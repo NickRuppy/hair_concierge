@@ -1,0 +1,580 @@
+TAP version 13
+# Subtest: deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown
+ok 1 - deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown
+  ---
+  duration_ms: 0.698375
+  ...
+# Subtest: deriveAlternativeComparison: summary score is the fraction of matching rows
+ok 2 - deriveAlternativeComparison: summary score is the fraction of matching rows
+  ---
+  duration_ms: 0.1015
+  ...
+# Subtest: deriveAlternativeComparison: preserves criteria order and copies id/label verbatim
+ok 3 - deriveAlternativeComparison: preserves criteria order and copies id/label verbatim
+  ---
+  duration_ms: 0.069542
+  ...
+# Subtest: deriveAlternativeComparison: is a pure function — same input, same output, no mutation
+ok 4 - deriveAlternativeComparison: is a pure function — same input, same output, no mutation
+  ---
+  duration_ms: 0.146333
+  ...
+# Subtest: Scan analytics is PostHog-only
+ok 5 - Scan analytics is PostHog-only
+  ---
+  duration_ms: 0.743583
+  ...
+# Subtest: noOpScanAnalytics never forwards events
+ok 6 - noOpScanAnalytics never forwards events
+  ---
+  duration_ms: 0.095959
+  ...
+# Subtest: Scan analytics factory only fires with analytics consent
+ok 7 - Scan analytics factory only fires with analytics consent
+  ---
+  duration_ms: 0.301959
+  ...
+# Subtest: Scan events map to PostHog with the documented snake_case properties
+ok 8 - Scan events map to PostHog with the documented snake_case properties
+  ---
+  duration_ms: 0.842708
+  ...
+# Subtest: scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery
+ok 9 - scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery
+  ---
+  duration_ms: 0.096416
+  ...
+# Subtest: scan_result_shown reports a not_needed verdict as a catalog hit, not a miss
+ok 10 - scan_result_shown reports a not_needed verdict as a catalog hit, not a miss
+  ---
+  duration_ms: 0.064417
+  ...
+# Subtest: matchCatalogProducts typo table: 1 deletion on a short token (≤ 5 chars) ("glss")
+ok 11 - matchCatalogProducts typo table: 1 deletion on a short token (≤ 5 chars) ("glss")
+  ---
+  duration_ms: 1.426458
+  ...
+# Subtest: matchCatalogProducts typo table: 1 substitution on a short token ("baloa")
+ok 12 - matchCatalogProducts typo table: 1 substitution on a short token ("baloa")
+  ---
+  duration_ms: 0.173792
+  ...
+# Subtest: matchCatalogProducts typo table: 2 edits on a long token (> 5 chars) ("elvtol shampo")
+ok 13 - matchCatalogProducts typo table: 2 edits on a long token (> 5 chars) ("elvtol shampo")
+  ---
+  duration_ms: 0.094791
+  ...
+# Subtest: matchCatalogProducts typo table: a transposition counts as one edit ("glsis")
+ok 14 - matchCatalogProducts typo table: a transposition counts as one edit ("glsis")
+  ---
+  duration_ms: 0.074416
+  ...
+# Subtest: matchCatalogProducts typo table: a transposition on a long token ("olpalex")
+ok 15 - matchCatalogProducts typo table: a transposition on a long token ("olpalex")
+  ---
+  duration_ms: 0.081958
+  ...
+# Subtest: matchCatalogProducts typo table: 2 edits on a short token are rejected ("gxxss")
+ok 16 - matchCatalogProducts typo table: 2 edits on a short token are rejected ("gxxss")
+  ---
+  duration_ms: 0.063667
+  ...
+# Subtest: matchCatalogProducts typo table: 3 edits on a long token are rejected ("elxxxal")
+ok 17 - matchCatalogProducts typo table: 3 edits on a long token are rejected ("elxxxal")
+  ---
+  duration_ms: 0.1385
+  ...
+# Subtest: matchCatalogProducts typo table: multi-token: every token must match some title token ("hyaluron elvitl")
+ok 18 - matchCatalogProducts typo table: multi-token: every token must match some title token ("hyaluron elvitl")
+  ---
+  duration_ms: 0.077917
+  ...
+# Subtest: matchCatalogProducts typo table: multi-token: one unmatched token rejects the row ("elvital zzzzzz")
+ok 19 - matchCatalogProducts typo table: multi-token: one unmatched token rejects the row ("elvital zzzzzz")
+  ---
+  duration_ms: 0.420708
+  ...
+# Subtest: matchCatalogProducts typo table: a typo in a partially typed last token still matches ("kerasp")
+ok 20 - matchCatalogProducts typo table: a typo in a partially typed last token still matches ("kerasp")
+  ---
+  duration_ms: 2.034666
+  ...
+# Subtest: matchCatalogProducts: tokens under 5 chars compare whole words, not word prefixes
+ok 21 - matchCatalogProducts: tokens under 5 chars compare whole words, not word prefixes
+  ---
+  duration_ms: 0.879166
+  ...
+# Subtest: matchCatalogProducts: very short tokens (< 3 chars) get no typo tolerance
+ok 22 - matchCatalogProducts: very short tokens (< 3 chars) get no typo tolerance
+  ---
+  duration_ms: 0.217833
+  ...
+# Subtest: matchCatalogProducts: exact title → substring → token → typo-only tiers, sort_order only breaks ties within a tier
+ok 23 - matchCatalogProducts: exact title → substring → token → typo-only tiers, sort_order only breaks ties within a tier
+  ---
+  duration_ms: 0.317375
+  ...
+# Subtest: matchCatalogProducts: within the typo tier the existing sort_order → name → id tiebreak holds
+ok 24 - matchCatalogProducts: within the typo tier the existing sort_order → name → id tiebreak holds
+  ---
+  duration_ms: 12.136958
+  ...
+# Subtest: matchCatalogProducts: plain substring matching is unchanged (case-insensitive, over the identity title)
+ok 25 - matchCatalogProducts: plain substring matching is unchanged (case-insensitive, over the identity title)
+  ---
+  duration_ms: 0.180667
+  ...
+# Subtest: matchCatalogProducts: numbers never match by typo — sizes and product numbers are exact
+ok 26 - matchCatalogProducts: numbers never match by typo — sizes and product numbers are exact
+  ---
+  duration_ms: 0.211208
+  ...
+# Subtest: maskAlternative: an alternative with no carried criteria yields an empty comparison
+ok 27 - maskAlternative: an alternative with no carried criteria yields an empty comparison
+  ---
+  duration_ms: 0.853417
+  ...
+# Subtest: maskAlternative: does not mutate the input
+ok 28 - maskAlternative: does not mutate the input
+  ---
+  duration_ms: 0.128542
+  ...
+# Subtest: maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+ok 29 - maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+  ---
+  duration_ms: 0.212833
+  ...
+# Subtest: maskScanVerdictPayload: an empty alternatives list stays empty
+ok 30 - maskScanVerdictPayload: an empty alternatives list stays empty
+  ---
+  duration_ms: 0.04875
+  ...
+# Subtest: scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK
+ok 31 - scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK
+  ---
+  duration_ms: 687.707167
+  ...
+# Subtest: scan name-only submission migration: a scan row with only brand_text (no product_name_text, no identifier) still fails
+ok 32 - scan name-only submission migration: a scan row with only brand_text (no product_name_text, no identifier) still fails
+  ---
+  duration_ms: 412.589
+  ...
+# Subtest: scan name-only submission migration: non-scan sources are untouched by the relaxed CHECK (the rule only ever constrains source='scan')
+ok 33 - scan name-only submission migration: non-scan sources are untouched by the relaxed CHECK (the rule only ever constrains source='scan')
+  ---
+  duration_ms: 400.008458
+  ...
+# Subtest: scan name-only submission migration: one-open-name-only-submission index rejects a second open duplicate (case-insensitive)
+ok 34 - scan name-only submission migration: one-open-name-only-submission index rejects a second open duplicate (case-insensitive)
+  ---
+  duration_ms: 503.564375
+  ...
+# Subtest: scan name-only submission migration: the index scopes to (user, category, brand, name) -- a different user, category, brand, or name is not blocked
+ok 35 - scan name-only submission migration: the index scopes to (user, category, brand, name) -- a different user, category, brand, or name is not blocked
+  ---
+  duration_ms: 386.727542
+  ...
+# Subtest: scan name-only submission migration: a CLOSED prior submission (not in the open-status set) does not block a new one
+ok 36 - scan name-only submission migration: a CLOSED prior submission (not in the open-status set) does not block a new one
+  ---
+  duration_ms: 390.533167
+  ...
+# Subtest: scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category
+ok 37 - scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category
+  ---
+  duration_ms: 373.2905
+  ...
+# Subtest: captureScanException tags and scopes the event under scan.*
+ok 38 - captureScanException tags and scopes the event under scan.*
+  ---
+  duration_ms: 0.784417
+  ...
+# Subtest: captureScanException honours an explicit warning level, without leaking it into tags/context
+ok 39 - captureScanException honours an explicit warning level, without leaking it into tags/context
+  ---
+  duration_ms: 0.170667
+  ...
+# Subtest: buildScanSentryPayload omits reason/userId when absent, never emits empty tag values
+ok 40 - buildScanSentryPayload omits reason/userId when absent, never emits empty tag values
+  ---
+  duration_ms: 0.195416
+  ...
+# Subtest: buildScanSentryPayload carries a distinct tag per scan route, for filtering
+ok 41 - buildScanSentryPayload carries a distinct tag per scan route, for filtering
+  ---
+  duration_ms: 0.07325
+  ...
+# Subtest: dm lookup warnings capture only a fixed message and low-cardinality reason, once per window
+ok 42 - dm lookup warnings capture only a fixed message and low-cardinality reason, once per window
+  ---
+  duration_ms: 0.133041
+  ...
+# Subtest: findOpenScanSubmission: open submission found
+ok 43 - findOpenScanSubmission: open submission found
+  ---
+  duration_ms: 0.911167
+  ...
+# Subtest: findOpenScanSubmission: queries every GTIN spelling of the same number
+ok 44 - findOpenScanSubmission: queries every GTIN spelling of the same number
+  ---
+  duration_ms: 0.169209
+  ...
+# Subtest: the active-product lookup requires both the active flag and the active lifecycle
+ok 45 - the active-product lookup requires both the active flag and the active lifecycle
+  ---
+  duration_ms: 0.783
+  ...
+# Subtest: the active-product lookup reports a miss as null and a query failure as the caller's error code
+ok 46 - the active-product lookup reports a miss as null and a query failure as the caller's error code
+  ---
+  duration_ms: 0.288834
+  ...
+# Subtest: presentation rows select the full commerce column list, dedupe ids and normalize the link status
+ok 47 - presentation rows select the full commerce column list, dedupe ids and normalize the link status
+  ---
+  duration_ms: 0.261666
+  ...
+# Subtest: presentation rows short-circuit on an empty id list and surface the caller's error code
+ok 48 - presentation rows short-circuit on an empty id list and surface the caller's error code
+  ---
+  duration_ms: 0.094916
+  ...
+# Subtest: product header renders name, brand, category label and commerce
+ok 49 - product header renders name, brand, category label and commerce
+  ---
+  duration_ms: 15.491
+  ...
+# Subtest: product header hides the purchase link when the link is not available
+ok 50 - product header hides the purchase link when the link is not available
+  ---
+  duration_ms: 0.306
+  ...
+# Subtest: product header drops a price without a currency instead of assuming EUR
+ok 51 - product header drops a price without a currency instead of assuming EUR
+  ---
+  duration_ms: 0.253583
+  ...
+# Subtest: presented verdict joins brand and purchase url onto alternatives
+ok 52 - presented verdict joins brand and purchase url onto alternatives
+  ---
+  duration_ms: 0.518417
+  ...
+# Subtest: presented verdict leaves alternatives without a catalog row quiet, not broken
+ok 53 - presented verdict leaves alternatives without a catalog row quiet, not broken
+  ---
+  duration_ms: 0.096209
+  ...
+# Subtest: presented verdict passes the not_needed payload through unchanged
+ok 54 - presented verdict passes the not_needed payload through unchanged
+  ---
+  duration_ms: 0.051542
+  ...
+# Subtest: loadScanEvaluationContext: refined source takes precedence and preserves every evaluated category decision
+ok 55 - loadScanEvaluationContext: refined source takes precedence and preserves every evaluated category decision
+  ---
+  duration_ms: 54.661792
+  ...
+# Subtest: loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions
+ok 56 - loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions
+  ---
+  duration_ms: 6.187583
+  ...
+# Subtest: loadScanEvaluationContext: no plan and no completed source is null
+ok 57 - loadScanEvaluationContext: no plan and no completed source is null
+  ---
+  duration_ms: 2.818125
+  ...
+# Subtest: loadScanEvaluationContext: plan without need versions or completed source is null
+ok 58 - loadScanEvaluationContext: plan without need versions or completed source is null
+  ---
+  duration_ms: 1.537667
+  ...
+# Subtest: loadScanEvaluationContext: failed source reads and invalid hashes are retry, never missing profile
+ok 59 - loadScanEvaluationContext: failed source reads and invalid hashes are retry, never missing profile
+  ---
+  duration_ms: 10.93925
+  ...
+# Subtest: anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+ok 60 - anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+  ---
+  duration_ms: 34.425209
+  ...
+# Subtest: anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response
+ok 61 - anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response
+  ---
+  duration_ms: 2.239583
+  ...
+# Subtest: anti-leak: masking survives an alternative whose productId collides with a substring used elsewhere (no accidental UUID leak)
+ok 62 - anti-leak: masking survives an alternative whose productId collides with a substring used elsewhere (no accidental UUID leak)
+  ---
+  duration_ms: 2.34125
+  ...
+# Subtest: anti-leak: dm-identified unknown exposes only the product-row subset
+ok 63 - anti-leak: dm-identified unknown exposes only the product-row subset
+  ---
+  duration_ms: 1.105041
+  ...
+# Subtest: an evaluation status without a verdict scans as unknown
+ok 64 - an evaluation status without a verdict scans as unknown
+  ---
+  duration_ms: 2.682375
+  ...
+# Subtest: no evaluated role selects nothing
+ok 65 - no evaluated role selects nothing
+  ---
+  duration_ms: 0.498625
+  ...
+# Subtest: a single evaluated role is the winner regardless of its verdict
+ok 66 - a single evaluated role is the winner regardless of its verdict
+  ---
+  duration_ms: 1.300209
+  ...
+# Subtest: ideal beats supportive
+ok 67 - ideal beats supportive
+  ---
+  duration_ms: 0.60325
+  ...
+# Subtest: supportive beats unknown
+ok 68 - supportive beats unknown
+  ---
+  duration_ms: 0.595042
+  ...
+# Subtest: unknown beats mismatch so a mixed role result never overclaims a rejection
+ok 69 - unknown beats mismatch so a mixed role result never overclaims a rejection
+  ---
+  duration_ms: 1.059792
+  ...
+# Subtest: all roles mismatching stays a mismatch on the first role
+ok 70 - all roles mismatching stays a mismatch on the first role
+  ---
+  duration_ms: 1.249125
+  ...
+# Subtest: an equal verdict is broken by the higher target coverage
+ok 71 - an equal verdict is broken by the higher target coverage
+  ---
+  duration_ms: 0.359625
+  ...
+# Subtest: a missing coverage loses against measured coverage on an equal verdict
+ok 72 - a missing coverage loses against measured coverage on an equal verdict
+  ---
+  duration_ms: 0.211042
+  ...
+# Subtest: an equal verdict and coverage is broken by fewer caution criteria
+ok 73 - an equal verdict and coverage is broken by fewer caution criteria
+  ---
+  duration_ms: 0.353208
+  ...
+# Subtest: a full tie keeps the given role order
+ok 74 - a full tie keeps the given role order
+  ---
+  duration_ms: 1.006
+  ...
+# Subtest: selecting does not reorder the caller's entries
+ok 75 - selecting does not reorder the caller's entries
+  ---
+  duration_ms: 1.164042
+  ...
+# Subtest: writes only the privacy-safe submit lookup measurement
+ok 76 - writes only the privacy-safe submit lookup measurement
+  ---
+  duration_ms: 0.669083
+  ...
+# Subtest: is fail-open and rate-limits a degraded submit telemetry warning
+ok 77 - is fail-open and rate-limits a degraded submit telemetry warning
+  ---
+  duration_ms: 0.217834
+  ...
+# Subtest: ScanProactiveTriggerCard: renders a card for every proactive trigger id with its own copy
+ok 78 - ScanProactiveTriggerCard: renders a card for every proactive trigger id with its own copy
+  ---
+  duration_ms: 1.761375
+  ...
+# Subtest: ScanProactiveTriggerCard: kategorien_luecke links into /routine instead of opening the sheet
+ok 79 - ScanProactiveTriggerCard: kategorien_luecke links into /routine instead of opening the sheet
+  ---
+  duration_ms: 0.14925
+  ...
+# Subtest: ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open the sheet via a button
+ok 80 - ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open the sheet via a button
+  ---
+  duration_ms: 0.19325
+  ...
+# Subtest: ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap
+ok 81 - ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap
+  ---
+  duration_ms: 0.19275
+  ...
+# Subtest: recordScanSession: a call within 30 minutes stays the SAME session (no increment)
+ok 82 - recordScanSession: a call within 30 minutes stays the SAME session (no increment)
+  ---
+  duration_ms: 0.509209
+  ...
+# Subtest: recordScanSession: the count keeps climbing across further 30-minute gaps
+ok 83 - recordScanSession: the count keeps climbing across further 30-minute gaps
+  ---
+  duration_ms: 0.092542
+  ...
+# Subtest: recordScanSession: null storage (SSR, private mode) is always session 1, never crashes
+ok 84 - recordScanSession: null storage (SSR, private mode) is always session 1, never crashes
+  ---
+  duration_ms: 0.075959
+  ...
+# Subtest: recordScanSession: a storage that throws is treated as session 1, never crashes
+ok 85 - recordScanSession: a storage that throws is treated as session 1, never crashes
+  ---
+  duration_ms: 0.044375
+  ...
+# Subtest: recordScanSession: corrupt/garbage JSON in storage is treated as no prior record
+ok 86 - recordScanSession: corrupt/garbage JSON in storage is treated as no prior record
+  ---
+  duration_ms: 0.04925
+  ...
+# Subtest: readScanFatigueBudget: nothing persisted yet answers null
+ok 87 - readScanFatigueBudget: nothing persisted yet answers null
+  ---
+  duration_ms: 0.116375
+  ...
+# Subtest: writeScanFatigueBudget + readScanFatigueBudget: round-trips a persisted trigger id
+ok 88 - writeScanFatigueBudget + readScanFatigueBudget: round-trips a persisted trigger id
+  ---
+  duration_ms: 0.054083
+  ...
+# Subtest: readScanFatigueBudget: null storage (SSR) or garbage content is always a safe null
+ok 89 - readScanFatigueBudget: null storage (SSR) or garbage content is always a safe null
+  ---
+  duration_ms: 0.035334
+  ...
+# Subtest: readScanFatigueBudget/writeScanFatigueBudget: a storage that throws never crashes
+ok 90 - readScanFatigueBudget/writeScanFatigueBudget: a storage that throws never crashes
+  ---
+  duration_ms: 0.183625
+  ...
+# Subtest: F1: the fatigue budget survives being read back by a fresh storage read (simulates a remount)
+ok 91 - F1: the fatigue budget survives being read back by a fresh storage read (simulates a remount)
+  ---
+  duration_ms: 0.241
+  ...
+# Subtest: isMaskedScanVerdict: only a response carrying freeRevealAvailable is masked
+ok 92 - isMaskedScanVerdict: only a response carrying freeRevealAvailable is masked
+  ---
+  duration_ms: 0.36
+  ...
+# Subtest: scanTierSignal: an in_catalog verdict is the only evidence of a tier
+ok 93 - scanTierSignal: an in_catalog verdict is the only evidence of a tier
+  ---
+  duration_ms: 0.077292
+  ...
+# Subtest: nextScanTierSignal: a proven tier survives a later verdict that carries no evidence
+ok 94 - nextScanTierSignal: a proven tier survives a later verdict that carries no evidence
+  ---
+  duration_ms: 0.050958
+  ...
+# Subtest: scanRevealCta: the reveal is offered only while the credit is genuinely unspent
+ok 95 - scanRevealCta: the reveal is offered only while the credit is genuinely unspent
+  ---
+  duration_ms: 0.048833
+  ...
+# Subtest: durable original source wins after touch consumed or replaced; only safe acquisition fields leave server
+ok 96 - durable original source wins after touch consumed or replaced; only safe acquisition fields leave server
+  ---
+  duration_ms: 0.446959
+  ...
+# Subtest: new scanner context uses signed matching touch, never a different journey or failed lookup fallback
+ok 97 - new scanner context uses signed matching touch, never a different journey or failed lookup fallback
+  ---
+  duration_ms: 0.126625
+  ...
+# Subtest: safe source does not reveal raw dynamic paths, querystrings or unsupported values
+ok 98 - safe source does not reveal raw dynamic paths, querystrings or unsupported values
+  ---
+  duration_ms: 0.067083
+  ...
+# Subtest: scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition
+ok 99 - scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition
+  ---
+  duration_ms: 0.044334
+  ...
+# Subtest: scanner offer content events are PostHog-only
+ok 100 - scanner offer content events are PostHog-only
+  ---
+  duration_ms: 0.67275
+  ...
+# Subtest: scanner offer content interactions retain the offer envelope and omit an absent section
+ok 101 - scanner offer content interactions retain the offer envelope and omit an absent section
+  ---
+  duration_ms: 0.433084
+  ...
+# Subtest: scanner quiz view emits once with event-time timestamp only for scan_v1
+ok 102 - scanner quiz view emits once with event-time timestamp only for scan_v1
+  ---
+  duration_ms: 1.440708
+  ...
+# Subtest: an ordinary displayed quiz never emits even if a late lookup identifies scan_v1
+ok 103 - an ordinary displayed quiz never emits even if a late lookup identifies scan_v1
+  ---
+  duration_ms: 0.083791
+  ...
+# Subtest: a no-longer-current scanner mount is not backdated after context resolves
+ok 104 - a no-longer-current scanner mount is not backdated after context resolves
+  ---
+  duration_ms: 0.401
+  ...
+# Subtest: a failed context lookup retries with the original mount snapshot
+ok 105 - a failed context lookup retries with the original mount snapshot
+  ---
+  duration_ms: 0.201667
+  ...
+# Subtest: each rendered mount gets one distinct scanner view
+ok 106 - each rendered mount gets one distinct scanner view
+  ---
+  duration_ms: 0.198333
+  ...
+# Subtest: scanner quiz views are PostHog-only and map their bounded snapshot
+ok 107 - scanner quiz views are PostHog-only and map their bounded snapshot
+  ---
+  duration_ms: 0.401583
+  ...
+# Subtest: incomplete scanner metadata retries before capture and persistent failure emits no view
+ok 108 - incomplete scanner metadata retries before capture and persistent failure emits no view
+  ---
+  duration_ms: 0.255583
+  ...
+# Subtest: builds the dedicated scanner transactional payload without organic focus or caller package
+ok 109 - builds the dedicated scanner transactional payload without organic focus or caller package
+  ---
+  duration_ms: 0.811583
+  ...
+# Subtest: requires an explicit scanner message id instead of falling back to the organic template
+ok 110 - requires an explicit scanner message id instead of falling back to the organic template
+  ---
+  duration_ms: 0.183042
+  ...
+# Subtest: scanner presentation uses the controlled selection and only the compact tariff layout
+ok 111 - scanner presentation uses the controlled selection and only the compact tariff layout
+  ---
+  duration_ms: 21.800209
+  ...
+# Subtest: scanner presentation without introductory annual price anchors on the renewal equivalent
+ok 112 - scanner presentation without introductory annual price anchors on the renewal equivalent
+  ---
+  duration_ms: 0.613792
+  ...
+# Subtest: scanner presentation propagates pending state and selected dynamic monthly terms
+ok 113 - scanner presentation propagates pending state and selected dynamic monthly terms
+  ---
+  duration_ms: 1.737125
+  ...
+# Subtest: scanner trial continue is the pricing CTA and carries the selected interval
+ok 114 - scanner trial continue is the pricing CTA and carries the selected interval
+  ---
+  duration_ms: 0.382708
+  ...
+1..114
+# tests 114
+# suites 0
+# pass 114
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13145.921875

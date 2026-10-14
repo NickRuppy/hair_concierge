@@ -1,0 +1,1685 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "scope": [
+    "tests/scan-resolve-event-log.test.ts",
+    "tests/scan-resolve-events-migration.test.ts",
+    "tests/scan-resolve-auto-save.test.ts",
+    "tests/scan-wishlist-auto-save-postgres.test.ts",
+    "tests/scan-wishlist-route.test.ts"
+  ],
+  "supportingSelectedKeeperFile": "tests/scan-resolve-route.test.ts",
+  "readScope": "46 complete owned callbacks plus one selected route keeper and its fixtures; not all44 route callbacks semantically reviewed",
+  "phases": {
+    "before": {
+      "files": [
+        {
+          "file": "tests/scan-resolve-event-log.test.ts",
+          "snapshot": "before/tests/scan-resolve-event-log.test.ts",
+          "sha256": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+          "declarations": 14,
+          "callbacks": [
+            {
+              "title": "creates an opaque UUID attempt id",
+              "line": 38,
+              "callbackSha256": "22c4114e07f49c7f0396cbfaa7f2560b69f68d4b9c977692c3da2158b38eb0b0"
+            },
+            {
+              "title": "records a started attempt with canonical value",
+              "line": 45,
+              "callbackSha256": "165935f07d67e7cbb16576097135c2748d4a47f589e9685218ee9a99b8eaebdc"
+            },
+            {
+              "title": "completes exactly the same unfinished attempt with the v2 terminal outcome",
+              "line": 65,
+              "callbackSha256": "037aaff55a2c35442157ca76b70399acb2b62510536ed8826b212ea4f823c962"
+            },
+            {
+              "title": "persists dm lookup telemetry only when the completed resolve was eligible",
+              "line": 115,
+              "callbackSha256": "2172748eeb3253e66b30c8a281c7917078e0259f07cdb521b880d058dc81e906"
+            },
+            {
+              "title": "non-GTIN raw value logs a null canonical value",
+              "line": 157,
+              "callbackSha256": "2f65b02461e274c0a9875d3385a3eb0f2a647997760eb51c43aa2cdd676fe906"
+            },
+            {
+              "title": "fail-open: an insert error never throws",
+              "line": 170,
+              "callbackSha256": "264888df6b11637dcc240584eaea635e29e7aa15967e2734e432a3c8cee6cc6f"
+            },
+            {
+              "title": "fail-open: a thrown client error never propagates",
+              "line": 189,
+              "callbackSha256": "b2ba5b8d95b52cb856275675b81b25c910982f02ce6a489cb98b3d83e0e2c515"
+            },
+            {
+              "title": "fail-open: a completion error never propagates",
+              "line": 210,
+              "callbackSha256": "3b7104726d84c812aa663cf92a83a7394808ea78a0d93640ca9e2b09f2431f13"
+            },
+            {
+              "title": "an explicit createdAt is written as the row's created_at",
+              "line": 244,
+              "callbackSha256": "78cf207baad46b27de6f9ddf44b4fa1c38fee30e2f7ac959bf79cc80fb132da5"
+            },
+            {
+              "title": "without an explicit createdAt the row keeps the column default",
+              "line": 261,
+              "callbackSha256": "b897dbf678e5673c3603b33bc770eef4c830fe87666e6240b285335abb127c44"
+            },
+            {
+              "title": "a start-write failure captures once to Sentry with the attempt_log_write_failed reason",
+              "line": 274,
+              "callbackSha256": "5be8a1d27e8ba8db469e0a952aa526759d275d15cc51d0bdc9a7bdc4bfb2c405"
+            },
+            {
+              "title": "a completion-write failure also captures to Sentry",
+              "line": 300,
+              "callbackSha256": "f1cd7f60c66fd2502c271e3c4387dee4ec35ef1c1d8367471004ca921e5a9f20"
+            },
+            {
+              "title": "a second write failure within the 60s throttle window does not capture again",
+              "line": 334,
+              "callbackSha256": "19f9507e2ce9fe0770df2c76f19fa31a326782fba8951124863d39ae784bf04a"
+            },
+            {
+              "title": "a write failure after the throttle window resets captures again",
+              "line": 352,
+              "callbackSha256": "4b8936b47f5e562f767f2762420a4fc2015bcc15bf266bf12730335cdb5695a2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-events-migration.test.ts",
+          "snapshot": "before/tests/scan-resolve-events-migration.test.ts",
+          "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+          "declarations": 5,
+          "callbacks": [
+            {
+              "title": "adds nullable v2 terminal telemetry without changing the legacy outcome contract",
+              "line": 16,
+              "callbackSha256": "b58f785b973ecff64e20d8607333e7ad96665313bf6c37d2efb12864afa6e7df"
+            },
+            {
+              "title": "backfills every legacy event as terminal-unknown, never as a proven resolution",
+              "line": 59,
+              "callbackSha256": "9535d9baabe1c4a4755a85fe2a3dad0d75ad4729d92a68a9b193a5273031b4a0"
+            },
+            {
+              "title": "materializes only non-PII aggregates before raw data deletion and remains idempotent",
+              "line": 69,
+              "callbackSha256": "62dc7272734fd417c89bd6bdc119f84e0c53013450a22638cb19cc618b6fdda3"
+            },
+            {
+              "title": "keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job",
+              "line": 101,
+              "callbackSha256": "a70795c6f9293ff9b9c4f6bb56d28547ed0415ec4ac5da3a8e21bcc62fa8c5f4"
+            },
+            {
+              "title": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+              "line": 137,
+              "callbackSha256": "6883e4354daced870068271c5560ad05b7c3dacd6706271bb1bb560856fc90d6"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-auto-save.test.ts",
+          "snapshot": "before/tests/scan-resolve-auto-save.test.ts",
+          "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+          "declarations": 11,
+          "callbacks": [
+            {
+              "title": "scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product",
+              "line": 170,
+              "callbackSha256": "9e40a9074c5d85cd7d25d9e680a18827d2619fc8805365d284b1cdfef2534944"
+            },
+            {
+              "title": "scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)",
+              "line": 194,
+              "callbackSha256": "7ccbf277cb1561dc0360ac9d78f83dd02063e10669e98fcae080dd84716d1f33"
+            },
+            {
+              "title": "scan resolve auto-save: an already-saved product's response state is carried through unchanged",
+              "line": 212,
+              "callbackSha256": "59e610e34262e8ac25b3ea81bedf836e2ae5b9078c77c82d876cf8af1096dbe0"
+            },
+            {
+              "title": "scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)",
+              "line": 228,
+              "callbackSha256": "15526711749355caf0725b924e689e0c8ae1d053f8e4fc65c957508fdf6e9029"
+            },
+            {
+              "title": "scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial",
+              "line": 244,
+              "callbackSha256": "eb9e53750041197d263870575a85a70b2fae0f06f44d6d176c10d2c1926bfb30"
+            },
+            {
+              "title": "scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user",
+              "line": 267,
+              "callbackSha256": "415b27d5807b77fb26a082f65191605198eb70dec97a9d6fed5bd21d6d8c27e3"
+            },
+            {
+              "title": "scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)",
+              "line": 284,
+              "callbackSha256": "a170e631a6f5634006448282e020d195923ae21082f07615770f701bc12b22af"
+            },
+            {
+              "title": "scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save",
+              "line": 304,
+              "callbackSha256": "3893ebc550c91ef483ac81a3360b8ffa213eb648e9648ab6b2f89f20360d13bf"
+            },
+            {
+              "title": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx",
+              "line": 319,
+              "callbackSha256": "c0723d57f1ec97bfe7cfa0c9db4a0c4a5957fd2304b4f9fc5283ed1e26698c67"
+            },
+            {
+              "title": "scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 356,
+              "callbackSha256": "5bb235dd693a51fbb4d2aff9a52cd910aec56f2dcce6b86b6f41b5a7077caf6f"
+            },
+            {
+              "title": "scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)",
+              "line": 371,
+              "callbackSha256": "4e2cf7c05dde15a67a10b917b44b55311ba324fca2a93a2c38aafe4c7760ac8d"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+          "snapshot": "before/tests/scan-wishlist-auto-save-postgres.test.ts",
+          "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+          "declarations": 6,
+          "callbacks": [
+            {
+              "title": "auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)",
+              "line": 208,
+              "callbackSha256": "59798b4ef3592933717bcbd460e74d4f6ad40cb5907d0c3f68213edfe718f866"
+            },
+            {
+              "title": "auto-save: rescanning the same product is idempotent — exactly one row survives repeated scans",
+              "line": 214,
+              "callbackSha256": "82e2382303375b08249c5d074418b109d763ad074b4b238ba0831fa109df3199"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)",
+              "line": 222,
+              "callbackSha256": "bbf4ca8ceaf46835e8d117330f77e4dbda92e6d5b0b63fd8aa1bbebf0e13a0b5"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans",
+              "line": 246,
+              "callbackSha256": "d405f8a5c9a59a1d16e3b92c133b2821fc45ae6b7202a830ad9443b0af37eece"
+            },
+            {
+              "title": "auto-save: scoped to user and product — another user's or another product's rows are untouched",
+              "line": 259,
+              "callbackSha256": "944387c69810b632913428be633a37ba159ade4e54635916d9f746794d3a50b8"
+            },
+            {
+              "title": "auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched",
+              "line": 275,
+              "callbackSha256": "68234b2eb40209968bdcb4df20993562f29705b9f3ec4617ebba800dabfd3a8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-route.test.ts",
+          "snapshot": "before/tests/scan-wishlist-route.test.ts",
+          "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+          "declarations": 10,
+          "callbacks": [
+            {
+              "title": "scan wishlist GET: unauthenticated is rejected",
+              "line": 28,
+              "callbackSha256": "343bfe62ea38afafb137b49ec38dc9792fcd83e92318992b6c80622289cee7f0"
+            },
+            {
+              "title": "scan wishlist GET: rate limited returns 429 with Retry-After, before any load",
+              "line": 34,
+              "callbackSha256": "daa8b5fa39c86f851b948290a4ea7b9ca76195c446699fe7b8d304ca2de1bed4"
+            },
+            {
+              "title": "scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 49,
+              "callbackSha256": "7cfa99abd6bac0db8f2bbb6ee48784cc4ce811f57a468ddd5a3924286f2ef283"
+            },
+            {
+              "title": "scan wishlist GET: returns the injected entries",
+              "line": 65,
+              "callbackSha256": "acb58bcbfcda312e943080a4e8393bf78263f20a0f05215120ce2f6915ff788f"
+            },
+            {
+              "title": "scan wishlist GET: an unexpected error maps to 503 and captures to Sentry",
+              "line": 80,
+              "callbackSha256": "48196382b5439222b20bc2f30e34e79ce4e54874474ddaaa2aeb424157fd8ed3"
+            },
+            {
+              "title": "listScanWishlist: joins product fields and presents commerce data",
+              "line": 148,
+              "callbackSha256": "bcf28cc00c6d881dd99cb9312ca2e6d95cfaa1b8c9708485c485e67e20e507a1"
+            },
+            {
+              "title": "listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)",
+              "line": 169,
+              "callbackSha256": "35de3f025729f916aafc69189193dc6db13f61b52b093e86b4e77bc679663108"
+            },
+            {
+              "title": "listScanWishlist: a load error throws a stable error",
+              "line": 175,
+              "callbackSha256": "c1fc30e2ee7b543c7709e79f8b21da855c3b42708a08dc18dd7b5a0816c7476a"
+            },
+            {
+              "title": "listScanWishlist: drops a product that has since been deactivated or discontinued",
+              "line": 187,
+              "callbackSha256": "ef11c3a602caa4105a2e24cca5f881f61d560022ab76d219c6bb660ef2b04e38"
+            },
+            {
+              "title": "listScanWishlist: drops a disposition-quarantined product (ruling R7)",
+              "line": 203,
+              "callbackSha256": "421dab2cb4ec20570fc03572d9f5e0541eb7e1403925d62929285fec3536d9f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-route.test.ts",
+          "snapshot": "before/tests/scan-resolve-route.test.ts",
+          "sha256": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88",
+          "declarations": 44,
+          "callbacks": [
+            {
+              "title": "scan resolve: unauthenticated is rejected",
+              "line": 144,
+              "callbackSha256": "a00a4d7a6c6528fe24ea2dcab8d4642a550631523fb5b4da00eeec218ff0440c"
+            },
+            {
+              "title": "scan resolve: rate limited returns 429 with Retry-After",
+              "line": 151,
+              "callbackSha256": "54225d6ffd28bd99efee7251390681ce16ba05cfe8fcee84e636fe9d0d669f98"
+            },
+            {
+              "title": "scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 161,
+              "callbackSha256": "b9efe1162d7c47ad104f4a4648824017414b1c8d1635fb3bfb6d7bfbc661a3ab"
+            },
+            {
+              "title": "scan resolve: body with both identifier and productId is rejected",
+              "line": 180,
+              "callbackSha256": "03b77e54ca454c12d7576af8cd2cfd131bed4f8585e01a6ebd9e4fdaad3730ea"
+            },
+            {
+              "title": "scan resolve: bad EAN checksum is rejected before any lookup",
+              "line": 188,
+              "callbackSha256": "eaa2e6d0c1242fab7f76647dee0bcd9f59aa1a5a4a3b48dbd6f46e90af36d283"
+            },
+            {
+              "title": "scan resolve: an open submission answers a catalog miss",
+              "line": 202,
+              "callbackSha256": "0ce6f40aff67ef0efbd38cd0ec2ab61d7bb9c76deecad362fa169efc33983cf4"
+            },
+            {
+              "title": "scan resolve: a cataloged EAN resolves to a verdict even while a submission is open",
+              "line": 219,
+              "callbackSha256": "9ccaaa5ecd705629098507893f6d84ff470b79ed3d93aec773d13a9fc93aeb55"
+            },
+            {
+              "title": "scan resolve: a quarantined hit with an open submission answers pending, not unknown",
+              "line": 234,
+              "callbackSha256": "7e750d2895d7ec75d2b631689f12095f36128d045d11548e961bf23787972d00"
+            },
+            {
+              "title": "scan resolve: identifier miss returns unknown_product with all 10 categories",
+              "line": 248,
+              "callbackSha256": "f7c85c8f01e6ca30ea288eaaf9ee156f905bb88924846886663847f9dbe1715b"
+            },
+            {
+              "title": "scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome",
+              "line": 261,
+              "callbackSha256": "66dc88b0ba65027e5acb6b3e59a9dd4e5aa4d13a0d563ab674402975365d2835"
+            },
+            {
+              "title": "scan resolve: pending and quarantined paths never ask dm",
+              "line": 314,
+              "callbackSha256": "a72ea7a7005c85617d7cf4c85f7dded264b6885783b113740e7044ed4fbb3e98"
+            },
+            {
+              "title": "scan resolve: an unexpected dm throw preserves the plain sheet and records failure",
+              "line": 342,
+              "callbackSha256": "67b38405ced93c418e09be58d3cd65cc5147676a0956ff9795fc0a9699a9de4f"
+            },
+            {
+              "title": "scan resolve: productId not found is 404",
+              "line": 365,
+              "callbackSha256": "7acf16a4d01b98277a325a1f9e03d9d76f442799575533f712103f3807b4b25c"
+            },
+            {
+              "title": "scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)",
+              "line": 374,
+              "callbackSha256": "d70f5d8ef2ac039b98bd4b920d092a9d4bf457d664320d82abbd2f261eb8cb52"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined identifier hit is treated as unknown_product",
+              "line": 380,
+              "callbackSha256": "ba8263a91a88b83180a27c7e0b838f101f0879e684756716bc23ab7fb404643a"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined productId is 404 product_not_found",
+              "line": 396,
+              "callbackSha256": "98af7e93bd62bbe0054afd95195972f9882d07af443f45eb306682fa4b29b284"
+            },
+            {
+              "title": "scan resolve: no personal plan at all is 409 profile_missing",
+              "line": 410,
+              "callbackSha256": "b8b6c3de3e8304a5d589e5142c81d6b1a10fdfa19702ed71df04e2cac7b3acc0"
+            },
+            {
+              "title": "scan resolve: identifier hit resolves a verdict with snapshotSource and savedState",
+              "line": 419,
+              "callbackSha256": "9768c93e55a817ac5919be6f396016ab4c71c8691c34d4ed7d91e9320246dcea"
+            },
+            {
+              "title": "scan resolve: a missing catalog presentation row fails closed with 503",
+              "line": 441,
+              "callbackSha256": "ae974532ff980f4065f56119f44418e60cff0e0dff754ea596789ca084e87598"
+            },
+            {
+              "title": "scan resolve: alternatives are enriched with brand and purchase link",
+              "line": 448,
+              "callbackSha256": "97ecda5fbb2f36b4d75d311c6909f6f33ecc32d3eaed7293c55e2394bf6097da"
+            },
+            {
+              "title": "scan resolve: a quarantined alternative is never offered (ruling R7)",
+              "line": 488,
+              "callbackSha256": "7ba052702c38bc86e3c9f8c2a529a9e3bdbd02fe0c9ffc5312b49112f3093d60"
+            },
+            {
+              "title": "scan resolve: productId path resolves the same way as an identifier hit",
+              "line": 532,
+              "callbackSha256": "53f286cfd596af1c0031421c08f00680e164a21c8b1e737d090cd47daa76cc28"
+            },
+            {
+              "title": "scan resolve: a not-needed decision skips the recommendation-candidates load",
+              "line": 541,
+              "callbackSha256": "8e9becbc7656e711102ccc3a91749afa79b595ece4a8d79b38753d9d481a374f"
+            },
+            {
+              "title": "scan resolve: a role-sensitive category loads product facts per role and the candidate pool once",
+              "line": 569,
+              "callbackSha256": "dc1c1656657acf8b33ffd2edb0e4ae6af32de8d8715051c12d90c9b5c160fac5"
+            },
+            {
+              "title": "scan resolve: a candidate load that omits a requested role fails closed as 503",
+              "line": 612,
+              "callbackSha256": "c62f7459e4aada143522ef0520f541a26f34d22bccac37a6528e11085a9d175a"
+            },
+            {
+              "title": "scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)",
+              "line": 646,
+              "callbackSha256": "d9ea897918394be299834d704f02f5d9cadd3bbe323c7aba5625ba37fb3f08ee"
+            },
+            {
+              "title": "scan resolve: a category whose facts do not vary by role loads exactly once",
+              "line": 670,
+              "callbackSha256": "ac06b7cc9808a04a590120f5aba0b5dd65008564f27b8906401fa0fd6683b3b7"
+            },
+            {
+              "title": "scan resolve: an unexpected lib error maps to 503 and captures to Sentry",
+              "line": 703,
+              "callbackSha256": "4df3787dc2f5531593714066cb19b67ba573abbea2a91d20bc0e3434b50ddf31"
+            },
+            {
+              "title": "attempt telemetry: catalog hit starts before lookup and completes only after payload build",
+              "line": 756,
+              "callbackSha256": "2cd1a8b69957ea735c74ebd9e8a9966c1e8d64f35b40ab06d4c42d3566878f65"
+            },
+            {
+              "title": "attempt telemetry: created_at is the request start, never later than the completion",
+              "line": 782,
+              "callbackSha256": "5bf4531724eb118de4de6e829db9be4d5a80d3996d8e71973ea9398b156b6dc4"
+            },
+            {
+              "title": "attempt telemetry: an unknown fit verdict is completed but not counted as resolved",
+              "line": 814,
+              "callbackSha256": "a45511afce4237bcc5cb89d1b7c9e6d136f01967c607c69909cbdd05a2ad483a"
+            },
+            {
+              "title": "attempt telemetry: catalog miss completes as unknown_product",
+              "line": 836,
+              "callbackSha256": "2bc1bcf579f7c0942c3a1f8c92d74f00c8bfa9b7f56fe7f62c47204b7da3ef2d"
+            },
+            {
+              "title": "attempt telemetry: invalid checksum starts then completes as invalid_identifier",
+              "line": 857,
+              "callbackSha256": "a0bb217e7b24238072b81e9ebc6cceaddcb00bd4c1dc648030bcca932190869d"
+            },
+            {
+              "title": "attempt telemetry: quarantined hit retains its matching product",
+              "line": 877,
+              "callbackSha256": "d92ddb38f2b5f2a29389918d969440a39bedb125ec638bbf992f6e19c5e8bd6c"
+            },
+            {
+              "title": "attempt telemetry: open submission completes as pending_submission",
+              "line": 896,
+              "callbackSha256": "9ed87db5850e8a7a21cf4d2b5a24c1b21845a8bd17452ef9fe72e06f0d63227c"
+            },
+            {
+              "title": "attempt telemetry: resolve-by-productId logs nothing — no barcode involved",
+              "line": 919,
+              "callbackSha256": "10f35949663d7a45ca7b118cac5063f3c8985d0d80b5a401285e15e847a6b91c"
+            },
+            {
+              "title": "attempt telemetry: F11 — nothing is written before the response, record before completion",
+              "line": 929,
+              "callbackSha256": "509bc49ecfbd0b73a2c2fb033fc25f6a592fed24e6339de7fe7375a7e060a1e0"
+            },
+            {
+              "title": "attempt telemetry: the completion never overtakes the record, even on a slow insert",
+              "line": 956,
+              "callbackSha256": "da192e2f01b865274596d6ea21d59413d7a4981f2c09e518ea67cdd23f51bd08"
+            },
+            {
+              "title": "attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss",
+              "line": 979,
+              "callbackSha256": "6e7b2a9bcffb289b8f2a45383cedf1bd68bd2b3ae0fde768feab4631d02cbc1b"
+            },
+            {
+              "title": "attempt telemetry: a post-lookup failure records the current bounded stage",
+              "line": 998,
+              "callbackSha256": "eee98aa136312aa68cadbbfe7784e87f68daa54b9f64843b699cd76915854aff"
+            },
+            {
+              "title": "attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product",
+              "line": 1022,
+              "callbackSha256": "d752253ca980409161b474f1d02460b84b76eeeb5cf388a285c88cb52b3fe6ca"
+            },
+            {
+              "title": "attempt telemetry: one admin client per request, shared with the onError path",
+              "line": 1046,
+              "callbackSha256": "310c1c2401da0016cc847e28fd2c612ec5ac8ecb9d1fcb858979c00cbcc16b96"
+            },
+            {
+              "title": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException",
+              "line": 1067,
+              "callbackSha256": "b99721a1dd822bd148755c4630a11b51b46ab0c7ee9f76555704839b5ef36f41"
+            },
+            {
+              "title": "attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 1102,
+              "callbackSha256": "fb216b5675f127457eb19b47436d82aadec597cfba8c96c378e97f3f29f93825"
+            }
+          ]
+        }
+      ],
+      "declarations": 90,
+      "ownedDeclarations": 46
+    },
+    "transfer": {
+      "files": [
+        {
+          "file": "tests/scan-resolve-event-log.test.ts",
+          "snapshot": "transfer/tests/scan-resolve-event-log.test.ts",
+          "sha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+          "declarations": 14,
+          "callbacks": [
+            {
+              "title": "creates an opaque UUID attempt id",
+              "line": 38,
+              "callbackSha256": "22c4114e07f49c7f0396cbfaa7f2560b69f68d4b9c977692c3da2158b38eb0b0"
+            },
+            {
+              "title": "records a started attempt with canonical value",
+              "line": 45,
+              "callbackSha256": "165935f07d67e7cbb16576097135c2748d4a47f589e9685218ee9a99b8eaebdc"
+            },
+            {
+              "title": "completes exactly the same unfinished attempt with the v2 terminal outcome",
+              "line": 65,
+              "callbackSha256": "037aaff55a2c35442157ca76b70399acb2b62510536ed8826b212ea4f823c962"
+            },
+            {
+              "title": "persists dm lookup telemetry only when the completed resolve was eligible",
+              "line": 115,
+              "callbackSha256": "2172748eeb3253e66b30c8a281c7917078e0259f07cdb521b880d058dc81e906"
+            },
+            {
+              "title": "non-GTIN raw value logs a null canonical value",
+              "line": 157,
+              "callbackSha256": "2f65b02461e274c0a9875d3385a3eb0f2a647997760eb51c43aa2cdd676fe906"
+            },
+            {
+              "title": "fail-open: an insert error never throws",
+              "line": 170,
+              "callbackSha256": "264888df6b11637dcc240584eaea635e29e7aa15967e2734e432a3c8cee6cc6f"
+            },
+            {
+              "title": "fail-open: a thrown client error never propagates",
+              "line": 189,
+              "callbackSha256": "b2ba5b8d95b52cb856275675b81b25c910982f02ce6a489cb98b3d83e0e2c515"
+            },
+            {
+              "title": "fail-open: a completion error never propagates",
+              "line": 210,
+              "callbackSha256": "3b7104726d84c812aa663cf92a83a7394808ea78a0d93640ca9e2b09f2431f13"
+            },
+            {
+              "title": "an explicit createdAt is written as the row's created_at",
+              "line": 244,
+              "callbackSha256": "78cf207baad46b27de6f9ddf44b4fa1c38fee30e2f7ac959bf79cc80fb132da5"
+            },
+            {
+              "title": "without an explicit createdAt the row keeps the column default",
+              "line": 261,
+              "callbackSha256": "b897dbf678e5673c3603b33bc770eef4c830fe87666e6240b285335abb127c44"
+            },
+            {
+              "title": "a start-write failure captures once to Sentry with the attempt_log_write_failed reason",
+              "line": 274,
+              "callbackSha256": "5be8a1d27e8ba8db469e0a952aa526759d275d15cc51d0bdc9a7bdc4bfb2c405"
+            },
+            {
+              "title": "a completion-write failure also captures to Sentry",
+              "line": 300,
+              "callbackSha256": "5a67334ddbc5024a1ce1d175c61c267a1ba2d8c041c9fd0d06cb2755fefc2c98"
+            },
+            {
+              "title": "a second write failure within the 60s throttle window does not capture again",
+              "line": 337,
+              "callbackSha256": "19f9507e2ce9fe0770df2c76f19fa31a326782fba8951124863d39ae784bf04a"
+            },
+            {
+              "title": "a write failure after the throttle window resets captures again",
+              "line": 355,
+              "callbackSha256": "4b8936b47f5e562f767f2762420a4fc2015bcc15bf266bf12730335cdb5695a2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-events-migration.test.ts",
+          "snapshot": "transfer/tests/scan-resolve-events-migration.test.ts",
+          "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+          "declarations": 5,
+          "callbacks": [
+            {
+              "title": "adds nullable v2 terminal telemetry without changing the legacy outcome contract",
+              "line": 16,
+              "callbackSha256": "b58f785b973ecff64e20d8607333e7ad96665313bf6c37d2efb12864afa6e7df"
+            },
+            {
+              "title": "backfills every legacy event as terminal-unknown, never as a proven resolution",
+              "line": 59,
+              "callbackSha256": "9535d9baabe1c4a4755a85fe2a3dad0d75ad4729d92a68a9b193a5273031b4a0"
+            },
+            {
+              "title": "materializes only non-PII aggregates before raw data deletion and remains idempotent",
+              "line": 69,
+              "callbackSha256": "62dc7272734fd417c89bd6bdc119f84e0c53013450a22638cb19cc618b6fdda3"
+            },
+            {
+              "title": "keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job",
+              "line": 101,
+              "callbackSha256": "a70795c6f9293ff9b9c4f6bb56d28547ed0415ec4ac5da3a8e21bcc62fa8c5f4"
+            },
+            {
+              "title": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+              "line": 137,
+              "callbackSha256": "6883e4354daced870068271c5560ad05b7c3dacd6706271bb1bb560856fc90d6"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-auto-save.test.ts",
+          "snapshot": "transfer/tests/scan-resolve-auto-save.test.ts",
+          "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+          "declarations": 11,
+          "callbacks": [
+            {
+              "title": "scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product",
+              "line": 170,
+              "callbackSha256": "9e40a9074c5d85cd7d25d9e680a18827d2619fc8805365d284b1cdfef2534944"
+            },
+            {
+              "title": "scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)",
+              "line": 194,
+              "callbackSha256": "7ccbf277cb1561dc0360ac9d78f83dd02063e10669e98fcae080dd84716d1f33"
+            },
+            {
+              "title": "scan resolve auto-save: an already-saved product's response state is carried through unchanged",
+              "line": 212,
+              "callbackSha256": "59e610e34262e8ac25b3ea81bedf836e2ae5b9078c77c82d876cf8af1096dbe0"
+            },
+            {
+              "title": "scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)",
+              "line": 228,
+              "callbackSha256": "15526711749355caf0725b924e689e0c8ae1d053f8e4fc65c957508fdf6e9029"
+            },
+            {
+              "title": "scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial",
+              "line": 244,
+              "callbackSha256": "eb9e53750041197d263870575a85a70b2fae0f06f44d6d176c10d2c1926bfb30"
+            },
+            {
+              "title": "scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user",
+              "line": 267,
+              "callbackSha256": "415b27d5807b77fb26a082f65191605198eb70dec97a9d6fed5bd21d6d8c27e3"
+            },
+            {
+              "title": "scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)",
+              "line": 284,
+              "callbackSha256": "a170e631a6f5634006448282e020d195923ae21082f07615770f701bc12b22af"
+            },
+            {
+              "title": "scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save",
+              "line": 304,
+              "callbackSha256": "3893ebc550c91ef483ac81a3360b8ffa213eb648e9648ab6b2f89f20360d13bf"
+            },
+            {
+              "title": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx",
+              "line": 319,
+              "callbackSha256": "c0723d57f1ec97bfe7cfa0c9db4a0c4a5957fd2304b4f9fc5283ed1e26698c67"
+            },
+            {
+              "title": "scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 356,
+              "callbackSha256": "5bb235dd693a51fbb4d2aff9a52cd910aec56f2dcce6b86b6f41b5a7077caf6f"
+            },
+            {
+              "title": "scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)",
+              "line": 371,
+              "callbackSha256": "4e2cf7c05dde15a67a10b917b44b55311ba324fca2a93a2c38aafe4c7760ac8d"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+          "snapshot": "transfer/tests/scan-wishlist-auto-save-postgres.test.ts",
+          "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+          "declarations": 6,
+          "callbacks": [
+            {
+              "title": "auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)",
+              "line": 208,
+              "callbackSha256": "59798b4ef3592933717bcbd460e74d4f6ad40cb5907d0c3f68213edfe718f866"
+            },
+            {
+              "title": "auto-save: rescanning the same product is idempotent — exactly one row survives repeated scans",
+              "line": 214,
+              "callbackSha256": "82e2382303375b08249c5d074418b109d763ad074b4b238ba0831fa109df3199"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)",
+              "line": 222,
+              "callbackSha256": "bbf4ca8ceaf46835e8d117330f77e4dbda92e6d5b0b63fd8aa1bbebf0e13a0b5"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans",
+              "line": 246,
+              "callbackSha256": "d405f8a5c9a59a1d16e3b92c133b2821fc45ae6b7202a830ad9443b0af37eece"
+            },
+            {
+              "title": "auto-save: scoped to user and product — another user's or another product's rows are untouched",
+              "line": 259,
+              "callbackSha256": "944387c69810b632913428be633a37ba159ade4e54635916d9f746794d3a50b8"
+            },
+            {
+              "title": "auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched",
+              "line": 275,
+              "callbackSha256": "68234b2eb40209968bdcb4df20993562f29705b9f3ec4617ebba800dabfd3a8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-route.test.ts",
+          "snapshot": "transfer/tests/scan-wishlist-route.test.ts",
+          "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+          "declarations": 10,
+          "callbacks": [
+            {
+              "title": "scan wishlist GET: unauthenticated is rejected",
+              "line": 28,
+              "callbackSha256": "343bfe62ea38afafb137b49ec38dc9792fcd83e92318992b6c80622289cee7f0"
+            },
+            {
+              "title": "scan wishlist GET: rate limited returns 429 with Retry-After, before any load",
+              "line": 34,
+              "callbackSha256": "daa8b5fa39c86f851b948290a4ea7b9ca76195c446699fe7b8d304ca2de1bed4"
+            },
+            {
+              "title": "scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 49,
+              "callbackSha256": "7cfa99abd6bac0db8f2bbb6ee48784cc4ce811f57a468ddd5a3924286f2ef283"
+            },
+            {
+              "title": "scan wishlist GET: returns the injected entries",
+              "line": 65,
+              "callbackSha256": "acb58bcbfcda312e943080a4e8393bf78263f20a0f05215120ce2f6915ff788f"
+            },
+            {
+              "title": "scan wishlist GET: an unexpected error maps to 503 and captures to Sentry",
+              "line": 80,
+              "callbackSha256": "48196382b5439222b20bc2f30e34e79ce4e54874474ddaaa2aeb424157fd8ed3"
+            },
+            {
+              "title": "listScanWishlist: joins product fields and presents commerce data",
+              "line": 148,
+              "callbackSha256": "bcf28cc00c6d881dd99cb9312ca2e6d95cfaa1b8c9708485c485e67e20e507a1"
+            },
+            {
+              "title": "listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)",
+              "line": 169,
+              "callbackSha256": "35de3f025729f916aafc69189193dc6db13f61b52b093e86b4e77bc679663108"
+            },
+            {
+              "title": "listScanWishlist: a load error throws a stable error",
+              "line": 175,
+              "callbackSha256": "c1fc30e2ee7b543c7709e79f8b21da855c3b42708a08dc18dd7b5a0816c7476a"
+            },
+            {
+              "title": "listScanWishlist: drops a product that has since been deactivated or discontinued",
+              "line": 187,
+              "callbackSha256": "ef11c3a602caa4105a2e24cca5f881f61d560022ab76d219c6bb660ef2b04e38"
+            },
+            {
+              "title": "listScanWishlist: drops a disposition-quarantined product (ruling R7)",
+              "line": 203,
+              "callbackSha256": "421dab2cb4ec20570fc03572d9f5e0541eb7e1403925d62929285fec3536d9f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-route.test.ts",
+          "snapshot": "transfer/tests/scan-resolve-route.test.ts",
+          "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+          "declarations": 44,
+          "callbacks": [
+            {
+              "title": "scan resolve: unauthenticated is rejected",
+              "line": 144,
+              "callbackSha256": "a00a4d7a6c6528fe24ea2dcab8d4642a550631523fb5b4da00eeec218ff0440c"
+            },
+            {
+              "title": "scan resolve: rate limited returns 429 with Retry-After",
+              "line": 151,
+              "callbackSha256": "54225d6ffd28bd99efee7251390681ce16ba05cfe8fcee84e636fe9d0d669f98"
+            },
+            {
+              "title": "scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 161,
+              "callbackSha256": "b9efe1162d7c47ad104f4a4648824017414b1c8d1635fb3bfb6d7bfbc661a3ab"
+            },
+            {
+              "title": "scan resolve: body with both identifier and productId is rejected",
+              "line": 180,
+              "callbackSha256": "03b77e54ca454c12d7576af8cd2cfd131bed4f8585e01a6ebd9e4fdaad3730ea"
+            },
+            {
+              "title": "scan resolve: bad EAN checksum is rejected before any lookup",
+              "line": 188,
+              "callbackSha256": "eaa2e6d0c1242fab7f76647dee0bcd9f59aa1a5a4a3b48dbd6f46e90af36d283"
+            },
+            {
+              "title": "scan resolve: an open submission answers a catalog miss",
+              "line": 202,
+              "callbackSha256": "0ce6f40aff67ef0efbd38cd0ec2ab61d7bb9c76deecad362fa169efc33983cf4"
+            },
+            {
+              "title": "scan resolve: a cataloged EAN resolves to a verdict even while a submission is open",
+              "line": 219,
+              "callbackSha256": "9ccaaa5ecd705629098507893f6d84ff470b79ed3d93aec773d13a9fc93aeb55"
+            },
+            {
+              "title": "scan resolve: a quarantined hit with an open submission answers pending, not unknown",
+              "line": 234,
+              "callbackSha256": "7e750d2895d7ec75d2b631689f12095f36128d045d11548e961bf23787972d00"
+            },
+            {
+              "title": "scan resolve: identifier miss returns unknown_product with all 10 categories",
+              "line": 248,
+              "callbackSha256": "f7c85c8f01e6ca30ea288eaaf9ee156f905bb88924846886663847f9dbe1715b"
+            },
+            {
+              "title": "scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome",
+              "line": 261,
+              "callbackSha256": "66dc88b0ba65027e5acb6b3e59a9dd4e5aa4d13a0d563ab674402975365d2835"
+            },
+            {
+              "title": "scan resolve: pending and quarantined paths never ask dm",
+              "line": 314,
+              "callbackSha256": "a72ea7a7005c85617d7cf4c85f7dded264b6885783b113740e7044ed4fbb3e98"
+            },
+            {
+              "title": "scan resolve: an unexpected dm throw preserves the plain sheet and records failure",
+              "line": 342,
+              "callbackSha256": "67b38405ced93c418e09be58d3cd65cc5147676a0956ff9795fc0a9699a9de4f"
+            },
+            {
+              "title": "scan resolve: productId not found is 404",
+              "line": 365,
+              "callbackSha256": "7acf16a4d01b98277a325a1f9e03d9d76f442799575533f712103f3807b4b25c"
+            },
+            {
+              "title": "scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)",
+              "line": 374,
+              "callbackSha256": "d70f5d8ef2ac039b98bd4b920d092a9d4bf457d664320d82abbd2f261eb8cb52"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined identifier hit is treated as unknown_product",
+              "line": 380,
+              "callbackSha256": "ba8263a91a88b83180a27c7e0b838f101f0879e684756716bc23ab7fb404643a"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined productId is 404 product_not_found",
+              "line": 396,
+              "callbackSha256": "98af7e93bd62bbe0054afd95195972f9882d07af443f45eb306682fa4b29b284"
+            },
+            {
+              "title": "scan resolve: no personal plan at all is 409 profile_missing",
+              "line": 410,
+              "callbackSha256": "b8b6c3de3e8304a5d589e5142c81d6b1a10fdfa19702ed71df04e2cac7b3acc0"
+            },
+            {
+              "title": "scan resolve: identifier hit resolves a verdict with snapshotSource and savedState",
+              "line": 419,
+              "callbackSha256": "9768c93e55a817ac5919be6f396016ab4c71c8691c34d4ed7d91e9320246dcea"
+            },
+            {
+              "title": "scan resolve: a missing catalog presentation row fails closed with 503",
+              "line": 441,
+              "callbackSha256": "ae974532ff980f4065f56119f44418e60cff0e0dff754ea596789ca084e87598"
+            },
+            {
+              "title": "scan resolve: alternatives are enriched with brand and purchase link",
+              "line": 448,
+              "callbackSha256": "97ecda5fbb2f36b4d75d311c6909f6f33ecc32d3eaed7293c55e2394bf6097da"
+            },
+            {
+              "title": "scan resolve: a quarantined alternative is never offered (ruling R7)",
+              "line": 488,
+              "callbackSha256": "7ba052702c38bc86e3c9f8c2a529a9e3bdbd02fe0c9ffc5312b49112f3093d60"
+            },
+            {
+              "title": "scan resolve: productId path resolves the same way as an identifier hit",
+              "line": 532,
+              "callbackSha256": "53f286cfd596af1c0031421c08f00680e164a21c8b1e737d090cd47daa76cc28"
+            },
+            {
+              "title": "scan resolve: a not-needed decision skips the recommendation-candidates load",
+              "line": 541,
+              "callbackSha256": "8e9becbc7656e711102ccc3a91749afa79b595ece4a8d79b38753d9d481a374f"
+            },
+            {
+              "title": "scan resolve: a role-sensitive category loads product facts per role and the candidate pool once",
+              "line": 569,
+              "callbackSha256": "dc1c1656657acf8b33ffd2edb0e4ae6af32de8d8715051c12d90c9b5c160fac5"
+            },
+            {
+              "title": "scan resolve: a candidate load that omits a requested role fails closed as 503",
+              "line": 612,
+              "callbackSha256": "c62f7459e4aada143522ef0520f541a26f34d22bccac37a6528e11085a9d175a"
+            },
+            {
+              "title": "scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)",
+              "line": 646,
+              "callbackSha256": "d9ea897918394be299834d704f02f5d9cadd3bbe323c7aba5625ba37fb3f08ee"
+            },
+            {
+              "title": "scan resolve: a category whose facts do not vary by role loads exactly once",
+              "line": 670,
+              "callbackSha256": "ac06b7cc9808a04a590120f5aba0b5dd65008564f27b8906401fa0fd6683b3b7"
+            },
+            {
+              "title": "scan resolve: an unexpected lib error maps to 503 and captures to Sentry",
+              "line": 703,
+              "callbackSha256": "4df3787dc2f5531593714066cb19b67ba573abbea2a91d20bc0e3434b50ddf31"
+            },
+            {
+              "title": "attempt telemetry: catalog hit starts before lookup and completes only after payload build",
+              "line": 756,
+              "callbackSha256": "2cd1a8b69957ea735c74ebd9e8a9966c1e8d64f35b40ab06d4c42d3566878f65"
+            },
+            {
+              "title": "attempt telemetry: created_at is the request start, never later than the completion",
+              "line": 782,
+              "callbackSha256": "5bf4531724eb118de4de6e829db9be4d5a80d3996d8e71973ea9398b156b6dc4"
+            },
+            {
+              "title": "attempt telemetry: an unknown fit verdict is completed but not counted as resolved",
+              "line": 814,
+              "callbackSha256": "a45511afce4237bcc5cb89d1b7c9e6d136f01967c607c69909cbdd05a2ad483a"
+            },
+            {
+              "title": "attempt telemetry: catalog miss completes as unknown_product",
+              "line": 836,
+              "callbackSha256": "2bc1bcf579f7c0942c3a1f8c92d74f00c8bfa9b7f56fe7f62c47204b7da3ef2d"
+            },
+            {
+              "title": "attempt telemetry: invalid checksum starts then completes as invalid_identifier",
+              "line": 857,
+              "callbackSha256": "a0bb217e7b24238072b81e9ebc6cceaddcb00bd4c1dc648030bcca932190869d"
+            },
+            {
+              "title": "attempt telemetry: quarantined hit retains its matching product",
+              "line": 877,
+              "callbackSha256": "d92ddb38f2b5f2a29389918d969440a39bedb125ec638bbf992f6e19c5e8bd6c"
+            },
+            {
+              "title": "attempt telemetry: open submission completes as pending_submission",
+              "line": 896,
+              "callbackSha256": "9ed87db5850e8a7a21cf4d2b5a24c1b21845a8bd17452ef9fe72e06f0d63227c"
+            },
+            {
+              "title": "attempt telemetry: resolve-by-productId logs nothing — no barcode involved",
+              "line": 919,
+              "callbackSha256": "10f35949663d7a45ca7b118cac5063f3c8985d0d80b5a401285e15e847a6b91c"
+            },
+            {
+              "title": "attempt telemetry: F11 — nothing is written before the response, record before completion",
+              "line": 929,
+              "callbackSha256": "509bc49ecfbd0b73a2c2fb033fc25f6a592fed24e6339de7fe7375a7e060a1e0"
+            },
+            {
+              "title": "attempt telemetry: the completion never overtakes the record, even on a slow insert",
+              "line": 956,
+              "callbackSha256": "da192e2f01b865274596d6ea21d59413d7a4981f2c09e518ea67cdd23f51bd08"
+            },
+            {
+              "title": "attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss",
+              "line": 979,
+              "callbackSha256": "6e7b2a9bcffb289b8f2a45383cedf1bd68bd2b3ae0fde768feab4631d02cbc1b"
+            },
+            {
+              "title": "attempt telemetry: a post-lookup failure records the current bounded stage",
+              "line": 998,
+              "callbackSha256": "eee98aa136312aa68cadbbfe7784e87f68daa54b9f64843b699cd76915854aff"
+            },
+            {
+              "title": "attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product",
+              "line": 1022,
+              "callbackSha256": "d752253ca980409161b474f1d02460b84b76eeeb5cf388a285c88cb52b3fe6ca"
+            },
+            {
+              "title": "attempt telemetry: one admin client per request, shared with the onError path",
+              "line": 1046,
+              "callbackSha256": "310c1c2401da0016cc847e28fd2c612ec5ac8ecb9d1fcb858979c00cbcc16b96"
+            },
+            {
+              "title": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException",
+              "line": 1067,
+              "callbackSha256": "d41109d8b9a800a1fef1daed54178bef6a1afa90cd1d7ef67f1f693d14ae5ebd"
+            },
+            {
+              "title": "attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 1105,
+              "callbackSha256": "fb216b5675f127457eb19b47436d82aadec597cfba8c96c378e97f3f29f93825"
+            }
+          ]
+        }
+      ],
+      "declarations": 90,
+      "ownedDeclarations": 46
+    },
+    "cut": {
+      "files": [
+        {
+          "file": "tests/scan-resolve-event-log.test.ts",
+          "snapshot": "cut/tests/scan-resolve-event-log.test.ts",
+          "sha256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+          "declarations": 10,
+          "callbacks": [
+            {
+              "title": "creates an opaque UUID attempt id",
+              "line": 38,
+              "callbackSha256": "22c4114e07f49c7f0396cbfaa7f2560b69f68d4b9c977692c3da2158b38eb0b0"
+            },
+            {
+              "title": "records a started attempt with canonical value",
+              "line": 45,
+              "callbackSha256": "165935f07d67e7cbb16576097135c2748d4a47f589e9685218ee9a99b8eaebdc"
+            },
+            {
+              "title": "completes exactly the same unfinished attempt with the v2 terminal outcome",
+              "line": 65,
+              "callbackSha256": "037aaff55a2c35442157ca76b70399acb2b62510536ed8826b212ea4f823c962"
+            },
+            {
+              "title": "persists dm lookup telemetry only when the completed resolve was eligible",
+              "line": 115,
+              "callbackSha256": "2172748eeb3253e66b30c8a281c7917078e0259f07cdb521b880d058dc81e906"
+            },
+            {
+              "title": "non-GTIN raw value logs a null canonical value",
+              "line": 157,
+              "callbackSha256": "2f65b02461e274c0a9875d3385a3eb0f2a647997760eb51c43aa2cdd676fe906"
+            },
+            {
+              "title": "fail-open: a thrown client error never propagates",
+              "line": 170,
+              "callbackSha256": "b2ba5b8d95b52cb856275675b81b25c910982f02ce6a489cb98b3d83e0e2c515"
+            },
+            {
+              "title": "an explicit createdAt is written as the row's created_at",
+              "line": 191,
+              "callbackSha256": "78cf207baad46b27de6f9ddf44b4fa1c38fee30e2f7ac959bf79cc80fb132da5"
+            },
+            {
+              "title": "a completion-write failure also captures to Sentry",
+              "line": 208,
+              "callbackSha256": "5a67334ddbc5024a1ce1d175c61c267a1ba2d8c041c9fd0d06cb2755fefc2c98"
+            },
+            {
+              "title": "a second write failure within the 60s throttle window does not capture again",
+              "line": 245,
+              "callbackSha256": "19f9507e2ce9fe0770df2c76f19fa31a326782fba8951124863d39ae784bf04a"
+            },
+            {
+              "title": "a write failure after the throttle window resets captures again",
+              "line": 263,
+              "callbackSha256": "4b8936b47f5e562f767f2762420a4fc2015bcc15bf266bf12730335cdb5695a2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-events-migration.test.ts",
+          "snapshot": "cut/tests/scan-resolve-events-migration.test.ts",
+          "sha256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+          "declarations": 4,
+          "callbacks": [
+            {
+              "title": "adds nullable v2 terminal telemetry without changing the legacy outcome contract",
+              "line": 16,
+              "callbackSha256": "b58f785b973ecff64e20d8607333e7ad96665313bf6c37d2efb12864afa6e7df"
+            },
+            {
+              "title": "materializes only non-PII aggregates before raw data deletion and remains idempotent",
+              "line": 59,
+              "callbackSha256": "62dc7272734fd417c89bd6bdc119f84e0c53013450a22638cb19cc618b6fdda3"
+            },
+            {
+              "title": "keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job",
+              "line": 91,
+              "callbackSha256": "a70795c6f9293ff9b9c4f6bb56d28547ed0415ec4ac5da3a8e21bcc62fa8c5f4"
+            },
+            {
+              "title": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+              "line": 127,
+              "callbackSha256": "6883e4354daced870068271c5560ad05b7c3dacd6706271bb1bb560856fc90d6"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-auto-save.test.ts",
+          "snapshot": "cut/tests/scan-resolve-auto-save.test.ts",
+          "sha256": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+          "declarations": 10,
+          "callbacks": [
+            {
+              "title": "scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product",
+              "line": 170,
+              "callbackSha256": "9e40a9074c5d85cd7d25d9e680a18827d2619fc8805365d284b1cdfef2534944"
+            },
+            {
+              "title": "scan resolve auto-save: an already-saved product's response state is carried through unchanged",
+              "line": 194,
+              "callbackSha256": "59e610e34262e8ac25b3ea81bedf836e2ae5b9078c77c82d876cf8af1096dbe0"
+            },
+            {
+              "title": "scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)",
+              "line": 210,
+              "callbackSha256": "15526711749355caf0725b924e689e0c8ae1d053f8e4fc65c957508fdf6e9029"
+            },
+            {
+              "title": "scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial",
+              "line": 226,
+              "callbackSha256": "eb9e53750041197d263870575a85a70b2fae0f06f44d6d176c10d2c1926bfb30"
+            },
+            {
+              "title": "scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user",
+              "line": 249,
+              "callbackSha256": "415b27d5807b77fb26a082f65191605198eb70dec97a9d6fed5bd21d6d8c27e3"
+            },
+            {
+              "title": "scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)",
+              "line": 266,
+              "callbackSha256": "a170e631a6f5634006448282e020d195923ae21082f07615770f701bc12b22af"
+            },
+            {
+              "title": "scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save",
+              "line": 286,
+              "callbackSha256": "3893ebc550c91ef483ac81a3360b8ffa213eb648e9648ab6b2f89f20360d13bf"
+            },
+            {
+              "title": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx",
+              "line": 301,
+              "callbackSha256": "c0723d57f1ec97bfe7cfa0c9db4a0c4a5957fd2304b4f9fc5283ed1e26698c67"
+            },
+            {
+              "title": "scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 338,
+              "callbackSha256": "5bb235dd693a51fbb4d2aff9a52cd910aec56f2dcce6b86b6f41b5a7077caf6f"
+            },
+            {
+              "title": "scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)",
+              "line": 353,
+              "callbackSha256": "4e2cf7c05dde15a67a10b917b44b55311ba324fca2a93a2c38aafe4c7760ac8d"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+          "snapshot": "cut/tests/scan-wishlist-auto-save-postgres.test.ts",
+          "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+          "declarations": 6,
+          "callbacks": [
+            {
+              "title": "auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)",
+              "line": 208,
+              "callbackSha256": "59798b4ef3592933717bcbd460e74d4f6ad40cb5907d0c3f68213edfe718f866"
+            },
+            {
+              "title": "auto-save: rescanning the same product is idempotent — exactly one row survives repeated scans",
+              "line": 214,
+              "callbackSha256": "82e2382303375b08249c5d074418b109d763ad074b4b238ba0831fa109df3199"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)",
+              "line": 222,
+              "callbackSha256": "bbf4ca8ceaf46835e8d117330f77e4dbda92e6d5b0b63fd8aa1bbebf0e13a0b5"
+            },
+            {
+              "title": "auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans",
+              "line": 246,
+              "callbackSha256": "d405f8a5c9a59a1d16e3b92c133b2821fc45ae6b7202a830ad9443b0af37eece"
+            },
+            {
+              "title": "auto-save: scoped to user and product — another user's or another product's rows are untouched",
+              "line": 259,
+              "callbackSha256": "944387c69810b632913428be633a37ba159ade4e54635916d9f746794d3a50b8"
+            },
+            {
+              "title": "auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched",
+              "line": 275,
+              "callbackSha256": "68234b2eb40209968bdcb4df20993562f29705b9f3ec4617ebba800dabfd3a8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-wishlist-route.test.ts",
+          "snapshot": "cut/tests/scan-wishlist-route.test.ts",
+          "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+          "declarations": 10,
+          "callbacks": [
+            {
+              "title": "scan wishlist GET: unauthenticated is rejected",
+              "line": 28,
+              "callbackSha256": "343bfe62ea38afafb137b49ec38dc9792fcd83e92318992b6c80622289cee7f0"
+            },
+            {
+              "title": "scan wishlist GET: rate limited returns 429 with Retry-After, before any load",
+              "line": 34,
+              "callbackSha256": "daa8b5fa39c86f851b948290a4ea7b9ca76195c446699fe7b8d304ca2de1bed4"
+            },
+            {
+              "title": "scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 49,
+              "callbackSha256": "7cfa99abd6bac0db8f2bbb6ee48784cc4ce811f57a468ddd5a3924286f2ef283"
+            },
+            {
+              "title": "scan wishlist GET: returns the injected entries",
+              "line": 65,
+              "callbackSha256": "acb58bcbfcda312e943080a4e8393bf78263f20a0f05215120ce2f6915ff788f"
+            },
+            {
+              "title": "scan wishlist GET: an unexpected error maps to 503 and captures to Sentry",
+              "line": 80,
+              "callbackSha256": "48196382b5439222b20bc2f30e34e79ce4e54874474ddaaa2aeb424157fd8ed3"
+            },
+            {
+              "title": "listScanWishlist: joins product fields and presents commerce data",
+              "line": 148,
+              "callbackSha256": "bcf28cc00c6d881dd99cb9312ca2e6d95cfaa1b8c9708485c485e67e20e507a1"
+            },
+            {
+              "title": "listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)",
+              "line": 169,
+              "callbackSha256": "35de3f025729f916aafc69189193dc6db13f61b52b093e86b4e77bc679663108"
+            },
+            {
+              "title": "listScanWishlist: a load error throws a stable error",
+              "line": 175,
+              "callbackSha256": "c1fc30e2ee7b543c7709e79f8b21da855c3b42708a08dc18dd7b5a0816c7476a"
+            },
+            {
+              "title": "listScanWishlist: drops a product that has since been deactivated or discontinued",
+              "line": 187,
+              "callbackSha256": "ef11c3a602caa4105a2e24cca5f881f61d560022ab76d219c6bb660ef2b04e38"
+            },
+            {
+              "title": "listScanWishlist: drops a disposition-quarantined product (ruling R7)",
+              "line": 203,
+              "callbackSha256": "421dab2cb4ec20570fc03572d9f5e0541eb7e1403925d62929285fec3536d9f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/scan-resolve-route.test.ts",
+          "snapshot": "cut/tests/scan-resolve-route.test.ts",
+          "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+          "declarations": 44,
+          "callbacks": [
+            {
+              "title": "scan resolve: unauthenticated is rejected",
+              "line": 144,
+              "callbackSha256": "a00a4d7a6c6528fe24ea2dcab8d4642a550631523fb5b4da00eeec218ff0440c"
+            },
+            {
+              "title": "scan resolve: rate limited returns 429 with Retry-After",
+              "line": 151,
+              "callbackSha256": "54225d6ffd28bd99efee7251390681ce16ba05cfe8fcee84e636fe9d0d669f98"
+            },
+            {
+              "title": "scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture",
+              "line": 161,
+              "callbackSha256": "b9efe1162d7c47ad104f4a4648824017414b1c8d1635fb3bfb6d7bfbc661a3ab"
+            },
+            {
+              "title": "scan resolve: body with both identifier and productId is rejected",
+              "line": 180,
+              "callbackSha256": "03b77e54ca454c12d7576af8cd2cfd131bed4f8585e01a6ebd9e4fdaad3730ea"
+            },
+            {
+              "title": "scan resolve: bad EAN checksum is rejected before any lookup",
+              "line": 188,
+              "callbackSha256": "eaa2e6d0c1242fab7f76647dee0bcd9f59aa1a5a4a3b48dbd6f46e90af36d283"
+            },
+            {
+              "title": "scan resolve: an open submission answers a catalog miss",
+              "line": 202,
+              "callbackSha256": "0ce6f40aff67ef0efbd38cd0ec2ab61d7bb9c76deecad362fa169efc33983cf4"
+            },
+            {
+              "title": "scan resolve: a cataloged EAN resolves to a verdict even while a submission is open",
+              "line": 219,
+              "callbackSha256": "9ccaaa5ecd705629098507893f6d84ff470b79ed3d93aec773d13a9fc93aeb55"
+            },
+            {
+              "title": "scan resolve: a quarantined hit with an open submission answers pending, not unknown",
+              "line": 234,
+              "callbackSha256": "7e750d2895d7ec75d2b631689f12095f36128d045d11548e961bf23787972d00"
+            },
+            {
+              "title": "scan resolve: identifier miss returns unknown_product with all 10 categories",
+              "line": 248,
+              "callbackSha256": "f7c85c8f01e6ca30ea288eaaf9ee156f905bb88924846886663847f9dbe1715b"
+            },
+            {
+              "title": "scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome",
+              "line": 261,
+              "callbackSha256": "66dc88b0ba65027e5acb6b3e59a9dd4e5aa4d13a0d563ab674402975365d2835"
+            },
+            {
+              "title": "scan resolve: pending and quarantined paths never ask dm",
+              "line": 314,
+              "callbackSha256": "a72ea7a7005c85617d7cf4c85f7dded264b6885783b113740e7044ed4fbb3e98"
+            },
+            {
+              "title": "scan resolve: an unexpected dm throw preserves the plain sheet and records failure",
+              "line": 342,
+              "callbackSha256": "67b38405ced93c418e09be58d3cd65cc5147676a0956ff9795fc0a9699a9de4f"
+            },
+            {
+              "title": "scan resolve: productId not found is 404",
+              "line": 365,
+              "callbackSha256": "7acf16a4d01b98277a325a1f9e03d9d76f442799575533f712103f3807b4b25c"
+            },
+            {
+              "title": "scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)",
+              "line": 374,
+              "callbackSha256": "d70f5d8ef2ac039b98bd4b920d092a9d4bf457d664320d82abbd2f261eb8cb52"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined identifier hit is treated as unknown_product",
+              "line": 380,
+              "callbackSha256": "ba8263a91a88b83180a27c7e0b838f101f0879e684756716bc23ab7fb404643a"
+            },
+            {
+              "title": "scan resolve: a disposition-quarantined productId is 404 product_not_found",
+              "line": 396,
+              "callbackSha256": "98af7e93bd62bbe0054afd95195972f9882d07af443f45eb306682fa4b29b284"
+            },
+            {
+              "title": "scan resolve: no personal plan at all is 409 profile_missing",
+              "line": 410,
+              "callbackSha256": "b8b6c3de3e8304a5d589e5142c81d6b1a10fdfa19702ed71df04e2cac7b3acc0"
+            },
+            {
+              "title": "scan resolve: identifier hit resolves a verdict with snapshotSource and savedState",
+              "line": 419,
+              "callbackSha256": "9768c93e55a817ac5919be6f396016ab4c71c8691c34d4ed7d91e9320246dcea"
+            },
+            {
+              "title": "scan resolve: a missing catalog presentation row fails closed with 503",
+              "line": 441,
+              "callbackSha256": "ae974532ff980f4065f56119f44418e60cff0e0dff754ea596789ca084e87598"
+            },
+            {
+              "title": "scan resolve: alternatives are enriched with brand and purchase link",
+              "line": 448,
+              "callbackSha256": "97ecda5fbb2f36b4d75d311c6909f6f33ecc32d3eaed7293c55e2394bf6097da"
+            },
+            {
+              "title": "scan resolve: a quarantined alternative is never offered (ruling R7)",
+              "line": 488,
+              "callbackSha256": "7ba052702c38bc86e3c9f8c2a529a9e3bdbd02fe0c9ffc5312b49112f3093d60"
+            },
+            {
+              "title": "scan resolve: productId path resolves the same way as an identifier hit",
+              "line": 532,
+              "callbackSha256": "53f286cfd596af1c0031421c08f00680e164a21c8b1e737d090cd47daa76cc28"
+            },
+            {
+              "title": "scan resolve: a not-needed decision skips the recommendation-candidates load",
+              "line": 541,
+              "callbackSha256": "8e9becbc7656e711102ccc3a91749afa79b595ece4a8d79b38753d9d481a374f"
+            },
+            {
+              "title": "scan resolve: a role-sensitive category loads product facts per role and the candidate pool once",
+              "line": 569,
+              "callbackSha256": "dc1c1656657acf8b33ffd2edb0e4ae6af32de8d8715051c12d90c9b5c160fac5"
+            },
+            {
+              "title": "scan resolve: a candidate load that omits a requested role fails closed as 503",
+              "line": 612,
+              "callbackSha256": "c62f7459e4aada143522ef0520f541a26f34d22bccac37a6528e11085a9d175a"
+            },
+            {
+              "title": "scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)",
+              "line": 646,
+              "callbackSha256": "d9ea897918394be299834d704f02f5d9cadd3bbe323c7aba5625ba37fb3f08ee"
+            },
+            {
+              "title": "scan resolve: a category whose facts do not vary by role loads exactly once",
+              "line": 670,
+              "callbackSha256": "ac06b7cc9808a04a590120f5aba0b5dd65008564f27b8906401fa0fd6683b3b7"
+            },
+            {
+              "title": "scan resolve: an unexpected lib error maps to 503 and captures to Sentry",
+              "line": 703,
+              "callbackSha256": "4df3787dc2f5531593714066cb19b67ba573abbea2a91d20bc0e3434b50ddf31"
+            },
+            {
+              "title": "attempt telemetry: catalog hit starts before lookup and completes only after payload build",
+              "line": 756,
+              "callbackSha256": "2cd1a8b69957ea735c74ebd9e8a9966c1e8d64f35b40ab06d4c42d3566878f65"
+            },
+            {
+              "title": "attempt telemetry: created_at is the request start, never later than the completion",
+              "line": 782,
+              "callbackSha256": "5bf4531724eb118de4de6e829db9be4d5a80d3996d8e71973ea9398b156b6dc4"
+            },
+            {
+              "title": "attempt telemetry: an unknown fit verdict is completed but not counted as resolved",
+              "line": 814,
+              "callbackSha256": "a45511afce4237bcc5cb89d1b7c9e6d136f01967c607c69909cbdd05a2ad483a"
+            },
+            {
+              "title": "attempt telemetry: catalog miss completes as unknown_product",
+              "line": 836,
+              "callbackSha256": "2bc1bcf579f7c0942c3a1f8c92d74f00c8bfa9b7f56fe7f62c47204b7da3ef2d"
+            },
+            {
+              "title": "attempt telemetry: invalid checksum starts then completes as invalid_identifier",
+              "line": 857,
+              "callbackSha256": "a0bb217e7b24238072b81e9ebc6cceaddcb00bd4c1dc648030bcca932190869d"
+            },
+            {
+              "title": "attempt telemetry: quarantined hit retains its matching product",
+              "line": 877,
+              "callbackSha256": "d92ddb38f2b5f2a29389918d969440a39bedb125ec638bbf992f6e19c5e8bd6c"
+            },
+            {
+              "title": "attempt telemetry: open submission completes as pending_submission",
+              "line": 896,
+              "callbackSha256": "9ed87db5850e8a7a21cf4d2b5a24c1b21845a8bd17452ef9fe72e06f0d63227c"
+            },
+            {
+              "title": "attempt telemetry: resolve-by-productId logs nothing — no barcode involved",
+              "line": 919,
+              "callbackSha256": "10f35949663d7a45ca7b118cac5063f3c8985d0d80b5a401285e15e847a6b91c"
+            },
+            {
+              "title": "attempt telemetry: F11 — nothing is written before the response, record before completion",
+              "line": 929,
+              "callbackSha256": "509bc49ecfbd0b73a2c2fb033fc25f6a592fed24e6339de7fe7375a7e060a1e0"
+            },
+            {
+              "title": "attempt telemetry: the completion never overtakes the record, even on a slow insert",
+              "line": 956,
+              "callbackSha256": "da192e2f01b865274596d6ea21d59413d7a4981f2c09e518ea67cdd23f51bd08"
+            },
+            {
+              "title": "attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss",
+              "line": 979,
+              "callbackSha256": "6e7b2a9bcffb289b8f2a45383cedf1bd68bd2b3ae0fde768feab4631d02cbc1b"
+            },
+            {
+              "title": "attempt telemetry: a post-lookup failure records the current bounded stage",
+              "line": 998,
+              "callbackSha256": "eee98aa136312aa68cadbbfe7784e87f68daa54b9f64843b699cd76915854aff"
+            },
+            {
+              "title": "attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product",
+              "line": 1022,
+              "callbackSha256": "d752253ca980409161b474f1d02460b84b76eeeb5cf388a285c88cb52b3fe6ca"
+            },
+            {
+              "title": "attempt telemetry: one admin client per request, shared with the onError path",
+              "line": 1046,
+              "callbackSha256": "310c1c2401da0016cc847e28fd2c612ec5ac8ecb9d1fcb858979c00cbcc16b96"
+            },
+            {
+              "title": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException",
+              "line": 1067,
+              "callbackSha256": "d41109d8b9a800a1fef1daed54178bef6a1afa90cd1d7ef67f1f693d14ae5ebd"
+            },
+            {
+              "title": "attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503",
+              "line": 1105,
+              "callbackSha256": "fb216b5675f127457eb19b47436d82aadec597cfba8c96c378e97f3f29f93825"
+            }
+          ]
+        }
+      ],
+      "declarations": 84,
+      "ownedDeclarations": 40
+    }
+  },
+  "guards": [
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "sha256": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb"
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189"
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf"
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9"
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a"
+    },
+    {
+      "file": "tests/scan-resolve-route.test.ts",
+      "sha256": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88"
+    },
+    {
+      "file": "src/lib/scan/resolve-event-log.ts",
+      "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d"
+    },
+    {
+      "file": "src/lib/scan/saved-state.ts",
+      "sha256": "873535b9d443df33d5821e1430ffc245f1f157e8a2be8220a264adcd6ca4674c"
+    },
+    {
+      "file": "src/app/api/scan/resolve/route.ts",
+      "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4"
+    },
+    {
+      "file": "src/app/api/scan/wishlist/route.ts",
+      "sha256": "38a949d65ac30fb119fd80630e174957b133613eb29d3e8e97ea65f71d45ad7e"
+    },
+    {
+      "file": "src/lib/scan/route.ts",
+      "sha256": "fe5d062ff939962807c453c1feaabaf6bde3cd4e76dac9b9831e9316b3efadb3"
+    },
+    {
+      "file": "src/lib/scan/catalog-eligibility.ts",
+      "sha256": "0bcee33a0110e82bf580ac2a978866670829a91a592c1261fe9242ec6500741d"
+    },
+    {
+      "file": "src/lib/scan/load-scan-verdict.ts",
+      "sha256": "31770332de371dddaeb46d811dd1dffd42932b3ba5e9289f2035eb152e2d4f91"
+    },
+    {
+      "file": "src/lib/scan/product-presentation.ts",
+      "sha256": "3ea93de572b145c43007b3bb28373f3056438ea71ba698c7fd8a9293899b0177"
+    },
+    {
+      "file": "src/lib/scan/masked-alternative.ts",
+      "sha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha256": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/commerce.ts",
+      "sha256": "54887c47fed101a272b7b61bf8b9c36aad54dba3723f77476316a6cfd71bf0ed"
+    },
+    {
+      "file": "src/lib/observability/scan.ts",
+      "sha256": "ef86d2acf76deb1a0862d0118a8d64d6c0dc889f4687b517e490337bce525e1d"
+    },
+    {
+      "file": "src/lib/entitlements/entitlements.ts",
+      "sha256": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59"
+    },
+    {
+      "file": "src/lib/entitlements/index.ts",
+      "sha256": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087"
+    },
+    {
+      "file": "src/lib/entitlements/flag.ts",
+      "sha256": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214"
+    },
+    {
+      "file": "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+      "sha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717"
+    },
+    {
+      "file": "supabase/migrations/20260808062602_personal_plan_stage1_3_foundation.sql",
+      "sha256": "56fe7fa766fc315f599215156ff35fa8be0225618c7ccbb5e9e8523b249c0c71"
+    },
+    {
+      "file": "supabase/migrations/20260820100200_scan_wishlist.sql",
+      "sha256": "8b9abe93d3125177873a0dd32518fb8c9056c4e3eaf6bca50c0bd4e8767bad3a"
+    },
+    {
+      "file": "supabase/migrations/20260821120000_scan_resolve_events.sql",
+      "sha256": "4089d1021dc16904e655a2680cd83654aad25f5e5fb8cc4b54a8a62db9317ec9"
+    },
+    {
+      "file": "supabase/migrations/20260917062353_scan_dm_lookup_telemetry.sql",
+      "sha256": "7df1caae0b5c3cc7a75bf70d43dedb82dc4a9ae3de569a92f0cf088464885d13"
+    },
+    {
+      "file": "tests/scan-saved-state.test.ts",
+      "sha256": "31df6b3ebf08c13730e8507fe12ac35ee81dba0bf50ffba481799d7bfeae8fd5"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "docs/scan-attempt-log.md",
+      "sha256": "df757d15b5ec420e96cfea1297c07c9a152f89b9bc9c9e8aab8f63f5a1cf47f6"
+    },
+    {
+      "file": "plans/2026-09-04-scan-hardening.md",
+      "sha256": "1c37a4ab36b29081693546e5361325ca9c9bf03fd78bf19155ccf3ddf12ea992"
+    },
+    {
+      "file": "plans/freemium-scanner-first/plan.md",
+      "sha256": "a5a795fabb557e03aed778067b75cb06b7039f4e991cc4ef072872e34ce4894b"
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+    },
+    {
+      "file": "src/components/scan/scan-wishlist-sheet.tsx",
+      "sha256": "e737a9219334b3416b852f079e9f29b279f3f6733cc6f7d6ebd2cfdbe8cdf574"
+    },
+    {
+      "file": "src/components/routine/gemerkt-section.tsx",
+      "sha256": "44a4b16054c8d199286944d3b86490306e0fbfa890bb740b3b4ff2e99fe066e6"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestQueryBuilder.ts",
+      "sha256": "b92fa3ecbc94373704df0e3d2cf36fb24f15abbdbd5660d339cade759fd66073"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/package.json",
+      "sha256": "395783968ba3868bbc44b14d3e5b97b308f0acae074bdf2a5ff18d0cbe1e2798"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/next/dist/server/after/after-context.js",
+      "sha256": "9877fb3af14db690e25ff1195623bbd6e545c351f298d34ff64db521777fe65c"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    }
+  ],
+  "noRepositoryWrites": true,
+  "unchangedSurvivingCallbacks": {
+    "allSixFiles": 82,
+    "ownedFiveFiles": 39
+  }
+}

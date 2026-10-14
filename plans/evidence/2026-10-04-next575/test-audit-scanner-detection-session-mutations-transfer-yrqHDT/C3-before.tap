@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: advanceLoopClock: a decoded session never reports the fallback
+ok 1 - advanceLoopClock: a decoded session never reports the fallback
+  ---
+  duration_ms: 0.801959
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 168.643583

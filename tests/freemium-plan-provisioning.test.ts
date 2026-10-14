@@ -329,3 +329,31 @@ test("acceptInitialRoutineForUser wires acceptIdealPlan's saveFacts from the ser
     "acceptInitialRoutineForUser must pass saveFacts (built from the same admin client) to acceptIdealPlan",
   )
 })
+
+test("freemium provisioning builds a product-only snapshot: no tool plan, no tools categories", async () => {
+  const state = freshState()
+  const snapshots: unknown[] = []
+  const base = fakeDeps(state)
+  await provision({
+    ...base,
+    createOrReuseInitialNeed: async (request) => {
+      snapshots.push(request.outputSnapshot)
+      return base.createOrReuseInitialNeed(request)
+    },
+  })
+  assert.equal(snapshots.length, 1)
+  const snapshot = snapshots[0] as {
+    toolPlan?: unknown
+    renderedOrder: string[]
+    decisions: Array<{ category: string }>
+  }
+  assert.equal("toolPlan" in snapshot, false)
+  assert.equal(
+    snapshot.renderedOrder.some((category) => category.startsWith("tool")),
+    false,
+  )
+  assert.equal(
+    snapshot.decisions.some((decision) => decision.category.startsWith("tool")),
+    false,
+  )
+})

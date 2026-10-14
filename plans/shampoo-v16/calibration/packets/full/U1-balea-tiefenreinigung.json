@@ -1,0 +1,75 @@
+{
+  "slot": "U1",
+  "productId": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+  "name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml (catalog name: Balea Tiefenreinigung)",
+  "brand": "Balea PROFESSIONAL",
+  "packSize": "250 ml",
+  "gtins": [
+    "4070765001020",
+    "4010355426239 (legacy dm URL pack code in catalog affiliate link; the old URL redirects to the 4070765001020 page; not confirmed as a barcode)"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de (dm own brand; dm DE PDP, dm-Artikelnummer 1536339)",
+      "gtinShown": "4070765001020 ('GTIN: 4070765001020' on page)",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, GLYCERIN, HYDROLYZED KERATIN, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ZINC SULFATE, MENTHOL, CITRIC ACID, PARFUM, SODIUM BENZOATE",
+      "claimsVerbatim": "Tiefenreinigendes Shampoo für alle Haartypen | Befreit das Haar von Styling-Rückständen | Für ein Gefühl von Leichtigkeit und Glanz | Silikonfreie Rezeptur mit Menthol || Befreit das Haar von überschüssigem Ballast: Das Shampoo Tiefenreinigung von Balea PROFESSIONAL sorgt für ein Gefühl von Frische und Sauberkeit. Die Formel mit Menthol reinigt intensiv und entfernt wirksam Styling-Rückstände sowie überschüssiges Fett von Haar und Kopfhaut. Gleichzeitig wirkt das Deep-Cleanse-System einem statischen Aufladen der Haare entgegen. Das Haar erhält seinen natürlichen Glanz zurück und fühlt sich spürbar leichter an. Dank seiner pH-hautneutralen und silikonfreien Rezeptur ist das Shampoo für die tägliche Anwendung geeignet. || Produktmerkmale: Wirkung: Pflege, Glanz; Produkteigenschaften: Ohne Alkohol, ohne Silikone; Haartyp: normales Haar. Listing badges: Ohne Silikone, Ohne Alkohol.",
+      "directionsVerbatim": "Sanft ins nasse Haar einmassieren, kurz einwirken lassen und sorgfältig mit lauwarmen Wasser ausspülen.",
+      "note": "Rendered in Browser pane (static fetch returns an empty shell). Title 'Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml'; 1,25 EUR; 'dm-Dauerpreis nicht erhöht seit 15.10.2019'; Hergestellt in Schweiz; company dm-drogerie markt GmbH + Co. KG, Karlsruhe. Page shows ingredients in upper case, separated on the page by ' | ' (here rewritten with ', ')."
+    },
+    {
+      "url": "https://www.dm.de/balea-professional-shampoo-tiefenreinigung-p4010355426239.html",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "dm_legacy_url_redirect",
+      "gtinShown": null,
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "Catalog row's affiliate link. In the Browser pane it redirected to /p/d/1536339/balea-professional-shampoo-tiefenreinigung, i.e. the same product page as above."
+    },
+    {
+      "url": "https://product-search.services.dmtech.com/de/search/crawl?query=4070765001020",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "dm_public_search_api",
+      "gtinShown": "4070765001020",
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "Returns one hit: gtin 4070765001020, dan 1536339, 'Balea PROFESSIONAL', 'Shampoo Tiefenreinigung, 250 ml', category Shampoo, self /p/d/1536339/... A search for the legacy code 4010355426239 returns 0 hits."
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842910201.html",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "codecheck",
+      "gtinShown": "Found via search by 4070765001020 (barcode field blank in extracted text)",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, GLYCERIN, HYDROLYZED KERATIN, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ZINC SULFATE, MENTHOL, CITRIC ACID, PARFUM, SODIUM BENZOATE",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "User-entered (captured 14 Apr 2026, last change 25 Sep 2026); 250 ml; supporting only. Identical list."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "AQUA",
+    "SODIUM LAURETH SULFATE",
+    "COCAMIDOPROPYL BETAINE",
+    "SODIUM CHLORIDE",
+    "GLYCERIN",
+    "HYDROLYZED KERATIN",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "ZINC SULFATE",
+    "MENTHOL",
+    "CITRIC ACID",
+    "PARFUM",
+    "SODIUM BENZOATE"
+  ],
+  "canonicalReason": "Current German dm (brand owner) PDP with GTIN, complete INCI; codecheck lists the identical sequence. dm is the only retailer for this own-brand product.",
+  "inciFingerprintSha256": "c9faf0a554eb9cfc104111236fb4f01e3302870bca19e9218540a49a7ddb83bb",
+  "normalization": "Split verbatim INCI on commas; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "IDENTITY: the shampoo row 0f71ff9d and the deep-cleansing row 375ee7a0 describe the same physical product, Balea PROFESSIONAL Shampoo Tiefenreinigung 250 ml, GTIN 4070765001020 (the shampoo row's affiliate link redirects to that product page). The freeze is for the physical product sold today; nothing here changes the duplicate decision for Nick. No conflicts found. dm lists 'Haartyp: normales Haar' and 'Wirkung: Pflege, Glanz' in Produktmerkmale alongside the 'Tiefenreinigendes Shampoo für alle Haartypen' wording."
+}

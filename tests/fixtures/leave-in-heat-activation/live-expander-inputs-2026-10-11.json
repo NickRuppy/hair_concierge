@@ -1,0 +1,1398 @@
+{
+ "capturedAt": "2026-10-11",
+ "source": "production read-only SELECT (project pqdkhefxsxkyeqelqegq): product_leave_in_specs JOIN products.suitable_thicknesses; expander inputs only",
+ "rows": [
+  {
+   "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "0ba22032-a5b1-4a0a-a8a2-b49861d00fb8",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "oil_replacement"
+   ],
+   "care_benefits": [
+    "shine",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "0c80efd5-0462-46fa-ad15-2c736f5ef269",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "oil_replacement"
+   ],
+   "care_benefits": [
+    "repair",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "replacement_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat",
+    "post_style"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "2a8ae385-17c9-440b-ab89-87fe1e6350a4",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "protein"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "protein",
+    "repair",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "protein",
+    "repair"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+   "thicknesses": [
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "curl_definition",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "replacement_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat",
+    "post_style"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "3c769f60-283f-48c3-9549-cf84b73115d7",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "404fb3e4-04c4-4089-8120-8c3e92300a3a",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "replacement_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "repair",
+    "detangling",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "4c4980b7-99e0-4225-90fb-d55082a1f264",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "volume"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "oil_replacement",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "protein",
+    "repair",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "anti_frizz",
+    "shine",
+    "moisture"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+   "thicknesses": [
+    "coarse",
+    "fine",
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "protein",
+    "repair",
+    "detangling",
+    "anti_frizz",
+    "shine",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "695414e1-3435-4304-943b-76677408980c",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "oil_replacement"
+   ],
+   "care_benefits": [
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "post_style"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "76f3611b-2dda-4a90-bd3c-c9b1577ec5aa",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "7db2bb60-0af6-4198-adec-28fad13251a6",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "repair",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "protein",
+    "repair"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "repair"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "curl_definition",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "repair",
+    "detangling",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "958c37a5-7581-4b3a-9fcb-9d086238316e",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "anti_frizz",
+    "shine",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "996eaa2a-ea4c-4dfb-b455-2782e82d9a44",
+   "thicknesses": [
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "9f94c225-61ec-455d-b303-f39e885e222a",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "a67c4125-2195-4cb6-a6d0-8bcd495a74d4",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner",
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "detangling",
+    "repair",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "a8abcd37-f0cc-4b31-91d9-7ec786a6abde",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "anti_frizz",
+    "shine",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "a9fc4fb5-0152-40dd-9a01-6ecf0155709f",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "b3ddfac2-ae06-42dd-9caf-822a2941c6f2",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "curl_definition",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "b89a5ced-700a-4cdb-be89-c85c212e4eca",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "bf3c797d-680f-44b4-8826-b5c45cf045ae",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "d2936db6-6865-4375-8060-95995b96b804",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "oil_replacement"
+   ],
+   "care_benefits": [
+    "repair",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "d70fdc25-2cdc-4b8a-b005-c4c719d88c33",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "protein"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+   "thicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+   "thicknesses": [
+    "normal",
+    "coarse"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "curl_definition"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+   "thicknesses": [
+    "coarse"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "moisture"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "e6896862-523b-42b3-967d-41cbd16acf64",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "thicknesses": [
+    "normal"
+   ],
+   "roles": [
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "shine"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+   "thicknesses": [
+    "coarse",
+    "fine",
+    "normal"
+   ],
+   "roles": [
+    "styling_prep",
+    "extension_conditioner"
+   ],
+   "care_benefits": [
+    "repair",
+    "protein",
+    "shine",
+    "anti_frizz"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+   "thicknesses": [
+    "fine"
+   ],
+   "roles": [
+    "extension_conditioner",
+    "styling_prep"
+   ],
+   "care_benefits": [
+    "protein",
+    "repair",
+    "detangling"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "provides_heat_protection": true,
+   "heat_activation_required": false
+  },
+  {
+   "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+   "thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "roles": [
+    "replacement_conditioner"
+   ],
+   "care_benefits": [
+    "moisture"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "dry_hair"
+   ],
+   "provides_heat_protection": false,
+   "heat_activation_required": false
+  }
+ ]
+}

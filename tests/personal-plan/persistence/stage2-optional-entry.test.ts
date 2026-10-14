@@ -6,6 +6,8 @@ import {
   type OptionalStage2Context,
 } from "@/lib/personal-plan/persistence/stage2-optional-entry"
 import type { Stage2PersistedDraft } from "@/lib/personal-plan/persistence/stage2-refinement-service"
+import { normalizeLateAddedQuestions } from "@/lib/personal-plan/refinement/assumed-defaults"
+import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 
 const triggerContext: Stage2TriggerContext = {
@@ -159,6 +161,7 @@ test("eligible fully-assumed complete parent opens with a skipped seed and no le
 
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "products",
     client: client as never,
   })
@@ -204,6 +207,7 @@ test("openOptionalRefinement reuses an existing in-progress draft even without a
   const existing = draft({ id: "draft-open", status: "in_progress", refinedVersionId: null })
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "habits",
     deps: {
       loadContext: async () => context({ currentDraft: existing, latestCompleteDraft: null }),
@@ -238,6 +242,7 @@ for (const provenance of ["assumed", "user"] as const) {
     const opened = draft({ id: "draft-cloned", status: "in_progress", refinedVersionId: null })
     const result = await openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: parent }),
@@ -265,6 +270,7 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
   await assert.rejects(
     openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: null }),
@@ -275,4 +281,111 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
     }),
     /stage2_optional_parent_unavailable/,
   )
+})
+
+for (const [label, ctx] of [
+  ["a complete parent", () => context()],
+  [
+    "an existing in-progress draft",
+    () =>
+      context({
+        currentDraft: draft({ id: "draft-open", status: "in_progress", refinedVersionId: null }),
+        latestCompleteDraft: null,
+      }),
+  ],
+] as const) {
+  test(`openOptionalRefinement rejects a not_applicable module (tools) for ${label} without opening a draft`, async () => {
+    await assert.rejects(
+      openOptionalRefinement({
+        userId: "user-1",
+        toolsEnabled: false,
+        module: "tools",
+        deps: {
+          loadContext: async () => ctx(),
+          openPreparedDraft: async () => {
+            assert.fail("must not open a draft for a module without questions")
+          },
+        },
+      }),
+      /invalid_module/,
+    )
+  })
+}
+
+test("openOptionalRefinement still rejects an unknown module as invalid_module", async () => {
+  await assert.rejects(
+    openOptionalRefinement({
+      userId: "user-1",
+      toolsEnabled: false,
+      module: "nope" as never,
+      deps: {
+        loadContext: async () => context(),
+        openPreparedDraft: async () => assert.fail("must not open"),
+      },
+    }),
+    /invalid_module/,
+  )
+})
+test("S4-01: the optional successor of a complete pre-S4 draft keeps the assumed Bondbuilder timing", async () => {
+  const bondbuilderContext: Stage2TriggerContext = {
+    ...triggerContext,
+    relevantCategories: ["shampoo", "conditioner", "bondbuilder"],
+  }
+  const userProvenance = Object.fromEntries(
+    draft().completedQuestionIds.map((id) => [id, "user" as const]),
+  )
+  // mapDraft normalizes the complete parent on read (assumed „Ist mir egal“) …
+  const parent = normalizeLateAddedQuestions(
+    draft({ triggerContext: bondbuilderContext, answerProvenance: userProvenance, revision: 4 }),
+  )
+  assert.equal(parent.answers.bondbuilderTiming, "no_preference")
+  // … but the RPC clones the STORED parent row into the in-progress successor.
+  const clone = draft({
+    id: "draft-successor",
+    status: "in_progress",
+    refinedVersionId: null,
+    triggerContext: bondbuilderContext,
+    answerProvenance: userProvenance,
+    revision: 4,
+  })
+  const saves: Array<Record<string, unknown>> = []
+  const result = await openOptionalRefinement({
+    userId: "user-1",
+    module: "habits",
+    toolsEnabled: false,
+    deps: {
+      loadContext: async () => context({ latestCompleteDraft: parent }),
+      openPreparedDraft: async () => clone,
+      saveDraft: async (input) => {
+        saves.push(input as never)
+        return { outcome: "saved", revision: 5 }
+      },
+    },
+  })
+
+  assert.equal(saves.length, 1)
+  assert.equal(saves[0]!.expectedRevision, 4)
+  assert.equal(result.id, "draft-successor")
+  assert.equal(result.revision, 5)
+  assert.equal(result.answers.bondbuilderTiming, "no_preference")
+  assert.equal(result.answerProvenance.bondbuilder_timing, "assumed")
+  assert.equal(stage2ModuleStates(result).products.status, "complete")
+
+  // A successor opened before the fix (existing in-progress clone) is repaired the same way.
+  const reopenedSaves: unknown[] = []
+  const reopened = await openOptionalRefinement({
+    userId: "user-1",
+    module: "habits",
+    toolsEnabled: false,
+    deps: {
+      loadContext: async () => context({ currentDraft: clone, latestCompleteDraft: parent }),
+      openPreparedDraft: async () => clone,
+      saveDraft: async (input) => {
+        reopenedSaves.push(input)
+        return { outcome: "saved", revision: 5 }
+      },
+    },
+  })
+  assert.equal(reopenedSaves.length, 1)
+  assert.equal(stage2ModuleStates(reopened).products.status, "complete")
 })

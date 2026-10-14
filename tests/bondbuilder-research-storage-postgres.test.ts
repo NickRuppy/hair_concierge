@@ -154,17 +154,18 @@ async function insertLegacy(pg: Awaited<ReturnType<typeof database>>) {
 async function insertProtocol(
   pg: Awaited<ReturnType<typeof database>>,
   sourceText = "Synthetic source observation.",
+  sourceUrl = "https://epres.com/products/bond-repair-treatment",
 ) {
   const scope = { kind: "product", productId: PRODUCT, category: "bondbuilder" }
   await pg.query(
-    `INSERT INTO product_application_protocols(product_id,category,role,source_url,source_text,guidance_payload,guidance_payload_v2) VALUES($1,'bondbuilder','specialized_bond_treatment','https://epres.com/products/bond-repair-treatment',$2,$3,$4)`,
+    `INSERT INTO product_application_protocols(product_id,category,role,source_url,source_text,guidance_payload,guidance_payload_v2) VALUES($1,'bondbuilder','specialized_bond_treatment',$5,$2,$3,$4)`,
     [
       PRODUCT,
       sourceText,
       {
         schemaVersion: 1,
         scope,
-        evidence: [{ sourceUrl: "https://epres.com/products/bond-repair-treatment" }],
+        evidence: [{ sourceUrl }],
       },
       {
         schemaVersion: 2,
@@ -174,9 +175,106 @@ async function insertProtocol(
         applicationFamily: "bond_repair_treatment",
         runtimeBlockerCode: null,
       },
+      sourceUrl,
     ],
   )
 }
+test("reviewed low-trust Bondbuilders can promote only after application and category eligibility readiness", async (t) => {
+  for (const key of ["P06", "P07"]) {
+    await t.test(key, async (t) => {
+      const pg = await database(t)
+      // Exact owner/formula identity, with synthetic readiness facts to isolate
+      // the trust policy. This is NOT a publishable amendment of either pilot.
+      const p = JSON.parse(
+        await readFile(
+          new URL(
+            `data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/source-amendment-02/lane-b/${key}.json`,
+            ROOT,
+          ),
+          "utf8",
+        ),
+      ).profile as ReturnType<typeof makeBondbuilderProfile>
+      p.identity.product_id = PRODUCT
+      p.application.market_applicability = "exact_market"
+      p.application.source_market = p.identity.market
+      p.holds.protocol = []
+      const source = p.sources.find(
+        (s) =>
+          p.application.direction_source_ids.includes(s.id) &&
+          ["pack", "manufacturer", "distributor", "retailer"].includes(s.authority),
+      )!
+      sealProfile(p)
+      const researchFit = structuredClone({ fit: p.fit, holds: p.holds.fit })
+      await pg.query("UPDATE products SET name=$2,brand=$3 WHERE id=$1", [
+        PRODUCT,
+        p.identity.product_name,
+        p.identity.brand,
+      ])
+      await pg.exec(
+        await readFile(
+          new URL(
+            "supabase/migrations/20261005183359_bondbuilder_reviewed_low_trust_eligibility.sql",
+            ROOT,
+          ),
+          "utf8",
+        ),
+      )
+      await pg.exec(
+        await readFile(
+          new URL(
+            "supabase/migrations/20261006131328_bondbuilder_category_diameter_eligibility.sql",
+            ROOT,
+          ),
+          "utf8",
+        ),
+      )
+      await pg.query("SELECT bondbuilder_write_spec_v1($1,$2)", [PRODUCT, spec(p)])
+      await assert.rejects(
+        pg.query(
+          "UPDATE products SET origin='curated',is_chaarlie_recommended=true,suitable_thicknesses=ARRAY['fine','normal','coarse'] WHERE id=$1",
+          [PRODUCT],
+        ),
+        /curated publication/,
+        "no protocol still refuses",
+      )
+      await insertProtocol(pg, source.observation, source.url)
+      await pg.query(
+        "UPDATE products SET origin='curated',is_chaarlie_recommended=true,suitable_thicknesses=ARRAY['fine','normal','coarse'] WHERE id=$1",
+        [PRODUCT],
+      )
+      await pg.query("SELECT assert_personal_plan_curated_publication($1)", [PRODUCT])
+      assert.deepEqual(
+        (
+          await pg.query<{ is_chaarlie_recommended: boolean; claim_trust_level: string }>(
+            "SELECT p.is_chaarlie_recommended,s.claim_trust_level FROM products p JOIN product_bondbuilder_specs s ON s.product_id=p.id WHERE p.id=$1",
+            [PRODUCT],
+          )
+        ).rows[0],
+        { is_chaarlie_recommended: true, claim_trust_level: "low" },
+      )
+      await assert.rejects(
+        pg.query("UPDATE products SET suitable_thicknesses=ARRAY['coarse'] WHERE id=$1", [PRODUCT]),
+        /curated publication/,
+        "a partial catalog set contradicts category-wide eligibility",
+      )
+      const stored = (
+        await pg.query<{ research_profile: typeof p }>(
+          "SELECT research_profile FROM product_bondbuilder_specs WHERE product_id=$1",
+          [PRODUCT],
+        )
+      ).rows[0].research_profile
+      assert.deepEqual({ fit: stored.fit, holds: stored.holds.fit }, researchFit)
+      await assert.rejects(
+        pg.query(
+          "UPDATE product_application_protocols SET source_text='not reviewed' WHERE product_id=$1",
+          [PRODUCT],
+        ),
+        /curated publication/,
+        "unbound instructions remain blocked",
+      )
+    })
+  }
+})
 test("Bondbuilder rejects malformed profiles even alongside a complete legacy spec", async (t) => {
   const pg = await database(t)
   const mutations: Array<[string, (p: any) => void, boolean?]> = [
@@ -427,16 +525,34 @@ test("Bondbuilder storage round-trips complete research without inventing legacy
   assert.deepEqual(rows[0].research_profile, profile)
   assert.equal(rows[0].bond_repair_axis, null)
 })
-test("Bondbuilder complete reviewed profile can promote with nullable legacy facts; low plus legacy enums cannot", async (t) => {
+test("Bondbuilder complete reviewed profile can promote with nullable legacy facts; unreviewed low/default cannot", async (t) => {
   const pg = await database(t),
     p = makeBondbuilderProfile()
+  await pg.exec(
+    await readFile(
+      new URL(
+        "supabase/migrations/20261005183359_bondbuilder_reviewed_low_trust_eligibility.sql",
+        ROOT,
+      ),
+      "utf8",
+    ),
+  )
+  await pg.exec(
+    await readFile(
+      new URL(
+        "supabase/migrations/20261006131328_bondbuilder_category_diameter_eligibility.sql",
+        ROOT,
+      ),
+      "utf8",
+    ),
+  )
   p.fit.fine = fact(true)
   p.holds.fit = []
   sealProfile(p)
   await pg.query("SELECT bondbuilder_write_spec_v1($1,$2)", [PRODUCT, spec(p)])
   await insertProtocol(pg, p.sources[0].observation)
   await pg.query(
-    "UPDATE products SET origin='curated',is_chaarlie_recommended=true,suitable_thicknesses=ARRAY['fine'] WHERE id=$1",
+    "UPDATE products SET origin='curated',is_chaarlie_recommended=true,suitable_thicknesses=ARRAY['fine','normal','coarse'] WHERE id=$1",
     [PRODUCT],
   )
   await pg.query("SELECT assert_personal_plan_curated_publication($1)", [PRODUCT])
@@ -466,15 +582,43 @@ test("Bondbuilder complete reviewed profile can promote with nullable legacy fac
   p.assessment.policy_reference = "owner-default-policy-2026-10-01"
   sealProfile(p)
   await pg.query("SELECT bondbuilder_write_spec_v1($1,$2)", [PRODUCT, { ...legacy, ...spec(p) }])
-  await pg.query("INSERT INTO personal_plan_product_search_dispositions(product_id) VALUES($1)", [
-    PRODUCT,
-  ])
   await assert.rejects(
     pg.query("UPDATE products SET origin='curated',is_chaarlie_recommended=true WHERE id=$1", [
       PRODUCT,
     ]),
     /curated publication/,
   )
+})
+test("recommendation policy migrations preserve products and privileges, replay exactly and reject drift", async (t) => {
+  const pg = await database(t)
+  const migrations = await Promise.all(
+    [
+      "20261005183359_bondbuilder_reviewed_low_trust_eligibility.sql",
+      "20261006131328_bondbuilder_category_diameter_eligibility.sql",
+    ].map((name) => readFile(new URL(`supabase/migrations/${name}`, ROOT), "utf8")),
+  )
+  const attributes = () =>
+    pg.query(
+      "SELECT proowner,proacl,provolatile,prosecdef,proconfig FROM pg_proc WHERE oid='public.bondbuilder_curated_facts_ready_v1(uuid)'::regprocedure",
+    )
+  const before = (await attributes()).rows
+  const products = (await pg.query("SELECT * FROM products ORDER BY id")).rows
+  for (const migration of migrations) {
+    await pg.exec(migration)
+    await pg.exec(migration)
+  }
+  assert.deepEqual((await attributes()).rows, before)
+  assert.deepEqual((await pg.query("SELECT * FROM products ORDER BY id")).rows, products)
+  await pg.exec(
+    "CREATE OR REPLACE FUNCTION public.bondbuilder_curated_facts_ready_v1(p_product_id uuid) RETURNS boolean LANGUAGE plpgsql STABLE SET search_path='' AS $$ BEGIN RETURN true; END $$",
+  )
+  for (const migration of migrations) {
+    await assert.rejects(
+      pg.exec(migration),
+      /Bondbuilder recommendation .* predicate lineage changed/,
+    )
+    await pg.exec("ROLLBACK")
+  }
 })
 test("Bondbuilder rollback retains nullable research rows and reapply restores only service access", async (t) => {
   const pg = await database(t)

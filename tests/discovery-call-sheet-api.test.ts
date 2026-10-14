@@ -324,6 +324,22 @@ test("a partial follow-up save on an existing row keeps the stored score and bri
   assert.deepEqual(recorded.stored()!.consult_brief, validBody.consult_brief)
 })
 
+test("half-point scores save and read back as stated (7,5 stays 7,5)", async () => {
+  const { deps: d, recorded } = deps()
+  const response = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({
+      baseline_score: 7.5,
+      rescores: [{ score: 8.5, at: "2026-10-25T09:30:00.000Z", channel: "call" }],
+    }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+  assert.equal(recorded.stored()!.baseline_score, 7.5)
+  const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
+  assert.equal(callSheet.baselineScore, 7.5)
+  assert.equal(callSheet.rescores[0]!.score, 8.5)
+})
+
 test("a first save on a legacy enrollment with one island's fields writes a full row of defaults", async () => {
   const { deps: d, recorded } = deps()
   const response = await createDiscoveryCallSheetHandler(d)(
@@ -519,10 +535,14 @@ const withBrief = (sections: Record<string, unknown>, extra: Record<string, unkn
 const violations: Array<[string, unknown]> = [
   ["baseline 0", { baseline_score: 0 }],
   ["baseline 11", { baseline_score: 11 }],
-  ["baseline not whole", { baseline_score: 4.5 }],
+  ["baseline not a half point", { baseline_score: 4.25 }],
   ["baseline as text", { baseline_score: "4" }],
   ["rescore score 0", { rescores: [{ score: 0, at: "2026-10-25T09:30:00Z", channel: "call" }] }],
   ["rescore score 11", { rescores: [{ score: 11, at: "2026-10-25T09:30:00Z", channel: "call" }] }],
+  [
+    "rescore score not a half point",
+    { rescores: [{ score: 6.3, at: "2026-10-25T09:30:00Z", channel: "call" }] },
+  ],
   ["rescore bad channel", { rescores: [{ score: 6, at: "2026-10-25T09:30:00Z", channel: "sms" }] }],
   ["rescore at not ISO", { rescores: [{ score: 6, at: "morgen", channel: "call" }] }],
   ["rescores not an array", { rescores: { score: 6 } }],

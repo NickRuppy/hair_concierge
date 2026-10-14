@@ -1,0 +1,385 @@
+{
+ "blindId": "W202",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "brand": "Guhl",
+  "productName": "Guhl Frische und Leichtigkeit (Anti-Fett Shampoo)",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "completeness": "complete (packet; formula source tier 2, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum @21; prominent = positions 1-20 (E3)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3 and Coco-Glucoside @4, no reinforcing strong anionic.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "No amphoteric-only chassis; mild refatting (Glyceryl Oleate @6).",
+   "formulaFacts": {
+    "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+    "reinforcingRoutes": [],
+    "buffers": [
+     "Cocamidopropyl Betaine @3 (amphoteric)",
+     "Coco-Glucoside @4 (nonionic glucoside)"
+    ],
+    "notCleansing": [
+     "Sorbitan Caprylate @7 (sorbitan ester, preservative booster/solubilizer; in no C3 cleansing class)"
+    ],
+    "c3aOrC3b": "none"
+   }
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful conditioning system (prominent cationic guar HPG-HPTC @8) plus light routes (Glyceryl Oleate @6, Ascorbyl Palmitate @14, humectants Panthenol @11 / Glycerin @15). C2 not met: no early silicone or prominent payload lipid and no pearlizing route. Counter-signal: a single guar with weak refatters may give little slip; neighbor low.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "Single guar with weak refatters may give little slip.",
+   "formulaFacts": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8"
+    ],
+    "weak_refatter": [
+     "Glyceryl Oleate @6",
+     "Ascorbyl Palmitate @14"
+    ],
+    "payload_lipid": [],
+    "silicone": [],
+    "pearlizing": []
+   }
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate @6",
+     "Ascorbyl Palmitate @14"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3",
+     "Coco-Glucoside @4"
+    ],
+    "humectantContext": [
+     "Panthenol @11",
+     "Glycerin @15"
+    ],
+    "excluded": [
+     "Sorbitan Caprylate @7 (preservative booster/solubilizer, not deposition)",
+     "Zinc PCA @10 (active salt, not deposition)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two deposition families present (cationic_polymer + weak_refatter, W2); the guar sits fairly early (@8, before Sodium Chloride @9).",
+   "whyThisBand": "The only substantive deposition is one cationic guar polymer; the second family is weak_refatter only, against an SLES/betaine/glucoside reset.",
+   "whyNotNeighborBand": "Not moderate: the only families are one guar (a single light conditioning polymer) plus weak_refatter esters and humectants (W2 example), with no silicone, payload lipid, protein or film former to converge, facing moderate reset.",
+   "confidenceLimitingFactor": "Guar at @8 could deliver noticeable conditioning residue on fine hair; INCI-only.",
+   "rationale": "Low: a single cationic guar plus weak refatters facing an effective C1 reset; no silicone, no payload lipid, no film former.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "wLineRecord": {
+    "wLine": {
+     "position": 11,
+     "inci": "Panthenol",
+     "classes": [
+      "sub1_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 21
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "counterSignal": "Two deposition families present (cationic_polymer + weak_refatter, W2); the guar sits fairly early (@8, before Sodium Chloride @9).",
+   "formulaIdentifiers": {
+    "fingerprint": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+    "sourceTier": 2,
+    "captureDate": "not in stage-A packet (packet field absent)"
+   }
+  },
+  "focusPrimary": {
+   "value": "clarifying",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "Clarifying: oily-scalp positioning (E2 oily lexicon \"Anti-Fett\", \"schnell fettendes Haar\", manufacturer DE, moderate) with an F6-compatible formula (moderate cleansing, conditioning not high, weight not high). \"Frische\"/\"Leichtigkeit\" in the name do not qualify.",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "F6",
+    "E2",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "counterSignal": "Retailer moisture wording (\"spendet intensiv Feuchtigkeit\", low) points elsewhere but cannot act (nonspecific verdict); cleansing is the ordinary C1 moderate, not a reset chassis.",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol @11",
+     "Glycerin @15"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "HPG-HPTC @8"
+    ],
+    "limitation": "Light generic conditioning."
+   },
+   "claimRole": "candidate",
+   "decisionTrace": "Claim direction oily scalp (\"Anti-Fett Shampoo\", \"Für normales bis schnell fettendes Haar\", \"Verzögert das Nachfetten\", guhl.com, moderate). F6 compatibility: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential low (not high) -> compatible. Decision: clarifying (oily-scalp positioning is clarifying, F6)."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "rationale": "Empty: no distinct secondary positioning with an independent route.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "counterSignal": "n/a",
+   "decisionTrace": "Empty default considered. Moisture wording is retailer-only (low) over a nonspecific verdict; no independent route."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Regular: the oily-scalp reset intent cannot fire alternating on a moderate formula; no frequency wording; cleansingStrength is high-confidence moderate, so no trigger can move.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ],
+   "counterSignal": "see losing triggers",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "strong_plus_reset_intent: reset intent present (E2 oily lexicon, manufacturer moderate) but cleansingStrength is moderate, so alternating cannot fire (U4)"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no sensitive or dry-scalp claim unit (\"ohne auszutrocknen\" is protective wording, E2a).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "E2",
+    "E2a",
+    "CL-SRC"
+   ],
+   "counterSignal": "none"
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Supported: the complete INCI contains Piroctone Olamine @13, a recognized anti-dandruff active (Section 11). Formula-only; whether a dandruff target is projected depends on a dandruff claim (S-DANDRUFF, R17.3), hidden in the blind pass.",
+   "ruleIds": [
+    "11",
+    "S-DANDRUFF",
+    "R17.3"
+   ],
+   "counterSignal": "none (mechanical lookup, Section 11)"
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=low (moderate, neighbor moderate), C=moderate (moderate, neighbor low); T6 scalp-concern floor applies to targets ['oily']; T4 checked against N-ALT neighbors after T6. ",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "oily",
+    "confidence": "moderate",
+    "rationale": "S-OILY passes: positioning \"Anti-Fett Shampoo\" / \"Für normales bis schnell fettendes Haar\" / \"Verzögert das Nachfetten\" (manufacturer DE, moderate; E2 oily lexicon incl. v1.6.1 oily-hair terms); formula cleansingStrength moderate, weightPotential low, conditioningLevel moderate. Recognized active without dandruff claim does not block it (R17.3). Confidence = min(positioning moderate, cleansing high, weight moderate, conditioning moderate) = moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked with neighbor none against each projected bucket expectation (dehydriert-fettig expects regular).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "No D1 term in the product name, a manufacturer/pack claim or usage directions (13.6). D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)"
+  ],
+  "informationalNotes": [
+   "active_without_dandruff_positioning: Piroctone Olamine @13 present, no dandruff claim in any source (R17.3)"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (13.9, D2 lane visibility); not computed in the lane."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine @3 (amphoteric)",
+    "Coco-Glucoside @4 (nonionic glucoside)"
+   ],
+   "notCleansing": [
+    "Sorbitan Caprylate @7 (sorbitan ester, preservative booster/solubilizer; in no C3 cleansing class)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8"
+   ],
+   "weak_refatter": [
+    "Glyceryl Oleate @6",
+    "Ascorbyl Palmitate @14"
+   ],
+   "payload_lipid": [],
+   "silicone": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Panthenol @11",
+   "Glycerin @15"
+  ],
+  "actives": [
+   "Piroctone Olamine @13 (recognized anti-dandruff active)",
+   "Zinc PCA @10 (not a recognized dandruff active)",
+   "Panthenol @11"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @13"
+  ],
+  "exposure": {
+   "fragrance": "Parfum @21, Citrus Aurantium Peel Oil @22, Geranyl Acetate @23, Limonene @24, Tetramethyl Acetyloctahydronaphthalenes @25",
+   "coolingAgents": [],
+   "essentialOils": [
+    "Citrus Aurantium Peel Oil @22 (after Parfum, not prominent)"
+   ]
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [
+    "Panthenol @11"
+   ],
+   "listedHumectantRefattingRoutesProminent": [
+    "Glyceryl Oleate @6",
+    "Panthenol @11",
+    "Glycerin @15"
+   ],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": true
+  },
+  "preservativesAndOther": [
+   "Lactic Acid @5",
+   "Sodium Chloride @9",
+   "Tetrasodium Glutamate Diacetate @12 (chelator)",
+   "Citrus Limon Fruit Extract @16",
+   "Citric Acid @17",
+   "Melissa Officinalis Leaf Extract @18",
+   "Sodium Benzoate @19",
+   "Potassium Sorbate @20",
+   "CI 47005 @26",
+   "CI 61570 @27"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "formulaPassFile": "out/formula-pass/W202.json (hash-pinned, unchanged)",
+  "blindToFinalChanges": [
+   "focusPrimary general (provisional) -> clarifying (moderate): oily-scalp positioning, F6 compatible.",
+   "usageRole regular (low) -> regular (high).",
+   "scalpComfortTarget not_targeted (low) -> not_targeted (high).",
+   "No formula-derived property changed."
+  ]
+ },
+ "selfCheck": "6.11: fingerprint fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015 matches the stage-A packet and the formula pass; claims and identity were hidden during the formula judgment (formula pass frozen before the reveal); no ingredient, family count or position window assigned the weight band (the W-line only gated payload_lipid legs); W-line derived from the frozen list as W-LINE states, skipped candidates recorded; depositionLoad/persistence/resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 addressed where two or more families); confidence names its limiting factor; no comparison with any earlier or live value was made in the lane. Projection flags recomputed mechanically from this record (T4/I3 via N-ALT).",
+ "uncertainties": [
+  "\"Haartyp: normales Haar, fettiges Haar\" (dm) is a listing attribute and was not used; the manufacturer units carry the oily claim on their own.",
+  "Weight low vs moderate (guar @8 prominent) - neighbor moderate drives the fine T4 flag."
+ ]
+}

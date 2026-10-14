@@ -1,9 +1,9 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import * as legacyProfileProjection from "../src/lib/quiz/legacy-profile-projection"
-import { canLinkDirectQuizLead } from "../src/lib/quiz/link-to-profile"
+import { canLinkDirectQuizLead, linkQuizToProfile } from "../src/lib/quiz/link-to-profile"
+import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
 
 const { resolveProfileDensityFromQuizAnswers } = legacyProfileProjection
 
@@ -110,14 +110,146 @@ test("personal-plan projection rejects incomplete canonical diagnostics", () => 
   )
 })
 
-test("a mismatched direct lead falls back to the authenticated email instead of blocking linking", () => {
-  const source = readFileSync(
-    new URL("../src/lib/quiz/link-to-profile.ts", import.meta.url),
-    "utf8",
-  )
+type Row = Record<string, unknown>
 
-  assert.match(source, /direct lead does not match account; trying email fallback/)
-  assert.doesNotMatch(source, /throw new Error\("Quiz lead is already linked to another user"\)/)
+function linkingStore(
+  input: {
+    established?: boolean
+    ownLead?: boolean
+    planOnly?: boolean
+    evidenceError?: boolean
+  } = {},
+) {
+  const lead: Row = {
+    id: "lead-1",
+    email: "victim@example.com",
+    quiz_kind: "legacy",
+    user_id: input.ownLead ? "user-1" : null,
+    created_at: "2026-10-10T00:00:00.000Z",
+    quiz_answers: {
+      structure: "curly",
+      thickness: "fine",
+      density: "high",
+      hair_length: "long",
+      concerns: ["frizz"],
+    },
+  }
+  const profiles: Row[] = input.established
+    ? [
+        {
+          id: "profile-1",
+          user_id: "user-1",
+          facts_revision: 4,
+          diagnostics: {
+            texture: "straight",
+            source: { kind: "legacy_quiz", version: 1, leadId: "own-old", raw: {} },
+          },
+          facts_provenance: {
+            diagnostics: {
+              source: { kind: "legacy_lead", id: "own-old" },
+              schemaVersion: 1,
+              at: "2026-09-01T00:00:00.000Z",
+            },
+          },
+        },
+      ]
+    : []
+  const saves: Row[] = []
+  const admin = {
+    from(table: string) {
+      const rows =
+        table === "leads"
+          ? [lead]
+          : table === "hair_profiles"
+            ? profiles
+            : table === "personal_plans" && input.planOnly
+              ? [{ id: "plan-1", user_id: "user-1" }]
+              : []
+      const filters: Array<(row: Row) => boolean> = []
+      let patch: Row | undefined
+      const result = async () => {
+        if (table === "hair_profiles" && input.evidenceError)
+          return { data: null, error: { message: "unavailable" } }
+        const row = rows.find((row) => filters.every((filter) => filter(row))) ?? null
+        if (row && patch) Object.assign(row, patch)
+        return { data: row, error: null }
+      }
+      const query = {
+        select: () => query,
+        eq: (key: string, value: unknown) => {
+          filters.push((row) => row[key] === value)
+          return query
+        },
+        is: (key: string, value: unknown) => {
+          filters.push((row) => row[key] === value)
+          return query
+        },
+        order: () => query,
+        limit: () => query,
+        single: result,
+        maybeSingle: result,
+        update: (value: Row) => {
+          patch = value
+          return query
+        },
+        then: (resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) =>
+          result().then(resolve, reject),
+      }
+      return query
+    },
+    async rpc(name: string, args: Row) {
+      assert.equal(name, "user_facts_save_v1")
+      saves.push(args)
+      return { data: simulateUserFactsSave(profiles, args), error: null }
+    },
+  }
+  return { admin: admin as never, profiles, lead, saves }
+}
+
+// PUB-1, security audit 2026-10-09: email equality does not establish quiz ownership.
+for (const leadId of [undefined, "mismatched-direct-id"]) {
+  test(`PUB-1: ordinary login preserves established facts against a planted email lead (${leadId ?? "no lead id"})`, async () => {
+    const store = linkingStore({ established: true })
+    const before = structuredClone(store.profiles)
+    await linkQuizToProfile("user-1", "victim@example.com", leadId, { admin: store.admin })
+    assert.deepEqual(store.profiles, before)
+    assert.deepEqual(store.saves, [])
+    assert.equal(store.lead.user_id, null, "the foreign lead must not be claimed")
+  })
+}
+
+test("PUB-1: a new account still adopts its quiz by email after a mismatched direct id", async () => {
+  const store = linkingStore()
+  await linkQuizToProfile("user-1", "victim@example.com", "mismatched-direct-id", {
+    admin: store.admin,
+  })
+  assert.equal(store.lead.user_id, "user-1")
+  assert.equal((store.profiles[0]!.diagnostics as Row).texture, "curly")
+})
+
+for (const ownLead of [false, true]) {
+  test(`PUB-1: explicit matching lead adoption remains available (${ownLead ? "same-user retry" : "browser lead id"})`, async () => {
+    const store = linkingStore({ established: true, ownLead })
+    await linkQuizToProfile("user-1", "victim@example.com", "lead-1", { admin: store.admin })
+    assert.equal(store.lead.user_id, "user-1")
+    assert.equal((store.profiles[0]!.diagnostics as Row).texture, "curly")
+  })
+}
+
+test("PUB-1: an existing Personal Plan also blocks email-only lead adoption", async () => {
+  const store = linkingStore({ planOnly: true })
+  await linkQuizToProfile("user-1", "victim@example.com", undefined, { admin: store.admin })
+  assert.deepEqual(store.saves, [])
+  assert.equal(store.lead.user_id, null)
+})
+
+test("PUB-1: unreadable account evidence fails closed before claiming a lead", async () => {
+  const store = linkingStore({ evidenceError: true })
+  await assert.rejects(() =>
+    linkQuizToProfile("user-1", "victim@example.com", undefined, { admin: store.admin }),
+  )
+  assert.deepEqual(store.saves, [])
+  assert.equal(store.lead.user_id, null)
 })
 
 test("an unlinked direct lead must match the authenticated account email", () => {

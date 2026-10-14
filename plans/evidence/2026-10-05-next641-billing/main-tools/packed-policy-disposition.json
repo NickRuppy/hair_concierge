@@ -1,0 +1,6 @@
+{
+  "oldDirectory": "/tmp/test-audit-billing125-tools-svsmm1u3",
+  "oldPinsSHA256": "873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b",
+  "policy": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q",
+  "changes": "Fresh TMP copy only. Add bounded packed metadata guard. Preserve all original source/dependency pins and other identity entries; preserve all original artifacts plus new copies. No repository writes or runtime. Original preparers remain historical and must not be rerun."
+}

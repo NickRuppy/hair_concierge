@@ -1,0 +1,509 @@
+{
+ "blindId": "T111",
+ "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+ "identity": {
+  "productName": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "brand": "Schwarzkopf GLISS",
+  "market": "DE",
+  "packSize": "200 ml",
+  "formulaBlock": {
+   "normalization": "Aqua (Water, Eau) one entry; normalized one-based positions.",
+   "completeness": "complete (ID-1)",
+   "sourceTier": 1,
+   "identityConfidence": "high",
+   "e3ProminenceCutoff": "Parfum (Fragrance) at 7 -> positions 1-6 prominent"
+  },
+  "positioningSourceGrades": {
+   "productName": "high",
+   "pack_back": "moderate",
+   "manufacturer_de": "moderate",
+   "rossmann": "low"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (4); no reinforcing route -> moderate.",
+   "formulaFacts": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (ether type)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "counterSignal": "Coco-Glucoside (9) is after Parfum (not a buffer); one buffer suffices for C1.",
+   "neighboringAlternative": "none",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T111"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "rationale": "One meaningful cationic system, prominent Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6), plus pea peptide (5) and late light routes Glyceryl Oleate (10), PEG-7 Glyceryl Cocoate (12), Glycol Distearate (13), Hydrogenated Castor Oil (15). C2 not met.",
+   "formulaFacts": [
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5,
+     "role": "protein_film"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6,
+     "role": "cationic_polymer, prominent"
+    },
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 15,
+     "role": "payload_lipid, late"
+    }
+   ],
+   "counterSignal": "No silicone, no prominent payload lipid, no humectant entry on the C2 list; everything after the guar is late.",
+   "neighboringAlternative": "low",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T111"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "rationale": "One prominent guar plus a peptide; remaining routes are late and weak; effective C1 reset.",
+   "formulaFacts": [
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5,
+     "role": "protein_film"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6,
+     "role": "cationic_polymer, prominent"
+    },
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 15,
+     "role": "payload_lipid, late"
+    }
+   ],
+   "counterSignal": "",
+   "neighboringAlternative": "moderate",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T111"
+   ],
+   "weightRecord": {
+    "formulaIdentifiers": {
+     "blindId": "T111",
+     "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+     "sourceTier": 1,
+     "completeness": "complete (ID-1)",
+     "captureDate": "not in packet"
+    },
+    "evidenceByFamily": {
+     "cationic_polymer": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6)"
+     ],
+     "protein_film": [
+      "Pisum Sativum (Pea) Peptide (5)"
+     ],
+     "weak_refatter": [
+      "Glyceryl Oleate (10)",
+      "PEG-7 Glyceryl Cocoate (12)"
+     ],
+     "payload_lipid": [
+      "Hydrogenated Castor Oil (15, late)"
+     ],
+     "anionic_surfactant": [
+      "Sodium Laureth Sulfate (2)"
+     ],
+     "amphoteric_surfactant": [
+      "Cocamidopropyl Betaine (4)"
+     ],
+     "nonionic_surfactant": [
+      "Coco-Glucoside (9, non-prominent)"
+     ]
+    },
+    "excluded": [
+     "Glycol Distearate (13): pearlizer",
+     "Laureth-4 (14): thickener",
+     "PEG-120 Methyl Glucose Dioleate (16): PEG thickener",
+     "Propylene Glycol (19): solvent",
+     "Leuconostoc/Radish Root Ferment Filtrate (20): preservation"
+    ],
+    "unresolved": [],
+    "subjudgments": {
+     "depositionLoad": {
+      "value": "light",
+      "rationale": "Guar (6) and pea peptide (5); refatters (10, 12) and waxy lipid (15) are after Parfum."
+     },
+     "persistence": {
+      "value": "low",
+      "rationale": "Hydroxypropyl guar and a peptide are weakly retained; no silicone."
+     },
+     "resetCapacity": {
+      "value": "moderate",
+      "rationale": "SLES + betaine (C1 moderate)."
+     }
+    },
+    "counterevidence": "W2: several families, but beyond the guar and peptide every family is after Parfum (weak refatters, late waxy lipid); no silicone/film former; ordinary sulfate reset offsets a light polymer.",
+    "proposedWeightPotential": "low",
+    "whyThisBand": "A single light polymer plus a peptide; late weak routes; effective reset.",
+    "whyNotNeighborBand": "W2: several families, but beyond the guar and peptide every family is after Parfum (weak refatters, late waxy lipid); no silicone/film former; ordinary sulfate reset offsets a light polymer.",
+    "confidence": "moderate",
+    "confidenceLimitingFactor": "Guar is prominent (6); with the late waxy lipid a step toward moderate is realistic.",
+    "neighboringAlternative": "moderate",
+    "claimsEffect": "Claims read after freeze; none changes the band (6.5 step 5)."
+   }
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "rationale": "Neither Piroctone Olamine nor Climbazole.",
+   "neighboringAlternative": "none",
+   "formulaFacts": [],
+   "counterSignal": "None; mechanical rule (Section 11).",
+   "blindToFinal": "unchanged",
+   "sources": [
+    "formula packet T111"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "rationale": "general: positioned for split ends/damage, but the formula's care is a single peptide plus guar, which does not form a repair_supported cluster.",
+   "formulaFacts": [
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6
+    }
+   ],
+   "counterSignal": "Explicit damage positioning on pack and manufacturer page.",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "routes": {
+     "repair": [
+      "Pisum Sativum (Pea) Peptide (5)"
+     ],
+     "shared": [
+      "Hydroxypropyl Guar HPTC (6)"
+     ]
+    },
+    "limitation": "One peptide plus one guar is not a coherent damage-care cluster ('one protein token is not enough')."
+   },
+   "claimRole": "candidate",
+   "decisionTrace": {
+    "claimDirection": "repair ('Für splissgeschädigtes Haar' pack back, moderate; 'Für geschädigtes und splissanfälliges Haar', manufacturer, moderate)",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (verdict nonspecific)",
+    "decisionReason": "Repair claim over a formula whose verdict is nonspecific -> general (F1)."
+   },
+   "blindToFinal": "provisional pending_claims -> general",
+   "sources": [
+    "formula packet",
+    "reveal packet"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty.",
+   "counterSignal": "None.",
+   "formulaFacts": [],
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selectedValues": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "No qualifying secondary.",
+    "exceptionCode": null
+   },
+   "blindToFinal": "provisional [] -> final []",
+   "sources": [
+    "reveal packet"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default.",
+   "formulaFacts": [],
+   "counterSignal": "No other trigger evaluated as firing.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [
+     "'Regelmäßig anwenden' is not U2 frequency wording"
+    ],
+    "losingTriggers": []
+   },
+   "blindToFinal": "provisional regular -> final regular",
+   "sources": [
+    "reveal packet"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "None that could make it targeted.",
+   "formulaFacts": [],
+   "blindToFinal": "provisional not_targeted -> final not_targeted",
+   "sources": [
+    "formula packet",
+    "reveal packet"
+   ]
+  }
+ },
+ "focusRecord": {
+  "focusPrimary": "general",
+  "focusSecondary": [],
+  "careDirection": {
+   "verdict": "nonspecific",
+   "routes": {
+    "repair": [
+     "Pisum Sativum (Pea) Peptide (5)"
+    ],
+    "shared": [
+     "Hydroxypropyl Guar HPTC (6)"
+    ]
+   },
+   "limitation": "One peptide plus one guar is not a coherent damage-care cluster ('one protein token is not enough')."
+  },
+  "claimRole": "candidate",
+  "counterSignal": "Explicit damage positioning on pack and manufacturer page.",
+  "neighboringAlternative": "repair",
+  "decisionTrace": {
+   "primary": {
+    "claimDirection": "repair ('Für splissgeschädigtes Haar' pack back, moderate; 'Für geschädigtes und splissanfälliges Haar', manufacturer, moderate)",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (verdict nonspecific)",
+    "decisionReason": "Repair claim over a formula whose verdict is nonspecific -> general (F1)."
+   },
+   "secondary": {
+    "emptyDefaultConsidered": true,
+    "selectedValues": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "No qualifying secondary.",
+    "exceptionCode": null
+   },
+   "usageRole": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [
+     "'Regelmäßig anwenden' is not U2 frequency wording"
+    ],
+    "losingTriggers": []
+   },
+   "narrative": "general: positioned for split ends/damage, but the formula's care is a single peptide plus guar, which does not form a repair_supported cluster."
+  }
+ },
+ "weightRecord": {
+  "formulaIdentifiers": {
+   "blindId": "T111",
+   "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+   "sourceTier": 1,
+   "completeness": "complete (ID-1)",
+   "captureDate": "not in packet"
+  },
+  "evidenceByFamily": {
+   "cationic_polymer": [
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6)"
+   ],
+   "protein_film": [
+    "Pisum Sativum (Pea) Peptide (5)"
+   ],
+   "weak_refatter": [
+    "Glyceryl Oleate (10)",
+    "PEG-7 Glyceryl Cocoate (12)"
+   ],
+   "payload_lipid": [
+    "Hydrogenated Castor Oil (15, late)"
+   ],
+   "anionic_surfactant": [
+    "Sodium Laureth Sulfate (2)"
+   ],
+   "amphoteric_surfactant": [
+    "Cocamidopropyl Betaine (4)"
+   ],
+   "nonionic_surfactant": [
+    "Coco-Glucoside (9, non-prominent)"
+   ]
+  },
+  "excluded": [
+   "Glycol Distearate (13): pearlizer",
+   "Laureth-4 (14): thickener",
+   "PEG-120 Methyl Glucose Dioleate (16): PEG thickener",
+   "Propylene Glycol (19): solvent",
+   "Leuconostoc/Radish Root Ferment Filtrate (20): preservation"
+  ],
+  "unresolved": [],
+  "subjudgments": {
+   "depositionLoad": {
+    "value": "light",
+    "rationale": "Guar (6) and pea peptide (5); refatters (10, 12) and waxy lipid (15) are after Parfum."
+   },
+   "persistence": {
+    "value": "low",
+    "rationale": "Hydroxypropyl guar and a peptide are weakly retained; no silicone."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES + betaine (C1 moderate)."
+   }
+  },
+  "counterevidence": "W2: several families, but beyond the guar and peptide every family is after Parfum (weak refatters, late waxy lipid); no silicone/film former; ordinary sulfate reset offsets a light polymer.",
+  "proposedWeightPotential": "low",
+  "whyThisBand": "A single light polymer plus a peptide; late weak routes; effective reset.",
+  "whyNotNeighborBand": "W2: several families, but beyond the guar and peptide every family is after Parfum (weak refatters, late waxy lipid); no silicone/film former; ordinary sulfate reset offsets a light polymer.",
+  "confidence": "moderate",
+  "confidenceLimitingFactor": "Guar is prominent (6); with the late waxy lipid a step toward moderate is realistic.",
+  "neighboringAlternative": "moderate",
+  "claimsEffect": "Claims read after freeze; none changes the band (6.5 step 5)."
+ },
+ "projection": {
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "ideal",
+    "t1Fit": "ideal",
+    "confidence": "moderate",
+    "rationale": "T1: W=low, C=moderate -> ideal"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "t1Fit": "ideal",
+    "confidence": "moderate",
+    "rationale": "T1: W=low, C=moderate -> ideal"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "acceptable",
+    "t1Fit": "acceptable",
+    "confidence": "moderate",
+    "rationale": "T1: W=low, C=moderate -> acceptable"
+   }
+  ],
+  "weight": {
+   "value": "light",
+   "confidence": "moderate",
+   "rationale": "W-LIVE: weightPotential low -> light"
+  },
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 scalp claim unit (after E2a); packet has a manufacturer/pack source -> high."
+   },
+   "secondary": null
+  },
+  "observedCleansingIntensity": {
+   "value": "regular",
+   "confidence": "high",
+   "rationale": "I1: cleansingStrength moderate, D1 false -> regular"
+  },
+  "positioning": {
+   "explicitResetPositioning": false,
+   "d1Evidence": "No D1 stem (tiefenrein/deep clean/clarifying shampoo/detox-reinigung) in name, manufacturer/pack claims or directions.",
+   "d1Grade": "high"
+  },
+  "deepCleanserListing": {
+   "value": "not_flagged",
+   "deepCleanserRecord": "needs_record",
+   "confidence": "high",
+   "rationale": "D2 not met: D1 false."
+  },
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "fine: weightPotential neighbor -> acceptable (selected ideal)"
+   }
+  ],
+  "informationalNotes": [],
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal",
+    "intensityMatchesBucket": true
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal",
+    "intensityMatchesBucket": true
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable",
+    "intensityMatchesBucket": true
+   }
+  ],
+  "required_protocol_roles": [
+   "shampoo_everyday"
+  ],
+  "projectionStatus": "proposal_blocked_by_review_flags"
+ },
+ "blindToFinalChanges": [
+  {
+   "property": "focusPrimary",
+   "from": "provisional",
+   "to": "general",
+   "evidence": "repair claims",
+   "reason": "verdict nonspecific"
+  }
+ ],
+ "selfCheck": {
+  "fingerprintMatchesFrozenPacket": true,
+  "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+  "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+  "allThreeWeightSubjudgmentsPresent": true,
+  "counterevidenceAndWhyNotNeighborSpecific": true,
+  "w2AppliedWhereTwoOrMoreFamilies": true,
+  "confidenceNamesLimitingUncertainty": true,
+  "noComparisonWithEarlierValuesInsideLane": true,
+  "allFinalPropertiesModerateOrBetter": true,
+  "webUsed": false
+ },
+ "uncertainties": [
+  {
+   "reading": "focus general (peptide+guar not a repair cluster)",
+   "alternative": "repair"
+  },
+  {
+   "reading": "weight low",
+   "alternative": "moderate"
+  }
+ ]
+}

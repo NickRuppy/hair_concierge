@@ -854,6 +854,73 @@ test("the PDF prints „So wendest du es an“ after the routine, by day, with i
   assert.match(markup, /\.dcp-apply \{ break-before: page;/)
 })
 
+test("the sheet numbers products only, and prints variant headings as subheadings", async () => {
+  const base = readyModel()
+  if (base.application?.status !== "ready") throw new Error("expected a ready section")
+  const model: DiscoveryCockpitModel = {
+    ...base,
+    application: {
+      status: "ready",
+      section: {
+        ...base.application.section,
+        print: {
+          days: [
+            {
+              dayType: "between_wash_care_day",
+              label: "Pflegetag ohne Wäsche",
+              summary: "Pflege deine Längen zwischen den Wäschen.",
+              cadence: null,
+              steps: [
+                {
+                  kind: "product",
+                  productId: "p1",
+                  name: "Hitzeschutz Spray",
+                  imageUrl: null,
+                  categoryLabel: "Hitzeschutz",
+                  purpose: "Schützt.",
+                  actions: ["Gleichmäßig verteilen."],
+                  note: null,
+                },
+                { kind: "transition", copy: "Danach mit dem nächsten Schritt fortfahren." },
+                {
+                  kind: "product",
+                  productId: "p2",
+                  name: "Finish Öl",
+                  imageUrl: null,
+                  categoryLabel: "Haaröl",
+                  purpose: "Schließt ab.",
+                  actions: [
+                    "Auf trockenem Haar (empfohlen)",
+                    "Einen Tropfen in die Spitzen geben.",
+                    "Nach leichtem Anfeuchten",
+                    "Spitzen leicht anfeuchten.",
+                    "Einen Tropfen einarbeiten.",
+                  ],
+                  headings: [0, 2],
+                  note: null,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
+  }
+  const markup = await renderPdf(model, null)
+  const section = markup.slice(markup.indexOf("So wendest du es an"))
+  // Two products → numbers 1 and 2; the transition between them carries no number.
+  assert.deepEqual(
+    [...section.matchAll(/class="dcp-apply-num">(\d+)</g)].map((match) => match[1]),
+    ["1", "2"],
+  )
+  assert.doesNotMatch(section, /dcp-apply-num-quiet/)
+  // Headings are subheadings, never numbered actions; each variant numbers its own list.
+  assert.match(section, /class="dcp-apply-variant">Auf trockenem Haar \(empfohlen\)</)
+  assert.match(section, /class="dcp-apply-variant">Nach leichtem Anfeuchten</)
+  assert.doesNotMatch(section, /<li>Auf trockenem Haar/)
+  assert.equal(section.split('class="dcp-apply-actions"').length - 1, 3)
+})
+
 test("a sheet finalised before batch 6 shows the drift banner once (the section is new)", async () => {
   const model = readyModel()
   const markup = await renderPdf(model, composeRoutine().sourceHash)
@@ -1503,6 +1570,48 @@ test("batch 9: a one-product-per-step routine keeps its application-section fing
   assert.equal(
     withDiscoveryApplicationHash(composeRoutine(), compile().print).sourceHash,
     APPLICATION_GOLDEN_HASH,
+  )
+})
+
+test("variant headings are layout only: they never move the fingerprint, changed words do", () => {
+  const print = compile().print
+  const withoutHeadings = {
+    days: print.days.map((day) => ({
+      ...day,
+      steps: day.steps.map((step) => {
+        if (step.kind !== "product") return step
+        const { headings: _layout, ...rest } = step
+        void _layout
+        return rest
+      }),
+    })),
+  }
+  assert.ok(
+    print.days.some((day) =>
+      day.steps.some((step) => step.kind === "product" && (step.headings?.length ?? 0) > 0),
+    ),
+    "the fixture prints variant headings",
+  )
+  const routine = composeRoutine()
+  assert.equal(
+    withDiscoveryApplicationHash(routine, print).sourceHash,
+    withDiscoveryApplicationHash(routine, withoutHeadings).sourceHash,
+  )
+  const reworded = {
+    days: print.days.map((day, index) =>
+      index === 0
+        ? {
+            ...day,
+            steps: day.steps.map((step) =>
+              step.kind === "product" ? { ...step, actions: [...step.actions, "Neu."] } : step,
+            ),
+          }
+        : day,
+    ),
+  }
+  assert.notEqual(
+    withDiscoveryApplicationHash(routine, reworded).sourceHash,
+    withDiscoveryApplicationHash(routine, print).sourceHash,
   )
 })
 

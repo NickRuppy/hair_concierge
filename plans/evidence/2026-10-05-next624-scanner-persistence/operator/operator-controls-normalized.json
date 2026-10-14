@@ -1,0 +1,357 @@
+[
+  {
+    "id": "M1-start-rejection",
+    "candidate": "C1",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "mutatedSha256": "f74cc04d5aa04991673c00345d5915349969384ae32729264401e3c2ae89d1f0",
+    "from": "export async function recordScanResolveAttempt(\n  client: SupabaseClient,\n  attempt: ScanResolveAttempt,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client.from(\"scan_resolve_events\").insert({\n      id: attempt.attemptId,\n      user_id: attempt.userId,\n      identifier_type: attempt.identifierType,\n      raw_value: attempt.rawValue,\n      canonical_value: canonicalizeGtin(attempt.rawValue),\n      ...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),\n    })\n    if (error) {\n      console.warn(\"scan_resolve_attempt_start_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_start_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n  }\n}",
+    "to": "export async function recordScanResolveAttempt(\n  client: SupabaseClient,\n  attempt: ScanResolveAttempt,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client.from(\"scan_resolve_events\").insert({\n      id: attempt.attemptId,\n      user_id: attempt.userId,\n      identifier_type: attempt.identifierType,\n      raw_value: attempt.rawValue,\n      canonical_value: canonicalizeGtin(attempt.rawValue),\n      ...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),\n    })\n    if (error) {\n      console.warn(\"scan_resolve_attempt_start_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n      throw new Error(error.message)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_start_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n    throw cause\n  }\n}",
+    "anchor": {
+      "kind": "function",
+      "scope": "recordScanResolveAttempt",
+      "scopeSha256": "5254d32d1ba3b3658a45888d9ec00fff37b6499ac6f53a6188330bd80cad810c",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-route.test.ts",
+      "name": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException$",
+      "tests/scan-resolve-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 1095,
+        "text": "assert.doesNotReject(\n    Promise.all(queued.splice(0).map((task) => task())),\n    \"attempt-log insert errors must not reject the route deferred drain\",\n  )",
+        "keeperSha256": "8b5e9843b5226f77e0790cb4c9512976a88e8ce346ae0ecb98e0c2ac92f0c53b",
+        "testFileSha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+      },
+      "cut": {
+        "startLine": 1095,
+        "text": "assert.doesNotReject(\n    Promise.all(queued.splice(0).map((task) => task())),\n    \"attempt-log insert errors must not reject the route deferred drain\",\n  )",
+        "keeperSha256": "8b5e9843b5226f77e0790cb4c9512976a88e8ce346ae0ecb98e0c2ac92f0c53b",
+        "testFileSha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+      }
+    },
+    "expectedOperator": "doesNotReject",
+    "errorMessageIncludes": [
+      "Got unwanted rejection",
+      "attempt-log insert errors must not reject the route deferred drain",
+      "boom"
+    ],
+    "intendedAssertion": "assert.doesNotReject(\n    Promise.all(queued.splice(0).map((task) => task())),\n    \"attempt-log insert errors must not reject the route deferred drain\",\n  )",
+    "proofKind": "Whole TS source parses; intended real-owner assertion only after main execution"
+  },
+  {
+    "id": "M2-start-warning-severity",
+    "candidate": "C2",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "mutatedSha256": "d6ef9631470dcef745eba292cb6534940799ff8f7c0c97704f7254a9b3e6d037",
+    "from": "    level: \"warning\",",
+    "to": "    level: \"error\",",
+    "anchor": {
+      "kind": "function",
+      "scope": "reportAttemptLogFailure",
+      "scopeSha256": "7e48b30666cbe45db034773bdcf191629fd385c46d34f7265fd86b01bdeaed17",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-route.test.ts",
+      "name": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException$",
+      "tests/scan-resolve-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 1099,
+        "text": "assert.deepEqual(captured, [\n    // Fail-open telemetry: warning, not error (plan §5 task 5).\n    { route: \"resolve\", status: 200, reason: \"attempt_log_write_failed\", level: \"warning\" },\n  ])",
+        "keeperSha256": "8b5e9843b5226f77e0790cb4c9512976a88e8ce346ae0ecb98e0c2ac92f0c53b",
+        "testFileSha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+      },
+      "cut": {
+        "startLine": 1099,
+        "text": "assert.deepEqual(captured, [\n    // Fail-open telemetry: warning, not error (plan §5 task 5).\n    { route: \"resolve\", status: 200, reason: \"attempt_log_write_failed\", level: \"warning\" },\n  ])",
+        "keeperSha256": "8b5e9843b5226f77e0790cb4c9512976a88e8ce346ae0ecb98e0c2ac92f0c53b",
+        "testFileSha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "warning",
+      "error"
+    ],
+    "intendedAssertion": "assert.deepEqual(captured, [\n    // Fail-open telemetry: warning, not error (plan §5 task 5).\n    { route: \"resolve\", status: 200, reason: \"attempt_log_write_failed\", level: \"warning\" },\n  ])",
+    "proofKind": "Whole TS source parses; intended real-owner assertion only after main execution"
+  },
+  {
+    "id": "M3-completion-rejection",
+    "candidate": "C3",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "mutatedSha256": "ad66727515df68203a83473f3f9aecb7cbbc8e7b00c726cafb6586bae14c6cec",
+    "from": "export async function completeScanResolveAttempt(\n  client: SupabaseClient,\n  completion: ScanResolveAttemptCompletion,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client\n      .from(\"scan_resolve_events\")\n      .update({\n        lookup_outcome: completion.lookupOutcome,\n        terminal_outcome: completion.terminalOutcome,\n        matched_product_id: completion.matchedProductId,\n        failure_stage: completion.failureStage,\n        ...(completion.dmLookup\n          ? {\n              dm_lookup_outcome: completion.dmLookup.outcome,\n              dm_lookup_duration_ms: completion.dmLookup.durationMs,\n              dm_lookup_deadline_ms: completion.dmLookup.deadlineMs,\n            }\n          : {}),\n        completed_at: new Date().toISOString(),\n      })\n      .eq(\"id\", completion.attemptId)\n      .is(\"completed_at\", null)\n    if (error) {\n      console.warn(\"scan_resolve_attempt_completion_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_completion_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n  }\n}",
+    "to": "export async function completeScanResolveAttempt(\n  client: SupabaseClient,\n  completion: ScanResolveAttemptCompletion,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client\n      .from(\"scan_resolve_events\")\n      .update({\n        lookup_outcome: completion.lookupOutcome,\n        terminal_outcome: completion.terminalOutcome,\n        matched_product_id: completion.matchedProductId,\n        failure_stage: completion.failureStage,\n        ...(completion.dmLookup\n          ? {\n              dm_lookup_outcome: completion.dmLookup.outcome,\n              dm_lookup_duration_ms: completion.dmLookup.durationMs,\n              dm_lookup_deadline_ms: completion.dmLookup.deadlineMs,\n            }\n          : {}),\n        completed_at: new Date().toISOString(),\n      })\n      .eq(\"id\", completion.attemptId)\n      .is(\"completed_at\", null)\n    if (error) {\n      console.warn(\"scan_resolve_attempt_completion_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n      throw new Error(error.message)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_completion_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n    throw cause\n  }\n}",
+    "anchor": {
+      "kind": "function",
+      "scope": "completeScanResolveAttempt",
+      "scopeSha256": "403284848986da2666851e85096eaa5a9783a8f172d141a0bb1af6866359822e",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "name": "a completion-write failure also captures to Sentry"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^a completion-write failure also captures to Sentry$",
+      "tests/scan-resolve-event-log.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 319,
+        "text": "assert.doesNotReject(\n    completeScanResolveAttempt(\n      client as never,\n      {\n        attemptId: \"00000000-0000-4000-8000-000000000001\",\n        lookupOutcome: \"miss\",\n        terminalOutcome: \"unknown_product\",\n        matchedProductId: null,\n        failureStage: null,\n      },\n      capture,\n    ),\n    \"attempt-log completion errors must not reject\",\n  )",
+        "keeperSha256": "80505ad12b077d853a358b28909ae99f5073dcdffdd96bb8f54833d04d48609f",
+        "testFileSha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba"
+      },
+      "cut": {
+        "startLine": 227,
+        "text": "assert.doesNotReject(\n    completeScanResolveAttempt(\n      client as never,\n      {\n        attemptId: \"00000000-0000-4000-8000-000000000001\",\n        lookupOutcome: \"miss\",\n        terminalOutcome: \"unknown_product\",\n        matchedProductId: null,\n        failureStage: null,\n      },\n      capture,\n    ),\n    \"attempt-log completion errors must not reject\",\n  )",
+        "keeperSha256": "80505ad12b077d853a358b28909ae99f5073dcdffdd96bb8f54833d04d48609f",
+        "testFileSha256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e"
+      }
+    },
+    "expectedOperator": "doesNotReject",
+    "errorMessageIncludes": [
+      "Got unwanted rejection",
+      "attempt-log completion errors must not reject",
+      "completion unavailable"
+    ],
+    "intendedAssertion": "assert.doesNotReject(\n    completeScanResolveAttempt(\n      client as never,\n      {\n        attemptId: \"00000000-0000-4000-8000-000000000001\",\n        lookupOutcome: \"miss\",\n        terminalOutcome: \"unknown_product\",\n        matchedProductId: null,\n        failureStage: null,\n      },\n      capture,\n    ),\n    \"attempt-log completion errors must not reject\",\n  )",
+    "proofKind": "Whole TS source parses; intended real-owner assertion only after main execution"
+  },
+  {
+    "id": "M4-default-created-at",
+    "candidate": "D1",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "mutatedSha256": "31fe19a094622b5f414f2cf5222e2d63940dcfa47df31592ec4a6438ae1081ec",
+    "from": "...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),",
+    "to": "...(attempt.createdAt ? { created_at: attempt.createdAt } : { created_at: \"2026-09-04T10:00:00.000Z\" }),",
+    "anchor": {
+      "kind": "function",
+      "scope": "recordScanResolveAttempt",
+      "scopeSha256": "5254d32d1ba3b3658a45888d9ec00fff37b6499ac6f53a6188330bd80cad810c",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "name": "records a started attempt with canonical value"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^records a started attempt with canonical value$",
+      "tests/scan-resolve-event-log.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 56,
+        "text": "assert.deepEqual(inserted(), {\n    id: \"00000000-0000-4000-8000-000000000001\",\n    user_id: \"user-1\",\n    identifier_type: \"ean\",\n    raw_value: \"0022796976116\",\n    canonical_value: \"00022796976116\",\n  })",
+        "keeperSha256": "737ee2de79ac6686b08974e5fe7a182ff88ac04ee9cf9349f392eeb4f6c25947",
+        "testFileSha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba"
+      },
+      "cut": {
+        "startLine": 56,
+        "text": "assert.deepEqual(inserted(), {\n    id: \"00000000-0000-4000-8000-000000000001\",\n    user_id: \"user-1\",\n    identifier_type: \"ean\",\n    raw_value: \"0022796976116\",\n    canonical_value: \"00022796976116\",\n  })",
+        "keeperSha256": "737ee2de79ac6686b08974e5fe7a182ff88ac04ee9cf9349f392eeb4f6c25947",
+        "testFileSha256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "created_at",
+      "2026-09-04T10:00:00.000Z"
+    ],
+    "intendedAssertion": "assert.deepEqual(inserted(), {\n    id: \"00000000-0000-4000-8000-000000000001\",\n    user_id: \"user-1\",\n    identifier_type: \"ean\",\n    raw_value: \"0022796976116\",\n    canonical_value: \"00022796976116\",\n  })",
+    "proofKind": "Whole TS source parses; intended real-owner assertion only after main execution"
+  },
+  {
+    "id": "M5-legacy-version",
+    "candidate": "D2",
+    "file": "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sourceSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "mutatedSha256": "70e820f135c5396866a18f5402f48ba35107b686596710b6729c15b21a8d32e8",
+    "from": "SET telemetry_version = 1,",
+    "to": "SET telemetry_version = 2,",
+    "anchor": {
+      "kind": "sql-bytes",
+      "scopeSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "name": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^telemetry migration executes, accepts v2 starts, and aggregates before retention deletion$",
+      "tests/scan-resolve-events-migration.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 227,
+        "text": "assert.equal(legacy.rows[0]?.count, 10)",
+        "keeperSha256": "6ddcb710cbd54cf36293b634114f75eb7d1122cf79210404ea0c3d24cd659547",
+        "testFileSha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189"
+      },
+      "cut": {
+        "startLine": 217,
+        "text": "assert.equal(legacy.rows[0]?.count, 10)",
+        "keeperSha256": "6ddcb710cbd54cf36293b634114f75eb7d1122cf79210404ea0c3d24cd659547",
+        "testFileSha256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "0 !== 10"
+    ],
+    "intendedAssertion": "assert.equal(legacy.rows[0]?.count, 10)",
+    "proofKind": "Valid SQL literal substitution, raw byte guard; no SQL parsing or execution in preparation"
+  },
+  {
+    "id": "M6-legacy-resolution",
+    "candidate": "D2",
+    "file": "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sourceSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "mutatedSha256": "b5f303c78821d688ab4212af5471fbeaf678af0bfd839e6386ee16193420325d",
+    "from": "terminal_outcome = 'legacy_unknown'",
+    "to": "terminal_outcome = 'resolved'",
+    "anchor": {
+      "kind": "sql-bytes",
+      "scopeSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "name": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^telemetry migration executes, accepts v2 starts, and aggregates before retention deletion$",
+      "tests/scan-resolve-events-migration.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 227,
+        "text": "assert.equal(legacy.rows[0]?.count, 10)",
+        "keeperSha256": "6ddcb710cbd54cf36293b634114f75eb7d1122cf79210404ea0c3d24cd659547",
+        "testFileSha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189"
+      },
+      "cut": {
+        "startLine": 217,
+        "text": "assert.equal(legacy.rows[0]?.count, 10)",
+        "keeperSha256": "6ddcb710cbd54cf36293b634114f75eb7d1122cf79210404ea0c3d24cd659547",
+        "testFileSha256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "0 !== 10"
+    ],
+    "intendedAssertion": "assert.equal(legacy.rows[0]?.count, 10)",
+    "proofKind": "Valid SQL literal substitution, raw byte guard; no SQL parsing or execution in preparation"
+  },
+  {
+    "id": "M7-premium-prediction",
+    "candidate": "D3",
+    "file": "src/app/api/scan/resolve/route.ts",
+    "sourceSha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "mutatedSha256": "b89071592f8c2a6a8fc15f3b91be590595caf80923672424d00b1e7aeddad9f5",
+    "from": "responseSavedState = { state: \"merkliste\", managedByScan: true }",
+    "to": "responseSavedState = { state: null, managedByScan: false }",
+    "anchor": {
+      "kind": "function",
+      "scope": "createScanResolveRouteHandler",
+      "scopeSha256": "1ef3c73fcdbc7a43e388f3b47cbe4b14e16ae2fea2bd72b9403bc8ea8a81e4fd",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "name": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx$",
+      "tests/scan-resolve-auto-save.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 342,
+        "text": "assert.deepEqual(body.savedState, { state: \"merkliste\", managedByScan: true })",
+        "keeperSha256": "96b42df35c53bf907688a31dd4f9eb552417ea00df609da673c939aafbf57db1",
+        "testFileSha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf"
+      },
+      "cut": {
+        "startLine": 324,
+        "text": "assert.deepEqual(body.savedState, { state: \"merkliste\", managedByScan: true })",
+        "keeperSha256": "96b42df35c53bf907688a31dd4f9eb552417ea00df609da673c939aafbf57db1",
+        "testFileSha256": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "managedByScan",
+      "merkliste",
+      "false",
+      "true"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.savedState, { state: \"merkliste\", managedByScan: true })",
+    "proofKind": "Whole TS source parses; intended real-owner assertion only after main execution"
+  }
+]

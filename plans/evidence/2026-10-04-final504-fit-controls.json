@@ -1,0 +1,53 @@
+[
+  {
+    "id": "surviving-null-fit-label",
+    "lane": "fit",
+    "phase": "new",
+    "intended": "Existing legacy.fitLabelFor(informed_override) === null must reject wrongly enabling v3 fit label for null presentation; original v3 positive still passes.",
+    "source": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "name": "uses the v3 informed-override fit label while preserving legacy wording"
+    },
+    "originalHash": "2cb625b1bc8232d48395bcb205e14cd7fa7302549c2a7f5fe19f141a1b8954d6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final504-fit-mutations-controls/surviving-null-fit-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final504-fit-mutations-controls/surviving-null-fit-label-fault.tap"
+    },
+    "restoredHash": "2cb625b1bc8232d48395bcb205e14cd7fa7302549c2a7f5fe19f141a1b8954d6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final504-fit-mutations-controls/surviving-null-fit-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      63,
+      66
+    ],
+    "assertionStacks": [
+      66
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

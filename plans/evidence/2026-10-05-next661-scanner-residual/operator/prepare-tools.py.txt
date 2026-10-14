@@ -1,0 +1,61 @@
+from pathlib import Path
+import json,hashlib,difflib
+D=Path(__file__).parent;T=Path('/tmp/test-audit-free67-tools-phkvfcm3');P=Path('/tmp/test-audit-scanner-residual119')
+sha=lambda b:hashlib.sha256(b).hexdigest();old=json.loads((T/'operator-pins.json').read_bytes())
+assert sha((T/'operator-pins.json').read_bytes())=='9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5'
+assert sha((P/'manifest.json').read_bytes())=='8f982b06fbe8e5481e90c5723c02ab18ebe9d26e46b4e5975f5937e849151048'
+assert sha((P/'handoff.json').read_bytes())=='ee488f815db07525e045e3a8be7ac3a6747fad660934ad5cc7ff722dc2e588ff'
+def put(n,s):
+ p=D/n;assert p.resolve().is_relative_to(D.resolve());p.parent.mkdir(exist_ok=True,parents=True)
+ b=s.encode() if isinstance(s,str) else s
+ if p.exists():assert p.read_bytes()==b,p
+ else:
+  with p.open('xb') as f:f.write(b)
+def once(s,a,b):
+ assert s.count(a)==1,a;return s.replace(a,b)
+provenance=[]
+for n in ['operator-pins.json','operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','proof-attestation.cjs','operator-native-proof.cjs']:
+ b=(T/n).read_bytes();put('template-originals/'+n,b)
+ if n=='operator-pins.json':continue
+ if n in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']:
+  norm=b.decode().replace("const PIN_SHA='9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+  assert next(v for k,v in old['entrypointTemplateHashes'].items() if Path(k).resolve()==(T/n).resolve())==sha(norm.encode()),n
+ else:assert next(v for k,v in old['artifactHashes'].items() if Path(k).resolve()==(T/n).resolve())==sha(b),n
+ s=b.decode().replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-free-provisioning67',str(P)).replace("const PIN_SHA='9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ if n=='operator-guard.cjs':
+  s=once(s,'candidates.length!==1||controls.length!==2','candidates.length!==14||controls.length!==18')
+  s=once(s,"keepers.size!==1)fail('One unique keeper required')","keepers.size!==7)fail('Seven unique keepers required')")
+  s=once(s,"        if(k.addedAssertions.length!==1||replaceOnce(k.after,'    '+k.addedAssertions[0]+'\\n','','sole assertion addition')!==k.body)fail('Keeper owner calls/input/support changed')", "        let exact=k.body;for(const e of k.reviewedEdits)exact=replaceOnce(exact,e.from,e.to,'reviewed assertion transfer');if(exact!==k.after)fail('Reviewed keeper edit reconstruction failed');for(const a of before.rows.get(k.name).assertions)if(!k.after.includes(a.text))fail('Original keeper assertion changed')")
+  s=once(s,"}else if(k.addedAssertions.length)fail('Unexpected assertion addition')","}else if(k.reviewedEdits.length)fail('Unexpected assertion addition')")
+  s=once(s,"Object.keys(snapshots).length!==7||JSON.stringify(counts)!=='{\"before\":67,\"transfer\":67,\"cut\":66}'||unrelated!==65||unchangedRetained!==65||changedKeepers!==1", "Object.keys(snapshots).length!==21||JSON.stringify(counts)!=='{\"before\":119,\"transfer\":119,\"cut\":105}'||unrelated!==98||unchangedRetained!==100||changedKeepers!==5")
+  start=s.index("  const ledger=readJSON(PROPOSAL+'/ledger.json');")
+  end=s.index('  for(const c of candidates){\n    const donor=',start)
+  s=s[:start]+'''  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.classification==='F').length!==2)fail('Held F count');
+  for(const held of ledger.filter(j=>j.classification==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(held.title)?.statement||'')!==held.sha256)fail('Held F changed');
+  for(const phase of ['before','transfer','cut']){
+    const names=Object.keys(snapshots).flatMap(file=>nativeRegistrationNames(ts,file,snapshots[file][phase].bytes.toString()));
+    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?114:128)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
+  }
+'''+s[end:]
+  helper='''function nativeRegistrationNames(ts,file,text){
+  const sf=parse(ts,file,text),names=[];let table=null;
+  function tableWalk(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)==='TYPO_TABLE'){if(!ts.isArrayLiteralExpression(n.initializer))fail('Literal typo table required');table=n.initializer.elements.map(e=>{if(!ts.isObjectLiteralExpression(e))fail('Literal table row');const row={};for(const p of e.properties){if(ts.isPropertyAssignment(p)&&['label','query'].includes(p.name.getText(sf))){if(!ts.isStringLiteralLike(p.initializer))fail('Literal label/query');row[p.name.getText(sf)]=p.initializer.text}}if(Object.keys(row).length!==2)fail('Both literal title fields required');return row})}ts.forEachChild(n,tableWalk)}tableWalk(sf);
+  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+    const title=n.arguments[0];let loop=null;for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){if(loop)fail('Nested registration loop');loop=p}
+    if(loop){if(file!=='tests/scan-catalog-search-typo.test.ts'||loop.expression.getText(sf)!=='TYPO_TABLE'||!table||table.length!==10||title.getText(sf)!=='`matchCatalogProducts typo table: ${label} ("${query}")`')fail('Unknown registration expansion');for(const r of table)names.push(`matchCatalogProducts typo table: ${r.label} ("${r.query}")`)}
+    else {if(!ts.isStringLiteralLike(title))fail('Unknown dynamic title');names.push(title.text)}
+  }ts.forEachChild(n,walk)}walk(sf);return names
+}
+'''
+  s=once(s,'function replaceOnce(text,from,to,label) {',helper+'function replaceOnce(text,from,to,label) {')
+  s=once(s,'registrations,replaceOnce,load','registrations,nativeRegistrationNames,replaceOnce,load')
+ if n=='operator-edit.cjs':s=once(s,'parsedPhaseFiles:21,sourceControlsParsed:2','parsedPhaseFiles:63,sourceControlsParsed:18')
+ if n=='operator-run-controls.cjs':
+  s=once(s,'tsMutantsParsed:2,allControlsPrepared:prepared.size===2','tsMutantsParsed:16,sqlByteRecipes:2,allControlsPrepared:prepared.size===18').replace('ALL7 test','ALL21 test').replace('receipts.length===2','receipts.length===18')
+ if n=='operator-proof.cjs':
+  for a,b in [('complete.verified!==2','complete.verified!==18'),('complete.cleanRuns!==4','complete.cleanRuns!==36'),('Required2','Required18'),('length!==7','length!==21'),('records.length!==2','records.length!==18'),('Two records required','Eighteen records required'),('verified:2,logFiles:6','verified:18,logFiles:54')]:s=once(s,a,b)
+ if n=='proof-attestation.cjs':s=once(s,'controls:2','controls:18').replace("c.errorMessageIncludes.join('\\n')","c.errorMessageIncludes[0]").replace("c.errorMessageIncludes.join(' | ')","c.errorMessageIncludes[0]")
+ if n=='operator-native-proof.cjs':s=once(s,"n=phase==='cut'?67:68","n=phase==='cut'?114:128")
+ put(n,s);provenance.append({'file':n,'template':str(T/n),'templateSHA256':sha(b if isinstance(b,bytes) else (T/n).read_bytes()),'preparedTemplateSHA256':sha(s.encode())})
+put('template-provenance.json',json.dumps({'templatePins':'9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5','strictProofPolicy':'Free67/refinement final decoded message and FIRST outer assertion frame prefix unchanged','files':provenance},indent=2)+'\n')
+put('template-delta.patch',''.join(''.join(difflib.unified_diff((D/'template-originals'/x['file']).read_text().splitlines(True),(D/x['file']).read_text().splitlines(True),fromfile=x['template'],tofile=str(D/x['file']))) for x in provenance))

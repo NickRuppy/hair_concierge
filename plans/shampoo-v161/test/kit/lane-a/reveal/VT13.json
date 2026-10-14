@@ -1,0 +1,28 @@
+{
+  "blindId": "VT13",
+  "productName": "Hydrate-Me.Wash",
+  "brand": "Kevin.Murphy",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_kevin_murphy_de-DE EU storefront (domain .com.au, German-language EUR shop; SKU KMU63933; shows both a \"Made in U.S.A.\" and a \"Made in EU\" list; this field holds the \"Made in EU\" block, which the shop itself truncates at \"Benzyl Alcoho\")",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Gib stumpfem, sprödem und trockenem Haar einen pflegenden Feuchtigkeitskick. HYDRATE-ME.WASH ist unser super glättendes, feuchtigkeitsspendendes WASH Produkt, das dem Haar dringend benötigte Feuchtigkeit zurückgibt. Es ist ideal für von Natur aus trockenes Haar oder für Haar, das rauem, trockenem Klima ausgesetzt ist. Es ist vollgepackt mit Antioxidantien, die trockenen Haaren wieder zu einem gesunden Glanz verhelfen.",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_hagel_shop_de (GPSR importer Kevin Murphy Europe, Copenhagen)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Kevin.Murphy Hydrate-Me.Wash ist die einzigartige Kombination aus den neuesten Forschungsergebnissen der kosmetischen Hautpflege und dem Wissen um die Wirkungsweise von Antioxidantien. Die Inhaltsstoffe des Shampoos liefern Feuchtigkeit und versiegeln diese im Haar. Risse in der Haaroberfläche werden aufgefüllt und das Haar wird dadurch geglättet. Der Effekt ist sofort sichtbar: glattes, seidiges und glänzendes Haar mit viel Leuchtkraft. Die Buschpflaume aus dem australischen Regenwald mit dem höchsten Vitamin C Gehalt von Früchten überhaupt, stimuliert die Bildung von Collagen und Elastin. Hydrolisierte Seidenextrakte glätten die Haaroberfläche und versiegeln das Haar, damit bleibt die Feuchtigkeit im Haar. Vitamin A, E und C schließen die Feuchtigkeit im Haar ein und das Haar fühlt sich seidig und sanft an. Für normales bis trockenes Haar.",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_amazon_de (brand content)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "",
+      "directionsVerbatim": "Auf feuchtes Haar auftragen und sanft in Haar und Kopfhaut einmassieren. Ausspülen. Danach Hydrate-Me.Rinse verwenden. Kann täglich und im Rahmen des Hydrate-Programms verwendet werden."
+    }
+  ]
+}

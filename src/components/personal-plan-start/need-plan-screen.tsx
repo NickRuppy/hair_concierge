@@ -11,7 +11,9 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { Stage1ToolBlock } from "@/lib/personal-plan/tools/read-view"
 import { NeedCard, NeedCardGroup, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
+import { ToolBlock } from "./tool-block"
 
 export type NeedPlanScreenKind = "basis" | "optional"
 
@@ -24,6 +26,11 @@ export type NeedPlanScreenViewModel = {
   countLabel: string
   cards: PlanStartCardViewModel[]
   progress: 50 | 100
+  /**
+   * Tier-local Hair Tools block, rendered after this page's care-product cards. Absent whenever
+   * the Tools rollout is off or this tier has no Tool card (read-time, `buildToolView`).
+   */
+  toolBlock?: Stage1ToolBlock | null
 }
 
 export const PLAN_START_CATALOG_DISCLAIMER =
@@ -49,6 +56,8 @@ export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error
 
 export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
 export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
+/** The accept CTA while no budget is saved: the budget question comes first (journey 5). */
+export const PLAN_START_BUDGET_FIRST_LABEL = "Weiter"
 export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
 export const PLAN_START_REFINE_PENDING_LABEL = "Deine Produkte werden geöffnet …"
 export const PLAN_START_REFINE_ERROR =
@@ -68,6 +77,8 @@ type NeedPlanScreenProps = {
   nextStatus?: NeedPlanScreenNextStatus
   /** Non-blocking status line under the CTA, e.g. while a fallback route opens. */
   nextNotice?: string | null
+  /** The accept CTA leads into the budget question first, so it reads „Weiter". */
+  budgetFirst?: boolean
 }
 
 export function NeedPlanScreen({
@@ -78,6 +89,7 @@ export function NeedPlanScreen({
   nextIntent = "refine",
   nextStatus = "idle",
   nextNotice,
+  budgetFirst = false,
 }: NeedPlanScreenProps) {
   const transitionLayer = usePersonalPlanTransitionLayer()
   const [actionPortalTarget, setActionPortalTarget] = useState<HTMLElement | null>(null)
@@ -98,7 +110,9 @@ export function NeedPlanScreen({
       : screen.kind === "basis" && hasOptionalPage
         ? "Optionale Empfehlungen"
         : accepts
-          ? PLAN_START_ACCEPT_LABEL
+          ? budgetFirst
+            ? PLAN_START_BUDGET_FIRST_LABEL
+            : PLAN_START_ACCEPT_LABEL
           : PLAN_START_REFINE_LABEL
 
   const actionNav =
@@ -185,6 +199,8 @@ export function NeedPlanScreen({
             ),
           )}
         </div>
+
+        {screen.toolBlock ? <ToolBlock block={screen.toolBlock} /> : null}
       </main>
       {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}
     </section>

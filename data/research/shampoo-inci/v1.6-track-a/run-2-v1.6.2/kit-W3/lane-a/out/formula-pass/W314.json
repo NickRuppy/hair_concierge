@@ -1,0 +1,129 @@
+{
+  "blindId": "W314",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized positions (ID-2). 19 entries.",
+    "e3ProminenceCutoff": "Parfum @18. Prominent = positions 1-17."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @3 with prominent buffers Cocamidopropyl Hydroxysultaine @4, Coco-Glucoside @7 and Cocamidopropyl Betaine @17; no reinforcing strong anionic.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system (cationic Guar Hydroxypropyltrimonium Chloride @14) with light routes Glycol Distearate @16 (pearlizer), Hydrolyzed Keratin @12 (protein) and humectants Glycerin @5, Panthenol @11, Hydrogenated Starch Hydrolysate @2. C2 not met: no early silicone or payload lipid. Counter-signal: the guar and keratin sit after several typically low-dose actives (allantoin, bisabolol, zinc PCA, panthenol), so light care (low) is realistic.",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @14"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Keratin @12"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @3", "Cocamidopropyl Hydroxysultaine @4", "Coco-Glucoside @7", "Cocamidopropyl Betaine @17"],
+        "humectantContext": ["Hydrogenated Starch Hydrolysate @2", "Glycerin @5", "Panthenol @11"],
+        "excluded": ["Glycol Distearate @16 (pearlizing wax)", "Allantoin @8, Bisabolol @9, Zinc PCA @10, Camellia Sinensis Leaf Extract @13 (actives/botanical, no deposition role)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@18 Parfum",
+        "classes": ["fragrance"],
+        "cap": "e3Point @18 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": ["w_line_skipped:Panthenol@11 (clause ii: pearlizing wax Glycol Distearate @16 and cleansing surfactant Cocamidopropyl Betaine @17 after it and before the cap)"],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Two families present (cationic_polymer + protein_film).",
+      "whyThisBand": "A light guar and a hydrolyzed protein, both late, against a four-surfactant ordinary reset; no silicone or lipid.",
+      "whyNotNeighborBand": "Not moderate (W2): both families are late/trace in the list - Hydrolyzed Keratin @12 and the guar @14 follow Allantoin @8, Bisabolol @9, Zinc PCA @10 and Panthenol @11, typically low-dose actives; no silicone or payload lipid; moderate reset faces only light routes.",
+      "confidenceLimitingFactor": "Two families converge; doses unknown.",
+      "rationale": "Low: late guar + late protein vs ordinary reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Hydrogenated Starch Hydrolysate @2", "Glycerin @5", "Panthenol @11"],
+        "repairRoutes": ["Hydrolyzed Keratin @12"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @14"],
+        "limitation": "One protein token is not a repair cluster; humectants also serve scalp comfort."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Allantoin @8, Bisabolol @9, Zinc PCA @10 point to a scalp-comfort role if positioned.",
+      "decisionTrace": "Blind: no claim; provisional general.",
+      "rationale": "Provisional general.",
+      "ruleIds": ["7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent comfort routes Allantoin @8, Bisabolol @9, Panthenol @11 and humectant Glycerin @5. MB not met: Sodium Laureth Sulfate @3 prominent strong anionic. S-SENSITIVE and S-DRY formula halves pass. Hydrogenated Starch Hydrolysate @2 and Zinc PCA @10 are unlisted.",
+      "counterSignals": "None prominent.",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active; Zinc PCA does not count.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @3 (defining)", "Cocamidopropyl Hydroxysultaine @4", "Coco-Glucoside @7", "Cocamidopropyl Betaine @17"],
+    "conditioningRoutes": ["Hydrolyzed Keratin @12", "Guar Hydroxypropyltrimonium Chloride @14", "Glycol Distearate @16"],
+    "humectants": ["Hydrogenated Starch Hydrolysate @2", "Glycerin @5", "Panthenol @11"],
+    "actives": ["Allantoin @8", "Bisabolol @9", "Zinc PCA @10", "Camellia Sinensis Leaf Extract @13"],
+    "exposure": ["Parfum @18"],
+    "preservatives": ["Sodium Benzoate @19"]
+  },
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,1123 @@
+[
+  {
+    "id": "module-dismissal-positive",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "The already-retained products membership true becomes false.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/module-dismissal-positive-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/module-dismissal-positive-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/module-dismissal-positive-after.tap"
+    },
+    "keeperAssertionLines": [
+      125,
+      126
+    ],
+    "assertionStacks": [
+      125
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "empty-dismissals-invented-habits",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred exact empty array fails [habits] != []; existing products false alone would pass.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/empty-dismissals-invented-habits-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/empty-dismissals-invented-habits-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/empty-dismissals-invented-habits-after.tap"
+    },
+    "keeperAssertionLines": [
+      158,
+      159
+    ],
+    "assertionStacks": [
+      159
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "dismissal-owner-filter-removed",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Actual query selects foreign products row; retained membership false fails, not a mock-manufactured denial.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/dismissal-owner-filter-removed-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/dismissal-owner-filter-removed-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/dismissal-owner-filter-removed-after.tap"
+    },
+    "keeperAssertionLines": [
+      158,
+      159
+    ],
+    "assertionStacks": [
+      158
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "nav-success-marked-unavailable",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred available true fails while exact profile set still survives.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-success-marked-unavailable-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-success-marked-unavailable-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-success-marked-unavailable-after.tap"
+    },
+    "keeperAssertionLines": [
+      268,
+      269,
+      270,
+      271,
+      272
+    ],
+    "assertionStacks": [
+      270
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "nav-positive-membership-lost",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred profile true fails while underlying set is unchanged.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-positive-membership-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-positive-membership-lost-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-positive-membership-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      268,
+      269,
+      270,
+      271,
+      272
+    ],
+    "assertionStacks": [
+      271
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "nav-negative-membership-lost",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred application false fails after profile true succeeds.",
+    "source": "src/lib/personal-plan/lifecycle/repository.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-negative-membership-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-negative-membership-lost-fault.tap"
+    },
+    "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/nav-negative-membership-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      268,
+      269,
+      270,
+      271,
+      272
+    ],
+    "assertionStacks": [
+      272
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "journey-frontier-stage4-label",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred frontier stage4 fails stage3; timing and personal_plan kind remain intact.",
+    "source": "src/lib/personal-plan/journey-access.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "originalHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-frontier-stage4-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-frontier-stage4-label-fault.tap"
+    },
+    "restoredHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-frontier-stage4-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      547,
+      549,
+      550,
+      551,
+      552,
+      557,
+      558
+    ],
+    "assertionStacks": [
+      549
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "journey-stage3-allowed-lost",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred allowed.stage3 true fails; frontier derives original readiness and remains stage4.",
+    "source": "src/lib/personal-plan/journey-access.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "originalHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage3-allowed-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage3-allowed-lost-fault.tap"
+    },
+    "restoredHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage3-allowed-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      547,
+      549,
+      550,
+      551,
+      552,
+      557,
+      558
+    ],
+    "assertionStacks": [
+      550
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "journey-stage4-allowed-lost",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred allowed.stage4 true fails while frontier remains stage4.",
+    "source": "src/lib/personal-plan/journey-access.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "originalHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage4-allowed-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage4-allowed-lost-fault.tap"
+    },
+    "restoredHash": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/journey-stage4-allowed-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      547,
+      549,
+      550,
+      551,
+      552,
+      557,
+      558
+    ],
+    "assertionStacks": [
+      551
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "narrow-stage2-starts-reporting",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Transferred exact [] timings fails on actual prefix emissions; access and zero later-stage reads remain valid.",
+    "source": "src/lib/personal-plan/journey-access-loader.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads"
+    },
+    "originalHash": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/narrow-stage2-starts-reporting-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/narrow-stage2-starts-reporting-fault.tap"
+    },
+    "restoredHash": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/narrow-stage2-starts-reporting-after.tap"
+    },
+    "keeperAssertionLines": [
+      309,
+      310,
+      339,
+      340,
+      341,
+      342,
+      343,
+      344
+    ],
+    "assertionStacks": [
+      344
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-access-state",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the access-state field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-access-state-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-access-state-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-access-state-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-source-id",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the source-id field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-id-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-id-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-id-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-paid-at",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the paid-at field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-paid-at-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-paid-at-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-paid-at-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-qualified-at",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the qualified-at field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-qualified-at-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-qualified-at-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-qualified-at-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-lead-id",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the lead-id field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-lead-id-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-lead-id-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-lead-id-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-quiz-source",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the quiz-source field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-quiz-source-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-quiz-source-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-quiz-source-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-source-kind",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Full emitted enrollment object fails only the source-kind field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-kind-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-kind-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-source-kind-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-correlation-user",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Changing real user query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-user-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-user-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-user-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-correlation-provider",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Changing real provider query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-provider-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-provider-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-provider-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "launch-correlation-reference",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Changing real reference query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-reference-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-reference-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/launch-correlation-reference-after.tap"
+    },
+    "keeperAssertionLines": [
+      424,
+      433
+    ],
+    "assertionStacks": [
+      424
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "unbound-partner-admitted",
+    "lane": "journey",
+    "phase": "new",
+    "intended": "Existing full empty enrollment rejects active partner with null lead/date after both missing-field guards are bypassed. Neither original nor keeper isolates each guard alone: both inputs have BOTH null.",
+    "source": "src/lib/personal-plan/enrollment.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a claimed partner's revoked tester enrollments never resurrect the old tester lead"
+    },
+    "originalHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/unbound-partner-admitted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/unbound-partner-admitted-fault.tap"
+    },
+    "restoredHash": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-journey-mutations-new/unbound-partner-admitted-after.tap"
+    },
+    "keeperAssertionLines": [
+      705
+    ],
+    "assertionStacks": [
+      705
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  }
+]

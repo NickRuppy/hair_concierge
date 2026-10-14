@@ -121,8 +121,10 @@ test("rule 5: concerns map, order preserved, deduped, unmapped dropped, no cap",
     ["dryness", "frizz", "hair_damage", "hair_loss", "breakage"],
   )
   assert.deepEqual(
-    deriveDiagnosticsColumns(diagnostics({ currentConcerns: ["low_shine"] })).concerns,
-    [],
+    deriveDiagnosticsColumns(
+      diagnostics({ currentConcerns: ["low_shine", "lost_shape", "low_volume_or_weighed_down"] }),
+    ).concerns,
+    ["low_shine", "lost_shape", "low_volume_or_weighed_down"],
   )
   assert.deepEqual(
     deriveDiagnosticsColumns(diagnostics({ currentConcerns: ["dry_lengths", "frizz_flyaways"] }))
@@ -158,7 +160,7 @@ test("rule 6: goals map incl. volume_balance resolution, no cap, absent -> []", 
         goals: ["volume_balance"],
       }),
     ).goals,
-    [],
+    ["volume_balance"],
   )
   assert.deepEqual(
     deriveDiagnosticsColumns(
@@ -265,10 +267,10 @@ test("rule 7b (main #611): primary_concern — explicit pick, else sole concern,
   )
   // Sole concern without a pick (the quiz only asks with two or more).
   assert.equal(derive({ currentConcerns: ["frizz_flyaways"] }), "frizz")
-  // A pick with no legacy equivalent, no pick among several, a stale pick: null.
+  // New concern values retain a stated main problem. No pick among several or stale pick: null.
   assert.equal(
     derive({ currentConcerns: ["low_shine", "breakage"], primaryConcern: "low_shine" }),
-    null,
+    "low_shine",
   )
   assert.equal(derive({ currentConcerns: ["breakage", "tangling"] }), null)
   assert.equal(
@@ -557,4 +559,21 @@ test("rule 16: deriveLegacyColumns only emits keys for non-null domains, union w
   })
   assert.ok("hair_texture" in both)
   assert.ok("drying_method" in both)
+})
+
+test("NR2/NR3: directionless goal and each stated new concern survive without changing facts", () => {
+  for (const primaryConcern of ["low_shine", "lost_shape", "low_volume_or_weighed_down"] as const) {
+    const facts = diagnostics({
+      currentConcerns: [primaryConcern, "dry_lengths"],
+      primaryConcern,
+      goals: ["volume_balance"],
+    })
+    const before = structuredClone(facts)
+    const columns = deriveDiagnosticsColumns(facts)
+    assert.deepEqual(columns.concerns, [primaryConcern, "dryness"])
+    assert.equal(columns.primary_concern, primaryConcern)
+    assert.deepEqual(columns.goals, ["volume_balance"])
+    assert.equal(columns.desired_volume, null)
+    assert.deepEqual(facts, before)
+  }
 })

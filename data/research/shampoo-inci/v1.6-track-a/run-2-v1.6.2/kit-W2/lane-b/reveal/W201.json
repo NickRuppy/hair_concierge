@@ -1,0 +1,28 @@
+{
+  "blindId": "W201",
+  "productName": "Hask Curl Care Shampoo (dm/Müller: 'HASK Shampoo curls + coconut oil'; US: 'Curls + Coconut Oil, Argan Oil & Vitamin E Shampoo')",
+  "brand": "Hask",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Lockenshampoo | Mit Kokosöl, Arganöl und Vitamin E | Feuchtigkeitsspendend | Für alle Lockentypen | Vegan | Das Shampoo curls + coconut oil von HASK reinigt sanft und pflegt lockiges Haar. Angereichert mit einer Mischung aus Kokosöl, Arganöl und Vitamin E, spendet die Formel intensive Feuchtigkeit und kann dabei helfen, die Locken vor Schäden zu schützen. Bei jeder Haarwäsche werden Ablagerungen schonend entfernt, ohne die natürlichen Öle des Haares anzugreifen. Das Shampoo kann dazu beitragen, die natürliche Lockenstruktur zu erhalten und zu verbessern - für schwungvolle und definierte Locken ohne Frizz. | Produkteigenschaften: ohne Silikone, ohne Sulfat",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Starte deinen Tag mit dem HASK Curls Shampoo. Angereichert mit einer einzigartigen Mischung aus Kokosöl, Arganöl und Vitamin E, spendet diese Formel Feuchtigkeit und schützt Locken vor Schäden und Frizz. Jede Haarwäsche entfernt sanft Ablagerungen, ohne die natürlichen Öle zu entfernen, und sorgt für schwungvolle, schwerelose Locken. | Produkteigenschaft: pflegend|reinigend | Haartyp: lockiges Haar | Eigenschaften: ohne Sulfate|ohne Silikone|vegan",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "manufacturer_us",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Start wash day with this moisturizing shampoo that gently removes build-up without stripping away natural oils, revealing bouncy, weightless curls. | MOISTURIZES | PROTECTS CURLS | FIGHTS FRIZZ | BEST FOR All curl patterns and textures | Cleanses to remove build-up without stripping away natural oils | Hydrates and protects curl texture from damage and frizz | Made with a Curl Activating Complex for long-lasting, frizz-free curl retention and definition | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
+      "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Gentle enough for daily use."
+    }
+  ]
+}

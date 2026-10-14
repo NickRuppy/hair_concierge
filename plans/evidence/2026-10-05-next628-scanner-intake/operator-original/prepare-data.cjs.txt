@@ -1,0 +1,23 @@
+'use strict'
+// TMP-only normalization; parser/library reads only, no owner/test imports or child creation.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process')
+const D=__dirname,P='/tmp/test-audit-scanner-intake26',R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+for(const n of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[n]=()=>{throw Error('No children')}
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p)),write=(n,x)=>{if(path.dirname(path.resolve(D,n))!==D)throw Error('TMP-only');fs.writeFileSync(D+'/'+n,JSON.stringify(x,null,2)+'\n',{flag:'wx',mode:0o444})}
+if(sha(fs.readFileSync(P+'/manifest.json'))!=='d7d58df419edf371041212beb2159cb7f6b6d0282b3ecbd439b6de027ebbfc0e'||sha(fs.readFileSync(P+'/handoff-receipt.json'))!=='81ba5cfa65ae2e88504ba16f63139cd1cfaad87c86bfdc5a5def4c9e0ec79110')throw Error('Proposal changed')
+const M=read(P+'/manifest.json');for(const a of M.artifacts)if(sha(fs.readFileSync(P+'/'+a.path))!==a.sha256)throw Error('Artifact drift');for(const r of M.readSet)if(sha(fs.readFileSync(R+'/'+r.file))!==r.sha256)throw Error('Original source drift '+r.file)
+const g=require('./operator-guard.cjs'),ts=require(R+'/node_modules/typescript'),evidence={root:R,head:M.HEAD,branch:M.branch,phases:{before:{},transfer:{},cut:{}}}
+for(const p of M.phaseFiles){const b=fs.readFileSync(P+'/snapshots/'+p.phase+'/'+p.file);if(sha(b)!==p.sha256)throw Error('Phase drift');g.registrations(ts,p.file,b.toString());evidence.phases[p.phase][p.file]=p.sha256}
+const candidates=read(P+'/candidates.json').map(c=>({id:c.id,file:c.file,donor:{name:c.donor.title,body:c.donor.body,sha256:sha(c.donor.body)},keeper:{name:c.keeper.title,body:c.keeper.body,sha256:sha(c.keeper.body)},keeperAfter:c.keeperAfter,assertionUnion:c.assertionUnion,equivalence:c.equivalence}))
+const controls=read(P+'/controls.json').map(c=>{
+ const original=fs.readFileSync(R+'/'+c.owner,'utf8'),sf=g.parse(ts,c.owner,original),found=[]
+ function walk(n){if(ts.isFunctionDeclaration(n)&&n.name?.text===c.scope)found.push({n,kind:'function'});if(ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ts.isIdentifier(d.name)&&d.name.text===c.scope))found.push({n,kind:'variable'});ts.forEachChild(n,walk)}walk(sf)
+ if(found.length!==1||sha(original)!==c.ownerSha256||original.split(c.anchor).length!==2)throw Error('Scope identity')
+ const mutated=original.replace(c.anchor,()=>c.replacement);if(sha(mutated)!==c.mutatedSha256)throw Error('Mutant drift');g.parse(ts,c.owner,mutated)
+ const oracles={};let regexLiteral=null
+ for(const phase of ['transfer','cut']){const text=fs.readFileSync(P+'/snapshots/'+phase+'/'+c.testFile,'utf8'),r=g.registrations(ts,c.testFile,text).get(c.testName),o=c.oracles[phase];if(sha(r.statement)!==o.keeperSha256||!r.assertions.some(a=>a.startLine===o.line&&a.text===o.assertion))throw Error('Oracle drift');oracles[phase]={startLine:o.line,text:o.assertion,keeperSha256:o.keeperSha256,testFileSha256:o.testFileSha256};const assertion=g.parse(ts,'assertion.ts',o.assertion);function visit(n){if(n.kind===ts.SyntaxKind.RegularExpressionLiteral)regexLiteral=n.getText(assertion);ts.forEachChild(n,visit)}visit(assertion)}
+ const escaped=c.testName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+ return{id:c.id,file:c.owner,sourceSha256:c.ownerSha256,mutatedSha256:c.mutatedSha256,from:c.anchor,to:c.replacement,anchor:{kind:found[0].kind,scope:c.scope,scopeSha256:sha(found[0].n.getText(sf)),expectedOccurrences:1},test:{file:c.testFile,name:c.testName},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.testFile],oracles,expectedOperator:c.operator,errorMessageIncludes:c.operator==='deepStrictEqual'?['Expected values to be strictly deep-equal','- []']:['The input','match the regular expression',regexLiteral],intendedAssertion:c.oracles.transfer.assertion,proofKind:'actual source output, transferred assertion'}
+})
+write('operator-evidence.json',evidence);write('operator-candidates.json',candidates);write('operator-controls-normalized.json',controls)
+console.log(JSON.stringify({phasesParsed:6,originalReadsets:25,controlsParsed:14,ownerImports:0,childrenStarted:0,repositoryWrites:0}))

@@ -1,0 +1,19 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "staticOnly": [
+    "node /tmp/test-audit-offer-experiments87/check.cjs"
+  ],
+  "mainOnlyNativeFocus": "node --import ./tests/server-only-register.cjs --import tsx --test tests/free-reveal.test.ts",
+  "mainOnlyNativeCohort": "node --import ./tests/server-only-register.cjs --import tsx --test tests/personal-plan-pricing-experiment.test.ts tests/free-reveal.test.ts tests/meta-offer-view.test.ts tests/organic-offer-media-experiment.test.ts tests/meta-offer-view-client.test.ts tests/personal-plan-transition-motion.test.tsx",
+  "selectedPatternRule": "Anchor ^exact escaped keeper title$ from controls.json; each run must select exactly1. Main must enforce timeout/own-process-group and owned source restore; this package contains no execution/mutation driver.",
+  "browserReadOnlyReference": "npx playwright test tests/personal-plan-offer-motion.spec.ts --project=chromium (NOT run; requires reviewed lab/build configuration. Existing local-login opt-in can alter auth state; providerSDK can use network; playwright.config reads.env.local.)",
+  "expectedNativeDeclarationCounts": {
+    "allBefore": 68,
+    "allTransfer": 68,
+    "allCut": 64,
+    "freeBefore": 13,
+    "freeTransfer": 13,
+    "freeCut": 9
+  },
+  "noRuntimeExecuted": true
+}

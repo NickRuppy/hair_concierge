@@ -1,0 +1,236 @@
+[
+  {
+    "phase": "before",
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "sites": 20
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "sites": 20
+  },
+  {
+    "phase": "cut",
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "sha256": "c8c7e0b03e300f1aada3ffb9bd3cf4ee7a598ac4d87bce7b02ecfaffccf6d23a",
+    "sites": 19
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "sites": 15
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "sites": 15
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "sha256": "312b51252842994dca7e9588f58ab03852ab99de537966374a862c5b8184b06d",
+    "sites": 11
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "sites": 16
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "sites": 16
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "sites": 16
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "sites": 1
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "sites": 1
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "sites": 1
+  },
+  {
+    "phase": "before",
+    "file": "tests/payment-integrity.test.ts",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "sites": 12
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/payment-integrity.test.ts",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "sites": 12
+  },
+  {
+    "phase": "cut",
+    "file": "tests/payment-integrity.test.ts",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "sites": 12
+  },
+  {
+    "phase": "before",
+    "file": "tests/payment-monitor-route.test.ts",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "sites": 18
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/payment-monitor-route.test.ts",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "sites": 18
+  },
+  {
+    "phase": "cut",
+    "file": "tests/payment-monitor-route.test.ts",
+    "sha256": "28bcd568bf5119c64c2d105f7c872f1bd54e300c43144e0b8f64d40d81d67771",
+    "sites": 17
+  },
+  {
+    "phase": "before",
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "sites": 8
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "sites": 8
+  },
+  {
+    "phase": "cut",
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "sites": 8
+  },
+  {
+    "phase": "before",
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "sites": 4
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "sites": 4
+  },
+  {
+    "phase": "cut",
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "sites": 4
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "sites": 7
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "sites": 7
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "sites": 7
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "sites": 5
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "sites": 5
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "sites": 5
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "sites": 3
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "sites": 3
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "sites": 3
+  },
+  {
+    "phase": "before",
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "sites": 6
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "sites": 6
+  },
+  {
+    "phase": "cut",
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "sites": 6
+  },
+  {
+    "phase": "before",
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "sites": 10
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "sites": 10
+  },
+  {
+    "phase": "cut",
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "sites": 10
+  }
+]

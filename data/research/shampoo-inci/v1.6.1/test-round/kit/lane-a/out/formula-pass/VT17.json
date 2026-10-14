@@ -1,0 +1,271 @@
+{
+ "blindId": "VT17",
+ "inciFingerprintSha256": "6635962985f9b1a54602ba96907582a72056e007f26454febd9037f66aca91bb",
+ "phase": "formula-pass (blind, claims hidden)",
+ "lane": "lane-a",
+ "standard": "lane copy of candidate shampoo-classification-v1.6.1 (not locked)",
+ "identity": {
+  "packSize": "200 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalizationNote": "Packet entries already merge split synonyms (ID-2); every position cited is the normalized one-based position, identical to the packet index + 1.",
+  "inciCount": 19
+ },
+ "formulaFacts": {
+  "e3Point": {
+   "position": 12,
+   "inci": "PARFUM / FRAGRANCE"
+  },
+  "surfactants": [
+   {
+    "inci": "SODIUM LAURETH SULFATE",
+    "position": 2,
+    "class": "strong anionic, ether/sulfonate type (defining anionic)",
+    "prominent": true
+   },
+   {
+    "inci": "COCO-BETAINE",
+    "position": 4,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "PPG-5-CETETH-20",
+    "position": 13,
+    "class": "not a cleansing route (solubilizer)"
+   }
+  ],
+  "conditioningRoutes": {
+   "silicone": [
+    "DIMETHICONE@6"
+   ],
+   "cationic_polymer": [],
+   "cationic_conditioner": [],
+   "payload_lipid": [],
+   "weak_refatter": [
+    "2-OLEAMIDO-1,3-OCTADECANEDIOL@11 (ceramide-type lipid additive)"
+   ],
+   "pearlizing_fatty_route": [
+    "GLYCOL DISTEARATE@3"
+   ],
+   "humectants": [
+    "GLYCERIN@5"
+   ]
+  },
+  "actives": [
+   "SELENIUM SULFIDE@15",
+   "SALICYLIC ACID@14",
+   "MENTHOL@10",
+   "TOCOPHERYL ACETATE@19"
+  ],
+  "scalpRelevant": {
+   "e4ComfortRoutesProminent": [],
+   "e4HumectantRefattingProminent": [
+    "GLYCERIN@5"
+   ],
+   "coolingAgents": [
+    "MENTHOL@10 (prominent)"
+   ],
+   "essentialOilsOrAllergens": [],
+   "recognizedDandruffActives": [
+    "SELENIUM SULFIDE@15"
+   ]
+  },
+  "preservatives": [
+   "SODIUM BENZOATE@16",
+   "SELENIUM SULFIDE@15 (capped active, W-LINE class b)"
+  ],
+  "labelFact": "Selenium sulfide: EU Annex III anti-dandruff-only active, max 1 % (DS1); informational only, no copy."
+ },
+ "wLine": {
+  "wLine": {
+   "position": 12,
+   "inci": "PARFUM / FRAGRANCE",
+   "classes": [
+    "fragrance",
+    "alphabetical_tail"
+   ]
+  },
+  "cap": {
+   "e3Point": 12
+  },
+  "alphabeticalRun": {
+   "first": 11,
+   "last": 19
+  },
+  "skipped": [],
+  "codes": [],
+  "payloadLipidMaterial": [],
+  "payloadLipidNonMaterial": [],
+  "derivation": "Alphabetical run 11 (2-OLEAMIDO-1,3-OCTADECANEDIOL) to 19 (TOCOPHERYL ACETATE): 9 ascending entries under the W-LINE comparison (digits sort before letters, so 2-OLEAMIDO@11 sorts before MENTHOL@10 and breaks the shorter run CARBOMER@7-MENTHOL@10). The run does not contain the earliest cleansing surfactant (SODIUM LAURETH SULFATE@2); its second entry PARFUM@12 is a candidate (class d) and is also the E3 marker (class a). No candidate precedes it. (i) SLES@2 before it; (ii) nothing between it and the cap -> plausible; W-line = cap = 12, no fallback code. Alternative reading (if the manufacturer's letter-sort of 2-OLEAMIDO is followed, run 7-19): tail candidate CI 19140@8, W-line 8. The formula has no payload_lipid, so either reading changes nothing."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "moderate by C1: defining anionic SODIUM LAURETH SULFATE@2 (ether type) with the prominent buffer COCO-BETAINE@4 and no reinforcing strong anionic (the settled ether-sulfate-plus-betaine core).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "moderate: one meaningful conditioning system - prominent DIMETHICONE@6 - with light routes (pearlizing GLYCOL DISTEARATE@3, GLYCERIN@5, ceramide-type 2-OLEAMIDO-1,3-OCTADECANEDIOL@11). C2 is not met: there is no cationic polymer. Counter-signal: without a cationic deposition aid, silicone deposition from an SLES chassis may be limited, so low is the realistic neighbor.",
+   "ruleIds": [
+    "C2",
+    "5",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "moderate: one plausibly persistent system - prominent DIMETHICONE@6 - in an ordinary C1 SLES/betaine chassis (reset moderate); bounded residue is plausible. No cationic polymer or conditioner, no payload lipid (W-line PARFUM@12 gates nothing), so neither W-RICH nor the convergence route for high exists.",
+   "ruleIds": [
+    "6.6",
+    "6.7",
+    "W2",
+    "W-LINE",
+    "P0",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "2-OLEAMIDO-1,3-OCTADECANEDIOL@11 (ceramide-type; if read as payload_lipid it would be material at 11 < W-line 12, which changes no route because reset is moderate and it sits after MENTHOL@10)"
+    ],
+    "silicone": [
+     "DIMETHICONE@6"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "SODIUM LAURETH SULFATE@2 (strong anionic, ether type)",
+     "COCO-BETAINE@4 (amphoteric buffer)"
+    ],
+    "humectantContext": [
+     "GLYCERIN@5"
+    ],
+    "excluded": [
+     "GLYCOL DISTEARATE@3 (pearlizing wax, 6.4)",
+     "CARBOMER@7 (anionic acrylate rheology polymer, suspends the selenium sulfide; 6.4)",
+     "PPG-5-CETETH-20@13 (solubilizer)",
+     "TOCOPHERYL ACETATE@19 (antioxidant)",
+     "MENTHOL@10 (cooling agent)",
+     "SELENIUM SULFIDE@15, SALICYLIC ACID@14 (actives)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate",
+   "persistence": "moderate",
+   "resetCapacity": "moderate",
+   "counterevidence": "No cationic polymer to aid silicone deposition; the second deposition family is only a trace ceramide-type additive after MENTHOL@10; moderate SLES reset.",
+   "whyThisBand": "A prominent dimethicone is a plausibly persistent deposit; calling the product lightweight would understate the residue risk, while a single silicone without cationic aid and with moderate reset keeps it bounded.",
+   "whyNotNeighborBand": "low rather than moderate would need the silicone to be light/late; it is the sixth entry, before Carbomer and the actives (W2: two families present, so \"one light route\" is not sufficient). high is excluded: one route kind only, no W-RICH.",
+   "confidenceLimitingFactor": "Dimethicone deposition without cationic polymer is uncertain; realistic unknowns (silicone level, particle size) could move it to low."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "PROVISIONAL (formula-only, claims hidden): general. No claim direction is visible in the blind pass, so no specialist focus has a claim-plus-formula case yet (7.2 \"unsupported/generic claims\"). Formula care-direction verdict recorded for reconciliation: nonspecific. Formula-led route that could matter: recognized dandruff active SELENIUM SULFIDE@15 (DS1) with SALICYLIC ACID@14 and MENTHOL@10.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "GLYCERIN@5"
+    ],
+    "repairRoutes": [
+     "2-OLEAMIDO-1,3-OCTADECANEDIOL@11"
+    ],
+    "sharedConditioningRoutes": [
+     "DIMETHICONE@6"
+    ],
+    "limitation": "No coherent humectant or damage-care cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims hidden; the provisional value can change only through 3.2 reconciliation.",
+   "decisionTrace": "Claim direction: null (blind). Formula compatible: n/a until a claim names a job. Decision: provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "decisionTrace": "Empty default considered and kept: no exact-product positioning is visible in the blind pass (Section 8 condition 1 cannot be met).",
+   "rationale": "PROVISIONAL (formula-only): []. Secondary focus requires distinct exact-product positioning, hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "treatment",
+   "rationale": "PROVISIONAL (formula-only): regular, the default (Section 9). Every non-default trigger needs a moderate/high-graded claim or direction (CL-SRC), hidden in the blind pass. treatment becomes possible because dandruffSupport is supported (needs a qualifying E2 dandruff claim, U3); alternating impossible (not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "PROVISIONAL (formula-only): not_targeted, because SC1 positioning (an E2 sensitive/dry claim unit graded moderate/high) cannot be seen in the blind pass. Formula half (CSA) recorded for reconciliation: CSA would pass only through the humectant list (GLYCERIN@5 prominent); there is no E4 comfort route, so an S-SENSITIVE gate would fail. Counter-signals: prominent cooling agent MENTHOL@10; declared PARFUM@12.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E3",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: the complete INCI contains SELENIUM SULFIDE@15, a recognized anti-dandruff active (Section 11 table; DS1 for selenium sulfide). Formula-only property, final in the blind pass; whether a dandruff target is projected depends on the claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1",
+    "N-ALT"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "provisionalNotes": [
+  "focusPrimary, focusSecondary, usageRole and scalpComfortTarget are claim-dependent and provisional (formula-only).",
+  "dandruffSupport supported via DS1 (selenium sulfide); a dandruff target depends on a qualifying E2 dandruff claim (S-DANDRUFF, R17.3)."
+ ]
+}

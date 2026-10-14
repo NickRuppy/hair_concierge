@@ -1,0 +1,104 @@
+{
+  "blindId": "L17",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: Sodium Laureth Sulfate #2 is effectively unbuffered - Cocamidopropyl Betaine #5 sits after Sodium Chloride #3 and Parfum #4 - with no refatting or conditioning counter-signal at all, a chelator (Tetrasodium EDTA #18) and explicit deep-cleansing intent. C1 does not apply (weak amphoteric buffering and reset intent); net effect remains strong after counter-signals.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Sodium Chloride #3", "Parfum #4", "Cocamidopropyl Betaine #5", "Tetrasodium EDTA #18"],
+      "counterSignal": "single anionic route, betaine present; no second reinforcing anionic",
+      "neighboringAlternative": "moderate"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: no cationic, silicone, lipid or humectant; Hydroxypropyl Methylcellulose #13 is a thickener.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Hydroxypropyl Methylcellulose #13"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: depositionLoad light (none), persistence low, resetCapacity strong.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "strong" },
+      "formulaFacts": ["no deposition route"],
+      "counterSignal": "none",
+      "whyThisBand": "deposition absent",
+      "whyNotNeighborBand": "nothing to persist",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "Clarifying: 'Tiefenreinigung' in the product name, 'Tiefenreinigendes Shampoo', 'entfernt Ablagerungen'; strong, unconditioned SLES chassis is compatible.",
+      "ruleIds": ["§7.2", "§7.1"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "clarifying focus" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Tetrasodium EDTA #18"],
+      "counterSignal": "'Glanz' co-named benefit; positioning text is retailer copy",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Deep-cleansing name claim + compatible strong formula -> clarifying."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'Glanz' is named but has no independent smoothing/film route; it is an outcome of residue removal (restatement of cleansing, §8 condition 3; F2).",
+      "ruleIds": ["§8", "F2"],
+      "neighboringAlternative": "shine"
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "moderate",
+      "rationale": "Occasional_reset: explicit deep-cleansing product by D1 lexicon ('Tiefenreinigung' in the product name) with strong cleansing.",
+      "ruleIds": ["§9", "D1"],
+      "counterSignal": "directions do not restrict frequency",
+      "neighboringAlternative": "alternating"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp-comfort positioning; strong reset, citrus oils.",
+      "ruleIds": ["§10"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "high", "normal": "high", "coarse": "high" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C low). No neighbors -> no T4 flag.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": { "primary": "ordinary", "secondary": null },
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "scalpTargetConfidence": "high",
+    "cleansingIntensity": "clarifying",
+    "cleansingIntensityRationale": "I1: strong + occasional_reset + clarifying primary -> clarifying (amber against normal bucket's regular, I2). I3: neighbor moderate -> regular would equal the expected intensity -> review_intensity_boundary.",
+    "explicitResetPositioning": true,
+    "deepCleanserListing": "flagged",
+    "deepCleanserRationale": "D1 true ('Tiefenreinigung' in product name, E1 high). D2: strong + clarifying + occasional_reset + D1 -> flagged; confidence moderate (min of cleansing/focus/usage). Regular entry kept.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_intensity_boundary"],
+    "informationalNotes": ["deep_cleanser_listing:needs_record"]
+  },
+  "uncertainties": [
+    "C1 does not say how late the amphoteric may sit and still 'buffer'; here betaine follows salt and fragrance. Treated as weak buffering -> strong. Compare L10 (same two surfactants, betaine at #3, judged moderate): the line between them is not specified.",
+    "D2 deep-cleanser record existence is not visible to the lane (needs_record assumed)."
+  ]
+}

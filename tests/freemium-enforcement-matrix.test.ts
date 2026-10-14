@@ -105,16 +105,6 @@ async function withFlagOn(fn: () => Promise<void>) {
   }
 }
 
-test("flag on: a free authenticated user is still denied /api/profile (non-admitted, subscription_required)", async () => {
-  await withFlagOn(async () => {
-    const response = await createFreeUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile"),
-    )
-    assert.equal(response.status, 403)
-    assert.deepEqual(await response.json(), { error: "subscription_required" })
-  })
-})
-
 /**
  * T15 (freemium-scanner-first PR5): the profile page's Haar-Check corner lock relies on
  * the profile editors' save (`POST /api/profile/answers` since the clean switch; formerly
@@ -350,71 +340,6 @@ test("hasFreemiumPaidAccess: flag off is inert — allowed, no billing/moderator
   }
 })
 
-test("hasFreemiumPaidAccess: no active subscription, one-time access, or moderator grant denies", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(userId, userEmail, false, accessDeps())
-    assert.equal(result, "denied")
-  })
-})
-
-test("hasFreemiumPaidAccess: an active subscription (hasAppAccess) grants access", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(
-      userId,
-      userEmail,
-      false,
-      accessDeps({ hasAppAccess: async () => true }),
-    )
-    assert.equal(result, "allowed")
-  })
-})
-
-test("hasFreemiumPaidAccess: an active one-time purchase grants access even when hasAppAccess is false", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(
-      userId,
-      userEmail,
-      false,
-      accessDeps({ resolveOneTimeAccessState: async () => "active" }),
-    )
-    assert.equal(result, "allowed")
-  })
-})
-
-test("hasFreemiumPaidAccess: an active moderator grant grants access", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(
-      userId,
-      userEmail,
-      false,
-      accessDeps({
-        resolveModeratorAccess: async () => ({
-          kind: "active",
-          campaignId: "c1",
-          expiresAt: "2026-12-31T00:00:00.000Z",
-        }),
-      }),
-    )
-    assert.equal(result, "allowed")
-  })
-})
-
-test("hasFreemiumPaidAccess: an ended moderator cannot retain access through a manual grant alone (mirrors T2 I1/I3 fix)", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(
-      userId,
-      userEmail,
-      false,
-      accessDeps({
-        hasAppAccess: async () => true, // manual-grant-inclusive check says yes
-        hasPaidAppAccess: async () => false, // independent (excludes manual grants) check says no
-        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
-      }),
-    )
-    assert.equal(result, "denied")
-  })
-})
-
 test("hasFreemiumPaidAccess: an ended moderator with independently verified paid access remains admitted", async () => {
   await withFlagOn(async () => {
     const result = await hasFreemiumPaidAccess(
@@ -521,30 +446,6 @@ test("hasFreemiumPaidAccess: an email-only manual grant is allowed once the auth
   })
 })
 
-// PR1 review fix (F1b): a field-test guest's moderator lookup is skipped
-// entirely by middleware (`!fieldTestGuest && dependencies.resolveModeratorAccess
-// ? ... : Promise.resolve("none")`), so an unrelated moderator outage can
-// never surface for them. The `resolveModeratorAccess` stub below returns a
-// state that would flip the outcome if it were ever consulted (`"ended"`,
-// which forces the independent-paid-access recomputation and — since that
-// recomputation says no — would deny), proving the skip actually happens
-// rather than coincidentally agreeing.
-test("hasFreemiumPaidAccess: a field-test guest's moderator lookup is skipped, mirroring middleware's access_kind exception", async () => {
-  await withFlagOn(async () => {
-    const result = await hasFreemiumPaidAccess(
-      userId,
-      userEmail,
-      true,
-      accessDeps({
-        hasAppAccess: async () => true, // valid manual field-test grant
-        hasPaidAppAccess: async () => false, // no independent paid entitlement
-        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
-      }),
-    )
-    assert.equal(result, "allowed")
-  })
-})
-
 // --- 4. I3: parity between the middleware composite and the guard util -----
 
 /**
@@ -584,6 +485,15 @@ type ParityScenario = {
 }
 
 const parityScenarios: ParityScenario[] = [
+  {
+    name: "ended-manual-grant",
+    hasCurrentAppAccess: () => true,
+    hasCurrentPaidAppAccess: () => false,
+    oneTimeAccessState: "none",
+    moderatorAccess: { kind: "ended", campaignId: "c1" },
+    fieldTestGuest: false,
+    expected: "denied",
+  },
   {
     name: "subscription-active",
     hasCurrentAppAccess: () => true,
@@ -718,6 +628,8 @@ for (const scenario of parityScenarios) {
           scenario.oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
         resolveModeratorAccess: (async () =>
           scenario.moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
+        hasCurrentPartnerAccess: (async () =>
+          false) as UpdateSessionDependencies["hasCurrentPartnerAccess"],
         getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
       }
 
@@ -729,7 +641,10 @@ for (const scenario of parityScenarios) {
         assert.equal(response.status, 200, `middleware: ${scenario.name}`)
       } else if (scenario.expected === "denied") {
         assert.equal(response.status, 403, `middleware: ${scenario.name}`)
-        assert.deepEqual(await response.json(), { error: "subscription_required" })
+        assert.deepEqual(await response.json(), {
+          error:
+            scenario.name === "ended-manual-grant" ? "field_test_ended" : "subscription_required",
+        })
       } else {
         assert.equal(response.status, 503, `middleware: ${scenario.name}`)
         assert.deepEqual(await response.json(), { error: "moderator_access_unavailable" })

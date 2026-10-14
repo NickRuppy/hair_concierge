@@ -1,0 +1,52 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
+const kit = '/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m';
+const proof = require(kit + '/operator-proof.cjs');
+const sha = b => crypto.createHash('sha256').update(b).digest('hex');
+const controls = JSON.parse(fs.readFileSync(kit + '/operator-controls-normalized.json'));
+const dirs = process.argv.slice(2);
+assert.equal(dirs.length, 2);
+const all = [];
+for (const [index, dir] of dirs.entries()) {
+  const phase = index ? 'cut' : 'transfer';
+  const records = JSON.parse(fs.readFileSync(dir + '/receipt.json'));
+  const complete = JSON.parse(fs.readFileSync(dir + '/complete.json'));
+  assert.equal(records.length, 20);
+  assert.equal(complete.verified, 20);
+  assert.equal(complete.cleanRuns, 40);
+  assert.equal(complete.phase, phase);
+  const reviews = records.map((r, i) => {
+    const c = controls[i];
+    assert.equal(r.id, c.id);
+    assert.equal(r.byteExactRestored, true);
+    assert.equal(r.sourceRestored, c.sourceSha256);
+    assert.equal(r.actualSourceFault, c.mutatedSha256);
+    assert.equal(sha(fs.readFileSync('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/' + c.file)), c.sourceSha256);
+    const runs = {};
+    for (const label of ['before', 'fault', 'after']) {
+      const b = fs.readFileSync(dir + '/' + c.id + '-' + label + '.tap');
+      assert.equal(sha(b), r[label].logSHA256);
+      assert.equal(sha(fs.readFileSync(dir + '/' + c.id + '-' + label + '.command.json')), r[label].commandSHA256);
+      runs[label] = {...r[label], ...proof.parseTAP(b.toString()), text: b.toString()};
+    }
+    assert.ok(proof.clean(c, runs.before));
+    assert.ok(proof.clean(c, runs.after));
+    const parsed = proof.intended(c, runs.fault, phase);
+    assert.ok(parsed.accepted, c.id);
+    if (index) {
+      const before = all[0].reviews[i];
+      assert.equal(parsed.operator, before.operator);
+      assert.deepEqual(parsed.diagnostic, before.diagnostic, c.id + ' complete decoded diagnostic differs across phases');
+      assert.equal(parsed.firstFrame, before.firstFrame);
+    }
+    return {id:c.id, operator:parsed.operator, firstFrame:parsed.firstFrame, diagnostic:parsed.diagnostic,
+      logSHA256:r.fault.logSHA256, byteExactRestored:true, cleanBefore:true, cleanAfter:true};
+  });
+  all.push({phase, dir, reviews, completionSHA256:sha(fs.readFileSync(dir + '/complete.json'))});
+}
+const output = {status:'PASS', requiredControls:40, cleanRuns:80,
+  completeDecodedDiagnosticsIdenticalAcrossPhases:true, all,
+  readLimits:'Root fully read all scalar controls, Chat timestamp markup control and representative routine form TAP. All remaining complete TAP diagnostics decoded and validated with reviewed strict decoder, actual prohibited-node witnesses and FIRST frames inspected. Postcut complete decoded values compared exactly against transfer; repeated decorative HTML not separately human-read in full. No unseen SSR-tail claim.'};
+fs.writeFileSync('/tmp/test-audit-public66-root-final-diagnostic-review.json', JSON.stringify(output,null,2)+'\n');
+console.log(JSON.stringify({status:output.status, requiredControls:40, cleanRuns:80, completeDecodedDiagnosticsIdenticalAcrossPhases:true, completions:all.map(x=>x.completionSHA256), readLimits:output.readLimits}));

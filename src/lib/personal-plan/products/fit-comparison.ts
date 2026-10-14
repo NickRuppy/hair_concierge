@@ -1,3 +1,4 @@
+import { isProductMarketSegmentDisplayEnabled } from "@/lib/personal-plan/release"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 
 import type {
@@ -15,26 +16,34 @@ import type {
   Stage3KnownAuthorityEvaluation,
 } from "./authority/contracts"
 import {
-  careDirectionAxisFitResult,
-  orderedAxisFitResult,
-  repairSupportAxisFitResult,
-} from "./authority/categories/axis-fit"
+  compareBondbuilderTieOrder,
+  bondbuilderMatchesTiming,
+  bondbuilderTimingBucket,
+  bondbuilderTimingOf,
+  bondbuilderTrustRank,
+} from "./authority/categories/bondbuilder"
+import type { BondbuilderTiming } from "@/lib/personal-plan/refinement/types"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
-import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
+import {
+  compareRankableCandidates,
+  shampooGentlenessRank,
+  dryShampooVolumeRank,
+  type RankableCandidate,
+} from "./candidate-ranking"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
   positionLabel,
-  positionsOverlap,
+  criterionIdForDimension,
   renderedDimensions,
   targetPositionLabel,
   type ComparisonProductEntry,
   type Stage3FitComparisonDimension,
-  type Stage3FitComparisonPosition,
   type Stage3FitComparisonProduct,
 } from "./comparison-dimensions"
 import { compactCriterionSchema } from "./fit-comparison-schema"
+import type { BudgetCandidateView, BudgetNotice, BudgetRoleAllocation } from "./budget-policy"
 
 export type {
   ComparisonProductEntry,
@@ -72,7 +81,14 @@ export type Stage3FitEvidenceRow = {
   }>
 }
 
-export type Stage3FitComparison =
+/** Present only when a budget allocation shaped the comparison; absent (not null) otherwise. */
+export type Stage3FitComparisonBudgetFields = {
+  defaultProductId?: string | null
+  budgetNotice?: BudgetNotice | null
+  budgetException?: BudgetRoleAllocation["exception"]
+}
+
+export type Stage3FitComparison = (
   | {
       schemaVersion: 1
       mode: "comparison"
@@ -98,6 +114,8 @@ export type Stage3FitComparison =
       evidenceRows?: Stage3FitEvidenceRow[]
       reason: "specialist_category" | "no_exact_product"
     }
+) &
+  Stage3FitComparisonBudgetFields
 
 export type Stage3SelectedComparisonCandidate = {
   productId: string
@@ -118,12 +136,17 @@ export function stage3FitComparisonForTransport(
   return { ...comparison, dimensions: [] }
 }
 
+/** One fit-ranked comparison candidate with the facts the budget policy and cards need. */
+export type Stage3RankedComparisonCandidate = CandidateAssessment
+
 type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   catalogSortOrder: number | null | undefined
   facts: Stage3CategoryProductFacts
   targetMatchCount: number
   targetCount: number
   cautionCount: number
+  shampooGentleness?: number
+  dryShampooVolumePreference?: number
   priceEur: number | null
 }
 
@@ -131,35 +154,67 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   input: Stage3AuthorityInput<C>,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   context?: Stage3EvaluationContext,
-  options?: { alternativeSelection?: Stage3FitComparisonAlternativeSelection },
+  options?: {
+    alternativeSelection?: Stage3FitComparisonAlternativeSelection
+    /** This subject's slice of a proposal-wide budget allocation. */
+    budgetAllocation?: BudgetRoleAllocation
+    /** The full fit ranking already computed for the allocation (budget path only). */
+    rankedCandidates?: readonly Stage3RankedComparisonCandidate[]
+    /**
+     * A stored choice that must stay visible (price-neutral path only): a ranking change may
+     * push a still-eligible chosen product out of the bounded shortlist.
+     */
+    keepCandidateId?: string | null
+  },
 ): Stage3FitComparison {
   const authorityInput = input as unknown as Stage3AuthorityInput
   const authorityEvaluation = subjectEvaluation ?? evaluateStage3Authority(authorityInput)
-  const selectedCandidates = boundedSelectedComparisonCandidateAssessments(
-    authorityInput,
-    authorityEvaluation,
-    options?.alternativeSelection ?? "web",
-  )
+  const selection = options?.alternativeSelection ?? "web"
+  const allocation = options?.budgetAllocation
+  const selectedCandidates = allocation
+    ? budgetedComparisonCandidates(
+        options?.rankedCandidates ??
+          rankStage3ComparisonCandidates(authorityInput, authorityEvaluation, selection),
+        allocation,
+        selection,
+      )
+    : boundedSelectedComparisonCandidateAssessments(
+        authorityInput,
+        authorityEvaluation,
+        selection,
+        options?.keepCandidateId ?? null,
+      )
+  const budgetViews = allocation
+    ? new Map(allocation.candidates.map((view) => [view.productId, view]))
+    : undefined
+  const budgetFields: Stage3FitComparisonBudgetFields = allocation
+    ? {
+        defaultProductId: allocation.defaultProductId,
+        budgetNotice: allocation.notice,
+        budgetException: allocation.exception,
+      }
+    : {}
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
-    ...alternativeProductEntries(authorityInput, selectedCandidates),
+    ...alternativeProductEntries(authorityInput, selectedCandidates, budgetViews),
   ]
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
   const dimensions = comparisonDimensions(authorityInput, entries)
-  const evidenceRows =
-    dimensions.length > 0
-      ? evidenceRowsFromDimensions(
-          authorityInput,
-          dimensions,
-          entries,
-          authorityEvaluation,
-          selectedCandidates,
-          context,
-        )
-      : compactEvidenceRows(authorityInput, authorityEvaluation, entries, selectedCandidates)
+  // Bondbuilders retain their application row even when no property axis separates them.
+  const hasComparisonEvidence = dimensions.length > 0 || authorityInput.category === "bondbuilder"
+  const evidenceRows = hasComparisonEvidence
+    ? evidenceRowsFromDimensions(
+        authorityInput,
+        dimensions,
+        entries,
+        authorityEvaluation,
+        selectedCandidates,
+        context,
+      )
+    : compactEvidenceRows(authorityInput, authorityEvaluation, entries, selectedCandidates)
 
-  if (dimensions.length > 0) {
+  if (hasComparisonEvidence) {
     return {
       schemaVersion: 1,
       mode: "comparison",
@@ -171,6 +226,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
       alternatives,
       dimensions,
       evidenceRows,
+      ...budgetFields,
     }
   }
 
@@ -186,19 +242,27 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
     dimensions: [],
     evidenceRows,
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
+    ...budgetFields,
   }
 }
 
-export function findStage3SelectedComparisonCandidate<C extends PersonalPlanCategory>(
-  input: Stage3AuthorityInput<C>,
-  selectedProductId: string,
-): Stage3SelectedComparisonCandidate | null {
-  const authorityInput = input as unknown as Stage3AuthorityInput
-  const candidate =
-    boundedSelectedComparisonCandidateAssessments(authorityInput).find(
-      (item) => item.productId === selectedProductId,
-    ) ?? null
-  return candidate ? publicSelectedCandidate(candidate) : null
+/** The allocation's candidates in its order, mapped back to assessments; unknown IDs drop out. */
+function budgetedComparisonCandidates(
+  ranked: readonly CandidateAssessment[],
+  allocation: BudgetRoleAllocation,
+  selection: Stage3FitComparisonAlternativeSelection,
+): CandidateAssessment[] {
+  const byId = new Map(ranked.map((candidate) => [candidate.productId, candidate]))
+  const limit =
+    selection === "native"
+      ? STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT
+      : STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT
+  return allocation.candidates
+    .flatMap((view) => {
+      const candidate = byId.get(view.productId)
+      return candidate ? [candidate] : []
+    })
+    .slice(0, limit)
 }
 
 function currentComparisonProductEntries(
@@ -236,13 +300,14 @@ function currentComparisonProductEntries(
 function alternativeProductEntries(
   input: Stage3AuthorityInput,
   alternatives: readonly CandidateAssessment[],
+  budgetViews?: ReadonlyMap<string, BudgetCandidateView>,
 ): ComparisonProductEntry[] {
   return alternatives.map((candidate) => ({
     product: {
       productId: candidate.productId,
       displayName: candidate.recommendation.displayName,
       presentationImageUrl: candidate.facts.presentationImageUrl ?? null,
-      presentation: presentationFor(candidate.facts),
+      presentation: presentationFor(candidate.facts, budgetViews?.get(candidate.productId)),
       category: candidate.category,
       role: candidate.role,
       source: "alternative",
@@ -253,6 +318,7 @@ function alternativeProductEntries(
 
 function presentationFor(
   facts: Stage3CategoryProductFacts,
+  budgetView?: BudgetCandidateView,
 ): Stage3FitComparisonProduct["presentation"] {
   return {
     priceLabel: priceLabel(facts),
@@ -262,7 +328,52 @@ function presentationFor(
       (facts.netContentUnit === "ml" || facts.netContentUnit === "g")
         ? `${formatNumber(facts.netContentValue)} ${facts.netContentUnit}`
         : null,
+    ...(budgetView
+      ? {
+          packagePriceEur: usablePackagePriceEur(facts),
+          overBudget: budgetView.overBudget,
+          labelKind: budgetView.label,
+        }
+      : {}),
+    ...marketSegmentBadge(facts),
   }
+}
+
+const MARKET_SEGMENT_BADGE_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+])
+
+/**
+ * The Drogerie/Profi badge: only behind the display flag, only for shampoo, conditioner and mask,
+ * and only for a known segment. Absent (not null) otherwise, so flag-off bytes stay unchanged.
+ */
+function marketSegmentBadge(
+  facts: Stage3CategoryProductFacts,
+): { marketSegment: "drugstore" | "professional" } | Record<string, never> {
+  const segment = facts.marketSegment
+  return isProductMarketSegmentDisplayEnabled() &&
+    MARKET_SEGMENT_BADGE_CATEGORIES.has(facts.category) &&
+    (segment === "drugstore" || segment === "professional")
+    ? { marketSegment: segment }
+    : {}
+}
+
+/**
+ * The package price the budget may use: only a buyable link with a finite positive EUR price.
+ * Anything else is unknown, and unknown prices are never treated as affordable.
+ */
+export function usablePackagePriceEur(
+  facts: Pick<Stage3CategoryProductFacts, "priceEur" | "purchaseLinkStatus">,
+): number | null {
+  const price = facts.priceEur
+  return facts.purchaseLinkStatus === "available" &&
+    typeof price === "number" &&
+    Number.isFinite(price) &&
+    price > 0
+    ? price
+    : null
 }
 
 /**
@@ -287,7 +398,11 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(value)
 }
 
-function selectedComparisonCandidateAssessments(
+/**
+ * The complete price-neutral fit ranking of eligible comparison candidates (best first), before
+ * any display bound. The budget policy consumes this list; it never re-ranks by fit.
+ */
+export function rankStage3ComparisonCandidates(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   selection: Stage3FitComparisonAlternativeSelection = "web",
@@ -308,17 +423,62 @@ function selectedComparisonCandidateAssessments(
       (candidate) =>
         selection === "native" || (candidate.targetCount > 0 && candidate.targetMatchCount > 0),
     )
-    .sort((left, right) =>
-      compareWithAuthorityPin(
-        toRankableCandidate(left),
-        toRankableCandidate(right),
-        pinnedRecommendationProductId,
-      ),
+    .sort(
+      (left, right) =>
+        (input.category === "bondbuilder"
+          ? compareBondbuilderTrust(left, right, bondbuilderTimingOf(input))
+          : 0) ||
+        compareWithAuthorityPin(
+          toRankableCandidate(left),
+          toRankableCandidate(right),
+          pinnedRecommendationProductId,
+        ),
     )
 }
 
 /**
- * The authority adapter's own recommendation (e.g. Bondbuilder's K18 tie-default) is the
+ * Bondbuilders rank by verdict, reviewed trust, timing, then price, catalogue order and id.
+ * The capped budget policy consumes this order afterwards. Trust and timing always precede price.
+ */
+export function compareBondbuilderTrust(
+  left: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
+  right: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
+  timing: BondbuilderTiming = "no_preference",
+): number {
+  const verdictOrder = Number(left.verdict !== "ideal") - Number(right.verdict !== "ideal")
+  if (verdictOrder !== 0) return verdictOrder
+  const trustOrder = candidateTrustRank(left.facts) - candidateTrustRank(right.facts)
+  if (trustOrder !== 0) return trustOrder
+  const timingOrder =
+    candidateTimingRank(left.facts, timing) - candidateTimingRank(right.facts, timing)
+  if (timingOrder !== 0) return timingOrder
+  return compareBondbuilderTieOrder(
+    { ...left.facts, productId: left.productId },
+    { ...right.facts, productId: right.productId },
+  )
+}
+
+/**
+ * 0 when a Bondbuilder is used the way the person asked for (or she has no preference), 1
+ * otherwise; other categories never rank. Also the budget policy's `usageRank`.
+ */
+export function candidateTimingRank(
+  facts: Stage3CategoryProductFacts,
+  timing: BondbuilderTiming,
+): number {
+  return facts.category === "bondbuilder" &&
+    !bondbuilderMatchesTiming(bondbuilderTimingBucket(facts.spec), timing)
+    ? 1
+    : 0
+}
+
+/** The Bondbuilder trust rank of a candidate (lower is better); other categories never rank. */
+export function candidateTrustRank(facts: Stage3CategoryProductFacts): number {
+  return facts.category === "bondbuilder" ? bondbuilderTrustRank(facts.spec.claimTrustLevel) : 0
+}
+
+/**
+ * The authority adapter's own recommendation (e.g. Bondbuilder's cheapest tie option) is the
  * product `evaluateStage3Authority` would hand back for this exact input. Reuses an
  * already-computed evaluation when the caller has one to avoid evaluating twice.
  */
@@ -335,6 +495,8 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
     verdict: candidate.verdict,
     targetMatchCount: candidate.targetMatchCount,
     cautionCount: candidate.cautionCount,
+    shampooGentleness: candidate.shampooGentleness,
+    dryShampooVolumePreference: candidate.dryShampooVolumePreference,
     catalogSortOrder: candidate.catalogSortOrder,
     priceEur: candidate.priceEur,
     productId: candidate.productId,
@@ -343,9 +505,9 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
 
 /**
  * Invariant: the authority's pinned recommendation only breaks ties among candidates already
- * equal on verdict, coverage, and cautions — it never overrides those fields. Implemented by
+ * equal on verdict, coverage, cautions, shampoo gentleness and dry-shampoo volume preference — it never overrides those fields. Implemented by
  * running the shared comparator twice: once with catalogSortOrder/priceEur/productId neutralized
- * (isolating verdict/coverage/cautions), then — only on a genuine tie — the pin, then the full
+ * (isolating verdict/coverage/cautions/gentleness/volume), then — only on a genuine tie — the pin, then the full
  * comparator (which restores catalogSortOrder/priceEur/productId) for the remaining tiebreaks.
  */
 function compareWithAuthorityPin(
@@ -370,34 +532,47 @@ function boundedSelectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   selection: Stage3FitComparisonAlternativeSelection = "web",
+  keepCandidateId: string | null = null,
 ): CandidateAssessment[] {
-  const candidates = selectedComparisonCandidateAssessments(input, subjectEvaluation, selection)
+  const candidates = rankStage3ComparisonCandidates(input, subjectEvaluation, selection)
   if (selection === "native") {
-    return candidates
-      .sort(compareNativePresentationCandidates)
-      .slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+    // Bondbuilders keep the authority order (Nick's ruling S2: verdict → trust → timing → price /
+    // catalogue order / id); a price-only presentation would put medium-trust products ahead (S4-02).
+    // Other categories keep the native verdict → price presentation.
+    return (
+      input.category === "bondbuilder"
+        ? candidates
+        : candidates.sort(compareNativePresentationCandidates)
+    ).slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   }
-  return candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const bounded = candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const kept = keepCandidateId
+    ? candidates.find((candidate) => candidate.productId === keepCandidateId)
+    : undefined
+  if (!kept || bounded.includes(kept)) return bounded
+  // The stored choice takes the last slot so the shortlist keeps its size.
+  return [...bounded.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT - 1), kept]
 }
 
-/** Native carousel policy is presentation-only: verdict, then comparable EUR price, then ID. */
+/** Native keeps its price-first tie policy, with the shared volume preference before price. */
 function compareNativePresentationCandidates(
   left: CandidateAssessment,
   right: CandidateAssessment,
 ): number {
-  const verdict = left.verdict === right.verdict ? 0 : left.verdict === "ideal" ? -1 : 1
-  if (verdict !== 0) return verdict
-  const price = (candidate: CandidateAssessment) =>
-    candidate.facts.currency === "EUR" &&
-    Number.isFinite(candidate.priceEur) &&
-    candidate.priceEur !== null &&
-    candidate.priceEur >= 0
-      ? candidate.priceEur
-      : Number.POSITIVE_INFINITY
-  const leftPrice = price(left)
-  const rightPrice = price(right)
-  if (leftPrice !== rightPrice) return leftPrice - rightPrice
-  return left.productId.localeCompare(right.productId)
+  const rank = (candidate: CandidateAssessment): RankableCandidate => ({
+    ...toRankableCandidate(candidate),
+    targetMatchCount: 0,
+    cautionCount: 0,
+    catalogSortOrder: 0,
+    priceEur:
+      candidate.facts.currency === "EUR" &&
+      Number.isFinite(candidate.priceEur) &&
+      candidate.priceEur !== null &&
+      candidate.priceEur >= 0
+        ? candidate.priceEur
+        : null,
+  })
+  return compareRankableCandidates(rank(left), rank(right))
 }
 
 function assessCandidate(
@@ -422,6 +597,8 @@ function assessCandidate(
     targetMatchCount: coverage.matches,
     targetCount: coverage.total,
     cautionCount: detached.criteria.filter((criterion) => criterion.result === "caution").length,
+    shampooGentleness: shampooGentlenessRank(input, candidate),
+    dryShampooVolumePreference: dryShampooVolumeRank(input, candidate),
     priceEur: candidate.priceEur ?? null,
   }
 }
@@ -512,12 +689,7 @@ function evidenceRowsFromDimensions(
       return {
         productId,
         valueLabel: positionLabel(position, dimension.stops),
-        relation: dimensionRelation(
-          input,
-          dimension,
-          position,
-          criteriaByProduct.get(productId) ?? [],
-        ),
+        relation: dimensionRelation(dimension, criteriaByProduct.get(productId) ?? []),
       }
     }),
   }))
@@ -540,59 +712,14 @@ function criteriaByProductId(
 }
 
 function dimensionRelation(
-  input: Stage3AuthorityInput,
   dimension: Stage3FitComparisonDimension,
-  position: Stage3FitComparisonPosition,
   criteria: readonly Stage3CriterionResult[],
 ): Stage3FitEvidenceRelation {
-  if (position.kind === "unknown") return "unknown"
   if (!dimension.targetPosition || dimension.targetPosition.kind === "unknown") return "no_target"
-
-  const criterionId =
-    dimension.dimensionId === "oil.role_support" ? "oil.role" : dimension.dimensionId
-  const criterion = criteria.find((item) => item.criterionId === criterionId)
-  if (
-    criterion &&
-    (input.category === "mask" || input.category === "oil" || input.category === "bondbuilder")
+  const criterion = criteria.find(
+    (item) => item.criterionId === criterionIdForDimension(dimension.dimensionId),
   )
-    return stage3CriterionEvidenceRelation(criterion.result)
-
-  if (dimension.dimensionId.endsWith(".care_direction"))
-    return positionAxisRelation(position, dimension.targetPosition, careDirectionAxisFitResult)
-
-  if (
-    dimension.dimensionId.endsWith(".weight") ||
-    dimension.dimensionId === "shampoo.cleansing_intensity"
-  )
-    return positionAxisRelation(position, dimension.targetPosition, (product, target) =>
-      orderedAxisFitResult(
-        product,
-        target,
-        dimension.stops.map((stop) => stop.stopId),
-      ),
-    )
-
-  if (dimension.dimensionId.endsWith(".repair_support"))
-    return positionAxisRelation(position, dimension.targetPosition, (product, target) =>
-      repairSupportAxisFitResult(
-        product,
-        target,
-        dimension.stops.map((stop) => stop.stopId),
-      ),
-    )
-
-  return relationToTarget(position, dimension.targetPosition)
-}
-
-function positionAxisRelation(
-  product: Stage3FitComparisonPosition,
-  target: Stage3FitComparisonPosition,
-  resultFor: (product: string, target: string) => Stage3CriterionResult["result"],
-): Stage3FitEvidenceRelation {
-  if (product.kind === "unknown" || target.kind === "unknown") return "unknown"
-  if (product.kind !== "position" || target.kind !== "position")
-    return positionsOverlap(product, target) ? "in_target" : "outside_target"
-  return stage3CriterionEvidenceRelation(resultFor(product.stopId, target.stopId))
+  return stage3CriterionEvidenceRelation(criterion?.result)
 }
 
 function compactEvidenceRows(
@@ -632,15 +759,6 @@ function compactEvidenceRows(
   })
 }
 
-function relationToTarget(
-  product: Stage3FitComparisonPosition,
-  target: Stage3FitComparisonPosition | null,
-): Stage3FitEvidenceRelation {
-  if (product.kind === "unknown") return "unknown"
-  if (!target || target.kind === "unknown") return "no_target"
-  return positionsOverlap(product, target) ? "in_target" : "outside_target"
-}
-
 export function stage3CriterionEvidenceRelation(
   result: Stage3CriterionResult["result"] | undefined,
 ): Stage3FitEvidenceRelation {
@@ -662,7 +780,7 @@ function criterionResultLabel(result: Stage3CriterionResult["result"] | undefine
     case "pass":
       return "erfüllt"
     case "caution":
-      return "passt mit Einschränkung"
+      return "passt bedingt"
     case "fail":
       return "nicht erfüllt"
     default:
@@ -746,8 +864,9 @@ function bondbuilderApplicationEvidenceRow(
     rowId: "bondbuilder.application",
     label: "Anwendung",
     target: {
-      valueLabel: "beides möglich",
-      rationale: "Beide Anwendungen erfüllen die Bond-Rolle. Entscheide nach deinem Alltag.",
+      valueLabel: "nach deinem Alltag",
+      rationale:
+        "Die passende Anwendung hängt von deinem Alltag ab, nicht von deinem Haardurchmesser.",
       profileEvidenceLabels: [],
     },
     productValues: entries.map(({ product, facts }) => {
@@ -778,10 +897,12 @@ function bondbuilderTreatmentModeBucket(mode: string | null): BondbuilderApplica
   return null
 }
 
-function bondbuilderApplication(spec: {
+export function bondbuilderApplication(spec: {
   applicationMode: string | null
   treatmentMode: string | null
 }): string | null {
+  if (spec.applicationMode === "bedtime_leave_in" && spec.treatmentMode === "leave_in")
+    return "Abends, über Nacht im Haar"
   const applicationBucket = bondbuilderApplicationModeBucket(spec.applicationMode)
   const treatmentBucket = bondbuilderTreatmentModeBucket(spec.treatmentMode)
   // Both axes are independent, unconstrained columns (see the admin form and migration CHECK

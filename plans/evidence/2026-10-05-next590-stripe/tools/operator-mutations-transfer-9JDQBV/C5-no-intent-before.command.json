@@ -1,0 +1,17 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^missing initial binding is typed retryable and restored binding succeeds without payment$",
+    "tests/stripe-trial-invoice.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

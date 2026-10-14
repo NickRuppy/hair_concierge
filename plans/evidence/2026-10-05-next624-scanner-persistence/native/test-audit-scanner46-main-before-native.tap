@@ -1,0 +1,573 @@
+TAP version 13
+# [scan] resolve failed Error: scan_resolve_entitlements_unavailable
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:505:45)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:314:22)
+#     at async withFlag (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:163:12)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:305:3)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] auto-save scheduling failed Error: no store
+#     at after (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:362:17)
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:539:11)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:366:22)
+#     at async withFlag (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:163:12)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-auto-save.test.ts:357:3)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product
+ok 1 - scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product
+  ---
+  duration_ms: 17.619084
+  ...
+# Subtest: scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)
+ok 2 - scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)
+  ---
+  duration_ms: 0.783291
+  ...
+# Subtest: scan resolve auto-save: an already-saved product's response state is carried through unchanged
+ok 3 - scan resolve auto-save: an already-saved product's response state is carried through unchanged
+  ---
+  duration_ms: 0.725041
+  ...
+# Subtest: scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)
+ok 4 - scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)
+  ---
+  duration_ms: 0.572625
+  ...
+# Subtest: scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial
+ok 5 - scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial
+  ---
+  duration_ms: 0.963625
+  ...
+# Subtest: scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user
+ok 6 - scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user
+  ---
+  duration_ms: 0.493167
+  ...
+# Subtest: scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)
+ok 7 - scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)
+  ---
+  duration_ms: 0.408042
+  ...
+# Subtest: scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save
+ok 8 - scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save
+  ---
+  duration_ms: 3.24125
+  ...
+# Subtest: scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx
+ok 9 - scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx
+  ---
+  duration_ms: 1.369042
+  ...
+# Subtest: scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503
+ok 10 - scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503
+  ---
+  duration_ms: 0.916208
+  ...
+# Subtest: scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)
+ok 11 - scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)
+  ---
+  duration_ms: 0.677458
+  ...
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_start_failed {
+#   cause: Error: network down
+#       at <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-event-log.test.ts:192:11)
+#       at Object.insert (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-event-log.test.ts:29:47)
+#       at recordScanResolveAttempt (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/resolve-event-log.ts:120:64)
+#       at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-event-log.test.ts:197:5)
+#       at Test.runInAsyncScope (node:async_hooks:211:14)
+#       at Test.run (node:internal/test_runner/test:934:25)
+#       at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#       at Test.postRun (node:internal/test_runner/test:1045:19)
+#       at Test.run (node:internal/test_runner/test:973:12)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# }
+# scan_resolve_attempt_completion_failed { message: 'completion unavailable' }
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_completion_failed { message: 'completion unavailable' }
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# Subtest: creates an opaque UUID attempt id
+ok 12 - creates an opaque UUID attempt id
+  ---
+  duration_ms: 0.698625
+  ...
+# Subtest: records a started attempt with canonical value
+ok 13 - records a started attempt with canonical value
+  ---
+  duration_ms: 0.478542
+  ...
+# Subtest: completes exactly the same unfinished attempt with the v2 terminal outcome
+ok 14 - completes exactly the same unfinished attempt with the v2 terminal outcome
+  ---
+  duration_ms: 0.898459
+  ...
+# Subtest: persists dm lookup telemetry only when the completed resolve was eligible
+ok 15 - persists dm lookup telemetry only when the completed resolve was eligible
+  ---
+  duration_ms: 0.109792
+  ...
+# Subtest: non-GTIN raw value logs a null canonical value
+ok 16 - non-GTIN raw value logs a null canonical value
+  ---
+  duration_ms: 0.074417
+  ...
+# Subtest: fail-open: an insert error never throws
+ok 17 - fail-open: an insert error never throws
+  ---
+  duration_ms: 0.531167
+  ...
+# Subtest: fail-open: a thrown client error never propagates
+ok 18 - fail-open: a thrown client error never propagates
+  ---
+  duration_ms: 1.242709
+  ...
+# Subtest: fail-open: a completion error never propagates
+ok 19 - fail-open: a completion error never propagates
+  ---
+  duration_ms: 0.138041
+  ...
+# Subtest: an explicit createdAt is written as the row's created_at
+ok 20 - an explicit createdAt is written as the row's created_at
+  ---
+  duration_ms: 0.212125
+  ...
+# Subtest: without an explicit createdAt the row keeps the column default
+ok 21 - without an explicit createdAt the row keeps the column default
+  ---
+  duration_ms: 0.273916
+  ...
+# Subtest: a start-write failure captures once to Sentry with the attempt_log_write_failed reason
+ok 22 - a start-write failure captures once to Sentry with the attempt_log_write_failed reason
+  ---
+  duration_ms: 0.105166
+  ...
+# Subtest: a completion-write failure also captures to Sentry
+ok 23 - a completion-write failure also captures to Sentry
+  ---
+  duration_ms: 0.10575
+  ...
+# Subtest: a second write failure within the 60s throttle window does not capture again
+ok 24 - a second write failure within the 60s throttle window does not capture again
+  ---
+  duration_ms: 0.229
+  ...
+# Subtest: a write failure after the throttle window resets captures again
+ok 25 - a write failure after the throttle window resets captures again
+  ---
+  duration_ms: 0.575458
+  ...
+# Subtest: adds nullable v2 terminal telemetry without changing the legacy outcome contract
+ok 26 - adds nullable v2 terminal telemetry without changing the legacy outcome contract
+  ---
+  duration_ms: 1.329958
+  ...
+# Subtest: backfills every legacy event as terminal-unknown, never as a proven resolution
+ok 27 - backfills every legacy event as terminal-unknown, never as a proven resolution
+  ---
+  duration_ms: 0.191417
+  ...
+# Subtest: materializes only non-PII aggregates before raw data deletion and remains idempotent
+ok 28 - materializes only non-PII aggregates before raw data deletion and remains idempotent
+  ---
+  duration_ms: 0.326916
+  ...
+# Subtest: keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job
+ok 29 - keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job
+  ---
+  duration_ms: 0.243958
+  ...
+# Subtest: telemetry migration executes, accepts v2 starts, and aggregates before retention deletion
+ok 30 - telemetry migration executes, accepts v2 starts, and aggregates before retention deletion
+  ---
+  duration_ms: 537.329708
+  ...
+# [scan] resolve failed Error: scan_resolve_presentation_row_missing
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:471:30)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:443:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] resolve failed Error: scan_resolve_candidates_role_missing
+#     at <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:106:44)
+#     at Array.map (<anonymous>)
+#     at loadScanVerdictForProduct (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:104:24)
+#     at async Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:446:23)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:630:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] resolve failed Error: boom
+#     at Object.buildScanVerdict (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:652:15)
+#     at loadScanVerdictForProduct (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:114:15)
+#     at async Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:446:23)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:656:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] resolve failed Error: scan_profile_context_unavailable
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:704:18)
+#     at Test.runInAsyncScope (node:async_hooks:211:14)
+#     at Test.run (node:internal/test_runner/test:934:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#     at Test.postRun (node:internal/test_runner/test:1045:19)
+#     at Test.run (node:internal/test_runner/test:973:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: scan resolve: unauthenticated is rejected
+ok 31 - scan resolve: unauthenticated is rejected
+  ---
+  duration_ms: 2.929792
+  ...
+# Subtest: scan resolve: rate limited returns 429 with Retry-After
+ok 32 - scan resolve: rate limited returns 429 with Retry-After
+  ---
+  duration_ms: 0.566125
+  ...
+# Subtest: scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture
+ok 33 - scan resolve: rate limiter unavailable fails closed with 503, without a Sentry capture
+  ---
+  duration_ms: 0.491875
+  ...
+# Subtest: scan resolve: body with both identifier and productId is rejected
+ok 34 - scan resolve: body with both identifier and productId is rejected
+  ---
+  duration_ms: 1.19025
+  ...
+# Subtest: scan resolve: bad EAN checksum is rejected before any lookup
+ok 35 - scan resolve: bad EAN checksum is rejected before any lookup
+  ---
+  duration_ms: 1.483833
+  ...
+# Subtest: scan resolve: an open submission answers a catalog miss
+ok 36 - scan resolve: an open submission answers a catalog miss
+  ---
+  duration_ms: 0.450125
+  ...
+# Subtest: scan resolve: a cataloged EAN resolves to a verdict even while a submission is open
+ok 37 - scan resolve: a cataloged EAN resolves to a verdict even while a submission is open
+  ---
+  duration_ms: 13.836959
+  ...
+# Subtest: scan resolve: a quarantined hit with an open submission answers pending, not unknown
+ok 38 - scan resolve: a quarantined hit with an open submission answers pending, not unknown
+  ---
+  duration_ms: 0.410833
+  ...
+# Subtest: scan resolve: identifier miss returns unknown_product with all 10 categories
+ok 39 - scan resolve: identifier miss returns unknown_product with all 10 categories
+  ---
+  duration_ms: 0.857542
+  ...
+# Subtest: scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome
+ok 40 - scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome
+  ---
+  duration_ms: 0.759958
+  ...
+# Subtest: scan resolve: pending and quarantined paths never ask dm
+ok 41 - scan resolve: pending and quarantined paths never ask dm
+  ---
+  duration_ms: 0.489166
+  ...
+# Subtest: scan resolve: an unexpected dm throw preserves the plain sheet and records failure
+ok 42 - scan resolve: an unexpected dm throw preserves the plain sheet and records failure
+  ---
+  duration_ms: 0.986167
+  ...
+# Subtest: scan resolve: productId not found is 404
+ok 43 - scan resolve: productId not found is 404
+  ---
+  duration_ms: 0.26225
+  ...
+# Subtest: scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)
+ok 44 - scan resolve: a non-ean identifier type is rejected (v1 surface is ean-only)
+  ---
+  duration_ms: 0.253709
+  ...
+# Subtest: scan resolve: a disposition-quarantined identifier hit is treated as unknown_product
+ok 45 - scan resolve: a disposition-quarantined identifier hit is treated as unknown_product
+  ---
+  duration_ms: 0.3265
+  ...
+# Subtest: scan resolve: a disposition-quarantined productId is 404 product_not_found
+ok 46 - scan resolve: a disposition-quarantined productId is 404 product_not_found
+  ---
+  duration_ms: 0.194875
+  ...
+# Subtest: scan resolve: no personal plan at all is 409 profile_missing
+ok 47 - scan resolve: no personal plan at all is 409 profile_missing
+  ---
+  duration_ms: 0.153291
+  ...
+# Subtest: scan resolve: identifier hit resolves a verdict with snapshotSource and savedState
+ok 48 - scan resolve: identifier hit resolves a verdict with snapshotSource and savedState
+  ---
+  duration_ms: 0.385417
+  ...
+# Subtest: scan resolve: a missing catalog presentation row fails closed with 503
+ok 49 - scan resolve: a missing catalog presentation row fails closed with 503
+  ---
+  duration_ms: 3.102792
+  ...
+# Subtest: scan resolve: alternatives are enriched with brand and purchase link
+ok 50 - scan resolve: alternatives are enriched with brand and purchase link
+  ---
+  duration_ms: 0.664291
+  ...
+# Subtest: scan resolve: a quarantined alternative is never offered (ruling R7)
+ok 51 - scan resolve: a quarantined alternative is never offered (ruling R7)
+  ---
+  duration_ms: 0.566292
+  ...
+# Subtest: scan resolve: productId path resolves the same way as an identifier hit
+ok 52 - scan resolve: productId path resolves the same way as an identifier hit
+  ---
+  duration_ms: 0.366875
+  ...
+# Subtest: scan resolve: a not-needed decision skips the recommendation-candidates load
+ok 53 - scan resolve: a not-needed decision skips the recommendation-candidates load
+  ---
+  duration_ms: 0.321625
+  ...
+# Subtest: scan resolve: a role-sensitive category loads product facts per role and the candidate pool once
+ok 54 - scan resolve: a role-sensitive category loads product facts per role and the candidate pool once
+  ---
+  duration_ms: 1.927708
+  ...
+# Subtest: scan resolve: a candidate load that omits a requested role fails closed as 503
+ok 55 - scan resolve: a candidate load that omits a requested role fails closed as 503
+  ---
+  duration_ms: 0.870542
+  ...
+# Subtest: scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)
+ok 56 - scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)
+  ---
+  duration_ms: 0.459
+  ...
+# Subtest: scan resolve: a category whose facts do not vary by role loads exactly once
+ok 57 - scan resolve: a category whose facts do not vary by role loads exactly once
+  ---
+  duration_ms: 0.357875
+  ...
+# Subtest: scan resolve: an unexpected lib error maps to 503 and captures to Sentry
+ok 58 - scan resolve: an unexpected lib error maps to 503 and captures to Sentry
+  ---
+  duration_ms: 0.276542
+  ...
+# Subtest: attempt telemetry: catalog hit starts before lookup and completes only after payload build
+ok 59 - attempt telemetry: catalog hit starts before lookup and completes only after payload build
+  ---
+  duration_ms: 0.297041
+  ...
+# Subtest: attempt telemetry: created_at is the request start, never later than the completion
+ok 60 - attempt telemetry: created_at is the request start, never later than the completion
+  ---
+  duration_ms: 5.201083
+  ...
+# Subtest: attempt telemetry: an unknown fit verdict is completed but not counted as resolved
+ok 61 - attempt telemetry: an unknown fit verdict is completed but not counted as resolved
+  ---
+  duration_ms: 0.409042
+  ...
+# Subtest: attempt telemetry: catalog miss completes as unknown_product
+ok 62 - attempt telemetry: catalog miss completes as unknown_product
+  ---
+  duration_ms: 0.205417
+  ...
+# Subtest: attempt telemetry: invalid checksum starts then completes as invalid_identifier
+ok 63 - attempt telemetry: invalid checksum starts then completes as invalid_identifier
+  ---
+  duration_ms: 0.161084
+  ...
+# Subtest: attempt telemetry: quarantined hit retains its matching product
+ok 64 - attempt telemetry: quarantined hit retains its matching product
+  ---
+  duration_ms: 0.230833
+  ...
+# Subtest: attempt telemetry: open submission completes as pending_submission
+ok 65 - attempt telemetry: open submission completes as pending_submission
+  ---
+  duration_ms: 0.143042
+  ...
+# Subtest: attempt telemetry: resolve-by-productId logs nothing — no barcode involved
+ok 66 - attempt telemetry: resolve-by-productId logs nothing — no barcode involved
+  ---
+  duration_ms: 0.220333
+  ...
+# Subtest: attempt telemetry: F11 — nothing is written before the response, record before completion
+ok 67 - attempt telemetry: F11 — nothing is written before the response, record before completion
+  ---
+  duration_ms: 0.140125
+  ...
+# [scan] resolve failed Error: facts unavailable
+#     at Object.loadScanProductFacts (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1004:15)
+#     at <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:89:24)
+#     at Array.map (<anonymous>)
+#     at loadScanVerdictForProduct (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:85:19)
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:446:29)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1008:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] resolve failed Error: dispositions unavailable
+#     at Object.isProductSearchQuarantined (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1028:15)
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:370:39)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1032:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [scan] resolve failed Error: facts unavailable
+#     at Object.loadScanProductFacts (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1057:15)
+#     at <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:89:24)
+#     at Array.map (<anonymous>)
+#     at loadScanVerdictForProduct (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/load-scan-verdict.ts:85:19)
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:446:29)
+#     at async scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:14)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1061:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# [scan] telemetry scheduling failed Error: no store
+#     at after (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1106:15)
+#     at scheduleAttemptWrite (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:206:5)
+#     at Object.handler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:332:9)
+#     at scanRouteHandler (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/route.ts:86:27)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1110:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: attempt telemetry: the completion never overtakes the record, even on a slow insert
+ok 68 - attempt telemetry: the completion never overtakes the record, even on a slow insert
+  ---
+  duration_ms: 5.990208
+  ...
+# Subtest: attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss
+ok 69 - attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss
+  ---
+  duration_ms: 0.266
+  ...
+# Subtest: attempt telemetry: a post-lookup failure records the current bounded stage
+ok 70 - attempt telemetry: a post-lookup failure records the current bounded stage
+  ---
+  duration_ms: 0.540583
+  ...
+# Subtest: attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product
+ok 71 - attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product
+  ---
+  duration_ms: 0.2725
+  ...
+# Subtest: attempt telemetry: one admin client per request, shared with the onError path
+ok 72 - attempt telemetry: one admin client per request, shared with the onError path
+  ---
+  duration_ms: 0.344791
+  ...
+# Subtest: attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+ok 73 - attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+  ---
+  duration_ms: 0.7265
+  ...
+# Subtest: attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503
+ok 74 - attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503
+  ---
+  duration_ms: 0.446417
+  ...
+# Subtest: auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)
+ok 75 - auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)
+  ---
+  duration_ms: 538.872041
+  ...
+# Subtest: auto-save: rescanning the same product is idempotent — exactly one row survives repeated scans
+ok 76 - auto-save: rescanning the same product is idempotent — exactly one row survives repeated scans
+  ---
+  duration_ms: 372.062167
+  ...
+# Subtest: auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)
+ok 77 - auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)
+  ---
+  duration_ms: 361.874875
+  ...
+# Subtest: auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans
+ok 78 - auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans
+  ---
+  duration_ms: 355.705583
+  ...
+# Subtest: auto-save: scoped to user and product — another user's or another product's rows are untouched
+ok 79 - auto-save: scoped to user and product — another user's or another product's rows are untouched
+  ---
+  duration_ms: 365.093459
+  ...
+# Subtest: auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched
+ok 80 - auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched
+  ---
+  duration_ms: 358.594791
+  ...
+# [scan] wishlist failed Error: boom
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-wishlist-route.test.ts:81:18)
+#     at Test.runInAsyncScope (node:async_hooks:211:14)
+#     at Test.run (node:internal/test_runner/test:934:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#     at Test.postRun (node:internal/test_runner/test:1045:19)
+#     at Test.run (node:internal/test_runner/test:973:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: scan wishlist GET: unauthenticated is rejected
+ok 81 - scan wishlist GET: unauthenticated is rejected
+  ---
+  duration_ms: 1.856167
+  ...
+# Subtest: scan wishlist GET: rate limited returns 429 with Retry-After, before any load
+ok 82 - scan wishlist GET: rate limited returns 429 with Retry-After, before any load
+  ---
+  duration_ms: 1.0225
+  ...
+# Subtest: scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture
+ok 83 - scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture
+  ---
+  duration_ms: 0.326791
+  ...
+# Subtest: scan wishlist GET: returns the injected entries
+ok 84 - scan wishlist GET: returns the injected entries
+  ---
+  duration_ms: 0.330416
+  ...
+# Subtest: scan wishlist GET: an unexpected error maps to 503 and captures to Sentry
+ok 85 - scan wishlist GET: an unexpected error maps to 503 and captures to Sentry
+  ---
+  duration_ms: 1.973875
+  ...
+# Subtest: listScanWishlist: joins product fields and presents commerce data
+ok 86 - listScanWishlist: joins product fields and presents commerce data
+  ---
+  duration_ms: 13.056583
+  ...
+# Subtest: listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)
+ok 87 - listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)
+  ---
+  duration_ms: 0.077667
+  ...
+# Subtest: listScanWishlist: a load error throws a stable error
+ok 88 - listScanWishlist: a load error throws a stable error
+  ---
+  duration_ms: 0.226042
+  ...
+# Subtest: listScanWishlist: drops a product that has since been deactivated or discontinued
+ok 89 - listScanWishlist: drops a product that has since been deactivated or discontinued
+  ---
+  duration_ms: 0.338625
+  ...
+# Subtest: listScanWishlist: drops a disposition-quarantined product (ruling R7)
+ok 90 - listScanWishlist: drops a disposition-quarantined product (ruling R7)
+  ---
+  duration_ms: 0.409375
+  ...
+1..90
+# tests 90
+# suites 0
+# pass 90
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7296.429875

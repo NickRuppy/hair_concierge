@@ -1,0 +1,64 @@
+--- /tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-run-cohort.cjs
++++ /tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-run-cohort.cjs
+@@ -1,7 +1,7 @@
+ 'use strict'
+ // Main-only full bounded cohort; --check has no writes/children.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'');if(!['check','run'].includes(mode)||process.argv.length>3)g.fail('Use --check | run')
+ const context=g.load(PIN_SHA),initial=context.current(),phase=initial.phase
+ if(mode==='check'){console.log(JSON.stringify({mode,phase,expected:context.counts[phase],command:proof.cohortCommand(context),repositoryWrites:0,childrenStarted:0}));process.exit(0)}
+--- /tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-guard.cjs
++++ /tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-guard.cjs
+@@ -4,7 +4,7 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator'
++const BASE = '/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator'
+ const PROPOSAL = '/tmp/test-audit-dormant-rollout-closure'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+@@ -26,6 +26,8 @@
+       if (keep) lines.push(line)
+     }
+     if (sha(lines.join('')) !== pin.sharedConfigRelevantSHA) fail('Relevant shared config drift')
++  } else if (pin.sharedPackedRelevantSHA) {
++    require('/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs').check(pin, bytes)
+   } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)
+ }
+ function inventory(dir) {
+--- /tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-run-controls.cjs
++++ /tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+--- /tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-verify.cjs
++++ /tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-verify.cjs
+@@ -1,7 +1,7 @@
+ 'use strict'
+ // Read-only final receipt verification; never applies a cut or starts children.
+ const g=require('./operator-guard.cjs'),p=require('./operator-proof.cjs')
+-const PIN_SHA='76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const ctx=g.load(PIN_SHA),state=ctx.current()
+ if(process.argv.length===3&&process.argv[2]==='--check'){console.log(JSON.stringify({phase:state.phase,readOnly:true,acceptance:false,runtimeProof:false}));process.exit(0)}
+ if(process.argv.length!==10)g.fail('Use <before-cohort-dir> <sha> <before-controls-dir> <sha> <cut-cohort-dir> <sha> <cut-controls-dir> <sha>')
+--- /tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-edit.cjs
++++ /tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-edit.cjs
+@@ -2,7 +2,7 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==7))g.fail('Use --check | transfer | cut <full103-dir> <sha> <all14-before-dir> <sha>')
+ const context=g.load(PIN_SHA)

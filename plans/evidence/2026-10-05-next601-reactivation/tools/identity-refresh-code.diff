@@ -1,0 +1,22 @@
+--- /tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/operator-edit.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-edit.cjs
+@@ -2,7 +2,7 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5'
++const PIN_SHA='53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+--- /tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/operator-run-controls.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5'
++const PIN_SHA='53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')

@@ -1,0 +1,147 @@
+{
+  "blindId": "W102",
+  "inciFingerprintSha256": "4c38ef0d7ffbc91af71108552246f97aaa83f57cf580e03e067bce3dc2a2de89",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "440 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "'Aqua (Water, Eau)' is one entry; no split synonyms; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum (Fragrance) @8 (prominent = positions 1-7)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @4 (amphoteric)"],
+      "nonProminentSurfactants": ["Coco-Glucoside @9 (after E3 point; recorded, not a buffer)"],
+      "notCleansing": ["Laureth-4 @14 (low-ethoxylate thickener)", "PEG-120 Methyl Glucose Dioleate @15 (PEG thickener)", "PEG-7 Glyceryl Cocoate @12 (refatter)"]
+    },
+    "conditioningRoutes": {
+      "protein_film": ["Hydrolyzed Keratin @5 (prominent)", "Hydrolyzed Collagen @6 (prominent)"],
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19 (not prominent; after fragrance allergens)"],
+      "weak_refatter": ["Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+      "payload_lipid": ["Hydrogenated Castor Oil @16 (not prominent)"],
+      "pearlizingFattyRoute": ["Glycol Distearate @13 (not prominent)"],
+      "silicone": [],
+      "humectants": []
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum (Fragrance) @8; declared allergens Benzyl Salicylate @17, Hexyl Cinnamal @18, Citronellol @20, Limonene @23, Linalool @25",
+      "essentialOils": [],
+      "coolingAgents": []
+    },
+    "wLine": {
+      "cap": "e3Point Parfum (Fragrance) @8",
+      "wLine": "Sodium Benzoate @7",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "Sodium Benzoate @7: (i) SLES @2 before; (ii) nothing between 7 and the cap",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @16 (>= W-line 7)"]
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining, one prominent buffer Cocamidopropyl Betaine @4, no reinforcing strong anionic (C3, C4, C1). Coco-Glucoside @9 is after the E3 point and is recorded only.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes - two prominent hydrolyzed proteins (Keratin @5, Collagen @6), a late cationic guar @19, weak refatters (Glyceryl Oleate @10, PEG-7 Glyceryl Cocoate @12), late Glycol Distearate @13 and Hydrogenated Castor Oil @16 - give noticeable but bounded rinse-off care. C2 not met (no prominent silicone or payload lipid, no humectant route). The only slip agent (guar) is post-fragrance, so low is the realistic neighbor.",
+      "ruleIds": ["Section 5", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19"],
+        "payload_lipid": ["Hydrogenated Castor Oil @16 (non-material, W-line @7)"],
+        "weak_refatter": ["Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Keratin @5", "Hydrolyzed Collagen @6"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "Coco-Glucoside @9 (non-prominent)"],
+        "humectantContext": ["Propylene Glycol @26 (solvent)"],
+        "excluded": ["Glycol Distearate @13 (pearlizing wax, 6.4)", "Laureth-4 @14 (thickener)", "PEG-120 Methyl Glucose Dioleate @15 (PEG thickener, 6.4)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - hydrolyzed proteins plus a trace post-fragrance guar and weak refatters",
+      "persistence": "low - hydrolyzed proteins are water-soluble low-persistence film; guar at trace level; lipid non-material",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "Several deposition families are present (protein, cationic, weak refatter, non-material lipid); proteins are prominent.",
+      "whyThisBand": "Deposition is light and low-persistence and the buffered SLES chassis rinses it; no silicone, no material lipid.",
+      "whyNotNeighborBand": "Not moderate (W2): the only cationic route (guar @19) sits after the fragrance and its declared allergens (trace), the prominent families are hydrolyzed proteins (low persistence), the refatters are weak, and the only payload lipid (Hydrogenated Castor Oil @16) is non-material under the W-line @7; a moderate reset faces only these light routes.",
+      "confidenceLimitingFactor": "Multiple light families interact (W2); protein share unknown",
+      "rationale": "Low: light, low-persistence deposition (hydrolyzed proteins, trace guar, weak refatters, non-material HCO) against a buffered SLES reset (6.6, W2, W-LINE). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": ["Hydrolyzed Keratin @5", "Hydrolyzed Collagen @6"],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+        "limitation": "Formula-only; two hydrolyzed proteins plus weak support; no humectant route"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Cationic and refatting support is late/weak; repair cluster rests mainly on two hydrolyzed proteins",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; formula verdict repair_supported (two prominent proteins plus cationic/refatter support). Placeholder general until claims are revealed.",
+      "rationale": "Provisional general (claim-dependent, 7.2); repair is the formula-compatible candidate.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible only with explicit frequency wording (cleansing not strong, U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA not met - no E4 comfort or humectant/refatting route is prominent (Glyceryl Oleate @10 is after the E3 point) and MB is excluded by prominent Sodium Laureth Sulfate @2. Even with a sensitive/dry claim the formula half would fail.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: complete INCI contains no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Weight low vs moderate: chose low because the only cationic is post-fragrance trace and the other routes are light; moderate recorded as neighbor."
+  ]
+}

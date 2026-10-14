@@ -1,0 +1,30 @@
+[
+  {
+    "id": "C1-current-turn-hair-loss-detector-false",
+    "file": "src/lib/agent/tools/load-advisor-guidance.ts",
+    "sourceSha256": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "anchor": { "kind": "function-or-constant", "scope": "hasHairLossOrThinningSignal", "expectedOccurrences": 1, "phase": "cut" },
+    "from": "function hasHairLossOrThinningSignal(message: string): boolean {\n  const normalized = normalizeText(message)\n  return (\n    /\\b(?:haarausfall|haarverlust|ausfall|ausfallen|duenner|dunner|licht|scheitel|kahl|kahle|alopez|alopecia|thinning|shedding|hair loss|bald|patchy|postpartum|traction)\\b/.test(\n      normalized,\n    ) ||\n    /\\b(?:haare?|haarstraehnen|haarsträhnen)\\b.{0,40}\\b(?:fall(?:en|t)?|gehen)\\b.{0,20}\\baus\\b/.test(\n      normalized,\n    ) ||\n    /\\bfall(?:en|t)?\\b.{0,40}\\b(?:haare?|haarstraehnen|haarsträhnen)\\b.{0,20}\\baus\\b/.test(\n      normalized,\n    )\n  )\n}",
+    "to": "function hasHairLossOrThinningSignal(message: string): boolean {\n  void message\n  return false\n}",
+    "test": { "file": "tests/agent-guidance.spec.ts", "name": "current-turn separated hair-loss wording loads safety overlay without model focus" },
+    "phase": "cut",
+    "intendedAssertion": "current-turn separated hair-loss wording must select the safety overlay without model focus",
+    "sensitivityLimit": "Require the native keeper to fail this named assertion, not parse/type/import/provider setup. This fault is prepared only and was not applied.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require the full pinned source hash and unique from anchor; save byte-exact original; apply one fault; run only the named native keeper; restore exact bytes and verify SHA256 before any next fault. Never overlap source writers."
+  },
+  {
+    "id": "C2-parsed-avoidance-receipt-empty",
+    "file": "src/lib/agent/tools/load-advisor-guidance.ts",
+    "sourceSha256": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "anchor": { "kind": "function-or-constant", "scope": "compactAvoidLines", "expectedOccurrences": 1, "phase": "cut" },
+    "from": "function compactAvoidLines(items: GuidanceItem[], limit: number): string[] {\n  const sectionLines = items.flatMap((item) =>\n    unique([\n      ...extractSectionLines(item.content, [\"Guardrails\"]),\n      ...extractSectionLines(item.content, [\"Avoid\"]),\n    ]).slice(0, item.kind === \"topic\" ? 1 : 2),\n  )\n  const fallbackLines = items.flatMap((item) =>\n    normalizeGuidanceLines(item.content).filter((line) =>\n      /\\b(do not|don't|never|avoid)\\b/i.test(line),\n    ),\n  )\n\n  return unique([...sectionLines, ...fallbackLines]).slice(0, limit)\n}",
+    "to": "function compactAvoidLines(items: GuidanceItem[], limit: number): string[] {\n  void items\n  void limit\n  return []\n}",
+    "test": { "file": "tests/agent-guidance.spec.ts", "name": "current-turn separated hair-loss wording loads safety overlay without model focus" },
+    "phase": "cut",
+    "intendedAssertion": "selected hair-loss guardrail must retain its parsed avoidance receipt",
+    "sensitivityLimit": "Require the native keeper to fail this named assertion, not parse/type/import/provider setup. This fault is prepared only and was not applied.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require the full pinned source hash and unique from anchor; save byte-exact original; apply one fault; run only the named native keeper; restore exact bytes and verify SHA256 before any next fault. Never overlap source writers."
+  }
+]

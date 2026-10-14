@@ -1,8 +1,16 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../../../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
-import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
+import {
+  activatingHeatRouteForEvent,
+  stage3HeatRoutesFromSnapshot,
+} from "@/lib/personal-plan/oil-heat-context"
+import {
+  bondbuilderShortlist,
+  compareBondbuilderTieOrder,
+} from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
 import { comparisonDimensions } from "../../../src/lib/personal-plan/products/comparison-dimensions"
 import type {
@@ -11,6 +19,8 @@ import type {
   Stage3CategoryProductFacts,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
 import type { PersonalPlanCategory } from "../../../src/lib/personal-plan/products/contracts"
+
+const K18_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 const TARGETS: Record<PersonalPlanCategory, unknown> = {
   shampoo: {
@@ -104,8 +114,11 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           thickness: "normal",
+          thicknesses: ["normal"],
           shampooBucket: "normal",
           scalpRoute: "balanced",
           cleansingIntensity: "regular",
@@ -116,9 +129,12 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           thickness: "normal",
-          proteinMoistureBalance: "balanced",
+          thicknesses: ["normal"],
+          proteinMoistureBalance: "moisture",
           weight: "light",
           repairSupportLevel: "medium",
           balanceDirection: "moisture",
@@ -129,6 +145,8 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: the ideal fixture must be recommendable.
+        recommendable: true,
         spec: {
           format: "cream",
           weight: "light",
@@ -141,13 +159,22 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         },
       }
     case "heat_protectant":
-      return { ...base, category, spec: { format: "spray", providesHeatProtection: true } }
+      // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+      return {
+        ...base,
+        category,
+        recommendable: true,
+        spec: { format: "spray", providesHeatProtection: true },
+      }
     case "oil":
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           roleSupport: { dry_finish: true },
+          thicknesses: ["normal"],
           weight: "light",
           targetThicknessEligible: true,
           providesHeatProtection: false,
@@ -157,6 +184,8 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: the ideal fixture must be recommendable.
+        recommendable: true,
         spec: {
           weight: "light",
           careDirection: "moisture",
@@ -168,12 +197,16 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: { primaryRole: "scalp_comfort", presentationFormat: "serum", rinseMode: "leave_on" },
       }
     case "dry_shampoo":
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           primaryEffect: "classic_refresh",
           hairColorFit: "universal",
@@ -185,21 +218,29 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           applicationMode: "pre_shampoo",
           treatmentMode: "standalone",
           productFormat: "treatment",
           usageProtocol: "verified_course",
           relationship: "standalone",
+          // fit-verdict spec §6, ruled 2026-10-12: use reviewed technology facts.
+          technologyFamily: "sulfur_targeting_dimaleate",
+          claimTrustLevel: "high",
+          trustBasis: "owner_anchor",
         },
       }
     case "deep_cleansing_shampoo":
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           supportedResetRoles: ["residue_reset"],
-          scalpTypeFocus: "balanced",
+          targetScalpTypes: null,
           colorTreatedSuitability: "suitable",
         },
       }
@@ -280,13 +321,14 @@ function input(
       resolution: "resolved",
       needTier: "basis",
       roles: [role],
-      target: state === "unsupported" ? null : TARGETS[category],
+      target: state === "unsupported" ? null : structuredClone(TARGETS[category]),
       frequency: null,
       reasons: [],
       executionState: "available",
       executionPauseReason: null,
       deferredFacts: [],
     } as never,
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     productFacts:
@@ -369,6 +411,218 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
   })
 }
 
+test("Leave-in heat claim and verified shared protocol cover pre-heat without a label timing claim", () => {
+  const heatInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  heatInput.role = "pre_heat_application"
+  heatInput.categoryDecision.roles = ["pre_heat_application"]
+  if (heatInput.categoryDecision.target?.category !== "leave_in") throw new Error("fixture")
+  heatInput.categoryDecision.target.roles = ["pre_heat_application"]
+  if (heatInput.productFacts?.category !== "leave_in") throw new Error("fixture")
+  heatInput.productFacts.spec.roles = ["post_wash_leave_in", "pre_heat_application"]
+  heatInput.productFacts.spec.providesHeatProtection = true
+  heatInput.productFacts.spec.applicationStages = ["towel_dry"]
+  heatInput.productFacts.protocols = [
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "shared-heat" },
+  ]
+
+  const covered = evaluateStage3Authority(heatInput as never)
+  assert.equal(covered.status, "known")
+  if (covered.status === "known") assert.equal(covered.verdict, "ideal")
+
+  heatInput.productFacts.protocols = []
+  assert.equal(evaluateStage3Authority(heatInput as never).status, "unknown")
+
+  heatInput.productFacts.protocols = [
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "shared-heat" },
+  ]
+  heatInput.productFacts.spec.providesHeatProtection = false
+  const noHeatClaim = evaluateStage3Authority(heatInput as never)
+  assert.equal(noHeatClaim.status, "known")
+  if (noHeatClaim.status === "known") assert.equal(noHeatClaim.verdict, "mismatch")
+})
+
+function activatedLeaveInInput(
+  role: "post_wash_leave_in" | "pre_heat_application",
+  heatRoutes: Array<"airflow_shaping" | "direct_contact_heat"> | undefined,
+  route: "airflow_shaping" | "direct_contact_heat" | "either_heat" | null = "airflow_shaping",
+) {
+  const activated = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  activated.role = role
+  activated.categoryDecision.roles = [role]
+  if (activated.categoryDecision.target?.category !== "leave_in") throw new Error("fixture")
+  activated.categoryDecision.target.roles = [role]
+  if (activated.productFacts?.category !== "leave_in") throw new Error("fixture")
+  // DB-drift shape on purpose: the plan role list still names post-wash.
+  activated.productFacts.spec.roles = ["post_wash_leave_in", "pre_heat_application"]
+  activated.productFacts.spec.providesHeatProtection = true
+  // Verified protection + pre-heat protocol suffice; no literal pre_heat stage is required.
+  activated.productFacts.spec.applicationStages = ["towel_dry"]
+  activated.productFacts.spec.heatActivation = { route }
+  activated.productFacts.protocols = [
+    { role: "post_wash_leave_in", status: "verified_complete", fingerprint: "post-wash" },
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "pre-heat" },
+  ]
+  if (heatRoutes) activated.heatRoutes = heatRoutes
+  return activated
+}
+
+test("activated leave-in is a mismatch for post_wash_leave_in with the Hitzeaktivierung reason", () => {
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("post_wash_leave_in", ["airflow_shaping"]) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.deepEqual(
+    result.criteria
+      .filter((item) => item.result === "fail")
+      .map((item) => [item.criterionId, item.label, item.result, item.explanation]),
+    [
+      [
+        "leave_in.heat_activation",
+        "Hitzeaktivierung",
+        "fail",
+        "Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht.",
+      ],
+    ],
+  )
+})
+
+test("activated leave-in is ideal for pre_heat_application when the user blow-dries", () => {
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["airflow_shaping"]) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status === "known") assert.equal(result.verdict, "ideal")
+  const either = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["direct_contact_heat"], "either_heat") as never,
+  )
+  assert.equal(either.status === "known" && either.verdict, "ideal")
+})
+
+test("activated leave-in is a mismatch for a straightener-only user", () => {
+  const airflow = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["direct_contact_heat"]) as never,
+  )
+  assert.equal(airflow.status, "known")
+  if (airflow.status !== "known") return
+  assert.equal(airflow.verdict, "mismatch")
+  assert.deepEqual(
+    airflow.criteria
+      .filter((item) => item.result === "fail")
+      .map((item) => [item.criterionId, item.explanation]),
+    [
+      [
+        "leave_in.heat_activation",
+        "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
+      ],
+    ],
+  )
+  const direct = evaluateStage3Authority(
+    activatedLeaveInInput(
+      "pre_heat_application",
+      ["airflow_shaping"],
+      "direct_contact_heat",
+    ) as never,
+  )
+  assert.equal(direct.status, "known")
+  if (direct.status !== "known") return
+  assert.deepEqual(
+    direct.criteria.filter((item) => item.result === "fail").map((item) => item.explanation),
+    ["Wirkt erst mit Glätteisen oder Lockenstab – dieser Schritt fehlt in deiner Routine."],
+  )
+  const noHeat = evaluateStage3Authority(activatedLeaveInInput("pre_heat_application", []) as never)
+  assert.equal(noHeat.status === "known" && noHeat.verdict, "mismatch")
+})
+
+test('plain blow-drying is not an activating step, and the reason never claims „ohne Föhn"', () => {
+  // Activation rule: ordinary_airflow events do not count as an activating heat
+  // step. A user who blow-dries plainly and straightens gets the airflow product refused with
+  // a reason that is true for her — the styling step is missing, not the hair dryer.
+  const snapshot = {
+    assessments: {
+      heatExposure: {
+        events: [
+          {
+            id: "dry",
+            tool: "hair_dryer",
+            route: "ordinary_airflow",
+            frequency: "weekly_3_4x",
+            sourceRuleIds: [],
+          },
+          {
+            id: "iron",
+            tool: "straightener",
+            route: "direct_contact_heat",
+            frequency: "weekly_1x",
+            sourceRuleIds: [],
+          },
+        ],
+      },
+    },
+  } as never
+  assert.equal(activatingHeatRouteForEvent({ tool: "hair_dryer", route: "ordinary_airflow" }), null)
+  assert.deepEqual(stage3HeatRoutesFromSnapshot(snapshot), ["direct_contact_heat"])
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", stage3HeatRoutesFromSnapshot(snapshot)) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  for (const item of result.criteria) assert.doesNotMatch(item.explanation, /ohne Föhn/)
+  assert.deepEqual(
+    result.criteria.filter((item) => item.result === "fail").map((item) => item.explanation),
+    [
+      "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
+    ],
+  )
+})
+
+test("missing heat routes yield unknown", () => {
+  const noRoutes = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", undefined) as never,
+  )
+  assert.equal(noRoutes.status, "unknown")
+  if (noRoutes.status === "unknown") assert.deepEqual(noRoutes.missingFacts, ["heat_routes"])
+  const noRoute = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["airflow_shaping"], null) as never,
+  )
+  assert.equal(noRoute.status, "unknown")
+  if (noRoute.status === "unknown")
+    assert.deepEqual(noRoute.missingFacts, ["heat_activation_route"])
+})
+
+test("activated product never selected as the post-wash default among candidates", () => {
+  const gap = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  gap.capturedProductId = null
+  gap.subjectIdentity = null
+  gap.productFacts = null
+  gap.heatRoutes = ["airflow_shaping"]
+  const plain = knownFacts("leave_in")
+  const activated = knownFacts("leave_in")
+  if (plain.category !== "leave_in" || activated.category !== "leave_in") throw new Error("fixture")
+  Object.assign(plain, {
+    productId: "plain",
+    recommendable: true,
+    catalogSortOrder: 9,
+    factFingerprint: "facts-plain",
+  })
+  Object.assign(activated, {
+    productId: "activated",
+    recommendable: true,
+    catalogSortOrder: 1,
+    factFingerprint: "facts-activated",
+  })
+  activated.spec.heatActivation = { route: "airflow_shaping" }
+  gap.recommendationCandidates = [activated, plain]
+  const result = evaluateStage3Authority(gap as never)
+  assert.equal(result.status, "known")
+  if (result.status === "known") assert.equal(result.recommendation?.productId, "plain")
+  gap.recommendationCandidates = [activated]
+  const only = evaluateStage3Authority(gap as never)
+  assert.equal(only.status === "known" && only.recommendation, null)
+})
+
 test("supportive owned-product verdicts retain explicit keep and uncovered actions", () => {
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") throw new Error("fixture")
@@ -378,7 +632,8 @@ test("supportive owned-product verdicts retain explicit keep and uncovered actio
   leaveInInput.productFacts.spec.weight = "medium"
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   if (maskInput.productFacts?.category !== "mask") throw new Error("fixture")
-  maskInput.productFacts.spec.weight = "rich"
+  // fit-verdict spec §§3–4, ruled 2026-10-12: exactly one weight step is supportive.
+  maskInput.productFacts.spec.weight = "medium"
   const bondbuilderInput = input("bondbuilder", "known") as Stage3AuthorityInput<"bondbuilder">
   if (bondbuilderInput.productFacts?.category !== "bondbuilder") throw new Error("fixture")
   bondbuilderInput.productFacts.spec.relationship = "add_on"
@@ -396,6 +651,12 @@ test("supportive owned-product verdicts retain explicit keep and uncovered actio
     const result = evaluateStage3Authority(authorityInput as never)
     assert.equal(result.status, "known")
     if (result.status !== "known") continue
+    // fit-verdict spec §6, ruled 2026-10-12: an add-on cannot cover the role alone.
+    if (authorityInput.category === "bondbuilder") {
+      assert.equal(result.verdict, "mismatch")
+      assert.deepEqual(result.allowedActions, ["acknowledge_override", "leave_uncovered"])
+      continue
+    }
     assert.equal(result.verdict, "supportive")
     assert.ok(result.allowedActions.includes("keep_owned"))
     assert.ok(result.allowedActions.includes("leave_uncovered"))
@@ -426,6 +687,9 @@ for (const category of [
     assert.deepEqual(result.allowedActions, ["leave_uncovered"])
     assert.equal(result.recommendation, null)
     assert.equal(result.productFactFingerprint, null)
+    if (category === "bondbuilder") {
+      assert.equal(result.recommendationFactFingerprint, null)
+    }
   })
 }
 
@@ -466,6 +730,14 @@ function bondbuilderCandidate(productId: string, displayName: string) {
     productId,
     displayName,
     recommendable: true,
+    priceEur:
+      productId === K18_PRODUCT_ID
+        ? 56.25
+        : productId.startsWith("olaplex")
+          ? 34
+          : productId === "epres"
+            ? 48
+            : null,
     factFingerprint: `facts-${productId}`,
   })
 }
@@ -479,11 +751,8 @@ function bondbuilderGapInput(candidates: ReturnType<typeof bondbuilderCandidate>
   return gap
 }
 
-test("a Bondbuilder tie defaults to K18 without claiming it is the better product", () => {
-  const k18 = bondbuilderCandidate(
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-    "K18 Leave-In Molecular Repair Hair Mask",
-  )
+test("a Bondbuilder tie selects the cheapest option without claiming it is the better product", () => {
+  const k18 = bondbuilderCandidate(K18_PRODUCT_ID, "K18 Leave-In Molecular Repair Hair Mask")
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
@@ -495,13 +764,13 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
   assert.equal(
     result.recommendation?.reason,
-    "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
+    "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
   )
-  assert.equal(result.recommendationFactFingerprint, k18.factFingerprint)
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
   assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   // The "several equally suitable products" fact stays visible: the default is
   // a choice among equals, not a superiority claim.
@@ -512,35 +781,115 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   )
 })
 
-test("a Bondbuilder tie without the default product still leaves the need uncovered", () => {
+test("a Bondbuilder tie without K18 resolves by price, then catalogue order", () => {
+  const olaplex = Object.assign(
+    bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
+    { catalogSortOrder: 0, priceEur: 34 },
+  )
+  const epres = Object.assign(bondbuilderCandidate("epres", "Epres Bond Repair Treatment"), {
+    catalogSortOrder: 0,
+    priceEur: 48,
+  })
+  const result = evaluateStage3Authority(bondbuilderGapInput([epres, olaplex]))
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
+  assert.equal(
+    result.recommendation?.reason,
+    "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
+  )
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+  // Still a choice among equals: the shortlist caution stays.
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("a single ideal Bondbuilder candidate keeps the standalone rule, not the tie default", () => {
+  const only = bondbuilderCandidate(K18_PRODUCT_ID, "K18 Leave-In Molecular Repair Hair Mask")
+  const result = evaluateStage3Authority(bondbuilderGapInput([only]))
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, K18_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
+})
+
+function trustedBondbuilder(productId: string, claimTrustLevel: string | null) {
+  const candidate = bondbuilderCandidate(productId, productId)
+  candidate.spec = { ...candidate.spec, claimTrustLevel }
+  return candidate
+}
+
+test("a more trusted ideal Bondbuilder wins outright, without the tie default or shortlist", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
-      bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
-      bondbuilderCandidate("epres", "Epres Bond Repair Treatment"),
+      trustedBondbuilder(K18_PRODUCT_ID, "medium"),
+      trustedBondbuilder("olaplex-no3", "high"),
+      trustedBondbuilder("loreal", "low"),
     ]),
   )
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
-  assert.equal(result.recommendation, null)
-  assert.equal(result.recommendationFactFingerprint, null)
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
+  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
 
-test("a single ideal Bondbuilder candidate keeps the standalone rule, not the tie default", () => {
-  const only = bondbuilderCandidate(
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-    "K18 Leave-In Molecular Repair Hair Mask",
+test("the production Bondbuilder set resolves to OLAPLEX among the three high-trust products", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder("loreal-elvital-bond", "medium"),
+      trustedBondbuilder("ogx-sealing-serum", "low"),
+      trustedBondbuilder("redken-acidic-bonding", "medium"),
+      trustedBondbuilder("olaplex-3plus", "high"),
+      trustedBondbuilder("epres", "high"),
+      trustedBondbuilder("aveda", "low"),
+      trustedBondbuilder(K18_PRODUCT_ID, "high"),
+      trustedBondbuilder("kerastase-premiere", "medium"),
+    ]),
   )
-  const result = evaluateStage3Authority(bondbuilderGapInput([only]))
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
-  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("Q1: a high-trust tie without K18 never falls back to the less trusted K18", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      Object.assign(trustedBondbuilder("olaplex-no3", "high"), { priceEur: null }),
+      Object.assign(trustedBondbuilder("epres", "high"), { priceEur: null }),
+      trustedBondbuilder(K18_PRODUCT_ID, "medium"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  // Equal catalogue order and no price: the product id decides deterministically.
+  assert.equal(result.recommendation?.productId, "epres")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("trust never lifts a non-ideal Bondbuilder above an ideal one", () => {
+  const unverified = trustedBondbuilder("unverified-high", "high")
+  unverified.protocols = []
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([unverified, trustedBondbuilder("verified-low", "low")]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "verified-low")
 })
 
 test("only owned-fit authority policies advance for this semantic correction", () => {
@@ -560,7 +909,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       mask: "personal-plan.mask.v4",
       scalp_care: "personal-plan.scalp-care.v3",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
-      bondbuilder: "personal-plan.bondbuilder.v2",
+      bondbuilder: "personal-plan.bondbuilder.v3",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
     },
   )
@@ -753,7 +1102,8 @@ test("Shampoo uncovered-role recommendation ranks two ideal candidates by catalo
   assert.equal(result.recommendation?.productId, "shampoo-ideal-better-order")
 })
 
-test("Shampoo dandruff role stays ideal-only: no supportive fallback even when only supportive candidates exist", () => {
+test("Shampoo dandruff role recommends a one-step supportive fallback", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: supportive fallback applies to every role.
   const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
   shampooInput.role = "shampoo_dandruff"
   shampooInput.capturedProductId = null
@@ -775,23 +1125,25 @@ test("Shampoo dandruff role stays ideal-only: no supportive fallback even when o
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.verdict, "unknown")
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.equal(result.recommendation, null)
+  assert.equal(result.verdict, "supportive")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+  assert.equal(result.recommendation?.productId, "shampoo-dandruff-supportive")
 })
 
 test("Conditioner with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
+  // fit-verdict spec §3, ruled 2026-10-12: nonmatching direction is an axis, not a wrong-job gate.
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") {
     throw new Error("expected Conditioner fixture")
   }
   conditionerInput.productFacts.spec = {
-    thickness: null,
-    proteinMoistureBalance: null,
+    thickness: "normal",
+    thicknesses: ["normal"],
+    proteinMoistureBalance: "protein",
     weight: "light",
     repairSupportLevel: "medium",
     balanceDirection: "moisture",
-    targetFit: "known_mismatch",
+    targetFit: "matched",
   }
 
   const result = evaluateStage3Authority(conditionerInput as never)
@@ -799,7 +1151,11 @@ test("Conditioner with complete nonmatching semantic facts is a known mismatch, 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "mismatch")
-  assert.ok(result.criteria.some((criterion) => criterion.criterionId === "conditioner.role"))
+  assert.ok(
+    result.criteria.some(
+      (criterion) => criterion.criterionId === "conditioner.balance" && criterion.result === "fail",
+    ),
+  )
 })
 
 test("Conditioner with ambiguous or incomplete semantic facts remains unknown", () => {
@@ -842,7 +1198,7 @@ test("Oil v2 distinguishes known unsupported roles from missing role support", (
   assert.ok(missing.missingFacts.includes("oil.role_support"))
 })
 
-test("Oil v2 requires explicit leave-on support, canonical weight, and target-thickness eligibility", () => {
+test("Oil v2 requires explicit leave-on support, canonical weight, and distance-preserving thickness facts", () => {
   const oilInput = input("oil", "known") as Stage3AuthorityInput<"oil">
   oilInput.role = "leave_on_fibre_conditioning"
   oilInput.subjectKey = "decision:oil:leave_on_fibre_conditioning:owned-1"
@@ -873,7 +1229,8 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and target-th
     pre_wash_fibre_treatment: false,
   }
   oilInput.productFacts.spec.weight = "light"
-  oilInput.productFacts.spec.targetThicknessEligible = true
+  // fit-verdict spec §3, ruled 2026-10-12: thickness is a degree axis.
+  oilInput.productFacts.spec.thicknesses = ["normal"]
 
   const ideal = evaluateStage3Authority(oilInput as never)
   assert.equal(ideal.status, "known")
@@ -890,14 +1247,20 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and target-th
 
   const wrongThickness = structuredClone(oilInput) as Stage3AuthorityInput<"oil">
   if (wrongThickness.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
-  wrongThickness.productFacts.spec.targetThicknessEligible = false
+  // fit-verdict spec §3, ruled 2026-10-12: a one-step thickness miss is supportive.
+  wrongThickness.productFacts.spec.thicknesses = ["coarse"]
   const mismatch = evaluateStage3Authority(wrongThickness as never)
   assert.equal(mismatch.status, "known")
   if (mismatch.status !== "known") return
-  assert.equal(mismatch.verdict, "mismatch")
+  assert.equal(mismatch.verdict, "supportive")
+  assert.equal(
+    mismatch.criteria.find((criterion) => criterion.criterionId === "oil.thickness")?.result,
+    "caution",
+  )
 })
 
-test("Mask v4 treats compatible formulation preferences as ideal but keeps hard needs strict", () => {
+test("Mask uses additive formulation distances and keeps required functions strict", () => {
+  // fit-verdict spec §§2–4, ruled 2026-10-12: one-step misses add; two steps fail.
   const idealInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   idealInput.categoryDecision.target = {
     category: "mask",
@@ -932,7 +1295,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
   const compatible = evaluateStage3Authority(compatibleInput as never)
   assert.equal(compatible.status, "known")
   if (compatible.status !== "known") return
-  assert.equal(compatible.verdict, "ideal")
+  assert.equal(compatible.verdict, "mismatch")
   assert.deepEqual(
     compatible.criteria
       .filter((criterion) =>
@@ -941,7 +1304,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
         ),
       )
       .map((criterion) => criterion.result),
-    ["pass", "pass", "pass"],
+    ["caution", "pass", "caution"],
   )
 
   const strongerThanRequestedInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -960,7 +1323,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
     strongerThanRequested.criteria.find(
       (criterion) => criterion.criterionId === "mask.repair_support",
     )?.explanation,
-    "Unterstützt stärker als erforderlich.",
+    "Entspricht deinem Bedarf.",
   )
 
   const tooHeavyInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -969,10 +1332,10 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
   const tooHeavy = evaluateStage3Authority(tooHeavyInput as never)
   assert.equal(tooHeavy.status, "known")
   if (tooHeavy.status !== "known") return
-  assert.equal(tooHeavy.verdict, "supportive")
+  assert.equal(tooHeavy.verdict, "mismatch")
   assert.equal(
     tooHeavy.criteria.find((criterion) => criterion.criterionId === "mask.weight")?.result,
-    "caution",
+    "fail",
   )
 
   const mismatchInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -1015,7 +1378,7 @@ test("Mask v4 fails closed when required canonical functional benefits are missi
 // derived from the implementation. Ruling R12 Option A: the accepted set is {target}, widened by
 // exactly one step toward Protein (Feuchtigkeit → ausgeglichen → Protein) when the confirmed mask
 // target carries high repair support; a Protein target never widens.
-// Everything outside the accepted set is a caution (never a fail) for the intensive mask role.
+// fit-verdict spec §7a.3 / §§3–4, ruled 2026-10-12: nearest accepted-set distance decides caution vs fail.
 type MaskDirection = "moisture" | "balanced" | "protein"
 type MaskRepair = "low" | "medium" | "high"
 const MASK_CARE_DIRECTION_FIXTURES: Array<{
@@ -1023,7 +1386,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
   product: MaskDirection
   target: MaskDirection
   repair: MaskRepair
-  result: "pass" | "caution"
+  result: "pass" | "caution" | "fail"
   accepted: MaskDirection[]
 }> = [
   // Target Feuchtigkeit
@@ -1082,7 +1445,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "protein",
     target: "moisture",
     repair: "low",
-    result: "caution",
+    result: "fail",
     accepted: ["moisture"],
   },
   {
@@ -1090,7 +1453,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "protein",
     target: "moisture",
     repair: "medium",
-    result: "caution",
+    result: "fail",
     accepted: ["moisture"],
   },
   // Adversarial vs. a non-contiguous widening: high repair never jumps two steps to Protein.
@@ -1181,7 +1544,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "low",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1189,7 +1552,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "medium",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1197,7 +1560,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "high",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1252,7 +1615,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
 
 function maskCareDirectionInput(fixture: (typeof MASK_CARE_DIRECTION_FIXTURES)[number]) {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
-  // input() shares the TARGETS object by reference; never mutate it across fixtures.
+  // Keep this R12 fixture's explicit copy before overriding its target axes.
   maskInput.categoryDecision.target = structuredClone(maskInput.categoryDecision.target)
   if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
   if (maskInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
@@ -1274,7 +1637,14 @@ for (const fixture of MASK_CARE_DIRECTION_FIXTURES) {
       result.criteria.find((criterion) => criterion.criterionId === "mask.care_direction")?.result,
       fixture.result,
     )
-    assert.equal(result.verdict, fixture.result === "pass" ? "ideal" : "supportive")
+    assert.equal(
+      result.verdict,
+      fixture.result === "pass"
+        ? "ideal"
+        : fixture.result === "caution"
+          ? "supportive"
+          : "mismatch",
+    )
 
     const [careDirection] = comparisonDimensions(maskInput as never, [
       {
@@ -1298,6 +1668,7 @@ for (const fixture of MASK_CARE_DIRECTION_FIXTURES) {
 }
 
 test("Mask selects the best image-backed supportive candidate regardless of need tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis and optional admit one-step fallback.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -1317,7 +1688,7 @@ test("Mask selects the best image-backed supportive candidate regardless of need
     presentationImageUrl: "https://example.com/one.webp",
     factFingerprint: "facts-one-caution",
   })
-  oneCaution.spec.weight = "rich"
+  oneCaution.spec.weight = "medium"
   oneCaution.spec.repairSupportLevel = "high"
   Object.assign(twoCautions, {
     productId: "a-two-cautions",
@@ -1402,6 +1773,7 @@ test("Mask v4 preserves catalog merchandising order among equally fitting candid
 })
 
 test("Leave-in v3 evaluates towel-dry post-wash facts and repair support deterministically", () => {
+  // fit-verdict spec §§3–4, ruled 2026-10-12: repair uses at-or-above zero and additive distance.
   const idealInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
   idealInput.categoryDecision.target = {
     category: "leave_in",
@@ -1537,6 +1909,40 @@ test("standalone Heat does not require a suitable-thickness fact", () => {
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
   assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Bondbuilder category suitability covers every diameter without inventing producer verification", () => {
+  for (const hairThickness of ["fine", "normal", "coarse", undefined] as const) {
+    for (const suitableThicknesses of [null, [], ["normal"]] as const) {
+      const owned = input("bondbuilder", "known")
+      if (owned.productFacts?.category !== "bondbuilder") throw new Error("fixture")
+      owned.hairThickness = hairThickness
+      owned.productFacts.suitableThicknesses =
+        suitableThicknesses === null ? null : [...suitableThicknesses]
+      const result = evaluateStage3Authority(owned)
+      assert.equal(result.status, "known", `${hairThickness}/${suitableThicknesses}`)
+      if (result.status !== "known") continue
+      assert.equal(result.verdict, "ideal")
+      assert.deepEqual(result.allowedActions, ["keep_owned"])
+      const diameter = result.criteria.find(
+        (entry) => entry.criterionId === "bondbuilder.thickness",
+      )
+      assert.equal(diameter?.result, "pass")
+      assert.doesNotMatch(diameter?.explanation ?? "", /verifiziert/)
+    }
+  }
+  const candidate = bondbuilderCandidate("reviewed-entry-point", "Bond Treatment")
+  candidate.suitableThicknesses = []
+  const gap = bondbuilderGapInput([candidate])
+  gap.hairThickness = "coarse"
+  const recommended = evaluateStage3Authority(gap)
+  assert.equal(recommended.status, "known")
+  if (recommended.status !== "known") throw new Error("expected recommendation")
+  assert.equal(recommended.recommendation?.productId, candidate.productId)
+  candidate.recommendable = false
+  const unreviewed = evaluateStage3Authority(gap)
+  assert.equal(unreviewed.status, "known")
+  if (unreviewed.status === "known") assert.equal(unreviewed.recommendation, null)
 })
 
 test("Dry Shampoo does not fabricate or require a hair-thickness fit dimension", () => {
@@ -1831,22 +2237,6 @@ test("Heat candidate selection leaves a non-UUID tie unresolved", () => {
   assert.deepEqual(result.allowedActions, ["leave_uncovered"])
 })
 
-test("bondbuilder without a suitable candidate remains unknown", () => {
-  const bondbuilderInput = input("bondbuilder", "known")
-  bondbuilderInput.capturedProductId = null
-  bondbuilderInput.subjectIdentity = null
-  bondbuilderInput.productFacts = null
-
-  const result = evaluateStage3Authority(bondbuilderInput)
-  assert.equal(result.status, "known")
-  if (result.status !== "known") return
-  assert.equal(result.verdict, "unknown")
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.equal(result.recommendation, null)
-  assert.equal(result.productFactFingerprint, null)
-  assert.equal(result.recommendationFactFingerprint, null)
-})
-
 test("Conditioner recommendation ranking prefers ideal authority before catalog order", () => {
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   conditionerInput.capturedProductId = null
@@ -2033,10 +2423,12 @@ test("complete Shampoo authority treats a non-target cleansing intensity as supp
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "supportive")
-  assert.equal(result.criteria[0]?.criterionId, "shampoo.role")
-  assert.equal(result.criteria[0]?.result, "pass")
-  assert.equal(result.criteria[1]?.criterionId, "shampoo.cleansing_intensity")
-  assert.equal(result.criteria[1]?.result, "caution")
+  assert.equal(result.criteria.find((row) => row.criterionId === "shampoo.role")?.result, "pass")
+  // fit-verdict spec §7a.3, ruled 2026-10-12: criteria now include every evaluated axis.
+  assert.equal(
+    result.criteria.find((item) => item.criterionId === "shampoo.cleansing_intensity")?.result,
+    "caution",
+  )
   assert.deepEqual(result.allowedActions, ["keep_owned", "leave_uncovered"])
 })
 test("Scalp Care keeps comfort complementary while root reset suppresses only exfoliant", () => {
@@ -2196,6 +2588,7 @@ test("Leave-in uncovered-role recommendation still prefers an ideal candidate ov
 })
 
 test("Leave-in uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: keep one miss so the ranking tie remains eligible.
   const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
   leaveInInput.capturedProductId = null
   leaveInInput.subjectIdentity = null
@@ -2209,7 +2602,7 @@ test("Leave-in uncovered-role recommendation falls back to catalog order once ve
     displayName: "Später im Katalog",
     catalogSortOrder: 5,
     weight: "medium",
-    careDirection: "balanced",
+    careDirection: "moisture",
     repairSupportLevel: "high",
   })
   const earlierInCatalog = leaveInCoverageCandidate({
@@ -2217,7 +2610,7 @@ test("Leave-in uncovered-role recommendation falls back to catalog order once ve
     displayName: "Früher im Katalog",
     catalogSortOrder: 2,
     weight: "medium",
-    careDirection: "balanced",
+    careDirection: "moisture",
     repairSupportLevel: "high",
   })
   leaveInInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
@@ -2330,6 +2723,7 @@ test("Conditioner uncovered-role recommendation still prefers an ideal candidate
 })
 
 test("Conditioner uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: one weight miss stays supportive; two misses are excluded.
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   conditionerInput.capturedProductId = null
   conditionerInput.subjectIdentity = null
@@ -2341,7 +2735,7 @@ test("Conditioner uncovered-role recommendation falls back to catalog order once
     displayName: "Später im Katalog",
     catalogSortOrder: 5,
     weight: "medium",
-    balance: "balanced",
+    balance: "moisture",
     repairSupportLevel: "high",
   })
   const earlierInCatalog = conditionerCoverageCandidate({
@@ -2349,7 +2743,7 @@ test("Conditioner uncovered-role recommendation falls back to catalog order once
     displayName: "Früher im Katalog",
     catalogSortOrder: 2,
     weight: "medium",
-    balance: "balanced",
+    balance: "moisture",
     repairSupportLevel: "high",
   })
   conditionerInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
@@ -2545,6 +2939,7 @@ test("Oil uncovered-role recommendation preserves no-recommendation behavior whe
 })
 
 test("Mask uncovered-role recommendation ranks in a supportive candidate for a required tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis admits a one-step fallback with its reason.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -2561,7 +2956,7 @@ test("Mask uncovered-role recommendation ranks in a supportive candidate for a r
     presentationImageUrl: "https://example.com/required.webp",
     factFingerprint: "facts-required-supportive",
   })
-  supportiveCandidate.spec.weight = "rich"
+  supportiveCandidate.spec.weight = "medium"
   supportiveCandidate.spec.repairSupportLevel = "high"
   maskInput.recommendationCandidates = [supportiveCandidate]
 
@@ -2576,6 +2971,7 @@ test("Mask uncovered-role recommendation ranks in a supportive candidate for a r
 })
 
 test("Mask uncovered-role recommendation still prefers an ideal candidate over a supportive one at a required tier", () => {
+  // fit-verdict spec §§4–5, ruled 2026-10-12: retain verdict-first ranking with a one-step fallback.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -2602,7 +2998,7 @@ test("Mask uncovered-role recommendation still prefers an ideal candidate over a
     catalogSortOrder: 1,
     factFingerprint: "facts-required-supportive-2",
   })
-  supportive.spec.weight = "rich"
+  supportive.spec.weight = "medium"
   maskInput.recommendationCandidates = [supportive, ideal]
 
   const result = evaluateStage3Authority(maskInput as never)
@@ -2611,4 +3007,208 @@ test("Mask uncovered-role recommendation still prefers an ideal candidate over a
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
   assert.equal(result.recommendation?.productId, "mask-required-ideal")
+})
+
+/* ------------------------------------------------ S4: Bondbuilder timing (decisions.md S2, X1) */
+
+type ProductionBondbuilder = ReturnType<typeof bondbuilderCandidate>
+
+/** The production catalogue (2026-10-09): every `products.sort_order` is 0. */
+function productionBondbuilder(
+  productId: string,
+  trust: "high" | "medium" | "low",
+  applicationMode: "pre_shampoo" | "post_wash_leave_in" | "bedtime_leave_in",
+  priceEur: number,
+): ProductionBondbuilder {
+  const candidate = trustedBondbuilder(productId, trust)
+  candidate.spec = {
+    ...candidate.spec,
+    applicationMode,
+    treatmentMode: applicationMode === "pre_shampoo" ? "rinse_out" : "leave_in",
+  }
+  return Object.assign(candidate, { catalogSortOrder: 0, priceEur })
+}
+
+const PROD = {
+  olaplex: () => productionBondbuilder("olaplex-3plus", "high", "pre_shampoo", 34),
+  epres: () => productionBondbuilder("epres", "high", "pre_shampoo", 48),
+  k18: () => productionBondbuilder(K18_PRODUCT_ID, "high", "post_wash_leave_in", 56.25),
+  elvital: () => productionBondbuilder("loreal-elvital-bond", "medium", "pre_shampoo", 8.95),
+  redken: () => productionBondbuilder("redken-acidic-bonding", "medium", "pre_shampoo", 25.5),
+  kerastase: () => productionBondbuilder("kerastase-premiere", "medium", "pre_shampoo", 56.29),
+  ogx: () => productionBondbuilder("ogx-sealing-serum", "low", "bedtime_leave_in", 18.68),
+  aveda: () => productionBondbuilder("aveda", "low", "pre_shampoo", 52),
+}
+
+function productionSet(options: { withoutK18?: boolean } = {}) {
+  return Object.entries(PROD)
+    .filter(([key]) => !(options.withoutK18 && key === "k18"))
+    .map(([, make]) => make())
+}
+
+function timed(
+  candidates: ProductionBondbuilder[],
+  bondbuilderTiming: "before_wash" | "after_wash" | "no_preference",
+) {
+  const gap = bondbuilderGapInput(candidates)
+  gap.selectionProfile = { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming }
+  return gap
+}
+
+function knownResult(input: Stage3AuthorityInput) {
+  const result = evaluateStage3Authority(input)
+  assert.equal(result.status, "known")
+  if (result.status !== "known") throw new Error("expected a known evaluation")
+  return result
+}
+
+const hasShortlistCaution = (result: ReturnType<typeof knownResult>) =>
+  result.criteria.some(
+    (entry) => entry.criterionId === "bondbuilder.equal_shortlist" && entry.result === "caution",
+  )
+
+test("S4 E1: no preference picks OLAPLEX as the cheapest tie option with the shortlist caution", () => {
+  for (const input of [
+    timed(productionSet(), "no_preference"),
+    bondbuilderGapInput(productionSet()),
+  ]) {
+    const result = knownResult(input)
+    assert.equal(result.recommendation?.productId, "olaplex-3plus")
+    assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
+    assert.ok(hasShortlistCaution(result))
+  }
+})
+
+test("S4 E2: after the wash → K18 alone, validated_standalone without a tie caution", () => {
+  const result = knownResult(timed(productionSet(), "after_wash"))
+  assert.equal(result.recommendation?.productId, K18_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.equal(hasShortlistCaution(result), false)
+})
+
+test("S4 E3: before the wash → OLAPLEX by price (tie_ordered), the caution stays", () => {
+  const result = knownResult(timed(productionSet(), "before_wash"))
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
+  assert.ok(hasShortlistCaution(result))
+})
+
+test("S4 E8: after the wash without K18 → OLAPLEX with the unmet rule id", () => {
+  const result = knownResult(timed(productionSet({ withoutK18: true }), "after_wash"))
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(
+    result.recommendation?.authorityRuleId,
+    "bondbuilder.stage3.timing_unmet.after_wash.before_wash",
+  )
+  assert.equal(
+    result.recommendation?.reason,
+    "Kein gleich vertrauenswürdiges Produkt passt zu deinem Zeitpunkt.",
+  )
+  assert.ok(hasShortlistCaution(result))
+})
+
+test("S4: a lower-trust matching product never beats a higher-trust non-matching one", () => {
+  // A medium-trust after-wash product next to the high-trust pre-wash pair.
+  const mediumAfterWash = productionBondbuilder("medium-after", "medium", "post_wash_leave_in", 5)
+  const result = knownResult(
+    timed([PROD.olaplex(), PROD.epres(), mediumAfterWash, PROD.ogx()], "after_wash"),
+  )
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(
+    result.recommendation?.authorityRuleId,
+    "bondbuilder.stage3.timing_unmet.after_wash.before_wash",
+  )
+})
+
+test("S4: overnight (OGX) matches neither answer", () => {
+  for (const timing of ["before_wash", "after_wash"] as const) {
+    const result = knownResult(timed([PROD.ogx()], timing))
+    assert.equal(result.recommendation?.productId, "ogx-sealing-serum")
+    assert.equal(
+      result.recommendation?.authorityRuleId,
+      `bondbuilder.stage3.timing_unmet.${timing}.overnight`,
+    )
+  }
+  assert.equal(
+    knownResult(timed([PROD.ogx()], "no_preference")).recommendation?.authorityRuleId,
+    "bondbuilder.stage3.validated_standalone",
+  )
+})
+
+test("S4: the timing never changes a scanned or owned product's verdict", () => {
+  for (const owned of [PROD.k18(), PROD.olaplex(), PROD.ogx()]) {
+    const verdicts = (["no_preference", "before_wash", "after_wash"] as const).map((timing) => {
+      const subject = input("bondbuilder", "known") as Stage3AuthorityInput<"bondbuilder">
+      subject.productFacts = owned
+      subject.selectionProfile = { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: timing }
+      const result = knownResult(subject as Stage3AuthorityInput)
+      return [result.verdict, result.allowedActions, result.criteria]
+    })
+    assert.deepEqual(verdicts[1], verdicts[0])
+    assert.deepEqual(verdicts[2], verdicts[0])
+  }
+})
+
+test("S4: the exported shortlist is the authority's own tie set", () => {
+  const ids = (timing: "before_wash" | "after_wash" | "no_preference", withoutK18 = false) => {
+    const shortlist = bondbuilderShortlist(
+      timed(productionSet({ withoutK18 }), timing) as Stage3AuthorityInput<"bondbuilder">,
+    )
+    return {
+      pool: shortlist.pool.map((candidate) => candidate.productId).sort(),
+      selected: shortlist.selected?.productId ?? null,
+      timingUnmet: shortlist.timingUnmet,
+    }
+  }
+  assert.deepEqual(ids("no_preference"), {
+    pool: [K18_PRODUCT_ID, "epres", "olaplex-3plus"].sort(),
+    selected: "olaplex-3plus",
+    timingUnmet: false,
+  })
+  assert.deepEqual(ids("before_wash"), {
+    pool: ["epres", "olaplex-3plus"],
+    selected: "olaplex-3plus",
+    timingUnmet: false,
+  })
+  assert.deepEqual(ids("after_wash"), {
+    pool: [K18_PRODUCT_ID],
+    selected: K18_PRODUCT_ID,
+    timingUnmet: false,
+  })
+  assert.deepEqual(ids("after_wash", true), {
+    pool: ["epres", "olaplex-3plus"],
+    selected: "olaplex-3plus",
+    timingUnmet: true,
+  })
+})
+
+test("tie order is lower price (unpriced last), then catalogue order, then id", () => {
+  const order = (...candidates: ProductionBondbuilder[]) =>
+    [...candidates].sort(compareBondbuilderTieOrder).map((candidate) => candidate.productId)
+  const withOrder = (candidate: ProductionBondbuilder, sort: number | null, price: number | null) =>
+    Object.assign(candidate, { catalogSortOrder: sort, priceEur: price })
+  // Price beats catalogue order.
+  assert.deepEqual(order(withOrder(PROD.olaplex(), 2, 34), withOrder(PROD.epres(), 1, 48)), [
+    "olaplex-3plus",
+    "epres",
+  ])
+  // Same catalogue order (production: all 0) → the cheaper one.
+  assert.deepEqual(order(PROD.epres(), PROD.olaplex()), ["olaplex-3plus", "epres"])
+  assert.deepEqual(order(withOrder(PROD.olaplex(), 2, 40), withOrder(PROD.epres(), 1, 40)), [
+    "epres",
+    "olaplex-3plus",
+  ])
+  // Missing order or price ranks last; equal everything → product id.
+  assert.deepEqual(order(withOrder(PROD.olaplex(), null, 34), withOrder(PROD.epres(), 0, 48)), [
+    "olaplex-3plus",
+    "epres",
+  ])
+  assert.deepEqual(order(withOrder(PROD.olaplex(), 0, null), withOrder(PROD.epres(), 0, 48)), [
+    "epres",
+    "olaplex-3plus",
+  ])
+  assert.deepEqual(order(withOrder(PROD.olaplex(), 0, 40), withOrder(PROD.epres(), 0, 40)), [
+    "epres",
+    "olaplex-3plus",
+  ])
 })

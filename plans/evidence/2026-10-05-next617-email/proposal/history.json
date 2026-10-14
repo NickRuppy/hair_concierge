@@ -1,0 +1,67 @@
+{
+  "tests/customerio-funnel-attribution.test.ts": [
+    "0fbb79f0 2026-07-13 Enable production Meta funnel attribution (#216)"
+  ],
+  "tests/customerio-page-view.test.ts": [
+    "6fc40211 2026-07-17 Deduplicate Meta lead and offer funnel events (#232)",
+    "2b436d39 2026-07-16 fix(analytics): harden result offer tracking (#226)"
+  ],
+  "tests/customerio-quiz-traits.test.ts": [
+    "f918bf16 2026-09-19 feat(quiz): prefill returning lead details (#587)",
+    "cb6fb1b3 2026-06-25 Expand chemical treatment taxonomy (#187)",
+    "b1993a03 2026-06-19 Add hair length to quiz and profile"
+  ],
+  "tests/customerio-server.test.ts": [
+    "783f608a 2026-05-28 feat(customerio): sync lifecycle events server-side"
+  ],
+  "tests/customerio-stripe-lifecycle.test.ts": [
+    "318cf157 2026-09-14 feat(billing): launch seven-day Stripe and PayPal trials (#549)",
+    "7fd901f5 2026-07-07 fix(payments): launch full-price plans",
+    "783f608a 2026-05-28 feat(customerio): sync lifecycle events server-side"
+  ],
+  "tests/customerio-transactional.test.ts": [
+    "816a77c2 2026-09-16 fix(email): shorten trial confirmations and attach full contract PDF (#579)",
+    "318cf157 2026-09-14 feat(billing): launch seven-day Stripe and PayPal trials (#549)",
+    "35523688 2026-08-10 feat(payments): add actionable checkout error support (#347)"
+  ],
+  "tests/customerio-trial-reminder.test.ts": [
+    "291960a5 2026-09-15 fix(email): restore readable trial notices and Gmail formatting (#560)",
+    "9f1a3dc4 2026-09-15 feat(billing): remind trial users before their first payment (#557)"
+  ],
+  "tests/email-deliverability.test.ts": [
+    "034b567f 2026-08-02 Validate lead email deliverability before save (#305)"
+  ],
+  "tests/personal-plan-customerio-backfill.test.ts": [
+    "d3a9c8bf 2026-08-01 Make Personal Plan Customer.io profile sync durable (#295)"
+  ],
+  "tests/personal-plan-customerio-outbox-migration.test.ts": [
+    "d3a9c8bf 2026-08-01 Make Personal Plan Customer.io profile sync durable (#295)"
+  ],
+  "tests/personal-plan-customerio-outbox.test.ts": [
+    "69f1651d 2026-08-27 feat(personal-plan): give moderators a fresh email-bound test run (#472)",
+    "02a84108 2026-08-10 Add secure Personal Plan field-test access (#350)",
+    "d3a9c8bf 2026-08-01 Make Personal Plan Customer.io profile sync durable (#295)"
+  ],
+  "tests/personal-plan-customerio-reconcile-route.test.ts": [
+    "d3a9c8bf 2026-08-01 Make Personal Plan Customer.io profile sync durable (#295)"
+  ],
+  "tests/personal-plan-customerio-sync.test.ts": [
+    "9ae684fc 2026-08-05 Add hair loss concern guidance across both quizzes (#331)",
+    "8387d0d0 2026-08-01 Explain personal plan assessment on the offer page (#301)",
+    "d3a9c8bf 2026-08-01 Make Personal Plan Customer.io profile sync durable (#295)"
+  ],
+  "tests/trial-reminders-delivery.test.ts": [
+    "9f1a3dc4 2026-09-15 feat(billing): remind trial users before their first payment (#557)"
+  ],
+  "tests/trial-reminders-route.test.ts": [
+    "9f1a3dc4 2026-09-15 feat(billing): remind trial users before their first payment (#557)"
+  ],
+  "tests/trial-reminders-sql.test.ts": [
+    "9f1a3dc4 2026-09-15 feat(billing): remind trial users before their first payment (#557)"
+  ],
+  "tests/trial-reminders.test.ts": [
+    "a54ee67a 2026-09-15 fix(billing): collect PayPal trials on the day after the verified trial end (#568)",
+    "291960a5 2026-09-15 fix(email): restore readable trial notices and Gmail formatting (#560)",
+    "9f1a3dc4 2026-09-15 feat(billing): remind trial users before their first payment (#557)"
+  ]
+}

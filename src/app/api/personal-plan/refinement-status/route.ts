@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -35,6 +36,8 @@ export type RefinementStatusRouteReadClient = { from: (table: string) => Query }
 export type RefinementStatusRouteDeps = {
   getUserId: () => Promise<string | null>
   client: () => RefinementStatusRouteReadClient
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
 }
 
 const response = (body: unknown, status = 200) =>
@@ -45,7 +48,8 @@ export function createRefinementStatusRouteHandlers(deps: RefinementStatusRouteD
     async GET() {
       const userId = await deps.getUserId()
       if (!userId) return response({ error: "unauthorized" }, 401)
-      const result = await loadRefinementStatusForUser(deps.client(), userId)
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
+      const result = await loadRefinementStatusForUser(deps.client(), userId, { toolsEnabled })
       if (result.status === "no_personal_plan") return response({ error: "no_personal_plan" }, 404)
       if (result.status === "unavailable")
         return response({ error: "temporarily_unavailable" }, 503)
@@ -57,6 +61,7 @@ export function createRefinementStatusRouteHandlers(deps: RefinementStatusRouteD
 const handlers = createRefinementStatusRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   client: () => createAdminClient() as unknown as RefinementStatusRouteReadClient,
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
 })
 
 export const GET = () => handlers.GET()

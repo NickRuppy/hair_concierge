@@ -1,0 +1,15 @@
+[
+  {
+    "id": "F1",
+    "status": "HELD_NO_REPAIR_NO_CREDIT",
+    "file": "tests/product-identity-schema.test.ts",
+    "name": "product identity migration seeds all phase 0 product categories",
+    "source": "supabase/migrations/20260612120000_product_identity_normalization.sql",
+    "from": "('shampoo', 'Shampoo', true, true, 10)",
+    "to": "('renamed_shampoo', 'Shampoo', true, true, 10)",
+    "actualOracle": "normalizedSql = migrationSql.replace(/\\s+/g, ' ').toLowerCase(); assert.match(normalizedSql, /'shampoo'/)",
+    "whySurvives": "The unchanged display label becomes the exact quoted lowercase key text. The changed first tuple field is valid SQL and the static membership oracle cannot distinguish key from label. No SQL execution, mutation or test was run.",
+    "possibleRepairOutsideThisProposal": "Restrict membership assertion to parsed/anchored first tuple field of the product_categories VALUES section; preserve existing declaration and keys, prove old-pass/repaired-red separately if main authorizes.",
+    "credit": 0
+  }
+]

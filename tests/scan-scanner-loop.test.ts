@@ -223,21 +223,13 @@ test("isDetectionCurrent: a stale continuation after teardown is a no-op", () =>
 // Active clock: the 3s fallback measures scanning time, not wall time (F2)
 // ---------------------------------------------------------------------------
 
-test("advanceLoopClock: the first tick anchors the clock without accruing anything", () => {
-  const controller = runningController()
-  const session = createScanSessionState()
-
-  assert.equal(advanceLoopClock(controller, session, 1_000).timedOut, false)
-
-  assert.equal(session.activeMs, 0)
-  assert.equal(controller.lastTickAt, 1_000)
-})
-
 test("advanceLoopClock: accrues the gap between consecutive running ticks", () => {
   const controller = runningController()
   const session = createScanSessionState()
 
-  advanceLoopClock(controller, session, 1_000)
+  assert.equal(advanceLoopClock(controller, session, 1_000).timedOut, false)
+  assert.equal(session.activeMs, 0)
+  assert.equal(controller.lastTickAt, 1_000)
   advanceLoopClock(controller, session, 1_016)
   advanceLoopClock(controller, session, 1_032)
 
@@ -312,6 +304,8 @@ test("advanceLoopClock: a decoded session never reports the fallback", () => {
     now += 100
     assert.equal(advanceLoopClock(controller, session, now).timedOut, false)
   }
+
+  assert.equal(session.timeoutFired, false)
 })
 
 // ---------------------------------------------------------------------------
@@ -333,16 +327,6 @@ test("streamReleasePlan: a stale effect instance cannot stop the newer instance'
   const fresh: FakeStream = { id: "fresh" }
   const plan = streamReleasePlan({ current: fresh, videoSource: fresh }, stale)
   assert.deepEqual(plan, { clearCurrent: false, clearVideoSource: false })
-})
-
-test("streamReleasePlan: during a recovery swap the old stream leaves the new one attached", () => {
-  // `recover()` acquires first: the ref and the video already point at the new stream when
-  // the old one is released, so releasing it must not detach the live viewfinder.
-  const previous: FakeStream = { id: "previous" }
-  const next: FakeStream = { id: "next" }
-  const plan = streamReleasePlan({ current: next, videoSource: next }, previous)
-  assert.equal(plan.clearCurrent, false)
-  assert.equal(plan.clearVideoSource, false)
 })
 
 test("streamReleasePlan: slots are judged independently", () => {

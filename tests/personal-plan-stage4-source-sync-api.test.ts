@@ -59,8 +59,30 @@ const portfolio = {
 } satisfies ProposedProductPortfolio
 
 test("stored source snapshots fail closed instead of throwing on a legacy portfolio shape", () => {
-  const legacyPortfolio = {
+  const validRoutine = {
+    ...routine,
+    planId: "00000000-0000-4000-8000-000000000001",
+    source: {
+      ...routine.source,
+      refinedVersionId: "00000000-0000-4000-8000-000000000002",
+    },
+    createdAt: "2026-08-08T00:00:00.000Z",
+  }
+  const validPortfolio = {
     ...portfolio,
+    personalPlanId: validRoutine.planId,
+    refinedVersionId: validRoutine.source.refinedVersionId,
+  }
+  const validSnapshots = {
+    routine: validRoutine,
+    portfolio: validPortfolio,
+    sourceProductDraftId: "draft-a",
+    sourceProductDraftRevision: 4,
+  }
+  assert.deepEqual(parseRoutineSourceBaseSnapshots(validSnapshots), validSnapshots)
+
+  const legacyPortfolio = {
+    ...validPortfolio,
     ownedProducts: [
       {
         capturedProductId: "captured-a",
@@ -75,10 +97,8 @@ test("stored source snapshots fail closed instead of throwing on a legacy portfo
   }
   assert.equal(
     parseRoutineSourceBaseSnapshots({
-      routine,
+      ...validSnapshots,
       portfolio: legacyPortfolio,
-      sourceProductDraftId: "draft-a",
-      sourceProductDraftRevision: 4,
     }),
     null,
   )
@@ -1060,7 +1080,7 @@ test("a lane-settled claim never inherits a sibling's batch transition error", a
   assert.deepEqual(db.finished, [{ errorCode: "revision_conflict" }, { errorCode: null }])
 })
 
-test("a lost finish lease heals on the next worker without a second activation", async () => {
+test("a lost finish lease is reported unavailable and a later unchanged lane result settles it", async () => {
   // Models the orchestrator's start-state capture: the recompute activates only
   // while the plan's active Routine is not already sourced from the target.
   let activeRefinedVersion = "refined-a"
@@ -1175,7 +1195,7 @@ test("a lost source lease is not counted or reported as terminalized", async () 
   assert.deepEqual(reported, [])
 })
 
-test("a deleted user-product source is terminal while pending review remains retryable", async () => {
+test("a deleted user-product source is terminal", async () => {
   const db = repository({
     async loadUserProduct() {
       return null
@@ -1325,70 +1345,9 @@ test("a deferred product review does not block an independent changed claim", as
   assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: "unresolved_product_review" }])
 })
 
-test("two changed claims stage one complete deterministic successor delta", async () => {
-  const base = acquisitionBase()
-  const staged: Array<{ sourceKey: string; delta: unknown; routine: RoutineCompiledPayload }> = []
-  const db = repository({
-    async claim() {
-      // Deliberately reverse the input order: selection of the source event and
-      // candidate fingerprint must not depend on outbox claim order.
-      return [claimB, claim]
-    },
-    async loadBase() {
-      return { ...base, sourceProductDraftId: "draft-a", sourceProductDraftRevision: 1 }
-    },
-    async loadUserProduct(_, sourceKey) {
-      return sourceKey === claim.sourceKey
-        ? {
-            id: sourceKey,
-            category: "shampoo",
-            catalogProductId: "product-a",
-            displayName: "Shampoo A",
-            identityStatus: "matched",
-            ownershipStatus: "owned",
-          }
-        : {
-            id: sourceKey,
-            category: "conditioner",
-            catalogProductId: "product-b",
-            displayName: "Conditioner B",
-            identityStatus: "matched",
-            ownershipStatus: "owned",
-          }
-    },
-    async stage(input) {
-      staged.push(input)
-      return "staged"
-    },
-  })
-
-  assert.deepEqual(
-    await createRoutineSourceSyncService({ repository: db }).sync({ userId: "owner-a" }),
-    {
-      status: "processed",
-      processed: 2,
-      terminalized: 0,
-      deferred: 0,
-      unfinished: 0,
-      proposalStaged: true,
-      recomputeApplied: false,
-    },
-  )
-  assert.equal(staged.length, 1)
-  assert.equal(staged[0]?.sourceKey, "user-product-a")
-  const delta = staged[0]?.delta as { direct: Array<{ itemKey: string }>; consequential: unknown[] }
-  assert.deepEqual(delta.direct.map((entry) => entry.itemKey).sort(), ["item-0", "item-1"])
-  assert.deepEqual(delta.consequential, [])
-  assert.notEqual(
-    staged[0]?.routine.source.sourceFingerprint,
-    base.routine.source.sourceFingerprint,
-  )
-  assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
-})
-
 test("successor cadence is re-resolved once after the complete acquisition batch", async () => {
   const base = acquisitionBase()
-  const staged: Array<{ routine: RoutineCompiledPayload }> = []
+  const staged: Array<{ sourceKey: string; delta: unknown; routine: RoutineCompiledPayload }> = []
   let resolutionCalls = 0
   const db = repository({
     async claim() {
@@ -1451,6 +1410,15 @@ test("successor cadence is re-resolved once after the complete acquisition batch
   assert.equal(resolutionCalls, 1)
   assert.equal(staged.length, 1)
   assert.equal(staged[0]?.routine.items[0]?.cadence.resolved?.copyDe, "2× pro Woche")
+  assert.equal(staged[0]?.sourceKey, "user-product-a")
+  const delta = staged[0]?.delta as { direct: Array<{ itemKey: string }>; consequential: unknown[] }
+  assert.deepEqual(delta.direct.map((entry) => entry.itemKey).sort(), ["item-0", "item-1"])
+  assert.deepEqual(delta.consequential, [])
+  assert.notEqual(
+    staged[0]?.routine.source.sourceFingerprint,
+    base.routine.source.sourceFingerprint,
+  )
+  assert.deepEqual(db.finished, [{ errorCode: null }, { errorCode: null }])
 })
 
 test("legacy cadence enrichment is not presented as a change to untouched Routine items", async () => {
@@ -1566,6 +1534,97 @@ test("successor cadence authority binds the acquired exact Bondbuilder course", 
   })
   assert.equal(resolved.source.compilerVersion, "personal-plan-routine-compiler.v2")
   assert.equal(resolved.source.authorityVersions.routine, "personal-plan-routine-compiler.v2")
+})
+
+function bondbuilderSuccessor(): RoutineCompiledPayload {
+  const successor = structuredClone(acquisitionBase().routine)
+  successor.items = [
+    {
+      ...successor.items[0]!,
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned-aveda",
+        productId: "product-aveda",
+        displayName: "Aveda Botanical Repair",
+      },
+      cadence: {
+        recommended: { kind: "product_protocol_course", role: "specialized_bond_treatment" },
+        userOverride: null,
+        displayKey: "personal_plan.cadence.product_protocol_course",
+      },
+    },
+  ] as RoutineCompiledPayload["items"]
+  return successor
+}
+
+const AVEDA_DAMAGE_BRANCHED = {
+  kind: "damage_branched",
+  branches: [
+    { structural_levels: ["moderate"], copy_de: "Einmal pro Woche anwenden." },
+    { structural_levels: ["high", "severe"], copy_de: "An jedem Waschtag anwenden." },
+  ],
+}
+
+test("S4: successor sync reads the refined version's damage band for a damage-branched cadence", async () => {
+  const successor = bondbuilderSuccessor()
+  const levelReads: unknown[] = []
+  const resolved = await resolveSuccessorRoutineCadences({
+    routine: successor,
+    authorityReader: {
+      async load() {
+        return [
+          {
+            productId: "product-aveda",
+            category: "bondbuilder",
+            role: "specialized_bond_treatment",
+            cadence: AVEDA_DAMAGE_BRANCHED,
+          },
+        ]
+      },
+      async loadStructuralDamageLevel(input) {
+        levelReads.push(input)
+        return "moderate"
+      },
+    },
+  })
+
+  assert.deepEqual(levelReads, [
+    { planId: successor.planId, refinedVersionId: successor.source.refinedVersionId },
+  ])
+  assert.deepEqual(resolved.items[0]?.cadence.resolved, {
+    copyDe: "Einmal pro Woche anwenden.",
+    source: "exact_product_protocol",
+  })
+})
+
+test("S4: successor sync without a damage-branched fact never reads the snapshot", async () => {
+  let levelReads = 0
+  const resolved = await resolveSuccessorRoutineCadences({
+    routine: bondbuilderSuccessor(),
+    authorityReader: {
+      async load() {
+        return [
+          {
+            productId: "product-aveda",
+            category: "bondbuilder",
+            role: "specialized_bond_treatment",
+            cadence: { kind: "label_course", copy_de: "Alle ein bis drei Haarwäschen anwenden." },
+          },
+        ]
+      },
+      async loadStructuralDamageLevel() {
+        levelReads += 1
+        return "severe"
+      },
+    },
+  })
+  assert.equal(levelReads, 0)
+  assert.equal(
+    resolved.items[0]?.cadence.resolved?.copyDe,
+    "Alle ein bis drei Haarwäschen anwenden.",
+  )
 })
 
 test("sync route authenticates before admin service construction and respects the composed gate", async () => {

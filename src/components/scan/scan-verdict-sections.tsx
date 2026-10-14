@@ -106,7 +106,12 @@ export function ScanVerdictSections({
         <Banner
           status={result.status}
           title={voice(result.verdictTitle)}
-          subtitle={voice(result.subtitle)}
+          subtitle={voice(
+            (result.verdict === "supportive" || result.verdict === "mismatch") &&
+              result.reasonLines?.length
+              ? result.reasonLines.join(" · ")
+              : result.subtitle,
+          )}
         />
       ) : (
         <Banner
@@ -300,6 +305,19 @@ function CoveredBy({
  * shape the cockpit and the call PDF need, where an alternative is something Nick reads
  * out, not something to tap.
  */
+const OVER_BUDGET_LABEL = "Über deinem Budget"
+const MARKET_SEGMENT_LABEL = { drugstore: "Drogerie", professional: "Profi" } as const
+const NEUTRAL_PILL_CLASS =
+  "rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground"
+
+/** „Bis 15 € zuerst" — only with a saved capped budget (the server sets `budgetLimitEur`). */
+function budgetCaption(alternatives: ScanAlternativePresentation[]): string | null {
+  const limit = alternatives.find(
+    (alternative) => alternative.budgetLimitEur !== undefined,
+  )?.budgetLimitEur
+  return limit === undefined ? null : `Bis ${limit} € zuerst`
+}
+
 export function ScanAlternativesList({
   alternatives,
   onOpen,
@@ -309,12 +327,32 @@ export function ScanAlternativesList({
   onOpen?: (productId: string) => void
   onBuy?: (productId: string) => void
 }) {
+  const caption = budgetCaption(alternatives)
+  const supportiveRecommendationId = alternatives.some((item) => item.verdict === "ideal")
+    ? null
+    : alternatives[0]?.productId
   return (
     <section>
-      <p className="mb-2 text-[13px] font-bold text-foreground">Passende Alternativen</p>
+      <p
+        className={
+          caption
+            ? "text-[13px] font-bold text-foreground"
+            : "mb-2 text-[13px] font-bold text-foreground"
+        }
+      >
+        Passende Alternativen
+      </p>
+      {caption ? (
+        <p data-scan-budget-caption="" className="mb-2 mt-0.5 text-[12px] text-muted-foreground">
+          {caption}
+        </p>
+      ) : null}
       <ul className="flex flex-col gap-2">
         {alternatives.map((alternative) => {
           const meta = scanAlternativeMetaLine(alternative)
+          const segmentLabel = alternative.marketSegment
+            ? MARKET_SEGMENT_LABEL[alternative.marketSegment]
+            : null
           const identity = (
             <>
               <ScanProductThumb
@@ -326,8 +364,27 @@ export function ScanAlternativesList({
                 <span className="block truncate text-[13px] font-semibold text-foreground">
                   {alternative.displayName}
                 </span>
+                {alternative.verdict === "supportive" && alternative.reasonLines?.length ? (
+                  <span className="mt-0.5 block text-[12px] text-muted-foreground">
+                    {alternative.reasonLines.join(" · ")}
+                  </span>
+                ) : null}
                 {meta ? (
                   <span className="mt-0.5 block text-[12px] text-muted-foreground">{meta}</span>
+                ) : null}
+                {segmentLabel || alternative.overBudget ? (
+                  <span className="mt-1 flex flex-wrap gap-1">
+                    {segmentLabel ? (
+                      <span data-scan-market-segment="" className={NEUTRAL_PILL_CLASS}>
+                        {segmentLabel}
+                      </span>
+                    ) : null}
+                    {alternative.overBudget ? (
+                      <span data-scan-over-budget="" className={NEUTRAL_PILL_CLASS}>
+                        {OVER_BUDGET_LABEL}
+                      </span>
+                    ) : null}
+                  </span>
                 ) : null}
               </span>
             </>
@@ -355,7 +412,10 @@ export function ScanAlternativesList({
                     STATUS_CLASS[alternative.verdict === "ideal" ? "ok" : "pending"],
                   )}
                 >
-                  {alternative.verdictLabel}
+                  {alternative.verdict === "supportive" &&
+                  alternative.productId !== supportiveRecommendationId
+                    ? "Alternative · passt bedingt"
+                    : alternative.verdictLabel}
                 </span>
                 {onBuy && alternative.purchaseUrl ? (
                   <a

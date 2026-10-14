@@ -1,0 +1,21 @@
+{
+  "zeroQuota": true,
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "files": [
+    {
+      "file": "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "beforeSha": "1e6074e1e7655477a1286c49f94f4c58b9849ebea7cee86542eb9ed6a72ddc9d",
+      "afterSha": "eb1096d04d24d70670f389815e4cc35af7d9ae3d1d791181cff7a6fd672af871",
+      "original": "/tmp/test-audit-readiness-alias-main-7sh5_tbw/scripts/scanner-catalog-coverage/readiness-export.ts",
+      "prospective": "/tmp/test-audit-readiness-alias-main-7sh5_tbw/scripts/scanner-catalog-coverage/readiness-export.ts.new"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-readiness.test.ts",
+      "beforeSha": "20af0916fd719f6f482e32bea99b38c9ab4a236fdc408c8039a5265333733be8",
+      "afterSha": "71f6b73f5fb047994432d445ea95839a02342eb51cd9ac4134feb9885d5bc738",
+      "original": "/tmp/test-audit-readiness-alias-main-7sh5_tbw/tests/scanner-catalog-coverage-readiness.test.ts",
+      "prospective": "/tmp/test-audit-readiness-alias-main-7sh5_tbw/tests/scanner-catalog-coverage-readiness.test.ts.new"
+    }
+  ],
+  "allPostHashesExact": true
+}

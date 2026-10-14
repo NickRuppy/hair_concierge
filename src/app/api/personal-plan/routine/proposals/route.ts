@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
 import {
   canAccessPersonalPlanJourneyStage,
@@ -10,9 +11,15 @@ import {
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { routineProposalRequestSchema } from "@/lib/personal-plan/routine/contracts"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseRoutineProposalService } from "@/lib/personal-plan/routine/proposal-service"
+import {
+  loadRoutineShoppingBudget,
+  ROUTINE_BUDGET_REQUIRED_ERROR,
+} from "@/lib/personal-plan/routine/budget-gate"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 type Service = ReturnType<typeof createSupabaseRoutineProposalService>
 export type PersonalPlanRoutineProposalRouteDeps = {
@@ -20,6 +27,15 @@ export type PersonalPlanRoutineProposalRouteDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   service: () => Service
+  /**
+   * Budget gate (Task 6): when enabled and no budget is saved, a USER-authorized routine edit is
+   * refused with `budget_required` before any proposal exists. The gate lives only in this
+   * route — background recompute/sync never passes through it. Absent = no gate.
+   */
+  budgetGate?: {
+    enabled: () => boolean
+    load: (userId: string) => Promise<ShoppingBudget | null>
+  }
 }
 const response = (body: unknown, status = 200) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } })
@@ -42,6 +58,15 @@ export function createPersonalPlanRoutineProposalRouteHandlers(
       }
       const parsed = routineProposalRequestSchema.safeParse(await request.json().catch(() => null))
       if (!parsed.success) return response({ error: "invalid_request" }, 400)
+      if (deps.budgetGate?.enabled()) {
+        let budget: ShoppingBudget | null
+        try {
+          budget = await deps.budgetGate.load(userId)
+        } catch {
+          return response({ error: "temporarily_unavailable" }, 503)
+        }
+        if (!budget) return response({ error: ROUTINE_BUDGET_REQUIRED_ERROR }, 409)
+      }
       const result = await deps.service().propose({ userId, ...parsed.data })
       if (result.status === "temporarily_unavailable")
         return response({ error: result.status }, 503)
@@ -56,6 +81,16 @@ const handlers = createPersonalPlanRoutineProposalRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () => createSupabaseRoutineProposalService({ client: createAdminClient() as never }),
+  service: () => {
+    const admin = createAdminClient()
+    return createSupabaseRoutineProposalService({
+      client: admin as never,
+      toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, admin),
+    })
+  },
+  budgetGate: {
+    enabled: () => isShoppingBudgetEnabled(),
+    load: (userId) => loadRoutineShoppingBudget(createAdminClient(), userId),
+  },
 })
 export const POST = handlers.POST

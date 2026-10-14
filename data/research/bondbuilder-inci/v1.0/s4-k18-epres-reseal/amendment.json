@@ -1,0 +1,71 @@
+{
+  "version": "bondbuilder-preserved-bundle-amendment-v1",
+  "status": "prepared — awaiting Nick's approval of the re-seal (plans/catalog-completeness-fill/slice4/k18-epres/APPROVAL.md)",
+  "prepared_at": "2026-10-11",
+  "scope": "Two source-bound field changes on reference anchors whose curated publication rests on a reviewed preserved bundle. The frozen v0.5 research profiles are NOT rewritten (profile_sha256 unchanged); protocol holds are NOT adjudicated. The change is carried into the catalogue by re-sealing each preserved bundle around the changed row.",
+  "items": [
+    {
+      "key": "K18",
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "research_key": "P02",
+      "profile_sha256": "26005fee342e0141fb0f29e33101a617ca5ba2b06f06b54de71aa99c7c01bb57",
+      "ruling": "B3 (Nick, 2026-10-09): K18 schedule copy from the German official manufacturer page.",
+      "target": "product_application_protocols.cadence of protocol ef3f1639-cab4-4a1b-bbcc-54b8e436af39",
+      "before": {
+        "kind": "label_course",
+        "copy_de": "Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."
+      },
+      "after": {
+        "kind": "label_course",
+        "copy_de": "Die ersten vier Haarwäschen hintereinander anwenden, danach bei jeder vierten Haarwäsche."
+      },
+      "profile_binding": {
+        "source_id": "C03-P02-1",
+        "url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+        "profile_authority": "distributor",
+        "checked_date": "2026-10-03",
+        "observation_excerpt": "German cadence: first four consecutive washes, then every fourth wash.",
+        "profile_cadence_value": {
+          "status": "source_stated",
+          "initial": { "kind": "consecutive_washes", "count": 4 },
+          "maintenance": { "kind": "every_n_washes", "minimum": 4, "maximum": 4 },
+          "branches": []
+        },
+        "note": "The frozen profile already selects this DE cadence and keeps the US four-to-six-wash variant (C03-P02-2, k18hair.com) unselected. Only the runtime protocol copy still carried the US variant."
+      },
+      "live_read": {
+        "checked_at": "2026-10-09",
+        "verbatim_de": "Für bestmögliche Ergebnisse empfiehlt es sich, die Maske zunächst an vier aufeinanderfolgenden Haarwäschen zu verwenden. Danach genügt es, sie alle vier Wäschen zu wiederholen, um den reparierenden Langzeiteffekt zu erhalten und das Haar dauerhaft zu stärken.",
+        "captured_in": "catalog-completeness-fill Slice 1 amendment k18-cadence-de.json (status blocked)"
+      },
+      "kind_rationale": "label_course: a fixed initial course (four consecutive washes) followed by a maintenance rhythm (every fourth wash)."
+    },
+    {
+      "key": "Epres",
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "research_key": "P03",
+      "profile_sha256": "883f3758c57520162140e307eceb1c6feecbd1e2830d2c3c3a8f8e64446d62c8",
+      "ruling": "Catalog completeness Slice 1 Group E (Nick, 2026-10-09): Epres net content 30 ml.",
+      "target": "products.net_content_value / net_content_unit",
+      "before": { "net_content_value": null, "net_content_unit": null },
+      "after": { "net_content_value": 30, "net_content_unit": "ml" },
+      "profile_binding": {
+        "source_id": "C03-P03-3",
+        "url": "https://kevinmurphy-germany.de/epres-die-revolution-der-haarpflege/",
+        "profile_authority": "distributor",
+        "checked_date": "2026-10-03",
+        "observation_excerpt": "Distributor article identifies a retail kit containing the spray bottle and two 15 ml ampoules, and a refill presentation with two 15 ml ampoules.",
+        "corroboration": {
+          "source_id": "R13",
+          "url": "https://epres-hair.de/modal.aspx?WPParams=50C9D4C6C5D2E6BDA5A98395A992",
+          "observation": "2x15ml refill concentrate; four ingredients corroborate global concentrate by spelling; no precise water volume."
+        }
+      },
+      "external_research": "catalog-completeness-fill research r3 (2026-10-09, medium confidence): kit = 1 empty 150 ml spray bottle + 2 x 15 ml concentrate vials (shop.rawhair.com.au; Cosmoprof US '(2) Concentrates - .5 oz.'); epres-hair.de states no total volume. Alternative reading 300 ml ready-to-use yield was rejected by the ruling.",
+      "limitations": [
+        "30 ml is the concentrate total of both presentations (kit and refill: 2 x 15 ml); no DE source prints '30 ml' as a single figure.",
+        "The frozen profile's identity.size still reads '15 ml concentrate vial; starter/refill presentation not catalog-reconciled'; the profile is not rewritten."
+      ]
+    }
+  ]
+}

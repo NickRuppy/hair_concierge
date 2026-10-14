@@ -1,0 +1,2 @@
+21c2813f047017072b06e3b9c14f77ecb379a28f 2026-09-30 feat(beratung): Runsheet-Iteration 3 — Consultant-Slide, Routine-Tabellen, Komplexitäts-Fold, Options-Fotos (#631)
+fae51dbf72b68de8849190b8b15b459b86f9ecf0 2026-09-29 feat(beratung): Runsheet-Iteration 2 — Brief v4 (Mechanik + Buckets), Komplexitäts-Frage, Empfehlungs-Tabellen (#630)

@@ -1,0 +1,1202 @@
+[
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck accepts a deliverable address without touching persistence",
+    "beforeSHA": "9d24bd94d2703c23847effd1545ce5cdd0445a90bf7d528db7c2bc777170cf3c",
+    "transferSHA": "9d24bd94d2703c23847effd1545ce5cdd0445a90bf7d528db7c2bc777170cf3c",
+    "cutSHA": "9d24bd94d2703c23847effd1545ce5cdd0445a90bf7d528db7c2bc777170cf3c",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck rejects an undeliverable address in the lead route's rejection shape",
+    "beforeSHA": "3c7ca27d165324082ff2205590827da9915bdbb8e6ed33d69685159f72218cf9",
+    "transferSHA": "3c7ca27d165324082ff2205590827da9915bdbb8e6ed33d69685159f72218cf9",
+    "cutSHA": "3c7ca27d165324082ff2205590827da9915bdbb8e6ed33d69685159f72218cf9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck rejects malformed bodies before any deliverability lookup",
+    "beforeSHA": "072bdf5953d6e68739132de163533199c6874ab89628dd09c040a8c223a39d4f",
+    "transferSHA": "072bdf5953d6e68739132de163533199c6874ab89628dd09c040a8c223a39d4f",
+    "cutSHA": "072bdf5953d6e68739132de163533199c6874ab89628dd09c040a8c223a39d4f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck fails with 500 when the lookup throws so the client can fail open",
+    "beforeSHA": "165f9912f453acfe1e577a70742d991c3e353c5c173b8d89c6b32d31fb4c732f",
+    "transferSHA": "165f9912f453acfe1e577a70742d991c3e353c5c173b8d89c6b32d31fb4c732f",
+    "cutSHA": "165f9912f453acfe1e577a70742d991c3e353c5c173b8d89c6b32d31fb4c732f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck throttles on its own budget before resolving any domain",
+    "beforeSHA": "c3c16725cab165bd5bb84642a97d3105034d5a31a625ce3d821ae6ab7887b185",
+    "transferSHA": "c3c16725cab165bd5bb84642a97d3105034d5a31a625ce3d821ae6ab7887b185",
+    "cutSHA": "c3c16725cab165bd5bb84642a97d3105034d5a31a625ce3d821ae6ab7887b185",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "name": "precheck answers 503 when the rate limiter itself is unavailable",
+    "beforeSHA": "d4dbe9fa512b882a2e0aef6dabeac3bc74fb573946be0dcfc9f09d2fce82fc31",
+    "transferSHA": "d4dbe9fa512b882a2e0aef6dabeac3bc74fb573946be0dcfc9f09d2fce82fc31",
+    "cutSHA": "d4dbe9fa512b882a2e0aef6dabeac3bc74fb573946be0dcfc9f09d2fce82fc31",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "preparation credentials use a Web Crypto UUID and 32-byte claim token",
+    "beforeSHA": "420b01a627695d314ad5142762cb6211eb1b61e255a46e015f00dc5d0719783a",
+    "transferSHA": "420b01a627695d314ad5142762cb6211eb1b61e255a46e015f00dc5d0719783a",
+    "cutSHA": "420b01a627695d314ad5142762cb6211eb1b61e255a46e015f00dc5d0719783a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "pending preparation survives a lost response only for the same fresh answers",
+    "beforeSHA": "eb469f59dd16132a8e47d6532f0dfd3c4678fbce61700c8b51cdbe6ab22097ad",
+    "transferSHA": "eb469f59dd16132a8e47d6532f0dfd3c4678fbce61700c8b51cdbe6ab22097ad",
+    "cutSHA": "eb469f59dd16132a8e47d6532f0dfd3c4678fbce61700c8b51cdbe6ab22097ad",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "preparation Retry-After accepts only the bounded short-window contract",
+    "beforeSHA": "89f8a7f858930e9fb76b2fabdfe9c93a2ac7d85352f8ab90e848eb43f48ae454",
+    "transferSHA": "89f8a7f858930e9fb76b2fabdfe9c93a2ac7d85352f8ab90e848eb43f48ae454",
+    "cutSHA": "89f8a7f858930e9fb76b2fabdfe9c93a2ac7d85352f8ab90e848eb43f48ae454",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "one 429 waits for the short server boundary and retries exactly once",
+    "beforeSHA": "daf469a8c0ebef6eeed44d249d9bdf4b7a80af9dc5f6363326ccc6b7f4869365",
+    "transferSHA": "daf469a8c0ebef6eeed44d249d9bdf4b7a80af9dc5f6363326ccc6b7f4869365",
+    "cutSHA": "daf469a8c0ebef6eeed44d249d9bdf4b7a80af9dc5f6363326ccc6b7f4869365",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "preparation detaches an injected browser fetch before calling it",
+    "beforeSHA": "48d5d9c052ba2f8a5ed2a9cf47d2e0061d3a4d502050bd4f707c9a4e7b265264",
+    "transferSHA": "48d5d9c052ba2f8a5ed2a9cf47d2e0061d3a4d502050bd4f707c9a4e7b265264",
+    "cutSHA": "48d5d9c052ba2f8a5ed2a9cf47d2e0061d3a4d502050bd4f707c9a4e7b265264",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "credential conflicts and mismatched success receipts discard only the poisoned credential",
+    "beforeSHA": "8b8072a89f917d8cb2a95bcf45dec394a1a8e0eac4a768fd959743b63ba59e12",
+    "transferSHA": "8b8072a89f917d8cb2a95bcf45dec394a1a8e0eac4a768fd959743b63ba59e12",
+    "cutSHA": "8b8072a89f917d8cb2a95bcf45dec394a1a8e0eac4a768fd959743b63ba59e12",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "a second 429 or invalid wait contract stops without a third request",
+    "beforeSHA": "a2643572918d400b6162d240da44f160e0b401187fbacf3426edec3b4a28bc28",
+    "transferSHA": "a2643572918d400b6162d240da44f160e0b401187fbacf3426edec3b4a28bc28",
+    "cutSHA": "a2643572918d400b6162d240da44f160e0b401187fbacf3426edec3b4a28bc28",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "name": "non-rate failures retain one bounded retry but ordinary 4xx stops",
+    "beforeSHA": "97d5fbb9fb1704bc8465c1e1568370f9ef6a6b0b3c2882d81c441d27beb0dcf6",
+    "transferSHA": "97d5fbb9fb1704bc8465c1e1568370f9ef6a6b0b3c2882d81c441d27beb0dcf6",
+    "cutSHA": "97d5fbb9fb1704bc8465c1e1568370f9ef6a6b0b3c2882d81c441d27beb0dcf6",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "name": "preparation RPC inserts once and returns the exact replay receipt",
+    "beforeSHA": "436637f34b03563e1f164c35e2720a02e22e554292238291517d30ccdf24ebe4",
+    "transferSHA": "436637f34b03563e1f164c35e2720a02e22e554292238291517d30ccdf24ebe4",
+    "cutSHA": "436637f34b03563e1f164c35e2720a02e22e554292238291517d30ccdf24ebe4",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "name": "preparation RPC fails closed for mismatched replay authority",
+    "beforeSHA": "0d85758cfe154c0737bd44ade9f5ded5e9d492058e6cbef235c350f63ef93aa4",
+    "transferSHA": "0d85758cfe154c0737bd44ade9f5ded5e9d492058e6cbef235c350f63ef93aa4",
+    "cutSHA": "0d85758cfe154c0737bd44ade9f5ded5e9d492058e6cbef235c350f63ef93aa4",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "name": "preparation RPC replays attached success but rejects an expired unclaimed artifact",
+    "beforeSHA": "e3d7308013f1af427620130734c21b530b045ab2335064aa8448ace919b505c4",
+    "transferSHA": "e3d7308013f1af427620130734c21b530b045ab2335064aa8448ace919b505c4",
+    "cutSHA": "e3d7308013f1af427620130734c21b530b045ab2335064aa8448ace919b505c4",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "name": "preparation RPC rejects a new artifact whose requested expiry is not in the future",
+    "beforeSHA": "0cdfc8df3eed14b36facb086203e9e6795d6058a469a341b01d8df40ccb7a299",
+    "transferSHA": "0cdfc8df3eed14b36facb086203e9e6795d6058a469a341b01d8df40ccb7a299",
+    "cutSHA": "0cdfc8df3eed14b36facb086203e9e6795d6058a469a341b01d8df40ccb7a299",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "name": "preparation RPC stays service-only and expired limiter windows are cleaned every five minutes",
+    "beforeSHA": "ebbc00f7a3edf6d026bc83c516d23f17af7985db779e63e003f5cb07cf872b4a",
+    "transferSHA": "ebbc00f7a3edf6d026bc83c516d23f17af7985db779e63e003f5cb07cf872b4a",
+    "cutSHA": "ebbc00f7a3edf6d026bc83c516d23f17af7985db779e63e003f5cb07cf872b4a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare preserves disabled and unavailable context boundaries",
+    "beforeSHA": "cb12b35ff27f60180b3a8ca26ccb9e871bacab59394607658d01feb5c06a4f44",
+    "transferSHA": "cb12b35ff27f60180b3a8ca26ccb9e871bacab59394607658d01feb5c06a4f44",
+    "cutSHA": "cb12b35ff27f60180b3a8ca26ccb9e871bacab59394607658d01feb5c06a4f44",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare maps an unexpected context throw to its structured server error",
+    "beforeSHA": "e9478dddec340f2a674e649b4ba3a11c5eb2fd2229582929be1c169e9f65879e",
+    "transferSHA": "e9478dddec340f2a674e649b4ba3a11c5eb2fd2229582929be1c169e9f65879e",
+    "cutSHA": "e9478dddec340f2a674e649b4ba3a11c5eb2fd2229582929be1c169e9f65879e",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+    "beforeSHA": "aed9e8cde4545634f39c0b46625a86dc0d3b6efd511d92c20cec0a42bb8b8aee",
+    "transferSHA": "ac61048f6100328c22178f843d937ff102534c59f98f364b82cd4f289ae3fb3c",
+    "cutSHA": "ac61048f6100328c22178f843d937ff102534c59f98f364b82cd4f289ae3fb3c",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare skips the journey bucket when no verified identity resolves",
+    "beforeSHA": "0f0829ec9ceb2d1b450d1f57fcb106c00c771f43b8d516be09e7e1b27851da01",
+    "transferSHA": "0f0829ec9ceb2d1b450d1f57fcb106c00c771f43b8d516be09e7e1b27851da01",
+    "cutSHA": "0f0829ec9ceb2d1b450d1f57fcb106c00c771f43b8d516be09e7e1b27851da01",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare returns Retry-After only for a real rejected limiter",
+    "beforeSHA": "bbacd4c31c7bda7a51cc1ffc6101d23e720263da3e5ede9fab5fbe96383cfbfb",
+    "transferSHA": "bbacd4c31c7bda7a51cc1ffc6101d23e720263da3e5ede9fab5fbe96383cfbfb",
+    "cutSHA": "bbacd4c31c7bda7a51cc1ffc6101d23e720263da3e5ede9fab5fbe96383cfbfb",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare gives already-open legacy pages a server replay credential",
+    "beforeSHA": "dd1b7b6732be38ffd26709a418ad6e4f22d413c5acd9367e30f2419cd87aee0a",
+    "transferSHA": "dd1b7b6732be38ffd26709a418ad6e4f22d413c5acd9367e30f2419cd87aee0a",
+    "cutSHA": "dd1b7b6732be38ffd26709a418ad6e4f22d413c5acd9367e30f2419cd87aee0a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare rejects a partial replay credential before persistence",
+    "beforeSHA": "4a6b5c23b65afba3f1b5bfc122b6815f281f9eed11b47cf4dd7efd63eefcb53d",
+    "transferSHA": "4a6b5c23b65afba3f1b5bfc122b6815f281f9eed11b47cf4dd7efd63eefcb53d",
+    "cutSHA": "4a6b5c23b65afba3f1b5bfc122b6815f281f9eed11b47cf4dd7efd63eefcb53d",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "prepare returns a stable conflict response for mismatched replay credentials",
+    "beforeSHA": "961a62c433dff75359c8e5e846944c61cfe4cb0ec6fb8012198d2e6b1507e99e",
+    "transferSHA": "961a62c433dff75359c8e5e846944c61cfe4cb0ec6fb8012198d2e6b1507e99e",
+    "cutSHA": "961a62c433dff75359c8e5e846944c61cfe4cb0ec6fb8012198d2e6b1507e99e",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "name": "production persistence maps conflicts, validates receipts, and purges only after inserts",
+    "beforeSHA": "f2e9c8011f078499758940289c1ae7b9c8e20e6457efac99e36fad351b0354fb",
+    "transferSHA": "f2e9c8011f078499758940289c1ae7b9c8e20e6457efac99e36fad351b0354fb",
+    "cutSHA": "f2e9c8011f078499758940289c1ae7b9c8e20e6457efac99e36fad351b0354fb",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "V2 adapter uses the fixed taxonomy, diagnostic priority, and required elasticity answer",
+    "beforeSHA": "2a19d410e1a24f90524b245b4cd50bb1029213b368b50b2e8245a9c35160e861",
+    "transferSHA": "2a19d410e1a24f90524b245b4cd50bb1029213b368b50b2e8245a9c35160e861",
+    "cutSHA": "2a19d410e1a24f90524b245b4cd50bb1029213b368b50b2e8245a9c35160e861",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "multiple scalp concerns retain the safest supported shampoo direction",
+    "beforeSHA": "de0461e01aee97e96542f13f5708402ae45bee5546405cf922b34f0263dd4617",
+    "transferSHA": "de0461e01aee97e96542f13f5708402ae45bee5546405cf922b34f0263dd4617",
+    "cutSHA": "de0461e01aee97e96542f13f5708402ae45bee5546405cf922b34f0263dd4617",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "volume balance follows factual hair signals instead of selection order",
+    "beforeSHA": "64815fc6fc9e8daf2d9aee45a7ee8a8ccb50b0864d5d0802e570fc7bb56072a4",
+    "transferSHA": "64815fc6fc9e8daf2d9aee45a7ee8a8ccb50b0864d5d0802e570fc7bb56072a4",
+    "cutSHA": "64815fc6fc9e8daf2d9aee45a7ee8a8ccb50b0864d5d0802e570fc7bb56072a4",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "new damage concern is retained without merging it into Frizz",
+    "beforeSHA": "6468969bd80f2a792cdeca409aa690cec9bd698808ee5a5c030af8effcde76f6",
+    "transferSHA": "6468969bd80f2a792cdeca409aa690cec9bd698808ee5a5c030af8effcde76f6",
+    "cutSHA": "6468969bd80f2a792cdeca409aa690cec9bd698808ee5a5c030af8effcde76f6",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "combined hair-loss concern appends profile compatibility without displacing routine concerns",
+    "beforeSHA": "54f02f3b60822ac2ba942f2ae2cef817fe61c4060dce912a4b25dd4f3c84f9a1",
+    "transferSHA": "54f02f3b60822ac2ba942f2ae2cef817fe61c4060dce912a4b25dd4f3c84f9a1",
+    "cutSHA": "54f02f3b60822ac2ba942f2ae2cef817fe61c4060dce912a4b25dd4f3c84f9a1",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "prepared artifact contains three public dimensions but keeps products and routine locked",
+    "beforeSHA": "e159c180605244b846d8596b4a6f088513f034f9bbdc26a35c932b8941f62a98",
+    "transferSHA": "e159c180605244b846d8596b4a6f088513f034f9bbdc26a35c932b8941f62a98",
+    "cutSHA": "e159c180605244b846d8596b4a6f088513f034f9bbdc26a35c932b8941f62a98",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "prepared artifact keeps email priority separate from the offer assessment",
+    "beforeSHA": "74cf4fca2d23cdf06b4198ab8936e8b2b0d2914d79a45e2202cef26aabb2a189",
+    "transferSHA": "74cf4fca2d23cdf06b4198ab8936e8b2b0d2914d79a45e2202cef26aabb2a189",
+    "cutSHA": "74cf4fca2d23cdf06b4198ab8936e8b2b0d2914d79a45e2202cef26aabb2a189",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "straight, wavy, curly, and coily complete profiles all prepare deterministic plans",
+    "beforeSHA": "28a934affeb5799fe91c6fa40f99420e910ec5c167f5857f2074da808c2848e9",
+    "transferSHA": "28a934affeb5799fe91c6fa40f99420e910ec5c167f5857f2074da808c2848e9",
+    "cutSHA": "28a934affeb5799fe91c6fa40f99420e910ec5c167f5857f2074da808c2848e9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "name": "canonical answer hash ignores selection order but changes with durable answers",
+    "beforeSHA": "dbb3885de9d5149dd27ee2e3311666999d5399d1381b2f899916ba0b8f2535e9",
+    "transferSHA": "dbb3885de9d5149dd27ee2e3311666999d5399d1381b2f899916ba0b8f2535e9",
+    "cutSHA": "dbb3885de9d5149dd27ee2e3311666999d5399d1381b2f899916ba0b8f2535e9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "optional inventory entry is a POST separate from baseline draft loading",
+    "beforeSHA": "6249cca3294bdcbdce90941fad0a7ca7649d8926ded7978e8231db047c6ffccb",
+    "transferSHA": "6249cca3294bdcbdce90941fad0a7ca7649d8926ded7978e8231db047c6ffccb",
+    "cutSHA": "6249cca3294bdcbdce90941fad0a7ca7649d8926ded7978e8231db047c6ffccb",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "optional Stage 2 entry uses a separate POST and returns the prepared successor revision",
+    "beforeSHA": "0ea8759f03afc4f730a8173b16aaf62e7f0470f3eee947ce3abeb79648a7e588",
+    "transferSHA": "0ea8759f03afc4f730a8173b16aaf62e7f0470f3eee947ce3abeb79648a7e588",
+    "cutSHA": "0ea8759f03afc4f730a8173b16aaf62e7f0470f3eee947ce3abeb79648a7e588",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser Stage 2 gateway maps a failed load to a typed error and retries with a fresh request",
+    "beforeSHA": "b83186dde04a20595bb276b5162b638f5c70d7ab836d8b6880185d85d198c13c",
+    "transferSHA": "b83186dde04a20595bb276b5162b638f5c70d7ab836d8b6880185d85d198c13c",
+    "cutSHA": "b83186dde04a20595bb276b5162b638f5c70d7ab836d8b6880185d85d198c13c",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser Stage 2 gateway saves and completes the final page in one request",
+    "beforeSHA": "686cebfc0679fab8fecb285a851a0afb6497137ce903c29c6b1ab9b47c7d0c86",
+    "transferSHA": "686cebfc0679fab8fecb285a851a0afb6497137ce903c29c6b1ab9b47c7d0c86",
+    "cutSHA": "686cebfc0679fab8fecb285a851a0afb6497137ce903c29c6b1ab9b47c7d0c86",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser Stage 2 gateway preserves the durable final page on completion failure",
+    "beforeSHA": "b30e46438c3da2efd9af46359b642d202261a091540350dd8a6247a5bec736f5",
+    "transferSHA": "b30e46438c3da2efd9af46359b642d202261a091540350dd8a6247a5bec736f5",
+    "cutSHA": "b30e46438c3da2efd9af46359b642d202261a091540350dd8a6247a5bec736f5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser Stage 2 gateway passes through a present recompute outcome from a module completion",
+    "beforeSHA": "fcae1a901b8fc205b05096277c5a202aa65b19e9447b908f3395c2b41d057eff",
+    "transferSHA": "fcae1a901b8fc205b05096277c5a202aa65b19e9447b908f3395c2b41d057eff",
+    "cutSHA": "fcae1a901b8fc205b05096277c5a202aa65b19e9447b908f3395c2b41d057eff",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser Stage 2 gateway leaves an absent recompute field undefined, never invents one",
+    "beforeSHA": "9e4762008c802ef8ecdc10eca6b315f020cf849ba115d186e4b9a8718341e55f",
+    "transferSHA": "9e4762008c802ef8ecdc10eca6b315f020cf849ba115d186e4b9a8718341e55f",
+    "cutSHA": "9e4762008c802ef8ecdc10eca6b315f020cf849ba115d186e4b9a8718341e55f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "name": "the browser intake client posts a stable UUID idempotency key with valid manual input",
+    "beforeSHA": "8a0588bf806053d52991e62cfaa839a95fa1921d320bc8a0376881362e41a8cd",
+    "transferSHA": "8a0588bf806053d52991e62cfaa839a95fa1921d320bc8a0376881362e41a8cd",
+    "cutSHA": "8a0588bf806053d52991e62cfaa839a95fa1921d320bc8a0376881362e41a8cd",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "email recovery renders only the current missing group with an honest remaining count",
+    "beforeSHA": "367aae4e4618ea6960cf9a5dfd510f335b863418e8e621fc038294c0f3ca44c6",
+    "transferSHA": "367aae4e4618ea6960cf9a5dfd510f335b863418e8e621fc038294c0f3ca44c6",
+    "cutSHA": "367aae4e4618ea6960cf9a5dfd510f335b863418e8e621fc038294c0f3ca44c6",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "a ready email return buyer gets the scanner destination for Personal Plan sources too",
+    "beforeSHA": "d046d041f68ffe54026e160d70777f74a49332ace75afcc0120449422e0d60f9",
+    "transferSHA": "d046d041f68ffe54026e160d70777f74a49332ace75afcc0120449422e0d60f9",
+    "cutSHA": "d046d041f68ffe54026e160d70777f74a49332ace75afcc0120449422e0d60f9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "server-first pending envelope renders approved static copy and no-JS recovery",
+    "beforeSHA": "ba58f3db96048ee0a7a60406e5475e97075b74a316d1510c9a5127dae5166b12",
+    "transferSHA": "0481c1ff48d322b7f5ec4626f935a97649d28e2a07e88b010afcbe39181a50d9",
+    "cutSHA": "0481c1ff48d322b7f5ec4626f935a97649d28e2a07e88b010afcbe39181a50d9",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "server-first ready envelope renders the signed-off arrival screen (Variante B)",
+    "beforeSHA": "875f345eff2a6b64fcaa96a18b5be3dcab17f3dc7a73dbc57c76f6b86f61afe5",
+    "transferSHA": "875f345eff2a6b64fcaa96a18b5be3dcab17f3dc7a73dbc57c76f6b86f61afe5",
+    "cutSHA": "875f345eff2a6b64fcaa96a18b5be3dcab17f3dc7a73dbc57c76f6b86f61afe5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "missing source facts ask for the fact without claiming no action is needed",
+    "beforeSHA": "6b2d833013e72888d83f322453b31b5e3db8538fa7ad65e4b3ad0030e895d6b8",
+    "transferSHA": "9ca8a2e90be7a30e06187383a99494c792fefd19130d35455b31d8958f1d60a7",
+    "cutSHA": "9ca8a2e90be7a30e06187383a99494c792fefd19130d35455b31d8958f1d60a7",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "forbidden and invalid states show support without waiting or payment claims",
+    "beforeSHA": "c187f279a09e1d30b96f1c4f66b48895cc395d9e84af03d4d3fe4777ae75eb32",
+    "transferSHA": "bd1617252ffe9ae6f857e6514830f0ae7fd2e629559f3f737b900cefffb6fb46",
+    "cutSHA": "bd1617252ffe9ae6f857e6514830f0ae7fd2e629559f3f737b900cefffb6fb46",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "timeout and transient states lead with a retry state instead of a live check",
+    "beforeSHA": "ed876511727a9e92f3d9d263b11e763fede06e9a6ce34b5d446aa5222ae9ad0b",
+    "transferSHA": "f10714f857ae9225dce857bd49247f442ebdc75e9c7a521de00508ebbfe5c170",
+    "cutSHA": "f10714f857ae9225dce857bd49247f442ebdc75e9c7a521de00508ebbfe5c170",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "client honors none, link, and poll initial actions instead of always posting",
+    "beforeSHA": "afc0fbcd0dbf8dc9f66d63899e661089ff33c5409a1654c6936126b54c8bc3d3",
+    "transferSHA": "afc0fbcd0dbf8dc9f66d63899e661089ff33c5409a1654c6936126b54c8bc3d3",
+    "cutSHA": "afc0fbcd0dbf8dc9f66d63899e661089ff33c5409a1654c6936126b54c8bc3d3",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "name": "page passes the server-first readiness envelope into the client",
+    "beforeSHA": "bbcc3c5713286f594d55c4c5f4a02fc33a02fcf3fce422dff277148e265172e9",
+    "transferSHA": "bbcc3c5713286f594d55c4c5f4a02fc33a02fcf3fce422dff277148e265172e9",
+    "cutSHA": "bbcc3c5713286f594d55c4c5f4a02fc33a02fcf3fce422dff277148e265172e9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "name": "backend readiness enables the CTA on the first successful poll",
+    "beforeSHA": "764674630e31681d87496cd571079e44c654c5be240b7f80e0a8922e64fc7466",
+    "transferSHA": "764674630e31681d87496cd571079e44c654c5be240b7f80e0a8922e64fc7466",
+    "cutSHA": "764674630e31681d87496cd571079e44c654c5be240b7f80e0a8922e64fc7466",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "name": "readiness polling remains bounded to thirty seconds",
+    "beforeSHA": "f602ca5fe874c5507573a28b468d385d92bfb04ffeb177b8ec0441b4a93d7e32",
+    "transferSHA": "f602ca5fe874c5507573a28b468d385d92bfb04ffeb177b8ec0441b4a93d7e32",
+    "cutSHA": "f602ca5fe874c5507573a28b468d385d92bfb04ffeb177b8ec0441b4a93d7e32",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "name": "read-only polling escalates to one authoritative link request when the server signals it",
+    "beforeSHA": "ebad481adce9f27341588a26d424541ff23fe4d42a5c9570e551d381361a4a9f",
+    "transferSHA": "ebad481adce9f27341588a26d424541ff23fe4d42a5c9570e551d381361a4a9f",
+    "cutSHA": "ebad481adce9f27341588a26d424541ff23fe4d42a5c9570e551d381361a4a9f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "name": "an active buyer waits for exact subscription correlation instead of entering onboarding",
+    "beforeSHA": "9fcf758e06c70e3d99a9939b38b7b6e8d678e8f215d580b904a10dd7934ca132",
+    "transferSHA": "9fcf758e06c70e3d99a9939b38b7b6e8d678e8f215d580b904a10dd7934ca132",
+    "cutSHA": "9fcf758e06c70e3d99a9939b38b7b6e8d678e8f215d580b904a10dd7934ca132",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "name": "readiness failures are recoverable and the ready CTA stays explicit",
+    "beforeSHA": "c62aedaa006e089890c8f8219e0707e75e75db3536d68df135231cbcacef5df0",
+    "transferSHA": "c62aedaa006e089890c8f8219e0707e75e75db3536d68df135231cbcacef5df0",
+    "cutSHA": "c62aedaa006e089890c8f8219e0707e75e75db3536d68df135231cbcacef5df0",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "name": "builds the hard-paywall payload from only the stored public analysis",
+    "beforeSHA": "98c778e937d69a758c9eaf108a201b4cce87b42dbad2bf8ce320e86c20e3b16a",
+    "transferSHA": "98c778e937d69a758c9eaf108a201b4cce87b42dbad2bf8ce320e86c20e3b16a",
+    "cutSHA": "98c778e937d69a758c9eaf108a201b4cce87b42dbad2bf8ce320e86c20e3b16a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "name": "derives a controlled primary message for compatible stored artifacts",
+    "beforeSHA": "7927ecb7379e18ec4d6b8121863e6bd1ea442798b59236eff420c15e63c3d202",
+    "transferSHA": "7927ecb7379e18ec4d6b8121863e6bd1ea442798b59236eff420c15e63c3d202",
+    "cutSHA": "7927ecb7379e18ec4d6b8121863e6bd1ea442798b59236eff420c15e63c3d202",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "name": "rejects a corrupted compatibility artifact whose central priority differs from row one",
+    "beforeSHA": "2b9132e24113d6617e9b81b9172312bd39b72b7b476460fe1c91dfc96115d364",
+    "transferSHA": "2b9132e24113d6617e9b81b9172312bd39b72b7b476460fe1c91dfc96115d364",
+    "cutSHA": "2b9132e24113d6617e9b81b9172312bd39b72b7b476460fe1c91dfc96115d364",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "name": "claims and sends the personal-plan email only once",
+    "beforeSHA": "b4e23e821c1b3b69ecc74e072dd5c890320671978c7b1f79afe11b16ad22aca9",
+    "transferSHA": "b4e23e821c1b3b69ecc74e072dd5c890320671978c7b1f79afe11b16ad22aca9",
+    "cutSHA": "b4e23e821c1b3b69ecc74e072dd5c890320671978c7b1f79afe11b16ad22aca9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "name": "marks a sanitized failure without throwing into the result journey",
+    "beforeSHA": "5b42907127a2447ce465a083e488a260dc4473ac4d93d61df8f0d64515a85536",
+    "transferSHA": "5b42907127a2447ce465a083e488a260dc4473ac4d93d61df8f0d64515a85536",
+    "cutSHA": "5b42907127a2447ce465a083e488a260dc4473ac4d93d61df8f0d64515a85536",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-route.test.ts",
+    "name": "validates configuration before claiming a personal-plan email",
+    "beforeSHA": "d08ac885ebf9dacfee5354213a79e666a49dd66749ef05541a94e95eb25fe731",
+    "transferSHA": "d08ac885ebf9dacfee5354213a79e666a49dd66749ef05541a94e95eb25fe731",
+    "cutSHA": "d08ac885ebf9dacfee5354213a79e666a49dd66749ef05541a94e95eb25fe731",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-route.test.ts",
+    "name": "returns the 200 send result for a valid personal-plan lead and attached public artifact",
+    "beforeSHA": "77d24746bd73477ee1d580da8b3857eb89eb3d3e85bd2e01511fb3103f195e60",
+    "transferSHA": "77d24746bd73477ee1d580da8b3857eb89eb3d3e85bd2e01511fb3103f195e60",
+    "cutSHA": "77d24746bd73477ee1d580da8b3857eb89eb3d3e85bd2e01511fb3103f195e60",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-route.test.ts",
+    "name": "uses the recoverable copy when lead rate limiting is unavailable",
+    "beforeSHA": "49fa1d3e9fc068e9cc4ce2cf3af47fb78852e15f055c1f0846060e55ce508b65",
+    "transferSHA": "49fa1d3e9fc068e9cc4ce2cf3af47fb78852e15f055c1f0846060e55ce508b65",
+    "cutSHA": "49fa1d3e9fc068e9cc4ce2cf3af47fb78852e15f055c1f0846060e55ce508b65",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-route.test.ts",
+    "name": "the reveal requests the dedicated email endpoint with keepalive without awaiting it",
+    "beforeSHA": "6fdc7ef70fc304656aab1d143d576911c4d37258a68d5088a302647bd094cc5a",
+    "transferSHA": "6fdc7ef70fc304656aab1d143d576911c4d37258a68d5088a302647bd094cc5a",
+    "cutSHA": "6fdc7ef70fc304656aab1d143d576911c4d37258a68d5088a302647bd094cc5a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-migration.test.ts",
+    "name": "result-return migration keeps a private, bounded, service-role capability mapping",
+    "beforeSHA": "16add43e87237457595cf96a8f20a279d5511391aadff09a8d8393920f14f91f",
+    "transferSHA": "16add43e87237457595cf96a8f20a279d5511391aadff09a8d8393920f14f91f",
+    "cutSHA": "16add43e87237457595cf96a8f20a279d5511391aadff09a8d8393920f14f91f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "name": "result-return reset rejects requests without same-origin Fetch Metadata",
+    "beforeSHA": "fe5efc724cce0f73936b6ad989a1ad61b617d0bddc987457ab40e1723790d176",
+    "transferSHA": "fe5efc724cce0f73936b6ad989a1ad61b617d0bddc987457ab40e1723790d176",
+    "cutSHA": "fe5efc724cce0f73936b6ad989a1ad61b617d0bddc987457ab40e1723790d176",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "name": "result-return reset returns private no-store 204 only after both capabilities reset",
+    "beforeSHA": "d6a4c722c4093cdeb3c133b9e617724ca9339e96d459e20ff81c43a093b2cc68",
+    "transferSHA": "d6a4c722c4093cdeb3c133b9e617724ca9339e96d459e20ff81c43a093b2cc68",
+    "cutSHA": "d6a4c722c4093cdeb3c133b9e617724ca9339e96d459e20ff81c43a093b2cc68",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "name": "result-return reset fails closed when rate limiting or server reset fails",
+    "beforeSHA": "1376121233d34da8ab44ad0295bd05061638302e2ab87efa0578e3d9c078a7d5",
+    "transferSHA": "1376121233d34da8ab44ad0295bd05061638302e2ab87efa0578e3d9c078a7d5",
+    "cutSHA": "1376121233d34da8ab44ad0295bd05061638302e2ab87efa0578e3d9c078a7d5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "name": "server reset revokes both valid capabilities and clears both cookies",
+    "beforeSHA": "97518389caf2a137e9498ee49641f18e60feb97190944f696d131449592c7e58",
+    "transferSHA": "97518389caf2a137e9498ee49641f18e60feb97190944f696d131449592c7e58",
+    "cutSHA": "97518389caf2a137e9498ee49641f18e60feb97190944f696d131449592c7e58",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "name": "server reset treats a malformed or missing result cookie as idempotent success",
+    "beforeSHA": "5caad6ac2c1db5eb618a6f821b97b51ab26e4af6f621fb5442758fb93c9e2179",
+    "transferSHA": "5caad6ac2c1db5eb618a6f821b97b51ab26e4af6f621fb5442758fb93c9e2179",
+    "cutSHA": "5caad6ac2c1db5eb618a6f821b97b51ab26e4af6f621fb5442758fb93c9e2179",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "result-return credentials are opaque 32-byte values and cookies have the host-only contract",
+    "beforeSHA": "e87e8ef7954f919609582c229288f3ba4f8bc3b5b4aaadf622bb4f21a3bc6799",
+    "transferSHA": "e87e8ef7954f919609582c229288f3ba4f8bc3b5b4aaadf622bb4f21a3bc6799",
+    "cutSHA": "e87e8ef7954f919609582c229288f3ba4f8bc3b5b4aaadf622bb4f21a3bc6799",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "malformed cookies fail closed without invoking the resolver",
+    "beforeSHA": "9bfcd64f916ac32d60c97aba02f81a8dcf4c49f2c0e39b33201138187c3f40d6",
+    "transferSHA": "9bfcd64f916ac32d60c97aba02f81a8dcf4c49f2c0e39b33201138187c3f40d6",
+    "cutSHA": "9bfcd64f916ac32d60c97aba02f81a8dcf4c49f2c0e39b33201138187c3f40d6",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "result lookup returns only a lead id and retries exactly once for a transport failure",
+    "beforeSHA": "02c8876deca77c85787e2bd3e91b65b257c5b83a94a2091230a22d5c2fe336ac",
+    "transferSHA": "02c8876deca77c85787e2bd3e91b65b257c5b83a94a2091230a22d5c2fe336ac",
+    "cutSHA": "02c8876deca77c85787e2bd3e91b65b257c5b83a94a2091230a22d5c2fe336ac",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "lookup neither retries application errors nor clears the capability",
+    "beforeSHA": "fa5902cb3778d343558f3a6874a97cd89e4f4ba130e5ead98560b99f8cfa82e8",
+    "transferSHA": "fa5902cb3778d343558f3a6874a97cd89e4f4ba130e5ead98560b99f8cfa82e8",
+    "cutSHA": "fa5902cb3778d343558f3a6874a97cd89e4f4ba130e5ead98560b99f8cfa82e8",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "returned transport errors retry once, then warn without disclosing capability data",
+    "beforeSHA": "38068a38245f465f0375a50c1c361dcc6477beabb07377899eecfc6fbea3b466",
+    "transferSHA": "38068a38245f465f0375a50c1c361dcc6477beabb07377899eecfc6fbea3b466",
+    "cutSHA": "38068a38245f465f0375a50c1c361dcc6477beabb07377899eecfc6fbea3b466",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "a resolved PostgREST transport envelope retries before succeeding",
+    "beforeSHA": "70a6b7e14919da2ed4dcaf5ac7920bb421915b2321f0567d0ea4b28d9fcc48e3",
+    "transferSHA": "70a6b7e14919da2ed4dcaf5ac7920bb421915b2321f0567d0ea4b28d9fcc48e3",
+    "cutSHA": "70a6b7e14919da2ed4dcaf5ac7920bb421915b2321f0567d0ea4b28d9fcc48e3",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "issue rotates the single lead capability and revoke clears the host-only cookie",
+    "beforeSHA": "325c1c30f679fe412a4e19dc944ada6449d8bbca67a197c940cbee718cdcfdb8",
+    "transferSHA": "325c1c30f679fe412a4e19dc944ada6449d8bbca67a197c940cbee718cdcfdb8",
+    "cutSHA": "325c1c30f679fe412a4e19dc944ada6449d8bbca67a197c940cbee718cdcfdb8",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "valid result has fixed precedence over an explicit resume token and an existing draft",
+    "beforeSHA": "b5bef7d90c524cc49f1ca0a6c2b1685385d0c120267568e27371e5de73050544",
+    "transferSHA": "b5bef7d90c524cc49f1ca0a6c2b1685385d0c120267568e27371e5de73050544",
+    "cutSHA": "b5bef7d90c524cc49f1ca0a6c2b1685385d0c120267568e27371e5de73050544",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "name": "return-entry trust requires a resolved capability for the requested lead",
+    "beforeSHA": "f4084894b2afc8acb602cd71edcdbb708894e785e8be7afea5772613fe5681a0",
+    "transferSHA": "f4084894b2afc8acb602cd71edcdbb708894e785e8be7afea5772613fe5681a0",
+    "cutSHA": "f4084894b2afc8acb602cd71edcdbb708894e785e8be7afea5772613fe5681a0",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal uses dynamic one-week and four-week dates with certain outcome copy",
+    "beforeSHA": "803093b1f6edc41ea090d1b9cb0e69d1c50bca6baa455eb7f2a66a2ad4b7ec4c",
+    "transferSHA": "803093b1f6edc41ea090d1b9cb0e69d1c50bca6baa455eb7f2a66a2ad4b7ec4c",
+    "cutSHA": "803093b1f6edc41ea090d1b9cb0e69d1c50bca6baa455eb7f2a66a2ad4b7ec4c",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal exposes all three messages before navigating",
+    "beforeSHA": "20072728e5d6e98636544467e384aa8e22f30fad160c20db1e7264e56e1a3640",
+    "transferSHA": "20072728e5d6e98636544467e384aa8e22f30fad160c20db1e7264e56e1a3640",
+    "cutSHA": "20072728e5d6e98636544467e384aa8e22f30fad160c20db1e7264e56e1a3640",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal completion records exact trigger and configured timing",
+    "beforeSHA": "645d1c34230b36684998acdf56a8152f8cb234e3c7a41bb65f63c12d5dcc4809",
+    "transferSHA": "645d1c34230b36684998acdf56a8152f8cb234e3c7a41bb65f63c12d5dcc4809",
+    "cutSHA": "645d1c34230b36684998acdf56a8152f8cb234e3c7a41bb65f63c12d5dcc4809",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal completion normalizes numeric boundaries",
+    "beforeSHA": "bfba1e26f9ae04520a31b32a978480a66bc68665491808a0a5c491cd439658a2",
+    "transferSHA": "bfba1e26f9ae04520a31b32a978480a66bc68665491808a0a5c491cd439658a2",
+    "cutSHA": "bfba1e26f9ae04520a31b32a978480a66bc68665491808a0a5c491cd439658a2",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal completion can only be claimed once",
+    "beforeSHA": "1bbcc6a937f38337b778e84cf74efb6471bc3cbd1873a1bfb30075ae3a0d9834",
+    "transferSHA": "1bbcc6a937f38337b778e84cf74efb6471bc3cbd1873a1bfb30075ae3a0d9834",
+    "cutSHA": "1bbcc6a937f38337b778e84cf74efb6471bc3cbd1873a1bfb30075ae3a0d9834",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "result reveal does not emit a generic page view before the actual offer",
+    "beforeSHA": "c5e29897c68a21d7816bd9a48fb802c1270a17e2fe58fa07cc03d90920915ce5",
+    "transferSHA": "c5e29897c68a21d7816bd9a48fb802c1270a17e2fe58fa07cc03d90920915ce5",
+    "cutSHA": "c5e29897c68a21d7816bd9a48fb802c1270a17e2fe58fa07cc03d90920915ce5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "name": "the exit line is held as a real state and the result shell continues it (Follow-up B)",
+    "beforeSHA": "e5ff28bc4ff08632abcfd6dfd02f86488774d8a458ae87781741a9470e1ec23b",
+    "transferSHA": "e5ff28bc4ff08632abcfd6dfd02f86488774d8a458ae87781741a9470e1ec23b",
+    "cutSHA": "e5ff28bc4ff08632abcfd6dfd02f86488774d8a458ae87781741a9470e1ec23b",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+    "name": "real PostgreSQL serializes parallel repairs and rejects a concurrent source change",
+    "beforeSHA": "2a3ad9c017b8604b7a77c096743b5cffd72c94aa2bd87d210ae09eb67ad92ab1",
+    "transferSHA": "2a3ad9c017b8604b7a77c096743b5cffd72c94aa2bd87d210ae09eb67ad92ab1",
+    "cutSHA": "2a3ad9c017b8604b7a77c096743b5cffd72c94aa2bd87d210ae09eb67ad92ab1",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair.test.ts",
+    "name": "repair builds server artifact and preserves exact v2/v3 envelope without migration",
+    "beforeSHA": "4fcab7445aa26cbb5eaea32c04cbba4ca0ce80a76602f96d996c82e80a094320",
+    "transferSHA": "4fcab7445aa26cbb5eaea32c04cbba4ca0ce80a76602f96d996c82e80a094320",
+    "cutSHA": "4fcab7445aa26cbb5eaea32c04cbba4ca0ce80a76602f96d996c82e80a094320",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair.test.ts",
+    "name": "repair refuses missing context and ambiguous historical concerns without a write",
+    "beforeSHA": "5fbe1d193151ef92208150cbd92c18842708923612591f6fa7b082a119f6e98d",
+    "transferSHA": "5fbe1d193151ef92208150cbd92c18842708923612591f6fa7b082a119f6e98d",
+    "cutSHA": "5fbe1d193151ef92208150cbd92c18842708923612591f6fa7b082a119f6e98d",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair.test.ts",
+    "name": "repair preserves conflict, forbidden, and unavailable outcomes",
+    "beforeSHA": "796f9043e2739df27fbd029f9e3975fb6f26c7c34d806ea63bedeb6647030b15",
+    "transferSHA": "796f9043e2739df27fbd029f9e3975fb6f26c7c34d806ea63bedeb6647030b15",
+    "cutSHA": "796f9043e2739df27fbd029f9e3975fb6f26c7c34d806ea63bedeb6647030b15",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair.test.ts",
+    "name": "SQL repair is service-only, CAS guarded, immutable, and idempotent",
+    "beforeSHA": "7c547cd67fbfdca12af062fd31eed694a1276a09f12f9273b609b7098cb731ac",
+    "transferSHA": "7c547cd67fbfdca12af062fd31eed694a1276a09f12f9273b609b7098cb731ac",
+    "cutSHA": "7c547cd67fbfdca12af062fd31eed694a1276a09f12f9273b609b7098cb731ac",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-email.test.ts",
+    "name": "projects current and legacy concern ids to the same email diagnosis",
+    "beforeSHA": "deb1fa7d0b592a9b6ad8c37599cbf3cbc1ab5dcce2b2df351b655275b19e82b8",
+    "transferSHA": "deb1fa7d0b592a9b6ad8c37599cbf3cbc1ab5dcce2b2df351b655275b19e82b8",
+    "cutSHA": "deb1fa7d0b592a9b6ad8c37599cbf3cbc1ab5dcce2b2df351b655275b19e82b8",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-email.test.ts",
+    "name": "encodes the lead id in the attributed result URL",
+    "beforeSHA": "5717c37e3e1660d1078ec26f25e9beb743ec95397b7c28301b6e776cc8c4c13f",
+    "transferSHA": "5717c37e3e1660d1078ec26f25e9beb743ec95397b7c28301b6e776cc8c4c13f",
+    "cutSHA": "5717c37e3e1660d1078ec26f25e9beb743ec95397b7c28301b6e776cc8c4c13f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "resolves the latest persisted scanner package without an analytics flag",
+    "beforeSHA": "8f75276212ff15962c287174e0edd8627f05caf56c9f53ca50338a680e842ada",
+    "transferSHA": "8f75276212ff15962c287174e0edd8627f05caf56c9f53ca50338a680e842ada",
+    "cutSHA": "8f75276212ff15962c287174e0edd8627f05caf56c9f53ca50338a680e842ada",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "the production claim excludes moderator-owned legacy leads",
+    "beforeSHA": "d352fefa5c4cb6ed7fd87125b64cdb990890da5f43ef69b370842bdfeb31af51",
+    "transferSHA": "d352fefa5c4cb6ed7fd87125b64cdb990890da5f43ef69b370842bdfeb31af51",
+    "cutSHA": "d352fefa5c4cb6ed7fd87125b64cdb990890da5f43ef69b370842bdfeb31af51",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "claims, sends, and marks the result artifact email sent",
+    "beforeSHA": "ca891ff6b2229738d4a402d04375d8a1cb0f6951e02ccaf3801257bd3778e2a6",
+    "transferSHA": "ca891ff6b2229738d4a402d04375d8a1cb0f6951e02ccaf3801257bd3778e2a6",
+    "cutSHA": "ca891ff6b2229738d4a402d04375d8a1cb0f6951e02ccaf3801257bd3778e2a6",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "does not claim or mutate when Customer.io transactional config is missing",
+    "beforeSHA": "ae39fc605156e1743e67a78a36afbf0cb2aab6c44c43ec99617490aa91070b0a",
+    "transferSHA": "ae39fc605156e1743e67a78a36afbf0cb2aab6c44c43ec99617490aa91070b0a",
+    "cutSHA": "ae39fc605156e1743e67a78a36afbf0cb2aab6c44c43ec99617490aa91070b0a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "does not claim a scanner lead when its dedicated Customer.io config is missing",
+    "beforeSHA": "efe39a1bd8f2b3cd1e216052ec8131c18765da573c1fabe8495ebd387b70bbd9",
+    "transferSHA": "efe39a1bd8f2b3cd1e216052ec8131c18765da573c1fabe8495ebd387b70bbd9",
+    "cutSHA": "efe39a1bd8f2b3cd1e216052ec8131c18765da573c1fabe8495ebd387b70bbd9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "does not claim when persisted funnel attribution is unavailable",
+    "beforeSHA": "c252ccb30a6dce053a2b779504221b09deefee30f3876f69565484641ddf9c74",
+    "transferSHA": "c252ccb30a6dce053a2b779504221b09deefee30f3876f69565484641ddf9c74",
+    "cutSHA": "c252ccb30a6dce053a2b779504221b09deefee30f3876f69565484641ddf9c74",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "scanner attribution sends the scanner email for an existing lead without a consent gate",
+    "beforeSHA": "f58b5dfd693c6d225f4639827f489579f180d0d76875b66a964cfcd816b1b679",
+    "transferSHA": "f58b5dfd693c6d225f4639827f489579f180d0d76875b66a964cfcd816b1b679",
+    "cutSHA": "f58b5dfd693c6d225f4639827f489579f180d0d76875b66a964cfcd816b1b679",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "skips personal-plan rows before parsing or sending a legacy result email",
+    "beforeSHA": "3883d044a0cbcd40244fabdcf504afbbd2cd16e16582444df5aaff01ecba8c43",
+    "transferSHA": "3883d044a0cbcd40244fabdcf504afbbd2cd16e16582444df5aaff01ecba8c43",
+    "cutSHA": "3883d044a0cbcd40244fabdcf504afbbd2cd16e16582444df5aaff01ecba8c43",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "skips a failed result artifact email until manual retry resets it",
+    "beforeSHA": "17d8926dd1de9d17f01ed16e5012d7eb79cdbe66c4c2e29fd9475fe3c0b7c3cb",
+    "transferSHA": "17d8926dd1de9d17f01ed16e5012d7eb79cdbe66c4c2e29fd9475fe3c0b7c3cb",
+    "cutSHA": "17d8926dd1de9d17f01ed16e5012d7eb79cdbe66c4c2e29fd9475fe3c0b7c3cb",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "the harmonized result email does not require a first name",
+    "beforeSHA": "2734be8463ade08d5b61c995585f36015fe93bff81d642340d5970f17e3ef8a9",
+    "transferSHA": "2734be8463ade08d5b61c995585f36015fe93bff81d642340d5970f17e3ef8a9",
+    "cutSHA": "2734be8463ade08d5b61c995585f36015fe93bff81d642340d5970f17e3ef8a9",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "two calls only send once with an atomic store claim",
+    "beforeSHA": "5ca8d3314c3735f7bf42f1312dc428f61609007f6f49c77bd38b814786bcc520",
+    "transferSHA": "5ca8d3314c3735f7bf42f1312dc428f61609007f6f49c77bd38b814786bcc520",
+    "cutSHA": "5ca8d3314c3735f7bf42f1312dc428f61609007f6f49c77bd38b814786bcc520",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "two scanner requests only send once with the existing atomic claim",
+    "beforeSHA": "d5adacfacad4ba8e313d547e4a38a465159635851b3e36356c3f92641e8006e3",
+    "transferSHA": "d5adacfacad4ba8e313d547e4a38a465159635851b3e36356c3f92641e8006e3",
+    "cutSHA": "d5adacfacad4ba8e313d547e4a38a465159635851b3e36356c3f92641e8006e3",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "send failure marks failed and redacts secret-ish tokens",
+    "beforeSHA": "15c973ba1fe31c9e72e41effca3b95cc6e34f9e10d3e8d1264f58bd6afb33704",
+    "transferSHA": "15c973ba1fe31c9e72e41effca3b95cc6e34f9e10d3e8d1264f58bd6afb33704",
+    "cutSHA": "15c973ba1fe31c9e72e41effca3b95cc6e34f9e10d3e8d1264f58bd6afb33704",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "incomplete quiz answers fail before sending",
+    "beforeSHA": "adf7cd793bca2e36fc8318771acd42590fd1268946a86c6d26eae2c1b1b46404",
+    "transferSHA": "adf7cd793bca2e36fc8318771acd42590fd1268946a86c6d26eae2c1b1b46404",
+    "cutSHA": "adf7cd793bca2e36fc8318771acd42590fd1268946a86c6d26eae2c1b1b46404",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "name": "persisted attribution distinguishes absent or organic rows from lookup failure",
+    "beforeSHA": "468f2b85a88e956337674cceca6b907dea37c8da4d6b34804ab6d2de3458c675",
+    "transferSHA": "468f2b85a88e956337674cceca6b907dea37c8da4d6b34804ab6d2de3458c675",
+    "cutSHA": "468f2b85a88e956337674cceca6b907dea37c8da4d6b34804ab6d2de3458c675",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-trigger.test.ts",
+    "name": "result artifact email trigger waits for a completed lead and access check",
+    "beforeSHA": "00dc7a92229caa57025b20029b96b5edaf3a7c4c28e9f4fa8a5a86ec69c4b2ab",
+    "transferSHA": "00dc7a92229caa57025b20029b96b5edaf3a7c4c28e9f4fa8a5a86ec69c4b2ab",
+    "cutSHA": "00dc7a92229caa57025b20029b96b5edaf3a7c4c28e9f4fa8a5a86ec69c4b2ab",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-trigger.test.ts",
+    "name": "result artifact email trigger sends for active subscriber routine path",
+    "beforeSHA": "23dd5f2160c46bc530710f0741dd41056cafce7f9b30dbf0983e1856bf1486c3",
+    "transferSHA": "23dd5f2160c46bc530710f0741dd41056cafce7f9b30dbf0983e1856bf1486c3",
+    "cutSHA": "23dd5f2160c46bc530710f0741dd41056cafce7f9b30dbf0983e1856bf1486c3",
+    "unrelated": true
+  },
+  {
+    "file": "tests/quiz-result-artifact-trigger.test.ts",
+    "name": "result artifact email trigger does not resend for the same lead",
+    "beforeSHA": "7415f67150d8729a328f45e31ed7596c062b45f16b36d022c20c8c6921bd2367",
+    "transferSHA": "7415f67150d8729a328f45e31ed7596c062b45f16b36d022c20c8c6921bd2367",
+    "cutSHA": "7415f67150d8729a328f45e31ed7596c062b45f16b36d022c20c8c6921bd2367",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-api-stage1.test.ts",
+    "name": "Stage 1 API derives identity server-side and never accepts a browser user id",
+    "beforeSHA": "7bf4786d41a2a634048a5e33aca02bfbc1fa4a34228191e252efb226ae993534",
+    "transferSHA": "7bf4786d41a2a634048a5e33aca02bfbc1fa4a34228191e252efb226ae993534",
+    "cutSHA": "7bf4786d41a2a634048a5e33aca02bfbc1fa4a34228191e252efb226ae993534",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-api-stage1.test.ts",
+    "name": "Stage 1 rejects an unreachable owner before constructing persistence",
+    "beforeSHA": "590c70b4f98f676ad3dcec51328f9893f29b96610530f0a12669edd51ef98f28",
+    "transferSHA": "590c70b4f98f676ad3dcec51328f9893f29b96610530f0a12669edd51ef98f28",
+    "cutSHA": "590c70b4f98f676ad3dcec51328f9893f29b96610530f0a12669edd51ef98f28",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-api-stage1.test.ts",
+    "name": "Stage 1 API preserves typed release and availability responses",
+    "beforeSHA": "99e4e7d375035c938a297ab8ffbc4bb11dfe49614e5b13f1262d9e1f3afee763",
+    "transferSHA": "99e4e7d375035c938a297ab8ffbc4bb11dfe49614e5b13f1262d9e1f3afee763",
+    "cutSHA": "99e4e7d375035c938a297ab8ffbc4bb11dfe49614e5b13f1262d9e1f3afee763",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-stage1-source.test.ts",
+    "name": "legacy quiz sources retain their exact lead provenance and canonicalize unordered answers",
+    "beforeSHA": "a6fc88c56a0cbaed9098a2e0ace88684f15162d46030ff8d52ec6dea0a542497",
+    "transferSHA": "a6fc88c56a0cbaed9098a2e0ace88684f15162d46030ff8d52ec6dea0a542497",
+    "cutSHA": "a6fc88c56a0cbaed9098a2e0ace88684f15162d46030ff8d52ec6dea0a542497",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-stage1-source.test.ts",
+    "name": "legacy Stage-1 parsing rejects unsupported values instead of trusting TypeScript casts",
+    "beforeSHA": "82773a8a102dd04a8dbb1630f9fe366c2e75536cee94470d97509b12561fa7bf",
+    "transferSHA": "82773a8a102dd04a8dbb1630f9fe366c2e75536cee94470d97509b12561fa7bf",
+    "cutSHA": "82773a8a102dd04a8dbb1630f9fe366c2e75536cee94470d97509b12561fa7bf",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan-stage1-source.test.ts",
+    "name": "legacy source migration brackets its one-time backfill with the immutable trigger",
+    "beforeSHA": "9bb697d7e86960f0fd13b65bf14a3ab985bf177065e87c676a7a47fafda30858",
+    "transferSHA": "9bb697d7e86960f0fd13b65bf14a3ab985bf177065e87c676a7a47fafda30858",
+    "cutSHA": "9bb697d7e86960f0fd13b65bf14a3ab985bf177065e87c676a7a47fafda30858",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/input.test.ts",
+    "name": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile",
+    "beforeSHA": "19a75adcc44394e5f66182d9a9c53c0d86d49ed9a8ad572f303cad47656ddec9",
+    "transferSHA": "21d6633c954419d10d7c6a3cfdfbe0e90250ee955df0c8667e013654396bdc7d",
+    "cutSHA": "21d6633c954419d10d7c6a3cfdfbe0e90250ee955df0c8667e013654396bdc7d",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan/input.test.ts",
+    "name": "INITIAL-12: V2 concerns normalize once without inventing breakage",
+    "beforeSHA": "5be2933e6a47783f8455c014661c081f25f3739fdfc2e07d40d47d0a211b3edd",
+    "transferSHA": "5be2933e6a47783f8455c014661c081f25f3739fdfc2e07d40d47d0a211b3edd",
+    "cutSHA": "5be2933e6a47783f8455c014661c081f25f3739fdfc2e07d40d47d0a211b3edd",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/input.test.ts",
+    "name": "`mask-missing-${field}: required Mask target input fails closed at the shared parser`",
+    "beforeSHA": "b95fc7d521fd6c3657545b3f2a8a1577510b70a743b5308f8d73d7f66e48c320",
+    "transferSHA": "b95fc7d521fd6c3657545b3f2a8a1577510b70a743b5308f8d73d7f66e48c320",
+    "cutSHA": "b95fc7d521fd6c3657545b3f2a8a1577510b70a743b5308f8d73d7f66e48c320",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/input.test.ts",
+    "name": "supported envelope hashing is stable across object key order",
+    "beforeSHA": "dc9e6f24b89d6f67b7b90537adfba182a9d47087ec10fe5f5fc1fa30c68e4a6f",
+    "transferSHA": "dc9e6f24b89d6f67b7b90537adfba182a9d47087ec10fe5f5fc1fa30c68e4a6f",
+    "cutSHA": "dc9e6f24b89d6f67b7b90537adfba182a9d47087ec10fe5f5fc1fa30c68e4a6f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown",
+    "beforeSHA": "d0e4eea26dec190c34ec32770378cf2a9817a807e22c6d958b53d94c07fd49ec",
+    "transferSHA": "4e20a54c581eb685bba01b6873ba562bea3a34f9ed6bf1f465531af712b7f8cb",
+    "cutSHA": "4e20a54c581eb685bba01b6873ba562bea3a34f9ed6bf1f465531af712b7f8cb",
+    "unrelated": false
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "INITIAL-04: oily scalp contributes one Reset point while product load stays deferred",
+    "beforeSHA": "800fe82e54b62ef38a40805e530827203df851641e13034ef0a685fafba5ce9f",
+    "transferSHA": "800fe82e54b62ef38a40805e530827203df851641e13034ef0a685fafba5ce9f",
+    "cutSHA": "800fe82e54b62ef38a40805e530827203df851641e13034ef0a685fafba5ce9f",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "known Shampoo frequency is preserved as known within the partial Reset assessment",
+    "beforeSHA": "43754837962f34889922543c0437a7ba95c7f7e1fc6fde584e55763d1ef76e8c",
+    "transferSHA": "43754837962f34889922543c0437a7ba95c7f7e1fc6fde584e55763d1ef76e8c",
+    "cutSHA": "43754837962f34889922543c0437a7ba95c7f7e1fc6fde584e55763d1ef76e8c",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "lightened hair preserves the quiz fact and drives high shared repair priority",
+    "beforeSHA": "85af2c80a0c971bea32295e99f53d7424e5bc26304c2857830208edb7828097a",
+    "transferSHA": "85af2c80a0c971bea32295e99f53d7424e5bc26304c2857830208edb7828097a",
+    "cutSHA": "85af2c80a0c971bea32295e99f53d7424e5bc26304c2857830208edb7828097a",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "shared damage lanes distinguish rare from material Heat and keep elasticity contextual",
+    "beforeSHA": "30d675450b47508f31a224ea592662accf8a33c242eda1001cba2242351ed071",
+    "transferSHA": "30d675450b47508f31a224ea592662accf8a33c242eda1001cba2242351ed071",
+    "cutSHA": "30d675450b47508f31a224ea592662accf8a33c242eda1001cba2242351ed071",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "ordinary airflow retains its route and frequency as a distinct Mask exposure fact",
+    "beforeSHA": "30e1249eb03966e8970d0bc0790b571942688d816bc9db4f26919d97e22e5afc",
+    "transferSHA": "30e1249eb03966e8970d0bc0790b571942688d816bc9db4f26919d97e22e5afc",
+    "cutSHA": "30e1249eb03966e8970d0bc0790b571942688d816bc9db4f26919d97e22e5afc",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "refined mechanical exposure maps rough rubbing to moderate and adds nothing otherwise",
+    "beforeSHA": "ef7b8b964814039adafda3f7a31ea579e0edcee4224e4188595341b287d1295d",
+    "transferSHA": "ef7b8b964814039adafda3f7a31ea579e0edcee4224e4188595341b287d1295d",
+    "cutSHA": "ef7b8b964814039adafda3f7a31ea579e0edcee4224e4188595341b287d1295d",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "name": "INITIAL-13: hair loss is isolated from repair and exposes the limited-evidence boundary",
+    "beforeSHA": "6a05fb66d2e859332329061e7ee1f5d4617b42b65c09498d2da5a8f09aa1d8a8",
+    "transferSHA": "6a05fb66d2e859332329061e7ee1f5d4617b42b65c09498d2da5a8f09aa1d8a8",
+    "cutSHA": "6a05fb66d2e859332329061e7ee1f5d4617b42b65c09498d2da5a8f09aa1d8a8",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio non-coily Leave-in owns persistent damp smoothing and demotes damp Oil",
+    "beforeSHA": "dda4ae90030595b2ca89b890982efd3fd2cdd2f92755b5f2e4045040035e1b76",
+    "transferSHA": "dda4ae90030595b2ca89b890982efd3fd2cdd2f92755b5f2e4045040035e1b76",
+    "cutSHA": "dda4ae90030595b2ca89b890982efd3fd2cdd2f92755b5f2e4045040035e1b76",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio preserves the coily two-layer damp smoothing exception",
+    "beforeSHA": "73e6dd0cbc78a5b5ae99b734154a528c8c0ecbeb2489b62098b4b4711fbb666c",
+    "transferSHA": "73e6dd0cbc78a5b5ae99b734154a528c8c0ecbeb2489b62098b4b4711fbb666c",
+    "cutSHA": "73e6dd0cbc78a5b5ae99b734154a528c8c0ecbeb2489b62098b4b4711fbb666c",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio keeps Conditioner baseline while repair categories share distinct jobs",
+    "beforeSHA": "188a0bef43452f140561151439fcf6377e7fa92c4c3b67994313a8e0f7f3d1bb",
+    "transferSHA": "188a0bef43452f140561151439fcf6377e7fa92c4c3b67994313a8e0f7f3d1bb",
+    "cutSHA": "188a0bef43452f140561151439fcf6377e7fa92c4c3b67994313a8e0f7f3d1bb",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio keeps wet-wash ownership and defers Heat carrier allocation",
+    "beforeSHA": "f883e24d788288a3a6f1563499539d5ddd83f73365d56a4b106c04cd4e6183fa",
+    "transferSHA": "f883e24d788288a3a6f1563499539d5ddd83f73365d56a4b106c04cd4e6183fa",
+    "cutSHA": "f883e24d788288a3a6f1563499539d5ddd83f73365d56a4b106c04cd4e6183fa",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio preserves Dry Shampoo as a bridge inside Shampoo's wet-wash budget",
+    "beforeSHA": "42f7b9393f62dcf84fefc57fd9a448a2a12a5abd3e6fcfff9644189c48805d75",
+    "transferSHA": "42f7b9393f62dcf84fefc57fd9a448a2a12a5abd3e6fcfff9644189c48805d75",
+    "cutSHA": "42f7b9393f62dcf84fefc57fd9a448a2a12a5abd3e6fcfff9644189c48805d75",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "name": "portfolio records Shampoo/Scalp Care and Deep Cleansing/exfoliant duplicate coverage",
+    "beforeSHA": "226ec35ef67a8cb5998533d976789b6d1eba69a130893b9491c043d699cb7af4",
+    "transferSHA": "226ec35ef67a8cb5998533d976789b6d1eba69a130893b9491c043d699cb7af4",
+    "cutSHA": "226ec35ef67a8cb5998533d976789b6d1eba69a130893b9491c043d699cb7af4",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/reasons.test.ts",
+    "name": "reason salience keeps no more than two primary facts without dropping detail",
+    "beforeSHA": "08ca269c9a81796405ed4b41f1a286e34b88b385614236b647ba0dd76df47895",
+    "transferSHA": "08ca269c9a81796405ed4b41f1a286e34b88b385614236b647ba0dd76df47895",
+    "cutSHA": "08ca269c9a81796405ed4b41f1a286e34b88b385614236b647ba0dd76df47895",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/reasons.test.ts",
+    "name": "reason normalization is stable and removes duplicate IDs",
+    "beforeSHA": "dc4c304339bc7aca9a6107ba46bab6be7646c94572790deabc4a1f0ca116ccf5",
+    "transferSHA": "dc4c304339bc7aca9a6107ba46bab6be7646c94572790deabc4a1f0ca116ccf5",
+    "cutSHA": "dc4c304339bc7aca9a6107ba46bab6be7646c94572790deabc4a1f0ca116ccf5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/types.test.ts",
+    "name": "Stage 1 keeps the approved stable category order",
+    "beforeSHA": "f39b984fe97edbcb6de4e95a26637736782655af236707452b90e012696d6878",
+    "transferSHA": "f39b984fe97edbcb6de4e95a26637736782655af236707452b90e012696d6878",
+    "cutSHA": "f39b984fe97edbcb6de4e95a26637736782655af236707452b90e012696d6878",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 persists only the authenticated user's active new-buyer artifact",
+    "beforeSHA": "3b233555622bd3b844ad38830b8913147a7af8e261b3bdb4c31c804a13de1bb5",
+    "transferSHA": "3b233555622bd3b844ad38830b8913147a7af8e261b3bdb4c31c804a13de1bb5",
+    "cutSHA": "3b233555622bd3b844ad38830b8913147a7af8e261b3bdb4c31c804a13de1bb5",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 keeps flag-off, non-cohort, and pending states outside all reads and writes",
+    "beforeSHA": "9f29f85409e5a8aa440ca69dc4698e44fb8c1aa4bca7004d46b5bf19af8e9d90",
+    "transferSHA": "9f29f85409e5a8aa440ca69dc4698e44fb8c1aa4bca7004d46b5bf19af8e9d90",
+    "cutSHA": "9f29f85409e5a8aa440ca69dc4698e44fb8c1aa4bca7004d46b5bf19af8e9d90",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 rejects a paid purchase before the rollout cutoff without mutating",
+    "beforeSHA": "19f45c837f2742e53cc404449aa8ef659276f3e06be0d562ae7088c197c5b339",
+    "transferSHA": "19f45c837f2742e53cc404449aa8ef659276f3e06be0d562ae7088c197c5b339",
+    "cutSHA": "19f45c837f2742e53cc404449aa8ef659276f3e06be0d562ae7088c197c5b339",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 admits verified normal paid pre-cutoff sources only while migration is enabled",
+    "beforeSHA": "66b32df0fa8207cbe7022b75ea7281baacfac3df186e162b1a9b1a7820a18c61",
+    "transferSHA": "66b32df0fa8207cbe7022b75ea7281baacfac3df186e162b1a9b1a7820a18c61",
+    "cutSHA": "66b32df0fa8207cbe7022b75ea7281baacfac3df186e162b1a9b1a7820a18c61",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 admits a bound paid migration outside the launch cutoff without weakening access",
+    "beforeSHA": "3f6cc11c24e017a6aa132d0452e200d56f3652bf1d8b6f9b6c2a5e048e557b59",
+    "transferSHA": "3f6cc11c24e017a6aa132d0452e200d56f3652bf1d8b6f9b6c2a5e048e557b59",
+    "cutSHA": "3f6cc11c24e017a6aa132d0452e200d56f3652bf1d8b6f9b6c2a5e048e557b59",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "a returning migration resumes its persisted Plan without re-reading or recomputing the legacy quiz",
+    "beforeSHA": "0499e3e7ccc94f821a0fd9df4a68be055a8a24c35b81bac489efed48426819a7",
+    "transferSHA": "0499e3e7ccc94f821a0fd9df4a68be055a8a24c35b81bac489efed48426819a7",
+    "cutSHA": "0499e3e7ccc94f821a0fd9df4a68be055a8a24c35b81bac489efed48426819a7",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 maps unavailable storage and invalid compute sources to typed safe outcomes",
+    "beforeSHA": "c2f26bc4120295eddd813ddd3f28e8f686c7a4ab8975d6be02a9bbe46d6312df",
+    "transferSHA": "c2f26bc4120295eddd813ddd3f28e8f686c7a4ab8975d6be02a9bbe46d6312df",
+    "cutSHA": "c2f26bc4120295eddd813ddd3f28e8f686c7a4ab8975d6be02a9bbe46d6312df",
+    "unrelated": true
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "name": "Stage 1 loads and persists an exact legacy lead without a prepared artifact",
+    "beforeSHA": "93baaa95582c7c09656a5a121e5abf52871f78af3249337f840c3ed1148bd766",
+    "transferSHA": "93baaa95582c7c09656a5a121e5abf52871f78af3249337f840c3ed1148bd766",
+    "cutSHA": "93baaa95582c7c09656a5a121e5abf52871f78af3249337f840c3ed1148bd766",
+    "unrelated": true
+  }
+]

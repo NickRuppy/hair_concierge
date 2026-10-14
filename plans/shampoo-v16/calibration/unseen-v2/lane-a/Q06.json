@@ -1,0 +1,238 @@
+{
+ "blindId": "Q06",
+ "identity": {
+  "brand": "AUSSIE",
+  "productName": "Shampoo Bouncy Curls",
+  "packSize": "300 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "e21766d0f8fd0a7c8ad3caa23f19a1442629efbc0c622305f2d8d0325f808625",
+  "normalization": "ID-2: no split entries; normalized positions = packet positions (24 entries).",
+  "completeness": "ID-3 MATERIAL CONFLICT: both retailer sources claim 'Mit Jojoba-, Kokosnuss- und Macadamianussöl' / 'Angereichert mit einer Mischung aus Jojobaöl, Kokosnussöl und australischem Macadamianussöl'. No INCI entry maps to these (no Simmondsia Chinensis Seed Oil, Cocos Nucifera Oil or Macadamia seed oil; Sodium Cocoyl Isethionate is a surfactant, not an oil). Nonvolatile oils are payload_lipid (6.3) and E4 refatting routes, so if present they could change weightPotential and conditioningLevel -> material; affected properties low confidence, product returns needs_research. Fragaria Chiloensis Fruit Extract #24 ('Passionsfrucht/Kokosmilch' scent notes are fragrance description) -> note only.",
+  "e3ProminenceCutoff": "Parfum #8; prominent = #1-#7",
+  "sourceNote": "Retailer sources only; all claims graded low (CL-SRC)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C6: no prominent strong anionic. Earliest prominent cleansing surfactant is Sodium Cocoyl Isethionate #2 (mild anionic) with prominent amphoteric co-surfactants Lauramidopropyl Betaine #3 and Cocamidopropyl Betaine #4; Sodium Lauroyl Sarcosinate #5 is a second mild anionic -> low. Counter-signal toward moderate: two mild anionics and no refatting, recorded; the convention holds.",
+   "ruleIds": [
+    "C6",
+    "C3",
+    "C4",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "low",
+   "neighboringAlternative": "moderate",
+   "rationale": "Formula as frozen: only Polyquaternium-10 #10 (after Parfum), no silicone, lipid, refatter or R11 humectant (Butylene Glycol #23 excluded) -> cleansing-led architecture with little substantive slip -> low. Confidence low because of the ID-3 material conflict: claimed jojoba/coconut/macadamia oils absent from INCI could, if present, add an emollient route and move the value to moderate.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "R11",
+    "ID-3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "low",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-10 #10 (after Parfum)"
+    ],
+    "silicone": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Cocoyl Isethionate #2",
+     "Lauramidopropyl Betaine #3",
+     "Cocamidopropyl Betaine #4",
+     "Sodium Lauroyl Sarcosinate #5"
+    ],
+    "humectantContext": [],
+    "excluded": [
+     "Citrus Aurantium Peel Oil #14 (fragrance oil, 6.4)",
+     "Butylene Glycol #23 (solvent/extract carrier)",
+     "Fragaria Chiloensis Fruit Extract #24 (botanical)",
+     "Tetrasodium EDTA #13 (chelator)"
+    ],
+    "unresolved": [
+     "Claimed Jojoba/Kokosnuss/Macadamia oils: absent from the frozen INCI (ID-3 material conflict); weight-relevant payload_lipid if present"
+    ]
+   },
+   "depositionLoad": "light - a single cationic cellulose polymer after fragrance (as frozen).",
+   "persistence": "low-moderate - PQ-10 can accumulate, but at post-fragrance level alone.",
+   "resetCapacity": "moderate - C6 low chassis but two mild anionics plus two betaines give real cleansing; not limited against a single light polymer.",
+   "counterevidence": "Unresolved claimed oils could add a payload_lipid family; PQ-10 is the only route as frozen.",
+   "whyThisBand": "As frozen: one light post-fragrance polymer, no other deposition family.",
+   "whyNotNeighborBand": "Single deposition family without a reinforcing route (W2: no polymer floor) -> not moderate as frozen; but the claimed-oil conflict prevents a dependable band.",
+   "confidenceLimitingFactor": "ID-3 material conflict (claimed oils missing from INCI) - low-confidence provisional band per 6.6 Unknowns; never defaulted to low with confidence.",
+   "rationale": "6.6 Unknowns + ID-3: provisional low at low confidence with the exact blocker; needs_research.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W2",
+    "ID-3",
+    "ID-1",
+    "N-ALT",
+    "6.9"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-10 #10"
+    ],
+    "limitation": "No humectant route at all; a single post-fragrance polymer distinguishes neither moisture nor repair. Even the claimed oils would not create a humectant cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Retailer claims 'Feuchtigkeitsspendend', 'extra feuchtigkeitsspendendes Shampoo für trockenes welliges und lockiges Haar' consistently point to moisture.",
+   "decisionTrace": "Claim direction: moisture for dry wavy/curly lengths (retailer-only, low). Low claims may be candidate only if the formula verdict independently supports moisture; verdict nonspecific -> cannot act (CL-SRC). 'Sprungkraft'/curls is pattern, not a focus. Decision: general.",
+   "rationale": "CL-SRC + F1 + 7.2 -> general.",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "T2",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": "Empty default kept; no moderate/high positioning and no independent route.",
+   "rationale": "Section 8, CL-SRC.",
+   "ruleIds": [
+    "8",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular; no trigger wording and retailer-only claims cannot fire triggers.",
+   "ruleIds": [
+    "9",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 scalp claim; 'reinigt sanft' is mildness (E2a). The oil conflict touches no comfort gate here because no scalp target is claimed.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No Piroctone Olamine or Climbazole; missing oils are not dandruff-relevant.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "needs_research",
+  "statusRationale": "13.1: conditioningLevel and weightPotential are low confidence (ID-3 material conflict) -> projection not finalizable; fields below are a provisional proposal only.",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "low",
+   "normal": "low",
+   "coarse": "low"
+  },
+  "thicknessRationale": "Provisional T1 with W low, C low: fine ideal, normal ideal, coarse acceptable. Ordinary target. T4: fine ideal -> W neighbor moderate gives acceptable -> flag; normal unchanged; coarse acceptable unchanged (C neighbor moderate, W neighbor moderate) -> no flag. T2: curl-pattern claims ignored.",
+  "weight": "light",
+  "weightConfidence": "low",
+  "weightRationale": "W-LIVE: provisional low -> light; low confidence -> needs_research (13.8).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; retailer copy only -> moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1 low -> gentle; differs from normal bucket expectation (regular) -> amber/supportive truthfully (I2). I3: confidence high and current intensity already differs -> no flag.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false; D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs to be resolved by orchestrator after freeze."
+ },
+ "selfCheck": "Fingerprint matches; formula judgments from INCI only (procedural blinding); weight returned as low-confidence provisional band with the exact blocker (6.6 Unknowns), not defaulted.",
+ "uncertainties": [
+  "ID-3: claimed Jojoba/Kokosnuss/Macadamia oils absent from the frozen INCI, treated as a material conflict (payload lipids could move weightPotential/conditioningLevel) -> needs_research. Possible formula/variant mismatch; needs a re-check of the exact German INCI.",
+  "C6: two mild anionics (isethionate + sarcosinate) still read as low by convention; moderate would not change flags (intensity already differs from the normal bucket)."
+ ]
+}

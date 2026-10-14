@@ -122,3 +122,25 @@ test("presented verdict passes the not_needed payload through unchanged", () => 
   const presented = presentScanVerdictPayload(notNeeded, [row()])
   assert.deepEqual(presented, notNeeded)
 })
+
+test("reason lines reach the web for scanned products and alternatives (fit-verdict spec §1/§7b, ruled 2026-10-12)", () => {
+  const presented = presentScanVerdictPayload(
+    {
+      ...inCatalog,
+      reasonLines: ["Für dein Haar eher schwer"],
+      alternatives: [
+        {
+          ...inCatalog.alternatives[0],
+          verdict: "supportive",
+          reasonLines: ["Eher für feines Haar gedacht"],
+        },
+      ],
+    },
+    [row()],
+  )
+  assert.equal(presented.kind, "in_catalog")
+  if (presented.kind !== "in_catalog") return
+  assert.deepEqual(presented.reasonLines, ["Für dein Haar eher schwer"])
+  assert.deepEqual(presented.alternatives[0].reasonLines, ["Eher für feines Haar gedacht"])
+  assert.equal("criteria" in presented.alternatives[0], false)
+})

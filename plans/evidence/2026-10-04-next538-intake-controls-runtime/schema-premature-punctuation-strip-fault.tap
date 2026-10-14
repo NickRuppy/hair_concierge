@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: scan submission normalizes the scanned identifier once before it is matched and persisted
+not ok 1 - scan submission normalizes the scanned identifier once before it is matched and persisted
+  ---
+  duration_ms: 4.538875
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:2:55514'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'AB12' !== 'AB-12'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'AB-12'
+  actual: 'AB12'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:1817:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 357.20225

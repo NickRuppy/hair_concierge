@@ -1,0 +1,9 @@
+[
+  "tests/free-registration-screen.test.tsx",
+  "tests/free-registration-recovery-terminal.test.ts",
+  "tests/free-snapshot-provisioning-acceptance.test.ts",
+  "tests/freemium-sheet-checkout-contract.test.ts",
+  "tests/freemium-plan-provisioning.test.ts",
+  "tests/freemium-cutover-journey.test.ts",
+  "tests/personal-plan/persistence/free-snapshot-service.test.ts"
+]

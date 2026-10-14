@@ -1,0 +1,121 @@
+--- before/tests/admin-user-billing-summary.test.ts
++++ cut/tests/admin-user-billing-summary.test.ts
+@@ -177,14 +177,6 @@
+   assert.equal(summary.status, "expired")
+ })
+ 
+-test("active entitlement with lapsed period end reports expired", () => {
+-  const summary = summarizeAdminUserBilling(
+-    subscriptionRow({ current_period_end: "2026-08-05T00:00:00.000Z" }),
+-    NOW,
+-  )
+-  assert.equal(summary.status, "expired")
+-})
+-
+ test("active entitlement within the 24h expiry grace still reports active", () => {
+   // 12h past the period end: hasCurrentBillingAccess still grants access.
+   const summary = summarizeAdminUserBilling(
+--- before/tests/billing-subscriptions-access-grace.test.ts
++++ cut/tests/billing-subscriptions-access-grace.test.ts
+@@ -38,30 +38,6 @@
+ 
+ test("EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window", () => {
+   assert.equal(EXPIRED_ENTITLEMENT_GRACE_MS, ONE_DAY_MS)
+-})
+-
+-test("hasCurrentBillingAccess: active row with period end 2 days past has no access", () => {
+-  const row = billingRow({
+-    entitlement_status: "active",
+-    current_period_end: isoOffset(-2 * ONE_DAY_MS),
+-  })
+-  assert.equal(hasCurrentBillingAccess(row, NOW), false)
+-})
+-
+-test("hasCurrentBillingAccess: active row 12 hours past is within the grace window", () => {
+-  const row = billingRow({
+-    entitlement_status: "active",
+-    current_period_end: isoOffset(-12 * 60 * 60 * 1000),
+-  })
+-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
+-})
+-
+-test("hasCurrentBillingAccess: active row with period end in the future has access", () => {
+-  const row = billingRow({
+-    entitlement_status: "active",
+-    current_period_end: isoOffset(ONE_DAY_MS),
+-  })
+-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
+ })
+ 
+ test("hasCurrentBillingAccess: past_due row exactly at the grace boundary has access", () => {
+@@ -107,19 +83,6 @@
+   assert.equal(hasCurrentBillingAccess(row, NOW), false)
+ })
+ 
+-test("hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior", () => {
+-  // current_period_end null on an open-entitlement row is treated as
+-  // legacy/incomplete billing_subscriptions data (e.g. rows backfilled from
+-  // profiles before a first webhook populated the period). Grace-window
+-  // enforcement only applies once we have a real period_end to measure
+-  // against, so null rows fall back to the pre-existing status-only check.
+-  const row = billingRow({
+-    entitlement_status: "active",
+-    current_period_end: null,
+-  })
+-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
+-})
+-
+ test("hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access", () => {
+   const profile = {
+     subscription_status: "active",
+--- before/tests/payment-monitor-route.test.ts
++++ cut/tests/payment-monitor-route.test.ts
+@@ -361,48 +361,6 @@
+   })
+ })
+ 
+-test("payment monitor flushes completed integrity findings before returning success", async () => {
+-  let flushes = 0
+-  const response = await handlePaymentMonitor(request(), {
+-    triggerSecret: secret,
+-    checkRateLimit: () => ({ allowed: true }),
+-    runPaymentIntegrity: async () =>
+-      result({
+-        counters: {
+-          ...emptyPaymentIntegrityCounters(),
+-          providersScanned: 2,
+-          candidatesChecked: 4,
+-          findings: 1,
+-        },
+-        findings: [
+-          {
+-            signal: "payment_integrity_mismatch",
+-            provider: "stripe",
+-            commerceKind: "subscription",
+-            boundary: "billing",
+-            errorFamily: "billing_state",
+-            invariant: "provider_success_without_billing_success",
+-            providerReferenceDigest:
+-              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+-            method: "card",
+-            truth: "succeeded",
+-            live: true,
+-            isInternalTest: false,
+-          },
+-        ],
+-        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
+-      }),
+-    captureCheckIn: () => undefined,
+-    flushTelemetry: async () => {
+-      flushes += 1
+-      return true
+-    },
+-  })
+-
+-  assert.equal(response.status, 200)
+-  assert.equal(flushes, 1)
+-})
+-
+ test("payment monitor uses uncapped incident counters when requiring Sentry receipts", async () => {
+   let flushes = 0
+   const response = await handlePaymentMonitor(request(), {

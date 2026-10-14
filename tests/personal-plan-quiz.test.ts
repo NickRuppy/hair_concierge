@@ -10,7 +10,6 @@ import {
   getPersonalPlanQuizTransitionDirection,
   getNextPersonalPlanQuizScreen,
   getPersonalPlanQuizAnswersKey,
-  getPersonalPlanLoadingProgress,
   getPersonalPlanQuizSectionId,
   loadPersonalPlanQuizDraft,
   savePersonalPlanQuizDraft,
@@ -411,18 +410,4 @@ test("materially different profiles produce recognizably different positive rece
   assert.match(straightFine[0].value, /Glatt · fein · wenige Haare/)
   assert.match(curlyTreated[1].value, /Stärkung der Längen · Form & Definition/)
   assert.match(coilyScalp[2].value, /gereizt oder empfindlich/)
-})
-
-test("loading progress is monotonic across its three stages", () => {
-  const values = [
-    getPersonalPlanLoadingProgress([], 10),
-    getPersonalPlanLoadingProgress(["evaluate_profile"], 5),
-    getPersonalPlanLoadingProgress(["evaluate_profile", "compare_goals"], 10),
-    getPersonalPlanLoadingProgress(["evaluate_profile", "compare_goals", "fit_everyday"], 0),
-  ]
-  assert.deepEqual(values, [10, 34, 67, 100])
-  assert.equal(
-    values.every((value, index) => index === 0 || value >= values[index - 1]),
-    true,
-  )
 })

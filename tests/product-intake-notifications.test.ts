@@ -326,6 +326,13 @@ test("review notification keeps delivery success after message is materialized",
   assert.ok(supabase.calls.includes("claim:product_submissions"))
   assert.ok(supabase.calls.includes("insert:messages"))
   assert.ok(!supabase.calls.includes("release:product_submissions"))
+  assert.equal(supabase.insertedMessages.length, 1)
+  const content = supabase.insertedMessages[0]?.content
+  assert.equal(typeof content, "string")
+  assert.match(String(content), /Gute Nachrichten/)
+  assert.match(String(content), /Garnier Hair Food Aloe/)
+  assert.match(String(content), /Routine/)
+  assert.match(String(content), /in deiner Routine verknüpft/)
 })
 
 test("review notification treats duplicate deterministic message id as already sent", async () => {
@@ -345,11 +352,6 @@ test("review notification treats duplicate deterministic message id as already s
   assert.ok(supabase.calls.includes("select:messages"))
   assert.ok(supabase.calls.includes("insert:messages"))
   assert.ok(supabase.calls.includes("update:conversations"))
-})
-
-test("resolved notification for a non-scan source keeps the routine-link wording", () => {
-  const message = buildProductIntakeReviewMessage(notificationSubmission({ status: "approved" }))
-  assert.match(message ?? "", /in deiner Routine verknüpft/)
 })
 
 test("resolved notification for a scan submission makes no routine claim", () => {

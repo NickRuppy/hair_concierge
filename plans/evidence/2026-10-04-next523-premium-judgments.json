@@ -1,0 +1,218 @@
+[
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 205,
+    "title": "header is the approved „Chaarlie Premium — Alles für dein Haar.“ line",
+    "sha256": "b4edf2050f7131fff12c8c00b195a3d74ca49d3f8698cf49cefd7b3058eded23",
+    "classification": "C",
+    "reason": "C1: full assertion union goes to existing tests/premium-sheet-component.test.tsx — tapping a plan row moves the selection and the CTA label with it; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 213,
+    "title": "every feature shows exactly three registry benefits, tapped first and plum-accented",
+    "sha256": "136fef7faa42a5f3b29a6bdce479503c1d512b8d508dd3cda016ad31aee155c4",
+    "classification": "R",
+    "reason": "Actual component emits all seven feature orders, registry names/copy and exact accent assignment. Canonical C5/C6 receiver: replace helper-derived expected order with fixed donor literals and assert rendered ID uniqueness, preserving the existing seven render inputs."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 248,
+    "title": "a null context still shows three benefits (the core order)",
+    "sha256": "a004dd69d1fdf06f66336ba7b8c1bd19633c4a63d36fb45f8cb5b931cca00f64",
+    "classification": "R",
+    "reason": "Fresh null context traverses null fallback in actual component. Canonical C4 receiver uses fixed routine/empfehlungen/chat literal, removing helper-generated expected correlation."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 256,
+    "title": "closing holds the last context steady through the exit animation (F1)",
+    "sha256": "81b068ea84e21ee9f0b3a2545e57c2eb2a64005523909a3ffc9eb3b75215ddd7",
+    "classification": "R",
+    "reason": "Open merkliste context then closed/null context must preserve last benefit/escape/accent during exit. Fresh null-context keeper cannot catch context reset on close; manual rerender, not mounted animation timing."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 301,
+    "title": "plan rows are Jährlich · Vierteljährlich (Beliebteste Wahl, preselected) · Monatlich",
+    "sha256": "eb2ba28aa6bd2371241cf1e2473080a0f2945666a81c9d1ef2c512142a815ebf",
+    "classification": "C",
+    "reason": "C2: full assertion union goes to existing tests/premium-sheet-component.test.tsx — tapping a plan row moves the selection and the CTA label with it; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 347,
+    "title": "tapping a plan row moves the selection and the CTA label with it",
+    "sha256": "0deeb5122209844132872ded4be2c606ea1ead48b6c852fa4b395b4c327a511a",
+    "classification": "R",
+    "reason": "Actual monthly click updates selection and CTA. Existing before tree becomes canonical header/plan/recommendation receiver; no extra render. Wrong event handler can preserve initial SSR and still fail this interaction."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 373,
+    "title": "the labelled escape is context-appropriate and never degrades anything",
+    "sha256": "821ebc2e1d2f720d06b1c380c3ee5fd542cbc0016c68dd181e0491b6e75f1ed7",
+    "classification": "R",
+    "reason": "scan, trigger and gated source prefixes yield distinct escape labels. Benefit ordering ignores source but dismiss-label reads it, so this is independently meaningful input branching."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 386,
+    "title": "dismissing always escapes: the escape button and onOpenChange(false)",
+    "sha256": "681d69f57be0292a171018ec96bcb05ac8389b278c0dacb7b091db9d9b5fcaa7",
+    "classification": "R",
+    "reason": "Actual labelled escape plus onOpenChange false/true observes close count1/2/2; the mid-payment back path is another state and must not replace direct dismissal semantics."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 402,
+    "title": "T14: the CTA opens checkout in place — it neither closes the sheet nor navigates",
+    "sha256": "7aca33e12331459ffd31da73e4a4f0956d1cfaeaa2b14228aa07c4d7496d3ab5",
+    "classification": "C",
+    "reason": "C3: full assertion union goes to existing tests/premium-sheet-component.test.tsx — T14: the mid-payment escape returns to the plan rows instead of closing the sheet; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-component.test.tsx",
+    "line": 417,
+    "title": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet",
+    "sha256": "629d5be2275269fd5807f5e3d399fd349cda8c4d430418dfea9ae7c04657597a",
+    "classification": "R",
+    "reason": "Canonical before/starting/back transition via actual reducer and callbacks. Receives all start-checkout intermediate assertions; back must restore plans without closing, unlike direct dismissal."
+  },
+  {
+    "file": "tests/premium-sheet-pricing.test.ts",
+    "line": 64,
+    "title": "`sheet plans stay on the standard catalog with launch pricing ${\n    launchPricingEnabled ? \"ON\" : \"OFF\"\n  }`",
+    "sha256": "b0ea02a274a0283c724fc7ae443bec8ec979cde18e278a13ec2fcc7f7164d31c",
+    "classification": "R",
+    "reason": "Retain both existing launch-flag states, actual flag guard and flag-aware catalog contrast, exact price/amount/analytics/name/detail/currency values plus launch-price leak checks. UI default fixture does not vary flag or observe submitted analytics amounts/currency; distinct money/default contract."
+  },
+  {
+    "file": "tests/premium-sheet-pricing.test.ts",
+    "line": 116,
+    "title": "Vierteljährlich is both the preselected and the recommended row",
+    "sha256": "ddf997454350797cabcf8a1cb93e275387568b556d205f557545f1034c56a403",
+    "classification": "C",
+    "reason": "C7: full assertion union goes to existing tests/premium-sheet-component.test.tsx — tapping a plan row moves the selection and the CTA label with it; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-pricing.test.ts",
+    "line": 131,
+    "title": "the CTA label carries the selected plan's standard price",
+    "sha256": "d8ca9d2af1e6fa8b3dbd49d2520b72c0e0fed1634bb15240650e410a3c002508",
+    "classification": "R",
+    "reason": "Retain exact CTA labels for year/quarter/month: renderer currently changes only to month, and default quarter; no existing year-CTA state in target cohort. Adding another click/render for quota is prohibited."
+  },
+  {
+    "file": "tests/premium-sheet-ordered-benefits.test.ts",
+    "line": 15,
+    "title": "null context falls back to the first three core-order features",
+    "sha256": "54c0422fca207a61a451510562628377b47cfce0c78200ca3bd273cf7fa41f22",
+    "classification": "C",
+    "reason": "C4: full assertion union goes to existing tests/premium-sheet-component.test.tsx — a null context still shows three benefits (the core order); exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-ordered-benefits.test.ts",
+    "line": 30,
+    "title": "`tapped feature \"${feature}\" leads, followed by core order minus itself`",
+    "sha256": "5030f599abf2d8d274d9b824556ebc2c8cabda4566c3eb546dc3258f7eaa6f69",
+    "classification": "C",
+    "reason": "C5: full assertion union goes to existing tests/premium-sheet-component.test.tsx — every feature shows exactly three registry benefits, tapped first and plum-accented; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/premium-sheet-ordered-benefits.test.ts",
+    "line": 38,
+    "title": "every result is free of duplicate feature ids",
+    "sha256": "e7687c33386f5e429a61853c0f2144720a6816fd01cdd36b3e0cc4725aedbbb9",
+    "classification": "C",
+    "reason": "C6: full assertion union goes to existing tests/premium-sheet-component.test.tsx — every feature shows exactly three registry benefits, tapped first and plum-accented; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 43,
+    "title": "busy selector keeps the CTA focusable while disabling plan changes",
+    "sha256": "1e0a262d71c5c23a4332164e5180ee81ca6f6246ad47d2b3e72571d615295741",
+    "classification": "R",
+    "reason": "Busy state disables exactly three plan controls while CTA remains focusable with aria-disabled and loading/status copy. Idle same-input consolidations do not execute the busy branch."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 56,
+    "title": "idle selector keeps the selected plan action label",
+    "sha256": "199d8b2f253c4f27868506c217cc2ad6fc13a150b505c529618af2c80d59270d",
+    "classification": "R",
+    "reason": "Existing exact renderSelector() idle call retains selected quarter label and non-disabled contract, and receives C11 no-reference-price negatives."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 64,
+    "title": "selector exposes stable motion hooks without changing selected plan layout",
+    "sha256": "28e0790a22fc760b4fda9a42123cd4336324f0535689920d1ceaf6ec456317ad",
+    "classification": "R",
+    "reason": "Existing exact renderSelector(QUIZ_RESULT_REFERENCE_PRICES) owns selected layout/data hooks plus key/class source constraints. Receives C8–10 output union. Source-key portion remains bounded source wiring, not mounted remount proof."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 82,
+    "title": "quiz-result selector displays the three reference prices as comparison prices",
+    "sha256": "f3374a15a38b245230efbdac4f64d43dcb0bdc356937957082b523cc5f62729a",
+    "classification": "C",
+    "reason": "C8: full assertion union goes to existing tests/subscription-plan-selector.test.tsx — selector exposes stable motion hooks without changing selected plan layout; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 92,
+    "title": "flag-off quiz-result selector preserves the existing discount copy",
+    "sha256": "dc9d3e979455b89f4bca37a037a5b0686d9b3367d775b311e7a195d39ba88577",
+    "classification": "C",
+    "reason": "C9: full assertion union goes to existing tests/subscription-plan-selector.test.tsx — selector exposes stable motion hooks without changing selected plan layout; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 100,
+    "title": "quiz-result reference prices use the approved readable styling",
+    "sha256": "799e8849513fc7451b501853a471e56a11eb417db52ed231837f003cc1b39633",
+    "classification": "C",
+    "reason": "C10: full assertion union goes to existing tests/subscription-plan-selector.test.tsx — selector exposes stable motion hooks without changing selected plan layout; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 110,
+    "title": "selector without reference prices does not render comparison prices",
+    "sha256": "8b0e30b59dea1a0ae88891638f6f02007138e98a80baf485bb2563522ca3f569",
+    "classification": "C",
+    "reason": "C11: full assertion union goes to existing tests/subscription-plan-selector.test.tsx — idle selector keeps the selected plan action label; exact whole bodies and staged keeper are in candidates.json."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 119,
+    "title": "personal-plan launch selector keeps the comparison prices and approved trust copy",
+    "sha256": "61fd05adce1a94f3be008758ad2402a6a527e62d639813302b7b676c85115d8c",
+    "classification": "R",
+    "reason": "Launch pricing uses different catalog/reference map, quarter19.99, annual/monthly details and approved trust/legal text. Standard discount keeper cannot establish launch-only pricing or copy."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 149,
+    "title": "launch catalog retains exact plans while standard callers retain the standard catalog",
+    "sha256": "766bebf635cff859fc842b42b85843ea656510fe70dc4cc5ef944ee4ea51bd13",
+    "classification": "R",
+    "reason": "Exact numeric launch plan tuples and explicit default-standard getStripePricingPlan resolution protect amount/catalog selection beyond formatted visible strings. Retain monetary source contract."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 167,
+    "title": "launch comparison anchors are the actual standard recurring prices",
+    "sha256": "0fbadc2ec7842f4f81832cea28c5057b092cdeaf34710b6a705174f6fce45f2c",
+    "classification": "R",
+    "reason": "Exact standard recurring reference amounts, launch alias identity, standard undefined result and all interval price equivalence. Display keeper formats references supplied directly and cannot catch helper selecting wrong catalog map."
+  },
+  {
+    "file": "tests/subscription-plan-selector.test.tsx",
+    "line": 186,
+    "title": "membership reactivation derives launch comparisons from the active catalog",
+    "sha256": "d0aa5f4f170cf658791ce03ab0636251d63d7024bf68031871d3bfd4515bbc60",
+    "classification": "R",
+    "reason": "Actual reactivation caller derives reference map from pricingCatalog and forbids quiz marketing anchors. Direct selector rendering receives already-chosen props, so it cannot catch reactivation wiring substituting wrong map."
+  }
+]

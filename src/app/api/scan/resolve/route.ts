@@ -47,6 +47,9 @@ import {
 } from "@/lib/scan/presentation-rows"
 import { maskScanVerdictPayload, type ScanMaskedVerdictResult } from "@/lib/scan/masked-alternative"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
+import { loadScanBudgetForRequest, loadScanShoppingBudget } from "@/lib/scan/shopping-budget"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import {
@@ -102,6 +105,11 @@ export type ScanResolveRouteDeps = {
   isProductSearchQuarantined: typeof isProductSearchQuarantined
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
   loadScanEvaluationContext: typeof loadScanEvaluationContext
+  /** Shopping budget (Task 7): flag gate + narrow fail-open loader. */
+  isShoppingBudgetEnabled: () => boolean
+  loadShoppingBudget: typeof loadScanShoppingBudget
+  /** The user-answered visible root colour (fail-open; absent = unknown). Not budget-gated. */
+  loadVisibleHairColor?: typeof loadVisibleHairColor
   loadScanProductFacts: typeof loadScanProductFacts
   loadRecommendationCandidates: typeof loadStage3RecommendationCandidatesByRole
   loadScanSavedState: typeof loadScanSavedState
@@ -426,7 +434,15 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       }
 
       attempt.failureStage = "profile_context"
-      const context = await deps.loadScanEvaluationContext(client, userId)
+      // The saved budget is read fresh, in parallel with the profile context, and never fails
+      // the scan (`loadScanBudgetForRequest` is flag-gated and fail-open).
+      const [context, budget, visibleHairColor] = await Promise.all([
+        deps.loadScanEvaluationContext(client, userId),
+        loadScanBudgetForRequest(deps, client, userId),
+        deps.loadVisibleHairColor
+          ? deps.loadVisibleHairColor(client, userId).catch(() => null)
+          : Promise.resolve(null),
+      ])
       if (!context) {
         completeAttempt("profile_ineligible", null)
         return scanFail("profile_missing", 409)
@@ -453,6 +469,8 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         () => {
           attempt.failureStage = "verdict"
         },
+        budget,
+        visibleHairColor,
       )
 
       // One catalog read covers the sheet's product header and the alternatives' brand +
@@ -601,6 +619,9 @@ export const POST = createScanResolveRouteHandler({
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
   loadScanEvaluationContext,
+  isShoppingBudgetEnabled,
+  loadShoppingBudget: loadScanShoppingBudget,
+  loadVisibleHairColor,
   loadScanProductFacts,
   loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
   loadScanSavedState,

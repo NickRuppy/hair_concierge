@@ -1,0 +1,812 @@
+[
+  {
+    "id": "omitted-visited-is-not-new-user",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Existing full deepEqual rejects unexpected chat in unvisitedNavSurfaces.",
+    "source": "src/lib/personal-plan/navigation-access.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access"
+    },
+    "originalHash": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/omitted-visited-is-not-new-user-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/omitted-visited-is-not-new-user-fault.tap"
+    },
+    "restoredHash": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/omitted-visited-is-not-new-user-after.tap"
+    },
+    "keeperAssertionLines": [
+      49
+    ],
+    "assertionStacks": [
+      49
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "default-dots-not-empty",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred negative navHtml data-nav-unvisited-dot fails on /anwendung/wash_day.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the signed navigation marks the current destination and the shell owns its bottom clearance"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/default-dots-not-empty-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/default-dots-not-empty-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/default-dots-not-empty-after.tap"
+    },
+    "keeperAssertionLines": [
+      294,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      313,
+      314,
+      315,
+      325,
+      326,
+      329,
+      330,
+      331,
+      333,
+      334
+    ],
+    "assertionStacks": [
+      333
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "premium-locks-inverted",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred premium negative fails; select C3 keeper, not just separate free-positive test.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the signed navigation marks the current destination and the shell owns its bottom clearance"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/premium-locks-inverted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/premium-locks-inverted-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/premium-locks-inverted-after.tap"
+    },
+    "keeperAssertionLines": [
+      294,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      313,
+      314,
+      315,
+      325,
+      326,
+      329,
+      330,
+      331,
+      333,
+      334
+    ],
+    "assertionStacks": [
+      334
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "shell-loses-free-tier",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Shell existing total count expected3 actual0; preserves producer/wrapper delivery proof.",
+    "source": "src/components/layout/authenticated-app-shell.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner"
+    },
+    "originalHash": "e651773a2427db685a9a58213a4072f067b4ac7680ce687701357659913188d0",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/shell-loses-free-tier-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/shell-loses-free-tier-fault.tap"
+    },
+    "restoredHash": "e651773a2427db685a9a58213a4072f067b4ac7680ce687701357659913188d0",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/shell-loses-free-tier-after.tap"
+    },
+    "keeperAssertionLines": [
+      679,
+      680,
+      681,
+      689,
+      690,
+      697,
+      698,
+      701,
+      705,
+      706
+    ],
+    "assertionStacks": [
+      681
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "free-chat-lock-omitted",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Copied /chat positive and/or existing total badge count fails.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-chat-lock-omitted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-chat-lock-omitted-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-chat-lock-omitted-after.tap"
+    },
+    "keeperAssertionLines": [
+      679,
+      680,
+      681,
+      689,
+      690,
+      697,
+      698,
+      701,
+      705,
+      706
+    ],
+    "assertionStacks": [
+      681
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "free-scan-lock-added",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Copied /scan negative and/or existing total count fails.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-scan-lock-added-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-scan-lock-added-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-scan-lock-added-after.tap"
+    },
+    "keeperAssertionLines": [
+      679,
+      680,
+      681,
+      689,
+      690,
+      697,
+      698,
+      701,
+      705,
+      706
+    ],
+    "assertionStacks": [
+      681
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "desktop-locks-added",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Copied headerNav negative or existing total count fails. No browser/computed-visibility claim.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/desktop-locks-added-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/desktop-locks-added-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/desktop-locks-added-after.tap"
+    },
+    "keeperAssertionLines": [
+      679,
+      680,
+      681,
+      689,
+      690,
+      697,
+      698,
+      701,
+      705,
+      706
+    ],
+    "assertionStacks": [
+      681
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "free-icon-size-lost",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Copied per-gated-link actual SVG h-5 w-5 regex fails while three badge count stays3.",
+    "source": "src/components/layout/personal-plan-navigation.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner"
+    },
+    "originalHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-icon-size-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-icon-size-lost-fault.tap"
+    },
+    "restoredHash": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/free-icon-size-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      679,
+      680,
+      681,
+      689,
+      690,
+      697,
+      698,
+      701,
+      705,
+      706
+    ],
+    "assertionStacks": [
+      701
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "fallback-treatment-corrupt",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred fallback marker fails in provisional nonstandard owner render.",
+    "source": "src/components/application/application-day-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-view-adapter.test.ts",
+      "name": "keeps the provisional status data hook accessible for nonstandard product imagery"
+    },
+    "originalHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-treatment-corrupt-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-treatment-corrupt-fault.tap"
+    },
+    "restoredHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-treatment-corrupt-after.tap"
+    },
+    "keeperAssertionLines": [
+      355,
+      359,
+      360,
+      361,
+      363,
+      364,
+      365
+    ],
+    "assertionStacks": [
+      363
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "fallback-url-corrupt",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred exact owner.example/uploads/shampoo.jpg fails while fallback marker/status survive.",
+    "source": "src/components/application/application-day-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-view-adapter.test.ts",
+      "name": "keeps the provisional status data hook accessible for nonstandard product imagery"
+    },
+    "originalHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-url-corrupt-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-url-corrupt-fault.tap"
+    },
+    "restoredHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-url-corrupt-after.tap"
+    },
+    "keeperAssertionLines": [
+      355,
+      359,
+      360,
+      361,
+      363,
+      364,
+      365
+    ],
+    "assertionStacks": [
+      364
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "fallback-silhouette-added",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred no-shampoo-silhouette negative fails.",
+    "source": "src/components/application/application-day-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-view-adapter.test.ts",
+      "name": "keeps the provisional status data hook accessible for nonstandard product imagery"
+    },
+    "originalHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-silhouette-added-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-silhouette-added-fault.tap"
+    },
+    "restoredHash": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/fallback-silhouette-added-after.tap"
+    },
+    "keeperAssertionLines": [
+      355,
+      359,
+      360,
+      361,
+      363,
+      364,
+      365
+    ],
+    "assertionStacks": [
+      365
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "loading-gains-real-navigation",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Transferred exact /PersonalPlanNavigation/ source absence fails. This selected keeper reads source; do not label it runtime rendering proof. Inserted component is the real nav owner.",
+    "source": "src/app/anwendung/loading.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "name": "the server shell owns Header presentation without changing the shared Header"
+    },
+    "originalHash": "badac70a1417554f8b6fe470579134a943b19fb341d6a9495c418a7846f8b79b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/loading-gains-real-navigation-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/loading-gains-real-navigation-fault.tap"
+    },
+    "restoredHash": "badac70a1417554f8b6fe470579134a943b19fb341d6a9495c418a7846f8b79b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/loading-gains-real-navigation-after.tap"
+    },
+    "keeperAssertionLines": [
+      339,
+      340,
+      344,
+      345,
+      359,
+      360,
+      362,
+      363
+    ],
+    "assertionStacks": [
+      363
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "denial-state-corrupt",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "Original canonical denial deepEqual feature_disabled fails, matching removed duplicate.",
+    "source": "src/app/anwendung/page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-route.test.tsx",
+      "name": "journey denial happens before any Routine, profile, catalog, or content read"
+    },
+    "originalHash": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-state-corrupt-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-state-corrupt-fault.tap"
+    },
+    "restoredHash": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-state-corrupt-after.tap"
+    },
+    "keeperAssertionLines": [
+      244,
+      245
+    ],
+    "assertionStacks": [
+      244
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "denial-read-before-return",
+    "lane": "stage5",
+    "phase": "new",
+    "intended": "View stays feature_disabled; existing monotonic privilegedReads assertion must be actual1 expected0. Swallowed stub throw cannot hide forbidden read.",
+    "source": "src/app/anwendung/page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage5-route.test.tsx",
+      "name": "journey denial happens before any Routine, profile, catalog, or content read"
+    },
+    "originalHash": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-read-before-return-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-read-before-return-fault.tap"
+    },
+    "restoredHash": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-stage5-mutations-new/denial-read-before-return-after.tap"
+    },
+    "keeperAssertionLines": [
+      244,
+      245
+    ],
+    "assertionStacks": [
+      245
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

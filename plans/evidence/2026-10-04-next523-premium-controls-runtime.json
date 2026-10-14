@@ -1,0 +1,1437 @@
+[
+  {
+    "id": "header-brand",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred header brand regex",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-brand-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-brand-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-brand-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      364
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.852834\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /Chaarlie Premium/. Input:\n    \n    'Chaarlie PlusAlles f\u00fcr dein Haar.'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: 'Chaarlie PlusAlles f\u00fcr dein Haar.'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:364:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 602.355208\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.977583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 620.388708\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.673708\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 560.274792\n"
+  },
+  {
+    "id": "header-promise",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred approved heading regex",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-promise-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-promise-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/header-promise-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      365
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.94075\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /Alles f\u00fcr dein Haar\\./. Input:\n    \n    'Chaarlie PremiumDein Angebot.'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: 'Chaarlie PremiumDein Angebot.'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:365:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 593.338417\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.42425\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 561.200542\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.677959\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 571.735833\n"
+  },
+  {
+    "id": "plan-order",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred initialRows interval array exact order",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-order-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-order-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-order-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      368
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.180084\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n    +   'month',\n    +   'quarter',\n        'year',\n    -   'quarter',\n    -   'month'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'year'\n    1: 'quarter'\n    2: 'month'\n  actual:\n    0: 'month'\n    1: 'quarter'\n    2: 'year'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:368:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 587.928125\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.95275\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 565.817167\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.979292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 569.346041\n"
+  },
+  {
+    "id": "plan-name",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred exact rendered quarter row text",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-name-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-name-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/plan-name-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      372
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.19825\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n        'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac',\n    +   'QuartalBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n    -   'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n        'Monatlich14,99 \u20ac'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  actual:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'QuartalBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:372:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 588.680208\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.421833\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 574.276958\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.427666\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 572.195625\n"
+  },
+  {
+    "id": "row-month-detail",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred exact monthly single-line row string",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/row-month-detail-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/row-month-detail-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/row-month-detail-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      372
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.216833\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n        'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac',\n        'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n    +   'Monatlich/ Monat14,99 \u20ac'\n    -   'Monatlich14,99 \u20ac'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  actual:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich/ Monat14,99 \u20ac'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:372:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 587.276209\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.670125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 573.816375\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.417083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 578.951083\n"
+  },
+  {
+    "id": "default-selection",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "actual initial selection quarter array and CTA interval",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/default-selection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/default-selection-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/default-selection-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      384
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.2985\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n    -   'false',\n        'true',\n        'false',\n    +   'false'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'false'\n    1: 'true'\n    2: 'false'\n  actual:\n    0: 'true'\n    1: 'false'\n    2: 'false'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:384:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 599.835542\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.431375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 575.882417\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.4815\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 575.290875\n"
+  },
+  {
+    "id": "recommended-selection",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "exact badge belongs to quarter rendered row, not year",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-selection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-selection-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-selection-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      372
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.749458\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n    +   'J\u00e4hrlichBeliebteste Wahl~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac',\n    +   'Viertelj\u00e4hrlich~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n    -   'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac',\n    -   'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n        'Monatlich14,99 \u20ac'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  actual:\n    0: 'J\u00e4hrlichBeliebteste Wahl~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlich~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:372:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 587.7185\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.43825\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 575.074917\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.435875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 568.269667\n"
+  },
+  {
+    "id": "recommended-copy",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "exact rendered badge copy/row",
+    "source": "src/lib/premium-sheet/pricing.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-copy-fault.tap"
+    },
+    "restoredHash": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/recommended-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      372
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.28125\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n        'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac',\n    +   'Viertelj\u00e4hrlichEmpfohlen~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n    -   'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac',\n        'Monatlich14,99 \u20ac'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichBeliebteste Wahl~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  actual:\n    0: 'J\u00e4hrlich~\u20ac8,33 / Monat \u00b7 44% sparen99,99 \u20ac'\n    1: 'Viertelj\u00e4hrlichEmpfohlen~\u20ac11,66 / Monat \u00b7 22% sparen34,99 \u20ac'\n    2: 'Monatlich14,99 \u20ac'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:372:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 591.6565\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.488584\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 568.885375\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.408292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 562.177917\n"
+  },
+  {
+    "id": "badge-nowrap",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred actual badge class nowrap assertion",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-nowrap-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-nowrap-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-nowrap-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      401
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.2\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /whitespace-nowrap/. Input:\n    \n    'ml-2 inline-block rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: 'ml-2 inline-block rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:401:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 607.130083\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.420416\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 560.462792\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.728042\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 570.219333\n"
+  },
+  {
+    "id": "badge-inline",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred actual badge inline-block assertion",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-inline-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-inline-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/badge-inline-after.tap"
+    },
+    "keeperAssertionLines": [
+      364,
+      365,
+      368,
+      372,
+      384,
+      388,
+      389,
+      401,
+      402,
+      403,
+      408,
+      420,
+      425,
+      426
+    ],
+    "assertionStacks": [
+      402
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nnot ok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 7.113958\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:10101'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /inline-block/. Input:\n    \n    'ml-2 whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: 'ml-2 whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:402:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 593.901667\n",
+    "beforeTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.404791\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 561.285125\n",
+    "restoredTap": "TAP version 13\n# Subtest: tapping a plan row moves the selection and the CTA label with it\nok 1 - tapping a plan row moves the selection and the CTA label with it\n  ---\n  duration_ms: 6.451\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 568.404791\n"
+  },
+  {
+    "id": "checkout-unexpected-close",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred closed===0 before escape, before later keeper count",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-unexpected-close-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-unexpected-close-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-unexpected-close-after.tap"
+    },
+    "keeperAssertionLines": [
+      481,
+      482,
+      483,
+      484,
+      485,
+      489,
+      490,
+      491
+    ],
+    "assertionStacks": [
+      481
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nnot ok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 7.24125\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:14416'\n  failureType: 'testCodeFailure'\n  error: |-\n    starting a payment must never close the sheet\n    \n    1 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:481:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 592.395625\n",
+    "beforeTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.360875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 577.125125\n",
+    "restoredTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.185292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 563.022708\n"
+  },
+  {
+    "id": "checkout-cta-retained",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred absent CTA count while starting",
+    "source": "src/components/premium-sheet/premium-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "originalHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-cta-retained-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-cta-retained-fault.tap"
+    },
+    "restoredHash": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-cta-retained-after.tap"
+    },
+    "keeperAssertionLines": [
+      481,
+      482,
+      483,
+      484,
+      485,
+      489,
+      490,
+      491
+    ],
+    "assertionStacks": [
+      483
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nnot ok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 7.631\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:14416'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    1 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:483:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 602.999833\n",
+    "beforeTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.235584\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 573.954917\n",
+    "restoredTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.41775\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 577.354416\n"
+  },
+  {
+    "id": "checkout-escape-copy",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred exact Plan \u00e4ndern label",
+    "source": "src/lib/premium-sheet/purchase-copy.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "originalHash": "9cdd10c706fa2d21b5fb784f2659b8465dd60ba8510d150f565030ef98d7fff7",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-escape-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-escape-copy-fault.tap"
+    },
+    "restoredHash": "9cdd10c706fa2d21b5fb784f2659b8465dd60ba8510d150f565030ef98d7fff7",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/checkout-escape-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      481,
+      482,
+      483,
+      484,
+      485,
+      489,
+      490,
+      491
+    ],
+    "assertionStacks": [
+      485
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nnot ok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 7.64275\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:14416'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'Zur\u00fcck'\n    - 'Plan \u00e4ndern'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'Plan \u00e4ndern'\n  actual: 'Zur\u00fcck'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:485:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 602.925541\n",
+    "beforeTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.161041\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 577.144125\n",
+    "restoredTap": "TAP version 13\n# Subtest: T14: the mid-payment escape returns to the plan rows instead of closing the sheet\nok 1 - T14: the mid-payment escape returns to the plan rows instead of closing the sheet\n  ---\n  duration_ms: 6.522125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 585.444875\n"
+  },
+  {
+    "id": "null-benefit-order",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "fixed null-context rendered ID order; prior component helper-generated oracle alone would correlate",
+    "source": "src/lib/premium-sheet/ordered-benefits.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "a null context still shows three benefits (the core order)"
+    },
+    "originalHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/null-benefit-order-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/null-benefit-order-fault.tap"
+    },
+    "restoredHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/null-benefit-order-after.tap"
+    },
+    "keeperAssertionLines": [
+      263
+    ],
+    "assertionStacks": [
+      263
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: a null context still shows three benefits (the core order)\nnot ok 1 - a null context still shows three benefits (the core order)\n  ---\n  duration_ms: 7.222625\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:7273'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n    -   'routine',\n        'empfehlungen',\n        'chat',\n    +   'anwendung'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'routine'\n    1: 'empfehlungen'\n    2: 'chat'\n  actual:\n    0: 'empfehlungen'\n    1: 'chat'\n    2: 'anwendung'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:263:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 588.497\n",
+    "beforeTap": "TAP version 13\n# Subtest: a null context still shows three benefits (the core order)\nok 1 - a null context still shows three benefits (the core order)\n  ---\n  duration_ms: 5.774917\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 571.297417\n",
+    "restoredTap": "TAP version 13\n# Subtest: a null context still shows three benefits (the core order)\nok 1 - a null context still shows three benefits (the core order)\n  ---\n  duration_ms: 5.687209\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 571.004708\n"
+  },
+  {
+    "id": "benefit-core-order",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "fixed literal feature-specific rendered IDs; unchanged seven render inputs",
+    "source": "src/lib/premium-sheet/ordered-benefits.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "every feature shows exactly three registry benefits, tapped first and plum-accented"
+    },
+    "originalHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-core-order-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-core-order-fault.tap"
+    },
+    "restoredHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-core-order-after.tap"
+    },
+    "keeperAssertionLines": [
+      223,
+      229,
+      230,
+      235,
+      236,
+      247,
+      248,
+      252,
+      253,
+      255,
+      256
+    ],
+    "assertionStacks": [
+      230
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nnot ok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 7.702459\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:5303'\n  failureType: 'testCodeFailure'\n  error: |-\n    merkliste: renders the approved fixed benefit order\n    + actual - expected\n    \n      [\n        'merkliste',\n    +   'empfehlungen',\n        'routine',\n    -   'empfehlungen'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'merkliste'\n    1: 'routine'\n    2: 'empfehlungen'\n  actual:\n    0: 'merkliste'\n    1: 'empfehlungen'\n    2: 'routine'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:230:12)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 597.030917\n",
+    "beforeTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 8.303667\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 576.333667\n",
+    "restoredTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 7.681709\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 571.728916\n"
+  },
+  {
+    "id": "benefit-duplicate",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "fixed rendered ID order/dedup; actual output can repeat tapped core feature without a React hook/provider error",
+    "source": "src/lib/premium-sheet/ordered-benefits.ts",
+    "selectedTest": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "every feature shows exactly three registry benefits, tapped first and plum-accented"
+    },
+    "originalHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-duplicate-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-duplicate-fault.tap"
+    },
+    "restoredHash": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/benefit-duplicate-after.tap"
+    },
+    "keeperAssertionLines": [
+      223,
+      229,
+      230,
+      235,
+      236,
+      247,
+      248,
+      252,
+      253,
+      255,
+      256
+    ],
+    "assertionStacks": [
+      230
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nnot ok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 7.404708\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:2:5303'\n  failureType: 'testCodeFailure'\n  error: |-\n    empfehlungen: renders the approved fixed benefit order\n    + actual - expected\n    \n      [\n        'empfehlungen',\n        'routine',\n    +   'empfehlungen'\n    -   'chat'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: 'empfehlungen'\n    1: 'routine'\n    2: 'chat'\n  actual:\n    0: 'empfehlungen'\n    1: 'routine'\n    2: 'empfehlungen'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/premium-sheet-component.test.tsx:230:12)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 601.354791\n",
+    "beforeTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 7.495708\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 565.392958\n",
+    "restoredTap": "TAP version 13\n# Subtest: every feature shows exactly three registry benefits, tapped first and plum-accented\nok 1 - every feature shows exactly three registry benefits, tapped first and plum-accented\n  ---\n  duration_ms: 7.677583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 569.211792\n"
+  },
+  {
+    "id": "selector-reference-amount",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred s-label array diverges from original reference-price formatter expectation",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-amount-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-amount-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-amount-after.tap"
+    },
+    "keeperAssertionLines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      89,
+      90,
+      91,
+      92
+    ],
+    "assertionStacks": [
+      85
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nnot ok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.850584\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2857'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n    +   '\u20ac20,99',\n    +   '\u20ac45,49',\n    +   '\u20ac150,99'\n    -   '\u20ac19,99',\n    -   '\u20ac44,49',\n    -   '\u20ac149,99'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: '\u20ac19,99'\n    1: '\u20ac44,49'\n    2: '\u20ac149,99'\n  actual:\n    0: '\u20ac20,99'\n    1: '\u20ac45,49'\n    2: '\u20ac150,99'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:85:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 217.582917\n",
+    "beforeTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 10.977667\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 189.780708\n",
+    "restoredTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.350625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 191.862334\n"
+  },
+  {
+    "id": "selector-discount-visible",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred exact visible discount text",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-visible-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-visible-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-visible-after.tap"
+    },
+    "keeperAssertionLines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      89,
+      90,
+      91,
+      92
+    ],
+    "assertionStacks": [
+      89
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nnot ok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 10.081\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2857'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /JETZT MIND\\. 20 % RABATT SICHERN/. Input:\n    \n    '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">RABATT SICHERN</span><span class=\"sr-only\">Jetzt mindestens 20 Prozent Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">RABATT SICHERN</span><span class=\"sr-only\">Jetzt mindestens 20 Prozent Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:89:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 212.6655\n",
+    "beforeTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.730083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 191.14625\n",
+    "restoredTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.538333\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 194.090667\n"
+  },
+  {
+    "id": "selector-discount-accessible",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred accessible discount text",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-accessible-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-accessible-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-discount-accessible-after.tap"
+    },
+    "keeperAssertionLines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      89,
+      90,
+      91,
+      92
+    ],
+    "assertionStacks": [
+      90
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nnot ok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 10.073667\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2857'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /Jetzt mindestens 20 Prozent Rabatt sichern/. Input:\n    \n    '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">JETZT MIND. 20 % RABATT SICHERN</span><span class=\"sr-only\">Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">JETZT MIND. 20 % RABATT SICHERN</span><span class=\"sr-only\">Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:90:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 212.392625\n",
+    "beforeTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.265959\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 186.242167\n",
+    "restoredTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.103584\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 187.914791\n"
+  },
+  {
+    "id": "selector-comparison-wording",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred forbidden Regul\u00e4rer Vergleichspreis regex",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-comparison-wording-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-comparison-wording-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-comparison-wording-after.tap"
+    },
+    "keeperAssertionLines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      89,
+      90,
+      91,
+      92
+    ],
+    "assertionStacks": [
+      91
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nnot ok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.941042\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2857'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input was expected to not match the regular expression /Regul\u00e4rer Vergleichspreis/. Input:\n    \n    '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">JETZT MIND. 20 % RABATT SICHERN</span><span class=\"sr-only\">Jetzt mindestens 20 Prozent Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<p class=\"mb-3 flex min-h-10 w-full items-center justify-center rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-3 py-2 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-plum-darkest)]\"><span aria-hidden=\"true\">JETZT MIND. 20 % RABATT SICHERN</span><span class=\"sr-only\">Jetzt mindestens 20 Prozent Rabatt sichern</span></p><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac19,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac44,49</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[14px] font-medium leading-none text-muted-foreground\"><span class=\"sr-only\">Regul\u00e4rer Vergleichspreis </span><s>\u20ac149,99</s></span><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n  operator: 'doesNotMatch'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:91:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 212.232291\n",
+    "beforeTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.20775\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 189.24375\n",
+    "restoredTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 8.907875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 188.910584\n"
+  },
+  {
+    "id": "selector-reference-style",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred exact readable class count3",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-style-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-style-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-reference-style-after.tap"
+    },
+    "keeperAssertionLines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      89,
+      90,
+      91,
+      92
+    ],
+    "assertionStacks": [
+      92
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nnot ok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 9.980208\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2857'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    0 !== 3\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 3\n  actual: 0\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:92:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 210.602208\n",
+    "beforeTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 11.414958\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 185.753208\n",
+    "restoredTap": "TAP version 13\n# Subtest: selector exposes stable motion hooks without changing selected plan layout\nok 1 - selector exposes stable motion hooks without changing selected plan layout\n  ---\n  duration_ms: 10.393\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 189.047917\n"
+  },
+  {
+    "id": "selector-empty-comparison-leak",
+    "lane": "checkout",
+    "phase": "new",
+    "intended": "transferred idle absent s/comparison assertions; default CTA still valid",
+    "source": "src/components/checkout/subscription-plan-selector.tsx",
+    "selectedTest": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "idle selector keeps the selected plan action label"
+    },
+    "originalHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-empty-comparison-leak-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-empty-comparison-leak-fault.tap"
+    },
+    "restoredHash": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next523-checkout-mutations-new/selector-empty-comparison-leak-after.tap"
+    },
+    "keeperAssertionLines": [
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "assertionStacks": [
+      62
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainInspectedIntendedFailure": true,
+    "faultTap": "TAP version 13\n# Subtest: idle selector keeps the selected plan action label\nnot ok 1 - idle selector keeps the selected plan action label\n  ---\n  duration_ms: 11.701\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:2:2281'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input was expected to not match the regular expression /<s[\\s>]/. Input:\n    \n    '<s>Vergleichspreis</s><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<s>Vergleichspreis</s><div class=\"grid gap-2.5\"><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"month\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"month\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Monatlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac14,99 \u00b7 / Monat</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"month\" data-offer-plan-price-selected=\"false\">\u20ac14,99</span></span></span></button><button type=\"button\" aria-pressed=\"true\" data-offer-plan-card=\"quarter\" data-offer-plan-selected=\"true\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]\"><span class=\"absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white\">Beliebteste Wahl</span><span data-offer-plan-radio=\"quarter\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-[var(--brand-plum)] bg-[var(--brand-plum)]\"><span class=\"size-1.5 rounded-full bg-white\"></span></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">Quartal</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac34,99 \u00b7 ~\u20ac11,66 / Monat \u00b7 22% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"quarter\" data-offer-plan-price-selected=\"true\">\u20ac34,99</span></span></span></button><button type=\"button\" aria-pressed=\"false\" data-offer-plan-card=\"year\" data-offer-plan-selected=\"false\" class=\"relative flex min-h-[78px] items-center gap-3 rounded-[14px] border bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(42,24,69,0.03)] transition-colors border-border hover:border-[var(--brand-plum-light)]\"><span data-offer-plan-radio=\"year\" class=\"grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-border bg-white\"></span><span class=\"min-w-0 flex-1\"><span class=\"block text-[15px] font-bold text-[var(--brand-plum-darkest)]\">J\u00e4hrlich</span><span class=\"mt-1 block text-[11px] leading-snug text-muted-foreground\">\u20ac99,99 \u00b7 ~\u20ac8,33 / Monat \u00b7 44% sparen</span></span><span class=\"flex shrink-0 flex-col items-end gap-1\"><span class=\"text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]\"><span data-offer-plan-price=\"year\" data-offer-plan-price-selected=\"false\">\u20ac99,99</span></span></span></button></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 mt-4 min-h-[54px] w-full rounded-[12px] bg-[var(--brand-coral)] px-5 py-3 text-[14px] font-bold text-white shadow-[0_8px_24px_-16px_rgba(var(--brand-coral-rgb),0.65)] transition-transform duration-150 hover:-translate-y-0.5 aria-disabled:cursor-wait aria-disabled:opacity-80\" type=\"button\" data-offer-selected-price=\"\u20ac34,99\" data-offer-cta-label=\"Jetzt starten \u2014 \u20ac34,99 im Quartal\"><span class=\"personal-plan-pricing-cta-content block\" data-offer-plan-cta-content=\"\">Jetzt starten \u2014 \u20ac34,99 im Quartal</span></button><span class=\"sr-only\" role=\"status\" aria-live=\"polite\"></span><div class=\"mt-4 space-y-2 text-center text-[11px] leading-relaxed text-[var(--text-caption)]\"><p>14 Tage Geld-zur\u00fcck-Garantie \u00b7 Jederzeit k\u00fcndbar</p><p>PayPal \u00b7 Apple Pay (auf unterst\u00fctzten Ger\u00e4ten) \u00b7 Visa \u00b7 Mastercard</p><p>Zahlungsdaten verarbeitet dein gew\u00e4hlter Anbieter. <a class=\"underline underline-offset-2\" href=\"/datenschutz\">Mehr zum Datenschutz.</a></p></div>'\n  operator: 'doesNotMatch'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/subscription-plan-selector.test.tsx:62:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 213.836625\n",
+    "beforeTap": "TAP version 13\n# Subtest: idle selector keeps the selected plan action label\nok 1 - idle selector keeps the selected plan action label\n  ---\n  duration_ms: 10.851458\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 188.230083\n",
+    "restoredTap": "TAP version 13\n# Subtest: idle selector keeps the selected plan action label\nok 1 - idle selector keeps the selected plan action label\n  ---\n  duration_ms: 9.841375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 186.49725\n"
+  }
+]

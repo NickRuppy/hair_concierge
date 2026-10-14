@@ -1,0 +1,24 @@
+{
+  "phaseCounts": {
+    "before": 163,
+    "transfer": 163,
+    "cut": 158,
+    "unrelatedCallbacksByteExact": 153,
+    "assertionsBefore": 573,
+    "assertionsTransfer": 589,
+    "assertionsCut": 573
+  },
+  "sourceMutantsParsed": 5,
+  "fullTestSnapshotsParsed": 72,
+  "allSupportBytesUnchanged": true,
+  "unrelatedCallbacksByteExact": 153,
+  "newOwnerCalls": 0,
+  "newFixtureInputs": 0,
+  "newRows": 0,
+  "addedSkips": 0,
+  "repositoryWrites": 0,
+  "productImports": 0,
+  "testChildren": 0,
+  "normalization": "Eight messages added only to transferred bare assert.ok calls (C2 one,C3 one,C4 four,C5 two); C1 aliases existing realEmptyScreen render.",
+  "pending": "Independent semantic review and main runtime proof required."
+}

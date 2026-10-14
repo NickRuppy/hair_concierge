@@ -26,8 +26,21 @@ export type ConsultLintRule =
   | "unknown_swap_key"
   | "swap_reason_priority"
   | "boundary_line_missing"
+  | "diagnose_plan_talk"
+  | "heat_less_framing"
 
-export type ConsultGuardrail = "G1" | "G1a" | "G1b" | "G1c" | "G2" | "G3" | "G4" | "G5" | "G6"
+/** G1–G6 from guardrails.md; „Stil" = a brief-shape rule of consult-brief-d (no guardrail). */
+export type ConsultGuardrail =
+  | "G1"
+  | "G1a"
+  | "G1b"
+  | "G1c"
+  | "G2"
+  | "G3"
+  | "G4"
+  | "G5"
+  | "G6"
+  | "Stil"
 
 export type ConsultLintFinding = {
   rule: ConsultLintRule
@@ -452,7 +465,7 @@ export function findForbiddenPhrases(text: string): ConsultForbiddenPhrase[] {
  * her products, swap targets or options carries is an invented product (G4). Deliberately a
  * closed list: an unknown brand outside it is not caught here (Nick's edit pass is).
  */
-export const CONSULT_MARKET_BRANDS: readonly string[] = [
+const CONSULT_MARKET_BRANDS: readonly string[] = [
   "Alpecin",
   "Alterra",
   "Alverde",
@@ -705,6 +718,25 @@ function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
   ]
 }
 
+/**
+ * Plan talk in the diagnose (consult-brief-d item 4): forward-looking markers only — „Umstellung"
+ * alone can be a past cause („Nach der Umstellung auf tägliches Glätten …", Codex review).
+ */
+export const DIAGNOSE_PLAN_TALK = words(
+  "vorgesehen|geplant|soll künftig|sollen künftig|wird künftig|werden künftig|steht an|stehen an",
+)
+
+/**
+ * „Less heat" advice, illegal when hot tools are part of her styling (item 5). What heat DOES is
+ * not advice: „die Belastung durch Hitze reduzieren" (a protectant's effect) stays legal.
+ */
+export const LESS_HEAT = words(
+  "weniger hitze|(?<!durch\\s)hitze reduzieren|hitze gezielt reduzieren|hitze runterfahren|seltener glätten|seltener stylen",
+)
+
+/** „nicht" / „kein…" right before a match (within the same short phrase). */
+const NEGATION_BEFORE = /(?<![\p{L}])(?:nicht|kein\p{L}*)(?:\s+\p{L}+)?\s+$/iu
+
 /** Whitespace-normalized, for the verbatim boundary check. */
 function squash(text: string): string {
   return normalizeConsultText(text).replace(/\s+/g, " ").trim()
@@ -864,6 +896,45 @@ export function lintConsultBrief(
         }
       }
     }
+  }
+
+  // consult-brief-d item 4: the diagnose describes her today — plan talk belongs in the Hebel.
+  const planTalk = DIAGNOSE_PLAN_TALK.exec(normalizeConsultText(brief.diagnose))
+  if (planTalk) {
+    findings.push({
+      rule: "diagnose_plan_talk",
+      guardrail: "Stil",
+      location: "diagnose",
+      excerpt: planTalk[0],
+      detail: "Die Diagnose beschreibt ihren heutigen Zustand; Vorhaben gehören in die Hebel.",
+    })
+  }
+
+  // Item 5: hot tools are part of her styling — the heat Hebel says „schonender".
+  if (input.flags.includes("hot_tool")) {
+    brief.hebel.forEach((entry, index) => {
+      for (const [location, text] of [
+        [`hebel[${index}].title`, entry.title],
+        [`hebel[${index}].note`, entry.note],
+      ] as const) {
+        // Collapsed whitespace: „durch  Hitze" must not slip past the exception (Codex review).
+        const normalized = normalizeConsultText(text).replace(/\s+/g, " ")
+        const match = LESS_HEAT.exec(normalized)
+        // A negated mention recommends the opposite („muss nicht seltener glätten").
+        const negated =
+          match !== null &&
+          NEGATION_BEFORE.test(normalized.slice(Math.max(0, match.index - 20), match.index))
+        if (match && !negated) {
+          findings.push({
+            rule: "heat_less_framing",
+            guardrail: "Stil",
+            location,
+            excerpt: match[0],
+            detail: 'Hitze-Tools gehören zu ihrem Styling: „schonender", nicht „weniger".',
+          })
+        }
+      }
+    })
   }
 
   // G2 — the boundary line, verbatim, in `erwartungen` of every brief (ruling: deterministic

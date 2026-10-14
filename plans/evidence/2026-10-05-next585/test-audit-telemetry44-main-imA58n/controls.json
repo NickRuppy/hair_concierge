@@ -1,0 +1,250 @@
+[
+  {
+    "id": "C1-drop-newest",
+    "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceSHA": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "from": "items.shift()",
+    "to": "items.pop()",
+    "keeperFile": "tests/sentry-client-runtime.test.ts",
+    "keeperTitle": "bounded FIFO drops the oldest exception and preserves rejection order",
+    "intended": "firstcapturedmessage second",
+    "source": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceHash": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "mutantSha": "754b92727ff0078d9d4dc1a1fc37835eeb00c1212c202b9baaaa13cab1b3f79e",
+    "scope": {
+      "kind": "function",
+      "name": "createBoundedFifo"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 175,
+        "text": "assert.equal((captures[0]?.[1] as Error).message, \"second\")",
+        "message": null,
+        "operator": "strictEqual"
+      },
+      "cut": {
+        "line": 175,
+        "text": "assert.equal((captures[0]?.[1] as Error).message, \"second\")",
+        "message": null,
+        "operator": "strictEqual"
+      }
+    }
+  },
+  {
+    "id": "C1-no-warning",
+    "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceSHA": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "from": "warn?.(`[analytics] ${label} queue full; dropped oldest item`)",
+    "to": "void warn",
+    "keeperFile": "tests/sentry-client-runtime.test.ts",
+    "keeperTitle": "bounded FIFO drops the oldest exception and preserves rejection order",
+    "intended": "one overflow warning",
+    "source": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceHash": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "mutantSha": "2b160a20c5865e64bd3cd52a231c32ada865044684648a2abc5e81cda19a0c20",
+    "scope": {
+      "kind": "function",
+      "name": "createBoundedFifo"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 174,
+        "text": "assert.equal(harness.calls.filter(([name]) => name === \"warn\").length, 1, \"one overflow warning\")",
+        "message": "one overflow warning",
+        "operator": "strictEqual"
+      },
+      "cut": {
+        "line": 174,
+        "text": "assert.equal(harness.calls.filter(([name]) => name === \"warn\").length, 1, \"one overflow warning\")",
+        "message": "one overflow warning",
+        "operator": "strictEqual"
+      }
+    }
+  },
+  {
+    "id": "C2-page-shift",
+    "file": "src/lib/customerio-tracking.ts",
+    "sourceSHA": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "from": "client.page(undefined, operation.path, operation.properties)",
+    "to": "client.page(operation.path, undefined, operation.properties)",
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperTitle": "browser helpers queue before readiness and flush clean payloads in order",
+    "intended": "literal full calls array",
+    "source": "src/lib/customerio-tracking.ts",
+    "sourceHash": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "mutantSha": "04ecc432ac0c856e198ec2edb25fb59aea5611f434850f378904eaec5eab7fab",
+    "scope": {
+      "kind": "function",
+      "name": "createCustomerIoTracker"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      },
+      "cut": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      }
+    }
+  },
+  {
+    "id": "C2-identify-id",
+    "file": "src/lib/customerio-tracking.ts",
+    "sourceSHA": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "from": "else client.identify(operation.userId, operation.traits)",
+    "to": "else client.identify(\"wrong-user\", operation.traits)",
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperTitle": "browser helpers queue before readiness and flush clean payloads in order",
+    "intended": "literal full calls array identifyID",
+    "source": "src/lib/customerio-tracking.ts",
+    "sourceHash": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "mutantSha": "4c41a950656e5bb85cb3d01898c36d144190f15e0f9bcecd4a16d879872d4cf3",
+    "scope": {
+      "kind": "function",
+      "name": "createCustomerIoTracker"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      },
+      "cut": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      }
+    }
+  },
+  {
+    "id": "C2-track-name",
+    "file": "src/lib/customerio-tracking.ts",
+    "sourceSHA": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "from": "else client.track(operation.eventName, operation.properties)",
+    "to": "else client.track(\"wrong-event\", operation.properties)",
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperTitle": "browser helpers queue before readiness and flush clean payloads in order",
+    "intended": "literal full calls array trackevent",
+    "source": "src/lib/customerio-tracking.ts",
+    "sourceHash": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "mutantSha": "7fc31c81f8ec1abc7e2b4332597102f8ab378638c89e5fdddead9cb9a1a8552a",
+    "scope": {
+      "kind": "function",
+      "name": "createCustomerIoTracker"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      },
+      "cut": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      }
+    }
+  },
+  {
+    "id": "C2-reverse-order",
+    "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceSHA": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "from": "const drained = items",
+    "to": "const drained = items.slice().reverse()",
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperTitle": "browser helpers queue before readiness and flush clean payloads in order",
+    "intended": "literal full calls array ordering",
+    "source": "src/lib/analytics/runtime/bounded-fifo.ts",
+    "sourceHash": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+    "mutantSha": "6aad41db41d58b3ae154cc7bef56f541a0ffa8613041961576f13248e3d1816e",
+    "scope": {
+      "kind": "function",
+      "name": "createBoundedFifo"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      },
+      "cut": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      }
+    }
+  },
+  {
+    "id": "C2-no-reset",
+    "file": "src/lib/customerio-tracking.ts",
+    "sourceSHA": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "from": "client.reset()",
+    "to": "void client",
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperTitle": "browser helpers queue before readiness and flush clean payloads in order",
+    "intended": "literal full calls array resetmissing",
+    "source": "src/lib/customerio-tracking.ts",
+    "sourceHash": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+    "mutantSha": "dba9b5d2e6c81a85a9d5a1d3bc8823cde8cd7aac22d9cb115fb67808ac11e352",
+    "scope": {
+      "kind": "function",
+      "name": "createCustomerIoTracker"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      },
+      "cut": {
+        "line": 57,
+        "text": "assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])",
+        "message": null,
+        "operator": "deepStrictEqual"
+      }
+    }
+  },
+  {
+    "id": "D1-accept-invalid-correlation",
+    "file": "src/lib/observability/app-performance.ts",
+    "sourceSHA": "323268e41054677312d0609bd2422c2244faf6d0bbd4c343c0d1b22d7476739a",
+    "from": "if (!CORRELATION_ID_PATTERN.test(value)) throw new TypeError(\"Invalid correlationId\")",
+    "to": "if (false) throw new TypeError(\"Invalid correlationId\")",
+    "keeperFile": "tests/app-performance-telemetry.test.ts",
+    "keeperTitle": "rejects invalid enum values and identifiers from the telemetry envelope",
+    "intended": "third assert.throws missing expectedexception",
+    "source": "src/lib/observability/app-performance.ts",
+    "sourceHash": "323268e41054677312d0609bd2422c2244faf6d0bbd4c343c0d1b22d7476739a",
+    "mutantSha": "a05b392c7dfbaed95c6eae064a6a88d7154bd80912c6f73d945b02a48219ae44",
+    "scope": {
+      "kind": "function",
+      "name": "assertCorrelationId"
+    },
+    "oracles": {
+      "transfer": {
+        "line": 60,
+        "text": "assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )",
+        "message": "Missing expected exception",
+        "operator": "throws"
+      },
+      "cut": {
+        "line": 60,
+        "text": "assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )",
+        "message": "Missing expected exception",
+        "operator": "throws"
+      }
+    }
+  }
+]

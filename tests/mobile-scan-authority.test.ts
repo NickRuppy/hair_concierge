@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
+import { readFile } from "node:fs/promises"
 import { buildScanVerdict, type BuildScanVerdictInput } from "../src/lib/scan/resolve-verdict"
 import { mobileAuthorityFailure } from "../src/lib/mobile/scan-service"
+import { mobileScanResolveResultSchema } from "../src/lib/mobile/scan-contracts"
 import {
   mobileAssessmentRows,
   mobileCriterionRows,
@@ -9,7 +12,10 @@ import {
 } from "../src/lib/mobile/result-presentation"
 import { presentScanVerdictPayload } from "../src/lib/scan/product-presentation"
 import { maskScanVerdictPayload } from "../src/lib/scan/masked-alternative"
-import type { Stage3ConditionerFacts } from "../src/lib/personal-plan/products/authority/contracts"
+import type {
+  Stage3BondbuilderFacts,
+  Stage3ConditionerFacts,
+} from "../src/lib/personal-plan/products/authority/contracts"
 
 function input(): BuildScanVerdictInput {
   const facts: Stage3ConditionerFacts = {
@@ -57,6 +63,7 @@ function input(): BuildScanVerdictInput {
     },
     productFacts: facts,
     recommendationCandidates: [],
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
@@ -67,6 +74,23 @@ function input(): BuildScanVerdictInput {
 }
 
 test("machine authority distinguishes missing product facts and unavailable personal targets", () => {
+  // These field names cross the scanner/native wire boundary.
+  for (const [field, missingKey] of [
+    ["thickness", "thickness"],
+    ["weight", "weight"],
+    ["proteinMoistureBalance", "protein_moisture_balance"],
+    ["repairSupportLevel", "repair_support_level"],
+  ] as const) {
+    const fixture = input()
+    ;(fixture.productFacts as Stage3ConditionerFacts).spec[field] = null
+    const verdict = buildScanVerdict(fixture)
+    assert.equal(verdict.kind, "in_catalog")
+    if (verdict.kind === "in_catalog")
+      assert.deepEqual(mobileAuthorityFailure(verdict), {
+        kind: "submission_required",
+        missingFacts: [missingKey],
+      })
+  }
   const value = input()
   ;(value.productFacts as Stage3ConditionerFacts).spec.weight = null
   const incomplete = buildScanVerdict(value)
@@ -115,6 +139,7 @@ test("compact categories expose every evaluated criterion beyond compact web sch
       "identity.active",
       "sensitivity.verified",
       "tint.verified",
+      "styling.direction",
       "format.verified",
       "protocol.verified",
     ].map((id) => ({
@@ -125,7 +150,8 @@ test("compact categories expose every evaluated criterion beyond compact web sch
     })),
     null,
   )
-  assert.equal(rows.length, 5)
+  // S2: five compact rows (identity, sensitivity, colour, volume, protocol) + format.
+  assert.equal(rows.length, 6)
   assert.ok(rows.every((row) => row.displayStatus === "green"))
   assert.ok(rows.every((row) => row.productStopIds.length === 1))
   const heat = mobileCriterionRows(
@@ -189,7 +215,7 @@ test("native alternatives sort full eligible pool by verdict EUR price then id b
   if (web.kind === "in_catalog") assert.equal(web.alternatives.length, 3)
 })
 
-test("native title specializes an authoritative scalp-row failure", () => {
+test("native title uses the ruled label for an authoritative scalp-row failure", () => {
   const rows = mobileCriterionRows(
     "shampoo",
     "shampoo_everyday",
@@ -203,7 +229,24 @@ test("native title specializes an authoritative scalp-row failure", () => {
     ],
     null,
   )
-  assert.equal(mobileVerdictTitle("mismatch", rows), "Passt nicht zu deiner Kopfhaut")
+  // fit-verdict spec §1, ruled 2026-10-12: titles use the same four labels on every surface.
+  assert.equal(mobileVerdictTitle("mismatch", rows), "Passt nicht")
+})
+
+test("native v1 contract preserves additive reason lines for the product and alternatives", async () => {
+  const fixture = JSON.parse(
+    await readFile(new URL("./fixtures/mobile/scan-v1.json", import.meta.url), "utf8"),
+  )
+  // Old v1 responses remain valid without the additive fields.
+  assert.equal(mobileScanResolveResultSchema.parse(fixture).contractVersion, 1)
+  fixture.reasonLines = ["Für feines Haar eher schwer"]
+  fixture.alternatives[0].verdict = "supportive"
+  fixture.alternatives[0].reasonLines = ["Eine Stufe unter deinem Repair-Ziel"]
+  const parsed = mobileScanResolveResultSchema.parse(fixture)
+  assert.equal(parsed.kind, "assessment")
+  if (parsed.kind !== "assessment") throw new Error("expected assessment")
+  assert.deepEqual(parsed.reasonLines, ["Für feines Haar eher schwer"])
+  assert.deepEqual(parsed.alternatives[0].reasonLines, ["Eine Stufe unter deinem Repair-Ziel"])
 })
 
 test("D3 reasons are explicitly distinguished from technical unavailable authority", () => {
@@ -232,12 +275,98 @@ test("all compact category schemas remain visible and missing criteria are never
     ["shampoo", "shampoo_dandruff", 1],
     ["heat_protectant", "pre_heat_protection", 1],
     ["scalp_care", "scalp_comfort", 3],
-    ["dry_shampoo", "root_refresh_bridge", 3],
-    ["deep_cleansing_shampoo", "residue_reset", 2],
+    ["dry_shampoo", "root_refresh_bridge", 5],
+    ["deep_cleansing_shampoo", "residue_reset", 3],
+    ["deep_cleansing_shampoo", "mineral_reset", 2],
   ] as const
   for (const [category, role, count] of cases) {
     const rows = mobileCriterionRows(category, role, [], null)
     assert.equal(rows.length, count)
     assert.ok(rows.every((row) => row.displayStatus === "neutral"))
+  }
+})
+
+// The native presentation used to re-sort by price alone; capped scan uses a separate builder.
+// Exercise both paths so a cheaper low-trust product cannot displace the reviewed trust/timing order.
+test("Bondbuilder web and native scan keep trust, timing and cheapest-first order under a cap", () => {
+  const role = "specialized_bond_treatment" as const
+  const candidate = (
+    productId: string,
+    priceEur: number,
+    trust: "high" | "medium",
+    afterWash = false,
+  ): Stage3BondbuilderFacts => ({
+    productId,
+    displayName: productId,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    knownReaction: false,
+    suitableThicknesses: ["normal"],
+    protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
+    factFingerprint: `facts-${productId}`,
+    catalogSortOrder: afterWash ? 0 : 10,
+    priceEur,
+    purchaseLinkStatus: "available",
+    spec: {
+      applicationMode: afterWash ? "post_wash_leave_in" : "pre_shampoo",
+      treatmentMode: afterWash ? "leave_in" : "rinse_out",
+      usageProtocol: "course",
+      productFormat: "treatment",
+      relationship: "standalone",
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: trust,
+    },
+  })
+  const k18 = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+  const candidates = [
+    candidate(k18, 56.25, "high", true),
+    candidate("epres", 48, "high"),
+    candidate("olaplex", 34, "high"),
+    candidate("elvital", 8.95, "medium"),
+  ]
+  for (const alternativeSelection of ["web", "native"] as const) {
+    for (const row of [
+      { timing: "no_preference", capped: false, expected: ["olaplex", "epres", k18] },
+      { timing: "after_wash", capped: false, expected: [k18, "olaplex", "epres"] },
+      { timing: "no_preference", capped: true, expected: ["elvital", "olaplex", "epres"] },
+      { timing: "after_wash", capped: true, expected: ["elvital", k18, "olaplex"] },
+    ] as const) {
+      const value = input()
+      const verdict = buildScanVerdict({
+        ...value,
+        category: "bondbuilder",
+        decision: {
+          ...value.decision,
+          category: "bondbuilder",
+          roles: [role],
+          target: {
+            category: "bondbuilder",
+            roles: [role],
+            requiredFunction: "support_stressed_hair_resilience",
+            mechanismTarget: "mechanism_neutral",
+          },
+        },
+        productFacts: candidate("scanned", 52, "medium"),
+        recommendationCandidates: candidates,
+        selectionProfile: { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: row.timing },
+        alternativeSelection,
+        ...(row.capped
+          ? { budget: { kind: "capped", limitEur: 15, allowExceptions: false } as const }
+          : {}),
+      })
+      assert.equal(verdict.kind, "in_catalog")
+      if (verdict.kind !== "in_catalog") throw new Error("expected an assessment")
+      for (const presented of [verdict, presentScanVerdictPayload(verdict, [])]) {
+        if (presented.kind !== "in_catalog") throw new Error("expected presented assessment")
+        assert.deepEqual(
+          presented.alternatives.slice(0, 3).map((option) => option.productId),
+          row.expected,
+          `${alternativeSelection}/${row.timing}/capped=${row.capped}`,
+        )
+      }
+    }
   }
 })

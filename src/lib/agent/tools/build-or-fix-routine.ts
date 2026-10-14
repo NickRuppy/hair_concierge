@@ -479,5 +479,3 @@ export function createBuildOrFixRoutineTool() {
     return projectRoutinePlan(params)
   }
 }
-
-export { projectRoutinePlan as projectBuildOrFixRoutinePlan }

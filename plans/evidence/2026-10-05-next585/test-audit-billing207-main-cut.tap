@@ -1,0 +1,1050 @@
+TAP version 13
+# Subtest: payment RPC updates the billing projection consumed by SQL and application access guards
+ok 1 - payment RPC updates the billing projection consumed by SQL and application access guards
+  ---
+  duration_ms: 2333.457958
+  ...
+# Subtest: trial projection appends stable classified-view columns and derives a safe immutable billing projection
+ok 2 - trial projection appends stable classified-view columns and derives a safe immutable billing projection
+  ---
+  duration_ms: 1462.22775
+  ...
+# Subtest: SQL and TypeScript agree on strict trial expiry, paid access, grace, cancellation, and revocation
+ok 3 - SQL and TypeScript agree on strict trial expiry, paid access, grace, cancellation, and revocation
+  ---
+  duration_ms: 1333.676583
+  ...
+# Subtest: linked trials fail closed in views while unlinked legacy rows retain their one-day grace
+ok 4 - linked trials fail closed in views while unlinked legacy rows retain their one-day grace
+  ---
+  duration_ms: 1172.298209
+  ...
+# Subtest: SQL and application readers reject unknown or empty trial markers consistently
+ok 5 - SQL and application readers reject unknown or empty trial markers consistently
+  ---
+  duration_ms: 1133.690166
+  ...
+# Subtest: link ownership, account deletion, and role boundaries preserve safe projection access
+ok 6 - link ownership, account deletion, and role boundaries preserve safe projection access
+  ---
+  duration_ms: 1554.103625
+  ...
+# Subtest: a second-exact legacy trial end keeps its next-midnight collection window in SQL and TypeScript
+ok 7 - a second-exact legacy trial end keeps its next-midnight collection window in SQL and TypeScript
+  ---
+  duration_ms: 1300.920375
+  ...
+# Subtest: a frozen midnight PayPal trial end is its own collection start and closes two days later in SQL and TypeScript
+ok 8 - a frozen midnight PayPal trial end is its own collection start and closes two days later in SQL and TypeScript
+  ---
+  duration_ms: 1123.835209
+  ...
+# Subtest: leaves only a completely unmarked legacy billing row to legacy access handling
+ok 9 - leaves only a completely unmarked legacy billing row to legacy access handling
+  ---
+  duration_ms: 0.404125
+  ...
+# Subtest: bridges the first-collection window at the seven-day boundary and locks when it closes
+ok 10 - bridges the first-collection window at the seven-day boundary and locks when it closes
+  ---
+  duration_ms: 2.125375
+  ...
+# Subtest: fails closed for cohort rows whose projection is missing, malformed, or linked to another enrollment
+ok 11 - fails closed for cohort rows whose projection is missing, malformed, or linked to another enrollment
+  ---
+  duration_ms: 0.367042
+  ...
+# Subtest: never grants access before admission becomes active, even with injected paid facts
+ok 12 - never grants access before admission becomes active, even with injected paid facts
+  ---
+  duration_ms: 0.092583
+  ...
+# Subtest: delegates paid and renewal-grace decisions to the existing policy
+ok 13 - delegates paid and renewal-grace decisions to the existing policy
+  ---
+  duration_ms: 0.140916
+  ...
+# Subtest: treats user-editable cohort markers and boolean strings as invalid rather than legacy or truth
+ok 14 - treats user-editable cohort markers and boolean strings as invalid rather than legacy or truth
+  ---
+  duration_ms: 0.06
+  ...
+# Subtest: admission recovery reason accepts only the verified existing-access marker
+ok 15 - admission recovery reason accepts only the verified existing-access marker
+  ---
+  duration_ms: 2224.212334
+  ...
+# Subtest: a confirmed abandoned attempt releases claims and replays the same evidence idempotently
+ok 16 - a confirmed abandoned attempt releases claims and replays the same evidence idempotently
+  ---
+  duration_ms: 1422.147375
+  ...
+# Subtest: trial admission adapter creates one immutable enrollment attempt through its real SQL shape
+ok 17 - trial admission adapter creates one immutable enrollment attempt through its real SQL shape
+  ---
+  duration_ms: 1321.099208
+  ...
+# Subtest: trial admission adapter composes reserve, activation, replay, and active-release refusal
+ok 18 - trial admission adapter composes reserve, activation, replay, and active-release refusal
+  ---
+  duration_ms: 1008.832833
+  ...
+# Subtest: trial admission adapter fails closed before provider calls and on unknown RPC output
+ok 19 - trial admission adapter fails closed before provider calls and on unknown RPC output
+  ---
+  duration_ms: 0.489833
+  ...
+# Subtest: trial admission reserves, activates atomically, and replays only the exact provider receipt
+ok 20 - trial admission reserves, activates atomically, and replays only the exact provider receipt
+  ---
+  duration_ms: 927.724708
+  ...
+# Subtest: trial admission rejects malformed claims and invalid authorization before any write
+ok 21 - trial admission rejects malformed claims and invalid authorization before any write
+  ---
+  duration_ms: 1199.953292
+  ...
+# Subtest: a claimed identity blocks the loser without partially writing its other identities
+ok 22 - a claimed identity blocks the loser without partially writing its other identities
+  ---
+  duration_ms: 1356.527083
+  ...
+# Subtest: an abandoned reservation can be released only with evidence, then its identities can be retried
+ok 23 - an abandoned reservation can be released only with evidence, then its identities can be retried
+  ---
+  duration_ms: 950.918917
+  ...
+# Subtest: identity namespace and key version separate claims, while consumed claims survive nullable FK deletion
+ok 24 - identity namespace and key version separate claims, while consumed claims survive nullable FK deletion
+  ---
+  duration_ms: 1086.343542
+  ...
+# Subtest: accepted terms and original trial timestamps are immutable, and legacy subscriptions remain unlinked
+ok 25 - accepted terms and original trial timestamps are immutable, and legacy subscriptions remain unlinked
+  ---
+  duration_ms: 939.524625
+  ...
+# Subtest: retained HMAC keys block a second trial after key rotation without writing new claims
+ok 26 - retained HMAC keys block a second trial after key rotation without writing new claims
+  ---
+  duration_ms: 743.756417
+  ...
+# Subtest: admission tables stay private and only service_role can execute the RPC
+ok 27 - admission tables stay private and only service_role can execute the RPC
+  ---
+  duration_ms: 1044.879458
+  ...
+# Subtest: browser context requires explicit marketing consent and excludes IP, URLs, tokens and arbitrary fields
+ok 28 - browser context requires explicit marketing consent and excludes IP, URLs, tokens and arbitrary fields
+  ---
+  duration_ms: 29.9155
+  ...
+# Subtest: Meta verified activation maps to StartTrial with consented private matching and stable identity; diagnostics never leave PostHog
+ok 29 - Meta verified activation maps to StartTrial with consented private matching and stable identity; diagnostics never leave PostHog
+  ---
+  duration_ms: 3.187458
+  ...
+# Subtest: PostHog keeps original versioned trial attribution and stable insert ID without private Meta fields
+ok 30 - PostHog keeps original versioned trial attribution and stable insert ID without private Meta fields
+  ---
+  duration_ms: 0.658167
+  ...
+# Subtest: versioned trial funnel delivery respects both rollout flags
+ok 31 - versioned trial funnel delivery respects both rollout flags
+  ---
+  duration_ms: 1591.66575
+  ...
+# Subtest: actual outbox schema accepts trial_started after additive migration and preserves legacy names
+ok 32 - actual outbox schema accepts trial_started after additive migration and preserves legacy names
+  ---
+  duration_ms: 2169.942916
+  ...
+# Subtest: accepts an initial owner declaration before provider work and preserves trial access through the immutable deadline
+ok 33 - accepts an initial owner declaration before provider work and preserves trial access through the immutable deadline
+  ---
+  duration_ms: 2172.868583
+  ...
+# Subtest: returns the original declaration facts on same-owner retry and rejects altered request ownership
+ok 34 - returns the original declaration facts on same-owner retry and rejects altered request ownership
+  ---
+  duration_ms: 1372.84475
+  ...
+# Subtest: rejects paid, revoked, and malformed cancellation declarations without persisting receipt work
+ok 35 - rejects paid, revoked, and malformed cancellation declarations without persisting receipt work
+  ---
+  duration_ms: 1334.165833
+  ...
+# Subtest: keeps cancellation declaration RPC execution service-role-only
+ok 36 - keeps cancellation declaration RPC execution service-role-only
+  ---
+  duration_ms: 1241.98425
+  ...
+# Subtest: provider operation RPC exposes only the exact owned billing link and confirms idempotently
+ok 37 - provider operation RPC exposes only the exact owned billing link and confirms idempotently
+  ---
+  duration_ms: 2366.4585
+  ...
+# Subtest: provider operation RPC cannot confirm after a restore or ownership-link race and remains service-only
+ok 38 - provider operation RPC cannot confirm after a restore or ownership-link race and remains service-only
+  ---
+  duration_ms: 1366.93725
+  ...
+# Subtest: confirmation compares the exact provider evidence, including a concurrently replaced billing customer
+ok 39 - confirmation compares the exact provider evidence, including a concurrently replaced billing customer
+  ---
+  duration_ms: 1331.717875
+  ...
+# Subtest: PayPal confirmation requires the owned payer, trial cohort, and plan pin
+ok 40 - PayPal confirmation requires the owned payer, trial cohort, and plan pin
+  ---
+  duration_ms: 1196.108125
+  ...
+# Subtest: claims stable operations and completes a Stripe reconciliation with its lease
+ok 41 - claims stable operations and completes a Stripe reconciliation with its lease
+  ---
+  duration_ms: 1.019958
+  ...
+# Subtest: a Stripe timeout remains pending and releases only the owned leased operation
+ok 42 - a Stripe timeout remains pending and releases only the owned leased operation
+  ---
+  duration_ms: 0.121416
+  ...
+# Subtest: PayPal runs its adapter under the owned lease and remains pending only when reconciliation says so
+ok 43 - PayPal runs its adapter under the owned lease and remains pending only when reconciliation says so
+  ---
+  duration_ms: 0.159166
+  ...
+# Subtest: malformed leased rows fail closed without a provider or completion RPC
+ok 44 - malformed leased rows fail closed without a provider or completion RPC
+  ---
+  duration_ms: 0.1565
+  ...
+# Subtest: a lost completion acknowledgement fails the invocation and leaves its lease for retry
+ok 45 - a lost completion acknowledgement fails the invocation and leaves its lease for retry
+  ---
+  duration_ms: 0.096791
+  ...
+# Subtest: a still-running provider call retains its lease instead of starting an immediate duplicate
+ok 46 - a still-running provider call retains its lease instead of starting an immediate duplicate
+  ---
+  duration_ms: 0.079
+  ...
+# Subtest: the retry migration denies stale lease completion, defers timeout replay, and preserves its declaration
+ok 47 - the retry migration denies stale lease completion, defers timeout replay, and preserves its declaration
+  ---
+  duration_ms: 2097.04775
+  ...
+# Subtest: the retry endpoint is cron-secret guarded and reports only aggregate worker state
+ok 48 - the retry endpoint is cron-secret guarded and reports only aggregate worker state
+  ---
+  duration_ms: 1.587625
+  ...
+# Subtest: route rejects unsigned targeting and requires authentication
+ok 49 - route rejects unsigned targeting and requires authentication
+  ---
+  duration_ms: 5.821333
+  ...
+# Subtest: capability issuance uses the confirmed owner RPC
+ok 50 - capability issuance uses the confirmed owner RPC
+  ---
+  duration_ms: 1.761666
+  ...
+# Subtest: saved declaration is acknowledged when provider configuration is unavailable
+ok 51 - saved declaration is acknowledged when provider configuration is unavailable
+  ---
+  duration_ms: 2.088083
+  ...
+# Subtest: PayPal capability and saved declaration immediately cancel only the exact owned trial
+ok 52 - PayPal capability and saved declaration immediately cancel only the exact owned trial
+  ---
+  duration_ms: 1.268417
+  ...
+# Subtest: PayPal mismatched payer stays saved and pending without provider mutation
+ok 53 - PayPal mismatched payer stays saved and pending without provider mutation
+  ---
+  duration_ms: 81.569083
+  ...
+# Subtest: atomically creates immutable server enrollment rather than reusing the client attempt ID
+ok 54 - atomically creates immutable server enrollment rather than reusing the client attempt ID
+  ---
+  duration_ms: 2342.7795
+  ...
+# Subtest: freezes once, binds the same provider reference idempotently, and requires reconciliation after horizon
+ok 55 - freezes once, binds the same provider reference idempotently, and requires reconciliation after horizon
+  ---
+  duration_ms: 1430.345875
+  ...
+# Subtest: adapter accepts PostgREST singleton composite rows and rejects ambiguous shapes
+ok 56 - adapter accepts PostgREST singleton composite rows and rejects ambiguous shapes
+  ---
+  duration_ms: 0.470583
+  ...
+# Subtest: private table and RPCs reject unprivileged access
+ok 57 - private table and RPCs reject unprivileged access
+  ---
+  duration_ms: 1212.940042
+  ...
+# Subtest: a committed monthly-to-annual revision controls the actual first charge and paid period
+ok 58 - a committed monthly-to-annual revision controls the actual first charge and paid period
+  ---
+  duration_ms: 1981.7425
+  ...
+# Subtest: after a confirmed replacement, old agreements cannot charge through a new effective contract
+ok 59 - after a confirmed replacement, old agreements cannot charge through a new effective contract
+  ---
+  duration_ms: 1281.97875
+  ...
+# Subtest: Stripe CLI defaults to read-only bounded provider page and returns resume cursor, not identities
+ok 60 - Stripe CLI defaults to read-only bounded provider page and returns resume cursor, not identities
+  ---
+  duration_ms: 1.203708
+  ...
+# Subtest: explicit apply is routed; ambiguous verification prevents completion while provider errors issue no checkpoint
+ok 61 - explicit apply is routed; ambiguous verification prevents completion while provider errors issue no checkpoint
+  ---
+  duration_ms: 0.838666
+  ...
+# Subtest: PayPal proof uses complete bounded actual transactions and rejects payer/app/window/duplicate/payment errors
+ok 62 - PayPal proof uses complete bounded actual transactions and rejects payer/app/window/duplicate/payment errors
+  ---
+  duration_ms: 1.311792
+  ...
+# Subtest: PayPal backfill binds canonical verified owner, dry runs then applies same HMAC namespace without emitting raw identities
+ok 63 - PayPal backfill binds canonical verified owner, dry runs then applies same HMAC namespace without emitting raw identities
+  ---
+  duration_ms: 0.537625
+  ...
+# Subtest: backfill counts explicit Stripe test exclusions separately from skipped invoices
+ok 64 - backfill counts explicit Stripe test exclusions separately from skipped invoices
+  ---
+  duration_ms: 0.106292
+  ...
+# Subtest: PayPal CLI excludes canonical QA before provider/owner processing but processes real profile backfill
+ok 65 - PayPal CLI excludes canonical QA before provider/owner processing but processes real profile backfill
+  ---
+  duration_ms: 0.171291
+  ...
+# Subtest: projects a canonical identity tuple as a versioned SHA-256 HMAC claim
+ok 66 - projects a canonical identity tuple as a versioned SHA-256 HMAC claim
+  ---
+  duration_ms: 0.92075
+  ...
+# Subtest: separates kind, namespace, and key material
+ok 67 - separates kind, namespace, and key material
+  ---
+  duration_ms: 0.20325
+  ...
+# Subtest: derives every retained key version and deduplicates identical projections
+ok 68 - derives every retained key version and deduplicates identical projections
+  ---
+  duration_ms: 0.207541
+  ...
+# Subtest: does not normalize the trusted adapter input or mutate inputs
+ok 69 - does not normalize the trusted adapter input or mutate inputs
+  ---
+  duration_ms: 0.198875
+  ...
+# Subtest: rejects malformed identity and key inputs without exposing their contents
+ok 70 - rejects malformed identity and key inputs without exposing their contents
+  ---
+  duration_ms: 0.333416
+  ...
+# Subtest: rejects projections exceeding the SQL RPC claim cap
+ok 71 - rejects projections exceeding the SQL RPC claim cap
+  ---
+  duration_ms: 0.254334
+  ...
+# Subtest: restriction stops matching and all-version recreation; release restores original used claims
+ok 72 - restriction stops matching and all-version recreation; release restores original used claims
+  ---
+  duration_ms: 1842.400041
+  ...
+# Subtest: erasure removes hashes without personal denial tombstones; old source replay and rotated backfills cannot recreate them
+ok 73 - erasure removes hashes without personal denial tombstones; old source replay and rotated backfills cannot recreate them
+  ---
+  duration_ms: 1177.276834
+  ...
+# Subtest: enrollment erasure also suppresses its provider agreement and preserves canonical activation replay
+ok 74 - enrollment erasure also suppresses its provider agreement and preserves canonical activation replay
+  ---
+  duration_ms: 1030.133292
+  ...
+# Subtest: shared-card correction retains unrelated account history and prevents every known old source from recreating the card
+ok 75 - shared-card correction retains unrelated account history and prevents every known old source from recreating the card
+  ---
+  duration_ms: 1351.053334
+  ...
+# Subtest: service-only key/source controls reject raw/direct claim writes and unregistered key loss
+ok 76 - service-only key/source controls reject raw/direct claim writes and unregistered key loss
+  ---
+  duration_ms: 1401.487833
+  ...
+# Subtest: operator tooling defaults to inspection; apply is explicit and never needs raw personal identities
+ok 77 - operator tooling defaults to inspection; apply is explicit and never needs raw personal identities
+  ---
+  duration_ms: 2.479334
+  ...
+# Subtest: released unused reservations purge private matching associations as well as public claims
+ok 78 - released unused reservations purge private matching associations as well as public claims
+  ---
+  duration_ms: 939.60725
+  ...
+# Subtest: pending enrollment erasure also fences its later authorized agreement
+ok 79 - pending enrollment erasure also fences its later authorized agreement
+  ---
+  duration_ms: 1057.263083
+  ...
+# Subtest: authorization consumes all reserved identity kinds even when final proof contains only card/account
+ok 80 - authorization consumes all reserved identity kinds even when final proof contains only card/account
+  ---
+  duration_ms: 861.801791
+  ...
+# Subtest: erased enrollment also suppresses a selected provider revision first observed by the later backfill
+ok 81 - erased enrollment also suppresses a selected provider revision first observed by the later backfill
+  ---
+  duration_ms: 867.467041
+  ...
+# Subtest: key registry updates are scoped, idempotent and retain claimed versions
+ok 82 - key registry updates are scoped, idempotent and retain claimed versions
+  ---
+  duration_ms: 1075.083375
+  ...
+# Subtest: admission stores a verified provider trial end of at least seven and at most ten days
+ok 83 - admission stores a verified provider trial end of at least seven and at most ten days
+  ---
+  duration_ms: 1178.367916
+  ...
+# Subtest: activation freezes original attribution and queues one consented zero-value StartTrial atomically
+ok 84 - activation freezes original attribution and queues one consented zero-value StartTrial atomically
+  ---
+  duration_ms: 1697.010167
+  ...
+# Subtest: first failed charge and recovery use the latest canonical ledger, preserve phase and deduplicate aliases
+ok 85 - first failed charge and recovery use the latest canonical ledger, preserve phase and deduplicate aliases
+  ---
+  duration_ms: 1143.533041
+  ...
+# Subtest: day-3 cancellation request, provider confirmation and committed restore remain separate replay-safe facts
+ok 86 - day-3 cancellation request, provider confirmation and committed restore remain separate replay-safe facts
+  ---
+  duration_ms: 1211.903458
+  ...
+# Subtest: guarded provider observation is distinct from submission and rejects an outdated cancellation fence
+ok 87 - guarded provider observation is distinct from submission and rejects an outdated cancellation fence
+  ---
+  duration_ms: 1654.975292
+  ...
+# Subtest: reconciliation transition captures once; a failed atomic outbox insert rolls back authoritative activation
+ok 88 - reconciliation transition captures once; a failed atomic outbox insert rolls back authoritative activation
+  ---
+  duration_ms: 1330.893458
+  ...
+# Subtest: existing frozen checkouts recover exact original acquisition without inventing historical marketing consent
+ok 89 - existing frozen checkouts recover exact original acquisition without inventing historical marketing consent
+  ---
+  duration_ms: 941.745916
+  ...
+# Subtest: PayPal freezes attribution before provider creation and preserves its canonical first-purchase agreement key
+ok 90 - PayPal freezes attribution before provider creation and preserves its canonical first-purchase agreement key
+  ---
+  duration_ms: 963.310958
+  ...
+# Subtest: service-role trigger capture works and field-test context cannot queue a marketing conversion
+ok 91 - service-role trigger capture works and field-test context cannot queue a marketing conversion
+  ---
+  duration_ms: 1064.485417
+  ...
+# Subtest: mixed old webhook destination inserts cannot bypass new trial consent or route diagnostics to commercial tools
+ok 92 - mixed old webhook destination inserts cannot bypass new trial consent or route diagnostics to commercial tools
+  ---
+  duration_ms: 1309.137708
+  ...
+# Subtest: OpenAI delivery follows actual stripe trial and first-paid SQL producers without changing Meta
+ok 93 - OpenAI delivery follows actual stripe trial and first-paid SQL producers without changing Meta
+  ---
+  duration_ms: 766.748666
+  ...
+# Subtest: OpenAI delivery follows actual paypal trial and first-paid SQL producers without changing Meta
+ok 94 - OpenAI delivery follows actual paypal trial and first-paid SQL producers without changing Meta
+  ---
+  duration_ms: 617.028375
+  ...
+# Subtest: switch/reversal append selected terms without rewriting accepted offer, deadline or identity claims
+ok 95 - switch/reversal append selected terms without rewriting accepted offer, deadline or identity claims
+  ---
+  duration_ms: 1746.667209
+  ...
+# Subtest: one pending operation, owner binding, expected revision, immutable catalog and revisions
+ok 96 - one pending operation, owner binding, expected revision, immutable catalog and revisions
+  ---
+  duration_ms: 1036.354375
+  ...
+# Subtest: cancellation and first payment between provider request and commit invalidate CAS
+ok 97 - cancellation and first payment between provider request and commit invalidate CAS
+  ---
+  duration_ms: 1371.0475
+  ...
+# Subtest: restore keeps cancellation until verified commit; replacement retains original agreement; replay cannot clear new cancellation
+ok 98 - restore keeps cancellation until verified commit; replacement retains original agreement; replay cannot clear new cancellation
+  ---
+  duration_ms: 1375.128792
+  ...
+# Subtest: a repeated cancellation declaration while canceled blocks pending restore, abandoned action leaves old state
+ok 99 - a repeated cancellation declaration while canceled blocks pending restore, abandoned action leaves old state
+  ---
+  duration_ms: 1255.2665
+  ...
+# Subtest: service-only RPCs and immutable history deny anonymous/authenticated callers
+ok 100 - service-only RPCs and immutable history deny anonymous/authenticated callers
+  ---
+  duration_ms: 920.84275
+  ...
+# Subtest: original deadline is strict and provider evidence cannot extend it or collect immediately
+ok 101 - original deadline is strict and provider evidence cannot extend it or collect immediately
+  ---
+  duration_ms: 1820.919875
+  ...
+# Subtest: effective contract refuses a missing selected revision instead of reverting to original
+ok 102 - effective contract refuses a missing selected revision instead of reverting to original
+  ---
+  duration_ms: 1276.984958
+  ...
+# Subtest: replacement agreement and original admission share one binding namespace
+ok 103 - replacement agreement and original admission share one binding namespace
+  ---
+  duration_ms: 814.935083
+  ...
+# Subtest: public management snapshot atomically reflects committed revision and preserves canceled state
+ok 104 - public management snapshot atomically reflects committed revision and preserves canceled state
+  ---
+  duration_ms: 614.781458
+  ...
+# Subtest: authentication, exact JSON and same-origin guard precede any trial mutation
+ok 105 - authentication, exact JSON and same-origin guard precede any trial mutation
+  ---
+  duration_ms: 5.541166
+  ...
+# Subtest: begin reserves once; reconcile only loads the authenticated durable operation
+ok 106 - begin reserves once; reconcile only loads the authenticated durable operation
+  ---
+  duration_ms: 1.631958
+  ...
+# Subtest: provider failure retains accepted operation for reconciliation without claiming success
+ok 107 - provider failure retains accepted operation for reconciliation without claiming success
+  ---
+  duration_ms: 0.503125
+  ...
+# Subtest: PayPal receives server constructed returns and only exact HTTPS approval destinations are forwarded
+ok 108 - PayPal receives server constructed returns and only exact HTTPS approval destinations are forwarded
+  ---
+  duration_ms: 2.154125
+  ...
+# Subtest: GET discloses only public frozen prices and the owned pending operation
+ok 109 - GET discloses only public frozen prices and the owned pending operation
+  ---
+  duration_ms: 1.7485
+  ...
+# Subtest: public snapshot eligibility is preserved and malformed snapshots fail closed
+ok 110 - public snapshot eligibility is preserved and malformed snapshots fail closed
+  ---
+  duration_ms: 0.573208
+  ...
+# Subtest: a fully canceled Stripe restore starts fresh hosted authorization on the same durable operation
+ok 111 - a fully canceled Stripe restore starts fresh hosted authorization on the same durable operation
+  ---
+  duration_ms: 1.022166
+  ...
+# Subtest: membership reads accepted prices and original deadline without exposing provider identifiers
+ok 112 - membership reads accepted prices and original deadline without exposing provider identifiers
+  ---
+  duration_ms: 2.153666
+  ...
+# Subtest: saved cancellation keeps access until the exact original deadline and disables another declaration
+ok 113 - saved cancellation keeps access until the exact original deadline and disables another declaration
+  ---
+  duration_ms: 1.3635
+  ...
+# Subtest: paid new-cohort membership cannot enter the free-trial cancellation flow
+ok 114 - paid new-cohort membership cannot enter the free-trial cancellation flow
+  ---
+  duration_ms: 0.169208
+  ...
+# Subtest: mismatched owners, corrupt accepted offers and incomplete facts fail closed
+ok 115 - mismatched owners, corrupt accepted offers and incomplete facts fail closed
+  ---
+  duration_ms: 0.204584
+  ...
+# Subtest: read scopes an enrollment to the authenticated owner and preserves expired status
+ok 116 - read scopes an enrollment to the authenticated owner and preserves expired status
+  ---
+  duration_ms: 0.347958
+  ...
+# Subtest: composed membership read prefers expired trial facts to a stale active compatibility profile
+ok 117 - composed membership read prefers expired trial facts to a stale active compatibility profile
+  ---
+  duration_ms: 2.148208
+  ...
+# Subtest: legacy and manual membership responses remain unchanged without a trial
+ok 118 - legacy and manual membership responses remain unchanged without a trial
+  ---
+  duration_ms: 0.669167
+  ...
+# Subtest: the composed sticky summary uses trial terms and rejects an unavailable quarterly trial
+ok 119 - the composed sticky summary uses trial terms and rejects an unavailable quarterly trial
+  ---
+  duration_ms: 1.38125
+  ...
+# Subtest: the selected interval controls the plan state and emits the requested selection
+ok 120 - the selected interval controls the plan state and emits the requested selection
+  ---
+  duration_ms: 17.692542
+  ...
+# Subtest: continue remains controlled and is unavailable while pending or disabled
+ok 121 - continue remains controlled and is unavailable while pending or disabled
+  ---
+  duration_ms: 7.132625
+  ...
+# Subtest: the displayed terms derive every selected price from the public pricing projection
+ok 122 - the displayed terms derive every selected price from the public pricing projection
+  ---
+  duration_ms: 35.332125
+  ...
+# Subtest: a no-coupon annual offer never retains the introductory annual display
+ok 123 - a no-coupon annual offer never retains the introductory annual display
+  ---
+  duration_ms: 1.166625
+  ...
+# Subtest: invalid public pricing fails closed instead of rendering misleading terms
+ok 124 - invalid public pricing fails closed instead of rendering misleading terms
+  ---
+  duration_ms: 0.188375
+  ...
+# Subtest: a server-sanitized trial projection replaces legacy result pricing only when supplied
+ok 125 - a server-sanitized trial projection replaces legacy result pricing only when supplied
+  ---
+  duration_ms: 16.171459
+  ...
+# Subtest: trial checkout serialization is explicit and cannot inherit a paid attempt
+ok 126 - trial checkout serialization is explicit and cannot inherit a paid attempt
+  ---
+  duration_ms: 0.223667
+  ...
+# Subtest: paid declaration is durable before provider effects, preserves full entitlement and queues one required receipt
+ok 127 - paid declaration is durable before provider effects, preserves full entitlement and queues one required receipt
+  ---
+  duration_ms: 2153.712
+  ...
+# Subtest: PayPal cancellation uses verified current successor while keeping immutable original ownership
+ok 128 - PayPal cancellation uses verified current successor while keeping immutable original ownership
+  ---
+  duration_ms: 1242.611667
+  ...
+# Subtest: foreign provider payer cannot trigger mutation but the owned customer declaration stays accepted
+ok 129 - foreign provider payer cannot trigger mutation but the owned customer declaration stays accepted
+  ---
+  duration_ms: 1210.307959
+  ...
+# Subtest: Stripe cancellation delegates only after generic durable acceptance
+ok 130 - Stripe cancellation delegates only after generic durable acceptance
+  ---
+  duration_ms: 1002.515416
+  ...
+# Subtest: year two routes to statutory flow; direct writes and unauthorized roles cannot manufacture a receipt
+ok 131 - year two routes to statutory flow; direct writes and unauthorized roles cannot manufacture a receipt
+  ---
+  duration_ms: 919.311833
+  ...
+# Subtest: paid cancellation HTTP requires auth, exact JSON and same origin without accepting client provider claims
+ok 132 - paid cancellation HTTP requires auth, exact JSON and same origin without accepting client provider claims
+  ---
+  duration_ms: 74.885834
+  ...
+# Subtest: a paid successor requires verified neutralization, matching customer, operation and unchanged entitlement
+ok 133 - a paid successor requires verified neutralization, matching customer, operation and unchanged entitlement
+  ---
+  duration_ms: 2064.783125
+  ...
+# Subtest: only the bound successor can renew; an old-source invoice replay stays duplicate
+ok 134 - only the bound successor can renew; an old-source invoice replay stays duplicate
+  ---
+  duration_ms: 1162.523125
+  ...
+# Subtest: successor lookup and binding are private and cannot clear a later cancellation on replay
+ok 135 - successor lookup and binding are private and cannot clear a later cancellation on replay
+  ---
+  duration_ms: 1263.466792
+  ...
+# Subtest: only a committed recovery candidate can transition to its verified final paid agreement
+ok 136 - only a committed recovery candidate can transition to its verified final paid agreement
+  ---
+  duration_ms: 988.65725
+  ...
+# Subtest: does not treat an active free trial or stale active profile as historical paid migration authority
+ok 137 - does not treat an active free trial or stale active profile as historical paid migration authority
+  ---
+  duration_ms: 2072.615625
+  ...
+# Subtest: admits only a linked trial with a successful first payment and verified paid access
+ok 138 - admits only a linked trial with a successful first payment and verified paid access
+  ---
+  duration_ms: 1288.079166
+  ...
+# Subtest: keeps independently eligible legacy billing and one-time purchase candidates
+ok 139 - keeps independently eligible legacy billing and one-time purchase candidates
+  ---
+  duration_ms: 1013.731125
+  ...
+# Subtest: keeps the authority function service-role only
+ok 140 - keeps the authority function service-role only
+  ---
+  duration_ms: 921.358083
+  ...
+# Subtest: paid recovery requires expired unpaid state or exact outstanding paid-boundary debt
+ok 141 - paid recovery requires expired unpaid state or exact outstanding paid-boundary debt
+  ---
+  duration_ms: 3121.689583
+  ...
+# Subtest: one durable pending paid action, original owner and revision remain immutable
+ok 142 - one durable pending paid action, original owner and revision remain immutable
+  ---
+  duration_ms: 1121.358125
+  ...
+# Subtest: competing old first payment wins before candidate commit
+ok 143 - competing old first payment wins before candidate commit
+  ---
+  duration_ms: 883.650042
+  ...
+# Subtest: repair binds a no-charge successor at the owed deadline without changing cash facts or original terms
+ok 144 - repair binds a no-charge successor at the owed deadline without changing cash facts or original terms
+  ---
+  duration_ms: 1381.114
+  ...
+# Subtest: a missing ledger successor allowance rolls back candidate link, cancellation clear and provider checkpoint
+ok 145 - a missing ledger successor allowance rolls back candidate link, cancellation clear and provider checkpoint
+  ---
+  duration_ms: 983.762542
+  ...
+# Subtest: paid recovery RPCs are service-only and raw operation writes are denied
+ok 146 - paid recovery RPCs are service-only and raw operation writes are denied
+  ---
+  duration_ms: 674.311375
+  ...
+# Subtest: verified paid consent commits candidate, first payment and full period atomically through the real ledger
+ok 147 - verified paid consent commits candidate, first payment and full period atomically through the real ledger
+  ---
+  duration_ms: 493.324542
+  ...
+# Subtest: public paid recovery snapshot distinguishes expired consent and existing paid repair without leaking provider IDs
+ok 148 - public paid recovery snapshot distinguishes expired consent and existing paid repair without leaking provider IDs
+  ---
+  duration_ms: 1126.829
+  ...
+# Subtest: paid recovery requires server authentication, exact consent fields and same origin before mutation
+ok 149 - paid recovery requires server authentication, exact consent fields and same origin before mutation
+  ---
+  duration_ms: 19.69025
+  ...
+# Subtest: provider approval follows accepted durable action and retries load the same owned operation
+ok 150 - provider approval follows accepted durable action and retries load the same owned operation
+  ---
+  duration_ms: 28.067417
+  ...
+# Subtest: ambiguous provider results preserve pending action; forged return destinations never reach client
+ok 151 - ambiguous provider results preserve pending action; forged return destinations never reach client
+  ---
+  duration_ms: 3.559875
+  ...
+# Subtest: public recovery view omits provider internals and preserves frozen first/renewal terms
+ok 152 - public recovery view omits provider internals and preserves frozen first/renewal terms
+  ---
+  duration_ms: 3.470458
+  ...
+# Subtest: records exact first monthly payment, including UTC EOM, and replays without access mutation
+ok 153 - records exact first monthly payment, including UTC EOM, and replays without access mutation
+  ---
+  duration_ms: 1384.445625
+  ...
+# Subtest: fulfills the first full UTC calendar period and records continuation debt when provider boundaries are seconds late
+ok 154 - fulfills the first full UTC calendar period and records continuation debt when provider boundaries are seconds late
+  ---
+  duration_ms: 1170.197792
+  ...
+# Subtest: days-late first collection fulfills from verified success and keeps the source period as repair evidence
+ok 155 - days-late first collection fulfills from verified success and keeps the source period as repair evidence
+  ---
+  duration_ms: 702.061083
+  ...
+# Subtest: unknown enrollment and failed first collection cannot create paid access or grace
+ok 156 - unknown enrollment and failed first collection cannot create paid access or grace
+  ---
+  duration_ms: 486.345167
+  ...
+# Subtest: repeated failure deliveries with a new provider time are duplicate facts and never extend grace
+ok 157 - repeated failure deliveries with a new provider time are duplicate facts and never extend grace
+  ---
+  duration_ms: 370.331042
+  ...
+# Subtest: rejects early first charges and malformed or incomplete event shapes before mutation
+ok 158 - rejects early first charges and malformed or incomplete event shapes before mutation
+  ---
+  duration_ms: 348.239083
+  ...
+# Subtest: accepts annual EOM only after a full year and rejects price or malformed immutable terms
+ok 159 - accepts annual EOM only after a full year and rejects price or malformed immutable terms
+  ---
+  duration_ms: 671.0955
+  ...
+# Subtest: renewal advances monotonically; due-period failure gets exactly seven days and old failures cannot relock
+ok 160 - renewal advances monotonically; due-period failure gets exactly seven days and old failures cannot relock
+  ---
+  duration_ms: 340.168458
+  ...
+# Subtest: delayed renewal follows the provider period boundary and a late annual first-payment failure stays stale
+ok 161 - delayed renewal follows the provider period boundary and a late annual first-payment failure stays stale
+  ---
+  duration_ms: 668.556834
+  ...
+# Subtest: out-of-order future renewal remains reconcilable after its missing period is applied
+ok 162 - out-of-order future renewal remains reconcilable after its missing period is applied
+  ---
+  duration_ms: 334.653625
+  ...
+# Subtest: invalid source boundaries remain reconcilable; canceled and revoked rows fail closed
+ok 163 - invalid source boundaries remain reconcilable; canceled and revoked rows fail closed
+  ---
+  duration_ms: 976.164291
+  ...
+# Subtest: same invoice aliases preserve phase while ambiguous event or source collisions fail closed
+ok 164 - same invoice aliases preserve phase while ambiguous event or source collisions fail closed
+  ---
+  duration_ms: 337.359333
+  ...
+# Subtest: a previously recorded failure event can be corrected to provider-confirmed success for that invoice
+ok 165 - a previously recorded failure event can be corrected to provider-confirmed success for that invoice
+  ---
+  duration_ms: 379.385
+  ...
+# Subtest: RPC and private ledger are service-role-only, and adapter accepts object or singleton array RPC data
+ok 166 - RPC and private ledger are service-role-only, and adapter accepts object or singleton array RPC data
+  ---
+  duration_ms: 345.771875
+  ...
+# Subtest: service-only paged operator projection exposes reconciliation facts without user or offer data
+ok 167 - service-only paged operator projection exposes reconciliation facts without user or offer data
+  ---
+  duration_ms: 1658.214083
+  ...
+# Subtest: read-only CLI pages through the dedicated RPC and rejects mutation-shaped arguments without RPC calls
+ok 168 - read-only CLI pages through the dedicated RPC and rejects mutation-shaped arguments without RPC calls
+  ---
+  duration_ms: 16.693583
+  ...
+# Subtest: accepts valid ISO offsets and fractional seconds
+ok 169 - accepts valid ISO offsets and fractional seconds
+  ---
+  duration_ms: 1.070125
+  ...
+# Subtest: does not grant access before authorization, including a future verified authorization
+ok 170 - does not grant access before authorization, including a future verified authorization
+  ---
+  duration_ms: 0.090417
+  ...
+# Subtest: a canceled trial retains access through its original end but has no expiry grace
+ok 171 - a canceled trial retains access through its original end but has no expiry grace
+  ---
+  duration_ms: 1.188125
+  ...
+# Subtest: bridges the first-collection window after trial end, then locks without renewal grace
+ok 172 - bridges the first-collection window after trial end, then locks without renewal grace
+  ---
+  duration_ms: 0.211625
+  ...
+# Subtest: grants a finite paid period even when the membership did not use a trial
+ok 173 - grants a finite paid period even when the membership did not use a trial
+  ---
+  duration_ms: 0.066166
+  ...
+# Subtest: grants verified paid access even when payment succeeds before the recorded trial end
+ok 174 - grants verified paid access even when payment succeeds before the recorded trial end
+  ---
+  duration_ms: 0.107292
+  ...
+# Subtest: keeps verified paid access when stale renewal-grace bookkeeping is unusable
+ok 175 - keeps verified paid access when stale renewal-grace bookkeeping is unusable
+  ---
+  duration_ms: 0.142
+  ...
+# Subtest: permits only a previously paid, non-canceled membership to use its persisted renewal-grace deadline
+ok 176 - permits only a previously paid, non-canceled membership to use its persisted renewal-grace deadline
+  ---
+  duration_ms: 0.137667
+  ...
+# Subtest: fails closed for malformed or contradictory persisted snapshots
+ok 177 - fails closed for malformed or contradictory persisted snapshots
+  ---
+  duration_ms: 0.231458
+  ...
+# Subtest: revocation always wins and repeated resolution does not extend a persisted grace deadline
+ok 178 - revocation always wins and repeated resolution does not extend a persisted grace deadline
+  ---
+  duration_ms: 0.293833
+  ...
+# Subtest: historical NULL-enrollment claims block a new trial and replay keeps earliest use
+ok 179 - historical NULL-enrollment claims block a new trial and replay keeps earliest use
+  ---
+  duration_ms: 1688.19275
+  ...
+# Subtest: prior payment winning before authorization consumes a reservation and denial retains neutralization
+ok 180 - prior payment winning before authorization consumes a reservation and denial retains neutralization
+  ---
+  duration_ms: 663.162209
+  ...
+# Subtest: authorization winning first preserves consumed enrollment ownership and replay
+ok 181 - authorization winning first preserves consumed enrollment ownership and replay
+  ---
+  duration_ms: 460.331792
+  ...
+# Subtest: history helper writes only normalized versioned HMAC claims, never raw identity or provider proof
+ok 182 - history helper writes only normalized versioned HMAC claims, never raw identity or provider proof
+  ---
+  duration_ms: 3.2035
+  ...
+# Subtest: authorization and payment ledger enqueue only confirmed events, once, with accepted facts
+ok 183 - authorization and payment ledger enqueue only confirmed events, once, with accepted facts
+  ---
+  duration_ms: 1496.644375
+  ...
+# Subtest: claim fence, immutable snapshot, crash parking, and queue acknowledgement are durable
+ok 184 - claim fence, immutable snapshot, crash parking, and queue acknowledgement are durable
+  ---
+  duration_ms: 734.466458
+  ...
+# Subtest: annual due selection excludes unpaid/canceled and parks too-late notices
+ok 185 - annual due selection excludes unpaid/canceled and parks too-late notices
+  ---
+  duration_ms: 515.004917
+  ...
+# Subtest: annual notices missed within seven days park, and months never get an annual notice
+ok 186 - annual notices missed within seven days park, and months never get an annual notice
+  ---
+  duration_ms: 372.69475
+  ...
+# Subtest: committed switch/restore confirmations use selected revision and preserve original deadline, while pending sends nothing
+ok 187 - committed switch/restore confirmations use selected revision and preserve original deadline, while pending sends nothing
+  ---
+  duration_ms: 388.043833
+  ...
+# Subtest: PayPal confirmation notices retain and validate the winning authorization provenance
+ok 188 - PayPal confirmation notices retain and validate the winning authorization provenance
+  ---
+  duration_ms: 35.28175
+  ...
+# Subtest: contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction
+ok 189 - contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction
+  ---
+  duration_ms: 4.284875
+  ...
+# Subtest: cancel receipt acknowledges declaration even when provider operation is pending; never needs provider success
+ok 190 - cancel receipt acknowledges declaration even when provider operation is pending; never needs provider success
+  ---
+  duration_ms: 0.522041
+  ...
+# Subtest: paid receipt rejects zero/mismatched amounts and uses late-success time; annual is never a monthly reminder
+ok 191 - paid receipt rejects zero/mismatched amounts and uses late-success time; annual is never a monthly reminder
+  ---
+  duration_ms: 1.335542
+  ...
+# Subtest: missing configuration claims nothing; verified owner alone chooses recipient; queue ACK is not delivered
+ok 192 - missing configuration claims nothing; verified owner alone chooses recipient; queue ACK is not delivered
+  ---
+  duration_ms: 1.349291
+  ...
+# Subtest: ambiguous/HTTP/error sends park once; settlement failure never retries provider
+ok 193 - ambiguous/HTTP/error sends park once; settlement failure never retries provider
+  ---
+  duration_ms: 7.685334
+  ...
+# Subtest: missing verified recipient and malformed snapshot send nothing
+ok 194 - missing verified recipient and malformed snapshot send nothing
+  ---
+  duration_ms: 4.441
+  ...
+# Subtest: cron refuses unauthenticated requests and exposes only aggregate failure/config status
+ok 195 - cron refuses unauthenticated requests and exposes only aggregate failure/config status
+  ---
+  duration_ms: 5.938125
+  ...
+# Subtest: inline required notice keeps arbitrary declaration content as escaped data, with no open or click tracking
+ok 196 - inline required notice keeps arbitrary declaration content as escaped data, with no open or click tracking
+  ---
+  duration_ms: 36.916292
+  ...
+# Subtest: committed change confirmation names original deadline and does not restore a canceled switch
+ok 197 - committed change confirmation names original deadline and does not restore a canceled switch
+  ---
+  duration_ms: 3.58475
+  ...
+# Subtest: paid cancellation receipt preserves paid access and pending provider work without trial-only promises
+ok 198 - paid cancellation receipt preserves paid access and pending provider work without trial-only promises
+  ---
+  duration_ms: 0.611708
+  ...
+# Subtest: annual notice leads with amount, date and post-year cancellation terms
+ok 199 - annual notice leads with amount, date and post-year cancellation terms
+  ---
+  duration_ms: 0.387542
+  ...
+# Subtest: PayPal contract confirmation states the day-after first-charge date instead of the trial-end moment
+ok 200 - PayPal contract confirmation states the day-after first-charge date instead of the trial-end moment
+  ---
+  duration_ms: 0.378666
+  ...
+# Subtest: PayPal contract confirmation with a frozen midnight trial end names one date for trial end and first charge
+ok 201 - PayPal contract confirmation with a frozen midnight trial end names one date for trial end and first charge
+  ---
+  duration_ms: 0.365542
+  ...
+# Subtest: PDF encoding failure is definitively unsent and classified as preparation failure
+ok 202 - PDF encoding failure is definitively unsent and classified as preparation failure
+  ---
+  duration_ms: 58.235417
+  ...
+# Subtest: subscription upsert omits an additive trial column for legacy rows and preserves linked retries
+ok 203 - subscription upsert omits an additive trial column for legacy rows and preserves linked retries
+  ---
+  duration_ms: 3.775208
+  ...
+# Subtest: active verified trial access overrides provider fields and grants full app access
+ok 204 - active verified trial access overrides provider fields and grants full app access
+  ---
+  duration_ms: 0.627542
+  ...
+# Subtest: expired trial does not inherit stale active/null-end profile access at the exact expiry
+ok 205 - expired trial does not inherit stale active/null-end profile access at the exact expiry
+  ---
+  duration_ms: 0.559625
+  ...
+# Subtest: trial access remains strict after a failed first payment but admits later paid renewal grace
+ok 206 - trial access remains strict after a failed first payment but admits later paid renewal grace
+  ---
+  duration_ms: 0.987083
+  ...
+# Subtest: malformed trial projections fail closed while independent access and legacy billing remain valid
+ok 207 - malformed trial projections fail closed while independent access and legacy billing remain valid
+  ---
+  duration_ms: 0.456708
+  ...
+# Subtest: legacy profile access still blocks checkout when no trial marker exists
+ok 208 - legacy profile access still blocks checkout when no trial marker exists
+  ---
+  duration_ms: 0.118542
+  ...
+1..208
+# tests 208
+# suites 0
+# pass 208
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22525.355042

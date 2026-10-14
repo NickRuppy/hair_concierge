@@ -38,6 +38,12 @@ function input() {
       gtin: null,
       productForm: "milk" as const,
       applicationStage: ["towel_dry" as const],
+      heatActivation: {
+        value: "not_required" as const,
+        route: null,
+        statements: [],
+        counterSignals: [],
+      },
       identityStatus: "verified" as const,
       categoryBoundaryStatus: "eligible" as const,
       confidence: "high" as const,

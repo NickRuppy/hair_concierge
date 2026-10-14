@@ -1,0 +1,119 @@
+{
+  "blindId": "L11",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #4 (Sodium Xylenesulfonate #3 is a hydrotrope); TEA-Dodecylbenzenesulfonate #18 is a late emulsion-carrier anionic, not a reinforcing cleansing route; no reset intent.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Sodium Xylenesulfonate #3", "Cocamidopropyl Betaine #4", "TEA-Dodecylbenzenesulfonate #18"],
+      "counterSignal": "A second (late) anionic is listed.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful silicone/cationic deposition system - Dimethiconol #10, Guar Hydroxypropyltrimonium Chloride #11, Dimethicone #14 - with late Panthenol #19; no pearlizer/fatty route or humectant cluster, silicones after Parfum.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Dimethiconol #10", "Guar Hydroxypropyltrimonium Chloride #11", "Dimethicone #14", "Panthenol #19"],
+      "counterSignal": "Two silicones plus guar approach the C2 'multiple systems' pattern.",
+      "neighboringAlternative": "high",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone (dimethiconol #10, dimethicone #14) plus cationic guar #11 is one meaningfully persistent deposition system, bounded by an effective SLES/betaine base and no rich 2-in-1 architecture (W1 analogue).",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": {"depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate"},
+      "whyThisBand": "Persistent silicone/guar deposition but bounded.",
+      "whyNotNeighborBand": "Not high: one route kind with effective reset. Low is the realistic neighbor because the silicones sit after Parfum.",
+      "formulaFacts": ["Dimethiconol #10", "Guar Hydroxypropyltrimonium Chloride #11", "Dimethicone #14"],
+      "counterSignal": "Silicones are after Parfum.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General: dominant positioning is hair loss / growth / density ('Anti-Haarverlust', 'Grow', 'dichteres Haar'), which is out of scope and cannot carry a focus. The remaining 'stärkt feines, schwaches Haar' / 'verringert Haarbruch' language has a nonspecific care-direction verdict (silicone + guar + late panthenol, no damage-care cluster). Piroctone Olamine #6 has no dandruff positioning, so not scalp_active (7.2).",
+      "ruleIds": ["7.2", "7.3", "E2", "F1"],
+      "careDirection": {"verdict": "nonspecific", "moistureRoutes": ["Panthenol #19"], "repairRoutes": [], "sharedRoutes": ["Dimethiconol #10", "Guar Hydroxypropyltrimonium Chloride #11", "Dimethicone #14"], "limitation": "Generic conditioning only."},
+      "claimRole": "not_applicable",
+      "formulaFacts": ["Piroctone Olamine #6", "Dimethiconol #10", "Niacinamide #30"],
+      "counterSignal": "Breakage-reduction claim (repair) and an unpositioned dandruff active.",
+      "neighboringAlternative": "repair",
+      "decisionTrace": "Blind: SLES/betaine + silicone/guar + piroctone -> nonspecific care. Unblind: hair-loss positioning excluded; breakage claim over nonspecific formula -> general.",
+      "sources": ["retailer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: no in-scope distinct positioning with an independent route.",
+      "ruleIds": ["§8"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "Regular: 'regelmäßig' is not a daily/frequent trigger; the problem led positioning is hair loss (out of scope), and the recognized dandruff active is not positioned for its problem, so no treatment trigger.",
+      "ruleIds": ["§9", "E2"],
+      "counterSignal": "Problem-led product containing a recognized active.",
+      "neighboringAlternative": "treatment",
+      "sources": ["retailer claims"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy/dry-scalp positioning; Menthol #12 and prominent fragrance are counter-signals.",
+      "ruleIds": ["§10"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #6 (formula only, §11).",
+      "ruleIds": ["§11"],
+      "counterSignal": "No dandruff positioning.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal",
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable. Ordinary, no T6. T4: W neighbor low raises fine and keeps normal ideal; C neighbor high raises coarse -> no flags. T2: 'feines Haar' ignored.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: moderate -> moderate.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "S-HAIRLOSS: hair-loss/growth positioning (and 'Halt der Haarwurzeln an der Kopfhaut') was not evaluated and creates no target. S-DANDRUFF: supported but no E2 dandruff claim -> no target, informational note. -> ordinary. Positioning evidence is retailer-only.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular; I3: no neighbor.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": ["active_without_dandruff_positioning"],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "§9 'treatment' = 'problem-led recognized active route': here the product is problem-led (hair loss, out of scope) and has a recognized active (piroctone) that serves a different, unpositioned problem. Resolved regular.",
+    "Focus when dominant claims are hair loss (out of scope): no §7 row; resolved general.",
+    "Identity: product name 'Grow Abundance' vs retailer copy 'Grow Abundant'; treated as the same product (no formula conflict in packet). Only retailer positioning available."
+  ]
+}

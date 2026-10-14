@@ -1,7 +1,9 @@
 import { deriveDesiredVolumeFromGoals } from "../src/lib/hair-profile/derived"
 import { mergeMissingProfileAnswers } from "../src/lib/mobile/profile-completion-contract"
-import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/legacy-profile-projection"
-import { projectQuizAnswersToLegacyVocabulary } from "../src/lib/quiz/normalization"
+import {
+  buildProfileDataFromQuizAnswers,
+  projectQuizAnswersToHistoricalColumnVocabulary,
+} from "../src/lib/quiz/legacy-profile-projection"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 
 /**
@@ -12,7 +14,7 @@ import type { QuizAnswers } from "../src/lib/quiz/types"
  * Verbatim copies — never "fix" them to match the new behaviour.
  */
 export function legacyMobileEditProfilePatch(answers: QuizAnswers): Record<string, unknown> {
-  const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
+  const goals = projectQuizAnswersToHistoricalColumnVocabulary(answers).goals
   return {
     ...buildProfileDataFromQuizAnswers(answers),
     goals,

@@ -1,0 +1,2240 @@
+{
+  "schema": 1,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "branch": "codex/test-audit-pruning",
+  "HEAD": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "decision": "prospective only; no runtime or repo mutation",
+  "counts": {
+    "before": 183,
+    "transfer": 183,
+    "cut": 182,
+    "unrelatedExact": 181,
+    "R": 169,
+    "F": 13,
+    "C": 1,
+    "D": 0
+  },
+  "phaseFiles": [
+    {
+      "phase": "before",
+      "file": "tests/moderator-account-maintenance.test.ts",
+      "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+      "bytes": 14184,
+      "lines": 456,
+      "sites": 13
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-account-maintenance.test.ts",
+      "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+      "bytes": 14184,
+      "lines": 456,
+      "sites": 13
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-account-maintenance.test.ts",
+      "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+      "bytes": 14184,
+      "lines": 456,
+      "sites": 13
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-account-reset-execution.test.ts",
+      "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+      "bytes": 16032,
+      "lines": 425,
+      "sites": 9
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-account-reset-execution.test.ts",
+      "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+      "bytes": 16032,
+      "lines": 425,
+      "sites": 9
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-account-reset-execution.test.ts",
+      "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+      "bytes": 16032,
+      "lines": 425,
+      "sites": 9
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-account-reset.test.ts",
+      "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+      "bytes": 29124,
+      "lines": 681,
+      "sites": 15
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-account-reset.test.ts",
+      "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+      "bytes": 29124,
+      "lines": 681,
+      "sites": 15
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-account-reset.test.ts",
+      "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+      "bytes": 29124,
+      "lines": 681,
+      "sites": 15
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-hosted-activation-probe.test.ts",
+      "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+      "bytes": 15835,
+      "lines": 441,
+      "sites": 10
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-hosted-activation-probe.test.ts",
+      "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+      "bytes": 15835,
+      "lines": 441,
+      "sites": 10
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-hosted-activation-probe.test.ts",
+      "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+      "bytes": 15835,
+      "lines": 441,
+      "sites": 10
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-hosted-auth-probe.test.ts",
+      "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+      "bytes": 12608,
+      "lines": 371,
+      "sites": 10
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-hosted-auth-probe.test.ts",
+      "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+      "bytes": 12608,
+      "lines": 371,
+      "sites": 10
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-hosted-auth-probe.test.ts",
+      "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+      "bytes": 12608,
+      "lines": 371,
+      "sites": 10
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-organic-fresh-start.test.ts",
+      "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+      "bytes": 4125,
+      "lines": 120,
+      "sites": 6
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-organic-fresh-start.test.ts",
+      "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+      "bytes": 4125,
+      "lines": 120,
+      "sites": 6
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-organic-fresh-start.test.ts",
+      "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+      "bytes": 4125,
+      "lines": 120,
+      "sites": 6
+    },
+    {
+      "phase": "before",
+      "file": "tests/moderator-quiz-draft-scope.test.ts",
+      "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+      "bytes": 1915,
+      "lines": 52,
+      "sites": 2
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/moderator-quiz-draft-scope.test.ts",
+      "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+      "bytes": 1915,
+      "lines": 52,
+      "sites": 2
+    },
+    {
+      "phase": "cut",
+      "file": "tests/moderator-quiz-draft-scope.test.ts",
+      "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+      "bytes": 1915,
+      "lines": 52,
+      "sites": 2
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-activation-route.test.ts",
+      "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+      "bytes": 4809,
+      "lines": 139,
+      "sites": 4
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-activation-route.test.ts",
+      "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+      "bytes": 4809,
+      "lines": 139,
+      "sites": 4
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-activation-route.test.ts",
+      "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+      "bytes": 4809,
+      "lines": 139,
+      "sites": 4
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-activation.test.ts",
+      "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+      "bytes": 2173,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-activation.test.ts",
+      "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+      "bytes": 2173,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-activation.test.ts",
+      "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+      "bytes": 2173,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-analytics.test.ts",
+      "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+      "bytes": 4105,
+      "lines": 127,
+      "sites": 5
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-analytics.test.ts",
+      "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+      "bytes": 4105,
+      "lines": 127,
+      "sites": 5
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-analytics.test.ts",
+      "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+      "bytes": 4105,
+      "lines": 127,
+      "sites": 5
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+      "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+      "bytes": 7530,
+      "lines": 244,
+      "sites": 8
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+      "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+      "bytes": 7530,
+      "lines": 244,
+      "sites": 8
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+      "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+      "bytes": 7530,
+      "lines": 244,
+      "sites": 8
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-entry-route.test.ts",
+      "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+      "bytes": 8315,
+      "lines": 234,
+      "sites": 8
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-entry-route.test.ts",
+      "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+      "bytes": 8315,
+      "lines": 234,
+      "sites": 8
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-entry-route.test.ts",
+      "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+      "bytes": 8315,
+      "lines": 234,
+      "sites": 8
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+      "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+      "bytes": 2026,
+      "lines": 45,
+      "sites": 2
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+      "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+      "bytes": 2026,
+      "lines": 45,
+      "sites": 2
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+      "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+      "bytes": 2026,
+      "lines": 45,
+      "sites": 2
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-schema.test.ts",
+      "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+      "bytes": 7877,
+      "lines": 181,
+      "sites": 4
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-schema.test.ts",
+      "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+      "bytes": 7877,
+      "lines": 181,
+      "sites": 4
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-schema.test.ts",
+      "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+      "bytes": 7877,
+      "lines": 181,
+      "sites": 4
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-server.test.ts",
+      "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+      "bytes": 10388,
+      "lines": 380,
+      "sites": 12
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-server.test.ts",
+      "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+      "bytes": 10388,
+      "lines": 380,
+      "sites": 12
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-server.test.ts",
+      "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+      "bytes": 10388,
+      "lines": 380,
+      "sites": 12
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+      "bytes": 5698,
+      "lines": 169,
+      "sites": 7
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+      "bytes": 5844,
+      "lines": 171,
+      "sites": 7
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "sha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+      "bytes": 5427,
+      "lines": 164,
+      "sites": 6
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-activation-route.test.ts",
+      "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+      "bytes": 8264,
+      "lines": 252,
+      "sites": 7
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-activation-route.test.ts",
+      "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+      "bytes": 8264,
+      "lines": 252,
+      "sites": 7
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-activation-route.test.ts",
+      "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+      "bytes": 8264,
+      "lines": 252,
+      "sites": 7
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-contract.test.ts",
+      "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+      "bytes": 11600,
+      "lines": 429,
+      "sites": 7
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-contract.test.ts",
+      "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+      "bytes": 11600,
+      "lines": 429,
+      "sites": 7
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-contract.test.ts",
+      "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+      "bytes": 11600,
+      "lines": 429,
+      "sites": 7
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-journey.test.ts",
+      "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+      "bytes": 7381,
+      "lines": 238,
+      "sites": 6
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-journey.test.ts",
+      "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+      "bytes": 7381,
+      "lines": 238,
+      "sites": 6
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-journey.test.ts",
+      "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+      "bytes": 7381,
+      "lines": 238,
+      "sites": 6
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-schema.test.ts",
+      "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+      "bytes": 4554,
+      "lines": 106,
+      "sites": 3
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-schema.test.ts",
+      "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+      "bytes": 4554,
+      "lines": 106,
+      "sites": 3
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-schema.test.ts",
+      "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+      "bytes": 4554,
+      "lines": 106,
+      "sites": 3
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+      "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+      "bytes": 36791,
+      "lines": 997,
+      "sites": 8
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+      "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+      "bytes": 36791,
+      "lines": 997,
+      "sites": 8
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+      "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+      "bytes": 36791,
+      "lines": 997,
+      "sites": 8
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-moderator-start-route.test.ts",
+      "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+      "bytes": 7983,
+      "lines": 246,
+      "sites": 7
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-moderator-start-route.test.ts",
+      "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+      "bytes": 7983,
+      "lines": 246,
+      "sites": 7
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-moderator-start-route.test.ts",
+      "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+      "bytes": 7983,
+      "lines": 246,
+      "sites": 7
+    },
+    {
+      "phase": "before",
+      "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+      "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+      "bytes": 5386,
+      "lines": 161,
+      "sites": 4
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+      "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+      "bytes": 5386,
+      "lines": 161,
+      "sites": 4
+    },
+    {
+      "phase": "cut",
+      "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+      "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+      "bytes": 5386,
+      "lines": 161,
+      "sites": 4
+    },
+    {
+      "phase": "before",
+      "file": "tests/regular-quiz-field-test-activation.test.ts",
+      "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+      "bytes": 2016,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/regular-quiz-field-test-activation.test.ts",
+      "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+      "bytes": 2016,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "cut",
+      "file": "tests/regular-quiz-field-test-activation.test.ts",
+      "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+      "bytes": 2016,
+      "lines": 67,
+      "sites": 2
+    },
+    {
+      "phase": "before",
+      "file": "tests/regular-quiz-field-test-runtime.test.ts",
+      "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+      "bytes": 12372,
+      "lines": 382,
+      "sites": 8
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/regular-quiz-field-test-runtime.test.ts",
+      "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+      "bytes": 12372,
+      "lines": 382,
+      "sites": 8
+    },
+    {
+      "phase": "cut",
+      "file": "tests/regular-quiz-field-test-runtime.test.ts",
+      "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+      "bytes": 12372,
+      "lines": 382,
+      "sites": 8
+    },
+    {
+      "phase": "before",
+      "file": "tests/regular-quiz-field-test-schema.test.ts",
+      "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+      "bytes": 4780,
+      "lines": 112,
+      "sites": 4
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/regular-quiz-field-test-schema.test.ts",
+      "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+      "bytes": 4780,
+      "lines": 112,
+      "sites": 4
+    },
+    {
+      "phase": "cut",
+      "file": "tests/regular-quiz-field-test-schema.test.ts",
+      "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+      "bytes": 4780,
+      "lines": 112,
+      "sites": 4
+    },
+    {
+      "phase": "before",
+      "file": "tests/regular-quiz-field-test-ui.test.tsx",
+      "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+      "bytes": 9923,
+      "lines": 245,
+      "sites": 10
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/regular-quiz-field-test-ui.test.tsx",
+      "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+      "bytes": 9923,
+      "lines": 245,
+      "sites": 10
+    },
+    {
+      "phase": "cut",
+      "file": "tests/regular-quiz-field-test-ui.test.tsx",
+      "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+      "bytes": 9923,
+      "lines": 245,
+      "sites": 10
+    }
+  ],
+  "readSet": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598,
+      "lineCount": 423,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          140,
+          168
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+      "bytes": 44697,
+      "lineCount": 1034,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          809,
+          852
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestFilterBuilder.ts",
+      "sha256": "49b784b351661bddfd0e223f6395eebde85f8c4a348462cf8e5e83ec850402f8",
+      "bytes": 55695,
+      "lineCount": 2110,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          157,
+          177
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts",
+      "sha256": "3483dce13f52a70e35149044b424112bce6f0a4f3140da9130d9dcf71deb4f95",
+      "bytes": 25948,
+      "lineCount": 971,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          683,
+          709
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@supabase/supabase-js/src/SupabaseClient.ts",
+      "sha256": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60",
+      "bytes": 22465,
+      "lineCount": 619,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          375,
+          390
+        ],
+        [
+          433,
+          469
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@types/react-dom/server.d.ts",
+      "sha256": "b25350193e103ae90423c5418ddb0ad1168dc9c393c9295ef34980b990030617",
+      "bytes": 6500,
+      "lineCount": 183,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          109,
+          136
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+      "bytes": 395194,
+      "lineCount": 9877,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          5040,
+          5138
+        ],
+        [
+          5480,
+          5535
+        ],
+        [
+          9845,
+          9875
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.production.js",
+      "sha256": "02ee18a3036d1fc1bc236adbab2424107e5cddc59650559658163179e5dae46f",
+      "bytes": 242793,
+      "lineCount": 6692,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          4185,
+          4225
+        ],
+        [
+          6670,
+          6687
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+      "bytes": 669,
+      "lineCount": 18,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          18
+        ]
+      ]
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353,
+      "lineCount": 275,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          1,
+          100
+        ]
+      ]
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-execution.ts",
+      "sha256": "0acb1899e92518959ad61b12a9473dcdd23e9873adc4e014ccb96b2a9b972c62",
+      "bytes": 14259,
+      "lineCount": 380,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          380
+        ]
+      ]
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-inventory.ts",
+      "sha256": "42fb55f73c1be9306d0ad383893f7b9f41f10bcf6cbb27e61e84569f520460df",
+      "bytes": 12758,
+      "lineCount": 360,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          360
+        ]
+      ]
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-plan.ts",
+      "sha256": "3727022e3a9859b054cc3eb0b1e5101d60b1334276ebf548fb7323b6dd9ee646",
+      "bytes": 22677,
+      "lineCount": 505,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          505
+        ]
+      ]
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-types.ts",
+      "sha256": "c592bf318d39fe4834d1610b907d6e750efe657b1e8db08136b7d3eb99ded8a2",
+      "bytes": 4407,
+      "lineCount": 121,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          121
+        ]
+      ]
+    },
+    {
+      "file": "scripts/moderator-account-maintenance.ts",
+      "sha256": "98defa9df2c513efb0d795dec982310684517c401fd8c967321f8016f7697c0e",
+      "bytes": 19401,
+      "lineCount": 511,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          511
+        ]
+      ]
+    },
+    {
+      "file": "scripts/moderator-hosted-activation-probe.ts",
+      "sha256": "1761a667218946e446ddfeffa3b4a99ccf822288f63c3ddc71cbd584701eeaa0",
+      "bytes": 50556,
+      "lineCount": 1410,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          1410
+        ]
+      ]
+    },
+    {
+      "file": "scripts/moderator-hosted-auth-probe.ts",
+      "sha256": "660a51f1f757203e00d58ae53021882542f406d136b82174b9c18deeb07cea29",
+      "bytes": 26243,
+      "lineCount": 673,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          673
+        ]
+      ]
+    },
+    {
+      "file": "scripts/personal-plan-field-test-campaign.ts",
+      "sha256": "6950955a29676e52bea6e35d8311396b58d91c60fb02ff1fbe12b20818083a12",
+      "bytes": 12520,
+      "lineCount": 350,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          350
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "sha256": "cc81676e5f7352f30fafcb84acb7acc5cb65ef36d162bef9aa7138f18c9f6cd9",
+      "bytes": 7511,
+      "lineCount": 212,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          212
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate-organic/route.ts",
+      "sha256": "1f64fc63054fed7dcdc601a2af78a8001356ba38ef963307a927ce3816cbde24",
+      "bytes": 518,
+      "lineCount": 9,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          9
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "sha256": "e039eb061eaa680ea07b2d8a3548232ccba7f1556cf84fff5bc5ffdfcde90186",
+      "bytes": 7508,
+      "lineCount": 214,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          214
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "sha256": "b2603bf9278f809233de2e031dde951d9347b152399f62814fc5b55f9f77fbad",
+      "bytes": 10436,
+      "lineCount": 287,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          287
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "sha256": "4a13e5b3862b1572fb1aeb699ef43051e5cc9e3e1949990c973265e01538520d",
+      "bytes": 8214,
+      "lineCount": 217,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          217
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "bytes": 28830,
+      "lineCount": 754,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          1,
+          535
+        ],
+        [
+          660,
+          780
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha256": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595",
+      "bytes": 13970,
+      "lineCount": 322,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          135,
+          290
+        ]
+      ]
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+      "bytes": 7375,
+      "lineCount": 193,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          70,
+          125
+        ]
+      ]
+    },
+    {
+      "file": "src/app/quiz/layout.tsx",
+      "sha256": "40a1fc09f82f8d6832a57b76449af4b159fb4e2877989eb9e79bbbab99fe4e4d",
+      "bytes": 1097,
+      "lineCount": 28,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          28
+        ]
+      ]
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+      "bytes": 16212,
+      "lineCount": 436,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          160,
+          220
+        ]
+      ]
+    },
+    {
+      "file": "src/app/quiz/quiz-shell.tsx",
+      "sha256": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b",
+      "bytes": 10004,
+      "lineCount": 244,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          244
+        ]
+      ]
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1",
+      "bytes": 22548,
+      "lineCount": 619,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          619
+        ]
+      ]
+    },
+    {
+      "file": "src/app/result/[leadId]/result-client.tsx",
+      "sha256": "cc17af0e9eaa37a9fc05646cdafc32ee9314935b4632ce9fdec4f9385e48aa3f",
+      "bytes": 9712,
+      "lineCount": 315,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          315
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/haarplan/[token]/route.ts",
+      "sha256": "d09b0e336ff545c0f71280c124d29921f75b3dcaab32485688354ea51689d7ab",
+      "bytes": 3962,
+      "lineCount": 105,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          105
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/haarplan/beendet/page.tsx",
+      "sha256": "0faaeaaceea33b3520bc5dfbffeae775cd50b9d2de2faaec1d2302e32887c022",
+      "bytes": 336,
+      "lineCount": 11,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          11
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/haarplan/konto/moderator-account-entry.tsx",
+      "sha256": "5aa282c5a5fae33dd9f84ef4925d61cda07303868d7952a0c79885834f864555",
+      "bytes": 4801,
+      "lineCount": 132,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          132
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/haarplan/konto/moderator-account-page.tsx",
+      "sha256": "05ad72a73dc445d936c60c8a57bc08f45d6b0018b35558d2a0274bf2df7e8120",
+      "bytes": 2061,
+      "lineCount": 58,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          58
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/quiz/[token]/route.ts",
+      "sha256": "0b94094686fd2c54cbc9bbd18b974497f98a813fea1166dc559c69efd706485d",
+      "bytes": 4938,
+      "lineCount": 123,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          123
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/quiz/beendet/normal/route.ts",
+      "sha256": "d74a62cf50a392e6f561f0b8ef28bec26becf627746d47dc711a00fec83f1f03",
+      "bytes": 2422,
+      "lineCount": 72,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          72
+        ]
+      ]
+    },
+    {
+      "file": "src/app/test/quiz/session/layout.tsx",
+      "sha256": "9b934a17908682708300bbbaf702ee7993a4ca86e8fd9b07db6fa489d082fa16",
+      "bytes": 1491,
+      "lineCount": 47,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          47
+        ]
+      ]
+    },
+    {
+      "file": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "sha256": "251bf2db6b11eb8b033c535d6da6767fe0788939180cc5766b24dd1025324a57",
+      "bytes": 29065,
+      "lineCount": 653,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          653
+        ]
+      ]
+    },
+    {
+      "file": "src/components/partner-access/activation-button.tsx",
+      "sha256": "99b2782f09e4f64feb5478bae863da45652af9c95da161c6faf9c81eeeb52357",
+      "bytes": 2953,
+      "lineCount": 105,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          105
+        ]
+      ]
+    },
+    {
+      "file": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+      "sha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+      "bytes": 1317,
+      "lineCount": 19,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          19
+        ]
+      ]
+    },
+    {
+      "file": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "sha256": "f8373a3f8f9ee26815679654c15d7fc840221f51c25c1e7d50e7199841478033",
+      "bytes": 49272,
+      "lineCount": 1164,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          1164
+        ]
+      ]
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+      "sha256": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+      "bytes": 9535,
+      "lineCount": 288,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          1,
+          142
+        ]
+      ]
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "sha256": "fee63e94d8b38ffbbbdb8f892c1ef54109b3f7acae8d022e8f1d1c1058a3a545",
+      "bytes": 12503,
+      "lineCount": 296,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          296
+        ]
+      ]
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+      "bytes": 118811,
+      "lineCount": 3124,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          360,
+          381
+        ],
+        [
+          1770,
+          2035
+        ],
+        [
+          2260,
+          2344
+        ]
+      ]
+    },
+    {
+      "file": "src/components/regular-quiz-field-test/activation-card.tsx",
+      "sha256": "f043e0a38eeaa6ff95de6741976b7879bc1b30cb77828c1c0a15a2918c0cc271",
+      "bytes": 5495,
+      "lineCount": 141,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          141
+        ]
+      ]
+    },
+    {
+      "file": "src/components/regular-quiz-field-test/banner.tsx",
+      "sha256": "6fa319da17cc833d8d4da3aa9d1fa3c5b3cc52e123d4e667efc4423f9837398c",
+      "bytes": 678,
+      "lineCount": 17,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          17
+        ]
+      ]
+    },
+    {
+      "file": "src/funnels/offers/organic-plan-v1.tsx",
+      "sha256": "92f6d79b9a86c237e86d356e7e41bf21e69d824e839c0c28d7f2b66d50aa1397",
+      "bytes": 291,
+      "lineCount": 8,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          8
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha256": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b",
+      "bytes": 6644,
+      "lineCount": 194,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          194
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha256": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0",
+      "bytes": 5373,
+      "lineCount": 154,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          154
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/analytics/destinations/posthog.ts",
+      "sha256": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766",
+      "bytes": 21345,
+      "lineCount": 604,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          1,
+          135
+        ],
+        [
+          350,
+          635
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/analytics/runtime/posthog.ts",
+      "sha256": "0d2152292c62cec544e5bcb44f07f5c28238684ef1d1272826cf14f575c04591",
+      "bytes": 7990,
+      "lineCount": 258,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          258
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+      "bytes": 7133,
+      "lineCount": 220,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          220
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha256": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88",
+      "bytes": 295,
+      "lineCount": 9,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          9
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/activation.ts",
+      "sha256": "239383612fa01fcf3772d724be6aebe645997fb2197b144b97dcd27a19804641",
+      "bytes": 5473,
+      "lineCount": 185,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          185
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/campaign-cookie.ts",
+      "sha256": "6aeb1727031200b25e9343ec9dfe2e8947d025deef1322dbb756791ec0be4f6d",
+      "bytes": 3497,
+      "lineCount": 100,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          100
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/constants.ts",
+      "sha256": "e83a2f4837ba82a48c48cb752c8160b19df78e4b1d97248eaf2ab8d9f2bab0ae",
+      "bytes": 568,
+      "lineCount": 10,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/errors.ts",
+      "sha256": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1",
+      "bytes": 1708,
+      "lineCount": 39,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          39
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/index.ts",
+      "sha256": "4e4769a07e80ee506d27847a1d4a7767b59a0642bf45adf6d18e02e6da0a3afa",
+      "bytes": 240,
+      "lineCount": 8,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          8
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/lifecycle.ts",
+      "sha256": "6d659057384131874cc8f0a1cce0e96f77bdd3fae75c715826b6ff7a80399caf",
+      "bytes": 2305,
+      "lineCount": 67,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-contract.ts",
+      "sha256": "d0b5f90ae45555be0e52945a2ff11c510ff8a98acee369eefd26b7c1e7fb8e9c",
+      "bytes": 1955,
+      "lineCount": 71,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-journey.ts",
+      "sha256": "0fd1882119d91b10865dda3c6fb4ed0c03596fe3088b8e87d6aea0e4b81a3931",
+      "bytes": 6764,
+      "lineCount": 196,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          196
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-organic.ts",
+      "sha256": "bd9b75a133acbae7581de30ef5f78e3688c21437966ad5e2c71256436d2dc944",
+      "bytes": 2153,
+      "lineCount": 71,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator.ts",
+      "sha256": "dba5f364f8111b31ab8e640c3b2aab237ca6e0186f0ba5b3de86e2653d4ca628",
+      "bytes": 17262,
+      "lineCount": 488,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          488
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/regular-quiz-campaign-cookie.ts",
+      "sha256": "e6d9ecb3df1531b25083eb92dd91bac55a2309f34283c1b1c62fe8dc5c759a96",
+      "bytes": 2996,
+      "lineCount": 83,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/server.ts",
+      "sha256": "1ad09a70d19fdba940656d90af595006695e301be287d59af463f4c59337d799",
+      "bytes": 21919,
+      "lineCount": 668,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          668
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/token.ts",
+      "sha256": "a30e67820c6141bc1aa37c05d42067383b4903f48e0d82d408838e079cfd0c37",
+      "bytes": 365,
+      "lineCount": 10,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio.ts",
+      "sha256": "fb1a2ed1d913687beb8472949da09a123c439221bfc4779228012b9244bbd6ff",
+      "bytes": 9106,
+      "lineCount": 267,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          267
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "sha256": "80a330256ee55ca065fba088cb7973d0dd8694073aed9cc452282d9bbea0cd29",
+      "bytes": 1218,
+      "lineCount": 37,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          37
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/quiz/draft.ts",
+      "sha256": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "bytes": 4218,
+      "lineCount": 151,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          151
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/quiz/moderator-fresh-start.ts",
+      "sha256": "267ad66268e13fd592c5bd2f3048471fcad31c084df406bb89dab8c522b5aa39",
+      "bytes": 3375,
+      "lineCount": 93,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          93
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "bytes": 11376,
+      "lineCount": 343,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          343
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/quiz/result-narrative.ts",
+      "sha256": "1cc0a22b9baeb3552e304b902776b650355767cd624a73bd34764ac103652e50",
+      "bytes": 33317,
+      "lineCount": 1045,
+      "read": "operative_slices_only",
+      "ranges": [
+        [
+          1,
+          210
+        ],
+        [
+          900,
+          1045
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+      "bytes": 2854,
+      "lineCount": 91,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          91
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "bytes": 36657,
+      "lineCount": 922,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          922
+        ]
+      ]
+    },
+    {
+      "file": "src/proxy.ts",
+      "sha256": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa",
+      "bytes": 13680,
+      "lineCount": 387,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          387
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260728130000_add_personal_plan_prepared_artifacts.sql",
+      "sha256": "ace9b75c1f0af85bdbdc8b46d0ca68a94857ab421068a066ce21d868493b6783",
+      "bytes": 9134,
+      "lineCount": 277,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          277
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql",
+      "sha256": "91a8385f3a6edb1bda31f1b095a15c7aeec67f73a59c500c053b286a8e52bcbb",
+      "bytes": 4401,
+      "lineCount": 131,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          131
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260810120016_personal_plan_field_test_access.sql",
+      "sha256": "bc1b5da679b3afa99b4456dbdfdaf65d2a6846fb53f4b5a9f2e63aea6a6fabf0",
+      "bytes": 17152,
+      "lineCount": 468,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          468
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260811120000_regular_quiz_field_test_access.sql",
+      "sha256": "3ea1404c9fe56ce4e119993297a7fe7c1e0710a225e247085228786bf2bdf2e4",
+      "bytes": 14854,
+      "lineCount": 335,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          335
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260813091352_regular_quiz_field_test_personal_plan_routing.sql",
+      "sha256": "597b20f6c43804662eb584a1d5b2ed9e8a6e2484cca7390f3a1a4f323c6662f4",
+      "bytes": 6786,
+      "lineCount": 182,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          182
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260827100624_personal_plan_moderator_email_bound_access.sql",
+      "sha256": "5405126450defa01da7a082192238b78b6edabefa0e422ff41722edeea609602",
+      "bytes": 28816,
+      "lineCount": 784,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          784
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260827150340_personal_plan_moderator_organic_access.sql",
+      "sha256": "8dab21a96b028b3c2490939386e3f15f5e163955fb93cbcffbe6915c0343f1f8",
+      "bytes": 28322,
+      "lineCount": 759,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          759
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-account-maintenance.test.ts",
+      "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+      "bytes": 14184,
+      "lineCount": 456,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          456
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-account-reset-execution.test.ts",
+      "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+      "bytes": 16032,
+      "lineCount": 425,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          425
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-account-reset.test.ts",
+      "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+      "bytes": 29124,
+      "lineCount": 681,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          681
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-hosted-activation-probe.test.ts",
+      "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+      "bytes": 15835,
+      "lineCount": 441,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          441
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-hosted-auth-probe.test.ts",
+      "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+      "bytes": 12608,
+      "lineCount": 371,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          371
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-organic-fresh-start.test.ts",
+      "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+      "bytes": 4125,
+      "lineCount": 120,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          120
+        ]
+      ]
+    },
+    {
+      "file": "tests/moderator-quiz-draft-scope.test.ts",
+      "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+      "bytes": 1915,
+      "lineCount": 52,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          52
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-activation-route.test.ts",
+      "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+      "bytes": 4809,
+      "lineCount": 139,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          139
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-activation.test.ts",
+      "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+      "bytes": 2173,
+      "lineCount": 67,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-analytics.test.ts",
+      "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+      "bytes": 4105,
+      "lineCount": 127,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          127
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+      "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+      "bytes": 7530,
+      "lineCount": 244,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          244
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-entry-route.test.ts",
+      "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+      "bytes": 8315,
+      "lineCount": 234,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          234
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+      "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+      "bytes": 2026,
+      "lineCount": 45,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          45
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-schema.test.ts",
+      "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+      "bytes": 7877,
+      "lineCount": 181,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          181
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-server.test.ts",
+      "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+      "bytes": 10388,
+      "lineCount": 380,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          380
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+      "bytes": 5698,
+      "lineCount": 169,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          169
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-activation-route.test.ts",
+      "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+      "bytes": 8264,
+      "lineCount": 252,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          252
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-contract.test.ts",
+      "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+      "bytes": 11600,
+      "lineCount": 429,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          429
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-journey.test.ts",
+      "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+      "bytes": 7381,
+      "lineCount": 238,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          238
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-schema.test.ts",
+      "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+      "bytes": 4554,
+      "lineCount": 106,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          106
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+      "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+      "bytes": 36791,
+      "lineCount": 997,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          997
+        ]
+      ]
+    },
+    {
+      "file": "tests/personal-plan-moderator-start-route.test.ts",
+      "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+      "bytes": 7983,
+      "lineCount": 246,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          246
+        ]
+      ]
+    },
+    {
+      "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+      "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+      "bytes": 5386,
+      "lineCount": 161,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          161
+        ]
+      ]
+    },
+    {
+      "file": "tests/regular-quiz-field-test-activation.test.ts",
+      "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+      "bytes": 2016,
+      "lineCount": 67,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ]
+    },
+    {
+      "file": "tests/regular-quiz-field-test-runtime.test.ts",
+      "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+      "bytes": 12372,
+      "lineCount": 382,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          382
+        ]
+      ]
+    },
+    {
+      "file": "tests/regular-quiz-field-test-schema.test.ts",
+      "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+      "bytes": 4780,
+      "lineCount": 112,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          112
+        ]
+      ]
+    },
+    {
+      "file": "tests/regular-quiz-field-test-ui.test.tsx",
+      "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+      "bytes": 9923,
+      "lineCount": 245,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          245
+        ]
+      ]
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "bytes": 391,
+      "lineCount": 10,
+      "read": "complete",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "ast-mapping.json",
+      "sha256": "b6d33ea8d7edf64f874d6603ee9c16c87f681cfbd740e0ac1703c755c5ecf9ff",
+      "bytes": 99521
+    },
+    {
+      "path": "build-handoff.py",
+      "sha256": "d9bd7a35e20d9c29f4050f507f9dda14f3a9e3a5aff9c973542101d9f8e29146",
+      "bytes": 16706
+    },
+    {
+      "path": "build-ledger.py",
+      "sha256": "9d82651704c96cafaa1b97af81168b1782a976e51688b72d768ec40fb452bdb5",
+      "bytes": 22038
+    },
+    {
+      "path": "build-static.cjs",
+      "sha256": "593c9d0d9259937ec172e799a2b26d8c382b67fad9dde6549678afcd741d6757",
+      "bytes": 8939
+    },
+    {
+      "path": "candidates.json",
+      "sha256": "1de59e9e3ece80720592bc207a38420a0773f166f9cd077aaa390e0fd5e0635f",
+      "bytes": 4762
+    },
+    {
+      "path": "complete-ledger.md",
+      "sha256": "1188e120dd8a445ae453d5d004d9a05108d73bdcdaea4f4137d457a3064f3d29",
+      "bytes": 41310
+    },
+    {
+      "path": "complete.diff",
+      "sha256": "c6c20c5c834a3b45653d6810a23f5cd2f5fb0df4c1bc99d670a59d1aea872653",
+      "bytes": 1060
+    },
+    {
+      "path": "controls.json",
+      "sha256": "9477608cfb7e7e8298e42b5cf35b947215e0078468cdd6acf75f6b4f7393ae9f",
+      "bytes": 4536
+    },
+    {
+      "path": "cut.diff",
+      "sha256": "311b6c6379983f3d942da8835aab47a90c7a840449ac1407af85c1a1740e067f",
+      "bytes": 1165
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "4fd60191669305738a9e6b6a614acc343a9f46fbb80947eb52fcb1c25b014346",
+      "bytes": 41247
+    },
+    {
+      "path": "judgments.json",
+      "sha256": "9d5c079fe4268ad2fa327f109642a7205c1ead4d86f5974dcbaa8936e0f658e5",
+      "bytes": 379075
+    },
+    {
+      "path": "layer-plan.md",
+      "sha256": "bddf32836a31ecc3404d7d8a6547481e5f7ad986425d31396d9e39425dbdca2f",
+      "bytes": 6614
+    },
+    {
+      "path": "main-commands.json",
+      "sha256": "26361638399c6ea426046320af5900eeb939371855717ec9b79fae1763e0f082",
+      "bytes": 2593
+    },
+    {
+      "path": "phase-files.json",
+      "sha256": "9165669b32375160ff6d4823f91259c67e25a7d00d605667c2209fb1b5350d05",
+      "bytes": 18543
+    },
+    {
+      "path": "read-scope.json",
+      "sha256": "e241b937a2c7952d05e51fa59ecc5e1e3dcc33b633b8c6758e1a4d94faf281ef",
+      "bytes": 37649
+    },
+    {
+      "path": "start-pins.json",
+      "sha256": "d7876784f9204ea0839202a157430e876aefcaae27a042398479eb59039c093c",
+      "bytes": 31701
+    },
+    {
+      "path": "static-check.json",
+      "sha256": "db59f3fe5c7f23535f1aedf67b18bcc75ed35b6ba95341f6d420ef2527855742",
+      "bytes": 670
+    },
+    {
+      "path": "transfer.diff",
+      "sha256": "f427d331cc9e458922e6f30f8f1eee9c9ebcd91c247cd0a30ddb63b5a44670f0",
+      "bytes": 537
+    }
+  ]
+}

@@ -24,6 +24,8 @@ import {
   withEligibleAlternatives,
 } from "@/lib/scan/product-presentation"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
+import type { Stage3VisibleHairColor } from "@/lib/personal-plan/products/authority/selection-profile"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 import type {
   ScanPresentedVerdictPayload,
@@ -115,6 +117,9 @@ export type DiscoveryVerdictDeps = {
     productId: string,
     decision: ScanEvaluationContext["snapshot"]["decisions"][number],
     context: ScanEvaluationContext,
+    budget?: ShoppingBudget | null,
+    /** The participant's user-answered root colour (as her scanner reads it); absent = unknown. */
+    visibleHairColor?: Stage3VisibleHairColor | null,
   ) => Promise<ScanVerdictPayload>
 }
 
@@ -131,20 +136,30 @@ export const DISCOVERY_SCAN_VERDICT_DEPS: LoadScanVerdictDeps = {
   buildScanVerdict,
 }
 
+/** The cockpit's verdict build: the resolve route's `loadScanVerdictForProduct`, same arguments. */
+export function discoveryScanVerdictLoader(
+  scanDeps: LoadScanVerdictDeps,
+): DiscoveryVerdictDeps["loadScanVerdict"] {
+  return (client, category, productId, decision, context, budget, visibleHairColor) =>
+    loadScanVerdictForProduct(
+      client,
+      scanDeps,
+      category,
+      productId,
+      decision,
+      context,
+      undefined,
+      budget,
+      visibleHairColor ?? null,
+    )
+}
+
 export const DISCOVERY_VERDICT_DEPS: DiscoveryVerdictDeps = {
   loadActiveProductById: createActiveProductByIdLoader("discovery_product_lookup_failed"),
   loadPresentationRows: createPresentationRowLoader("discovery_presentation_lookup_failed"),
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
-  loadScanVerdict: (client, category, productId, decision, context) =>
-    loadScanVerdictForProduct(
-      client,
-      DISCOVERY_SCAN_VERDICT_DEPS,
-      category,
-      productId,
-      decision,
-      context,
-    ),
+  loadScanVerdict: discoveryScanVerdictLoader(DISCOVERY_SCAN_VERDICT_DEPS),
 }
 
 export async function loadParticipantScanVerdicts(
@@ -153,6 +168,10 @@ export async function loadParticipantScanVerdicts(
   items: readonly DiscoveryIntakeItem[],
   context: ScanEvaluationContext,
   deps: DiscoveryVerdictDeps = DISCOVERY_VERDICT_DEPS,
+  /** Pass-through only (cockpit budget wiring is Task 8); default none keeps verdicts unchanged. */
+  budget: ShoppingBudget | null = null,
+  /** Her user-answered root colour, read once by the cockpit (as her scanner reads it). */
+  visibleHairColor: Stage3VisibleHairColor | null = null,
 ): Promise<DiscoveryParticipantVerdict[]> {
   // Controller ruling: an item still in research carries no catalog product, so it gets no
   // verdict at all and surfaces through `unassignedIntakeProducts` instead. Neither does an
@@ -167,7 +186,9 @@ export async function loadParticipantScanVerdicts(
   // end up offering — the cockpit lists a whole inventory, so per-item reads would be a
   // request per product.
   const verdicts = await Promise.all(
-    owned.map((item) => resolveItemVerdict(admin, userId, item, context, deps)),
+    owned.map((item) =>
+      resolveItemVerdict(admin, userId, item, context, deps, budget, visibleHairColor),
+    ),
   )
   const presentationIds = [
     ...owned.map((item) => item.productId),
@@ -274,6 +295,8 @@ async function resolveItemVerdict(
   item: DiscoveryIntakeItem & { productId: string },
   context: ScanEvaluationContext,
   deps: DiscoveryVerdictDeps,
+  budget: ShoppingBudget | null,
+  visibleHairColor: Stage3VisibleHairColor | null,
 ): Promise<ItemVerdict> {
   const { id: itemId, productId } = item
   try {
@@ -303,7 +326,25 @@ async function resolveItemVerdict(
     const decision = context.snapshot.decisions.find((entry) => entry.category === active.category)
     if (!decision) return { kind: "decision_missing", itemId, productId }
 
-    const verdict = await deps.loadScanVerdict(admin, active.category, active.id, decision, context)
+    // Unchanged arguments without a colour; with one, the budget slot is explicit.
+    const verdict = visibleHairColor
+      ? await deps.loadScanVerdict(
+          admin,
+          active.category,
+          active.id,
+          decision,
+          context,
+          budget,
+          visibleHairColor,
+        )
+      : await deps.loadScanVerdict(
+          admin,
+          active.category,
+          active.id,
+          decision,
+          context,
+          ...(budget ? [budget] : []),
+        )
     return {
       kind: "verdict",
       itemId,
@@ -380,6 +421,8 @@ export async function loadDiscoveryRecommendationPropertyRows(
   steps: readonly DiscoveryRecommendationRowStep[],
   context: ScanEvaluationContext,
   deps: Pick<DiscoveryVerdictDeps, "loadScanVerdict"> = DISCOVERY_VERDICT_DEPS,
+  /** Her user-answered root colour, so the recommendation rows grade like her scanner. */
+  visibleHairColor: Stage3VisibleHairColor | null = null,
 ): Promise<Map<string, DiscoveryPropertyRow[]>> {
   const entries = await Promise.all(
     steps.map(async (step): Promise<[string, DiscoveryPropertyRow[]] | null> => {
@@ -388,13 +431,17 @@ export async function loadDiscoveryRecommendationPropertyRows(
       const decision = context.snapshot.decisions.find((entry) => entry.category === step.category)
       if (!decision) return null
       try {
-        const verdict = await deps.loadScanVerdict(
-          admin,
-          step.category,
-          preview.productId,
-          decision,
-          context,
-        )
+        const verdict = visibleHairColor
+          ? await deps.loadScanVerdict(
+              admin,
+              step.category,
+              preview.productId,
+              decision,
+              context,
+              null,
+              visibleHairColor,
+            )
+          : await deps.loadScanVerdict(admin, step.category, preview.productId, decision, context)
         const rows = discoveryRecommendationPropertyRows(
           step.category,
           step.role,

@@ -1,0 +1,38 @@
+{
+  "status": "conditional proposal ready; runtime unexecuted",
+  "counts": {
+    "R": 71,
+    "C": 8,
+    "F": 5,
+    "D": 0
+  },
+  "phases": [
+    84,
+    84,
+    76
+  ],
+  "nativePhases": [
+    80,
+    80,
+    72
+  ],
+  "unchangedCallbacks": 72,
+  "sourceControls": 20,
+  "repoWrites": 0,
+  "testRuns": 0,
+  "artifacts": {
+    "complete-ledger.md": "f8762208d49c240659b5ec4c25b8d1b1a611dd24ff92e75a802c092bb86a5181",
+    "layer-plan.md": "441f9dd37517979ea1c49da65ab8cadcf76017018287d7ea041137880ceade22",
+    "judgments.json": "96fa391fa7326d2bb32a57cfb921e28b8c141bc14600374bbb86923e3f7803cd",
+    "sites.json": "23875f6960e08f62bc328e0277fddb9615e1b44d3b0160dd28ebe952d48c5aa4",
+    "candidates.json": "1cb535117dd738bb68b985f34ca16868e171119596aa0b0b83e8d259be29ef6c",
+    "manifest.json": "a6ebc4f3d1ebeece0a5778a91dd5a00ccdda53e473c92c1bdcdfbf0a8115a307",
+    "controls.json": "e8380572fb83586221fcb5094bfdb3636f9b69cf8d5d583b0596921b55434e35",
+    "complete.diff": "6f9bb00f0a4f7c8bf98dc6846c73fa304e71bc9ac7d8f1b8b03d6c2866f53bf8",
+    "static-check.json": "14470627be778729fbc8090cf7d79aff3dc3de6cce65e0a0509f611858fc18cf"
+  },
+  "finalReadsetCheck": {
+    "matched": 64,
+    "drift": 0
+  }
+}

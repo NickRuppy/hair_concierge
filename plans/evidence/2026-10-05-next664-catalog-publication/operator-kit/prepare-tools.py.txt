@@ -1,0 +1,105 @@
+from pathlib import Path
+import json,hashlib,tempfile,difflib
+T=Path('/tmp/test-audit-free67-tools-phkvfcm3');P=Path('/tmp/test-audit-catalog-publication99-0f7kicd2');D=Path(tempfile.mkdtemp(prefix='test-audit-catalog99-tools-',dir='/tmp')); print(D)
+sha=lambda b:hashlib.sha256(b).hexdigest()
+names=['operator-guard.cjs','operator-proof.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs','operator-readonly-preload.cjs','operator-pins.json']
+(D/'template-originals').mkdir()
+for n in names:(D/'template-originals'/n).write_bytes((T/n).read_bytes())
+(D/'template-provenance.json').write_text(json.dumps({'template':str(T),'files':{n:sha((T/n).read_bytes()) for n in names},'reusedIdentityDependencies':'Exact prior reviewed pins and policies; no inherited Free source guards. Catalog111 original semantic guards preserved separately.'},indent=2)+'\n')
+def put(n,s):(D/n).write_text(s)
+def src(n):return (T/n).read_text().replace(str(T),str(D)).replace('/tmp/test-audit-free-provisioning67',str(P))
+s=src('operator-guard.cjs');a=s.index('  if(evidence.root');b=s.index('  function guards(',a)
+s=s[:a]+r'''  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==3||controls.length!==6||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0},assertionCounts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
+  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==2)fail('Two unique keepers required')
+  const normalize=text=>text.replace(/\s+/g,'')
+  function calls(body){const sf=parse(ts,'callback.ts',body),out=[];function walk(n){if(ts.isCallExpression(n)&&!n.expression.getText(sf).startsWith('assert.'))out.push(n.getText(sf));ts.forEachChild(n,walk)}walk(sf);return out}
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+      for(const row of rows.values())assertionCounts[phase]+=row.assertions.length
+      const sf=parse(ts,file,bytes.toString());function visit(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){if(!ts.isStringLiteralLike(n.arguments[0]))fail('Nonliteral title');for(let p=n.parent;p;p=p.parent)if(ts.isIterationStatement(p,false)||ts.isFunctionLike(p))fail('Non-top-level registration')}ts.forEachChild(n,visit)}visit(sf)
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local)if(before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original donor identity')
+    for(const k of keepers.values())if(k.file===file){
+      if(before.rows.get(k.name)?.statement!==k.body||sha(k.body)!==k.sha256)fail('Original keeper identity')
+      const oldRow=before.rows.get(k.name),newRow=transfer.rows.get(k.name)
+      if(!newRow||JSON.stringify(calls(oldRow.callback))!==JSON.stringify(calls(newRow.callback)))fail('Nonassert calls/inputs changed')
+      let cursor=0;for(const a of oldRow.assertions){const i=newRow.assertions.findIndex((x,j)=>j>=cursor&&x.text===a.text);if(i<0)fail('Original keeper assertion lost/reordered');cursor=i+1}
+      reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
+    }
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+    for(const[name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const keeper=keepers.get(file+'\0'+name)
+      if(keeper){if(t?.statement!==keeper.after||k?.statement!==keeper.after)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;unrelated++
+    }
+  }
+  if(Object.keys(snapshots).length!==16||JSON.stringify(counts)!=='{"before":99,"transfer":99,"cut":96}'||unrelated!==94||unchangedRetained!==94||changedKeepers!==2||JSON.stringify(assertionCounts)!=='{"before":300,"transfer":307,"cut":300}')fail('Phase conservation mismatch')
+  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.length!==99||ledger.filter(j=>j.classification==='C').length!==3||ledger.some(j=>!['R','C'].includes(j.classification)))fail('Frozen ledger mismatch')
+  for(const c of candidates){
+    const donor=snapshots[c.file].before.rows.get(c.donor.name)
+    if(JSON.stringify(c.assertionUnion)!==JSON.stringify(donor.assertions.map(a=>a.text)))fail('Incomplete donor union')
+    for(const phase of ['transfer','cut']){
+      const row=snapshots[c.keeper.file][phase].rows.get(c.keeper.name)
+      if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
+      for(const text of c.assertionUnion)if(row.assertions.filter(a=>normalize(a.text)===normalize(text)).length!==1)fail('Whole donor assertion not retained uniquely')
+    }
+  }
+  for(const phase of ['before','transfer','cut']){
+    const names=Object.values(snapshots).flatMap(f=>[...f[phase].rows.keys()]).sort()
+    if(JSON.stringify(names)!==JSON.stringify([...evidence.nativeNames[phase]].sort()))fail('Native title multiset drift')
+  }
+''' +s[b:]
+s=s.replace("const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]","const exactCommand=[process.execPath,'--experimental-test-isolation=none','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+escaped+'$',c.test.file]")
+put('operator-guard.cjs',s)
+for n in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']:
+ s=src(n);import re;s=re.sub(r"const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",s)
+ s=s.replace('parsedPhaseFiles:21,sourceControlsParsed:2','parsedPhaseFiles:48,sourceControlsParsed:6').replace('tsMutantsParsed:2,allControlsPrepared:prepared.size===2','tsMutantsParsed:6,allControlsPrepared:prepared.size===6').replace('Snapshot ALL7','Snapshot ALL16').replace('receipts.length===2','receipts.length===6')
+ if n=='operator-native-proof.cjs':
+  s=s.replace("const expectedCommand={executable:process.execPath,args:['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',...ctx.evidence.ownedFiles],cwd:g.ROOT};","const expectedCommand=JSON.parse(fs.readFileSync(__dirname+'/full-native-command.json'));")
+  s=s.replace("n=phase==='cut'?67:68","n=phase==='cut'?96:99").replace("new Set(names).size!==n||names.some(name=>!expected.includes(name))","JSON.stringify([...names].sort())!==JSON.stringify([...expected].sort())")
+ put(n,s)
+put('operator-readonly-preload.cjs',src('operator-readonly-preload.cjs'))
+s=src('operator-proof.cjs');s=s.replace('complete.verified!==2||complete.cleanRuns!==4','complete.verified!==6||complete.cleanRuns!==12').replace('Required2 controls','Required6 controls').replace('length!==7','length!==16').replace("records.length!==2)g.fail('Two records required')","records.length!==6)g.fail('Six records required')").replace('verified:2,logFiles:6','verified:6,logFiles:18')
+a=s.index('function intended(')
+s=s[:a]+r'''// Catalog-only addition: strictly decode top-level Node expected/actual, not nested exception fields.
+function diagnosticValue(text,key){
+ const lines=text.split('\n'),found=lines.map((v,i)=>v.startsWith('  '+key+':')?i:-1).filter(i=>i>=0);if(found.length!==1)return{ok:false}
+ const i=found[0],tail=lines[i].slice(('  '+key+':').length).trimStart()
+ function scalar(value){
+   if(value.startsWith('"')){try{return{ok:true,value:JSON.parse(value)}}catch{return{ok:false}}}
+   if(value.startsWith("'")){if(!value.endsWith("'"))return{ok:false};return{ok:true,value:value.slice(1,-1).replaceAll("''", "'")}}
+   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
+   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
+   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
+   return{ok:false}
+ }
+ if(['|-','|','|+'].includes(tail)){const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}return{ok:true,value:body.join('\n')}}
+ if(tail)return scalar(tail)
+ const values=[];for(let k=i+1;k<lines.length&&lines[k].startsWith('    ');k++){const m=lines[k].match(/^    (\d+): (.*)$/);if(!m||Number(m[1])!==values.length)return{ok:false};const v=scalar(m[2]);if(!v.ok)return v;values.push(v.value)}
+ return values.length?{ok:true,value:values}:{ok:false}
+}
+function valueProof(control,text){
+ const expected=diagnosticValue(text,'expected'),actual=diagnosticValue(text,'actual')
+ if(!expected.ok||!actual.ok)return{accepted:false,expected,actual}
+ const accepted=control.expectedOperator==='doesNotMatch'
+   ?expected.value==='/is_chaarlie_recommended/'&&typeof actual.value==='string'&&actual.value.includes('"is_chaarlie_recommended":false')&&(()=>{try{return JSON.parse(actual.value).is_chaarlie_recommended===false}catch{return false}})()
+   :JSON.stringify(expected.value)===JSON.stringify(control.expectedValue)&&JSON.stringify(actual.value)===JSON.stringify(control.actualValue)
+ return{accepted,expected,actual}
+}
+''' +s[a:]
+s=s.replace(" const messageMatches=typeof", " const decodedValues=valueProof(control,run.text)\n const messageMatches=typeof")
+s=s.replace("&&firstFrame.includes(stackToken),operator,message", "&&firstFrame.includes(stackToken)&&decodedValues.accepted,decodedValues,operator,message")
+s=s.replace('parseTAP,named,clean,errorMessage,intended,validateTransferReceipt','parseTAP,named,clean,errorMessage,diagnosticValue,valueProof,intended,validateTransferReceipt')
+put('operator-proof.cjs',s)
+put('prepare-tools.py',Path('/tmp/prepare-catalog99-tools.py').read_text())
+Path('/tmp/catalog99-new-tool-directory.txt').write_text(str(D)+'\n')

@@ -1,12 +1,12 @@
 import {
-  GOALS,
+  ENGINE_GOALS,
   HAIR_LENGTHS,
   PROFILE_CONCERNS,
-  type Goal,
+  type EngineGoal,
   type HairLength,
   type ProfileConcern,
 } from "@/lib/vocabulary"
-import { QUIZ_CONCERN_VALUES, normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
+import { QUIZ_ANSWER_CONCERN_VALUES, normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
 /**
@@ -87,9 +87,9 @@ const TREATMENT_BY_PROFILE_VALUE: Record<string, string> = {
   chemically_straightened: "chemisch_geglaettet",
 }
 
-const QUIZ_CONCERNS = new Set<string>(QUIZ_CONCERN_VALUES)
+const QUIZ_CONCERNS = new Set<string>(QUIZ_ANSWER_CONCERN_VALUES)
 const PROFILE_CONCERN_VALUES = new Set<string>(PROFILE_CONCERNS)
-const GOAL_VALUES = new Set<string>(GOALS)
+const GOAL_VALUES = new Set<string>(ENGINE_GOALS)
 
 function mappedValue<T extends string>(value: unknown, mapping: Record<string, T>): T | undefined {
   return typeof value === "string" ? mapping[value] : undefined
@@ -112,9 +112,11 @@ function filterConcerns(value: unknown): ProfileConcern[] | undefined {
   )
 }
 
-function filterGoals(value: unknown): Goal[] | undefined {
+function filterGoals(value: unknown): EngineGoal[] | undefined {
   if (!Array.isArray(value)) return undefined
-  return value.filter((entry): entry is Goal => typeof entry === "string" && GOAL_VALUES.has(entry))
+  return value.filter(
+    (entry): entry is EngineGoal => typeof entry === "string" && GOAL_VALUES.has(entry),
+  )
 }
 
 /**

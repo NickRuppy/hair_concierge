@@ -1,0 +1,103 @@
+{
+  "slot": "P06",
+  "productId": null,
+  "name": "HeadRemedy Anti-Dandruff Shampoo",
+  "brand": "KMS",
+  "packSize": "300 ml",
+  "gtins": [
+    "4044897858098",
+    "4044897123042",
+    "4044897103044",
+    "4044897091068",
+    "4044897051062",
+    "776578769815"
+  ],
+  "sources": [
+    {
+      "url": "https://www.kmshair.com/de-DE/products/headremedy-collection/headremedy-anti-dandruff-shampoo/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_kms_de-DE (Art. No. 108003)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": null,
+      "inciVerbatim": "Water/Aqua/Eau, Cocamidopropyl Betaine, Coco-Glucoside, Sodium Lauroyl Sarcosinate, Disodium 2-Sulfolaurate, PEG-200 Hydrogenated Glyceryl Palmate, Propanediol, Citric Acid, Piroctone Olamine, PEG-7 Glyceryl Cocoate, Polyquaternium-47, Tetrasodium Glutamate Diacetate, Panthenol, Zinc PCA, Glycerin, Fraxinus Excelsior Bark Extract, Saccharomyces Ferment Lysate Filtrate, Sodium Benzoate, Fragrance/Parfum, Citrus Aurantium Peel Oil, Limonene, Tetramethyl Acetyloctahydronaphthalenes.",
+      "claimsVerbatim": "Bekämpft Schuppen und lindert juckende Kopfhaut. Bietet wohltuende Linderung für juckende Kopfhaut und Schuppenbildung. ANTI-SCHUPPEN-KONTROLLE: Kontrolliert Schuppen und hilft, ihnen vorzubeugen. Reduziert schuppenbedingte Ablagerungen. Bringt den natürlichen pH-Wert der Kopfhaut ins Gleichgewicht. BERUHIGEND: Reinigt und beruhigt juckende, trockene, gereizte und schuppige Kopfhaut. Hilft, den Feuchtigkeitshaushalt der Kopfhaut auszugleichen. Hilft, Schädigungen vorzubeugen. PFLEGEND: Reinigt sanft und effektiv, ohne das Haar zu beschweren. Sanft zur Kopfhaut – ideal für die tägliche Anwendung. Hinterlässt das Haar sauber, gepflegt und gesund aussehend. Haartyp: Für alle Haarstrukturen. Ideal für trockene & unausgeglichene Kopfhaut. Upgecycelte Esche – Reich an Nährstoffen, bekannt für ihre intensiv feuchtigkeitsspendenden Eigenschaften. Formuliert ohne SLS/SLES-Sulfate¹, Mineralöle, Silikone, Farbstoffe und PEGs. Die Formulierung enthält bis zu 87 % Inhaltsstoffe natürlichen Ursprungs² und ist bis zu 96 % biologisch abbaubar³.",
+      "directionsVerbatim": "Aufschäumen, ausspülen und bei Bedarf wiederholen. Für optimale Ergebnisse mindestens zweimal pro Woche anwenden."
+    },
+    {
+      "url": "https://www.lookfantastic.de/p/kms-headremedy-anti-dandruff-shampoo-300ml/17777743/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_lookfantastic_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4044897858098",
+      "inciVerbatim": "Water/Aqua/Eau, Cocamidopropyl Betaine, Coco-Glucoside, Sodium Lauroyl Sarcosinate, Disodium 2-Sulfolaurate, PEG-200 Hydrogenated Glyceryl Palmate, Propanediol, Citric Acid, Piroctone Olamine, PEG-7 Glyceryl Cocoate, Polyquaternium-47, Tetrasodium Glutamate Diacetate, Panthenol, Zinc PCA, Glycerin, Fraxinus Excelsior Bark Extract, Saccharomyces Ferment Lysate Filtrate, Sodium Benzoate, Fragrance/Parfum, Citrus Aurantium Peel Oil, Limonene, Tetramethyl Acetyloctahydronaphthalenes.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.hagel-shop.de/kms-headremedy-anti-dandruff-shampoo-300-ml-12141593.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_hagel_shop_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4044897858098",
+      "inciVerbatim": "Water/Aqua/Eau, Cocamidopropyl Betaine, Coco-Glucoside, Sodium Lauroyl Sarcosinate, Disodium 2-Sulfolaurate, PEG-200 Hydrogenated Glyceryl Palmate, Propanediol, Citric Acid, Piroctone Olamine, PEG-7 Glyceryl Cocoate, Polyquaternium-47, Tetrasodium Glutamate Diacetate, Panthenol, Zinc PCA, Glycerin, Fraxinus Excelsior Bark Extract, Saccharomyces Ferment Lysate Filtrate, Sodium Benzoate, Fragrance/Parfum, Citrus Aurantium Peel Oil, Limonene, Tetramethyl Acetyloctahydronaphthalenes.",
+      "claimsVerbatim": "KMS HeadRemedy Anti-Dandruff Shampoo - Anti-Schuppen-Pflege, die Juckreiz lindert und Schuppen wirksam reduziert. Sie hilft, die Schuppenbildung zu kontrollieren und vorzubeugen, während sie den natürlichen pH-Wert der Kopfhaut ausgleicht. Für eine beruhigte Kopfhaut und sichtbar gepflegtes Haar. Reinigt und lindert Juckreiz, Trockenheit, Reizungen und Schuppenbildung der Kopfhaut. Hilft, den Feuchtigkeitshaushalt der Kopfhaut auszugleichen. Reinigt sanft und effektiv, ohne das Haar zu beschweren. Sanft zur Kopfhaut, für den täglichen Gebrauch geeignet. Macht das Haar sauber, versorgt es mit Feuchtigkeit und lässt es gesund aussehen.",
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "source": "https://www.lookfantastic.de/p/kms-head-remedy-anti-dandruff-shampoo-300ml/11431702/",
+      "kind": "old_formula_other_gtin",
+      "gtin": "4044897123042",
+      "list": "Water / Aqua / Eau, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Zinc Pyrithione, Acrylates Copolymer, Sodium Cocoyl Glutamate, Citric Acid, Propylene Glycol, Lactic Acid, Panthenol, Melissa Officinalis (Balm) Extract, Salvia Officinalis (Sage) Extract, Rosmarinus Officinalis (Rosemary) Extract, Urtica Dioica\\n \\n (Nettle) Extract, Equisetum Arvense (Horsetail) Extract, Humulus Lupulus (Hops) Extract, Chamomilla Recutita (Matricaria) Flower Extract, PPG-9, Sodium Chloride, PEG-3 Distearate, Sodium Hydroxide, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Quaternium-80, Sodium Naphthalenesulfonate, Butylene Glycol, Croscarmellose, Glucose, Sodium Benzoate, Benzoic Acid, DMDM Hydantoin, Fragrance / Parfum, C.I. 42090.",
+      "note": "OLD formulation of KMS Head Remedy Anti-Dandruff Shampoo (listing title 'KMS Head Remedy Anti-Dandruff Shampoo 300 ml'); page shows barcode 4044897123042. SLES + Zinc Pyrithione. Not the current formula; not merged. Hagel-shop also still lists EAN 4044897123042 (https://www.hagel-shop.de/kms-headremedy-anti-dandruff-shampoo-300-ml.html, 'Anti-Schuppen, Beruhigend, Mild' with no INCI printed) and parfumdreams.de prints ean 4044897123042 for 'Headremedy Anti-Dandruff Shampoo' 300 ml."
+    },
+    {
+      "source": "https://www.amazon.de/dp/B06XHVDS5W",
+      "kind": "old_formula_other_gtin",
+      "gtin": "UPC 776578769815 (Amazon spec table; Art./Modellnummer 112805); EAN not shown",
+      "list": "Water / Aqua / Eau, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycol Distearate, Acrylates Copolymer, Sodium Cocoyl Glutamate, Citric Acid, Octopirox®, PPG-6, Panthenol, Chamomilla Recutita (Matricaria) Flower Extract, Equisetum Arvense Extract, Humulus Lupulus (Hops) Extract, Melissa Officinalis Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Propylene Glycol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Lactic Acid, Quaternium-80, Glyceryl Oleate, Butylene Glycol, Glucose, Salvia Officinalis (Sage) Leaf Extract, Urtica Dioica (Nettle) Extract, Sodium Benzoate, Benzoic Acid, Potassium Sorbate, Fragrance / Parfum, Blue 1 / C.I. 42090.",
+      "note": "OLD formulation (Art. 112805; SLES + Octopirox). Amazon ASIN B06XHVDS5W still serves this older list; current ASIN is B0GX6W4RVZ (Art. 108003). Different from the lookfantastic old-formula list (Zinc Pyrithione), i.e. at least two older revisions exist. Both are the SLES era; neither is the current SLS/SLES-free formula."
+    },
+    {
+      "source": "https://www.kmshair.com/de-DE/products/headremedy-collection/headremedy-anti-dandruff-shampoo/",
+      "kind": "claim_vs_inci",
+      "quote": "Formuliert ohne SLS/SLES-Sulfate¹, Mineralöle, Silikone, Farbstoffe und PEGs.",
+      "list": null,
+      "note": "Manufacturer claim says formulated without PEGs, but the manufacturer INCI itself lists PEG-200 Hydrogenated Glyceryl Palmate and PEG-7 Glyceryl Cocoate. The INCI is authoritative for the formula; the claim is not."
+    }
+  ],
+  "canonicalInci": [
+    "Water/Aqua/Eau",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Sodium Lauroyl Sarcosinate",
+    "Disodium 2-Sulfolaurate",
+    "PEG-200 Hydrogenated Glyceryl Palmate",
+    "Propanediol",
+    "Citric Acid",
+    "Piroctone Olamine",
+    "PEG-7 Glyceryl Cocoate",
+    "Polyquaternium-47",
+    "Tetrasodium Glutamate Diacetate",
+    "Panthenol",
+    "Zinc PCA",
+    "Glycerin",
+    "Fraxinus Excelsior Bark Extract",
+    "Saccharomyces Ferment Lysate Filtrate",
+    "Sodium Benzoate",
+    "Fragrance/Parfum",
+    "Citrus Aurantium Peel Oil",
+    "Limonene",
+    "Tetramethyl Acetyloctahydronaphthalenes"
+  ],
+  "canonicalReason": "Current KMS DE manufacturer page (Art. No. 108003) and two GTIN-anchored German-market retailers (lookfantastic.de and hagel-shop.de, both showing EAN 4044897858098) print a character-identical full list (22 entries). No pack photo seen. The older SLES-based formulas (EAN 4044897123042 and Art. 112805) are kept separately in conflicts and not merged.",
+  "inciFingerprintSha256": "541487036feac0c7f14d0bc67de7353e17db9635cbc646fcbc9f4ad5ac9be21c",
+  "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Canonical = current formula (Art. No. 108003, EAN 4044897858098). Old-formula pack EAN 4044897123042 is still on sale (lookfantastic.de, hagel-shop.de, parfumdreams.de, Notino/Douglas per phase-1 research; Notino bot-walled this run, 403) so German users may hold the OLD formula; its lists are in conflicts. gtins[] additionally carries Amazon UPC 776578769815 (Amazon.de spec table of the OLD-formula ASIN B06XHVDS5W, Art. 112805), which is not in the pre-registration aliases and maps to the old formula. Aliases 4044897103044, 4044897091068, 4044897051062 are barcode-DB-only 'Head Remedy Dandruff Shampoo' older packs (upcitemdb); their formula was not verified and is not merged. parfumdreams also shows EAN 4044897128054 but that is the separate 'Headremedy Deep Cleanse Shampoo', not a P06 alias. KMS page also lists voluntary fragrance components (Octahydro Tetramethyl Acetonaphtone, Ethylene Brassylate, Methyl Dihydrojasmonate, Sweet Orange Essential Oil, Tetrahydrolinalool, Dipropylene Glycol, Cedarwood Light EO USA, 2-tert-Butylcyclohexyl Acetate, Oxacyclohexadecan-2-one, ...) outside the INCI list; they are not ingredients of the INCI and were not added. Active: Piroctone Olamine (+ Zinc PCA); cosmetic anti-dandruff, medically adjacent. The lookfantastic.de page text is English (retailer copy) so its claims/directions were not recorded. KMS says the pack list is authoritative and formulations evolve continuously."
+}

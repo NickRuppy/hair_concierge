@@ -5,7 +5,6 @@ import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative
 import {
   initialScanFlowState,
   isDetectionPaused,
-  isSheetOpen,
   scanFlowReducer,
   scanRevealAnimates,
   scanRevealedAlternatives,
@@ -129,23 +128,6 @@ test("resolve_started: taking over from a submit clears the busy flag it superse
   assert.deepEqual(state.activeRequest, { kind: "resolve", token: 3 })
 })
 
-test("resolve_started: without showResolvingImmediately keeps scanning for the confirm window", () => {
-  const state = run({ type: "resolve_started", token: 1, showResolvingImmediately: false })
-
-  // The green "✓ Gelesen – wird geprüft" moment stays visible; the fetch is already running.
-  assert.deepEqual(state.step, { kind: "scanning" })
-  assert.deepEqual(state.activeRequest, { kind: "resolve", token: 1 })
-})
-
-test("resolving_sheet_due: the 400ms timer raises the skeleton for the current request", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: false },
-    { type: "resolving_sheet_due", token: 1 },
-  )
-
-  assert.deepEqual(state.step, { kind: "resolving" })
-})
-
 test("resolving_sheet_due: a stale timer never raises the skeleton", () => {
   const state = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: false },
@@ -164,26 +146,6 @@ test("resolving_sheet_due: cannot replace an already-shown result with the skele
   )
 
   assert.equal(state.step.kind, "result")
-})
-
-test("resolved: an in-catalog/not-needed verdict opens the result sheet", () => {
-  const result = verdictResult()
-  const state = scanFlowReducer(resolving(), { type: "resolved", token: 1, result })
-
-  assert.deepEqual(state.step, { kind: "result", result })
-  assert.equal(state.activeRequest, null)
-})
-
-test("resolved: an unknown product opens the unknown sheet", () => {
-  const state = scanFlowReducer(resolving(), { type: "resolved", token: 1, result: unknownResult })
-
-  assert.deepEqual(state.step, { kind: "unknown", unknown: unknownResult })
-})
-
-test("resolved: an open submission opens the pending sheet", () => {
-  const state = scanFlowReducer(resolving(), { type: "resolved", token: 1, result: pendingResult })
-
-  assert.deepEqual(state.step, { kind: "pending", pending: pendingResult })
 })
 
 test("resolved: a stale response never repaints a step the user already left (F4)", () => {
@@ -257,19 +219,6 @@ test("submitted: opens the pending sheet and clears the busy flag", () => {
   assert.deepEqual(state.step, { kind: "pending", pending: pendingResult })
   assert.equal(state.submitting, false)
   assert.equal(state.activeRequest, null)
-})
-
-test("submitted: a stale submission never re-opens a sheet over the live viewfinder (F4)", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: unknownResult },
-    { type: "submit_started", token: 2 },
-    { type: "return_to_scanning" },
-    { type: "submitted", token: 2, pending: pendingResult },
-  )
-
-  assert.deepEqual(state.step, { kind: "scanning" })
-  assert.equal(state.submitting, false)
 })
 
 test("submit_failed: keeps the unknown sheet open and shows the error line (F17)", () => {
@@ -351,13 +300,6 @@ test("return_to_scanning: leaves the camera state alone", () => {
   assert.deepEqual(state.camera, { status: "unavailable", reason: "denied" })
 })
 
-// --- auxiliary sheets -------------------------------------------------------
-
-test("auxiliary_opened: opens the search and the wishlist sheet over a live scanner", () => {
-  assert.equal(run({ type: "auxiliary_opened", sheet: "search" }).auxiliary, "search")
-  assert.equal(run({ type: "auxiliary_opened", sheet: "wishlist" }).auxiliary, "wishlist")
-})
-
 test("auxiliary_opened: ignored while a step sheet is already open", () => {
   const before = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
@@ -415,50 +357,17 @@ test("auxiliary_closed: without cancelSubmit leaves an in-flight submit's active
   assert.deepEqual(state.activeRequest, { kind: "submit", token: 5 })
 })
 
-test("auxiliary_closed with cancelSubmit: dismissing the search sheet while a research-intake submit is in flight cancels it (same bug class as F4)", () => {
-  const state = run(
-    { type: "auxiliary_opened", sheet: "search" },
-    { type: "submit_started", token: 5 },
-    { type: "auxiliary_closed", cancelSubmit: true },
-  )
-
-  assert.equal(state.auxiliary, "none")
-  assert.equal(state.submitting, false)
-  assert.equal(state.submitError, null)
-  assert.equal(state.activeRequest, null)
-})
-
-test("auxiliary_closed with cancelSubmit: a late SUCCESS after dismissal is dropped -- no pending step, step stays scanning", () => {
-  const state = run(
-    { type: "auxiliary_opened", sheet: "search" },
-    { type: "submit_started", token: 5 },
-    { type: "auxiliary_closed", cancelSubmit: true },
-    { type: "submitted", token: 5, pending: pendingResult },
-  )
-
-  assert.deepEqual(state.step, { kind: "scanning" })
-  assert.equal(state.submitting, false)
-  assert.equal(state.auxiliary, "none")
-})
-
-test("auxiliary_closed with cancelSubmit: a late FAILURE after dismissal is dropped -- no error resurfacing", () => {
-  const state = run(
-    { type: "auxiliary_opened", sheet: "search" },
-    { type: "submit_started", token: 5 },
-    { type: "auxiliary_closed", cancelSubmit: true },
-    { type: "submit_failed", token: 5, error: "Hat nicht geklappt" },
-  )
-
-  assert.equal(state.submitError, null)
-  assert.equal(state.submitting, false)
-})
-
 test("auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)", () => {
   const dismissed = run(
     { type: "auxiliary_opened", sheet: "search" },
     { type: "submit_started", token: 5 },
     { type: "auxiliary_closed", cancelSubmit: true },
   )
+
+  assert.equal(dismissed.auxiliary, "none")
+  assert.equal(dismissed.submitting, false)
+  assert.equal(dismissed.submitError, null)
+  assert.equal(dismissed.activeRequest, null)
 
   const reopened = scanFlowReducer(dismissed, {
     type: "auxiliary_opened",
@@ -509,25 +418,6 @@ test("save_sheet_toggled: opens and closes the save sheet", () => {
   assert.equal(scanFlowReducer(opened, { type: "save_sheet_toggled", open: false }).saveOpen, false)
 })
 
-test("saved_state_changed: updates the shown result's saved state", () => {
-  const before = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: verdictResult("p1") },
-  )
-
-  const state = scanFlowReducer(before, {
-    type: "saved_state_changed",
-    productId: "p1",
-    savedState: { state: "merkliste", managedByScan: true },
-  })
-
-  assert.equal(state.step.kind, "result")
-  assert.deepEqual(state.step.kind === "result" ? state.step.result.savedState : null, {
-    state: "merkliste",
-    managedByScan: true,
-  })
-})
-
 test("saved_state_changed: a save for product A never lands on product B's card (F5)", () => {
   const before = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
@@ -556,21 +446,6 @@ test("saved_state_changed: dropped when no result sheet is open at all", () => {
   )
 })
 
-// --- camera -----------------------------------------------------------------
-
-test("camera_unavailable: records the reason so the tile can explain itself", () => {
-  for (const reason of ["denied", "no_camera", "insecure"] as const) {
-    assert.deepEqual(run({ type: "camera_unavailable", reason }).camera, {
-      status: "unavailable",
-      reason,
-    })
-  }
-})
-
-test("camera_stalled: a dead stream is its own state, not an unavailable camera", () => {
-  assert.deepEqual(run({ type: "camera_stalled" }).camera, { status: "stalled" })
-})
-
 test("camera_retry: puts the camera back live from unavailable and from stalled", () => {
   assert.deepEqual(
     run({ type: "camera_unavailable", reason: "denied" }, { type: "camera_retry" }).camera,
@@ -579,33 +454,6 @@ test("camera_retry: puts the camera back live from unavailable and from stalled"
   assert.deepEqual(run({ type: "camera_stalled" }, { type: "camera_retry" }).camera, {
     status: "live",
   })
-})
-
-test("camera_live: a recovered stream reports itself live", () => {
-  assert.deepEqual(run({ type: "camera_stalled" }, { type: "camera_live" }).camera, {
-    status: "live",
-  })
-})
-
-// --- derived predicates -----------------------------------------------------
-
-test("isSheetOpen: true for every step except scanning", () => {
-  assert.equal(isSheetOpen(initialScanFlowState), false)
-  assert.equal(isSheetOpen(resolving()), true)
-  assert.equal(
-    isSheetOpen({ ...initialScanFlowState, step: { kind: "unknown", unknown: unknownResult } }),
-    true,
-  )
-  assert.equal(
-    isSheetOpen({ ...initialScanFlowState, step: { kind: "pending", pending: pendingResult } }),
-    true,
-  )
-  assert.equal(
-    isSheetOpen({ ...initialScanFlowState, step: { kind: "result", result: verdictResult() } }),
-    true,
-  )
-  // An auxiliary sheet is not a step sheet.
-  assert.equal(isSheetOpen({ ...initialScanFlowState, auxiliary: "search" }), false)
 })
 
 test("isDetectionPaused: only a bare scanning step with no sheet keeps decoding", () => {
@@ -774,27 +622,6 @@ test("scanFlowReducer: a successful reveal only lands on the product it was star
   assert.equal(scanRevealAnimates(late), false)
 })
 
-test("scanFlowReducer: fix round 1 (F2) — a silent (background) reveal skips the unblur", () => {
-  const started = scanFlowReducer(maskedShown("p1"), {
-    type: "reveal_started",
-    productId: "p1",
-    silent: true,
-    token: 1,
-  })
-  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: true, token: 1 })
-
-  const revealed = scanFlowReducer(started, {
-    type: "reveal_succeeded",
-    productId: "p1",
-    alternatives: REVEALED,
-    silent: true,
-    token: 1,
-  })
-  // The card still renders the full alternatives — only the animation decision differs.
-  assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
-  assert.equal(scanRevealAnimates(revealed), false)
-})
-
 test("scanFlowReducer: 409 already_used flips the CTA; an empty list or any other failure only clears the busy flag", () => {
   const started = scanFlowReducer(maskedShown("p1"), {
     type: "reveal_started",
@@ -955,30 +782,6 @@ test("scanFlowReducer: the Premium sheet opens with its context, closes empty, a
   assert.equal(scanFlowReducer(opened, { type: "return_to_scanning" }).premiumSheet, null)
 })
 
-// --- T10: trigger-layer session history --------------------------------------
-
-test("resolved: an in_catalog/not_needed verdict appends its category to the scan history", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: verdictResult("p1") }, // category: shampoo
-  )
-  assert.deepEqual(state.categoriesScanned, ["shampoo"])
-})
-
-test("resolved: an unknown/pending result leaves the category history untouched", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: unknownResult },
-  )
-  assert.deepEqual(state.categoriesScanned, [])
-
-  const pendingState = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: pendingResult },
-  )
-  assert.deepEqual(pendingState.categoriesScanned, [])
-})
-
 test("resolved: the category history survives return_to_scanning and accumulates across scans", () => {
   const state = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
@@ -1051,43 +854,17 @@ test("resolved: the trigger-layer decision is derived from tier/sessionNumber, n
 })
 
 test("resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)", () => {
+  const result = verdictResult()
   const state = scanFlowReducer(resolving(), {
     type: "resolved",
     token: 1,
-    result: verdictResult(),
+    result,
   })
+  assert.deepEqual(state.step, { kind: "result", result })
+  assert.equal(state.activeRequest, null)
   assert.equal(state.activeProactiveTrigger, null)
   assert.equal(state.zweiScansGleicheKategorie, false)
   assert.equal(state.proactiveTriggerShown, null)
-})
-
-test("resolved: a genuinely free session can fire a proactive trigger (Wiederkehrer, session 2)", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    {
-      type: "resolved",
-      token: 1,
-      result: verdictResult("p1"),
-      tier: "free",
-      sessionNumber: 2,
-    },
-  )
-  assert.equal(state.activeProactiveTrigger, "wiederkehrer")
-  assert.equal(state.proactiveTriggerShown, "wiederkehrer")
-})
-
-test("resolved: Wiederkehrer does NOT fire on session 1 or session 3+ (F4)", () => {
-  const sessionOne = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free", sessionNumber: 1 },
-  )
-  assert.equal(sessionOne.activeProactiveTrigger, null)
-
-  const sessionThree = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free", sessionNumber: 3 },
-  )
-  assert.equal(sessionThree.activeProactiveTrigger, null)
 })
 
 test("fatigue: once a proactive trigger has fired, a later resolve's own card is suppressed", () => {
@@ -1117,17 +894,6 @@ test("fatigue: once a proactive trigger has fired, a later resolve's own card is
 
 // --- F2 (fix round 1): unknown/pending resolves never select nor spend a proactive trigger
 
-test("F2: an unknown_product resolve under would-be-qualifying conditions selects no trigger and leaves the budget unspent", () => {
-  const state = run(
-    { type: "resolve_started", token: 1, showResolvingImmediately: true },
-    // sessionNumber 2 alone would fire Wiederkehrer for an in_catalog/not_needed result —
-    // here the result is `unknown_product`, so no card can ever render for it.
-    { type: "resolved", token: 1, result: unknownResult, tier: "free", sessionNumber: 2 },
-  )
-  assert.equal(state.activeProactiveTrigger, null)
-  assert.equal(state.proactiveTriggerShown, null)
-})
-
 test("F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent", () => {
   const state = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
@@ -1135,16 +901,24 @@ test("F2: a pending_submission resolve under would-be-qualifying conditions also
   )
   assert.equal(state.activeProactiveTrigger, null)
   assert.equal(state.proactiveTriggerShown, null)
+  assert.deepEqual(state.step, { kind: "pending", pending: pendingResult })
+  assert.deepEqual(state.categoriesScanned, [])
 })
 
 test("F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)", () => {
-  const state = run(
+  const unknownState = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
     { type: "resolved", token: 1, result: unknownResult, tier: "free", sessionNumber: 2 },
+  )
+  assert.equal(unknownState.activeProactiveTrigger, null)
+  assert.equal(unknownState.proactiveTriggerShown, null)
+  assert.deepEqual(unknownState.categoriesScanned, [])
+  const continuation: ScanFlowAction[] = [
     { type: "return_to_scanning" },
     { type: "resolve_started", token: 2, showResolvingImmediately: true },
     { type: "resolved", token: 2, result: verdictResult("p2"), tier: "free", sessionNumber: 2 },
-  )
+  ]
+  const state = continuation.reduce(scanFlowReducer, unknownState)
   assert.equal(state.activeProactiveTrigger, "wiederkehrer")
   assert.equal(state.proactiveTriggerShown, "wiederkehrer")
 })

@@ -1,0 +1,242 @@
+import { z } from "zod"
+import type { ProductFrequency } from "@/lib/types"
+import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import { PRODUCT_FREQUENCIES, normalizeProductFrequency } from "@/lib/vocabulary/frequencies"
+
+const trimmedString = z.preprocess(
+  (value) => (typeof value === "string" ? value.trim() : value),
+  z.string(),
+)
+
+const optionalTrimmedString = z.preprocess((value) => {
+  if (typeof value !== "string") return value
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}, z.string().optional())
+
+export const productIntakeFrequencySchema = z.preprocess((value) => {
+  if (typeof value !== "string") return value
+  return normalizeProductFrequency(value) ?? value
+}, z.enum(PRODUCT_FREQUENCIES))
+
+export const productIntakeCategorySchema = z.enum(SUPPORTED_PRODUCT_CATEGORY_KEYS)
+
+const uuidString = z.string().uuid()
+const uploadPathString = trimmedString.pipe(z.string().min(1).max(500))
+const validationMetadataSchema = z.record(z.string(), z.unknown())
+
+const frontImageValidationStatusSchema = z.enum([
+  "valid_product_front",
+  "uncertain",
+  "not_a_product_photo",
+  "unsafe_or_inappropriate",
+])
+
+const barcodeImageValidationStatusSchema = z.enum([
+  "valid_barcode",
+  "uncertain",
+  "not_a_product_photo",
+  "unsafe_or_inappropriate",
+])
+
+const manualProductIntakeBaseSchema = z
+  .object({
+    intake_method: z.literal("manual").default("manual"),
+    category: productIntakeCategorySchema,
+    frequency_range: productIntakeFrequencySchema,
+    brand_text: optionalTrimmedString,
+    brand_id: uuidString.optional(),
+    product_line_id: uuidString.nullable().optional(),
+    product_name_text: trimmedString.pipe(z.string().min(1).max(240)),
+    replace_existing_confirmed: z.boolean().default(false),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.brand_text && !value.brand_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["brand_text"],
+        message: "Marke ist erforderlich.",
+      })
+    }
+  })
+
+const photoProductIntakeBaseSchema = z.object({
+  intake_method: z.literal("photo"),
+  category: productIntakeCategorySchema,
+  frequency_range: productIntakeFrequencySchema,
+  front_image_path: uploadPathString,
+  front_image_validation_status: frontImageValidationStatusSchema.default("uncertain"),
+  front_image_validation_metadata: validationMetadataSchema.default({}),
+  barcode_image_path: uploadPathString.optional(),
+  barcode_image_validation_status: barcodeImageValidationStatusSchema.optional(),
+  barcode_image_validation_metadata: validationMetadataSchema.default({}),
+  brand_text: optionalTrimmedString,
+  brand_id: uuidString.optional(),
+  product_line_id: uuidString.nullable().optional(),
+  product_name_text: optionalTrimmedString.pipe(z.string().max(240).optional()),
+  replace_existing_confirmed: z.boolean().default(false),
+})
+
+export const onboardingProductIntakeSubmissionSchema = z
+  .discriminatedUnion("intake_method", [
+    manualProductIntakeBaseSchema.extend({
+      existing_usage_id: uuidString.optional(),
+    }),
+    photoProductIntakeBaseSchema.extend({
+      front_image_path: uploadPathString.optional(),
+      existing_usage_id: uuidString.optional(),
+    }),
+  ])
+  .superRefine((value, ctx) => {
+    if (value.intake_method === "photo" && !value.front_image_path && !value.existing_usage_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["front_image_path"],
+        message: "Vorderseitenfoto ist erforderlich.",
+      })
+    }
+  })
+
+export const chatProductIntakeSubmissionSchema = z
+  .discriminatedUnion("intake_method", [
+    manualProductIntakeBaseSchema.extend({
+      source_conversation_id: uuidString.optional(),
+      source_message_id: uuidString.optional(),
+      offer_id: z.string().min(1).optional(),
+      existing_usage_id: uuidString.optional(),
+      existing_submission_id: uuidString.optional(),
+    }),
+    photoProductIntakeBaseSchema.extend({
+      front_image_path: uploadPathString.optional(),
+      source_conversation_id: uuidString.optional(),
+      source_message_id: uuidString.optional(),
+      offer_id: z.string().min(1).optional(),
+      existing_usage_id: uuidString.optional(),
+      existing_submission_id: uuidString.optional(),
+    }),
+  ])
+  .superRefine((value, ctx) => {
+    if (value.intake_method === "photo" && !value.front_image_path && !value.existing_usage_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["front_image_path"],
+        message: "Vorderseitenfoto ist erforderlich.",
+      })
+    }
+  })
+
+const personalPlanManualProductIntakeSchema = z
+  .object({
+    intake_method: z.literal("manual").default("manual"),
+    category: productIntakeCategorySchema,
+    frequency_range: productIntakeFrequencySchema,
+    brand_text: optionalTrimmedString,
+    brand_id: uuidString.optional(),
+    product_line_id: uuidString.nullable().optional(),
+    product_name_text: trimmedString.pipe(z.string().min(1).max(240)),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.brand_text && !value.brand_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["brand_text"],
+        message: "Marke ist erforderlich.",
+      })
+    }
+  })
+
+const personalPlanPhotoProductIntakeSchema = z.object({
+  intake_method: z.literal("photo"),
+  category: productIntakeCategorySchema,
+  frequency_range: productIntakeFrequencySchema,
+  front_image_path: uploadPathString,
+  front_image_validation_status: frontImageValidationStatusSchema.default("uncertain"),
+  front_image_validation_metadata: validationMetadataSchema.default({}),
+  barcode_image_path: uploadPathString.optional(),
+  barcode_image_validation_status: barcodeImageValidationStatusSchema.optional(),
+  barcode_image_validation_metadata: validationMetadataSchema.default({}),
+  brand_text: optionalTrimmedString,
+  brand_id: uuidString.optional(),
+  product_line_id: uuidString.nullable().optional(),
+  product_name_text: optionalTrimmedString.pipe(z.string().max(240).optional()),
+})
+
+export const personalPlanProductIntakeSubmissionSchema = z.discriminatedUnion("intake_method", [
+  personalPlanManualProductIntakeSchema,
+  personalPlanPhotoProductIntakeSchema,
+])
+
+export const onboardingProductIntakeCancelSchema = z.object({
+  categories: z
+    .array(productIntakeCategorySchema)
+    .min(1)
+    .max(SUPPORTED_PRODUCT_CATEGORY_KEYS.length),
+})
+
+// Scan intake (source "scan"): unknown-scanned-EAN flow. Brand/product name stay
+// optional here — the single-tap unknown-product UI (ScanUnknownFlow) only asks for a
+// shelf category and submits on tap; it never collects brand or product name. Both
+// fields are kept optional for API/schema compatibility with the other intake
+// sources, not because the UI still asks for them. Category is user-picked and
+// required. Modeled after
+// `identifierSchema` in category-validators.ts:222-248, but deliberately WITHOUT its
+// value transform (which strips non-alphanumerics for barcode types): this schema is a
+// passthrough validator only. The single normalization point for the stored/matched
+// value is `normalizeIdentifierValue` (product-identity/normalize.ts:34), applied once
+// in submissions.ts before persist/match, so it produces the same normalized form as
+// the scan feature's other identifier boundaries (identifier-lookup.ts, pending-submission.ts).
+const scanIdentifierTypeSchema = z.enum(["ean", "gtin", "barcode"])
+
+export const scanProductIntakeIdentifierSchema = z
+  .object({
+    type: scanIdentifierTypeSchema,
+    value: trimmedString.pipe(z.string().min(1)),
+  })
+  .strict()
+
+export type ScanProductIntakeIdentifierInput = z.infer<typeof scanProductIntakeIdentifierSchema>
+
+export const scanProductIntakeSubmissionSchema = z.object({
+  intake_method: z.literal("manual").default("manual"),
+  category: productIntakeCategorySchema,
+  // Scan's single-tap unknown-product UI never asks for a use-frequency (plan §WP6), and
+  // submitScanProductIntake never reads/writes user_product_usage — nullable here (unlike
+  // every other intake schema) rather than inventing a value (controller ruling R8).
+  // Migration 20260820110000 relaxes product_submissions.frequency_range to NULL only
+  // for source='scan'.
+  frequency_range: productIntakeFrequencySchema.nullable(),
+  brand_text: optionalTrimmedString,
+  brand_id: uuidString.optional(),
+  product_line_id: uuidString.nullable().optional(),
+  product_name_text: optionalTrimmedString.pipe(z.string().max(240).optional()),
+  scannedIdentifier: scanProductIntakeIdentifierSchema.optional(),
+  replace_existing_confirmed: z.boolean().default(false),
+})
+
+export type ScanProductIntakeSubmissionInput = z.infer<typeof scanProductIntakeSubmissionSchema> & {
+  frequency_range: ProductFrequency | null
+}
+
+export type OnboardingProductIntakeSubmissionInput = z.infer<
+  typeof onboardingProductIntakeSubmissionSchema
+> & {
+  frequency_range: ProductFrequency
+}
+
+export type ChatProductIntakeSubmissionInput = z.infer<typeof chatProductIntakeSubmissionSchema> & {
+  frequency_range: ProductFrequency
+}
+
+// ScanProductIntakeSubmissionInput deliberately stays out of this union: scan intake
+// goes through the dedicated submitScanProductIntake (submissions.ts), never
+// submitProductIntake, because it must not read or write user_product_usage
+// (plans/scan-mvp.md WP4 ruling).
+export type ProductIntakeSubmissionInput =
+  | OnboardingProductIntakeSubmissionInput
+  | ChatProductIntakeSubmissionInput
+
+export type PersonalPlanProductIntakeSubmissionInput = z.infer<
+  typeof personalPlanProductIntakeSubmissionSchema
+> & {
+  frequency_range: ProductFrequency
+}

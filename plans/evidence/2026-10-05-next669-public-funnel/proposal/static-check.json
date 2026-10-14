@@ -1,0 +1,294 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "counts": {
+    "before": {
+      "declarations": 66,
+      "native": 79
+    },
+    "transfer": {
+      "declarations": 66,
+      "native": 79
+    },
+    "cut": {
+      "declarations": 63,
+      "native": 74
+    }
+  },
+  "unrelatedCallbacksByteExact": 60,
+  "phaseFiles": 36,
+  "tableRowsAdded": 0,
+  "testsExecuted": 0,
+  "ownerImports": 0,
+  "repositoryWrites": 0,
+  "limits": [
+    "No tests, native/Playwright/browser, owner imports, compiler/typechecker, DB/migration execution, provider/network or repository edits. Only owned TMP scripts, read-only source/Git commands and TypeScript createSourceFile AST parsing.",
+    "All twelve original test files, all helpers/fixtures/table rows/callbacks read. Complete per-site ledger applies to66 declarations only, not their surrounding suites.",
+    "Full immediate operative owner modules and real preview visual leaves read. Readset does not claim every transitive import/body, every SDK path, all application contracts or all payment/entitlement domain behavior; excluded owners remain outside semantic audit.",
+    "Large result-offer-pricing only public copy/render slices and negative string search; payment state/effect branches not re-audited. Supporting registry/public dynamic resolution is read; no global dead-feature closure established.",
+    "React/ReactDOM/Next/WebCrypto/Supabase/TypeScript/date-fns dependencies are exact named slices/types above, not full vendor audit. Stored whole files merely guard bytes.",
+    "Import graph guards are independently retained, with F limitations. No claim that source graph proves dynamic write closure or mounted browser behavior.",
+    "Prior freemium flag report explicitly only read first gated declarations/adjacent flag-off and partial remainder; prior selected scanner/funnel evidence and navigation inventories are context, not newly credited full reads. Historical verification text is historical and unrerun.",
+    "Native counts statically expand only original fixed loops: GATED_ROUTES4 and COMPOSITIONS/COMPOSITION_ENTRIES3. AST66/native79 before and transfer; AST63/native74 cut. No native title inventory observed yet.",
+    "Controls are frozen actual-owner recipes, not observed red. Root must establish exact full diagnostic/first-frame proof and clean restoration. No deletion credit until root accepts and proves."
+  ],
+  "controls": 20,
+  "uniqueMutantContents": 14,
+  "allMutantsTypeScriptParse": true,
+  "allControlsUniqueOriginalAnchor": true,
+  "allLiteralAssertionsLinePinned": true,
+  "fullOutsideChangedRegistrationsAndDonorLeadingSeparatorBytesExact": [
+    "tests/funnel-api.test.ts",
+    "tests/funnel-client.test.ts",
+    "tests/funnel-cookie.test.ts",
+    "tests/funnel-migration.test.ts",
+    "tests/funnel-rate-limit.test.ts",
+    "tests/funnel-route.test.ts",
+    "tests/funnel-server.test.ts",
+    "tests/gated-example-pages.test.tsx",
+    "tests/gated-pages-zero-mutation.test.tsx",
+    "tests/gated-preview-component.test.tsx",
+    "tests/editorial-pages.test.tsx",
+    "tests/landing-client-import-boundary.test.ts"
+  ],
+  "phaseHashes": {
+    "before": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ],
+    "transfer": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ],
+    "cut": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "1247d9a7a781a1c34e68302b2bd83ad9a9b58ef6e9689f43fd004d6df1f205ec"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ]
+  },
+  "topology": [
+    {
+      "candidate": "C1",
+      "calls": {
+        "before": {
+          "renderPreview().render": 2,
+          "renderPreview": 2,
+          "requireByData": 6,
+          "textContent": 3,
+          "textContent(ctaBlock).includes": 1,
+          "findAll": 2,
+          "findByData": 1,
+          "/overflow-y-auto/.test": 1,
+          "String": 1
+        },
+        "transfer": {
+          "renderPreview().render": 2,
+          "renderPreview": 2,
+          "requireByData": 7,
+          "textContent": 3,
+          "textContent(ctaBlock).includes": 1,
+          "findAll": 3,
+          "findByData": 2,
+          "/overflow-y-auto/.test": 2,
+          "String": 2
+        },
+        "cut": {
+          "renderPreview().render": 1,
+          "renderPreview": 1,
+          "requireByData": 5,
+          "textContent": 3,
+          "textContent(ctaBlock).includes": 1,
+          "findAll": 2,
+          "findByData": 1,
+          "/overflow-y-auto/.test": 1,
+          "String": 1
+        }
+      },
+      "meaning": "AST call-site count times original registration multiplicity, not dynamic execution count; donor assertions transferred, repeated renders removed; transfer intentionally contains donor plus union."
+    },
+    {
+      "candidate": "C2",
+      "calls": {
+        "before": {
+          "render": 2,
+          "GATED_CHAT_EXAMPLE_MESSAGES.filter": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map((m) => m.content ?? \"\").join": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map": 1
+        },
+        "transfer": {
+          "render": 2,
+          "GATED_CHAT_EXAMPLE_MESSAGES.filter": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map((m) => m.content ?? \"\").join": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map": 1
+        },
+        "cut": {
+          "render": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.filter": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map((m) => m.content ?? \"\").join": 1,
+          "GATED_CHAT_EXAMPLE_MESSAGES.map": 1
+        }
+      },
+      "meaning": "AST call-site count times original registration multiplicity, not dynamic execution count; donor assertions transferred, repeated renders removed; transfer intentionally contains donor plus union."
+    },
+    {
+      "candidate": "C3",
+      "calls": {
+        "before": {
+          "renderComposition": 6,
+          "JSON.stringify": 3
+        },
+        "transfer": {
+          "renderComposition": 6,
+          "JSON.stringify": 3
+        },
+        "cut": {
+          "renderComposition": 3,
+          "JSON.stringify": 3
+        }
+      },
+      "meaning": "AST call-site count times original registration multiplicity, not dynamic execution count; donor assertions transferred, repeated renders removed; transfer intentionally contains donor plus union."
+    }
+  ],
+  "readsetGuards": 97,
+  "allOriginalGuardsCurrent": true,
+  "ownerImportCount": 0,
+  "testRuns": 0,
+  "mutationsExecuted": 0,
+  "providerCalls": 0
+}

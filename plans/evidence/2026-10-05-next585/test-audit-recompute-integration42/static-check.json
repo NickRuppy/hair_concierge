@@ -1,0 +1,209 @@
+{
+  "counts": {
+    "before": 42,
+    "transfer": 42,
+    "cut": 38
+  },
+  "proof": {
+    "before": 58,
+    "transfer": 58,
+    "cut": 54
+  },
+  "untouched": 53,
+  "readset": 34,
+  "sites": [
+    [
+      "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      [
+        [
+          115,
+          "stages the historical Routine as a successor of the current one and confirms it"
+        ],
+        [
+          151,
+          "the direct operation keys name the exact transition, so a repeated flip stages afresh"
+        ],
+        [
+          170,
+          "an identical retry at the same plan revision reuses the same fingerprint inputs"
+        ],
+        [
+          188,
+          "a still-pending proposal for the target Routine is reported, never staged over"
+        ],
+        [
+          204,
+          "a missing or foreign plan row gets its own terminal reason"
+        ],
+        [
+          211,
+          "does nothing when the historical Routine is already the active one"
+        ],
+        [
+          220,
+          "reports no_routine_for_draft when nothing was ever compiled from the draft"
+        ],
+        [
+          235,
+          "a moved plan between the read and the stage is a retryable conflict"
+        ],
+        [
+          242,
+          "a moved plan between the stage and the confirm is a retryable conflict"
+        ],
+        [
+          254,
+          "a stale_proposal confirm is terminal, never retried"
+        ],
+        [
+          265,
+          "a refused staging is terminal, not retried"
+        ],
+        [
+          282,
+          "an already-staged identical proposal is confirmed rather than re-staged"
+        ],
+        [
+          295,
+          "an already-accepted proposal counts as activated, not as a failure"
+        ],
+        [
+          301,
+          "an unrecognised confirm outcome is terminal"
+        ]
+      ]
+    ],
+    [
+      "tests/personal-plan-refinement-recompute-activation.test.ts",
+      [
+        [
+          17,
+          "the recompute-activation migration wraps the existing RPCs instead of copying them"
+        ],
+        [
+          59,
+          "the recompute-activation migration keeps the provenance write out of the revision CAS"
+        ],
+        [
+          252,
+          "a module-driven recompute activates the successor immediately instead of proposing it"
+        ],
+        [
+          279,
+          "a module-1 projection activates immediately even before the closing module"
+        ],
+        [
+          300,
+          "today's linear refinement keeps its pending proposal"
+        ],
+        [
+          322,
+          "a refined version from another plan's module lineage never activates this one"
+        ],
+        [
+          350,
+          "a later recompute on the same module-projected version proposes instead of activating"
+        ],
+        [
+          381,
+          "the first Routine still activates without any proposal"
+        ],
+        [
+          398,
+          "replaying a module-driven completion reports the activation, not a pending proposal"
+        ],
+        [
+          443,
+          "an unconfirmable proposal on the replay path degrades to its pending proposal"
+        ],
+        [
+          486,
+          "an unconfirmable proposal the completion itself staged still fails loudly"
+        ],
+        [
+          511,
+          "the direct-accept provenance is written by the same transaction that activates"
+        ],
+        [
+          527,
+          "a failing provenance write rolls the whole completion back"
+        ]
+      ]
+    ],
+    [
+      "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      [
+        [
+          69,
+          "a superseded refined version is stale without reading the refinement lineage"
+        ],
+        [
+          87,
+          "a plan without a current refined version is stale rather than module-driven"
+        ],
+        [
+          92,
+          "a missing plan row is stale rather than an exception"
+        ],
+        [
+          97,
+          "a module projection naming the current version is module-driven, owner-scoped on both reads"
+        ],
+        [
+          120,
+          "a completed module draft whose result is the current version is module-driven"
+        ],
+        [
+          136,
+          "a module-driven plan whose lineage names only other versions is not module-driven"
+        ],
+        [
+          152,
+          "a linear refinement completion carries no module lineage and stays on today's terminal path"
+        ],
+        [
+          161,
+          "a plan with no refinement draft at all is not module-driven"
+        ],
+        [
+          170,
+          "read failures surface instead of being misclassified as not module-driven"
+        ]
+      ]
+    ],
+    [
+      "tests/personal-plan/refinement-recompute/production-deps.test.ts",
+      [
+        [
+          64,
+          "the production routine-state reader returns null with a single read when the plan has no active routine"
+        ],
+        [
+          78,
+          "the production routine-state reader composes the plan and version rows, translating undefined source-draft fields to null"
+        ],
+        [
+          107,
+          "the production routine-state reader carries real source-draft fields through unchanged"
+        ],
+        [
+          133,
+          "the production routine-state reader rejects a routine version row missing its source refined-need id"
+        ]
+      ]
+    ],
+    [
+      "tests/personal-plan/refinement-recompute/production-lane.test.ts",
+      [
+        [
+          512,
+          "a rebuilt draft for a person who owns products completes and activates"
+        ],
+        [
+          537,
+          "a retained (unassigned) product's disposition never blocks the recompute"
+        ]
+      ]
+    ]
+  ]
+}

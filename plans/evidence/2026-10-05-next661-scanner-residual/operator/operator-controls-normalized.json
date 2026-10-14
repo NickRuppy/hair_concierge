@@ -1,0 +1,1146 @@
+[
+  {
+    "id": "M01",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "fd5b81c2a3b4ff7f4a5df9555f227e2b1493da959fca3f1c41ee163af7be28da",
+    "anchor": {
+      "kind": "function",
+      "scope": "deriveAlternativeComparison",
+      "scopeSha256": "3283c8bbecb895a313992496493094c94b059e380662ea9181fb4563a94ffa14",
+      "expectedOccurrences": 1
+    },
+    "from": "summaryScore: rows.length > 0 ? matchCount / rows.length : 0,",
+    "to": "summaryScore: rows.length > 0 ? matchCount / rows.length : 1,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M01/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskAlternative: an alternative with no carried criteria yields an empty comparison"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskAlternative: an alternative with no carried criteria yields an empty comparison$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 57,
+        "text": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+        "keeperSha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 36,
+        "text": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+        "keeperSha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "rows": [],
+      "summaryScore": 0
+    },
+    "actualValue": {
+      "rows": [],
+      "summaryScore": 1
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [],\n+   summaryScore: 1\n-   summaryScore: 0\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M02",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "1df3280a6a04ab56c1f0b5f85159cb09a821fae49ce95620beca214d38b4da87",
+    "anchor": {
+      "kind": "function",
+      "scope": "comparisonRowState",
+      "scopeSha256": "066a55ce6415322f6b9ae0b642e0a81ae6578dbadd008becb38b67c5d71c0a19",
+      "expectedOccurrences": 1
+    },
+    "from": "case \"pass\":\n      return \"match\"",
+    "to": "case \"pass\":\n      return \"partial\"",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M02/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskScanVerdictPayload: masks every alternative, leaves every other field untouched$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 89,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 68,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 1
+    },
+    "actualValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "partial"
+        }
+      ],
+      "summaryScore": 0
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n+       state: 'partial'\n-       state: 'match'\n      }\n    ],\n+   summaryScore: 0\n-   summaryScore: 1\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M03",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "3116911a1af6dfc872326530f67151d03091b4933085f6578cbdce86ac52eb72",
+    "anchor": {
+      "kind": "function",
+      "scope": "deriveAlternativeComparison",
+      "scopeSha256": "3283c8bbecb895a313992496493094c94b059e380662ea9181fb4563a94ffa14",
+      "expectedOccurrences": 1
+    },
+    "from": "rowId: criterion.criterionId,",
+    "to": "...{ debug: true },\n      rowId: criterion.criterionId,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M03/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskScanVerdictPayload: masks every alternative, leaves every other field untouched$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 89,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 68,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 1
+    },
+    "actualValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match",
+          "debug": true
+        }
+      ],
+      "summaryScore": 1
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n+       debug: true,\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n        state: 'match'\n      }\n    ],",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M04",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutatedSha256": "a3f737e3b846eca2a5f9cf1cc3dc55405135073935089e37cd596b25dc54d5bf",
+    "anchor": {
+      "kind": "function",
+      "scope": "maskAlternative",
+      "scopeSha256": "e1146b79edfebc475f6111501e6b410b53c6ae7e023579ae249a3b2bc300d7c9",
+      "expectedOccurrences": 1
+    },
+    "from": "verdict: alternative.verdict,",
+    "to": "...{ productId: alternative.productId },\n    verdict: alternative.verdict,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M04/src/lib/scan/masked-alternative.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskScanVerdictPayload: masks every alternative, leaves every other field untouched$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 94,
+        "text": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 73,
+        "text": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "comparison",
+      "verdict",
+      "verdictLabel"
+    ],
+    "actualValue": [
+      "comparison",
+      "productId",
+      "verdict",
+      "verdictLabel"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'comparison',\n+   'productId',\n    'verdict',\n    'verdictLabel'\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M05",
+    "candidates": [
+      "C5"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutatedSha256": "bb4227f19d9e717a38a5f7d01f36b1f8041d6920ec24013427fbe2839c2380ca",
+    "anchor": {
+      "kind": "function",
+      "scope": "maskAlternative",
+      "scopeSha256": "e1146b79edfebc475f6111501e6b410b53c6ae7e023579ae249a3b2bc300d7c9",
+      "expectedOccurrences": 1
+    },
+    "from": "verdict: alternative.verdict,",
+    "to": "verdict: \"ideal\",",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M05/src/lib/scan/masked-alternative.ts",
+    "test": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree$",
+      "tests/scan-resolve-anti-leak.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 339,
+        "text": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+      },
+      "cut": {
+        "startLine": 339,
+        "text": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "supportive",
+    "actualValue": "ideal",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ideal'\n- 'supportive'",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M06",
+    "candidates": [
+      "C5"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutatedSha256": "3d8cce738765b9f9efc35c8dcba8fb06f16fc8ef8dab436d1d40d072e1f17ed9",
+    "anchor": {
+      "kind": "function",
+      "scope": "maskAlternative",
+      "scopeSha256": "e1146b79edfebc475f6111501e6b410b53c6ae7e023579ae249a3b2bc300d7c9",
+      "expectedOccurrences": 1
+    },
+    "from": "verdictLabel: alternative.verdictLabel,",
+    "to": "verdictLabel: \"Passt\",",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M06/src/lib/scan/masked-alternative.ts",
+    "test": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree$",
+      "tests/scan-resolve-anti-leak.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 340,
+        "text": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+      },
+      "cut": {
+        "startLine": 340,
+        "text": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "Passt eingeschränkt",
+    "actualValue": "Passt",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Passt'\n- 'Passt eingeschränkt'\n        ^",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M07",
+    "candidates": [
+      "C6"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "057715b842785065da29b370d3bdf9681f4aa5c806d1d3aea6566001bab39d22",
+    "anchor": {
+      "kind": "function",
+      "scope": "deriveAlternativeComparison",
+      "scopeSha256": "3283c8bbecb895a313992496493094c94b059e380662ea9181fb4563a94ffa14",
+      "expectedOccurrences": 1
+    },
+    "from": "rowId: criterion.criterionId,",
+    "to": "rowId: criterion.label,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M07/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskScanVerdictPayload: masks every alternative, leaves every other field untouched$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 89,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 68,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 1
+    },
+    "actualValue": {
+      "rows": [
+        {
+          "rowId": "Kopfhaut-Fokus",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 1
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n+       rowId: 'Kopfhaut-Fokus',\n-       rowId: 'shampoo.scalp_route',\n        state: 'match'\n      }\n    ],\n    summaryScore: 1\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M08",
+    "candidates": [
+      "C6"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "76cb96fa19f53a5ef11d7791dce5adaea72e59fe4947a8be0f11c87acb897794",
+    "anchor": {
+      "kind": "function",
+      "scope": "deriveAlternativeComparison",
+      "scopeSha256": "3283c8bbecb895a313992496493094c94b059e380662ea9181fb4563a94ffa14",
+      "expectedOccurrences": 1
+    },
+    "from": "summaryScore: rows.length > 0 ? matchCount / rows.length : 0,",
+    "to": "summaryScore: 0,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M08/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^maskScanVerdictPayload: masks every alternative, leaves every other field untouched$",
+      "tests/scan-masked-alternative.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 89,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+      },
+      "cut": {
+        "startLine": 68,
+        "text": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "keeperSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "testFileSha256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 1
+    },
+    "actualValue": {
+      "rows": [
+        {
+          "rowId": "shampoo.scalp_route",
+          "label": "Kopfhaut-Fokus",
+          "state": "match"
+        }
+      ],
+      "summaryScore": 0
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n...\n    ],\n+   summaryScore: 0\n-   summaryScore: 1\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M09",
+    "candidates": [
+      "C7"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutatedSha256": "c29c5bed6f714ea45d7ea529cc70a55c3410f62421c0a0892020da6be18cb030",
+    "anchor": {
+      "kind": "function",
+      "scope": "maskScanVerdictPayload",
+      "scopeSha256": "f2ae506448b4c1c77e74772883bbbbd4c04e909c8724bb2c0bc3228d4b1e584f",
+      "expectedOccurrences": 1
+    },
+    "from": "alternatives: verdict.alternatives.map(maskAlternative),",
+    "to": "alternatives: verdict.alternatives.slice(0, 1).map(maskAlternative),",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M09/src/lib/scan/masked-alternative.ts",
+    "test": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree$",
+      "tests/scan-resolve-anti-leak.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 315,
+        "text": "assert.equal(body.alternatives.length, 2)",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+      },
+      "cut": {
+        "startLine": 315,
+        "text": "assert.equal(body.alternatives.length, 2)",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 2,
+    "actualValue": 1,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 2",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.alternatives.length, 2)",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M10",
+    "candidates": [
+      "C7"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutatedSha256": "6960c885889f12d77d260427a811c1127cfc3fac081a6ef1b5bd8de850dead10",
+    "anchor": {
+      "kind": "function",
+      "scope": "maskAlternative",
+      "scopeSha256": "e1146b79edfebc475f6111501e6b410b53c6ae7e023579ae249a3b2bc300d7c9",
+      "expectedOccurrences": 1
+    },
+    "from": "verdict: alternative.verdict,",
+    "to": "...{ debug: true },\n    verdict: alternative.verdict,",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M10/src/lib/scan/masked-alternative.ts",
+    "test": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree$",
+      "tests/scan-resolve-anti-leak.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 325,
+        "text": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+      },
+      "cut": {
+        "startLine": 325,
+        "text": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "comparison",
+      "label",
+      "rowId",
+      "rows",
+      "state",
+      "summaryScore",
+      "verdict",
+      "verdictLabel"
+    ],
+    "actualValue": [
+      "comparison",
+      "debug",
+      "label",
+      "rowId",
+      "rows",
+      "state",
+      "summaryScore",
+      "verdict",
+      "verdictLabel"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'comparison',\n+   'debug',\n    'label',\n    'rowId',\n    'rows',\n    'state',\n    'summaryScore',",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M11",
+    "candidates": [
+      "C8"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutatedSha256": "bbd14d854dd22e7983fd92d8d492167c0c8fc8587a3ddced4a03e3f8ee52b0fb",
+    "anchor": {
+      "kind": "function",
+      "scope": "deriveAlternativeComparison",
+      "scopeSha256": "3283c8bbecb895a313992496493094c94b059e380662ea9181fb4563a94ffa14",
+      "expectedOccurrences": 1
+    },
+    "from": "label: criterion.label,",
+    "to": "label: \"Kriterium\",",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M11/src/lib/scan/alternative-comparison.ts",
+    "test": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree$",
+      "tests/scan-resolve-anti-leak.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 338,
+        "text": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+      },
+      "cut": {
+        "startLine": 338,
+        "text": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "keeperSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "testFileSha256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "Kopfhaut-Fokus",
+      "Reinigungsstärke"
+    ],
+    "actualValue": [
+      "Kriterium",
+      "Kriterium"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'Kriterium',\n+   'Kriterium'\n-   'Kopfhaut-Fokus',\n-   'Reinigungsstärke'\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M12",
+    "candidates": [
+      "C9"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutatedSha256": "d3edd852c2d1cf2162bb5fc6d1099661922568a46ab73db84a8a09e59c07ba85",
+    "anchor": {
+      "kind": "function",
+      "scope": "recordScanSession",
+      "scopeSha256": "98810cf9996598ba062fd3f9f755d3c7996e3a8765669619490fb3ff9fb6d7d7",
+      "expectedOccurrences": 1
+    },
+    "from": "    return count\n",
+    "to": "    return previous === null ? 0 : count\n",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M12/src/lib/scan/triggers/session-marker.ts",
+    "test": {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "name": "recordScanSession: the count keeps climbing across further 30-minute gaps"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^recordScanSession: the count keeps climbing across further 30-minute gaps$",
+      "tests/scan-trigger-session-marker.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 48,
+        "text": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "d02e7219d09ec8d31f287cceda5f11dd99f91be3835a48400fd0bfbfc712ae1f"
+      },
+      "cut": {
+        "startLine": 36,
+        "text": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "55feedcdc07e9f5d310830382e83e4419a843d7f2ef90cf6ed95abc5c6ad91ce"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 1,
+    "actualValue": 0,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n0 !== 1",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(recordScanSession(storage, 1_000), 1)",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M13",
+    "candidates": [
+      "C9"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutatedSha256": "cfa7910361407e08778b71daacd0e723c13ad83a42f4e7a1553ad75f3d2cb1a4",
+    "anchor": {
+      "kind": "function",
+      "scope": "recordScanSession",
+      "scopeSha256": "98810cf9996598ba062fd3f9f755d3c7996e3a8765669619490fb3ff9fb6d7d7",
+      "expectedOccurrences": 1
+    },
+    "from": "    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))",
+    "to": "    if (previous !== null) storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M13/src/lib/scan/triggers/session-marker.ts",
+    "test": {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "name": "recordScanSession: the count keeps climbing across further 30-minute gaps"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^recordScanSession: the count keeps climbing across further 30-minute gaps$",
+      "tests/scan-trigger-session-marker.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 49,
+        "text": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "d02e7219d09ec8d31f287cceda5f11dd99f91be3835a48400fd0bfbfc712ae1f"
+      },
+      "cut": {
+        "startLine": 37,
+        "text": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "55feedcdc07e9f5d310830382e83e4419a843d7f2ef90cf6ed95abc5c6ad91ce"
+      }
+    },
+    "expectedOperator": "==",
+    "expectedValue": true,
+    "actualValue": null,
+    "errorMessageIncludes": [
+      "fresh session must persist the session record",
+      "fresh session must persist the session record"
+    ],
+    "intendedAssertion": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M14",
+    "candidates": [
+      "C10"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutatedSha256": "469710a00277be4af70a36e7ae4224c4896f4cf2263bc1348e6fe57de155c5ef",
+    "anchor": {
+      "kind": "function",
+      "scope": "recordScanSession",
+      "scopeSha256": "98810cf9996598ba062fd3f9f755d3c7996e3a8765669619490fb3ff9fb6d7d7",
+      "expectedOccurrences": 1
+    },
+    "from": "    return count\n",
+    "to": "    return count === 2 ? 1 : count\n",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M14/src/lib/scan/triggers/session-marker.ts",
+    "test": {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "name": "recordScanSession: the count keeps climbing across further 30-minute gaps"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^recordScanSession: the count keeps climbing across further 30-minute gaps$",
+      "tests/scan-trigger-session-marker.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 50,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "d02e7219d09ec8d31f287cceda5f11dd99f91be3835a48400fd0bfbfc712ae1f"
+      },
+      "cut": {
+        "startLine": 38,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "keeperSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "testFileSha256": "55feedcdc07e9f5d310830382e83e4419a843d7f2ef90cf6ed95abc5c6ad91ce"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 2,
+    "actualValue": 1,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 2",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M15",
+    "candidates": [
+      "C11"
+    ],
+    "file": "src/lib/scan/profile-context.ts",
+    "sourceSha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+    "mutatedSha256": "0781b4e0cb82901dd0f42d50643dc8b84fc16e59d71f81f0e75931dd94c8fad3",
+    "anchor": {
+      "kind": "function",
+      "scope": "loadScanEvaluationContext",
+      "scopeSha256": "258bdaa988d0d67405c0de632f2262ee5f822ac3b376d0f867f7ebcdca0e340f",
+      "expectedOccurrences": 1
+    },
+    "from": "  return loaded?.prepared ?? null",
+    "to": "  return loaded ? { ...loaded.prepared, snapshot: { ...loaded.prepared.snapshot, profile: { ...loaded.prepared.snapshot.profile, hair: { ...loaded.prepared.snapshot.profile.hair, thickness: \"coarse\" } } } } : null",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M15/src/lib/scan/profile-context.ts",
+    "test": {
+      "file": "tests/scan-profile-context.test.ts",
+      "name": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions$",
+      "tests/scan-profile-context.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 82,
+        "text": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "keeperSha256": "e66400a2aecdb39b1420735d73505ce2df8ffb1ca8aa18375b7989b83c7d4a3b",
+        "testFileSha256": "db1d57b6d6c5e0d2bdf5fd491380b9de5fa013155140ecb777d8569c593bb301"
+      },
+      "cut": {
+        "startLine": 82,
+        "text": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "keeperSha256": "e66400a2aecdb39b1420735d73505ce2df8ffb1ca8aa18375b7989b83c7d4a3b",
+        "testFileSha256": "1220a4bb1c2eb038cf109e82b86799049a2a00a7028d41c1cefdc9bd85485131"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "texture": "wavy",
+      "thickness": "fine",
+      "density": "medium",
+      "length": "long",
+      "surface": "rough",
+      "elasticity": "stretches_bounces",
+      "chemicalTreatments": [
+        "natural"
+      ]
+    },
+    "actualValue": {
+      "texture": "wavy",
+      "thickness": "coarse",
+      "density": "medium",
+      "length": "long",
+      "surface": "rough",
+      "elasticity": "stretches_bounces",
+      "chemicalTreatments": [
+        "natural"
+      ]
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    chemicalTreatments: [\n      'natural'\n    ],\n    density: 'medium',\n...\n    texture: 'wavy',\n+   thickness: 'coarse'\n-   thickness: 'fine'\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M16",
+    "candidates": [
+      "C12"
+    ],
+    "file": "src/lib/scan/pending-submission.ts",
+    "sourceSha256": "849cbb78f7fd710238aa91168c5ca67383fc825025c112ae779731b4d6f486fa",
+    "mutatedSha256": "b3f280f27a38e6bb4fa27e839ca02edbd9fb1f13e35b3168272edf7789acd1ec",
+    "anchor": {
+      "kind": "function",
+      "scope": "findOpenScanSubmission",
+      "scopeSha256": "8fbe0df520aef0331e2d15ddb12f2186c10c4a080bac1ccfec5b0dad6a8a1762",
+      "expectedOccurrences": 1
+    },
+    "from": "  if (!data) return null",
+    "to": "  if (!data) return { submissionId: \"unexpected\", status: \"researching\" }",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M16/src/lib/scan/pending-submission.ts",
+    "test": {
+      "file": "tests/scan-pending-submission.test.ts",
+      "name": "findOpenScanSubmission: queries every GTIN spelling of the same number"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^findOpenScanSubmission: queries every GTIN spelling of the same number$",
+      "tests/scan-pending-submission.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 62,
+        "text": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+        "keeperSha256": "c60246324744a61dff12ff40b6be7970bc6a818fc792323d7b6a532b22e71bea",
+        "testFileSha256": "ce3ae6eec1ea9c7744d429f42ae6745a1897576d768a97d698334021aad0a5b3"
+      },
+      "cut": {
+        "startLine": 54,
+        "text": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+        "keeperSha256": "c60246324744a61dff12ff40b6be7970bc6a818fc792323d7b6a532b22e71bea",
+        "testFileSha256": "f3cf3e2a66495a21fc329ceae68928fe8e36cc03125df21f8ac4919a8da261c6"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": null,
+    "actualValue": {
+      "submissionId": "unexpected",
+      "status": "researching"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   status: 'researching',\n+   submissionId: 'unexpected'\n+ }\n- null",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+    "limits": "Actual native error unobserved; require full expected decoded Node message and first outer assertion frame. M13 explicit message plus exact operator/frame; actual null/expected true recorded for main inspection."
+  },
+  {
+    "id": "M17",
+    "candidates": [
+      "D1"
+    ],
+    "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "sourceSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+    "mutatedSha256": "187b82d368749d5287eeda56140cf235017b8d1dea9734357e19fe4e033d34f9",
+    "anchor": {
+      "kind": "sql-bytes",
+      "scope": "migration",
+      "scopeSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+      "expectedOccurrences": 1
+    },
+    "from": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "to": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_ean AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NOT NULL DO INSTEAD NOTHING;\n",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M17/supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "test": {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "name": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user\\+category$",
+      "tests/scan-name-only-submission-migration.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 211,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "keeperSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "testFileSha256": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618"
+      },
+      "cut": {
+        "startLine": 184,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "keeperSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "testFileSha256": "6b8bbe5a6850617220ed2b081d71af17501e34de4e7bcade5c16399b43d715cd"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 2,
+    "actualValue": 1,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 2",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+    "limits": "SQL text recipe inspected only; main must validate local PGlite support and intended assertion before acceptance. No database ran."
+  },
+  {
+    "id": "M18",
+    "candidates": [
+      "D2"
+    ],
+    "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "sourceSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+    "mutatedSha256": "bfb5f25433cc6062daf1878f4c3bdc361f60c8cdc389e61397580efc93940e44",
+    "anchor": {
+      "kind": "sql-bytes",
+      "scope": "migration",
+      "scopeSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+      "expectedOccurrences": 1
+    },
+    "from": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "to": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_name AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NULL DO INSTEAD NOTHING;\n",
+    "fullMutantPath": "/private/tmp/test-audit-scanner119-tools-e5gg36wq/mutants/M18/supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "test": {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "name": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user\\+category$",
+      "tests/scan-name-only-submission-migration.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 211,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "keeperSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "testFileSha256": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618"
+      },
+      "cut": {
+        "startLine": 184,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "keeperSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "testFileSha256": "6b8bbe5a6850617220ed2b081d71af17501e34de4e7bcade5c16399b43d715cd"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 2,
+    "actualValue": 1,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 2",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+    "limits": "SQL text recipe inspected only; main must validate local PGlite support and intended assertion before acceptance. No database ran."
+  }
+]

@@ -18,15 +18,6 @@ function facts(overrides: Partial<TrialAccessFacts> = {}): TrialAccessFacts {
   }
 }
 
-test("grants trial access from authorization inclusively until the immutable end exclusively", () => {
-  assert.deepEqual(resolveTrialAccess(facts(), new Date("2026-09-13T12:00:00.000Z")), {
-    hasAccess: true,
-    phase: "trial",
-    reason: "trial_active",
-  })
-  assert.equal(resolveTrialAccess(facts(), NOW).reason, "first_collection_pending")
-})
-
 test("accepts valid ISO offsets and fractional seconds", () => {
   assert.deepEqual(
     resolveTrialAccess(

@@ -1,0 +1,346 @@
+{
+ "blindId": "VT16",
+ "inciFingerprintSha256": "62c6f9e1036abf77934bec6b3629a4f56d6f273a10d4a86d539a8ea34d46c167",
+ "phase": "formula-pass (blind, claims hidden)",
+ "lane": "lane-a",
+ "standard": "lane copy of candidate shampoo-classification-v1.6.1 (not locked)",
+ "identity": {
+  "packSize": "200 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalizationNote": "Packet entries already merge split synonyms (ID-2); every position cited is the normalized one-based position, identical to the packet index + 1.",
+  "inciCount": 38
+ },
+ "formulaFacts": {
+  "e3Point": {
+   "position": 38,
+   "inci": "PARFUM / FRAGRANCE",
+   "note": "Positions 9-37 form an alphabetical run, so their order says nothing about relative amounts; E3 still counts them as prominent (convention)."
+  },
+  "surfactants": [
+   {
+    "inci": "SODIUM COCOYL ISETHIONATE",
+    "position": 2,
+    "class": "mild anionic (isethionate)",
+    "prominent": true
+   },
+   {
+    "inci": "DISODIUM LAURETH SULFOSUCCINATE",
+    "position": 3,
+    "class": "mild anionic (sulfosuccinate)",
+    "prominent": true
+   },
+   {
+    "inci": "SODIUM LAURYL SULFOACETATE",
+    "position": 4,
+    "class": "mild anionic (sulfoacetate)",
+    "prominent": true
+   },
+   {
+    "inci": "SODIUM LAUROYL SARCOSINATE",
+    "position": 5,
+    "class": "mild anionic (sarcosinate)",
+    "prominent": true
+   },
+   {
+    "inci": "COCAMIDOPROPYL BETAINE",
+    "position": 8,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "COCO-BETAINE",
+    "position": 16,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "DECYL GLUCOSIDE",
+    "position": 17,
+    "class": "nonionic cleansing (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "C12-13 PARETH-23 / C12-13 PARETH-3 / POLYSORBATE 21 / PPG-5-CETETH-20 / PEG-55 PROPYLENE GLYCOL OLEATE / TRIDECETH-6",
+    "position": [
+     11,
+     12,
+     27,
+     28,
+     22,
+     37
+    ],
+    "class": "not a cleansing route (emulsifiers/thickeners/solubilizers)"
+   },
+   {
+    "inci": "SODIUM ISETHIONATE",
+    "position": 36,
+    "class": "not a surfactant (isethionate salt)"
+   }
+  ],
+  "conditioningRoutes": {
+   "silicone": [
+    "AMODIMETHICONE@9",
+    "DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18"
+   ],
+   "cationic_conditioner": [
+    "CETRIMONIUM CHLORIDE@14"
+   ],
+   "cationic_polymer": [
+    "POLYQUATERNIUM-10@25",
+    "POLYQUATERNIUM-7@26"
+   ],
+   "payload_lipid": [
+    "HYDROGENATED COCONUT ACID@19 (fatty acid; non-material)",
+    "PRUNUS ARMENIACA KERNEL OIL / APRICOT KERNEL OIL@30 (non-material)"
+   ],
+   "pearlizing_fatty_route": [
+    "GLYCOL DISTEARATE@7"
+   ],
+   "humectants": [
+    "GLYCERIN@6",
+    "PANTHENOL@21",
+    "PROPYLENE GLYCOL@29 (solvent)"
+   ]
+  },
+  "actives": [
+   "PIROCTONE OLAMINE@24",
+   "SALICYLIC ACID@31",
+   "PANTHENOL@21"
+  ],
+  "scalpRelevant": {
+   "e4ComfortRoutesProminent": [
+    "PANTHENOL@21"
+   ],
+   "e4HumectantRefattingProminent": [
+    "GLYCERIN@6",
+    "PANTHENOL@21",
+    "PRUNUS ARMENIACA KERNEL OIL@30"
+   ],
+   "coolingAgents": [],
+   "essentialOilsOrAllergens": [],
+   "recognizedDandruffActives": [
+    "PIROCTONE OLAMINE@24"
+   ]
+  },
+  "preservatives": [
+   "BENZOIC ACID@10",
+   "PHENOXYETHANOL@23",
+   "SODIUM BENZOATE@33",
+   "PIROCTONE OLAMINE@24 (capped active)"
+  ]
+ },
+ "wLine": {
+  "wLine": {
+   "position": 10,
+   "inci": "BENZOIC ACID",
+   "classes": [
+    "preservative_or_capped_active",
+    "alphabetical_tail"
+   ]
+  },
+  "cap": {
+   "e3Point": 38
+  },
+  "alphabeticalRun": {
+   "first": 9,
+   "last": 37
+  },
+  "skipped": [],
+  "codes": [],
+  "payloadLipidMaterial": [],
+  "payloadLipidNonMaterial": [
+   "HYDROGENATED COCONUT ACID@19",
+   "PRUNUS ARMENIACA KERNEL OIL / APRICOT KERNEL OIL@30"
+  ],
+  "derivation": "Alphabetical run 9 (AMODIMETHICONE) to 37 (TRIDECETH-6): 29 consecutive ascending entries (C12-13 PARETH-23 / C12-13 PARETH-3 differ only in digits and count as in order). It does not contain the earliest cleansing surfactant (SODIUM COCOYL ISETHIONATE@2), so it is a tail; its second entry BENZOIC ACID@10 is a candidate (class d, and also class b). No candidate precedes it. (i) SODIUM COCOYL ISETHIONATE@2 before it; (ii) entries of the same run are ignored and nothing between the run end 37 and the cap 38 -> plausible. W-line 10."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic SODIUM COCOYL ISETHIONATE@2 and prominent amphoteric/glucoside co-surfactants are present (COCAMIDOPROPYL BETAINE@8, COCO-BETAINE@16, DECYL GLUCOSIDE@17). Counter-signal: four mild anionics occupy positions 2-5 ahead of the first amphoteric (@8), and positions 16-17 lie inside the alphabetical run, so the buffering share is uncertain; confidence moderate, neighbor moderate.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high: C2 is met - early (prominent, E3 point 38) silicone AMODIMETHICONE@9 (plus DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18), cationic polymers POLYQUATERNIUM-10@25 and POLYQUATERNIUM-7@26, pearlizing route GLYCOL DISTEARATE@7 and humectants GLYCERIN@6 / PANTHENOL@21; CETRIMONIUM CHLORIDE@14 adds a cationic conditioner. Counter-signal: everything from position 9 on is an alphabetized block (run 9-37), so the cationic and second silicone routes are probably sub-1 %; confidence moderate, neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high via the convergence route: three plausibly persistent deposition families converge - amino-silicone AMODIMETHICONE@9 plus DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18, cationic polymers POLYQUATERNIUM-10@25 / POLYQUATERNIUM-7@26 and the cationic conditioner CETRIMONIUM CHLORIDE@14 - in a mild C6 chassis whose reset is weak. No lipid leg is used: the only payload lipids (HYDROGENATED COCONUT ACID@19, APRICOT KERNEL OIL@30) lie after the W-line BENZOIC ACID@10 and are non-material, so W-RICH does not hold. Confidence moderate, neighbor moderate: all routes but amodimethicone sit in the alphabetized sub-1 % zone.",
+   "ruleIds": [
+    "6.6",
+    "6.7",
+    "W-LINE",
+    "W-RICH",
+    "W3",
+    "P0",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "POLYQUATERNIUM-10@25",
+     "POLYQUATERNIUM-7@26"
+    ],
+    "payload_lipid": [
+     "HYDROGENATED COCONUT ACID@19 (non-material; fatty acid, family payload_lipid vs weak_refatter uncertain - immaterial)",
+     "APRICOT KERNEL OIL@30 (non-material)"
+    ],
+    "weak_refatter": [],
+    "silicone": [
+     "AMODIMETHICONE@9",
+     "DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [
+     "CETRIMONIUM CHLORIDE@14"
+    ],
+    "reset": [
+     "SODIUM COCOYL ISETHIONATE@2",
+     "DISODIUM LAURETH SULFOSUCCINATE@3",
+     "SODIUM LAURYL SULFOACETATE@4",
+     "SODIUM LAUROYL SARCOSINATE@5 (mild anionics)",
+     "COCAMIDOPROPYL BETAINE@8",
+     "COCO-BETAINE@16 (amphoterics)",
+     "DECYL GLUCOSIDE@17 (nonionic)"
+    ],
+    "humectantContext": [
+     "GLYCERIN@6",
+     "PANTHENOL@21",
+     "PROPYLENE GLYCOL@29"
+    ],
+    "excluded": [
+     "GLYCOL DISTEARATE@7 (pearlizing wax)",
+     "CARBOMER@13 (anionic acrylate rheology polymer, 6.4)",
+     "PEG-55 PROPYLENE GLYCOL OLEATE@22, PPG-5-CETETH-20@28 (PEG/PPG thickeners/solubilizers)",
+     "C12-13 PARETH-23@11, C12-13 PARETH-3@12, POLYSORBATE 21@27, TRIDECETH-6@37 (emulsifiers)",
+     "ISOPROPYL ALCOHOL@20 (solvent)",
+     "PIROCTONE OLAMINE@24, SALICYLIC ACID@31 (actives)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate",
+   "persistence": "high",
+   "resetCapacity": "weak",
+   "counterevidence": "Positions 9-37 are alphabetized (W-LINE run), so the cationic polymers, cetrimonium and the second silicone are likely low-dose; the payload lipids are non-material (after the W-line); the four mild anionics could give more reset than \"weak\".",
+   "whyThisBand": "Amino-silicone, a silicone elastomer copolymer, two cationic polymers and a quat are designed to deposit and persist even at low dose (6.4/W-LINE rationale), and a mild isethionate/sulfosuccinate/sulfoacetate/sarcosinate chassis does not offset them.",
+   "whyNotNeighborBand": "moderate would require the reset to offset the deposition or the deposition to be light; neither is shown by the formula - the late (alphabetized) listing argues for lower amounts but cannot bound them, and a lighter call on doubt is the recommending direction (P0).",
+   "confidenceLimitingFactor": "Amounts inside the alphabetized block are unknown; the band rests on non-lipid families whose dose cannot be read from order."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "PROVISIONAL (formula-only, claims hidden): general. No claim direction is visible in the blind pass, so no specialist focus has a claim-plus-formula case yet (7.2 \"unsupported/generic claims\"). Formula care-direction verdict recorded for reconciliation: nonspecific. Formula-led route that could matter: recognized dandruff active PIROCTONE OLAMINE@24 (with SALICYLIC ACID@31).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "GLYCERIN@6",
+     "PANTHENOL@21"
+    ],
+    "repairRoutes": [
+     "AMODIMETHICONE@9"
+    ],
+    "sharedConditioningRoutes": [
+     "POLYQUATERNIUM-10@25",
+     "POLYQUATERNIUM-7@26",
+     "CETRIMONIUM CHLORIDE@14",
+     "GLYCOL DISTEARATE@7"
+    ],
+    "limitation": "Generic silicone/cationic conditioning; no protein or damage-care cluster and only two humectants. A recognized anti-dandruff active (PIROCTONE OLAMINE@24) makes scalp_active possible if a dandruff claim appears."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims hidden; the provisional value can change only through 3.2 reconciliation.",
+   "decisionTrace": "Claim direction: null (blind). Formula compatible: n/a until a claim names a job. Decision: provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered and kept: no exact-product positioning is visible in the blind pass (Section 8 condition 1 cannot be met).",
+   "rationale": "PROVISIONAL (formula-only): []. Secondary focus requires distinct exact-product positioning, hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "treatment",
+   "rationale": "PROVISIONAL (formula-only): regular, the default (Section 9). Every non-default trigger needs a moderate/high-graded claim or direction (CL-SRC), hidden in the blind pass. treatment becomes possible because dandruffSupport is supported (needs a qualifying E2 dandruff claim, U3); alternating impossible (not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "PROVISIONAL (formula-only): not_targeted, because SC1 positioning (an E2 sensitive/dry claim unit graded moderate/high) cannot be seen in the blind pass. Formula half (CSA) recorded for reconciliation: CSA would pass - prominent comfort route PANTHENOL@21 and humectant GLYCERIN@6 (prominent by E3). Counter-signals: declared PARFUM@38; SALICYLIC ACID@31; no cooling agent.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E3",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: the complete INCI contains PIROCTONE OLAMINE@24, a recognized anti-dandruff active (Section 11 table; DS1 for selenium sulfide). Formula-only property, final in the blind pass; whether a dandruff target is projected depends on the claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1",
+    "N-ALT"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "provisionalNotes": [
+  "focusPrimary, focusSecondary, usageRole and scalpComfortTarget are claim-dependent and provisional (formula-only).",
+  "dandruffSupport supported; a dandruff target depends on a qualifying E2 dandruff claim (S-DANDRUFF, R17.3)."
+ ]
+}

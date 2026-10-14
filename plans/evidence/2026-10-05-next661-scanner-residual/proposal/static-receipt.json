@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "before": 119,
+    "transfer": 119,
+    "cut": 105
+  },
+  "files": 21,
+  "snapshots": 63,
+  "candidates": 14,
+  "keepers": 7,
+  "changedKeepers": 5,
+  "unrelatedCallbacks": 98,
+  "syntaxParsedOnly": true,
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "runtimeRuns": 0
+}

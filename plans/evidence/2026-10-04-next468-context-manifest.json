@@ -1,0 +1,199 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "counts": {
+    "before": 111,
+    "transfer": 111,
+    "cut": 104
+  },
+  "sourceAndDependencyGuards": {
+    "src/lib/agent-v2/contracts.ts": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "src/lib/agent-v2/pending-followup-action.ts": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "src/lib/agent-v2/runtime/product-tool-context.ts": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+    "src/lib/agent-v2/runtime/responses-agent.ts": "09a317d720f8bb290cf6d28c0f736e9b465d9ee622b838794e877181e2fbef17",
+    "src/lib/agent-v2/validation/final-answer-validator.ts": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "src/lib/agent-v2/production/chat-pipeline.ts": "d3bef7860ac7be43e0ae42ed13bf9a7cf3148008ef87f27109884c5830cfa6c5",
+    "src/lib/agent-v2/tools/tool-definitions.ts": "3a89befd605e2613ed16bf5ca249acf261822fa4afb198f29c3f297095820f76",
+    "src/lib/agent-v2/named-product-context.ts": "d42ff75aa10e1d3142bc9f92f066473c05dd8efdd1c12a0b5b975c1af2b9d08e",
+    "src/lib/agent-v2/resolved-product-selection-adapter.ts": "d459ca466032b512ad9a83942dae66ede47fc6b41d9a097e294f5b58294adbc9",
+    "src/lib/agent-v2/product-lookup-policy.ts": "98f0032ba28a5634d8670f26de3b723f4d8ec83c69c6c61481da4a7efbe10dd0",
+    "src/lib/agent-v2/model-policy.ts": "86e31cf0cc28f058fdd26b8adabcb8d4217bc9f5c2662b235f4dda0e5593c77c",
+    "src/components/chat/chat-message.tsx": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+    "src/components/chat/product-intake-card.tsx": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "src/components/chat/product-lookup-clarification-card.tsx": "6217bd9198daf704351618917233857a0e2a1956fb9a25d91ec08a477e82af60",
+    "src/components/chat/product-image.tsx": "c6a7836ed34f15d1b0721a3e5649d468cd93d67fffd7683ef8f02dba93ea6a30",
+    "src/components/product-intake/product-intake-form-fields.tsx": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "src/hooks/use-product-intake-brand-options.ts": "3236faf7cc2d044e8d543c3bb80683e14404b3cb8ec1b70b75da770e693047bc",
+    "src/hooks/use-chat.ts": "8543c94ef05ff53b1fac4ce0babc298f50ea884dde170a47e57aeaceda7f26d3",
+    "src/lib/chat/product-lookup-selection-ui.ts": "6e41baf21f88ed8d7f1263997703ab41db92c732e70697750701f07f5b724bef",
+    "tests/agent-v2-responses-runtime.spec.ts": "61b4210729ac0514b120f9630c291a69639cd6329cad0d28808aef2d37b69990",
+    "data/agent-v2/evals/positive-reference-cases.json": "a532cdf5bca973602a46df5633d116164947c777c361fdd384c34dcdd1d3d05c",
+    "data/agent-v2/evals/request-interpretation-regression.json": "331931f0a18143336f85dab46f8b0842e8e5b72e3c37986fa927cc7935b9e11e",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "node_modules/zod/package.json": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+    "node_modules/zod/v4/core/parse.js": "2578b8d1341c3882a6c089f9ec57ce1c1a16b8b2b477721d4d89ba3d3ee50c9c",
+    "node_modules/zod/v4/classic/schemas.js": "eb4af7946a092aff8678b9251728ea58dab40154920cd65ec4a2ca1d4df68393"
+  },
+  "files": [
+    {
+      "file": "tests/agent-v2-current-care-context.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-current-care-context.spec.ts",
+          "sha256": "5639001ec803c72ccf74e94711af0add6cacecae0e478c6c146b4d2affab4f04",
+          "count": 12
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-current-care-context.spec.ts",
+          "sha256": "5639001ec803c72ccf74e94711af0add6cacecae0e478c6c146b4d2affab4f04",
+          "count": 12
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-current-care-context.spec.ts",
+          "sha256": "5639001ec803c72ccf74e94711af0add6cacecae0e478c6c146b4d2affab4f04",
+          "count": 12
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-named-product-context.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-named-product-context.spec.ts",
+          "sha256": "cc94d0ead07803dfb43b4740b4341bc2328a557913bf83ddc38e145909db99c4",
+          "count": 16
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-named-product-context.spec.ts",
+          "sha256": "cc94d0ead07803dfb43b4740b4341bc2328a557913bf83ddc38e145909db99c4",
+          "count": 16
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-named-product-context.spec.ts",
+          "sha256": "cc94d0ead07803dfb43b4740b4341bc2328a557913bf83ddc38e145909db99c4",
+          "count": 16
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-product-tool-context.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-product-tool-context.spec.ts",
+          "sha256": "ca663a9ea4b16d519bef54caf9a45b74d7e6cc1044d79d3e2259bf44f3533293",
+          "count": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-product-tool-context.spec.ts",
+          "sha256": "ca663a9ea4b16d519bef54caf9a45b74d7e6cc1044d79d3e2259bf44f3533293",
+          "count": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-product-tool-context.spec.ts",
+          "sha256": "14fa629f0aafc2001a78f8708a6b322ddcd6fed5250d455fb8017e0b5786b4c6",
+          "count": 7
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-product-lookup-policy.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-product-lookup-policy.spec.ts",
+          "sha256": "8f6b4d83ed9eb8d181d4d2a4680baf22b726527361ada1127d016ac237cc5541",
+          "count": 5
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-product-lookup-policy.spec.ts",
+          "sha256": "8f6b4d83ed9eb8d181d4d2a4680baf22b726527361ada1127d016ac237cc5541",
+          "count": 5
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-product-lookup-policy.spec.ts",
+          "sha256": "8f6b4d83ed9eb8d181d4d2a4680baf22b726527361ada1127d016ac237cc5541",
+          "count": 5
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-resolved-product-selection-adapter.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-resolved-product-selection-adapter.spec.ts",
+          "sha256": "c8e960d455f4363aed360bea8b81580be30012ab8ea06415d7f2c60e47649448",
+          "count": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-resolved-product-selection-adapter.spec.ts",
+          "sha256": "c8e960d455f4363aed360bea8b81580be30012ab8ea06415d7f2c60e47649448",
+          "count": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-resolved-product-selection-adapter.spec.ts",
+          "sha256": "c8e960d455f4363aed360bea8b81580be30012ab8ea06415d7f2c60e47649448",
+          "count": 8
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-pending-followup-action.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-pending-followup-action.spec.ts",
+          "sha256": "e560999a9d78a8e4f714e1994cf896fd701f6148810d654b32929e7e05e36646",
+          "count": 9
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-pending-followup-action.spec.ts",
+          "sha256": "e560999a9d78a8e4f714e1994cf896fd701f6148810d654b32929e7e05e36646",
+          "count": 9
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-pending-followup-action.spec.ts",
+          "sha256": "939150f7e5e8f57e5e7592291c35856c9764ed79e6da3f098ef6e7cbec930826",
+          "count": 8
+        }
+      }
+    },
+    {
+      "file": "tests/agent-v2-contracts.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/agent-v2-contracts.spec.ts",
+          "sha256": "341dce4d44d0ea935ab06b4b0397b7d6b07a72e545c47d30645fef12151798c8",
+          "count": 20
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/agent-v2-contracts.spec.ts",
+          "sha256": "341dce4d44d0ea935ab06b4b0397b7d6b07a72e545c47d30645fef12151798c8",
+          "count": 20
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/agent-v2-contracts.spec.ts",
+          "sha256": "24ad3ba4e5e41b33550fdd35ed1ae61beee866caaf22a64be31268675c5cda99",
+          "count": 19
+        }
+      }
+    },
+    {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/before/tests/chat-product-mentions.test.tsx",
+          "sha256": "9c1df257bbf1109a5d2fa06394d77032f5411d2d6ef728db9cec76e9d781ff37",
+          "count": 33
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/transfer/tests/chat-product-mentions.test.tsx",
+          "sha256": "c50458bf6dde16a79f8cde39925b09db2a7738d8d258e852ab677c7b23187653",
+          "count": 33
+        },
+        "cut": {
+          "path": "/tmp/test-audit-agent-context-staging-UcVSik/cut/tests/chat-product-mentions.test.tsx",
+          "sha256": "27a14c51c00ddf2311be3f6114091aaf3f7873deb25f8d941e2cab92f4a5ae32",
+          "count": 29
+        }
+      }
+    }
+  ]
+}

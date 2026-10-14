@@ -1,0 +1,145 @@
+{
+  "blindId": "P08",
+  "identity": {
+    "productName": "Lavera Pflegeshampoo basis sensitiv Hydrate & Care",
+    "brand": "Lavera",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 39,
+    "formulaFingerprintSha256": "bd2c7a1b3a6620fc542ee6f3f159320c270d1200ee305154de1818379d57b64f",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names (markers * and ** stripped, kept as provenance: * organic, ** natural fragrance components) joined with ', '",
+    "positioningSourceGrades": "product name high ('basis sensitiv', 'Hydrate & Care'); manufacturer moderate; retailer low",
+    "conflicts": "Manufacturer directions captured only partly (image); not material. Claim 'Hyaluron' -> Sodium Hyaluronate (10).",
+    "e3Point": "Fragrance (Parfum) at 28; ingredients 1-27 are prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Strong by C5 convention: defining anionic Sodium Coco-Sulfate (3) is alkyl-sulfate type; buffers Cocamidopropyl Betaine (5), Lauryl Glucoside (6), Coco-Glucoside (24) (>=2); but Sodium Cetearyl Sulfate (19) is a prominent alkyl sulfate (assigned by its chemistry name, C3) and therefore a reinforcing route -> C5 'otherwise' -> strong. Counter-signals toward moderate: Sodium Cetearyl Sulfate is a C16-18 emulsifying sulfate paired with Cetearyl Alcohol (15), three buffers, aloe base, Sunflower Oil (11), Glycerin (4). These lower confidence to moderate but cannot move the convention value (§4).",
+      "ruleIds": ["C5", "C3", "C4", "E3", "N-ALT", "§4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High via C2 (payload-lipid variant): prominent payload lipid Helianthus Annuus Seed Oil (11) in place of the early silicone, cationic polymer Guar Hydroxypropyltrimonium Chloride (21), fatty route Cetearyl Alcohol (15), humectants Glycerin (4), Sodium Hyaluronate (10), Betaine (17); plus weak refatter PCA Glyceryl Oleate (16). C2 holds even in a strong chassis (C2). Counter-signal: single late guar, natural-cosmetic oil levels likely low -> neighbor moderate.",
+      "ruleIds": ["C2", "§5", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "formulaIdentifiers": {"fingerprint": "bd2c7a1b3a6620fc542ee6f3f159320c270d1200ee305154de1818379d57b64f", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (21)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Helianthus Annuus Seed Oil (11)", "Cetearyl Alcohol (15)"],
+        "weak_refatter": ["PCA Glyceryl Oleate (16)"],
+        "protein_film": ["Arginine (22) - free amino acid, trace"],
+        "film_former": [],
+        "reset": ["anionic: Sodium Coco-Sulfate (3), Sodium Cetearyl Sulfate (19)", "amphoteric: Cocamidopropyl Betaine (5)", "nonionic: Lauryl Glucoside (6), Coco-Glucoside (24)"],
+        "humectantContext": ["Aloe Barbadensis Leaf Juice (2)", "Glycerin (4)", "Sodium Hyaluronate (10)", "Betaine (17)"],
+        "excluded": ["Tridecane (23), Undecane (25) - volatile alkanes, not persistent payload", "Citrus peel oils, Lavandula Oil/Extract (30-39) - essential/fragrance oils (6.4)", "Tocopherol (12) - antioxidant", "Sea Salt (13), Sodium Sulfate (26), Sodium Chloride (27) - salts", "Levulinic Acid (14), Sodium Levulinate (18), Sodium Anisate (20) - preservative system", "Cucumber (8), Melissa (9) extracts - botanicals"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Prominent sunflower oil and cetearyl alcohol plus one guar and a weak refatter: W-RICH formally met, but each lipid is mid-list and the polymer is single and late."},
+      "persistence": {"value": "moderate", "rationale": "Fatty alcohol is waxy/substantive; liquid oil and single guar are moderately retained."},
+      "resetCapacity": {"value": "strong", "rationale": "Alkyl sulfate chassis with a second sulfate and two glucosides (C5 strong)."},
+      "counterEvidence": "Strong reset offsets the lipid/polymer deposit (toward low); W-RICH convergence (toward high).",
+      "whyThisBand": "A lipid + fatty alcohol + cationic guar system plausibly leaves bounded residue; strong reset keeps it from coating.",
+      "whyNotNeighborBand": "Not high: reset is strong (not limited) and only one, late cationic polymer converges with mid-list lipids; no silicone. Not low (W2): two distinct deposition families including a prominent payload lipid and a fatty alcohol meet W-RICH, so calling it lightweight would understate the residue risk.",
+      "limitingFactor": "Strong reset vs W-RICH deposition; lipid levels unknown. Lane judged low the more realistic neighbor given strong reset.",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity strong); neighbor low.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W-RICH", "W2", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment; no count/position assigned band; three subjudgments present; whyNotNeighborBand specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin (4)", "Sodium Hyaluronate (10)", "Betaine (17)"], "repairRoutes": [], "sharedConditioningRoutes": ["Helianthus Annuus Seed Oil (11)", "Cetearyl Alcohol (15)", "PCA Glyceryl Oleate (16)", "Guar Hydroxypropyltrimonium Chloride (21)"], "limitation": "Rinse-off; strong-convention chassis."},
+      "claimRole": "candidate",
+      "counterSignal": "Sensitive-scalp positioning ('basis sensitiv', 'Schont empfindliche Kopfhaut') competes; cleansing strong by convention; heavy essential-oil load.",
+      "rationale": "Moisture: F7 step 1 - 'Hydrate' (moisture) is named in the exact product name; 'sensitiv' in the name does not name the scalp and so is not a scalp role in the name (E1, F7). Manufacturer copy 'Spendet intensive Feuchtigkeit', 'hilft, Trockenheit spürbar zu mildern' (hair) corroborates; formula moisture_supported (F1).",
+      "decisionTrace": {"claimDirection": "moisture (name 'Hydrate', high)", "formulaCompatible": true, "compatibleRoute": "Glycerin (4) + Sodium Hyaluronate (10) + Betaine (17) with Sunflower Oil (11)/Cetearyl Alcohol (15)", "decisionReason": "F7 step 1: role named in product name is primary."},
+      "ruleIds": ["F7", "F1", "E1", "§7.3", "CL-SRC", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": ["scalp_active"],
+      "confidence": "moderate",
+      "neighboringAlternative": "empty",
+      "careDirection": {"verdict": "not_applicable"},
+      "claimRole": "candidate",
+      "counterSignal": "The sensitive units are borderline (gentleness wording and an ingredient-reputation sentence); essential oils and C5-strong chassis.",
+      "rationale": "Scalp_active secondary (F7 step 3, Section 8): distinct manufacturer sensitive-scalp positioning ('Schont empfindliche Kopfhaut'; 'Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen'; name word 'sensitiv' counts together with these, SC1), scalpComfortTarget targeted, and an independent route not cited by the moisture primary: Aloe Barbadensis Leaf Juice (2), Melissa Officinalis Leaf Extract (9), glucoside/betaine buffering (Lauryl Glucoside 6) (F3).",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": ["scalp_active"], "matchingClaims": ["Schont empfindliche Kopfhaut (manufacturer)", "Bio-Aloe Vera ... die Kopfhaut zu beruhigen (manufacturer)"], "independentRoutes": ["Aloe Barbadensis Leaf Juice (2)", "Melissa extract (9)", "Lauryl Glucoside (6)"], "whyDistinct": "Scalp comfort vs lengths hydration; disjoint ingredients (F3).", "exceptionCode": null},
+      "ruleIds": ["§8", "F3", "F7", "SC1", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: 'Tag für Tag' is not U2 frequency wording (and frequent needs non-strong cleansing anyway); no reset intent, no D1, no dandruff. Strong cleansing alone never fires alternating.",
+      "decisionTrace": "default regular; alternating not fired (no U4 reset intent); frequent not fired (strong, and no U2 wording).",
+      "ruleIds": ["§9", "U1", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: explicit sensitive positioning by manufacturer units naming the sensitive scalp ('Schont empfindliche Kopfhaut'; aloe 'die Kopfhaut zu beruhigen'), with name word 'sensitiv' counted together with them (SC1); supportive architecture: aloe juice as base (2), glycerin, hyaluronate, betaine, sunflower oil/fatty alcohol refatting, three mild buffers. Counter-signals: C5-strong chassis by convention, many essential oils/allergens after fragrance (29-39). 'pH-hautneutral', 'Sanft zur Kopfhaut' are mildness only.",
+      "ruleIds": ["§10", "SC1", "E2", "E2a", "CL-SRC"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable; W neighbor low -> ideal (higher) -> no flag."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal; neighbor low keeps ideal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 C high -> ideal. T4: C neighbor moderate with W moderate -> acceptable (lower) -> flag coarse. W neighbor low with C high keeps ideal."},
+      "ruleIds": ["T1", "T4", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "moderate", "rationale": "S-ORDINARY way 4: sensitive target claimed (manufacturer units, moderate) and scalpComfortTarget targeted, but S-SENSITIVE formula gate fails: no prominent E4 comfort route (none of Panthenol, Allantoin, Bisabolol, Urea, Polidocanol, Dipotassium Glycyrrhizate, Avena Sativa, Niacinamide present). Prominent unlisted candidate Aloe Barbadensis Leaf Juice (2). No dry-scalp claim (only dry hair). S-FAIL -> ordinary + review flag."},
+      "secondary": null,
+      "ruleIds": ["S-SENSITIVE", "S-FAIL", "S-ORDINARY", "E4", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "moderate", "rationale": "I1: strong without alternating/occasional_reset -> regular = normal bucket expectation. I3: neighbor moderate -> regular, same -> no flag.", "ruleIds": ["I1", "I2", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false; D2 not met (focus not clarifying, usage not occasional_reset).", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_specialist_gate_failed", "detail": "target sensitive; formula gate failed: no prominent E4 comfort route; unlisted_route_candidate:Aloe Barbadensis Leaf Juice"},
+      {"code": "review_thickness_boundary", "detail": "coarse: conditioningLevel neighbor moderate would make coarse acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "C3/C5: Sodium Cetearyl Sulfate (19) is chemically an alkyl sulfate but functionally an emulsifier paired with Cetearyl Alcohol; the C3 'not a route' list does not exclude it, so it was counted as a prominent reinforcing route -> strong. Without it C5 gives moderate.",
+    "E2a/SC1: whether 'Schont empfindliche Kopfhaut' (gentleness toward a named scalp state) and 'Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen' (ingredient-reputation sentence) are qualifying sensitive units or protective wording. Lane counted them; the other reading gives not_targeted, focusSecondary empty, ordinary way 1 without the S-FAIL flag (same rows).",
+    "S-FOCUS: scalp_active (secondary) with ordinary primary target is explained by the S-FAIL flag -> no review_focus_target_mismatch."
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "productId": "12-guhl-panthenol-reparatur-2in1",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "2in1 Kur & Spülung. Kur mode: washed wet hair, 2–3 minutes, rinse → qualifies. Spülung mode is the conditioner mode (marketed as Spülung, 'kurz … ca. 30 Sekunden') and is not a mask mode — the standard's R1 worked case for this exact product. Classified on the Kur mode only.",
+    "evidenceSignals": [
+      "Kur mode: 2–3 min, 'dann ausspülen'",
+      "uncovered: conditioner (Spülung)"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "TETRASODIUM GLUTAMATE DIACETATE",
+    "index": 7,
+    "status": "plausible",
+    "note": "Earliest tail-class species is the chelator @7 (R8 class); Ethylhexylglycerin @9 is paired with Phenoxyethanol @12; Parfum @13. Base species (Cetearyl @2, Behentrimonium Chloride @3, Cetyl Esters @5) outrank it. Plausible. tail_index−1 = Panthenol @6."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S1: Behentrimonium Chloride @3 only → fails. S2: Cetearyl Alcohol @2. S3: Cetyl Esters @5 only (Avena Sativa Kernel Oil @11 in tail) → fails. One signal → moderate.",
+      "evidenceSignals": [
+        "S2: Cetearyl @2"
+      ],
+      "counterSignals": [
+        "S1/S3 not met"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "Positive leanness test: no R4b above the marker (Cetyl Esters @5 is a wax ester; Avena Sativa Kernel Oil @11 is in the tail), no silicone, exactly one cationic on the full list (Behentrimonium Chloride @3). Plausible marker, no boundary dependence → low.",
+      "evidenceSignals": [
+        "no above-tail R4b",
+        "no silicone",
+        "single cationic on full list"
+      ],
+      "counterSignals": []
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species (Glycine @10 is a free amino acid). Humectants above tail: Dipropylene Glycol @4, Panthenol @6 (partial). Coherent conditioning/humectant base → moisture.",
+      "evidenceSignals": [
+        "base @2/@3/@5",
+        "humectants @4/@6"
+      ],
+      "counterSignals": [
+        "'Reparatur' naming (E0)"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 route, no bond token; panthenol and glycine are explicit non-upgraders.",
+      "evidenceSignals": [
+        "bond_route none"
+      ],
+      "counterSignals": [
+        "repair naming"
+      ]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 clears nothing. Moisture guard criterion 1 fails (2 humectants above tail, no glycerin). No silicone/polymer for shine or smoothing. → general. focus_care_verdict: nonspecific.",
+      "evidenceSignals": [
+        "capable conventional base"
+      ],
+      "counterSignals": []
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary qualifies (cluster below criterion 1).",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask (Kur, 2–3 min); uncovered: [conditioner (Spülung, ~30 s)]",
+        "note": "Profile describes only the Kur mode; the Spülung mode is Conditioner-engine territory and is not profiled here."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Reparatur' naming vs repair_support_level low",
+        "note": "Repair positioning carried by Panthenol/Glycine only, which are non-qualifiers; moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": []
+}

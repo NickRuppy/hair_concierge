@@ -1,0 +1,24 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/funnel-api.test.ts",
+    "tests/funnel-client.test.ts",
+    "tests/funnel-cookie.test.ts",
+    "tests/funnel-migration.test.ts",
+    "tests/funnel-rate-limit.test.ts",
+    "tests/funnel-route.test.ts",
+    "tests/funnel-server.test.ts",
+    "tests/gated-example-pages.test.tsx",
+    "tests/gated-pages-zero-mutation.test.tsx",
+    "tests/gated-preview-component.test.tsx",
+    "tests/editorial-pages.test.tsx",
+    "tests/landing-client-import-boundary.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+}

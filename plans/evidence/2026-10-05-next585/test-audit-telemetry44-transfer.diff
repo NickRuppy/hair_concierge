@@ -1,0 +1,10 @@
+--- tests/sentry-client-runtime.test.ts (before)
++++ tests/sentry-client-runtime.test.ts (transfer)
+@@ -171,6 +171,7 @@
+ 
+   const captures = harness.calls.filter(([name]) => name === "captureException")
+   assert.equal(captures.length, 2)
++  assert.equal(harness.calls.filter(([name]) => name === "warn").length, 1, "one overflow warning")
+   assert.equal((captures[0]?.[1] as Error).message, "second")
+   assert.equal((captures[1]?.[1] as Error).message, "Unhandled promise rejection")
+   assert.deepEqual(

@@ -1,0 +1,63 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "readOnly": [
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-xwq0stb7/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-xwq0stb7/operator-edit.cjs --check",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-xwq0stb7/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-xwq0stb7/operator-run-controls.cjs --check",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-xwq0stb7/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-xwq0stb7/proof-attestation.cjs",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-xwq0stb7/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-xwq0stb7/static-integrity.cjs"
+  ],
+  "fullNative": {
+    "executable": "/usr/local/bin/node",
+    "args": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/personal-plan-email-precheck.test.ts",
+      "tests/personal-plan-preparation-client.test.ts",
+      "tests/personal-plan-prepare-idempotency-migration.test.ts",
+      "tests/personal-plan-prepare-route.test.ts",
+      "tests/personal-plan-prepared-plan.test.ts",
+      "tests/personal-plan-production-client.test.ts",
+      "tests/personal-plan-ready-server-first.test.tsx",
+      "tests/personal-plan-ready-transition.test.ts",
+      "tests/personal-plan-result-artifact-email.test.ts",
+      "tests/personal-plan-result-artifact-route.test.ts",
+      "tests/personal-plan-result-return-migration.test.ts",
+      "tests/personal-plan-result-return-reset.test.ts",
+      "tests/personal-plan-result-return.test.ts",
+      "tests/personal-plan-result-reveal.test.ts",
+      "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+      "tests/personal-plan-return-artifact-repair.test.ts",
+      "tests/quiz-result-artifact-email.test.ts",
+      "tests/quiz-result-artifact-route.test.ts",
+      "tests/quiz-result-artifact-trigger.test.ts",
+      "tests/personal-plan-api-stage1.test.ts",
+      "tests/personal-plan-stage1-source.test.ts",
+      "tests/personal-plan/input.test.ts",
+      "tests/personal-plan/needs.test.ts",
+      "tests/personal-plan/portfolio.test.ts",
+      "tests/personal-plan/reasons.test.ts",
+      "tests/personal-plan/types.test.ts",
+      "tests/personal-plan/persistence/stage1-service.test.ts"
+    ],
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+  },
+  "fullNativeShell": "/usr/local/bin/node --import ./tests/server-only-register.cjs --import tsx --test --test-concurrency=1 tests/personal-plan-email-precheck.test.ts tests/personal-plan-preparation-client.test.ts tests/personal-plan-prepare-idempotency-migration.test.ts tests/personal-plan-prepare-route.test.ts tests/personal-plan-prepared-plan.test.ts tests/personal-plan-production-client.test.ts tests/personal-plan-ready-server-first.test.tsx tests/personal-plan-ready-transition.test.ts tests/personal-plan-result-artifact-email.test.ts tests/personal-plan-result-artifact-route.test.ts tests/personal-plan-result-return-migration.test.ts tests/personal-plan-result-return-reset.test.ts tests/personal-plan-result-return.test.ts tests/personal-plan-result-reveal.test.ts tests/personal-plan-return-artifact-repair-postgres.test.ts tests/personal-plan-return-artifact-repair.test.ts tests/quiz-result-artifact-email.test.ts tests/quiz-result-artifact-route.test.ts tests/quiz-result-artifact-trigger.test.ts tests/personal-plan-api-stage1.test.ts tests/personal-plan-stage1-source.test.ts tests/personal-plan/input.test.ts tests/personal-plan/needs.test.ts tests/personal-plan/portfolio.test.ts tests/personal-plan/reasons.test.ts tests/personal-plan/types.test.ts tests/personal-plan/persistence/stage1-service.test.ts",
+  "fullNativeRequirement": "Existing opt-in PostgreSQL gate must remain disabled; exactly one unchanged named skip, all other native titles pass. Root controls environment/launch and closes all other runners first. No new test skip or environment edit in this proposal.",
+  "transfer": "/usr/local/bin/node /tmp/test-audit-generation157-tools-xwq0stb7/operator-edit.cjs transfer",
+  "controls": "/usr/local/bin/node /tmp/test-audit-generation157-tools-xwq0stb7/operator-run-controls.cjs run",
+  "controlsCurrentStatus": "Blocked before children until D1 diagnostic resolved; no auto-probe",
+  "explicitRootCaptureOnly": "/usr/local/bin/node /tmp/test-audit-generation157-tools-xwq0stb7/operator-run-controls.cjs run D1-required-thickness",
+  "captureLimitation": "Only after root accepts recipe and sequences transfer phase safely. Will restore exact bytes, verify final clean, then intentionally fail diagnostic acceptance. No cut proof. No execution here.",
+  "cut": "/usr/local/bin/node /tmp/test-audit-generation157-tools-xwq0stb7/operator-edit.cjs cut <eligible-transfer-receipt-dir> <completion-sha256>",
+  "cutCurrentStatus": "Cannot qualify18 complete proof in current unresolved version",
+  "nativeProof": "/usr/local/bin/node /tmp/test-audit-generation157-tools-xwq0stb7/operator-native-proof.cjs <before|transfer|cut> <closed-native.tap> <exact-command.json>"
+}

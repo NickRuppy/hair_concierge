@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { NextRequest, NextResponse } from "next/server"
 
-import { createDiscoveryDecisionsHandler } from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
+import {
+  createDiscoveryDecisionsHandler,
+  createDiscoveryDecisionsResetHandler,
+} from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
 import { createDiscoveryFinalizeHandler } from "../src/app/api/admin/beratung/[enrollmentId]/finalize/route"
 import { composeRunsheetProducts } from "../src/components/discovery/cockpit/runsheet-products"
 import {
@@ -316,6 +319,149 @@ test("a swap must name a product the cockpit displayed for that very step", asyn
     written.map((entry) => entry.swapProductId),
     [ids.alternative],
   )
+})
+
+test("an empty tie step accepts an equally ideal product and still refuses one nobody offered", async () => {
+  const BOND_KEY = "decision:bondbuilder:specialized_bond_treatment:gap"
+  const equal = "30000000-0000-4000-8000-0000000000e1"
+  const bondStep: DiscoveryIdealStep = {
+    decisionKey: BOND_KEY,
+    category: "bondbuilder",
+    role: "specialized_bond_treatment",
+    section: "basis",
+    categoryLabel: "Bondbuilder",
+    roleLabel: "Strukturpflege",
+    roleDescription: null,
+    frequencyLabel: "nach Herstellerangabe",
+    preview: {
+      kind: "recommendation",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      decisionKey: BOND_KEY,
+      productId: ids.ideal,
+      productName: "K18 Leave-In",
+      imageUrl: "https://catalog.example/k18.jpg",
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      commerce: {
+        priceEur: null,
+        purchaseLinkStatus: null,
+        netContentValue: null,
+        netContentUnit: null,
+        priceLabel: null,
+        netContentLabel: null,
+        availabilityLabel: null,
+        productUrl: null,
+        affiliateDisclosure: null,
+      },
+      reasoning: { productCriteria: "Struktur.", fit: "Passt.", frequency: "nach Bedarf" },
+    },
+    equalOptions: [
+      {
+        productId: equal,
+        productName: "Elvital Pre-Shampoo",
+        priceLabel: "8,95 €",
+        imageUrl: null,
+        applicationLabel: "Vorwäsche, ausspülen",
+      },
+    ],
+  }
+  const model: DiscoveryCockpitModel = {
+    ...readyModel(),
+    steps: [bondStep],
+    verdicts: [],
+    routine: composeDiscoveryRefinedRoutine({
+      steps: [bondStep],
+      items: [],
+      decisions: [],
+      swapProducts: [],
+    }),
+  }
+  const written: DiscoveryCallDecisionInput[] = []
+  const handler = createDiscoveryDecisionsHandler(
+    baseDeps({
+      loadModel: async () => model,
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
+        written.push(input)
+        return stored(input)
+      },
+    }),
+  )
+  const chosen = await handler(
+    decisionRequest({ decisionKey: BOND_KEY, decision: "swap", swapProductId: equal }),
+    params,
+  )
+  assert.equal(chosen.status, 200)
+  const stranger = await handler(
+    decisionRequest({ decisionKey: BOND_KEY, decision: "swap", swapProductId: ids.stranger }),
+    params,
+  )
+  assert.equal(stranger.status, 400)
+  assert.equal(await code(stranger), "swap_not_offered")
+  assert.deepEqual(
+    written.map((entry) => entry.swapProductId),
+    [equal],
+  )
+})
+
+function resetRequest() {
+  return new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/decisions`, {
+    method: "DELETE",
+  })
+}
+
+test("„Testlauf zurücksetzen“ deletes this intake's decisions and says how many", async () => {
+  const calls: string[] = []
+  const handler = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      resetDecisions: async (intakeId: string) => {
+        calls.push(intakeId)
+        return { outcome: "reset" as const, deleted: 7 }
+      },
+    }),
+  )
+  const response = await handler(resetRequest(), params)
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { deleted: 7 })
+  assert.deepEqual(calls, [ids.intake])
+})
+
+test("reset is frozen once finalised — before and inside the write", async () => {
+  let called = false
+  const before = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      loadIntake: async () => ({ ...submittedIntake, callFinalizedAt: "2026-10-01T10:00:00Z" }),
+      resetDecisions: async () => {
+        called = true
+        return { outcome: "reset" as const, deleted: 0 }
+      },
+    }),
+  )
+  const frozen = await before(resetRequest(), params)
+  assert.equal(frozen.status, 409)
+  assert.equal(await code(frozen), "finalized")
+  assert.equal(called, false)
+
+  const inside = createDiscoveryDecisionsResetHandler(
+    baseDeps({ resetDecisions: async () => ({ outcome: "finalized" as const }) }),
+  )
+  const raced = await inside(resetRequest(), params)
+  assert.equal(raced.status, 409)
+  assert.equal(await code(raced), "finalized")
+})
+
+test("a failing reset write answers 503, never a half state", async () => {
+  const handler = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      resetDecisions: async () => {
+        throw new Error("db down")
+      },
+    }),
+  )
+  const response = await handler(resetRequest(), params)
+  assert.equal(response.status, 503)
+  assert.equal(await code(response), "unavailable")
 })
 
 test("a decision key the Idealplan does not carry is refused", async () => {

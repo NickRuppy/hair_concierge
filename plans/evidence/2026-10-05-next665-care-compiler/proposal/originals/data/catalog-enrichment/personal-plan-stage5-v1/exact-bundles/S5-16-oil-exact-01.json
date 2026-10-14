@@ -1,0 +1,1987 @@
+{
+  "schema_version": "personal-plan-exact-catalog-bundle-v1",
+  "batch_id": "S5-16-oil-exact-01",
+  "items": [
+    {
+      "product_id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "product_name": "Jean&Len Repair Keratin & Mandel",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Jean&Len Produktseite",
+            "url": "https://www.jeanlen.de/keratin-haaroel",
+            "text": "Die Produktseite weist eine sparsame Anwendung mit ein bis zwei Tropfen in Längen und Spitzen aus, feucht oder trocken.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Jean&Len Haarpflegeübersicht",
+            "url": "https://www.jeanlen.de/haare/extrapflege/",
+            "text": "Die Markenübersicht beschreibt das Keratin-Haaröl als Glanz- und Anti-Frizz-Pflege ohne Beschweren.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Jean&Len Produktseite",
+            "url": "https://www.jeanlen.de/keratin-haaroel",
+            "text": "Die Produktseite weist eine sparsame Anwendung mit ein bis zwei Tropfen in Längen und Spitzen aus, feucht oder trocken.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-05e68c32-f096-457f-8b88-5cd3c0934873-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "05e68c32-f096-457f-8b88-5cd3c0934873"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Mit ein bis zwei Tropfen starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-jeanlen-keratin-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein bis zwei Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-jeanlen-keratin-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in die feuchten Längen und Spitzen geben und den Ansatz aussparen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.jeanlen.de/keratin-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Jean&Len Produktseite",
+            "url": "https://www.jeanlen.de/keratin-haaroel",
+            "text": "Die Produktseite weist eine sparsame Anwendung mit ein bis zwei Tropfen in Längen und Spitzen aus, feucht oder trocken.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-05e68c32-f096-457f-8b88-5cd3c0934873-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "05e68c32-f096-457f-8b88-5cd3c0934873"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Mit ein bis zwei Tropfen starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-jeanlen-keratin-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein bis zwei Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-jeanlen-keratin-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in die trockenen Längen und Spitzen geben und den Ansatz aussparen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.jeanlen.de/keratin-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "product_name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Weleda Produktseite",
+            "url": "https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483",
+            "text": "Weleda beschreibt wenige Tropfen als Abschluss in Längen und Spitzen für Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Weleda Produktseite",
+            "url": "https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483",
+            "text": "Weleda beschreibt wenige Tropfen als Abschluss in Längen und Spitzen für Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-07120c73-0171-4a2a-9d07-facd9ce90d8c-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "07120c73-0171-4a2a-9d07-facd9ce90d8c"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Nur wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-weleda-gloss-drops",
+                "action": "apply_product",
+                "copyTemplateDe": "Wenige Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-weleda-gloss-drops",
+                "action": "apply_product",
+                "copyTemplateDe": "Gleichmäßig in Längen und Spitzen verteilen, um den letzten Glanz- und Geschmeidigkeitsfinish zu setzen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.weleda.at/produkt/hydra-shine-gloss-drops-haar-oel-alpen-lein-g05483",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "product_name": "Pantene Pro-V Coconut Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "oh feliz Produktseite",
+            "url": "https://www.ohfeliz.com/pantene-pro-v/coconut-infused-oil",
+            "text": "Die Händlerseite beschreibt Coconut Infused Oil für nasses oder trockenes Haar, in kleiner Menge auf die Spitzen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Boots Produktseite",
+            "url": "https://www.boots.com/pantene-pro-v-defined-curls-coconut-infused-hair-oil-100ml-for-frizzy-unruly-curls-10366194",
+            "text": "Boots beschreibt die Coconut-Infused-Formel als leicht, schnell einziehend und ohne Beschweren.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "oh feliz Produktseite",
+            "url": "https://www.ohfeliz.com/pantene-pro-v/coconut-infused-oil",
+            "text": "Die Händlerseite beschreibt Coconut Infused Oil für nasses oder trockenes Haar, in kleiner Menge auf die Spitzen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-pantene-coconut-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-pantene-coconut-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In die feuchten Haarspitzen geben und anschließend wie gewohnt stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ohfeliz.com/pantene-pro-v/coconut-infused-oil",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "oh feliz Produktseite",
+            "url": "https://www.ohfeliz.com/pantene-pro-v/coconut-infused-oil",
+            "text": "Die Händlerseite beschreibt Coconut Infused Oil für nasses oder trockenes Haar, in kleiner Menge auf die Spitzen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-pantene-coconut-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-pantene-coconut-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "In die trockenen Haarspitzen geben und anschließend wie gewohnt stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ohfeliz.com/pantene-pro-v/coconut-infused-oil",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "product_name": "Balea Oil Repair Haaröl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "rich",
+          "role_support": [
+            "pre_wash_fibre_treatment",
+            "leave_on_fibre_conditioning"
+          ]
+        },
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+            "text": "dm beschreibt Oil Repair Intensiv mit hohem Naturölanteil, für Pflege vor der Haarwäsche oder im handtuchtrockenen Haar.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "pre_wash_fibre_treatment",
+          "cadence": null,
+          "source": {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+            "text": "dm beschreibt Oil Repair Intensiv mit hohem Naturölanteil, für Pflege vor der Haarwäsche oder im handtuchtrockenen Haar.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-1c43bc07-e3c6-4b8a-9b62-943147052e07-pre-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "1c43bc07-e3c6-4b8a-9b62-943147052e07"
+            },
+            "role": "intensive_care",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "compatibleDayTypes": [
+              "intensive_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "pre_wash",
+              "before": [
+                "wet_cleanse"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "rinse_out",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-balea-oil-repair-prewash",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor der Haarwäsche sparsam in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "wash-balea-oil-repair-prewash",
+                "action": "rinse",
+                "copyTemplateDe": "Danach mit der Haarwäsche fortfahren."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+            "text": "dm beschreibt Oil Repair Intensiv mit hohem Naturölanteil, für Pflege vor der Haarwäsche oder im handtuchtrockenen Haar.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-1c43bc07-e3c6-4b8a-9b62-943147052e07-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "1c43bc07-e3c6-4b8a-9b62-943147052e07"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-balea-oil-repair-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Im handtuchtrockenen Haar sparsam in Längen und Spitzen verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "product_name": "L’Oréal Öl Magique Midnight Serum",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+            "text": "L’Oréal beschreibt das Serum für trockenes oder nasses Haar, ohne Ausspülen, mit nicht fettender Formel.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+            "text": "L’Oréal beschreibt das Serum für trockenes oder nasses Haar, ohne Ausspülen, mit nicht fettender Formel.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-21a94166-3813-4c0f-8912-508fb8f704f1-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "21a94166-3813-4c0f-8912-508fb8f704f1"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam in Längen und Spitzen arbeiten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-loreal-midnight-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf das nasse Haar geben und gleichmäßig in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-loreal-midnight-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+            "text": "L’Oréal beschreibt das Serum für trockenes oder nasses Haar, ohne Ausspülen, mit nicht fettender Formel.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-21a94166-3813-4c0f-8912-508fb8f704f1-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "21a94166-3813-4c0f-8912-508fb8f704f1"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam in Längen und Spitzen arbeiten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-loreal-midnight-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Morgens oder abends auf trockenes Haar geben und in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-loreal-midnight-dry",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen; morgens ist keine zusätzliche Ausspülung nötig."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "product_name": "Neqi Opulent Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "NEQI Produktseite",
+            "url": "https://en.neqi-hair.com/products/opulent-oil-hair-serum",
+            "text": "NEQI beschreibt Opulent Oil als Serum für alle Haartypen mit Hitzeschutz bis 230 °C und Anwendung im handtuchtrockenen Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "NEQI How-tos",
+            "url": "https://en.neqi-hair.com/pages/how-tos",
+            "text": "Die NEQI-Anleitung nennt zwei bis drei Pumpstöße in Längen und Spitzen, nicht ausspülen, auch feucht oder trocken möglich.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "NEQI How-tos",
+            "url": "https://en.neqi-hair.com/pages/how-tos",
+            "text": "Die NEQI-Anleitung nennt zwei bis drei Pumpstöße in Längen und Spitzen, nicht ausspülen, auch feucht oder trocken möglich.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-27a2dd61-6e54-4746-8e24-a698dbafbf91-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Zwei bis drei Pumpstöße verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-neqi-opulent-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Zwei bis drei Pumpstöße in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-neqi-opulent-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In Längen und Spitzen des handtuchtrockenen Haars einarbeiten und durchkämmen."
+              },
+              {
+                "stepKey": "leave-neqi-opulent-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://en.neqi-hair.com/pages/how-tos",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "NEQI How-tos",
+            "url": "https://en.neqi-hair.com/pages/how-tos",
+            "text": "Die NEQI-Anleitung nennt zwei bis drei Pumpstöße in Längen und Spitzen, nicht ausspülen, auch feucht oder trocken möglich.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-27a2dd61-6e54-4746-8e24-a698dbafbf91-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Zwei bis drei Pumpstöße verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-neqi-opulent-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Zwei bis drei Pumpstöße in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-neqi-opulent-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Bei Bedarf in die trockenen Längen und Spitzen einarbeiten."
+              },
+              {
+                "stepKey": "leave-neqi-opulent-dry",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://en.neqi-hair.com/pages/how-tos",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "NEQI Produktseite",
+            "url": "https://en.neqi-hair.com/products/opulent-oil-hair-serum",
+            "text": "NEQI beschreibt Opulent Oil als Serum für alle Haartypen mit Hitzeschutz bis 230 °C und Anwendung im handtuchtrockenen Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-27a2dd61-6e54-4746-8e24-a698dbafbf91-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Zwei bis drei Pumpstöße verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-neqi-opulent-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor dem Hitzestyling zwei bis drei Pumpstöße in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-neqi-opulent-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "In Längen und Spitzen einarbeiten und gleichmäßig verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://en.neqi-hair.com/products/opulent-oil-hair-serum",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "product_name": "OGX Miracle Coconut Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "rich",
+          "role_support": [
+            "leave_on_fibre_conditioning"
+          ]
+        },
+        "sources": [
+          {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/coconut-miracle-penetrating-oil",
+            "text": "OGX positioniert Coconut Miracle Penetrating Oil für trockenes, groberes Haar, Glanz und Frizz-Kontrolle.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Ulta Produktseite",
+            "url": "https://www.ulta.com/p/coconut-miracle-oil-penetrating-oil-xlsImpprod14071348?sku=2302495",
+            "text": "Ulta gibt die Anwendung als kleine Menge im sauberen, handtuchtrockenen Haar bis in die Spitzen an, ohne Ausspülen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Ulta Produktseite",
+            "url": "https://www.ulta.com/p/coconut-miracle-oil-penetrating-oil-xlsImpprod14071348?sku=2302495",
+            "text": "Ulta gibt die Anwendung als kleine Menge im sauberen, handtuchtrockenen Haar bis in die Spitzen an, ohne Ausspülen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-2858a8b6-018b-4949-ae58-eedc348d20b4-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "2858a8b6-018b-4949-ae58-eedc348d20b4"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-ogx-coconut-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in die Handfläche geben und in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-ogx-coconut-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Gleichmäßig in das saubere, handtuchtrockene Haar geben und bis in die Spitzen arbeiten."
+              },
+              {
+                "stepKey": "leave-ogx-coconut-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und wie gewohnt stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ulta.com/p/coconut-miracle-oil-penetrating-oil-xlsImpprod14071348?sku=2302495",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "product_name": "Nuxe Huile Prodigieuse Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "pre_wash_fibre_treatment",
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "NUXE Produktseite",
+            "url": "https://de.nuxe.com/products/wichtiger-ol-50ml",
+            "text": "NUXE beschreibt Huile Prodigieuse als Trockenöl für Haar, mit Sprühmenge auf Längen und Spitzen und Vorwäsche-Maske.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "NUXE Haarölübersicht",
+            "url": "https://de.nuxe.com/collections/haar-ol",
+            "text": "Die NUXE-Haarölübersicht nennt ein bis zwei Tropfen als Abschluss oder Anwendung nach dem Shampoo im handtuchtrockenen Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "pre_wash_fibre_treatment",
+          "cadence": {
+            "kind": "frequency",
+            "copy_de": "Ein- bis zweimal pro Woche als intensive Pflege vor dem Shampoonieren."
+          },
+          "source": {
+            "label": "NUXE Produktseite",
+            "url": "https://de.nuxe.com/products/wichtiger-ol-50ml",
+            "text": "NUXE beschreibt Huile Prodigieuse als Trockenöl für Haar, mit Sprühmenge auf Längen und Spitzen und Vorwäsche-Maske.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5767f7a6-757c-40fa-b990-8e0a1abaea17-pre-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+            },
+            "role": "intensive_care",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "compatibleDayTypes": [
+              "intensive_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "pre_wash",
+              "before": [
+                "wet_cleanse"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "rinse_out",
+              "contactTimeSeconds": 600,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Ein bis zwei Sprühstöße in die Handfläche geben."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-nuxe-prewash",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein bis zwei Sprühstöße in die Handfläche geben."
+              },
+              {
+                "stepKey": "apply-nuxe-prewash",
+                "action": "apply_product",
+                "copyTemplateDe": "Als intensive Pflege vor dem Shampoonieren auf das Haar auftragen."
+              },
+              {
+                "stepKey": "wait-nuxe-prewash",
+                "action": "wait",
+                "copyTemplateDe": "Mindestens zehn Minuten einwirken lassen."
+              },
+              {
+                "stepKey": "wash-nuxe-prewash",
+                "action": "rinse",
+                "copyTemplateDe": "Danach mit dem Shampoonieren fortfahren."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://de.nuxe.com/products/wichtiger-ol-50ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "NUXE Haarölübersicht",
+            "url": "https://de.nuxe.com/collections/haar-ol",
+            "text": "Die NUXE-Haarölübersicht nennt ein bis zwei Tropfen als Abschluss oder Anwendung nach dem Shampoo im handtuchtrockenen Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5767f7a6-757c-40fa-b990-8e0a1abaea17-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Ein bis zwei Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-nuxe-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein bis zwei Tropfen in den Handflächen verteilen."
+              },
+              {
+                "stepKey": "apply-nuxe-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Nach dem Shampoo in das handtuchtrockene Haar geben und sanft in Längen und Spitzen einarbeiten."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://de.nuxe.com/collections/haar-ol",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": {
+            "kind": "as_needed",
+            "copy_de": "Nach Bedarf als abschließende Pflege verwenden."
+          },
+          "source": {
+            "label": "NUXE Haarölübersicht",
+            "url": "https://de.nuxe.com/collections/haar-ol",
+            "text": "Die NUXE-Haarölübersicht nennt ein bis zwei Tropfen als Abschluss oder Anwendung nach dem Shampoo im handtuchtrockenen Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5767f7a6-757c-40fa-b990-8e0a1abaea17-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Ein bis zwei Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-nuxe-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein bis zwei Tropfen in den Handflächen verteilen."
+              },
+              {
+                "stepKey": "apply-nuxe-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Abschluss sanft in trockene Längen und Spitzen einarbeiten."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://de.nuxe.com/collections/haar-ol",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "product_name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Rossmann Produktseite",
+            "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+            "text": "Rossmann führt das Produkt als schwereloses 7-in-1 Haaröl-Spray mit Anwendung auf feuchtem oder trockenem Haar, ohne Ausspülen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "dm Österreich Produktseite",
+            "url": "https://www.dm.at/p/d/1409913/pantene-pro-v-haarkur-miracles-7in1-haaroel-spray",
+            "text": "dm Österreich nennt Pflege-, Glanz-, Anti-Frizz- und Hitzeschutznutzen für das 7-in-1 Haaröl-Spray.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Rossmann Produktseite",
+            "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+            "text": "Rossmann führt das Produkt als schwereloses 7-in-1 Haaröl-Spray mit Anwendung auf feuchtem oder trockenem Haar, ohne Ausspülen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5827a3b9-a488-4c74-b13a-4d655f94f1c3-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-pantene-7in1-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf das feuchte Haar aufsprühen und in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-pantene-7in1-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Rossmann Produktseite",
+            "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+            "text": "Rossmann führt das Produkt als schwereloses 7-in-1 Haaröl-Spray mit Anwendung auf feuchtem oder trockenem Haar, ohne Ausspülen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5827a3b9-a488-4c74-b13a-4d655f94f1c3-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-pantene-7in1-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf das trockene Haar aufsprühen und in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-pantene-7in1-dry",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "dm Österreich Produktseite",
+            "url": "https://www.dm.at/p/d/1409913/pantene-pro-v-haarkur-miracles-7in1-haaroel-spray",
+            "text": "dm Österreich nennt Pflege-, Glanz-, Anti-Frizz- und Hitzeschutznutzen für das 7-in-1 Haaröl-Spray.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5827a3b9-a488-4c74-b13a-4d655f94f1c3-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-pantene-7in1-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor dem Hitzestyling sparsam auf feuchtes oder trockenes Haar sprühen und in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-pantene-7in1-heat",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.at/p/d/1409913/pantene-pro-v-haarkur-miracles-7in1-haaroel-spray",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "product_name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Urban Alchemy Produktseite",
+            "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+            "text": "Urban Alchemy beschreibt das Smooth Supreme Öl Serum als Trockenöl für schwerelosen Glanz, Hitzeschutz und Anwendung auf handtuchtrockenem oder trockenem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Urban Alchemy Produktseite",
+            "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+            "text": "Urban Alchemy beschreibt das Smooth Supreme Öl Serum als Trockenöl für schwerelosen Glanz, Hitzeschutz und Anwendung auf handtuchtrockenem oder trockenem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5ad6c978-fd27-469e-9f26-ff3f05b9f67a-leave-on",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam in Längen und Spitzen verteilen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-urban-alchemy-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf das handtuchtrockene Haar auftragen und in Längen und Spitzen verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Urban Alchemy Produktseite",
+            "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+            "text": "Urban Alchemy beschreibt das Smooth Supreme Öl Serum als Trockenöl für schwerelosen Glanz, Hitzeschutz und Anwendung auf handtuchtrockenem oder trockenem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5ad6c978-fd27-469e-9f26-ff3f05b9f67a-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam in Längen und Spitzen verteilen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-urban-alchemy-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf das trockene Haar auftragen und in Längen und Spitzen verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Urban Alchemy Produktseite",
+            "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+            "text": "Urban Alchemy beschreibt das Smooth Supreme Öl Serum als Trockenöl für schwerelosen Glanz, Hitzeschutz und Anwendung auf handtuchtrockenem oder trockenem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-5ad6c978-fd27-469e-9f26-ff3f05b9f67a-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam in Längen und Spitzen verteilen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-urban-alchemy-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor dem Hitzestyling auf handtuchtrockenes oder trockenes Haar auftragen und in Längen und Spitzen verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

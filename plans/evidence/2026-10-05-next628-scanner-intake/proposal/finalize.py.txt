@@ -1,0 +1,54 @@
+from pathlib import Path
+import json,hashlib,collections
+D=Path('/tmp/test-audit-scanner-intake26');R=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');sha=lambda b:hashlib.sha256(b if isinstance(b,bytes) else b.encode()).hexdigest();read=lambda n:json.loads((D/n).read_text());write=lambda n,x:(D/n).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+rows=read('before-ast.json');cand=read('candidates.json');phases={p:read(p+'-ast.json') for p in ['before','transfer','cut']};lookup={p:{r['title']:r for r in rs} for p,rs in phases.items()};assert [len(phases[p]) for p in ['before','transfer','cut']]==[26,26,22]
+donors={c['donor']['title'] for c in cand};keepers={c['keeper']['title'] for c in cand};unrelated=[]
+for r in rows:
+ if r['title'] not in donors|keepers:
+  assert all(lookup[p][r['title']]['body']==r['body'] for p in ['transfer','cut']);unrelated.append(r['title'])
+for c in cand:assert c['donor']['body']==lookup['transfer'][c['donor']['title']]['body'] and c['donor']['title'] not in lookup['cut']
+for name in keepers:
+ k=lookup['before'][name];ds=[c['donor'] for c in cand if c['keeper']['title']==name]
+ norm=lambda s:s.replace('renderToStaticMarkup(tree.value)','markup')
+ expected=collections.Counter(norm(a['text']) for r in [k]+ds for a in r['assertions'])
+ for p in ['transfer','cut']:
+  assert collections.Counter(norm(a['text']) for a in lookup[p][name]['assertions'])==expected
+  oldowner=[a['text'] for a in k['calls'] if a['expression'] in ['renderForm','renderFlow','renderToStaticMarkup','withClientHooks','ScanUnknownFlow','ScanResearchIntakeForm']]
+  newowner=[a['text'] for a in lookup[p][name]['calls'] if a['expression'] in ['renderForm','renderFlow','renderToStaticMarkup','withClientHooks','ScanUnknownFlow','ScanResearchIntakeForm']]
+  assert oldowner==newowner
+assert len(unrelated)==20
+U=cand[0]['file'];I=cand[2]['file'];uk=cand[0]['keeper']['title'];ik=cand[2]['keeper']['title'];V='src/lib/scan/verdict-labels.ts';UF='src/components/scan/scan-unknown-flow.tsx';SF='src/components/scan/scan-search-sheet.tsx'
+controls=[]
+def control(cid,owner,anchor,replacement,keeper,test,assertion,operator='match',scope=None):
+ source=(R/owner).read_text();assert source.count(anchor)==1,(cid,source.count(anchor));mutant=source.replace(anchor,replacement,1);path=D/'prospective-mutants'/cid/owner;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(mutant)
+ oracles={}
+ for p in ['transfer','cut']:
+  r=lookup[p][keeper];a=[a for a in r['assertions'] if a['text']==assertion];assert len(a)==1,(cid,assertion)
+  oracles[p]={'line':a[0]['line'],'assertion':assertion,'keeperSha256':sha(r['body']),'callbackSha256':r['callbackSha256'],'testFileSha256':sha((D/'snapshots'/p/test).read_bytes())}
+ controls.append({'id':cid,'owner':owner,'ownerSha256':sha(source),'mutatedSha256':sha(mutant),'anchor':anchor,'replacement':replacement,'scope':scope,'occurrences':1,'testFile':test,'testName':keeper,'operator':operator,'errorCode':'ERR_ASSERTION','oracles':oracles,'command':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+__import__('re').escape(keeper)+'$',test],'required':'Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun.'})
+for cid,name,value,repl,assertion in [
+ ('C1-headline','SCAN_UNKNOWN_HEADLINE','Danke dir – das ist neu für uns!','Danke dir – wir prüfen es!','assert.match(markup, /Danke dir – das ist neu für uns!/)'),
+ ('C1-subline','SCAN_UNKNOWN_SUBLINE','Wir nehmen es auf. Dein Ergebnis kommt in den Chat.','Wir nehmen es auf. Es folgt später.','assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)'),
+ ('C1-question','SCAN_UNKNOWN_QUESTION','Wobei benutzt du es?','Welche Kategorie?','assert.match(markup, /Wobei benutzt du es\\?/)')]:control(cid,V,f'export const {name} = "{value}"',f'export const {name} = "{repl}"',uk,U,assertion,scope=name)
+anchor='<div className="flex flex-col gap-4">'
+control('C2-input',UF,anchor,anchor+'\n      <input aria-label="audit field" />',uk,U,'assert.deepEqual(inputs, [])','deepStrictEqual','ScanUnknownFlow')
+for cid,label in [('C2-brand','Marke'),('C2-product','Produktname'),('C2-submit','Zur Prüfung einreichen')]:control(cid,UF,anchor,anchor+'\n      <p>'+label+'</p>',uk,U,'assert.doesNotMatch(markup, /'+label+'/)','doesNotMatch','ScanUnknownFlow')
+for cid,name,value,repl,assertion in [
+ ('C3-brand','RESEARCH_INTAKE_BRAND_LABEL','Marke','Firma','assert.match(markup, /Marke/)'),
+ ('C3-product','RESEARCH_INTAKE_PRODUCT_LABEL','Produktname','Artikelname','assert.match(markup, /Produktname/)'),
+ ('C3-question','RESEARCH_INTAKE_CATEGORY_LABEL','Was ist es?','Welche Art?','assert.match(markup, /Was ist es\\?/)'),
+ ('C3-helper','RESEARCH_INTAKE_CATEGORY_HELPER','Tippe die Kategorie an – das reicht uns schon.','Wähle eine Kategorie.','assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)'),
+ ('C3-back','RESEARCH_INTAKE_BACK_LABEL','Zurück','Abbrechen','assert.match(markup, /Zurück/)'),
+ ('C3-retailer','RESEARCH_INTAKE_BACK_LABEL','Zurück','Zurück dm','assert.doesNotMatch(markup, /\\bdm\\b/)')]:control(cid,SF,f'const {name} = "{value}"',f'const {name} = "{repl}"',ik,I,assertion,'doesNotMatch' if cid=='C3-retailer' else 'match',name)
+control('C4-alert',SF,'{error ? (','{true ? (',ik,I,'assert.doesNotMatch(markup, /role="alert"/)','doesNotMatch','ScanResearchIntakeForm')
+write('controls.json',controls)
+# Read scope is explicit: whole-file hashing never broadens human read credit.
+scope=[
+ ('AGENTS.md','routing read; current provided instructions'),(U,'FULL 414 lines all13 registrations and every helper'),(I,'FULL309 lines all13 registrations and every helper'),(UF,'FULL200 lines actual owner'),(SF,'FULL1065 lines actual form and parent sheet, read in slices'),('src/components/scan/scan-product-thumb.tsx','FULL70 lines owner'),('src/components/personal-plan-products/stage3-product-copy.ts','FULL category/role copy'),('src/lib/utils.ts','FULL cn adapter'),('src/lib/scan/verdict-labels.ts','1-160; operative unknown copy/brand formatting fully read, rest out of scope'),('src/lib/personal-plan/products/contracts.ts','1-145; category array/type and module imports; rest not semantically read'),('src/lib/scan/types.ts','1-208; unknown render DTO fully read'),('src/components/scan/scan-flow.tsx','787-940,1115-1235 plus imports/search; actual submit adapters and rendering props only, no complete ScanFlow re-audit'),('tests/scan-flow-ui.test.tsx','1-230,1300-1435,1720-2050; complete relevant harness plus cross-copy/parent intake registrations, rest not reread'),('src/app/scan/scan-page-client.tsx','125-157 production entry caller'),('src/app/labs/scan/scan-lab-client.tsx','420-448 lab caller only'),('src/components/discovery/intake/discovery-add-sheet.tsx','720-770 sibling caller, does not enable research intake'),('tests/server-only-register.cjs','FULL plain Node marker loader'),('package.json','scripts49-73 and relevant searched lines only'),('.github/workflows/ci.yml','143-165 quality-node routing and searched browser job lines only'),('plans/scan-public-launch.md','54,62,88-103 signed-off Task9 copy/one-tap'),('node_modules/react/cjs/react.development.js','268-280,451-464,515-530,774-789,1252-1270 element/Children/dispatcher semantics'),('node_modules/react-dom/server.node.js','FULL selector; no environment read'),('node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js','1155-1182,5042-5076,9850-9878 SSR attribute/function/render entry semantics'),('node_modules/next/dist/client/image-component.js','135-164,190-210 onError forwarding inspected; real network/optimizer not proved'),('node_modules/clsx/dist/clsx.mjs','FULL classname flattening')]
+readset=[]
+for f,note in scope:readset.append({'file':f,'sha256':sha((R/f).read_bytes()),'readScope':note,'lineCount':len((R/f).read_text().splitlines())})
+write('read-scope.json',{'readSet':readset,'limits':['No complete audit of other98/220 scanner cohorts or all26 test transitive dependencies.','Direct child calls use private React dispatcher; no browser mount, DOM focus, React reconciliation/timing or real network behavior proved.','React development excerpts inspected. Production runtime and full Next/React/vendor distribution not exhaustively semantically read.','Category constant/type slices read, not entire Personal Plan owner chain.','No source deletions proposed: components have live callers.','All runtime and actual owner mutations remain main-only.'],'history':['f61a7c64 initial one-tap unknown intake; current plan Task9 confirms copy/removed fields','2a87014e source+test diff added bridge order after phone-test contradiction','255ffa87 source+test diff F17 fixed stale tapped highlight with submitting conjunction','7072124b history introduced identified dm branch; full current branch tests retained','ac021a5b adds separate name-intake child; relevant source diff inspected and complete current child/test read']})
+write('static-check.json',{'counts':{'before':26,'transfer':26,'cut':22},'phasesParsed':6,'unrelatedCallbacksExact':20,'changedKeepers':2,'donors':4,'heldFExact':1,'fullAssertionMultisetPreserved':True,'normalization':'Only C4 renderToStaticMarkup(tree.value) expression reuses keeper existing markup; no new SSR call. Other13 donor assertions verbatim.','ownerFixtureRenderAndEventCallsAdded':0,'observationCallsMoved':{'C2':'Existing pure findAll input observation and its declaration moved from donor into keeper; not a new owner call.'},'mutationDescriptors':len(controls),'runtimeTests':0,'actualMutations':0,'repositoryWrites':0})
+(D/'complete-ledger.md').write_text('# Scanner intake UI26 semantic ledger\n\n26 registrations in two files:21R,1heldF,4conditionalC,0D. Full assertion/call AST bodies in complete-ledger.json; no runtime or mutation executed.\n\n'+'\n\n'.join(f"### {n+1}. {r['mark']} — {r['title']}\n\n`{r['file']}:{r['line']}`\n\nContract: {r['actualContract']}\n\nDetectable regression: {r['credibleRegression']}\n\nOwner: `{r['operativeSource']}`. {r['limits']}" for n,r in enumerate(read('judgments.json')))+'\n')
+write('main-commands.json',{'cwd':str(R),'baselineAndEachPhase':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',U,I],'gates':['Stop all writers/runners before transfer','Before26 and transfer26 clean','All14 exact intended owner faults actual red/restore/clean on current transfer','Only then remove four donors; cut22 clean','Independent preservation review and repository/campaign verification main-owned'],'runtime':'NOT RUN'})
+print(json.dumps({'controls':len(controls),'readset':len(readset),'unrelated':len(unrelated)}))

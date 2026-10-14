@@ -118,7 +118,8 @@ function conditionerFacts(productId: string, factFingerprint: string): Stage3Aut
       category: "conditioner",
       isActive: true,
       lifecycleStatus: "active",
-      recommendable: false,
+      // fit-verdict spec §2, ruled 2026-10-12: the active owned fixture must be recommendable.
+      recommendable: true,
       suitableThicknesses: ["normal"],
       knownReaction: false,
       protocols: [
@@ -127,7 +128,8 @@ function conditionerFacts(productId: string, factFingerprint: string): Stage3Aut
       factFingerprint,
       spec: {
         thickness: "normal",
-        proteinMoistureBalance: "balanced",
+        // fit-verdict spec §3, ruled 2026-10-12: ideal requires matching care direction.
+        proteinMoistureBalance: "moisture",
         weight: "light",
         repairSupportLevel: "medium",
         balanceDirection: "moisture",
@@ -312,6 +314,15 @@ function refinedInputHashFor(refinedVersionId: string): string {
 
 function createPersistence(world: World): Stage3ProductionPersistence {
   return {
+    async loadVisibleHairColor() {
+      return null
+    },
+    async loadShoppingContext() {
+      return { budget: null, currentConcerns: [], primaryConcern: null }
+    },
+    async loadCatalogPackagePrices() {
+      return []
+    },
     async loadOrCreate({ personalPlanId, refinedVersionId }) {
       const existing = [...world.drafts.values()].find(
         (draft) => draft.refinedVersionId === refinedVersionId && draft.status !== "stale",
@@ -393,6 +404,9 @@ function createPersistence(world: World): Stage3ProductionPersistence {
         profile: {
           source: { projection: "refined_post_plan" },
           hair: { thickness: "normal" },
+          scalp: { oiliness: "balanced", concerns: [] },
+          goals: [],
+          concerns: [],
         },
       } as never
     },

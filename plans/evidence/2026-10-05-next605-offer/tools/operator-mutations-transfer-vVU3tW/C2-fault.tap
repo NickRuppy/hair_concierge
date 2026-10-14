@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: consumeFreeReveal: second consume for the same user returns already_used
+not ok 1 - consumeFreeReveal: second consume for the same user returns already_used
+  ---
+  duration_ms: 2.33975
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/free-reveal.test.ts:2:3559'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   product_id: 'wrong-product',
+    -   product_id: 'product-a',
+        user_id: 'user-1'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    user_id: 'user-1'
+    product_id: 'product-a'
+  actual:
+    user_id: 'user-1'
+    product_id: 'wrong-product'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/free-reveal.test.ts:126:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 209.753375

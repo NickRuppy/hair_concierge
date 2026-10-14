@@ -1,0 +1,38 @@
+{
+  "status": "FROZEN_STATIC_ONLY_MAIN_RUNTIME_PENDING",
+  "directory": "/tmp/test-audit-discovery163-tools-70q2q9t7",
+  "pinsSHA256": "7886fcb73b5fc3b0396595668c23a84c75f37cf9586c3692862662e09d2e652f",
+  "toolHashesSHA256": "f7d947baebce03b50f9d628672ea0350a14c2e2378497dad8c7f061174592484",
+  "templateDeltaSHA256": "8baaff37ad7f9c70baea0869cef1b5bf75db20d8906c25f75e70a36073d1832c",
+  "acceptedProposalManifestSHA256": "fdaac17a025a772f2127cdd2d69a1885ee53585a12e58564f8d776e4b49bb2e5",
+  "counts": {
+    "before": 163,
+    "transfer": 163,
+    "cut": 158,
+    "phaseFiles": 72,
+    "unrelatedCallbacks": 153,
+    "originalAssertionsRetained": 573
+  },
+  "originalReadsets": 81,
+  "originalPackagePins": 8,
+  "fixedReadsets": 338,
+  "dependencyFiles": 3167,
+  "localClosure": 301,
+  "sourceControls": 5,
+  "uniqueSourceOwners": 4,
+  "proofAttestationAssertions": 134,
+  "repositoryWrites": 0,
+  "runtimeTests": 0,
+  "ownerImports": 0,
+  "childrenStarted": 0,
+  "checks": {
+    "editor-check.log": "85eeb9f1ab3e69c766b1bb2c0dfc9bf9a9257f7b30685c9b1a80b000069e358a",
+    "controls-check.log": "6ab44f7849b441f5ba1e68fcd8fa9e05d36c1cf1856fe3531f09c22ccb6e8feb",
+    "proof-attestation.log": "c48fc8db64fc7b1e7bfc74918bdb3521b9f443a4b8059b76b80024b1d72dba43"
+  },
+  "limits": [
+    "Syntax/static guard proof only; runtime owner sensitivity and restored clean runs remain main-only.",
+    "Selected closure/dependency distribution guards are bounded, not exhaustive third-party dependency audit.",
+    "Abrupt SIGKILL cannot execute finally; owned lock/backups remain for main inspection."
+  ]
+}

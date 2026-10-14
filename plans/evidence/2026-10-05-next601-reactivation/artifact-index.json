@@ -1,0 +1,734 @@
+[
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/C1-retained-password-capability-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/C1-retained-password-capability-prospective-owner.ts.txt",
+    "sha256": "7b566fd8e06bf83639ca04d5523ac3fda6b6ca32aafb838dadc19f0c97bcff07",
+    "bytes": 54587
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/C2-billing-before-profile-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/C2-billing-before-profile-prospective-owner.ts.txt",
+    "sha256": "2ff27caf78b782a67bff7fee000c60382849012c8ab844e8bb7a77058e084409",
+    "bytes": 54568
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7",
+    "bytes": 15990
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before-cut.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before-cut.diff",
+    "sha256": "9e73670bbd8fcf9c2f8926bc391254f55420dd577d17378c1456dd0004866d14",
+    "bytes": 2857
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before-transfer.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/before-transfer.diff",
+    "sha256": "0ca912c0f2214a34db509784d3b0bca61642796186073c8d34970378a301ad9b",
+    "bytes": 1640
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/candidates.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/candidates.json",
+    "sha256": "37b23950c0a91e47d020a42125f7b950daa5a2292946a8bcdc19b1d2913405fe",
+    "bytes": 18476
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/controls.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/controls.json",
+    "sha256": "fe34e2d7373f660a149465dfe3a254c6e689559bc536cbddc276815d3703a6c2",
+    "bytes": 6278
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "1cfbd182a19d4408e704de5d28ef3ddee7517873c0fd549f2651bb8835aa3573",
+    "bytes": 15266
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/cut/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/manifest.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/manifest.json",
+    "sha256": "87ceba4ac9d6819ea70ad95daaead398035d3b383742fc8c892e6a6b885ac0e3",
+    "bytes": 19307
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890",
+    "bytes": 16295
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer-cut.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/proposal/transfer-cut.diff",
+    "sha256": "c2b4d921b3c82c469897a86ffd913eb19b17cd5d659709de50bdbf910ea15519",
+    "bytes": 1374
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/C1-retained-password-capability-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/C1-retained-password-capability-prospective-owner.ts.txt",
+    "sha256": "7b566fd8e06bf83639ca04d5523ac3fda6b6ca32aafb838dadc19f0c97bcff07",
+    "bytes": 54587
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/C2-billing-before-profile-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/C2-billing-before-profile-prospective-owner.ts.txt",
+    "sha256": "2ff27caf78b782a67bff7fee000c60382849012c8ab844e8bb7a77058e084409",
+    "bytes": 54568
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/README.md",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/README.md",
+    "sha256": "29e4a11d6aae699de47cbb9b49b0433273b3d65341be0415d885a0cff0435781",
+    "bytes": 6729
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/UPSTREAM-REFERENCE.txt",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/UPSTREAM-REFERENCE.txt",
+    "sha256": "36b86bd78b17f321fea61701d7570249865df73af71e7742a3dd804bcdfc6331",
+    "bytes": 121
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/bounded-readset-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/bounded-readset-evidence.json",
+    "sha256": "734245f6fb7542fa3b5b19529ad75b39aedf148d21de0511b99525893a9b189f",
+    "bytes": 29671
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/driver-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/driver-static-check.log",
+    "sha256": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+    "bytes": 363
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/editor-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/editor-static-check.log",
+    "sha256": "f3c0cefee93eda4d4b1b31c3635a982218d9f5742cec67f9883df4a893201eaf",
+    "bytes": 407
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/full-operator-code.txt",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/full-operator-code.txt",
+    "sha256": "8ddee403ee38f30caf97b0ed7013536ab884f4c74f80baa63dedc9da38c73a30",
+    "bytes": 40403
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/full-tooling-adaptation.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/full-tooling-adaptation.diff",
+    "sha256": "74c5745e3f2558c4a9e926b0fe7cad9f856035ef94b60145aae617674fa9a7ac",
+    "bytes": 31330
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-code.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-code.diff",
+    "sha256": "71f4748fe6545669be94ace2a419bc8c81f535f28e6b1a686d8dbb1990c353ef",
+    "bytes": 1692
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-disposition.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-disposition.json",
+    "sha256": "de5a723bc3bd091b56790097aeb0208ec5432ff6620fc2f86b9428da1aa008a5",
+    "bytes": 800
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/README.md",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/README.md",
+    "sha256": "1ebb9f32c7db6b4cbb984001b1e0f13d0e8c9b7e4933200ce9e77c646cdf598a",
+    "bytes": 6120
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/driver-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/driver-static-check.log",
+    "sha256": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+    "bytes": 363
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/editor-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/editor-static-check.log",
+    "sha256": "f3c0cefee93eda4d4b1b31c3635a982218d9f5742cec67f9883df4a893201eaf",
+    "bytes": 407
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/full-operator-code.txt",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/full-operator-code.txt",
+    "sha256": "f46c57de3c7320c20e6818cdb33bae8f07560a55ef1b09723302203f5e6bc270",
+    "bytes": 40403
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/full-tooling-adaptation.diff",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/full-tooling-adaptation.diff",
+    "sha256": "a7b83c727000e8f0da66f4136d1ae3dc510a2ef3fd49be208c61dfbaced6f077",
+    "bytes": 31330
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/operator-edit.cjs.txt",
+    "sha256": "70b58fe2b0538b38dfe9181667d053f248adc0847ae7094f709ceb491dca7f10",
+    "bytes": 3509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/operator-pins.json",
+    "sha256": "7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5",
+    "bytes": 1263406
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/operator-run-controls.cjs.txt",
+    "sha256": "ec776764d58438c3255173ab68d413161e9b9eca5f20a6c8260268b625cc0a9b",
+    "bytes": 8057
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/identity-refresh-original/static-receipt.json",
+    "sha256": "21fa2d8bf1846dbd087fb1897493d0ff7f89d5f39a68be9262fe0e22d20d3538",
+    "bytes": 3173
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/intent.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/intent.json",
+    "sha256": "30ebb69d0a80661dd9d5bfd18574b5ac16a04a27e792d1a018f3002b139d41ad",
+    "bytes": 2747
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890",
+    "bytes": 16295
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/originals/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-cut-hIzViW/receipt.json",
+    "sha256": "7386e5459cb322085d55817e3ebc13f9ba049b5ba58dede049826ad7074ec7eb",
+    "bytes": 1801
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/intent.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/intent.json",
+    "sha256": "a138f01cccaf935e889b47ace727fef38fb6017d1dfd19551a52b856574f69e1",
+    "bytes": 2503
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7",
+    "bytes": 15990
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/originals/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/originals/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-transfer-R8kPrY/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-apply-transfer-R8kPrY/receipt.json",
+    "sha256": "a346c6ce0cb41d6d126c8425142a94a0148195d2686a43ed0a93872947ec7fce",
+    "bytes": 1567
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-controls-normalized.json",
+    "sha256": "cf8eb49eee6e66774f811e3a376a325e8f00e75f0dd3827d4037865313a9fe18",
+    "bytes": 6454
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-edit.cjs.txt",
+    "sha256": "d403a06809415251e4de7654d31dfcfd5bd41253cf18d2ef83feb48f7c6c54dd",
+    "bytes": 3509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-guard.cjs.txt",
+    "sha256": "70ccb5af63b3ea36ae02bee95ef2edffde5ab235eacd4565f037437e26e03f86",
+    "bytes": 11615
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability/originals/src/lib/stripe/checkout-activation.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability/originals/src/lib/stripe/checkout-activation.ts.txt",
+    "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+    "bytes": 54607
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-after.command.json",
+    "sha256": "2c778f6f766659530a7f334767786c2293b30806e81ea1906b3befc51329cc43",
+    "bytes": 481
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-after.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-after.tap",
+    "sha256": "618ae36872986782f9eaabadfea5280dacb2841ea9f7392c30d971c2213f0e44",
+    "bytes": 1488
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-before.command.json",
+    "sha256": "2c778f6f766659530a7f334767786c2293b30806e81ea1906b3befc51329cc43",
+    "bytes": 481
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-before.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-before.tap",
+    "sha256": "9ae411b4ae413bf73fe22ba18ac76c601a5af25cc306dba8108a636fa180d5e6",
+    "bytes": 1489
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-fault.command.json",
+    "sha256": "2c778f6f766659530a7f334767786c2293b30806e81ea1906b3befc51329cc43",
+    "bytes": 481
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C1-retained-password-capability-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C1-retained-password-capability-fault.tap",
+    "sha256": "e98aa8d1c37c50df36d70fe0958071054972d85198145975cead7afde88c18a5",
+    "bytes": 2166
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile/originals/src/lib/stripe/checkout-activation.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile/originals/src/lib/stripe/checkout-activation.ts.txt",
+    "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+    "bytes": 54607
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-after.command.json",
+    "sha256": "56251760227a94d7645bc48be0b4907aad3ec6ac942d5d5e9e1d3d36cef7e043",
+    "bytes": 477
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-after.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-after.tap",
+    "sha256": "3139d7ef12146804c31afdcd1fe35c595c20d965ce0e71494ba67ffec0024cb9",
+    "bytes": 1072
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-before.command.json",
+    "sha256": "56251760227a94d7645bc48be0b4907aad3ec6ac942d5d5e9e1d3d36cef7e043",
+    "bytes": 477
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-before.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-before.tap",
+    "sha256": "0eef9675c39ecbbc873dad18dbf91280de654294fda710d470ace71080e3b121",
+    "bytes": 1075
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-fault.command.json",
+    "sha256": "56251760227a94d7645bc48be0b4907aad3ec6ac942d5d5e9e1d3d36cef7e043",
+    "bytes": 477
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/C2-billing-before-profile-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/C2-billing-before-profile-fault.tap",
+    "sha256": "61744d03e1fa17307f7b27636b9d41d65e004af8a16c99f7ef9ee0d9bc43fc05",
+    "bytes": 2763
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/src/lib/stripe/checkout-activation.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/src/lib/stripe/checkout-activation.ts.txt",
+    "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+    "bytes": 54607
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-auth-return.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-auth-return.test.ts.txt",
+    "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "bytes": 4980
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-checkout-metadata.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-checkout-metadata.test.ts.txt",
+    "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "bytes": 20052
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-checkout-recovery.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-checkout-recovery.spec.ts.txt",
+    "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "bytes": 11652
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-helpers.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-helpers.test.ts.txt",
+    "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "bytes": 6628
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-retained-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-retained-account-activation.test.ts.txt",
+    "sha256": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890",
+    "bytes": 16295
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-routing.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-routing.test.ts.txt",
+    "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "bytes": 1905
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-stripe-context-postgres.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-stripe-context-postgres.test.ts.txt",
+    "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "bytes": 25721
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-stripe-context-runtime.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-stripe-context-runtime.test.ts.txt",
+    "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "bytes": 14683
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/all-originals/tests/reactivation-trial-management.test.ts.txt",
+    "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "bytes": 8509
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/complete.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/complete.json",
+    "sha256": "a67b07eec8846f9801e09ae11bd1ab100e9f76afb7dc2dccd843779b935919c1",
+    "bytes": 49992
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/intent.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/intent.json",
+    "sha256": "e9fe1d3f3985dab5ca1c10c15c1cb1499e133432a6aecec0a3ec521d964127ff",
+    "bytes": 1412
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-mutations-transfer-z3o17z/receipt.json",
+    "sha256": "03697b8ca504b9b81c10a365c21c421b666a3e3d4fc532a79222ea7844a86da1",
+    "bytes": 159151
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-pins.json",
+    "sha256": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+    "bytes": 1263406
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-proof.cjs.txt",
+    "sha256": "03f9efb056153fbaaeb3b0066e72103acf13f56b7c4bc8c4d89de17dcdf8b1aa",
+    "bytes": 4921
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/operator-run-controls.cjs.txt",
+    "sha256": "2aae88392fdf31d893b1014c93f4db5add3853177b2b11a2495fc068fd7e116c",
+    "bytes": 8057
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/prepare-pins.cjs.txt",
+    "sha256": "edbb9e8431d474cc46a2c5d30fe21f9e8836d43e6dfd7ad3436178f42ec157f1",
+    "bytes": 10850
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/static-receipt.json",
+    "sha256": "6de2443df812ccf1f1d1baa2c9eddf2ece39031d893d8c13f62679373c4790c1",
+    "bytes": 4290
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-tools-huh910i2/tool-code-syntax-check.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/tools/tool-code-syntax-check.log",
+    "sha256": "6fef7c4d6577e5a6471f3d82cc1cb607c2163258d6111f1eeb9c0b7290c5da84",
+    "bytes": 242
+  },
+  {
+    "source": "/tmp/test-audit-reactivation89-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation89-main-before.tap",
+    "sha256": "0fd15536cd44c6f339984be06d2a9cb38577f4b45f0f99a2471aee2d086af643",
+    "bytes": 31431
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-main-transfer.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-main-transfer.tap",
+    "sha256": "1abfb3d41c7235401cef38f105ae00e7abbd51f078d747446b0b8dfe7c2695e0",
+    "bytes": 31412
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-main-cut.tap",
+    "sha256": "f171d0564ab46279b286b949656e0657fd37903069ba16e6797de68718b6d3ee",
+    "bytes": 29655
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-main-controls.log",
+    "sha256": "8faa6f8cb4cf1c8714a3960d3bfbb5bf2311ef5ae58a2eac74343421d73f4148",
+    "bytes": 390
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-main-formatted-verification.json",
+    "sha256": "e32dcc0af3c7ef925502e35e549116107888d0d73099cd8dbb17778bcd1dd1b6",
+    "bytes": 1249
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-independent-review.md",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-independent-review.md",
+    "sha256": "122ad144a74e78c2147517dd590868f53f0aa3681a9ad13d46fbd825ee704839",
+    "bytes": 10281
+  },
+  {
+    "source": "/tmp/test-audit-reactivation83-independent-static.json",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-reactivation83-independent-static.json",
+    "sha256": "d22e455086b7a5e8aa844ad8215aac1a0c0de0bc65792c1a0f29abf2e202ba14",
+    "bytes": 2224
+  },
+  {
+    "source": "/tmp/test-audit-next598-both-transfers-typecheck.log",
+    "archive": "plans/evidence/2026-10-05-next601-reactivation/test-audit-next598-both-transfers-typecheck.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

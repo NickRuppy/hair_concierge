@@ -10,7 +10,7 @@ import {
   pinVerifiedPayPalTrialActivation,
 } from "../src/lib/paypal/trial-account-admission"
 import { recordVerifiedPayPalTrialSale } from "../src/lib/paypal/trial-webhook"
-import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
+import { paypalTrialProviderPlanFixture } from "./paypal-trial-plan.fixtures"
 import {
   frozenPayPalTrialStart,
   paypalTrialCollectionStart,
@@ -100,7 +100,7 @@ function fixture() {
     start_time: end,
     // A verified example batch; creation time alone does not guarantee this date.
     billing_info: { next_billing_time: new Date(Date.parse(end) + 10 * 3600 * 1000).toISOString() },
-    plan: buildPayPalDeferredTrialPlanRequest({ interval: "month", productId: "PROD-owned" }),
+    plan: paypalTrialProviderPlanFixture({ interval: "month", productId: "PROD-owned" }),
   }
   const tables: Record<string, any[]> = {
     trial_enrollments: [enrollment],
@@ -938,7 +938,7 @@ test("the annual live incident's prior-day billing batch cannot admit a trial or
   f.attempt.paypal_plan_id = "P-year"
   f.enrollment.accepted_offer = offer
   f.subscription.plan_id = "P-year"
-  f.subscription.plan = buildPayPalDeferredTrialPlanRequest({
+  f.subscription.plan = paypalTrialProviderPlanFixture({
     interval: "year",
     productId: "PROD-owned",
   })
@@ -999,7 +999,7 @@ for (const interval of ["month", "year"] as const) {
     })
     f.enrollment.accepted_offer = offer
     f.subscription.plan_id = `P-${interval}`
-    f.subscription.plan = buildPayPalDeferredTrialPlanRequest({ interval, productId: "PROD-owned" })
+    f.subscription.plan = paypalTrialProviderPlanFixture({ interval, productId: "PROD-owned" })
     const noon = new Date(Date.parse(f.end) + 12 * 3600000).toISOString()
     Object.assign(f.attempt, { provider_start_time: noon, trial_end_at: f.end })
     f.subscription.start_time = noon
@@ -1294,10 +1294,11 @@ test("a canceled activation snapshot acknowledges an already canceled and releas
 
 test("a proven canceled activation snapshot may omit its status clock", async () => {
   const f = apiFixture()
+  const confirmedAt = new Date(Date.now() - 10_000).toISOString()
   Object.assign(f.attempt, {
     authorization_proof_kind: "api_confirmation",
-    authorization_succeeded_at: new Date(Date.now() - 10_000).toISOString(),
-    api_confirmed_at: new Date(Date.now() - 10_000).toISOString(),
+    authorization_succeeded_at: confirmedAt,
+    api_confirmed_at: confirmedAt,
     api_confirmation_id: "44444444-4444-4444-8444-444444444444",
     activation_event_id: null,
   })
@@ -1324,10 +1325,11 @@ test("a proven canceled activation snapshot may omit its status clock", async ()
 
 test("a canceled activation snapshot cannot be replayed against a live active subscription", async () => {
   const f = apiFixture()
+  const confirmedAt = new Date(Date.now() - 10_000).toISOString()
   Object.assign(f.attempt, {
     authorization_proof_kind: "api_confirmation",
-    authorization_succeeded_at: new Date(Date.now() - 10_000).toISOString(),
-    api_confirmed_at: new Date(Date.now() - 10_000).toISOString(),
+    authorization_succeeded_at: confirmedAt,
+    api_confirmed_at: confirmedAt,
     api_confirmation_id: "44444444-4444-4444-8444-444444444444",
   })
   await assert.rejects(

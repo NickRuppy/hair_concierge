@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "parseSnapshots": 21,
+    "parseMutants": 4,
+    "phases": {
+      "before": 87,
+      "transfer": 87,
+      "cut": 83
+    },
+    "retainedByteExact": 82,
+    "modifiedRetained": 1,
+    "freeAssertions": {
+      "before": 23,
+      "transfer": 26,
+      "cut": 20
+    }
+  },
+  "runtimeExecuted": false,
+  "productImports": 0,
+  "repositoryWrites": 0,
+  "proposalOnly": true,
+  "readonlyCheck": {
+    "status": "PASS",
+    "snapshotParse": 21,
+    "mutantParse": 4,
+    "supportBytesExact": true,
+    "operativeKeeperCallsUnchanged": true,
+    "childrenStarted": 0,
+    "repositoryWrites": 0,
+    "productImports": 0
+  }
+}

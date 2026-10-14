@@ -1,3 +1,5 @@
+import type { UserHeatRoute } from "@/lib/heat-activation/contract"
+import { fitReasonLines } from "./verdict-labels"
 import { CATEGORY_COPY, ROLE_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { presentationFor } from "@/lib/personal-plan/decision-presentation"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
@@ -6,16 +8,31 @@ import type {
   Stage3CategoryProductFacts,
 } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
+import type { Stage3SelectionProfile } from "@/lib/personal-plan/products/authority/selection-profile"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
-  positionsOverlap,
+  criterionIdForDimension,
   renderedDimensions,
   type Stage3FitComparisonDimension,
   type Stage3FitComparisonPosition,
 } from "@/lib/personal-plan/products/comparison-dimensions"
-import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import { buildStage3FitComparison } from "@/lib/personal-plan/products/fit-comparison"
+import type {
+  PersonalPlanCategory,
+  Stage3CriterionResult,
+} from "@/lib/personal-plan/products/contracts"
+import type { BudgetRoleAllocation } from "@/lib/personal-plan/products/budget-policy"
+import { standaloneBudgetViews } from "@/lib/personal-plan/products/budget-role-ranking"
+import {
+  buildStage3FitComparison,
+  stage3CriterionEvidenceRelation,
+  rankStage3ComparisonCandidates,
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  type Stage3RankedComparisonCandidate,
+} from "@/lib/personal-plan/products/fit-comparison"
+import { isProductMarketSegmentDisplayEnabled } from "@/lib/personal-plan/release"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import type {
   PlanCategoryDecision,
   PlanHairThickness,
@@ -28,6 +45,7 @@ import type {
   ScanAlternative,
   ScanCoveredByEntry,
   ScanDimension,
+  ScanWebDimension,
   ScanInCatalogVerdictPayload,
   ScanNeedMode,
   ScanNotNeededVerdictPayload,
@@ -73,6 +91,10 @@ export type BuildScanVerdictInput = {
   perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
+  /** The user's heat routes (`stage3HeatRoutesFromSnapshot`); read by heat-activated products. */
+  heatRoutes?: readonly UserHeatRoute[]
+  /** The Stage-3 selection slice (`buildStage3SelectionProfile`), identical to the plan's. */
+  selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -81,6 +103,12 @@ export type BuildScanVerdictInput = {
   refinedInputHash: string
   /** Native presentation may select from the full eligible pool; web retains its default. */
   alternativeSelection?: "web" | "native"
+  /**
+   * The user's saved shopping budget (flag-gated by the caller). Only a capped budget changes
+   * anything: within-budget alternatives come first and carry `overBudget`/`budgetLimitEur`.
+   * Absent, null or uncapped leaves ordering and payload exactly as without a budget.
+   */
+  budget?: ShoppingBudget | null
 }
 
 export function buildScanVerdict(input: BuildScanVerdictInput): ScanVerdictPayload {
@@ -188,8 +216,11 @@ function productOnlyDimensions(input: BuildScanVerdictInput): ScanDimension[] {
   ])
   const dimensions =
     input.alternativeSelection === "native" ? allDimensions : renderedDimensions(allDimensions)
-  return dimensions.map((dimension) =>
-    scanDimension(dimension, facts.productId, { withoutTarget: true }),
+  return dimensions.map(
+    (dimension): ScanDimension => ({
+      ...scanDimension(dimension, facts.productId, { withoutTarget: true }),
+      state: "no_target",
+    }),
   )
 }
 
@@ -219,12 +250,68 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
   if (!best || !facts) return unclearPayload(input)
 
   const authorityInput = scanAuthorityInput(input, best.role)
+  const selection = input.alternativeSelection ?? "web"
+  const cappedBudget = input.budget?.kind === "capped" ? input.budget : null
+  let budgetOptions:
+    | {
+        budgetAllocation: BudgetRoleAllocation
+        rankedCandidates: Stage3RankedComparisonCandidate[]
+      }
+    | undefined
+  if (cappedBudget) {
+    // Standalone ordering only: the price-neutral fit ranking stays the source of fit, the
+    // budget just moves affordable products first. No routine quota, no allowance.
+    const ranked = rankStage3ComparisonCandidates(authorityInput, best.evaluation, selection)
+    // Bondbuilders use the trust pair, exactly like the plan (S4 G3); others: affordable first.
+    const views = standaloneBudgetViews(
+      authorityInput,
+      ranked,
+      cappedBudget,
+      selection === "native"
+        ? STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT
+        : STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+    )
+    budgetOptions = {
+      budgetAllocation: {
+        roleKey: best.role,
+        candidates: views,
+        defaultProductId: null,
+        exception: null,
+        notice: null,
+      },
+      rankedCandidates: ranked,
+    }
+  }
   const comparison = buildStage3FitComparison(authorityInput, best.evaluation, undefined, {
-    alternativeSelection: input.alternativeSelection ?? "web",
+    alternativeSelection: selection,
+    ...budgetOptions,
   })
   const dimensions = renderedDimensions(comparison.dimensions).map((dimension) =>
-    scanDimension(dimension, facts.productId, { withoutTarget: false }),
+    scanDimension(dimension, facts.productId, {
+      withoutTarget: false,
+      criteria:
+        best.evaluation.status === "known" || best.evaluation.status === "unknown"
+          ? best.evaluation.criteria
+          : [],
+    }),
   )
+  const criteria =
+    best.evaluation.status === "known" || best.evaluation.status === "unknown"
+      ? (best.evaluation.criteria ?? [])
+      : []
+  const evidencedDimensions = dimensions.filter((dimension) =>
+    criteria.some(
+      (criterion) => criterion.criterionId === criterionIdForDimension(dimension.dimensionId),
+    ),
+  )
+  const displayCoverage =
+    dimensions.length > 0
+      ? {
+          matches: evidencedDimensions.filter((dimension) => dimension.state === "in_target")
+            .length,
+          total: evidencedDimensions.filter((dimension) => dimension.state !== "no_target").length,
+        }
+      : best.coverage
   const verdict = scanVerdictForEvaluation(best.evaluation)
   const copy = SCAN_VERDICT_COPY[verdict]
   const narrative = presentationFor(input.decision)
@@ -233,9 +320,15 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
     kind: "in_catalog",
     verdict,
     verdictLabel: copy.label,
+    reasonLines: fitReasonLines(
+      verdict,
+      best.evaluation.status === "known" || best.evaluation.status === "unknown"
+        ? best.evaluation.criteria
+        : [],
+    ),
     verdictTitle: copy.title,
     status: copy.status,
-    subtitle: subtitleFor(best.coverage, dimensions.length > 0),
+    subtitle: subtitleFor(displayCoverage, dimensions.length > 0),
     evaluatedRole: best.role,
     evaluatedRoleLabel: ROLE_COPY[best.role]?.label ?? null,
     dimensions,
@@ -243,13 +336,17 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
       best.evaluation.status === "known" || best.evaluation.status === "unknown"
         ? best.evaluation.criteria
         : [],
-    coverage: best.coverage,
+    coverage: displayCoverage,
     fitNarrative: narrative
       ? { productCriteria: narrative.productCriteria, fit: narrative.fit }
       : null,
     // Ruling R12: alternatives show on every in_catalog verdict, `ideal` included — a
     // fitting product is not a reason to hide what else would fit.
-    alternatives: alternativesFrom(comparison),
+    alternatives: alternativesFrom(comparison, {
+      category: input.category,
+      candidates: factsForRole(input, best.role).recommendationCandidates,
+      budgetLimitEur: cappedBudget?.limitEur,
+    }),
     mobileDimensions: comparison.dimensions,
     mobileAuthority: {
       status: best.evaluation.status,
@@ -267,6 +364,7 @@ function unclearPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPaylo
     kind: "in_catalog",
     verdict: "unknown",
     verdictLabel: copy.label,
+    reasonLines: [],
     verdictTitle: copy.title,
     status: copy.status,
     subtitle: SCAN_SUBTITLE_WITHOUT_TARGETS,
@@ -300,14 +398,32 @@ function subtitleFor(
     : scanCriterionSubtitle(coverage.matches, coverage.total)
 }
 
+const MARKET_SEGMENT_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+])
+
 function alternativesFrom(
   comparison: ReturnType<typeof buildStage3FitComparison>,
+  budget: {
+    category: PersonalPlanCategory
+    candidates: readonly Stage3CategoryProductFacts[]
+    budgetLimitEur: 5 | 15 | undefined
+  },
 ): ScanAlternative[] {
   const presentationById = new Map(
     comparison.products.map((product) => [product.productId, product]),
   )
+  const segmentById = new Map(
+    budget.candidates.map((candidate) => [candidate.productId, candidate.marketSegment ?? null]),
+  )
+  const showSegment =
+    MARKET_SEGMENT_CATEGORIES.has(budget.category) && isProductMarketSegmentDisplayEnabled()
   return comparison.alternatives.map((candidate) => {
     const product = presentationById.get(candidate.productId)
+    const marketSegment = showSegment ? segmentById.get(candidate.productId) : null
+    const overBudget = product?.presentation?.overBudget
     return {
       productId: candidate.productId,
       displayName: product?.displayName ?? candidate.recommendation.displayName,
@@ -316,6 +432,13 @@ function alternativesFrom(
       netContentLabel: product?.presentation?.netContentLabel ?? null,
       verdict: candidate.verdict,
       verdictLabel: SCAN_VERDICT_COPY[candidate.verdict].label,
+      reasonLines: fitReasonLines(candidate.verdict, candidate.criteria),
+      // Optional metadata: keys exist only when the value does, so responses without a
+      // budget / with the display flag off carry exactly the pre-Task-7 keys.
+      ...(budget.budgetLimitEur !== undefined && overBudget !== undefined
+        ? { overBudget, budgetLimitEur: budget.budgetLimitEur }
+        : {}),
+      ...(marketSegment ? { marketSegment } : {}),
       // T8: already computed by `buildStage3FitComparison` — carried through for the
       // free-tier masked serializer only, see `ScanAlternative.criteria`.
       criteria: candidate.criteria,
@@ -361,6 +484,8 @@ function scanAuthorityInput(
     productFacts: facts,
     recommendationCandidates,
     hairThickness: input.hairThickness,
+    ...(input.heatRoutes ? { heatRoutes: input.heatRoutes } : {}),
+    selectionProfile: input.selectionProfile,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }
@@ -373,8 +498,8 @@ function stopIds(position: Stage3FitComparisonPosition | null): string[] {
 function scanDimension(
   dimension: Stage3FitComparisonDimension,
   productId: string,
-  options: { withoutTarget: boolean },
-): ScanDimension {
+  options: { withoutTarget: boolean; criteria?: readonly Stage3CriterionResult[] },
+): ScanWebDimension {
   const productPosition =
     dimension.productPositions.find((entry) => entry.productId === productId)?.position ?? null
   const targetPosition = options.withoutTarget ? null : dimension.targetPosition
@@ -387,15 +512,13 @@ function scanDimension(
     stops: dimension.stops.map((stop) => ({ stopId: stop.stopId, label: stop.label })),
     targetStopIds,
     productStopIds,
-    state: dimensionState(targetPosition, productPosition),
+    state:
+      options.withoutTarget || !targetPosition || targetPosition.kind === "unknown"
+        ? "no_target"
+        : stage3CriterionEvidenceRelation(
+            options.criteria?.find(
+              (item) => item.criterionId === criterionIdForDimension(dimension.dimensionId),
+            )?.result,
+          ),
   }
-}
-
-function dimensionState(
-  target: Stage3FitComparisonPosition | null,
-  product: Stage3FitComparisonPosition | null,
-): ScanDimension["state"] {
-  if (!target || target.kind === "unknown") return "no_target"
-  if (!product || product.kind === "unknown") return "unknown"
-  return positionsOverlap(product, target) ? "in_target" : "outside_target"
 }

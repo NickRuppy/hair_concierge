@@ -188,6 +188,8 @@ Bondbuilder is the deliberate category exception whose exact total cadence is pr
 | `bondbuilder.cadence.protocol_gap` | critical course facts are missing | Return a visible protocol-data gap and compile zero precise occurrences. |
 | `bondbuilder.cadence.successor` | selected primary or bound course changes | Create a proposed successor plan and require confirmation. |
 
+Damage-branched cadence (rulings B1/D-b, 2026-10-09): a protocol cadence of kind `damage_branched` (Aveda Botanical Repair) resolves by the refined snapshot's `assessments.damage.structuralLevel` — `moderate` → „Einmal pro Woche anwenden.", `high`/`severe` → „An jedem Waschtag anwenden."; `none`/`low` or a missing level fall back to the safe generic line with the `exact_product_cadence_unavailable` gap. The compiler reads the level from the snapshot, the successor sync from the routine's refined version.
+
 Current reported product frequency remains an inventory fact and never becomes the recommended course. Tier expresses how important the category is; it does not rewrite the selected product's verified directions.
 
 There is no universal V1 reassessment date. When the verified protocol has an initial and maintenance phase, its phase boundary may create a product-directed reassessment prompt. The shared check-in UI and successor-plan mechanics are deferred; any cadence change remains proposed until confirmed.
@@ -213,7 +215,7 @@ The shared product identity/lifecycle record plus a canonical Bondbuilder spec m
 | lifecycle and relationships | `active`, `discontinued`, `replaced_by`, `add_on_for` | missing lifecycle/relationship audit = `unknown` |
 | safety/exclusions | verified product/user conflict facts | known conflict = `mismatch`; unverified strong gate = `unknown` |
 | `suitableThicknesses` | verified non-empty suitability array | `null`/missing = `unknown`; `[]` invalid for active recommendation; exclusion = `mismatch` |
-| `bondRepairIntensity` | descriptive `maintenance | intensive` | missing = data gap; not a V1 person-side ranking axis |
+| `bondRepairIntensity` | retired 2026-10-09 | property removed (product column and person-side target); ranking uses `claim_trust_level` |
 | `applicationMode` | `pre_shampoo | post_wash_leave_in` | missing = critical protocol/format gap |
 | `treatmentMode` | `rinse_out | leave_in` | missing = critical protocol gap |
 | `productFormat` | verified format | missing prevents format-preference selection but not need computation |
@@ -231,8 +233,7 @@ Evaluate every product through these layers:
 - resolved reviewed identity;
 - active lifecycle for a new primary recommendation;
 - no `replaced_by` outgoing relationship;
-- no verified safety, exclusion, or suitable-thickness conflict;
-- `suitableThicknesses` contains the user's thickness.
+- no verified safety or hard exclusion conflict; technology approval follows the canonical model (§2 and §6), with no thickness hard gate.
 
 ### Layer 2 — standalone role
 
@@ -246,16 +247,9 @@ Evaluate every product through these layers:
 - amount may use only a safe non-numeric label fallback when the official directions genuinely permit it; never fabricate pumps or grams;
 - missing critical protocol keeps the product visible but out of precise recipes.
 
-Aggregate verdict:
+Fit verdicts follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): this category has gates only, with **Passt**, **Passt nicht**, or **Nicht geprüft** and no `supportive` verdict. Known hard-gate failures take precedence over missing required facts; owned mismatches retain the shared `acknowledge_override` and `leave_uncovered` actions without becoming verified coverage.
 
-| Engine result | German verdict | Exact rule |
-|---|---|---|
-| `ideal` | `passt sehr gut` | Strict gates pass; product is an active standalone Bondbuilder; critical exact protocol is verified. |
-| `supportive` | `passt mit Einschränkung` | Product is a verified companion/add-on for the selected primary but cannot cover the role alone. |
-| `mismatch` | `wechseln empfohlen` | Verified safety/thickness conflict, wrong category/role, discontinued/replaced primary, or another known strict conflict. |
-| `unknown` | `noch in Prüfung` | Identity/pending state, strict suitability, lifecycle audit, or critical protocol is unresolved. |
-
-Precedence is known safety stop; unresolved identity/pending; lifecycle/relationship; strict thickness/exclusion; role; critical protocol; supportive companion; ideal. Every verdict retains its exact facts and limitation.
+Technology approval is a hard gate; companion/add-on products are not standalone candidates (§6).
 
 Need and fit remain separate. A fitting owned product at `not_needed` is “not necessary but compatible”: Stage 2 may offer removal or informed continuation. “Not recommended” is reserved for an actual mismatch or safety issue. Exact reusable UI/state transitions remain owned by the shared Stage-2 specification.
 
@@ -267,15 +261,24 @@ The current launch set contains three equally eligible primary concepts when all
 - K18 Leave-In Molecular Repair Hair Mask — post-wash leave-in treatment;
 - OLAPLEX Nº.3PLUS Complete Repair Treatment — pre-shampoo cream.
 
-Selection rules:
+Selection rules (current implementation; Nick's rulings 2026-10-09 S2/X1 and 2026-10-13 S4, superseding the original V1 "no winner" rule):
 
-1. filter safety, lifecycle, strict suitability, role, availability, and critical protocol gaps;
-2. preserve an already-saved primary while it remains ideal and the user's preference has not changed;
-3. when the user expresses a format/application preference, prefer the ideal product matching `applicationMode + productFormat`;
-4. otherwise return the remaining ideal products as an equal shortlist; do not manufacture a winner;
-5. mechanism, treatment marketing, damage type, product weight, formula richness, claimed repair pathway, and price do not rank the shortlist in V1;
-6. budget may remove unavailable choices but does not make a surviving product intrinsically better;
-7. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
+The [canonical fit-verdict model](../../fit-verdict-model.md) supplies the fit evaluator and technology admission gates. The S4 owner rulings retain the following timing and tie policy for this branch.
+
+1. filter safety, lifecycle, verified technology, strict suitability, role, availability, and critical protocol gaps; only `ideal` standalone products compete;
+2. **claim trust** (`product_bondbuilder_specs.claim_trust_level`: high > medium > low > none) — only the most trusted ideal level forms the shortlist; nothing lifts a less trusted product above it;
+3. **timing** — the Feinschliff answer `bondbuilderTiming` (`before_wash` | `after_wash` | `no_preference`, carried in `Stage3SelectionProfile.bondbuilderTiming`) narrows the most trusted level to the products used that way (`application_mode`: `pre_shampoo` → before, `post_wash_leave_in` → after, `bedtime_leave_in` → overnight, which matches neither answer). If none matches, the whole most-trusted level stays and the pick carries `bondbuilder.stage3.timing_unmet.<requested>.<actual>`;
+4. **budget** (capped only, `trust_pair` mode) — cheaper first only inside one (verdict, trust, usage) run; the default is the best affordable product next to the best product overall;
+5. **Cheapest first** within an equal trust/timing tie (unknown prices last), then catalogue order, then product id (`compareBondbuilderTieOrder`, `bondbuilder.stage3.tie_ordered`; e.g. „Vor dem Waschen" → OLAPLEX No.3PLUS before Epres). The other tied products stay visible as equal options and the `bondbuilder.equal_shortlist` caution stays;
+6. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
+
+Nick retired the K18 house default on 2026-10-13, superseding Q1's catalogue-first tail. Lena, with damaged hair and no timing preference: OLAPLEX No.3PLUS (€34) is picked; Epres (€48) and K18 (€56.25) are equal options.
+
+Rule ids on the recommendation: `validated_standalone` (single pick, or any explicit user pick — an explicit `select_replacement` never persists `timing_unmet`), `tie_ordered`, `timing_unmet.<requested>.<actual>`. The same order drives the comparison list (`compareBondbuilderTrust`: verdict → trust → timing → price → catalogue order → id; ranked[0] equals the authority pick), the Stage-1 previews, the gateway budget allocation and the scan alternatives through one builder (`budget-role-ranking.ts`); cockpit equal options are exactly the authority's tie set (`bondbuilderShortlist`).
+
+Timing question retained per Nick 2026-10-13 (`bondbuilder_timing`, products module, X1): asked after the wash-frequency question only when Stage 1 put Bondbuilder in the plan, the user does not report an owned Bondbuilder, and she washes wet. Unanswered or „Ist mir egal" = `no_preference`, which uses trust → cheapest first without inventing a timing preference; completed drafts from before the question are normalized to the assumed `no_preference`.
+
+Routine card: no extra line when the answer is met; a planned product carrying `timing_unmet.*` shows one neutral line, e.g. „Nach dem Waschen gerade nicht möglich. Kommt vor dem Waschen ins Haar." (`routine/bondbuilder-timing-note.ts`). Owned products never show it.
 
 Stage 2 may describe a product as pre-shampoo spray, pre-shampoo cream, or post-wash leave-in treatment. Exact “when and how” instructions remain Stage 3.
 
@@ -360,11 +363,11 @@ Every hard rule above maps to at least one fixture:
 17. `bondbuilder-v2-combined-migration`: historical combined concern → `split_ends`; supporting context only and no strong indicator.
 18. `bondbuilder-lea-untreated-rough`: natural, untreated, rough surface, no breakage/hair damage/snapping → `not_needed`, no Stage-1 card, and no chemical-stress copy.
 19. `bondbuilder-missing-required-profile`: typed incomplete-profile state.
-20. `bondbuilder-equal-shortlist`: Epres, K18, and Nº.3PLUS all pass with no preference → equal ideal shortlist.
-21. `bondbuilder-format-preference`: verified pre-wash spray preference selects Epres from otherwise equal ideal candidates.
+20. `bondbuilder-equal-trust-price-order`: Epres, K18, and Nº.3PLUS all pass with equal trust → cheapest first (canonical model §7b Q6).
+21. `bondbuilder-format-preference`: application/format preference does not filter or reorder equally trusted candidates (canonical model §6).
 22. `bondbuilder-mechanism-neutral`: peptide/crosslink values do not change person fit or rank.
 23. `bondbuilder-weight-ignored`: fine/volume-sensitive profile does not rank or demote the same eligible candidates.
-24. `bondbuilder-addon-supportive`: Nº.0 is supportive companion and cannot fill primary alone.
+24. `bondbuilder-addon-excluded`: Nº.0 is companion-only and cannot fill the standalone role; no supportive verdict (canonical model §6).
 25. `bondbuilder-discontinued-replaced`: legacy Nº.3 is mismatch/not primary-eligible despite stale flags.
 26. `bondbuilder-pending-product`: visible `unknown`, excluded from recipe.
 27. `bondbuilder-missing-protocol`: core role retained as unknown; no executable occurrence.
@@ -380,7 +383,7 @@ Every hard rule above maps to at least one fixture:
 37. `bondbuilder-epres-protocol`: exact dry-unwashed spray/wait/wash course compiles.
 38. `bondbuilder-mask-incompatible`: separate intensive-care variants; total wash cadence unchanged.
 39. `bondbuilder-adverse-reaction`: optimization suppressed and stop-use guidance emitted.
-40. `bondbuilder-stable-recompute`: unchanged facts retain tier, equal-shortlist status, and saved ideal primary.
+40. `bondbuilder-stable-recompute`: unchanged facts retain tier, trust/price ordering, and saved ideal primary.
 
 ## Catalog, data, implementation, and launch gates
 

@@ -1,0 +1,26 @@
+{
+  "status": "PASS_STATIC_FINAL",
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "wholeFileAssertCallSites": {
+    "before": 193,
+    "transfer": 194,
+    "cut": 193
+  },
+  "heldFByteExact": true,
+  "sourceCleanupFiles": 0,
+  "originalReadsetCurrent": 247,
+  "allNonCandidateTestBytesExact": true,
+  "completeFileReconstruction": true,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "network": 0,
+  "nativeRuns": 0,
+  "removalCredit": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

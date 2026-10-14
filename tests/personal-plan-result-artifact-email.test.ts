@@ -139,24 +139,6 @@ test("rejects a corrupted compatibility artifact whose central priority differs 
   )
 })
 
-test("supports a numeric personal-plan transactional message id", () => {
-  const previous = process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]
-  process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "42"
-  try {
-    const artifact = prepared()
-    const payload = buildPersonalPlanResultArtifactEmailPayload({
-      email: "mia@example.com",
-      leadId,
-      priorities: artifact.priorities,
-      publicOfferModel: artifact.publicOfferModel,
-      siteUrl: "https://chaarlie.de",
-    })
-    assert.equal(payload.transactionalMessageId, 42)
-  } finally {
-    restoreEnv(previous)
-  }
-})
-
 function createStore(artifact = prepared()): PersonalPlanResultArtifactStore & {
   sent: string[]
   failed: Array<{ leadId: string; error: string }>

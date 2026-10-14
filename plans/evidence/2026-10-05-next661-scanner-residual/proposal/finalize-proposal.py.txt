@@ -1,0 +1,96 @@
+import json,pathlib,hashlib,difflib
+P=pathlib.Path('/tmp/test-audit-scanner-residual119'); R=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def put(n,v):
+ p=P/n;p.write_text(v if isinstance(v,str) else json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+a=json.loads((P/'candidate-bodies.json').read_text())
+details=[
+('Empty criteria projection','Both inputs reaching deriveAlternativeComparison are []; keeper supplies criteria:undefined to actual maskAlternative, which calls deriveAlternativeComparison(alternative.criteria ?? []). No identity field enters the lower helper.','deepEqual whole comparison {rows:[],summaryScore:0} already exists.','src/lib/scan/masked-alternative.ts -> alternative-comparison.ts','Empty-array score changed to1; no added assertions needed.'),
+('Generic pass projection','Donor conditioner.care_direction/Pflegerichtung/pass and keeper shampoo.scalp_route/Kopfhaut-Fokus/pass are NOT byte-equal. Owner copies arbitrary criterionId/label and dispatches only result; neither category nor specific string is tested by any predicate. The existing keeper first alternative supplies the same single-pass operative shape.','Add exact rows [{rowId:"shampoo.scalp_route",label:"Kopfhaut-Fokus",state:"match"}] and summaryScore1 as one whole-comparison deepEqual.','maskScanVerdictPayload -> maskAlternative -> deriveAlternativeComparison','Wrong pass state, wrong copied rowId or score fails complete literal comparison. Conditional on accepting generic projection read-set equivalence, not every imaginable future string-specific fault.'),
+('No extra row fields','Donor default single-pass row and keeper existing first single-pass row use same unconditional explicit row projection. Existing helper is not input-keyed on the differing id/label.','New whole-comparison deepEqual forbids every extra own row field, including the donor Object.keys assertion; it also preserves literal values.','maskScanVerdictPayload -> maskAlternative -> deriveAlternativeComparison','Actual projected debug field fails; drop only now-unused ScanComparisonRow type import after all three lower donors are removed.'),
+('Masked outer identity exclusion','Donor alternative() is byte-identical to keeper first inCatalogVerdict.alternatives[0]; second differs only productId and is independently checked in existing loop.','Existing exact Object.keys(entry).sort() equals [comparison,verdict,verdictLabel] for every existing alternative. No transfer.','maskScanVerdictPayload maps actual maskAlternative','Actual productId property leak fails existing exact outer key assertion.'),
+('Alternative own supportive verdict/copy','Both donor and existing real-route alternative B have verdict supportive and verdictLabel Passt eingeschränkt. Identity and criterion values differ, but those cannot alter either direct property copy in maskAlternative. Route external reads and core verdict are injected; actual masking/serialization run.','Add strictEqual body.alternatives[1].verdict supportive and verdictLabel Passt eingeschränkt to existing parsed response. Keep all scanned-identity and forbidden-string assertions.','createScanResolveRouteHandler -> presentScanVerdict -> maskScanVerdictPayload -> maskAlternative -> NextResponse.json','Actual wrong verdict or label fails added route assertion; not proof of provider/core engine or browser behavior.'),
+('Default alternative criteria projection','Donor alternative() is exactly keeper first alternative; same one shampoo criterion and explanation.','Whole-comparison literal added for C2 also contains donor exact rows and score1; no extra case or call.','maskScanVerdictPayload -> maskAlternative -> deriveAlternativeComparison','Wrong rowId or nonempty summaryScore fails.'),
+('Recursive key allowlist at actual response','Donor and keeper both withFlag(true), createScanResolveRouteHandler(baseDeps()), handler(request({productId})); same fixture/arguments and actual response. Keeper already parses raw JSON; response.json and JSON.parse(response.text()) consume identical JSON bytes.','Move alternatives.length2, everyKey traversal, all forbidden-key false assertions and exact sorted allowed-key list. Observation traversal moves; no production/handler/fixture calls added.','createScanResolveRouteHandler -> actual mask serializer -> actual NextResponse.json','Dropping one alternative fails count2; adding debug key fails exact recursive allowlist even when forbidden strings remain absent.'),
+('Generic criterion label literals on actual response','Same route/deps/flag/request as C7, with existing two alternatives. Donor sort intentionally ignores order; retain that exact oracle.','Move labels flatMap and sorted literal [Kopfhaut-Fokus,Reinigungsstärke] onto already parsed keeper body.','actual mask serializer -> deriveAlternativeComparison -> JSON','Actual constant Kriterium projection fails literal labels. Separate direct two-row order assertion remains.'),
+('First session count and persisted marker','Keeper already calls recordScanSession on newly-created same memory storage at1000. It previously ignored that return; donor observes return1 and marker existence at identical initial step.','Wrap existing first call in strictEqual(...,1); add existing donor getItem observation with explicit fresh-session message. No new storage adapter or record call.','recordScanSession uses parseScanSessionRecord/storage.setItem','Wrong first returned value or dropped first storage write fails new intermediate assertions; exact original third-call assertion remains.'),
+('Second session count after31minutes','Keeper existing first1000 and second1000+31minutes match donor calls and same newly-created storage. Further third call is retained unchanged.','Wrap existing second call in strictEqual(...,2); no additional input/call.','recordScanSession timestamp threshold/counter/storage','Return1 when count2 while stored count remains2 would escape old final3 oracle, but fails transferred assertion.'),
+('Compatible initial hair projection with missing refined row','Both source fixtures are generated by same real seed/builders and refined=null. Keeper additionally nulls plan.current_refined_need_version_id. eligiblePaid sees no edit; validNeed returns on !need before pointer access. Neither selected initial/source hash, output or publish arguments depends on that unused refined pointer.','Move exact deepEqual context.snapshot.profile.hair to source.initial.output_snapshot.profile.hair; source=initial and decisions assertions already present.','loadScanEvaluationContext -> loadSharedScannerContext -> prepareScannerContext/validNeed -> computeNeedPlan; RPC boundary is stubbed','Actual returned hair projection corruption fails. Shared fixture engine does not independently prove engine calculations; it does prove source/adapter preservation. No SQL/RPC concurrency claim.'),
+('Null terminal lookup result independent of GTIN spelling count','Donor single EAN4006381333931 and keeper0022796976116 generate different query values. Both stub responses data:null/error:null and same user. After awaited query the owner branches only on error/data; variants cannot distinguish null return. Query variant assertions remain complete.','Observe existing keeper await result with strictEqual(...,null), retaining three variant query assertions.','findOpenScanSubmission query chain -> if(error) -> if(!data) return null','Actual nonnull sentinel on absent data fails; no added query or fixture.'),
+('EAN migration acceptance already replayed','Keeper first INSERT has exact same table columns, values and userA as donor in identical empty pre-migration table after same actual SQL file. Final count2 observes persistence of first EAN and second name rows.','Existing count2 keeper plus successful both INSERTs subsumes count1 donor; unchanged keeper.','Local PGlite applies actual20260920160000 SQL file; actual CHECK/index','Actual migration rule discarding EAN row leaves count1 and intended keeper strictEqual fails. This is redundant registration D, not retired schema.'),
+('Name-only migration acceptance already replayed','Keeper second INSERT is exact same name row/user/category/status as donor. Prior EAN row has nonnull identifier and is excluded by name-only partial-index predicate; CHECK evaluates new row only. No existing trigger in harness. Independent fixture state difference traced, not claimed byte-identical.','Existing count2 after exact EAN/name inserts observes both; unchanged keeper.','Local PGlite actual CHECK and partial unique index','Actual migration rule discarding name row leaves count1. Unique rejection, no-identity failure, non-scan, closed-state and separate scopes retained. No remote DB proof.')]
+for c,d in zip(a,details):
+ c.update(dict(zip(['contract','operativeInputEquivalence','completeAssertionUnion','actualOwnerBoundary','credibleFaultAndLimits'],d)))
+ c['risk']='Conditional preservation proposal; parent acceptance, complete focused before/transfer/control/cut proof and whole campaign gates remain required.'
+ c['newOwnerCalls']=0;c['newInputCases']=0;c['newRows']=0;c['sourceCleanup']=[]
+put('candidates.json',a)
+files=json.loads((P/'original-files.json').read_text())
+for phase in ['transfer','cut']:
+ prior='before' if phase=='transfer' else 'transfer';chunks=[]
+ for f in files:
+  x=(P/prior/f['file']).read_text();y=(P/phase/f['file']).read_text()
+  chunks.extend(difflib.unified_diff(x.splitlines(True),y.splitlines(True),fromfile=prior+'/'+f['file'],tofile=phase+'/'+f['file']))
+ put(phase+'.diff',''.join(chunks))
+full='''src/lib/scan/alternative-comparison.ts
+src/lib/scan/masked-alternative.ts
+src/lib/scan/presentation-rows.ts
+src/lib/scan/product-presentation.ts
+src/lib/scan/role-selection.ts
+src/lib/scan/pending-submission.ts
+src/lib/scan/profile-context.ts
+src/lib/scan/verdict-access.ts
+src/lib/scan/scan-analytics.ts
+src/lib/scan/triggers/session-marker.ts
+src/lib/observability/scan.ts
+src/lib/scan/catalog-search.ts
+src/lib/scan/submit-dm-event-log.ts
+src/lib/funnel/analytics-context.ts
+src/lib/analytics/scanner-quiz-view.ts
+src/components/scan/scan-trigger-cards.tsx
+src/components/billing/scanner-trial-offer.tsx
+src/components/billing/trial-offer.tsx
+src/lib/customerio/scanner-result-artifact.ts
+src/app/api/scan/resolve/route.ts
+src/lib/scan/scanner-context-supabase.ts
+src/lib/scan/scanner-context.ts
+scripts/mobile/profile-fixture.ts
+src/lib/personal-plan/routine/commerce.ts
+src/lib/product-identity/display-title.ts
+src/lib/product-identity/normalize.ts
+src/lib/scan/route.ts
+src/lib/scan/load-scan-verdict.ts
+src/app/api/scan/search/route.ts
+src/app/api/funnel/session/route.ts
+src/lib/analytics/routes.ts
+src/lib/analytics/track-app-event.ts
+src/lib/personal-plan/compute-stage1.ts
+supabase/migrations/20260920160000_scan_name_only_submission_intake.sql'''.splitlines()
+slices={
+'src/lib/analytics/destinations/posthog.ts':'1–75,185–218,260–295,500–end: clean/mapping/actual track relevant events',
+'src/lib/analytics/events.ts':'430–453,650–730: scanner/offer event contracts',
+'src/components/scan/scan-flow.tsx':'290–340 plus caller search: server-confirmed tier gates storage',
+'src/lib/scan/resolve-verdict.ts':'150–225: role/comparison assembly caller',
+'src/lib/customerio/result-artifact-service.ts':'80–127 scanner artifact branch and delivery caller',
+'src/app/api/scan/submit/route.ts':'180–232 name-conflict recovery caller',
+'src/lib/product-intake/submissions.ts':'42–59 open statuses; other matches navigation only',
+'src/lib/personal-plan/input.ts':'1–155 and170–264 source schema/legacy builder/profile projection',
+'src/lib/personal-plan/types.ts':'130–156 hair fields',
+'src/lib/personal-plan-quiz/offer-adapter.ts':'1–102 legacy forward mapping; reverse adapter out of scope',
+'src/lib/scan/types.ts':'1–110 scan alternative/payload contracts',
+'package.json':'Node test command and dependency versions',
+'package-lock.json':'Guard only; not semantically read whole lock',
+'.github/workflows/ci.yml':'152–163 actual test:node CI step',
+'.nvmrc':'full',
+'tests/server-only-register.cjs':'full marker-only Node hook',
+'plans/freemium-scanner-first/plan.md':'T8/T10 and privacy clauses supporting current contract; not full plan',
+'node_modules/next/dist/server/web/spec-extension/response.js':'84–108 JSON serialization delegates native Response.json; no owner execution',
+'node_modules/@electric-sql/pglite/package.json':'installed package identity guard only',
+'node_modules/typescript/package.json':'static parser identity guard only',
+'node_modules/typescript/lib/typescript.js':'static parser bytes guard only, not semantic full read'
+}
+readsets=[]
+for n,depth in [(f['file'],'Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations') for f in files]+[(n,'Full operative source text read; imported transitive engines not automatically credited') for n in full]+list(slices.items()):
+ b=(R/n).read_bytes();readsets.append({'file':n,'sha256':sha(b),'bytes':len(b),'readDepth':depth})
+put('readsets.json',readsets)
+put('main-commands.json',{'cwd':str(R),'nativeAllArgv':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test']+[f['file'] for f in files], 'selectedTemplate':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^<escaped exact keeper title>$','<keeper file>'],'phases':['All21 original native baseline','Apply reviewed TMP transfer only after parent guarded tooling','All21 transfer native','Serial selected actual source controls clean1 -> intended assertion red1 -> own CAS restore -> clean1','Apply reviewed cut only after accepted proof','All21 cut native + campaign CI/coverage'], 'notExecuted':True})
+print('candidates',len(a),'readsets',len(readsets))

@@ -1,0 +1,69 @@
+7916fa05cfc3aac1a390af24f0643c2d5c892308
+feat(offer): introduce guided-story result journey (#238)
+
+## Why
+
+The previous offer page did not tell a sufficiently personal,
+concern-led story from quiz result to routine and Chaarlie support. This
+draft publishes the reviewed guided-story direction so the founders can
+evaluate the complete experience in a hosted preview before merge.
+
+## What changed
+
+- adds a hard-gated four-chapter quiz-result journey
+- derives three concern-led analysis priorities and a personalized hair
+portrait
+- selects one approved generated portrait from the user's hair texture
+and length, with simple perm/straightening treatment mapping and a
+generic fallback
+- preserves three accessible analysis markers and adds a protected
+21-state portrait review gallery
+- builds a shampoo/conditioner foundation plus an eligible targeted
+third step
+- demonstrates Chaarlie through a precomputed chat exchange and
+comparable tracker preview
+- restyles customer proof as one centered editorial section without
+decorative quote icons
+- preserves the existing pricing and checkout boundary while warming
+Stripe before the final gate
+- adds stable guided-story analytics, focus routing, and incumbent
+rollback registration
+- switches active organic and Meta packages to the guided-story variant
+in this branch
+- exposes `/labs/offer-page?variant=guided-story` and `/labs/portrait`
+in local development and Vercel Preview while keeping production access
+blocked
+
+## Verification
+
+- complete Node test suite passed
+- `npm run ci:verify` passed typecheck, lint, and the 84-route
+production build
+- lint completed with four pre-existing warnings and zero errors
+- portrait resolver, fallback, accessibility, gallery, and route tests
+passed
+- responsive browser walkthrough at 320px, 375px, and desktop
+- selected-asset, generic-fallback, and terminal-image-failure browser
+checks
+- testimonial alignment and attribution reviewed on mobile and desktop
+with no console errors
+- Codex ready check and review completed; prior Claude whole-branch
+portrait review plus a clean Claude review of the final testimonial
+delta
+
+## Review status and risks
+
+- Draft/WIP: final founder review and possible cosmetic iteration remain
+expected.
+- Testimonial full names are not published yet; the approved initials
+remain until exact names and display consent are supplied.
+- Generated portrait cells retain small hue and line-style differences
+when viewed as a matrix, although each user sees only one.
+- The preview uses a static `Lea` fixture and static pricing cards; it
+does not expose a real lead or start checkout.
+- The preview URL may require Vercel team authentication if Deployment
+Protection is enabled.
+- This branch maps both active packages to the new variant; do not merge
+until the final hosted journey is approved.
+- No production deployment, migration, merge, or live purchase was
+performed.

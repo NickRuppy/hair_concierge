@@ -1,0 +1,99 @@
+--- /tmp/test-audit-auth-tier-alias/before/src/lib/auth/authenticated-app-route-access.ts	2026-10-04 14:14:04
++++ /tmp/test-audit-auth-tier-alias/after/src/lib/auth/authenticated-app-route-access.ts	2026-10-04 14:14:04
+@@ -97,14 +97,6 @@
+ }
+ 
+ /**
+- * Original PR2 name, kept as an alias: `/scan` was the first page to need this
+- * composite, but nothing in it is scan-specific — T12's gated Routine/Anwendung/Chat
+- * pages read the very same tier. Existing `/scan` callers and their tests keep
+- * compiling against the old name.
+- */
+-export type ScanPageTierDependencies = AuthenticatedAppPageTierDependencies
+-
+-/**
+  * PR2 review fix (C1): `/scan`'s `tier` prop gates BEHAVIORAL surfaces since T9 (locked
+  * Merken, premium pitches, T10's trigger-layer storage) — it can no longer be sourced from
+  * `loadAuthenticatedAppNavigationAccess`'s classification, whose free-tier signal
+@@ -144,9 +136,6 @@
+   return entitlements.tier
+ }
+ 
+-/** PR2 name for the route-agnostic resolver above; see `ScanPageTierDependencies`. */
+-export const resolveScanPageTier = resolveAuthenticatedAppPageTier
+-
+ /**
+  * Separate from `loadScanRouteAccess`'s own `getUser` call: that dependency's return type
+  * carries only `{ id }` (the shape `resolveScanRouteAccess` needs), so the email + `access_kind`
+--- /tmp/test-audit-auth-tier-alias/before/tests/authenticated-app-route-access.test.ts	2026-10-04 14:14:04
++++ /tmp/test-audit-auth-tier-alias/after/tests/authenticated-app-route-access.test.ts	2026-10-04 14:14:04
+@@ -2,10 +2,10 @@
+ import test from "node:test"
+ 
+ import {
+-  resolveScanPageTier,
++  resolveAuthenticatedAppPageTier,
+   resolveScanRouteAccess,
+   resolveTrackerRouteAccess,
+-  type ScanPageTierDependencies,
++  type AuthenticatedAppPageTierDependencies,
+   type ScanRouteAccessDependencies,
+   type TrackerRouteAccessDependencies,
+ } from "../src/lib/auth/authenticated-app-route-access"
+@@ -119,18 +119,18 @@
+   assert.deepEqual(result, { kind: "redirect", href: "/quiz" })
+ })
+ 
+-// --- resolveScanPageTier (PR2 review fix, C1) --------------------------------
++// --- resolveAuthenticatedAppPageTier (PR2 review fix, C1) --------------------------------
+ 
+-function tierDependencies(overrides: Partial<ScanPageTierDependencies> = {}) {
++function tierDependencies(overrides: Partial<AuthenticatedAppPageTierDependencies> = {}) {
+   return {
+     getUser: async () => ({ id: "user-1", email: "user@example.com" }),
+     resolvePaidAccess: async () => "denied" as FreemiumAccessResult,
+     ...overrides,
+-  } satisfies ScanPageTierDependencies
++  } satisfies AuthenticatedAppPageTierDependencies
+ }
+ 
+ test("scan page tier: a paid-access composite of 'denied' is free", async () => {
+-  const tier = await resolveScanPageTier(
++  const tier = await resolveAuthenticatedAppPageTier(
+     tierDependencies({ resolvePaidAccess: async () => "denied" }),
+   )
+   assert.equal(tier, "free")
+@@ -138,7 +138,7 @@
+ 
+ test("scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free", async () => {
+   const seenArgs: Array<[string, string | null | undefined, boolean]> = []
+-  const tier = await resolveScanPageTier(
++  const tier = await resolveAuthenticatedAppPageTier(
+     tierDependencies({
+       getUser: async () => ({ id: "user-1", email: "grant@example.com" }),
+       resolvePaidAccess: async (userId, email, fieldTestGuest) => {
+@@ -155,7 +155,7 @@
+ 
+ test("scan page tier: a field-test guest is passed through to the paid-access composite", async () => {
+   let sawFieldTestGuest = false
+-  await resolveScanPageTier(
++  await resolveAuthenticatedAppPageTier(
+     tierDependencies({
+       getUser: async () => ({
+         id: "user-1",
+@@ -172,13 +172,13 @@
+ })
+ 
+ test("scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable", async () => {
+-  const tier = await resolveScanPageTier(
++  const tier = await resolveAuthenticatedAppPageTier(
+     tierDependencies({ resolvePaidAccess: async () => "unavailable" }),
+   )
+   assert.equal(tier, "premium")
+ })
+ 
+ test("scan page tier: no authenticated user is premium (never free)", async () => {
+-  const tier = await resolveScanPageTier(tierDependencies({ getUser: async () => null }))
++  const tier = await resolveAuthenticatedAppPageTier(tierDependencies({ getUser: async () => null }))
+   assert.equal(tier, "premium")
+ })

@@ -105,6 +105,9 @@ const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<
   frizz: "frizz_flyaways",
   hair_loss: "hair_loss_or_thinning",
   thinning: "hair_loss_or_thinning",
+  low_shine: "low_shine",
+  lost_shape: "lost_shape",
+  low_volume_or_weighed_down: "low_volume_or_weighed_down",
 }
 
 /** Table M: a legacy `dandruff` concern is a SCALP concern — `oily_dandruff` in

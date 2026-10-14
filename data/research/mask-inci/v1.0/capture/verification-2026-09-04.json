@@ -1,0 +1,59 @@
+{
+  "verificationDate": "2026-09-04",
+  "verifiedBy": "orchestrator (main session), live dm.de via in-app browser (real rendering; capture lane was JS-blocked)",
+  "adjudications": [
+    {
+      "product": "02-gliss-7sekunden-express-repair",
+      "finding": "REFORMULATION, not a database error. Two formula versions coexist under near-identical names: (a) older version, EAN 4015100433456, INCI with Hydrolyzed Pearl and no bond chemistry (the capture lane's rawInci, hautschutzengel-derived); (b) current dm.de product, dm-Artikelnummer 1581143, GTIN 4015100813319, dm-verbatim INCI containing the gluconamide pair (Hydroxypropylgluconamide + Hydroxypropylammonium Gluconate) and Hydrolyzed Keratin, no Pearl.",
+      "resolution": "Calibrate the CURRENT dm product: GTIN 4015100813319 with the dm-verbatim INCI below (source tier: dm, direct page extraction). The older EAN/formula is retained as superseded-version provenance in the capture file; lists are never merged across versions.",
+      "dmVerbatimInci": "Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua (Water, Eau), Glycerin, Caprylic/Capric Triglyceride, Parfum (Fragrance), Cetrimonium Chloride, PEG-7 Glyceryl Cocoate, Hydroxypropylgluconamide, Hydroxypropylammonium Gluconate, Hydrolyzed Keratin, Lauryl Alcohol, Cetyl Alcohol, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Citric Acid, Geranyl Acetate, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol",
+      "dmSource": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair (GTIN and INCI read from rendered page, 2026-09-04)",
+      "calibrationNotes": [
+        "Doubles as the reformulation/source-conflict archetype.",
+        "Stress case for the tail-marker rule: Parfum sits at rank 8 of 24 in a low-water serum architecture (Propylene Glycol rank 1, Aqua rank 5) with the named bond pair and Hydrolyzed Keratin AFTER it — strict tail reading would place the bond chemistry below the marker. The calibration run must adjudicate how the bond gate and tail rule interact on non-LGN architectures.",
+        "Named bond chemistry inside a 7-second express product — tests F2 (dwell is never boundary) together with the bond gate."
+      ]
+    },
+    {
+      "product": "01-hask-argan-oil-sachet",
+      "finding": "Identity resolved: dm-Artikelnummer 1474980, GTIN 071164333068 (UPC-12 form), read from rendered dm.de page. dm publishes no INCI/directions for this product (empty sections).",
+      "resolution": "GTIN adopted; INCI remains hautschutzengel-tier as captured."
+    },
+    {
+      "product": "09-balea-professional-aqua-hyaluron",
+      "finding": "GTIN 4066447668315 confirmed on rendered dm.de page (was pending direct dm confirmation). dm publishes no INCI for this own-brand page.",
+      "resolution": "Identity dm-confirmed; INCI remains hautschutzengel + fresh-store two-source corroboration."
+    },
+    {
+      "product": "03-bali-curls-sos-protein-treatment",
+      "finding": "TIER UPGRADE: product is sold on dm.de (dm-Artikelnummer 3122257) and GTIN 4262391991114 is dm-confirmed — the below-tier concern is obsolete. dm publishes no directions; the 3-min (DE brand page) vs 10-20-min (EN summary) dwell conflict stands.",
+      "resolution": "Per the DE/EU market rule, the DE brand page figure (3 minutes) governs; the EN figure is preserved as a recorded conflict, not averaged."
+    },
+    {
+      "product": "10-bali-curls-deep-repair-mask",
+      "finding": "TIER UPGRADE + naming resolved: dm.de sells 'BALI CURLS Haarmaske Deep Repair, 200 ml', dm-Artikelnummer 3106327, GTIN 4262391990001 (matches capture). dm and brand-direct agree on 'Deep Repair'; hautschutzengel's 'Deep Hydration Mask' is a different/older product and must not be used as a formula source for this SKU.",
+      "resolution": "Identity dm-confirmed at dm tier; brand-direct INCI capture stands pending any dm INCI publication."
+    },
+    {
+      "product": "06-monday-smooth-anti-frizz",
+      "finding": "No live Rossmann verification this pass (not attempted after dm priority work). EAN single-sourced from the Rossmann URL slug convention, which cross-checked correctly on four other cohort products.",
+      "resolution": "EAN accepted with single-source flag retained. The silicone-free-claim-vs-INCI mismatch is recorded as a claim/formula discrimination case for the run, not an identity blocker."
+    },
+    {
+      "product": "reserve-r3-wahre-schaetze-1-minute-kur",
+      "finding": "GTIN 3600542509350 confirmed on rendered dm.de page; dm publishes no INCI for it. Full INCI still missing.",
+      "resolution": "Reserve stays DORMANT (not activatable) until a full INCI is sourced. Lower priority: its primary (#2) came out of verification stronger."
+    },
+    {
+      "product": "reserve-r4-john-frieda-wunder-kur",
+      "finding": "SKU ambiguity unresolved (two same-brand products with different INCIs).",
+      "resolution": "Reserve stays DORMANT; resolve via mueller.de only if substitution for #6 is ever triggered."
+    },
+    {
+      "product": "12-guhl-panthenol-reparatur-2in1",
+      "finding": "Capture note: dual-mode directions (~30 sec as Spülung / 2-3 min as Kur) — this contradicts the Phase 1 charter's classification of this product as conditioner-mode-only.",
+      "resolution": "Kept as the boundary-stress case exactly because of this: under the F1 five-step directions test, a stated 2-3-min Kur mode WOULD be a qualifying mask mode, making the product mode-scoped eligible rather than excluded. The blind lane and key lane must both run the G0 test on the frozen directions; if eligibility flips vs. the charter's assumption, that goes to Nick — the charter's Guhl line cites the conditioner-engine-era directions reading and may need a correction rather than the test set being wrong."
+    }
+  ],
+  "gitignoreNote": "/data/research/mask-inci/** allowlisted in .gitignore (2026-09-04) mirroring the conditioner engine, so frozen artifacts are committed provenance."
+}

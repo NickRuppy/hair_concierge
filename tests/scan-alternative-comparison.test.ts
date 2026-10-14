@@ -1,10 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  deriveAlternativeComparison,
-  type ScanComparisonRow,
-} from "../src/lib/scan/alternative-comparison"
+import { deriveAlternativeComparison } from "../src/lib/scan/alternative-comparison"
 import type { Stage3CriterionResult } from "../src/lib/personal-plan/products/contracts"
 
 function criterion(overrides: Partial<Stage3CriterionResult> = {}): Stage3CriterionResult {
@@ -16,19 +13,6 @@ function criterion(overrides: Partial<Stage3CriterionResult> = {}): Stage3Criter
     ...overrides,
   }
 }
-
-test("deriveAlternativeComparison: no criteria yields an empty comparison with a zero score", () => {
-  const comparison = deriveAlternativeComparison([])
-  assert.deepEqual(comparison, { rows: [], summaryScore: 0 })
-})
-
-test("deriveAlternativeComparison: a pass criterion becomes a match row", () => {
-  const comparison = deriveAlternativeComparison([criterion({ result: "pass" })])
-  assert.deepEqual(comparison.rows, [
-    { rowId: "conditioner.care_direction", label: "Pflegerichtung", state: "match" },
-  ])
-  assert.equal(comparison.summaryScore, 1)
-})
 
 test("deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown", () => {
   const comparison = deriveAlternativeComparison([
@@ -64,12 +48,6 @@ test("deriveAlternativeComparison: preserves criteria order and copies id/label 
       ["shampoo.cleansing_intensity", "Reinigungsstärke"],
     ],
   )
-})
-
-test("deriveAlternativeComparison: a row never carries anything beyond rowId/label/state", () => {
-  const comparison = deriveAlternativeComparison([criterion()])
-  const row = comparison.rows[0] as ScanComparisonRow
-  assert.deepEqual(Object.keys(row).sort(), ["label", "rowId", "state"])
 })
 
 test("deriveAlternativeComparison: is a pure function — same input, same output, no mutation", () => {

@@ -195,6 +195,76 @@ test("initial Routine compilation is deterministic and excludes volatile portfol
     portfolio: "personal-plan-product-portfolio.v1",
     routine: "personal-plan-routine-compiler.v2",
   })
+
+  const payload = first.payload as Record<string, any>
+
+  assert.deepEqual(payload.sections, [
+    { key: "basis", itemKeys: ["item:conditioner:conditioner_rinse_out:captured-a"] },
+    {
+      key: "optional",
+      itemKeys: [
+        "item:oil:dry_finish:planned-a",
+        "item:heat_protectant:pre_heat_protection:captured-pending-a",
+      ],
+    },
+  ])
+  assert.deepEqual(payload.source.renderedOrder, ["conditioner", "oil", "heat_protectant"])
+  assert.deepEqual(
+    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),
+    ["conditioner", "oil", "heat_protectant"],
+  )
+  assert.deepEqual(
+    payload.items.map((item: Record<string, any>) => ({
+      key: item.itemKey,
+      assessment: item.state.systemAssessment,
+      inclusion: item.state.inclusion,
+      availability: item.state.availability,
+      fitDecision: item.state.fitDecision,
+      executable: item.executable,
+      productKind: item.product.kind,
+    })),
+    [
+      {
+        key: "item:conditioner:conditioner_rinse_out:captured-a",
+        assessment: "basis",
+        inclusion: "included",
+        availability: "owned",
+        fitDecision: "informed_override",
+        executable: true,
+        productKind: "owned",
+      },
+      {
+        key: "item:oil:dry_finish:planned-a",
+        assessment: "optional",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+        executable: false,
+        productKind: "planned",
+      },
+      {
+        key: "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        assessment: "optional",
+        inclusion: "included",
+        availability: "pending_review",
+        fitDecision: "standard",
+        executable: false,
+        productKind: "pending_review",
+      },
+      {
+        key: "item:mask:intensive_conditioning_mask:none",
+        assessment: "not_recommended",
+        inclusion: "excluded",
+        availability: "none",
+        fitDecision: "standard",
+        executable: false,
+        productKind: "none",
+      },
+    ],
+  )
+  assert.equal("applicationOrder" in payload, false)
+  assert.equal("dayTypes" in payload, false)
+  assert.equal("user_product_usage" in payload, false)
 })
 
 test("freezes matching delegated exact cadence into the initial Routine and fingerprints its fact", async () => {
@@ -276,77 +346,85 @@ test("freezes matching delegated exact cadence into the initial Routine and fing
   assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
 })
 
-test("initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering", async () => {
-  const candidate = await compileInitialRoutineCandidate(compilerInput())
-  const payload = candidate.payload as Record<string, any>
-
-  assert.deepEqual(payload.sections, [
-    { key: "basis", itemKeys: ["item:conditioner:conditioner_rinse_out:captured-a"] },
-    {
-      key: "optional",
-      itemKeys: [
-        "item:oil:dry_finish:planned-a",
-        "item:heat_protectant:pre_heat_protection:captured-pending-a",
-      ],
-    },
-  ])
-  assert.deepEqual(payload.source.renderedOrder, ["conditioner", "oil", "heat_protectant"])
-  assert.deepEqual(
-    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),
-    ["conditioner", "oil", "heat_protectant"],
-  )
-  assert.deepEqual(
-    payload.items.map((item: Record<string, any>) => ({
-      key: item.itemKey,
-      assessment: item.state.systemAssessment,
-      inclusion: item.state.inclusion,
-      availability: item.state.availability,
-      fitDecision: item.state.fitDecision,
-      executable: item.executable,
-      productKind: item.product.kind,
-    })),
-    [
+test("S4: the refined plan's damage band picks the damage-branched Bondbuilder cadence", async () => {
+  const bondPortfolio = {
+    ...portfolio(),
+    categoryResolutions: [
       {
-        key: "item:conditioner:conditioner_rinse_out:captured-a",
-        assessment: "basis",
-        inclusion: "included",
-        availability: "owned",
-        fitDecision: "informed_override",
+        decisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-bond",
         executable: true,
-        productKind: "owned",
-      },
-      {
-        key: "item:oil:dry_finish:planned-a",
-        assessment: "optional",
-        inclusion: "included",
-        availability: "planned",
-        fitDecision: "standard",
-        executable: false,
-        productKind: "planned",
-      },
-      {
-        key: "item:heat_protectant:pre_heat_protection:captured-pending-a",
-        assessment: "optional",
-        inclusion: "included",
-        availability: "pending_review",
-        fitDecision: "standard",
-        executable: false,
-        productKind: "pending_review",
-      },
-      {
-        key: "item:mask:intensive_conditioning_mask:none",
-        assessment: "not_recommended",
-        inclusion: "excluded",
-        availability: "none",
-        fitDecision: "standard",
-        executable: false,
-        productKind: "none",
+        gapPreserved: false,
       },
     ],
-  )
-  assert.equal("applicationOrder" in payload, false)
-  assert.equal("dayTypes" in payload, false)
-  assert.equal("user_product_usage" in payload, false)
+    ownedProducts: [
+      {
+        capturedProductId: "captured-bond",
+        userProductId: "user-product-bond",
+        productId: "product-bond",
+        displayName: "Bondbuilder",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        frequencyRange: null,
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+      },
+    ],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+  } as unknown as ProposedProductPortfolio
+  const snapshotAt = (structuralLevel: string) =>
+    ({
+      ...refinedNeedSnapshot,
+      assessments: { damage: { structuralLevel } },
+      decisions: [
+        {
+          category: "bondbuilder",
+          needTier: "optional",
+          roles: ["specialized_bond_treatment"],
+          frequency: { kind: "product_protocol_course" },
+          reasons: [{ id: "bond.protocol.v1" }],
+        },
+      ],
+      renderedOrder: ["bondbuilder"],
+    }) as unknown as InitialNeedPlanSnapshot
+  const cadenceAt = async (structuralLevel: string) => {
+    const candidate = await compileInitialRoutineCandidate({
+      ...compilerInput(),
+      portfolioSnapshot: bondPortfolio as never,
+      refinedNeedSnapshot: snapshotAt(structuralLevel),
+      cadenceAuthorityFacts: [
+        {
+          productId: "product-bond",
+          category: "bondbuilder",
+          role: "specialized_bond_treatment",
+          cadence: {
+            kind: "damage_branched",
+            branches: [
+              { structural_levels: ["moderate"], copy_de: "Einmal pro Woche anwenden." },
+              { structural_levels: ["high", "severe"], copy_de: "An jedem Waschtag anwenden." },
+            ],
+          },
+        },
+      ],
+    })
+    return (candidate.payload as Record<string, any>).items[0]?.cadence.resolved
+  }
+
+  assert.deepEqual(await cadenceAt("moderate"), {
+    copyDe: "Einmal pro Woche anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.deepEqual(await cadenceAt("severe"), {
+    copyDe: "An jedem Waschtag anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.equal((await cadenceAt("low")).source, "safe_generic_fallback")
 })
 
 test("source revision participates in the compiler fingerprint", async () => {

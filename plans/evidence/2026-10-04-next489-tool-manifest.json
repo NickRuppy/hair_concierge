@@ -1,0 +1,2219 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "scope": "Tool181 read-only proposal; main-only writes; same existing inputs and callbacks",
+  "counts": {
+    "before": 181,
+    "transfer": 181,
+    "cut": 171
+  },
+  "sourceAndDependencyGuards": {
+    "src/lib/agent/tools/select-products.ts": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "src/lib/agent/orchestrator/run-agentic-tool-turn.ts": "0b681d54fecf3f35d83873cf5c1ffc9d508a762fdbeefcc5f262f6fd9c326b5a",
+    "src/lib/agent/orchestrator/current-turn-context.ts": "b8babd8e383fed60587d0e4c7ffd117af40b7d27a25951e34163f1eea173d869",
+    "src/lib/agent/orchestrator/agentic-consultation-brief.ts": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "src/lib/agent/orchestrator/prompt.ts": "a040315f02bd4e5bd0342fd21f1bd87c1686cc1735fd15813cbed373ce5b2b7e",
+    "src/lib/agent/orchestrator/tool-definitions.ts": "d49775ae492e8034c49133a7c5867832efd8d9b3cc68e02cf6d0adf06175016a",
+    "src/lib/agent/orchestrator/agentic-tool-loop-types.ts": "695803313b8d355e62044489f7ffb75872b97f818cf574d70005a722c5fa9411",
+    "src/lib/agent/guidance/load-guidance.ts": "1265432ef32893758ea99b046dab05e671053dda3f1ed58ec991e2a99eeeca0a",
+    "src/lib/agent/guidance/catalog.ts": "099a61c09986f897e0077f7b5fb04e59b15276af902f727461dbb545eabddcf0",
+    "src/lib/recommendation-engine/chat.ts": "3747940e1766b60a76bc5390803799930ad0e677c395091142d6343a9a4720ca",
+    "tests/recommendation-engine-foundation.fixtures.ts": "35965fbf644bd05ce6d34bdceb867bb63aff571eb371604c37b4acb233d119d1",
+    "data/agent-guidance/topics/leave-in/core-fit.md": "e32ad6ad6c60fabb18585778dceffb6b822540823aa868738769e44adf8822c4",
+    "data/agent-guidance/topics/leave-in/response-playbook.md": "442abbf2d890d8c738e7ce1964153a4048e3b80f1a06141e6d6d7c13a82a2321",
+    "data/agent-guidance/playbooks/build-or-fix-routine.md": "2168f0523b2a53dd20ad379bb76df9a30664420ce6369a8975304cd34ba3ae8c",
+    "data/agent-guidance/overlays/fine-hair.md": "d2e0c9ce22e1275f9d46b1aaf39961b357f51a48adfa4d5fae0c5b0c5fd972a1",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "tsconfig.json": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+  },
+  "files": [
+    {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/before/tests/agentic-tool-loop.spec.ts",
+          "sha256": "db5af31622623e46ea9167f82f3b56d8953a22acd7c3aba624ea90acf9c9f692",
+          "count": 93
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tool181-diagnostics-staging-tIQgir/transfer/tests/agentic-tool-loop.spec.ts",
+          "sha256": "2978d3e9100b62a4a13fa6977245b71eb17e122576f777c86a0d5eed055c4352",
+          "count": 93
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tool181-diagnostics-staging-tIQgir/cut/tests/agentic-tool-loop.spec.ts",
+          "sha256": "aae7076d39568120a5fb9e60dd0496cf3f4d7b4cc4cf6df08cb733d5ff77911b",
+          "count": 87
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "current-turn extractor detects explicit minimal routine and saved-routine conflict",
+            "bodySha256": "6c9fe120e5d970929db0b1acdee881a4869b1143c45470b6f1a900cdf71f4ce9"
+          },
+          {
+            "title": "current-turn extractor captures direct care signals without inventing reset",
+            "bodySha256": "819adc1652b720680eaa2b7f907316dd209ec6767e638148c8b6b9faed79226d"
+          },
+          {
+            "title": "current-turn scalp context preserves dandruff and irritation together",
+            "bodySha256": "eda140668af99530c8a2f1f73c2740538dcbfc7e70aae4706e893ec2ada61a86"
+          },
+          {
+            "title": "current-turn extractor does not treat category comparisons as routine inventory",
+            "bodySha256": "d616d548e09f16321da39af53d76a89fdfa8593c8d7406a19453751b43da344c"
+          },
+          {
+            "title": "current-turn extractor does not treat nur-wissen category phrasing as inventory",
+            "bodySha256": "7e92b71ee4a5f1ace3be809bc0009ddc1fd13584ddfc36572a479b9b9ad1af17"
+          },
+          {
+            "title": "current-turn extractor does not mark absent saved routine as a conflict",
+            "bodySha256": "a995733d60b9229d1bc7c6301dd4ceb963018f1c6e88cd72acc9aded344fa6a3"
+          },
+          {
+            "title": "consultation brief distinguishes conceptual leave-in interest from product selection",
+            "bodySha256": "14b981d98093555eaa5c80ecdcc85d36b050debac6271b3e9d14c836895e5f4e"
+          },
+          {
+            "title": "consultation brief includes routine staging for broad routine requests",
+            "bodySha256": "cb62a0797d044b86529e7ee0814dd93222e6fab93ef2d15e8d30a73b33c10722"
+          },
+          {
+            "title": "consultation brief treats broad additional-products questions as routine basics context",
+            "bodySha256": "2ba80d054518c5a64934818e6f8070d695b08eb4e482c4c7f105684df945758d"
+          },
+          {
+            "title": "consultation brief treats broad what-else-to-add questions as routine basics context",
+            "bodySha256": "cbf7720ba7ef1dc01a000068d8de45e22a6ed9f2fa67d57042c0f66470a8576b"
+          },
+          {
+            "title": "agentic tool-loop prompt routes broad additional-products questions to routine basics",
+            "bodySha256": "0b7b4a9bafdd6d70b789824288c81552d00d4f7ac137fb915dffecc7c8691c7f"
+          },
+          {
+            "title": "agentic tool-loop prompt requires structured helpful rendering",
+            "bodySha256": "5e2ebd3632b636b1df2abc0982d4477374f9bcbbc37f1d0c4f4ac78d04914fc2"
+          },
+          {
+            "title": "agentic prompt asks for multi-category guidance on category comparisons",
+            "bodySha256": "0a52a91eb7a52083659d8880a6fbd4867fac6f6d0dbbf53f6ab690d314b08dd1"
+          },
+          {
+            "title": "route classifier prompt exposes night protection as a known topic",
+            "bodySha256": "71021cf432283ae492c0ac61c0195907c1df3c6800d6e479edf47c7e90a6efab"
+          },
+          {
+            "title": "consultation brief includes shampoo candidate context for explicit shampoo asks",
+            "bodySha256": "06268ddce9e48ae0aa0116c845fce08fa4037a6e2d60d1f3877bbe05444fad8f"
+          },
+          {
+            "title": "consultation brief includes candidate guidance for oil, bondbuilder, and deep cleansing",
+            "bodySha256": "57c4fc7ae371bddebdb0a46711db07619692e6bc53364edf93ebac5cd049488f"
+          },
+          {
+            "title": "consultation brief includes dry shampoo candidate guidance",
+            "bodySha256": "a2667b8619b5f84c6fdbf2a9e5428e8ed7eb555a4adab2c01fc1f77b85b6139f"
+          },
+          {
+            "title": "consultation brief includes peeling candidate guidance",
+            "bodySha256": "acc3a7337d638cdc7fda3b85f5e31cf4f29e2dfa94720b51fc1acd507da08d20"
+          },
+          {
+            "title": "consultation brief includes night protection candidate guidance for night terms",
+            "bodySha256": "e33d8d996a2827a27db6a2130f9b87fabccb87d98beaff2337811e55177bb9f3"
+          },
+          {
+            "title": "consultation brief understands German category synonyms",
+            "bodySha256": "065d3f7b9a44e58ae74387e72935c98f5ac912627939490593bd8c33682718b0"
+          },
+          {
+            "title": "consultation brief derives category guidance from active product state",
+            "bodySha256": "7cbf165be7968569feb2eb49c95caa6d5dd6af9aab75a7d239b3678efc3dd074"
+          },
+          {
+            "title": "consultation brief derives category guidance from last product category",
+            "bodySha256": "a350f5635a619773edb55a2a526c6015a63acde7517f680c84708ba54e9fa981"
+          },
+          {
+            "title": "tool-loop sends consultation brief before the model chooses tools",
+            "bodySha256": "65e8ea773f612c54c53fda486c699c3c44ef074fa0d2119fa5535c82a397b9b1"
+          },
+          {
+            "title": "tool-loop accepts an explicit null consultation brief for baseline runs",
+            "bodySha256": "374272c5252efda41a989db08b4575e0f6594d94fac4a7824bfa1ff54efc8833"
+          },
+          {
+            "title": "tool-loop asks select_products for an active-routine typoed shampoo ask",
+            "bodySha256": "5ca51046a400b03e15312925b793d7081ccf5d7042996ec8b06d979a73380962"
+          },
+          {
+            "title": "tool-loop surfaces only terminal product IDs backed by selected products",
+            "bodySha256": "caf76d53997a698d29801be1ae3588f57d63b97765c4fb566263d8f5095a57e8"
+          },
+          {
+            "title": "tool-loop treats direct need-category wording as concrete product intent",
+            "bodySha256": "ca0fac58157bf67c4ed25d071a900f545a85a859d5411b6d13a47ea287ddee98"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category curiosity",
+            "bodySha256": "d651795077d4ec5dc8cf2456581f639a621ca71f7cf982153421d3afc37c97ee"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category role questions",
+            "bodySha256": "212c3854fcaac4c3708c1e85f0ed6adf31c3146bcc11d81e076e59ae870f7b18"
+          },
+          {
+            "title": "tool-loop blocks select_products for category-level comparisons with product-like wording",
+            "bodySha256": "d0e7e7be53c8327098805380a527b72e1dbf748cf7b89d7ea313e85352164524"
+          },
+          {
+            "title": "tool-loop blocks select_products for category option comparisons",
+            "bodySha256": "c63db9c8342749795eb813385cac763d2a6cdacbbe1e98fc0705b31716ed7fd4"
+          },
+          {
+            "title": "tool-loop still allows concrete product asks with category-comparison wording",
+            "bodySha256": "8d756d5ff3b85257d387b0458486ee7e1eac192b7d79294acde7b7cbb9328284"
+          },
+          {
+            "title": "tool-loop can load advisor guidance for conceptual category answers without selecting products",
+            "bodySha256": "da9d2f1130f2e1143630dba4da06e37700c1e05c80a2c88d7558d822da1a89dc"
+          },
+          {
+            "title": "tool-loop injects answer context after advisor guidance",
+            "bodySha256": "7d52f4ed1a5d090a2d3fe255c298635cc3ed09efda2c2d8ba177f265ee5c5801"
+          },
+          {
+            "title": "tool-loop sends projected current-turn profile to advisor guidance",
+            "bodySha256": "451a4e4cabfdf0dd832bea9ad3a9576144875c138d2e73ec846389001d61c30b"
+          },
+          {
+            "title": "current-turn concerns keep augment semantics for product tools",
+            "bodySha256": "a7ba6298eea02a9c077a9b2a9e676bd0ec4f252d7114a39cc793a1b35426baa3"
+          },
+          {
+            "title": "tool-loop still selects products for an explicit leave-in ask",
+            "bodySha256": "f8423b0a1d3c06d0ccec463438618d864b48f20ba5fbc46784ce7616792a9704"
+          },
+          {
+            "title": "tool-loop can select bondbuilder products for explicit supported category asks",
+            "bodySha256": "f7b6e5afcee4a6472e5ac1919d9e3ede40a1843b728555ef84a2a871c4d1723b"
+          },
+          {
+            "title": "tool-loop infers current-turn density for follow-up product tools",
+            "bodySha256": "355a812f2477fdf3637019b8c500e4746d353ca9332e521fb637b3725d06e2d0"
+          },
+          {
+            "title": "tool-loop does not use the conceptual curiosity guard for oil",
+            "bodySha256": "222d48ce9de7ca1e0ddc9639aac266cbcf0b4782f079c436ea99c06235c14097"
+          },
+          {
+            "title": "tool-loop budgets recent messages from the newest context",
+            "bodySha256": "490968642a44c8dc5916c1aee7dc080948d1bdc8140b12e7b23a8ed2c17bbe86"
+          },
+          {
+            "title": "tool-loop does not select products for a pure usage follow-up",
+            "bodySha256": "033f28386ac478c3fd521907bed6a06eb3224b0899ce01f3768c523c57bdaf88"
+          },
+          {
+            "title": "tool-loop injects answer context after product tools in inline mode",
+            "bodySha256": "bc23a2e147c3bd45c224f4f4fd9cc2ef7dede3183917e264250ba8a0ee306b3e"
+          },
+          {
+            "title": "tool-loop routes prior product explanation followups through product facts",
+            "bodySha256": "768a7871b9098fc63d4f4b9bc55e50369917c8467b65de9c207fc0d21ddcd0d2"
+          },
+          {
+            "title": "tool-loop projects explicit current routine inventory into routine tool input",
+            "bodySha256": "aa8cf2fd99cbf74e653bd3bb138df5b0f039ba00cba935100de2cd0d15ec9f5e"
+          },
+          {
+            "title": "tool-loop carries recent scalp facts into anaphoric routine followups",
+            "bodySha256": "b7a51261d7a8c10928aa7431f7f870991763e774b2004ed3b852cb70b67f1cba"
+          },
+          {
+            "title": "tool-loop sends supported current-turn scalp and length signals to product selection",
+            "bodySha256": "375a4266a28530da48b90efb4930ea82ad865dbfe1294bc6c59060ee2392753b"
+          },
+          {
+            "title": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+            "bodySha256": "d2f0bea245fea858277ee30d6832808e57d4f64482f95d66bb746dee71ab27d8"
+          },
+          {
+            "title": "answer context includes current-turn conflict capsule only for conflicting routine inventory",
+            "bodySha256": "3436181af545e8b2948fdb33f0fc715fbdb1ad7a09da7365b5e2d10557ae8cef"
+          },
+          {
+            "title": "answer context asks product-plus-usage turns to answer both parts",
+            "bodySha256": "95099f23c7894d390a83c6349b2490890c09b989489c49411eb7e6a8788ed2b9"
+          },
+          {
+            "title": "answer context asks routine basics to anchor existing steps",
+            "bodySha256": "74f8d3a8af9c5791b1b0bb7c603dd86f9f2ce6bfb7574ea2e46296ef616cf2fa"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after product context exists",
+            "bodySha256": "32386801177e0fb0454e71d180798f9e9370fc5096074e4e02321b37b0836d13"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after products in baseline mode",
+            "bodySha256": "dab1139258f72b3357bfeb9d4dc38bc4d251303239eeaf24fa58e1e4e35d0c74"
+          },
+          {
+            "title": "advisor guidance can follow weak product results",
+            "bodySha256": "8e0dda1692308e68eb9a72b5c62759d36a9b4cc357e82f1438a33cb6f1408dde"
+          },
+          {
+            "title": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+            "bodySha256": "b21e1ac2d92a635205884303dc8ab923f9d475a96b0d153f80bc8d83ee35fcb6"
+          },
+          {
+            "title": "tool loop does not normalize routine basics state when a later product tool runs",
+            "bodySha256": "fa5e3132d0fbf1d25d08c1c9a387d20cba3af36ae9c881ede7a318e65f64b756"
+          },
+          {
+            "title": "tool-loop composer mode rewrites final answer without changing state",
+            "bodySha256": "07d4e2de3f197ecb26f7a3f8ca935b17ae894bf70f5bfc321144abbfc37440fd"
+          },
+          {
+            "title": "tool-loop lets a tool-less topic pivot update state from the terminal patch",
+            "bodySha256": "6aaf879bcae409667c759d64ba22040a3c4403fbed9b6e36cb9d76ffbda60c99"
+          },
+          {
+            "title": "tool-loop blocks and traces unknown tools",
+            "bodySha256": "8c2dd1cf3dc8b5f2f86bbbe7621b2e09713946eac950fb142568a8889982f6c5"
+          },
+          {
+            "title": "tool-loop nudges free-text first responses in-loop and then succeeds",
+            "bodySha256": "761c740cb5cb157f46a9c895954837a36c37b43c8dee9616fd5bd4c4308cd2be"
+          },
+          {
+            "title": "tool-loop does not accept terminal answers mixed with executable tools",
+            "bodySha256": "daade61a14e0d1671feef0acd769aebaa965208f82dbd824b37d0c1eb395ac06"
+          },
+          {
+            "title": "multiple terminal answers trigger final protocol repair and succeed",
+            "bodySha256": "46baf612fde8fdf7c67cd2e45fb4dfca2c62e00e8b984dc0c1160118b277fe4c"
+          },
+          {
+            "title": "max executable tool-call budget triggers final protocol repair",
+            "bodySha256": "7cd2b264f8ac8f71600be6c02147ade79e81f8ed18ebb44365e2dc44c7fe0693"
+          },
+          {
+            "title": "max model steps triggers final protocol repair",
+            "bodySha256": "1ffdcae5d6a7098ee3a04140df03bb1a0be0dde7d23a1d5a8a9e40090f9d9d20"
+          },
+          {
+            "title": "empty terminal answer becomes visible failure with canonical copy",
+            "bodySha256": "f5cc63044ac9f3855b17cda557bf5ba64fdad272030efb470a45eb6312dcfb5c"
+          },
+          {
+            "title": "failed protocol repair returns visible failure and leaves state unchanged",
+            "bodySha256": "d9511a240b4c2a3e152fa54dec5f6c32a47fd582e665a6e3bcc6826764c01219"
+          },
+          {
+            "title": "deterministic no_catalog_match does not trigger protocol repair",
+            "bodySha256": "fdd4aaddb076492b1db09d5681db21add929a25641f144c47935f4f9a0e59dc7"
+          },
+          {
+            "title": "agentic tool definitions expose strict V1 function tools with optional advisor guidance",
+            "bodySha256": "f6914f0141fd9a715e9da0cfe537ffff5bc54426e230bb290ef238489d483e2a"
+          },
+          {
+            "title": "terminal final step receives native context without route-shaped packet fields",
+            "bodySha256": "c2767a56a40a39aab0f9336019b48de071ef495d1b4a9538b743050466505160"
+          },
+          {
+            "title": "tool-loop polishes empty generic final closers",
+            "bodySha256": "ff95a823b12e1c639697c8423d228b417434f4065d6147b00d2dbdbbcb99a85b"
+          },
+          {
+            "title": "tool-loop replaces vague routine-offer closers with concrete next step",
+            "bodySha256": "8435d973d586079d943b55e9c8cd0007d8134857a3ad3db034572e2d02ca85f3"
+          },
+          {
+            "title": "tool-loop removes vague product-integration closers",
+            "bodySha256": "1826d7de51904739022d74a0b7d88ced01c65712f743afa6b5eaad3f1341f0e1"
+          },
+          {
+            "title": "tool-loop removes combined question-or-product closers",
+            "bodySha256": "839906f454b002c4c118dc7f62a9f8a18905e5aefba65f68fb2b8a6e522d1482"
+          },
+          {
+            "title": "tool-loop replaces interest-in-product-suggestion closers",
+            "bodySha256": "4655399ff78d135deb063c6773e0ae8cf21d93e5e24ed509a956670b8558196c"
+          },
+          {
+            "title": "tool-loop replaces routine-refinement-or-product-suggestion closers",
+            "bodySha256": "1c20f99c811abda5be7dd0eaeedcec13882f56cfe0408278b8535a2b6e635a00"
+          },
+          {
+            "title": "tool-loop removes should-you-have-more-questions closers",
+            "bodySha256": "3851909e864d8e3ed84790ec51a2f8e67ef2fae12ad11e25e9a08653bc628b25"
+          },
+          {
+            "title": "tool-loop removes broader application-or-product closers",
+            "bodySha256": "f39b3c3f320c2592e81bbb5f5dd8a06810c561ecb6bf6b2c3ef06acd02226b79"
+          },
+          {
+            "title": "tool-loop replaces product-suggestion offer closers with a concrete next step",
+            "bodySha256": "c386e0cdb9bc4272e2eae53df1330313615a186a32d81b1954cc907afe3bf8fb"
+          },
+          {
+            "title": "tool-loop replaces selection-help offer closers with a concrete next step",
+            "bodySha256": "8ac9921dbea5e4e950fbe420a9487380a344cfccf4d746c463a1550dd4c7bf32"
+          },
+          {
+            "title": "tool-loop softens broad scalp-soothing routine conclusions",
+            "bodySha256": "565adc346689483587083f6a881b7079ca9c9cdf916db2cb6d23063e8bed9b17"
+          },
+          {
+            "title": "tool-loop softens broad scalp-help routine introductions and conclusions",
+            "bodySha256": "456af1f79835d115dd76f9264d4fbaa0cdefe257f69123281eee94e4af8533e7"
+          },
+          {
+            "title": "tool-loop keeps scalp routine answers informal and non-medical",
+            "bodySha256": "be1d246d90cd2cd5f13d4545028e2753f28539c270ee2a51264cbd2084c55b83"
+          },
+          {
+            "title": "tool-loop avoids symptom-relief claims in scalp routine answers",
+            "bodySha256": "7ef9d45be103a77583d6af66651c1d998a03bc8dc1a150683fe99e1566a79c00"
+          },
+          {
+            "title": "tool-loop softens suitable-shampoo symptom-relief variants",
+            "bodySha256": "5d21d60f0408c7e8559ca72b04425742517622ebcbab40926474b63b7b6d6bb3"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo symptom-relief variants",
+            "bodySha256": "cc27247d23d11ec3559a279e9e323a870b8c3c7f34b187c3f3f3388afc4c008b"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo-recommendation symptom-relief variants",
+            "bodySha256": "e0292a4cc1d74bdc411d7288960e6fb580183ac7afba8e0aaf2973e0e8e69308"
+          },
+          {
+            "title": "tool-loop softens alternate scalp-calming symptom claims",
+            "bodySha256": "d14ea4d01ae52ba8b235154b69eb8abb72e4b361645e247832efe27174f9aa8c"
+          },
+          {
+            "title": "tool-loop softens scalp-calming and flake-reduction claims",
+            "bodySha256": "bbe0a50f41143430a749b3b8b7733592f2418421bf2216d570c0986d34f44289"
+          },
+          {
+            "title": "tool-loop removes generic application-help closers",
+            "bodySha256": "fd82a31b670b555af5f5dcbaf9260dee117c17c71e8c92bf6d069e8570604a5f"
+          },
+          {
+            "title": "tool-loop carries recent oil purpose into anaphoric product followups",
+            "bodySha256": "3df5776076ba536ed4d5bb6022f209f809f38e036dbef610095dd148dba41a11"
+          },
+          {
+            "title": "conceptual why questions after product turns are not forced into product selection",
+            "bodySha256": "cb654e881f3682c82fce2bf570f0f88fdbb8a95db3e4d1bb4acc18e5d5eeb283"
+          },
+          {
+            "title": "category-level why questions with articles do not become prior recommendation reroutes",
+            "bodySha256": "fdae815a6324f65f68e462010a54d863098db742254d9c06a4f8870d0010b71a"
+          },
+          {
+            "title": "tool-loop explains prior recommendation without selecting the mentioned alternative category",
+            "bodySha256": "199963ca4d8d90e9c547b8150fe7dee42951337557bc2d75b8ef6bc1cd6d5200"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "current-turn extractor detects explicit minimal routine and saved-routine conflict",
+            "bodySha256": "6c9fe120e5d970929db0b1acdee881a4869b1143c45470b6f1a900cdf71f4ce9"
+          },
+          {
+            "title": "current-turn extractor captures direct care signals without inventing reset",
+            "bodySha256": "819adc1652b720680eaa2b7f907316dd209ec6767e638148c8b6b9faed79226d"
+          },
+          {
+            "title": "current-turn scalp context preserves dandruff and irritation together",
+            "bodySha256": "eda140668af99530c8a2f1f73c2740538dcbfc7e70aae4706e893ec2ada61a86"
+          },
+          {
+            "title": "current-turn extractor does not treat category comparisons as routine inventory",
+            "bodySha256": "d616d548e09f16321da39af53d76a89fdfa8593c8d7406a19453751b43da344c"
+          },
+          {
+            "title": "current-turn extractor does not treat nur-wissen category phrasing as inventory",
+            "bodySha256": "7e92b71ee4a5f1ace3be809bc0009ddc1fd13584ddfc36572a479b9b9ad1af17"
+          },
+          {
+            "title": "current-turn extractor does not mark absent saved routine as a conflict",
+            "bodySha256": "a995733d60b9229d1bc7c6301dd4ceb963018f1c6e88cd72acc9aded344fa6a3"
+          },
+          {
+            "title": "consultation brief distinguishes conceptual leave-in interest from product selection",
+            "bodySha256": "14b981d98093555eaa5c80ecdcc85d36b050debac6271b3e9d14c836895e5f4e"
+          },
+          {
+            "title": "consultation brief includes routine staging for broad routine requests",
+            "bodySha256": "cb62a0797d044b86529e7ee0814dd93222e6fab93ef2d15e8d30a73b33c10722"
+          },
+          {
+            "title": "consultation brief treats broad additional-products questions as routine basics context",
+            "bodySha256": "2ba80d054518c5a64934818e6f8070d695b08eb4e482c4c7f105684df945758d"
+          },
+          {
+            "title": "consultation brief treats broad what-else-to-add questions as routine basics context",
+            "bodySha256": "cbf7720ba7ef1dc01a000068d8de45e22a6ed9f2fa67d57042c0f66470a8576b"
+          },
+          {
+            "title": "agentic tool-loop prompt routes broad additional-products questions to routine basics",
+            "bodySha256": "0b7b4a9bafdd6d70b789824288c81552d00d4f7ac137fb915dffecc7c8691c7f"
+          },
+          {
+            "title": "agentic tool-loop prompt requires structured helpful rendering",
+            "bodySha256": "5e2ebd3632b636b1df2abc0982d4477374f9bcbbc37f1d0c4f4ac78d04914fc2"
+          },
+          {
+            "title": "agentic prompt asks for multi-category guidance on category comparisons",
+            "bodySha256": "0a52a91eb7a52083659d8880a6fbd4867fac6f6d0dbbf53f6ab690d314b08dd1"
+          },
+          {
+            "title": "route classifier prompt exposes night protection as a known topic",
+            "bodySha256": "71021cf432283ae492c0ac61c0195907c1df3c6800d6e479edf47c7e90a6efab"
+          },
+          {
+            "title": "consultation brief includes shampoo candidate context for explicit shampoo asks",
+            "bodySha256": "06268ddce9e48ae0aa0116c845fce08fa4037a6e2d60d1f3877bbe05444fad8f"
+          },
+          {
+            "title": "consultation brief includes candidate guidance for oil, bondbuilder, and deep cleansing",
+            "bodySha256": "57c4fc7ae371bddebdb0a46711db07619692e6bc53364edf93ebac5cd049488f"
+          },
+          {
+            "title": "consultation brief includes dry shampoo candidate guidance",
+            "bodySha256": "a2667b8619b5f84c6fdbf2a9e5428e8ed7eb555a4adab2c01fc1f77b85b6139f"
+          },
+          {
+            "title": "consultation brief includes peeling candidate guidance",
+            "bodySha256": "acc3a7337d638cdc7fda3b85f5e31cf4f29e2dfa94720b51fc1acd507da08d20"
+          },
+          {
+            "title": "consultation brief includes night protection candidate guidance for night terms",
+            "bodySha256": "e33d8d996a2827a27db6a2130f9b87fabccb87d98beaff2337811e55177bb9f3"
+          },
+          {
+            "title": "consultation brief understands German category synonyms",
+            "bodySha256": "065d3f7b9a44e58ae74387e72935c98f5ac912627939490593bd8c33682718b0"
+          },
+          {
+            "title": "consultation brief derives category guidance from active product state",
+            "bodySha256": "7cbf165be7968569feb2eb49c95caa6d5dd6af9aab75a7d239b3678efc3dd074"
+          },
+          {
+            "title": "consultation brief derives category guidance from last product category",
+            "bodySha256": "a350f5635a619773edb55a2a526c6015a63acde7517f680c84708ba54e9fa981"
+          },
+          {
+            "title": "tool-loop sends consultation brief before the model chooses tools",
+            "bodySha256": "615d3c5a6a9a81963dae66072aabeb9fd6368b473298af677532f444138bf476"
+          },
+          {
+            "title": "tool-loop accepts an explicit null consultation brief for baseline runs",
+            "bodySha256": "374272c5252efda41a989db08b4575e0f6594d94fac4a7824bfa1ff54efc8833"
+          },
+          {
+            "title": "tool-loop asks select_products for an active-routine typoed shampoo ask",
+            "bodySha256": "5ca51046a400b03e15312925b793d7081ccf5d7042996ec8b06d979a73380962"
+          },
+          {
+            "title": "tool-loop surfaces only terminal product IDs backed by selected products",
+            "bodySha256": "caf76d53997a698d29801be1ae3588f57d63b97765c4fb566263d8f5095a57e8"
+          },
+          {
+            "title": "tool-loop treats direct need-category wording as concrete product intent",
+            "bodySha256": "ca0fac58157bf67c4ed25d071a900f545a85a859d5411b6d13a47ea287ddee98"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category curiosity",
+            "bodySha256": "d651795077d4ec5dc8cf2456581f639a621ca71f7cf982153421d3afc37c97ee"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category role questions",
+            "bodySha256": "212c3854fcaac4c3708c1e85f0ed6adf31c3146bcc11d81e076e59ae870f7b18"
+          },
+          {
+            "title": "tool-loop blocks select_products for category-level comparisons with product-like wording",
+            "bodySha256": "d0e7e7be53c8327098805380a527b72e1dbf748cf7b89d7ea313e85352164524"
+          },
+          {
+            "title": "tool-loop blocks select_products for category option comparisons",
+            "bodySha256": "c63db9c8342749795eb813385cac763d2a6cdacbbe1e98fc0705b31716ed7fd4"
+          },
+          {
+            "title": "tool-loop still allows concrete product asks with category-comparison wording",
+            "bodySha256": "8d756d5ff3b85257d387b0458486ee7e1eac192b7d79294acde7b7cbb9328284"
+          },
+          {
+            "title": "tool-loop can load advisor guidance for conceptual category answers without selecting products",
+            "bodySha256": "da9d2f1130f2e1143630dba4da06e37700c1e05c80a2c88d7558d822da1a89dc"
+          },
+          {
+            "title": "tool-loop injects answer context after advisor guidance",
+            "bodySha256": "7d52f4ed1a5d090a2d3fe255c298635cc3ed09efda2c2d8ba177f265ee5c5801"
+          },
+          {
+            "title": "tool-loop sends projected current-turn profile to advisor guidance",
+            "bodySha256": "451a4e4cabfdf0dd832bea9ad3a9576144875c138d2e73ec846389001d61c30b"
+          },
+          {
+            "title": "current-turn concerns keep augment semantics for product tools",
+            "bodySha256": "a7ba6298eea02a9c077a9b2a9e676bd0ec4f252d7114a39cc793a1b35426baa3"
+          },
+          {
+            "title": "tool-loop still selects products for an explicit leave-in ask",
+            "bodySha256": "f8423b0a1d3c06d0ccec463438618d864b48f20ba5fbc46784ce7616792a9704"
+          },
+          {
+            "title": "tool-loop can select bondbuilder products for explicit supported category asks",
+            "bodySha256": "f7b6e5afcee4a6472e5ac1919d9e3ede40a1843b728555ef84a2a871c4d1723b"
+          },
+          {
+            "title": "tool-loop infers current-turn density for follow-up product tools",
+            "bodySha256": "355a812f2477fdf3637019b8c500e4746d353ca9332e521fb637b3725d06e2d0"
+          },
+          {
+            "title": "tool-loop does not use the conceptual curiosity guard for oil",
+            "bodySha256": "222d48ce9de7ca1e0ddc9639aac266cbcf0b4782f079c436ea99c06235c14097"
+          },
+          {
+            "title": "tool-loop budgets recent messages from the newest context",
+            "bodySha256": "490968642a44c8dc5916c1aee7dc080948d1bdc8140b12e7b23a8ed2c17bbe86"
+          },
+          {
+            "title": "tool-loop does not select products for a pure usage follow-up",
+            "bodySha256": "033f28386ac478c3fd521907bed6a06eb3224b0899ce01f3768c523c57bdaf88"
+          },
+          {
+            "title": "tool-loop injects answer context after product tools in inline mode",
+            "bodySha256": "bc23a2e147c3bd45c224f4f4fd9cc2ef7dede3183917e264250ba8a0ee306b3e"
+          },
+          {
+            "title": "tool-loop routes prior product explanation followups through product facts",
+            "bodySha256": "768a7871b9098fc63d4f4b9bc55e50369917c8467b65de9c207fc0d21ddcd0d2"
+          },
+          {
+            "title": "tool-loop projects explicit current routine inventory into routine tool input",
+            "bodySha256": "aa8cf2fd99cbf74e653bd3bb138df5b0f039ba00cba935100de2cd0d15ec9f5e"
+          },
+          {
+            "title": "tool-loop carries recent scalp facts into anaphoric routine followups",
+            "bodySha256": "b7a51261d7a8c10928aa7431f7f870991763e774b2004ed3b852cb70b67f1cba"
+          },
+          {
+            "title": "tool-loop sends supported current-turn scalp and length signals to product selection",
+            "bodySha256": "375a4266a28530da48b90efb4930ea82ad865dbfe1294bc6c59060ee2392753b"
+          },
+          {
+            "title": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+            "bodySha256": "fe0fc6614bfa9176c5005b6f5b341fe6398fbdedc7a9b46219ca944ed7192a5f"
+          },
+          {
+            "title": "answer context includes current-turn conflict capsule only for conflicting routine inventory",
+            "bodySha256": "3436181af545e8b2948fdb33f0fc715fbdb1ad7a09da7365b5e2d10557ae8cef"
+          },
+          {
+            "title": "answer context asks product-plus-usage turns to answer both parts",
+            "bodySha256": "95099f23c7894d390a83c6349b2490890c09b989489c49411eb7e6a8788ed2b9"
+          },
+          {
+            "title": "answer context asks routine basics to anchor existing steps",
+            "bodySha256": "74f8d3a8af9c5791b1b0bb7c603dd86f9f2ce6bfb7574ea2e46296ef616cf2fa"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after product context exists",
+            "bodySha256": "32386801177e0fb0454e71d180798f9e9370fc5096074e4e02321b37b0836d13"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after products in baseline mode",
+            "bodySha256": "dab1139258f72b3357bfeb9d4dc38bc4d251303239eeaf24fa58e1e4e35d0c74"
+          },
+          {
+            "title": "advisor guidance can follow weak product results",
+            "bodySha256": "8e0dda1692308e68eb9a72b5c62759d36a9b4cc357e82f1438a33cb6f1408dde"
+          },
+          {
+            "title": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+            "bodySha256": "3b26038125330f33ee3ac25f2f80b2b7c06aee394eec60b90b6ca303865ed5af"
+          },
+          {
+            "title": "tool loop does not normalize routine basics state when a later product tool runs",
+            "bodySha256": "fa5e3132d0fbf1d25d08c1c9a387d20cba3af36ae9c881ede7a318e65f64b756"
+          },
+          {
+            "title": "tool-loop composer mode rewrites final answer without changing state",
+            "bodySha256": "07d4e2de3f197ecb26f7a3f8ca935b17ae894bf70f5bfc321144abbfc37440fd"
+          },
+          {
+            "title": "tool-loop lets a tool-less topic pivot update state from the terminal patch",
+            "bodySha256": "6aaf879bcae409667c759d64ba22040a3c4403fbed9b6e36cb9d76ffbda60c99"
+          },
+          {
+            "title": "tool-loop blocks and traces unknown tools",
+            "bodySha256": "8c2dd1cf3dc8b5f2f86bbbe7621b2e09713946eac950fb142568a8889982f6c5"
+          },
+          {
+            "title": "tool-loop nudges free-text first responses in-loop and then succeeds",
+            "bodySha256": "761c740cb5cb157f46a9c895954837a36c37b43c8dee9616fd5bd4c4308cd2be"
+          },
+          {
+            "title": "tool-loop does not accept terminal answers mixed with executable tools",
+            "bodySha256": "daade61a14e0d1671feef0acd769aebaa965208f82dbd824b37d0c1eb395ac06"
+          },
+          {
+            "title": "multiple terminal answers trigger final protocol repair and succeed",
+            "bodySha256": "46baf612fde8fdf7c67cd2e45fb4dfca2c62e00e8b984dc0c1160118b277fe4c"
+          },
+          {
+            "title": "max executable tool-call budget triggers final protocol repair",
+            "bodySha256": "7cd2b264f8ac8f71600be6c02147ade79e81f8ed18ebb44365e2dc44c7fe0693"
+          },
+          {
+            "title": "max model steps triggers final protocol repair",
+            "bodySha256": "1ffdcae5d6a7098ee3a04140df03bb1a0be0dde7d23a1d5a8a9e40090f9d9d20"
+          },
+          {
+            "title": "empty terminal answer becomes visible failure with canonical copy",
+            "bodySha256": "f5cc63044ac9f3855b17cda557bf5ba64fdad272030efb470a45eb6312dcfb5c"
+          },
+          {
+            "title": "failed protocol repair returns visible failure and leaves state unchanged",
+            "bodySha256": "d9511a240b4c2a3e152fa54dec5f6c32a47fd582e665a6e3bcc6826764c01219"
+          },
+          {
+            "title": "deterministic no_catalog_match does not trigger protocol repair",
+            "bodySha256": "fdd4aaddb076492b1db09d5681db21add929a25641f144c47935f4f9a0e59dc7"
+          },
+          {
+            "title": "agentic tool definitions expose strict V1 function tools with optional advisor guidance",
+            "bodySha256": "f6914f0141fd9a715e9da0cfe537ffff5bc54426e230bb290ef238489d483e2a"
+          },
+          {
+            "title": "terminal final step receives native context without route-shaped packet fields",
+            "bodySha256": "c2767a56a40a39aab0f9336019b48de071ef495d1b4a9538b743050466505160"
+          },
+          {
+            "title": "tool-loop polishes empty generic final closers",
+            "bodySha256": "ff95a823b12e1c639697c8423d228b417434f4065d6147b00d2dbdbbcb99a85b"
+          },
+          {
+            "title": "tool-loop replaces vague routine-offer closers with concrete next step",
+            "bodySha256": "8435d973d586079d943b55e9c8cd0007d8134857a3ad3db034572e2d02ca85f3"
+          },
+          {
+            "title": "tool-loop removes vague product-integration closers",
+            "bodySha256": "1826d7de51904739022d74a0b7d88ced01c65712f743afa6b5eaad3f1341f0e1"
+          },
+          {
+            "title": "tool-loop removes combined question-or-product closers",
+            "bodySha256": "839906f454b002c4c118dc7f62a9f8a18905e5aefba65f68fb2b8a6e522d1482"
+          },
+          {
+            "title": "tool-loop replaces interest-in-product-suggestion closers",
+            "bodySha256": "4655399ff78d135deb063c6773e0ae8cf21d93e5e24ed509a956670b8558196c"
+          },
+          {
+            "title": "tool-loop replaces routine-refinement-or-product-suggestion closers",
+            "bodySha256": "1c20f99c811abda5be7dd0eaeedcec13882f56cfe0408278b8535a2b6e635a00"
+          },
+          {
+            "title": "tool-loop removes should-you-have-more-questions closers",
+            "bodySha256": "3851909e864d8e3ed84790ec51a2f8e67ef2fae12ad11e25e9a08653bc628b25"
+          },
+          {
+            "title": "tool-loop removes broader application-or-product closers",
+            "bodySha256": "f39b3c3f320c2592e81bbb5f5dd8a06810c561ecb6bf6b2c3ef06acd02226b79"
+          },
+          {
+            "title": "tool-loop replaces product-suggestion offer closers with a concrete next step",
+            "bodySha256": "c386e0cdb9bc4272e2eae53df1330313615a186a32d81b1954cc907afe3bf8fb"
+          },
+          {
+            "title": "tool-loop replaces selection-help offer closers with a concrete next step",
+            "bodySha256": "8ac9921dbea5e4e950fbe420a9487380a344cfccf4d746c463a1550dd4c7bf32"
+          },
+          {
+            "title": "tool-loop softens broad scalp-soothing routine conclusions",
+            "bodySha256": "565adc346689483587083f6a881b7079ca9c9cdf916db2cb6d23063e8bed9b17"
+          },
+          {
+            "title": "tool-loop softens broad scalp-help routine introductions and conclusions",
+            "bodySha256": "456af1f79835d115dd76f9264d4fbaa0cdefe257f69123281eee94e4af8533e7"
+          },
+          {
+            "title": "tool-loop keeps scalp routine answers informal and non-medical",
+            "bodySha256": "be1d246d90cd2cd5f13d4545028e2753f28539c270ee2a51264cbd2084c55b83"
+          },
+          {
+            "title": "tool-loop avoids symptom-relief claims in scalp routine answers",
+            "bodySha256": "7ef9d45be103a77583d6af66651c1d998a03bc8dc1a150683fe99e1566a79c00"
+          },
+          {
+            "title": "tool-loop softens suitable-shampoo symptom-relief variants",
+            "bodySha256": "5d21d60f0408c7e8559ca72b04425742517622ebcbab40926474b63b7b6d6bb3"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo symptom-relief variants",
+            "bodySha256": "cc27247d23d11ec3559a279e9e323a870b8c3c7f34b187c3f3f3388afc4c008b"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo-recommendation symptom-relief variants",
+            "bodySha256": "e0292a4cc1d74bdc411d7288960e6fb580183ac7afba8e0aaf2973e0e8e69308"
+          },
+          {
+            "title": "tool-loop softens alternate scalp-calming symptom claims",
+            "bodySha256": "d14ea4d01ae52ba8b235154b69eb8abb72e4b361645e247832efe27174f9aa8c"
+          },
+          {
+            "title": "tool-loop softens scalp-calming and flake-reduction claims",
+            "bodySha256": "bbe0a50f41143430a749b3b8b7733592f2418421bf2216d570c0986d34f44289"
+          },
+          {
+            "title": "tool-loop removes generic application-help closers",
+            "bodySha256": "fd82a31b670b555af5f5dcbaf9260dee117c17c71e8c92bf6d069e8570604a5f"
+          },
+          {
+            "title": "tool-loop carries recent oil purpose into anaphoric product followups",
+            "bodySha256": "3df5776076ba536ed4d5bb6022f209f809f38e036dbef610095dd148dba41a11"
+          },
+          {
+            "title": "conceptual why questions after product turns are not forced into product selection",
+            "bodySha256": "cb654e881f3682c82fce2bf570f0f88fdbb8a95db3e4d1bb4acc18e5d5eeb283"
+          },
+          {
+            "title": "category-level why questions with articles do not become prior recommendation reroutes",
+            "bodySha256": "fdae815a6324f65f68e462010a54d863098db742254d9c06a4f8870d0010b71a"
+          },
+          {
+            "title": "tool-loop explains prior recommendation without selecting the mentioned alternative category",
+            "bodySha256": "199963ca4d8d90e9c547b8150fe7dee42951337557bc2d75b8ef6bc1cd6d5200"
+          }
+        ],
+        "cut": [
+          {
+            "title": "current-turn extractor detects explicit minimal routine and saved-routine conflict",
+            "bodySha256": "6c9fe120e5d970929db0b1acdee881a4869b1143c45470b6f1a900cdf71f4ce9"
+          },
+          {
+            "title": "current-turn scalp context preserves dandruff and irritation together",
+            "bodySha256": "eda140668af99530c8a2f1f73c2740538dcbfc7e70aae4706e893ec2ada61a86"
+          },
+          {
+            "title": "current-turn extractor does not treat category comparisons as routine inventory",
+            "bodySha256": "d616d548e09f16321da39af53d76a89fdfa8593c8d7406a19453751b43da344c"
+          },
+          {
+            "title": "current-turn extractor does not treat nur-wissen category phrasing as inventory",
+            "bodySha256": "7e92b71ee4a5f1ace3be809bc0009ddc1fd13584ddfc36572a479b9b9ad1af17"
+          },
+          {
+            "title": "current-turn extractor does not mark absent saved routine as a conflict",
+            "bodySha256": "a995733d60b9229d1bc7c6301dd4ceb963018f1c6e88cd72acc9aded344fa6a3"
+          },
+          {
+            "title": "consultation brief treats broad additional-products questions as routine basics context",
+            "bodySha256": "2ba80d054518c5a64934818e6f8070d695b08eb4e482c4c7f105684df945758d"
+          },
+          {
+            "title": "consultation brief treats broad what-else-to-add questions as routine basics context",
+            "bodySha256": "cbf7720ba7ef1dc01a000068d8de45e22a6ed9f2fa67d57042c0f66470a8576b"
+          },
+          {
+            "title": "route classifier prompt exposes night protection as a known topic",
+            "bodySha256": "71021cf432283ae492c0ac61c0195907c1df3c6800d6e479edf47c7e90a6efab"
+          },
+          {
+            "title": "consultation brief includes shampoo candidate context for explicit shampoo asks",
+            "bodySha256": "06268ddce9e48ae0aa0116c845fce08fa4037a6e2d60d1f3877bbe05444fad8f"
+          },
+          {
+            "title": "consultation brief includes candidate guidance for oil, bondbuilder, and deep cleansing",
+            "bodySha256": "57c4fc7ae371bddebdb0a46711db07619692e6bc53364edf93ebac5cd049488f"
+          },
+          {
+            "title": "consultation brief includes dry shampoo candidate guidance",
+            "bodySha256": "a2667b8619b5f84c6fdbf2a9e5428e8ed7eb555a4adab2c01fc1f77b85b6139f"
+          },
+          {
+            "title": "consultation brief includes peeling candidate guidance",
+            "bodySha256": "acc3a7337d638cdc7fda3b85f5e31cf4f29e2dfa94720b51fc1acd507da08d20"
+          },
+          {
+            "title": "consultation brief includes night protection candidate guidance for night terms",
+            "bodySha256": "e33d8d996a2827a27db6a2130f9b87fabccb87d98beaff2337811e55177bb9f3"
+          },
+          {
+            "title": "consultation brief understands German category synonyms",
+            "bodySha256": "065d3f7b9a44e58ae74387e72935c98f5ac912627939490593bd8c33682718b0"
+          },
+          {
+            "title": "consultation brief derives category guidance from active product state",
+            "bodySha256": "7cbf165be7968569feb2eb49c95caa6d5dd6af9aab75a7d239b3678efc3dd074"
+          },
+          {
+            "title": "consultation brief derives category guidance from last product category",
+            "bodySha256": "a350f5635a619773edb55a2a526c6015a63acde7517f680c84708ba54e9fa981"
+          },
+          {
+            "title": "tool-loop sends consultation brief before the model chooses tools",
+            "bodySha256": "615d3c5a6a9a81963dae66072aabeb9fd6368b473298af677532f444138bf476"
+          },
+          {
+            "title": "tool-loop accepts an explicit null consultation brief for baseline runs",
+            "bodySha256": "374272c5252efda41a989db08b4575e0f6594d94fac4a7824bfa1ff54efc8833"
+          },
+          {
+            "title": "tool-loop asks select_products for an active-routine typoed shampoo ask",
+            "bodySha256": "5ca51046a400b03e15312925b793d7081ccf5d7042996ec8b06d979a73380962"
+          },
+          {
+            "title": "tool-loop surfaces only terminal product IDs backed by selected products",
+            "bodySha256": "caf76d53997a698d29801be1ae3588f57d63b97765c4fb566263d8f5095a57e8"
+          },
+          {
+            "title": "tool-loop treats direct need-category wording as concrete product intent",
+            "bodySha256": "ca0fac58157bf67c4ed25d071a900f545a85a859d5411b6d13a47ea287ddee98"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category curiosity",
+            "bodySha256": "d651795077d4ec5dc8cf2456581f639a621ca71f7cf982153421d3afc37c97ee"
+          },
+          {
+            "title": "tool-loop blocks select_products for conceptual category role questions",
+            "bodySha256": "212c3854fcaac4c3708c1e85f0ed6adf31c3146bcc11d81e076e59ae870f7b18"
+          },
+          {
+            "title": "tool-loop blocks select_products for category-level comparisons with product-like wording",
+            "bodySha256": "d0e7e7be53c8327098805380a527b72e1dbf748cf7b89d7ea313e85352164524"
+          },
+          {
+            "title": "tool-loop blocks select_products for category option comparisons",
+            "bodySha256": "c63db9c8342749795eb813385cac763d2a6cdacbbe1e98fc0705b31716ed7fd4"
+          },
+          {
+            "title": "tool-loop still allows concrete product asks with category-comparison wording",
+            "bodySha256": "8d756d5ff3b85257d387b0458486ee7e1eac192b7d79294acde7b7cbb9328284"
+          },
+          {
+            "title": "tool-loop can load advisor guidance for conceptual category answers without selecting products",
+            "bodySha256": "da9d2f1130f2e1143630dba4da06e37700c1e05c80a2c88d7558d822da1a89dc"
+          },
+          {
+            "title": "tool-loop injects answer context after advisor guidance",
+            "bodySha256": "7d52f4ed1a5d090a2d3fe255c298635cc3ed09efda2c2d8ba177f265ee5c5801"
+          },
+          {
+            "title": "tool-loop sends projected current-turn profile to advisor guidance",
+            "bodySha256": "451a4e4cabfdf0dd832bea9ad3a9576144875c138d2e73ec846389001d61c30b"
+          },
+          {
+            "title": "current-turn concerns keep augment semantics for product tools",
+            "bodySha256": "a7ba6298eea02a9c077a9b2a9e676bd0ec4f252d7114a39cc793a1b35426baa3"
+          },
+          {
+            "title": "tool-loop still selects products for an explicit leave-in ask",
+            "bodySha256": "f8423b0a1d3c06d0ccec463438618d864b48f20ba5fbc46784ce7616792a9704"
+          },
+          {
+            "title": "tool-loop can select bondbuilder products for explicit supported category asks",
+            "bodySha256": "f7b6e5afcee4a6472e5ac1919d9e3ede40a1843b728555ef84a2a871c4d1723b"
+          },
+          {
+            "title": "tool-loop infers current-turn density for follow-up product tools",
+            "bodySha256": "355a812f2477fdf3637019b8c500e4746d353ca9332e521fb637b3725d06e2d0"
+          },
+          {
+            "title": "tool-loop does not use the conceptual curiosity guard for oil",
+            "bodySha256": "222d48ce9de7ca1e0ddc9639aac266cbcf0b4782f079c436ea99c06235c14097"
+          },
+          {
+            "title": "tool-loop budgets recent messages from the newest context",
+            "bodySha256": "490968642a44c8dc5916c1aee7dc080948d1bdc8140b12e7b23a8ed2c17bbe86"
+          },
+          {
+            "title": "tool-loop does not select products for a pure usage follow-up",
+            "bodySha256": "033f28386ac478c3fd521907bed6a06eb3224b0899ce01f3768c523c57bdaf88"
+          },
+          {
+            "title": "tool-loop injects answer context after product tools in inline mode",
+            "bodySha256": "bc23a2e147c3bd45c224f4f4fd9cc2ef7dede3183917e264250ba8a0ee306b3e"
+          },
+          {
+            "title": "tool-loop routes prior product explanation followups through product facts",
+            "bodySha256": "768a7871b9098fc63d4f4b9bc55e50369917c8467b65de9c207fc0d21ddcd0d2"
+          },
+          {
+            "title": "tool-loop projects explicit current routine inventory into routine tool input",
+            "bodySha256": "aa8cf2fd99cbf74e653bd3bb138df5b0f039ba00cba935100de2cd0d15ec9f5e"
+          },
+          {
+            "title": "tool-loop carries recent scalp facts into anaphoric routine followups",
+            "bodySha256": "b7a51261d7a8c10928aa7431f7f870991763e774b2004ed3b852cb70b67f1cba"
+          },
+          {
+            "title": "tool-loop sends supported current-turn scalp and length signals to product selection",
+            "bodySha256": "375a4266a28530da48b90efb4930ea82ad865dbfe1294bc6c59060ee2392753b"
+          },
+          {
+            "title": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+            "bodySha256": "fe0fc6614bfa9176c5005b6f5b341fe6398fbdedc7a9b46219ca944ed7192a5f"
+          },
+          {
+            "title": "answer context includes current-turn conflict capsule only for conflicting routine inventory",
+            "bodySha256": "3436181af545e8b2948fdb33f0fc715fbdb1ad7a09da7365b5e2d10557ae8cef"
+          },
+          {
+            "title": "answer context asks product-plus-usage turns to answer both parts",
+            "bodySha256": "95099f23c7894d390a83c6349b2490890c09b989489c49411eb7e6a8788ed2b9"
+          },
+          {
+            "title": "answer context asks routine basics to anchor existing steps",
+            "bodySha256": "74f8d3a8af9c5791b1b0bb7c603dd86f9f2ce6bfb7574ea2e46296ef616cf2fa"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after product context exists",
+            "bodySha256": "32386801177e0fb0454e71d180798f9e9370fc5096074e4e02321b37b0836d13"
+          },
+          {
+            "title": "tool-loop blocks redundant advisor guidance after products in baseline mode",
+            "bodySha256": "dab1139258f72b3357bfeb9d4dc38bc4d251303239eeaf24fa58e1e4e35d0c74"
+          },
+          {
+            "title": "advisor guidance can follow weak product results",
+            "bodySha256": "8e0dda1692308e68eb9a72b5c62759d36a9b4cc357e82f1438a33cb6f1408dde"
+          },
+          {
+            "title": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+            "bodySha256": "3b26038125330f33ee3ac25f2f80b2b7c06aee394eec60b90b6ca303865ed5af"
+          },
+          {
+            "title": "tool loop does not normalize routine basics state when a later product tool runs",
+            "bodySha256": "fa5e3132d0fbf1d25d08c1c9a387d20cba3af36ae9c881ede7a318e65f64b756"
+          },
+          {
+            "title": "tool-loop composer mode rewrites final answer without changing state",
+            "bodySha256": "07d4e2de3f197ecb26f7a3f8ca935b17ae894bf70f5bfc321144abbfc37440fd"
+          },
+          {
+            "title": "tool-loop lets a tool-less topic pivot update state from the terminal patch",
+            "bodySha256": "6aaf879bcae409667c759d64ba22040a3c4403fbed9b6e36cb9d76ffbda60c99"
+          },
+          {
+            "title": "tool-loop blocks and traces unknown tools",
+            "bodySha256": "8c2dd1cf3dc8b5f2f86bbbe7621b2e09713946eac950fb142568a8889982f6c5"
+          },
+          {
+            "title": "tool-loop nudges free-text first responses in-loop and then succeeds",
+            "bodySha256": "761c740cb5cb157f46a9c895954837a36c37b43c8dee9616fd5bd4c4308cd2be"
+          },
+          {
+            "title": "tool-loop does not accept terminal answers mixed with executable tools",
+            "bodySha256": "daade61a14e0d1671feef0acd769aebaa965208f82dbd824b37d0c1eb395ac06"
+          },
+          {
+            "title": "multiple terminal answers trigger final protocol repair and succeed",
+            "bodySha256": "46baf612fde8fdf7c67cd2e45fb4dfca2c62e00e8b984dc0c1160118b277fe4c"
+          },
+          {
+            "title": "max executable tool-call budget triggers final protocol repair",
+            "bodySha256": "7cd2b264f8ac8f71600be6c02147ade79e81f8ed18ebb44365e2dc44c7fe0693"
+          },
+          {
+            "title": "max model steps triggers final protocol repair",
+            "bodySha256": "1ffdcae5d6a7098ee3a04140df03bb1a0be0dde7d23a1d5a8a9e40090f9d9d20"
+          },
+          {
+            "title": "empty terminal answer becomes visible failure with canonical copy",
+            "bodySha256": "f5cc63044ac9f3855b17cda557bf5ba64fdad272030efb470a45eb6312dcfb5c"
+          },
+          {
+            "title": "failed protocol repair returns visible failure and leaves state unchanged",
+            "bodySha256": "d9511a240b4c2a3e152fa54dec5f6c32a47fd582e665a6e3bcc6826764c01219"
+          },
+          {
+            "title": "deterministic no_catalog_match does not trigger protocol repair",
+            "bodySha256": "fdd4aaddb076492b1db09d5681db21add929a25641f144c47935f4f9a0e59dc7"
+          },
+          {
+            "title": "agentic tool definitions expose strict V1 function tools with optional advisor guidance",
+            "bodySha256": "f6914f0141fd9a715e9da0cfe537ffff5bc54426e230bb290ef238489d483e2a"
+          },
+          {
+            "title": "terminal final step receives native context without route-shaped packet fields",
+            "bodySha256": "c2767a56a40a39aab0f9336019b48de071ef495d1b4a9538b743050466505160"
+          },
+          {
+            "title": "tool-loop polishes empty generic final closers",
+            "bodySha256": "ff95a823b12e1c639697c8423d228b417434f4065d6147b00d2dbdbbcb99a85b"
+          },
+          {
+            "title": "tool-loop replaces vague routine-offer closers with concrete next step",
+            "bodySha256": "8435d973d586079d943b55e9c8cd0007d8134857a3ad3db034572e2d02ca85f3"
+          },
+          {
+            "title": "tool-loop removes vague product-integration closers",
+            "bodySha256": "1826d7de51904739022d74a0b7d88ced01c65712f743afa6b5eaad3f1341f0e1"
+          },
+          {
+            "title": "tool-loop removes combined question-or-product closers",
+            "bodySha256": "839906f454b002c4c118dc7f62a9f8a18905e5aefba65f68fb2b8a6e522d1482"
+          },
+          {
+            "title": "tool-loop replaces interest-in-product-suggestion closers",
+            "bodySha256": "4655399ff78d135deb063c6773e0ae8cf21d93e5e24ed509a956670b8558196c"
+          },
+          {
+            "title": "tool-loop replaces routine-refinement-or-product-suggestion closers",
+            "bodySha256": "1c20f99c811abda5be7dd0eaeedcec13882f56cfe0408278b8535a2b6e635a00"
+          },
+          {
+            "title": "tool-loop removes should-you-have-more-questions closers",
+            "bodySha256": "3851909e864d8e3ed84790ec51a2f8e67ef2fae12ad11e25e9a08653bc628b25"
+          },
+          {
+            "title": "tool-loop removes broader application-or-product closers",
+            "bodySha256": "f39b3c3f320c2592e81bbb5f5dd8a06810c561ecb6bf6b2c3ef06acd02226b79"
+          },
+          {
+            "title": "tool-loop replaces product-suggestion offer closers with a concrete next step",
+            "bodySha256": "c386e0cdb9bc4272e2eae53df1330313615a186a32d81b1954cc907afe3bf8fb"
+          },
+          {
+            "title": "tool-loop replaces selection-help offer closers with a concrete next step",
+            "bodySha256": "8ac9921dbea5e4e950fbe420a9487380a344cfccf4d746c463a1550dd4c7bf32"
+          },
+          {
+            "title": "tool-loop softens broad scalp-soothing routine conclusions",
+            "bodySha256": "565adc346689483587083f6a881b7079ca9c9cdf916db2cb6d23063e8bed9b17"
+          },
+          {
+            "title": "tool-loop softens broad scalp-help routine introductions and conclusions",
+            "bodySha256": "456af1f79835d115dd76f9264d4fbaa0cdefe257f69123281eee94e4af8533e7"
+          },
+          {
+            "title": "tool-loop keeps scalp routine answers informal and non-medical",
+            "bodySha256": "be1d246d90cd2cd5f13d4545028e2753f28539c270ee2a51264cbd2084c55b83"
+          },
+          {
+            "title": "tool-loop avoids symptom-relief claims in scalp routine answers",
+            "bodySha256": "7ef9d45be103a77583d6af66651c1d998a03bc8dc1a150683fe99e1566a79c00"
+          },
+          {
+            "title": "tool-loop softens suitable-shampoo symptom-relief variants",
+            "bodySha256": "5d21d60f0408c7e8559ca72b04425742517622ebcbab40926474b63b7b6d6bb3"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo symptom-relief variants",
+            "bodySha256": "cc27247d23d11ec3559a279e9e323a870b8c3c7f34b187c3f3f3388afc4c008b"
+          },
+          {
+            "title": "tool-loop softens waiting-for-shampoo-recommendation symptom-relief variants",
+            "bodySha256": "e0292a4cc1d74bdc411d7288960e6fb580183ac7afba8e0aaf2973e0e8e69308"
+          },
+          {
+            "title": "tool-loop softens alternate scalp-calming symptom claims",
+            "bodySha256": "d14ea4d01ae52ba8b235154b69eb8abb72e4b361645e247832efe27174f9aa8c"
+          },
+          {
+            "title": "tool-loop softens scalp-calming and flake-reduction claims",
+            "bodySha256": "bbe0a50f41143430a749b3b8b7733592f2418421bf2216d570c0986d34f44289"
+          },
+          {
+            "title": "tool-loop removes generic application-help closers",
+            "bodySha256": "fd82a31b670b555af5f5dcbaf9260dee117c17c71e8c92bf6d069e8570604a5f"
+          },
+          {
+            "title": "tool-loop carries recent oil purpose into anaphoric product followups",
+            "bodySha256": "3df5776076ba536ed4d5bb6022f209f809f38e036dbef610095dd148dba41a11"
+          },
+          {
+            "title": "conceptual why questions after product turns are not forced into product selection",
+            "bodySha256": "cb654e881f3682c82fce2bf570f0f88fdbb8a95db3e4d1bb4acc18e5d5eeb283"
+          },
+          {
+            "title": "category-level why questions with articles do not become prior recommendation reroutes",
+            "bodySha256": "fdae815a6324f65f68e462010a54d863098db742254d9c06a4f8870d0010b71a"
+          },
+          {
+            "title": "tool-loop explains prior recommendation without selecting the mentioned alternative category",
+            "bodySha256": "199963ca4d8d90e9c547b8150fe7dee42951337557bc2d75b8ef6bc1cd6d5200"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/before/tests/agent-select-products-tool.spec.ts",
+          "sha256": "bda53591b8ccce5e89934e99a8e56b988a0b34d59f342c55b4f912926bae4c59",
+          "count": 88
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/transfer/tests/agent-select-products-tool.spec.ts",
+          "sha256": "4437aab8391d8345c9c2d6ab90b5055af61e90b8474ff0009e436b7312e93013",
+          "count": 88
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/cut/tests/agent-select-products-tool.spec.ts",
+          "sha256": "83fe950d183088e79c3f4c9b44716a7b377e5de52a9ba18a3fa1f217bdf5898a",
+          "count": 84
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "projectSelectedProducts returns authoritative shampoo recommendation payload",
+            "bodySha256": "1f10fdccb7d06127b6ea994beadb073cb71288d75fe4495153ca3a5e045a2b31"
+          },
+          {
+            "title": "projectSelectedProducts returns generic recommend policy for ordinary product picks",
+            "bodySha256": "ac2d6f27c7db78d3cf67c378f801aadf9c0095d2ddeeaed6a2dd1ad35ade53a3"
+          },
+          {
+            "title": "projectSelectedProducts does not let profile length concerns veto direct shampoo picks",
+            "bodySha256": "162df73121f6774f3f3d7814f475a88c342f977297dff937ae85b27cbb18a881"
+          },
+          {
+            "title": "projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant",
+            "bodySha256": "727f04210805b5c24605e0f4d7f5cdb7ab0732443e6b95a3ee99859f6fd80883"
+          },
+          {
+            "title": "projectSelectedProducts emits conditioner unsupported-signal caveats without making claims",
+            "bodySha256": "b32da0c35cadceae7cd42c9691fe2017edd8070efab0bef7434ad67cfa9c6ec0"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner claims without density or damage drivers",
+            "bodySha256": "6b21986aa661bd0257f8d86e755acdf9517e0afceaf6f5f346024e8e48dd70ec"
+          },
+          {
+            "title": "projectSelectedProducts adds conditioner profile deviation notice when message overrides thickness",
+            "bodySha256": "d8150abf3c0e7a40bc46e36fa4af9ce69e121d32e82b3a2b92412d94146accd8"
+          },
+          {
+            "title": "projectSelectedProducts keeps unsupported color requests out of conditioner claims",
+            "bodySha256": "bb6c36c66a0b94fbb8ffdf694773d7957293714afcd8e1053d4f766bdd06702d"
+          },
+          {
+            "title": "projectSelectedProducts keeps conditioner comparison facts useful when fit axes match",
+            "bodySha256": "4f91dbd76287a24b51061e1e6d29ad88e5ecac38e619772fb6d34117e1081596"
+          },
+          {
+            "title": "projectSelectedProducts exposes leave-in claims and unsupported ingredient caveats",
+            "bodySha256": "929f207e06338ea929acd0ed807894b5e6586e9a45b3d94a601c547d63668662"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete leave-in differences over missing metadata",
+            "bodySha256": "d708c497b9b35e707c7dfbe767b4ca9fbba1446f05199af3088effa05929b09a"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker leave-in alternatives without internal fallback wording",
+            "bodySha256": "9af285d2aade4bc27cf4fb02efdffda14a35e2f6fc9c56c67ee210114806aa37"
+          },
+          {
+            "title": "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+            "bodySha256": "9a601acbb231be679d69b9c18304c8c2f1fbc9c331f63b3594aad3dee741f507"
+          },
+          {
+            "title": "selectProducts includes owned verified non-recommended products for assessment",
+            "bodySha256": "75a1672cbd7a0b43eff9c876299b206a4952f1586784de0bdf43a8312d3592c1"
+          },
+          {
+            "title": "selectProducts narrows product-detail assessment grounding to target product ids",
+            "bodySha256": "fe8f42b4a9cb450fe1f814a42cd8886d03a8c841c129be6de51b10f5c52d0c5a"
+          },
+          {
+            "title": "selectProducts preserves resolved assessment target when engine returns no products",
+            "bodySha256": "3ed7287f9f2c991b24e76fdcc8e8015cc0425e8e45f3e9490bd85fd5dc50bfd8"
+          },
+          {
+            "title": "selectProducts applies leave-in texture and density overrides with profile notices",
+            "bodySha256": "7f9145df6ad48db5dcfe78f28006bf5ad913e83825749b8371f11f34af962cca"
+          },
+          {
+            "title": "selectProducts applies leave-in heat tool overrides to the runtime",
+            "bodySha256": "006881b476a3ba2431fc21d2c5ae21840037fd34ce12ab47e8f4633c57364e34"
+          },
+          {
+            "title": "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+            "bodySha256": "da82dc56675006e1af89ecee1fa08797ac988ae5f189295e28626a6d1f979548"
+          },
+          {
+            "title": "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+            "bodySha256": "69ed0113c9d68e8a6395631084f3aa4ce8bcdffc05f4e0c4f344c746b896db0f"
+          },
+          {
+            "title": "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests",
+            "bodySha256": "bb7940126b53aaadb3cceb3711edf417538e673e9060b8401b10c0f335933dd8"
+          },
+          {
+            "title": "selectProducts marks exact leave-in heat temperatures unsupported",
+            "bodySha256": "15f1b5e5f1e9e9a579d81a71a2f7fa0db1753672af4f18d9cc27a95aea458b68"
+          },
+          {
+            "title": "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+            "bodySha256": "0eda5c232ccdb13a610e657c8b83588adc9c703d229771ec5f785223d935c1cf"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+            "bodySha256": "ae2941b17e46070404fc9a25281b389cacc099adbf0c6b57a579b1209a354710"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+            "bodySha256": "4c735ad1f35de7450d157e46942121508666799ffe4c5f6eb0ac5f1ad54ffb6c"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner ingredient caveat even with no products",
+            "bodySha256": "7e3459588bbaf20b3d7a317d328be48baeab832314a0c54b7cc4a5b430db712c"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask ingredient caveat even with no products",
+            "bodySha256": "a81e125256f470f331e85b0fb8a1c8612065dc51c047e4bda43c5dee0ee4dccc"
+          },
+          {
+            "title": "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+            "bodySha256": "da1d3b14b55ed318c7c79e1b544949e207d8a834d1e5ff744dfa6ccbca58e541"
+          },
+          {
+            "title": "selectProducts tool passes request-aware mask runtime into category engine",
+            "bodySha256": "54f4e8b209f305a9ec1d9f3f7f3531bd0c9ef2178b5b6ce9db03addd40bb2186"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask claims and unsupported ingredient caveats",
+            "bodySha256": "eec7bc174767a80c71dfa273601f2c1522f4526bd55da0818bff4eb6bb2b1ff9"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker mask alternatives without internal fallback wording",
+            "bodySha256": "5c6e3bd32ea43f4d7a63473d2e87dd308ddc5ce672ce29e3eea5376496d21daa"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers for mask products",
+            "bodySha256": "41e9e01236367f3cff95272ab05bba459929d9a853d54471c93d226fbee13463"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers without displayable products",
+            "bodySha256": "fdd3267ed7b651f46b9c9987d791810460f60471742e280d27c59c3da5e1fb55"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask profile basis with balance and target axes",
+            "bodySha256": "e0f6f6507c0bd4f2a03032080ce2bd1cbfece4ef056f1be1dcf1a1aebb56997c"
+          },
+          {
+            "title": "projectSelectedProducts keeps mask comparison facts useful when fit axes match",
+            "bodySha256": "323aa5d227c45866f63fb1e5782f83a5c10456834c91ebf2c5a942a7e7e7b67a"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete mask differences over missing metadata",
+            "bodySha256": "26f4d96cbc33e12bf8dbfabe2cdc612cb71a95e8970e1d7d985a15c66d77fad6"
+          },
+          {
+            "title": "projectSelectedProducts keeps optional bondbuilder assessment with priced products",
+            "bodySha256": "8b9b404f10c821908bc815200930c31dde15cb68152b51252d26a6b4281fb12c"
+          },
+          {
+            "title": "projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims",
+            "bodySha256": "d0a181ac6cec5ce623b86b2bff68bcfb3531b9e5dc2dce1303be094128b76949"
+          },
+          {
+            "title": "projectSelectedProducts labels deep-cleansing reset facts without raw enum copy",
+            "bodySha256": "f70669b39131dc67c365aa82446ee0630e74af78ef676e1ea29cec1cb5c709e9"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only conditioner requests without products",
+            "bodySha256": "7205c3859e620b32deea2ae312b8f5881c471a666dc46125a4bc22ecf928899b"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only mask requests without products",
+            "bodySha256": "f86d9604924e3a7fe4bf1a3b780c52605d27dedcd2086d60cb4f400150a31593"
+          },
+          {
+            "title": "projectSelectedProducts returns explain-then-recommend policy for oily roots",
+            "bodySha256": "a656cd394d5fdd5fe2f62ac7e3cd883de55224ff1a44e9d446764239754926af"
+          },
+          {
+            "title": "projectSelectedProducts returns needs_more_info for blocking shampoo gaps",
+            "bodySha256": "cbd8767911e26206a7d8259750cc6a3be5b88756c727ee5010b8bc9df035e807"
+          },
+          {
+            "title": "projectSelectedProducts returns no_catalog_match when shampoo fits but no product is displayable",
+            "bodySha256": "c91c1d70792cfedf3f32d800ad0beb31d53cb4d12bbb5793cc99987fca4b8303"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when required profile info is missing",
+            "bodySha256": "f3ca84307ab381957202b03ae19ae32e954411ac7c2f3ca6060430819e84a0a3"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when protein balance is missing",
+            "bodySha256": "dbd8f90b462da58336c4057ac1b39f91e319d9159104841b7a440a04c787570e"
+          },
+          {
+            "title": "projectSelectedProducts blocks mask products when protein balance is missing",
+            "bodySha256": "d2bfc57cbd44e700db7345f21295813d4349f5597413a3ab68e8a4329d5af56c"
+          },
+          {
+            "title": "projectSelectedProducts preserves oil no-recommendation decisions as redirects",
+            "bodySha256": "1f7d34fc57a93f7edc3438245993cd2cde50a27a5bf07fb27f181c912ece4d25"
+          },
+          {
+            "title": "projectSelectedProducts returns not_recommended when shampoo is not the right lever",
+            "bodySha256": "9255cea31c0058ac75fe5c7eae3b0814853e5e89d61aa12c05279acfc22d8e6c"
+          },
+          {
+            "title": "projectSelectedProducts suppresses shampoo products when the category is not recommended",
+            "bodySha256": "3904d624e7b4bf7783559bdd6b3db3fb4385254dd5ff420d5137965dab8ca2e3"
+          },
+          {
+            "title": "projectSelectedProducts treats dry-length shampoo questions as not shampoo-first",
+            "bodySha256": "1a845feec72afa8008fd82c1b25d9a9f312517df55dd4cef28f79fa50c951244"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and dry-length shampoo prompts recommendable",
+            "bodySha256": "e9290624e577df259013825b68967e5b9efc6d08dcdbf4fb631cf33bb46deeac"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and frizz shampoo prompts recommendable",
+            "bodySha256": "dbaf4f8a29940dc2c4119c907cdfde2f88b9888e51f0c0acfc67c531c6c9f3b0"
+          },
+          {
+            "title": "`projectSelectedProducts uses shampoo policy for ${entry.label}`",
+            "bodySha256": "f11a9fe8775a5ed110e1094e5267cae5cb2334928df808729c63b2b62b5db8e3"
+          },
+          {
+            "title": "projectSelectedProducts still redirects weak-lever shampoo when the user is not explicitly asking for products",
+            "bodySha256": "93fbe7ddf9bda3ab6949ee10fd74ba57062e6e40ee7a1adfbeaa29a53a53bd99"
+          },
+          {
+            "title": "projectSelectedProducts still redirects compare-or-decide weak-lever shampoo without explicit product ask",
+            "bodySha256": "f2f4e2ac7831bedcb61b361b347b0b23f29ba44472da54bdb200438aefef42ff"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit compare-or-decide weak-lever shampoo as caveated recommendation",
+            "bodySha256": "552f9bcea1f49a804da75bd51c8fb5530efc627ea261c2ccb1d7027f592b4782"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit weak-lever shampoo asks as caveated even without userJob",
+            "bodySha256": "3f4b296a234ed843795d11ba39b1bbf86b6d162c64ef663f4ce2de7f46ea1500"
+          },
+          {
+            "title": "projectSelectedProducts keeps itchy dandruff cautious but offers a useful next step",
+            "bodySha256": "a3d9c453c877914ae38dacb2abbd92940f9bac66d8ff73adf05b5df44c2e7754"
+          },
+          {
+            "title": "projectSelectedProducts acknowledges oily-root shampoo troubleshooting",
+            "bodySha256": "cf906e0b70bc76544baf1ff2c981c6492164185d354f98cffaf41b97d5fe39a0"
+          },
+          {
+            "title": "projectSelectedProducts sanitizes weaker shampoo caveats and maps stale generic mismatch caveats",
+            "bodySha256": "81c42f3351a0782e51983b15281f18fb54348951e87512b1682232821981fb48"
+          },
+          {
+            "title": "projectSelectedProducts exposes structured shampoo comparison facts",
+            "bodySha256": "5b531954dad89a0b3749dd5f2af3519af2252f727d2e8c66670916e2a1afc0d2"
+          },
+          {
+            "title": "projectSelectedProducts exposes per-product shampoo claims from structured data only",
+            "bodySha256": "5a734fd60ce30d989a761a7dbedbb5d9ddb0b8ec1280d3c389434ccc8940c89b"
+          },
+          {
+            "title": "projectSelectedProducts writes shampoo fit reasons from structured claims, not product names",
+            "bodySha256": "69b9fd912aa2d56290b6235b6768c46341d5736e63d226904158d2891cd918d3"
+          },
+          {
+            "title": "projectSelectedProducts uses leave-in-specific missing-info when leave_in returns no products",
+            "bodySha256": "9d3ddaf66062f9954d8c421a1e0c9d4caad7bf782764f5dff5dbfe39c725a4ae"
+          },
+          {
+            "title": "projectSelectedProducts blocks leave-in products when texture or density is missing",
+            "bodySha256": "7dfe0726963858bac370d8866ec24b532637dfd9f24f8f5ac08cf8caad51915c"
+          },
+          {
+            "title": "projectSelectedProducts uses oil-specific missing-info when oil returns no products",
+            "bodySha256": "9d82bd2532768015db1ad8bcf91809644ac153bc9790455513e581ed05f58e2d"
+          },
+          {
+            "title": "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+            "bodySha256": "ee47446c091ec7bf688d90c07a9cc5b58d97ee07f747d31939ce59c4160b6bf4"
+          },
+          {
+            "title": "projectSelectedProducts exposes oil claims, caveats, and lean comparison facts",
+            "bodySha256": "6d8504e533cf5368a4eb56d1e4d00fd7e28acdc7e8c4d52336e2792fcf18475e"
+          },
+          {
+            "title": "projectSelectedProducts does not compare oil subtype against missing metadata",
+            "bodySha256": "98922bbd13d596ebe23cf6044a9659cbaffa0593400d336c2089f1a537eb1253"
+          },
+          {
+            "title": "selectProducts carries unsupported ingredient caveats for live oil requests",
+            "bodySha256": "4378b2a5830581f6a66215f95cb43a09b6396ad971dcead1010ad813762ffd31"
+          },
+          {
+            "title": "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+            "bodySha256": "7cec101a5508990ddad161d5413a76ec222f5bd4c87121e8c21eca92329d23fe"
+          },
+          {
+            "title": "selectProducts preserves supplied effective care context in runtime and care balance output",
+            "bodySha256": "5b08885d77b8cafe243ceeb56ee026d7fa44c18006031267a59be898cd967d48"
+          },
+          {
+            "title": "projectSelectedProducts does not turn therapy oil redirects into product recommendations",
+            "bodySha256": "3cf392d41a60b04a776c9e99c7575c8cf738e4f88ce081e80f3b48419fea02c3"
+          },
+          {
+            "title": "selectProducts applies oil thickness overrides to hard-gated oil selection",
+            "bodySha256": "37454c7149b17446b02723efa7fe28b9e39bda8163459ddc58c957eb151dadb6"
+          },
+          {
+            "title": "selectProducts applies oil density overrides to density-weight caution",
+            "bodySha256": "909056a32acb49d0acedeecf467fe7004775dbc3d133462b9a91f47c38219149"
+          },
+          {
+            "title": "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+            "bodySha256": "b11321a58e0fb6183d9270adc7f0178ae661c4c1015473c1025a3a0f0898f511"
+          },
+          {
+            "title": "oil purpose inference keeps negated scalp finish requests out of pre-wash",
+            "bodySha256": "d3be90821cb4c0d661ea3fbe55c50029a95931eb5d0ac8cec2b45dcf2739853c"
+          },
+          {
+            "title": "projectSelectedProducts uses mask-specific missing-info for explicit mask requests",
+            "bodySha256": "63af9e2c2fb10a82f0580cb4adc0e0ce913887f8b27f851761747045a46bebae"
+          },
+          {
+            "title": "projectSelectedProducts redirects deep-cleansing scalp treatment requests without products",
+            "bodySha256": "c78086f268801a2c340fd2a2d909f18c49920d03a88614c66d2791c883ca3029"
+          },
+          {
+            "title": "projectSelectedProducts keeps dry-shampoo scalp symptoms guidance-only",
+            "bodySha256": "129c5bf5f1355abe3c5d288a7290727cf428c73fa754d2261f5f1ceadc7176cd"
+          },
+          {
+            "title": "projectSelectedProducts redirects frequent dry-shampoo use to reset logic",
+            "bodySha256": "df28bb20ea30d2958a9eda099496b271441c9f0d29e28a949d40ad8988177e10"
+          },
+          {
+            "title": "projectSelectedProducts preserves no_catalog_match for relevant dry-shampoo requests",
+            "bodySha256": "0e45267caa2e618f05da13b2dbd22d597725becb5232d6e8d90b537eef0f713c"
+          },
+          {
+            "title": "selectProducts passes explicit dry-shampoo bridge context into category engine",
+            "bodySha256": "615962eaf7affe9dc97f85fbe430a57df314d93f8c5a38e20b073050b1d08c1a"
+          },
+          {
+            "title": "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+            "bodySha256": "7a564aa02eb8f129fa805cf217f4e39e80f7845fedb3c751173a606ec4b563a5"
+          },
+          {
+            "title": "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+            "bodySha256": "710d039897b518ee84016e8f9f08dda402e91159434bd6d45e77e352ab0da7a7"
+          },
+          {
+            "title": "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+            "bodySha256": "1d396fabac5d88253087a74c1abf96c7353b4b03ba881f783b0d4a9b67c4e7c1"
+          },
+          {
+            "title": "selectProducts tool only accepts engine-backed categories",
+            "bodySha256": "90c177b88a3f31aee87f5a0cca37c1c38826d2c48a71cccc628f02e4ebce7ef2"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "projectSelectedProducts returns authoritative shampoo recommendation payload",
+            "bodySha256": "1f10fdccb7d06127b6ea994beadb073cb71288d75fe4495153ca3a5e045a2b31"
+          },
+          {
+            "title": "projectSelectedProducts returns generic recommend policy for ordinary product picks",
+            "bodySha256": "ac2d6f27c7db78d3cf67c378f801aadf9c0095d2ddeeaed6a2dd1ad35ade53a3"
+          },
+          {
+            "title": "projectSelectedProducts does not let profile length concerns veto direct shampoo picks",
+            "bodySha256": "65c0d22792abb580090391ace82109b3fb68cfe344519805d3e443c8df11471a"
+          },
+          {
+            "title": "projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant",
+            "bodySha256": "727f04210805b5c24605e0f4d7f5cdb7ab0732443e6b95a3ee99859f6fd80883"
+          },
+          {
+            "title": "projectSelectedProducts emits conditioner unsupported-signal caveats without making claims",
+            "bodySha256": "b32da0c35cadceae7cd42c9691fe2017edd8070efab0bef7434ad67cfa9c6ec0"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner claims without density or damage drivers",
+            "bodySha256": "6b21986aa661bd0257f8d86e755acdf9517e0afceaf6f5f346024e8e48dd70ec"
+          },
+          {
+            "title": "projectSelectedProducts adds conditioner profile deviation notice when message overrides thickness",
+            "bodySha256": "d8150abf3c0e7a40bc46e36fa4af9ce69e121d32e82b3a2b92412d94146accd8"
+          },
+          {
+            "title": "projectSelectedProducts keeps unsupported color requests out of conditioner claims",
+            "bodySha256": "8b3e9f053c2dee63cdea4f6ca4e7c4907634f8cbf969a44f14b6a5087ccde618"
+          },
+          {
+            "title": "projectSelectedProducts keeps conditioner comparison facts useful when fit axes match",
+            "bodySha256": "4f91dbd76287a24b51061e1e6d29ad88e5ecac38e619772fb6d34117e1081596"
+          },
+          {
+            "title": "projectSelectedProducts exposes leave-in claims and unsupported ingredient caveats",
+            "bodySha256": "929f207e06338ea929acd0ed807894b5e6586e9a45b3d94a601c547d63668662"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete leave-in differences over missing metadata",
+            "bodySha256": "d708c497b9b35e707c7dfbe767b4ca9fbba1446f05199af3088effa05929b09a"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker leave-in alternatives without internal fallback wording",
+            "bodySha256": "9af285d2aade4bc27cf4fb02efdffda14a35e2f6fc9c56c67ee210114806aa37"
+          },
+          {
+            "title": "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+            "bodySha256": "9a601acbb231be679d69b9c18304c8c2f1fbc9c331f63b3594aad3dee741f507"
+          },
+          {
+            "title": "selectProducts includes owned verified non-recommended products for assessment",
+            "bodySha256": "75a1672cbd7a0b43eff9c876299b206a4952f1586784de0bdf43a8312d3592c1"
+          },
+          {
+            "title": "selectProducts narrows product-detail assessment grounding to target product ids",
+            "bodySha256": "fe8f42b4a9cb450fe1f814a42cd8886d03a8c841c129be6de51b10f5c52d0c5a"
+          },
+          {
+            "title": "selectProducts preserves resolved assessment target when engine returns no products",
+            "bodySha256": "3ed7287f9f2c991b24e76fdcc8e8015cc0425e8e45f3e9490bd85fd5dc50bfd8"
+          },
+          {
+            "title": "selectProducts applies leave-in texture and density overrides with profile notices",
+            "bodySha256": "7f9145df6ad48db5dcfe78f28006bf5ad913e83825749b8371f11f34af962cca"
+          },
+          {
+            "title": "selectProducts applies leave-in heat tool overrides to the runtime",
+            "bodySha256": "006881b476a3ba2431fc21d2c5ae21840037fd34ce12ab47e8f4633c57364e34"
+          },
+          {
+            "title": "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+            "bodySha256": "da82dc56675006e1af89ecee1fa08797ac988ae5f189295e28626a6d1f979548"
+          },
+          {
+            "title": "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+            "bodySha256": "69ed0113c9d68e8a6395631084f3aa4ce8bcdffc05f4e0c4f344c746b896db0f"
+          },
+          {
+            "title": "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests",
+            "bodySha256": "bb7940126b53aaadb3cceb3711edf417538e673e9060b8401b10c0f335933dd8"
+          },
+          {
+            "title": "selectProducts marks exact leave-in heat temperatures unsupported",
+            "bodySha256": "15f1b5e5f1e9e9a579d81a71a2f7fa0db1753672af4f18d9cc27a95aea458b68"
+          },
+          {
+            "title": "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+            "bodySha256": "0eda5c232ccdb13a610e657c8b83588adc9c703d229771ec5f785223d935c1cf"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+            "bodySha256": "ae2941b17e46070404fc9a25281b389cacc099adbf0c6b57a579b1209a354710"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+            "bodySha256": "4c735ad1f35de7450d157e46942121508666799ffe4c5f6eb0ac5f1ad54ffb6c"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner ingredient caveat even with no products",
+            "bodySha256": "7e3459588bbaf20b3d7a317d328be48baeab832314a0c54b7cc4a5b430db712c"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask ingredient caveat even with no products",
+            "bodySha256": "a81e125256f470f331e85b0fb8a1c8612065dc51c047e4bda43c5dee0ee4dccc"
+          },
+          {
+            "title": "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+            "bodySha256": "da1d3b14b55ed318c7c79e1b544949e207d8a834d1e5ff744dfa6ccbca58e541"
+          },
+          {
+            "title": "selectProducts tool passes request-aware mask runtime into category engine",
+            "bodySha256": "54f4e8b209f305a9ec1d9f3f7f3531bd0c9ef2178b5b6ce9db03addd40bb2186"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask claims and unsupported ingredient caveats",
+            "bodySha256": "eec7bc174767a80c71dfa273601f2c1522f4526bd55da0818bff4eb6bb2b1ff9"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker mask alternatives without internal fallback wording",
+            "bodySha256": "5c6e3bd32ea43f4d7a63473d2e87dd308ddc5ce672ce29e3eea5376496d21daa"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers for mask products",
+            "bodySha256": "41e9e01236367f3cff95272ab05bba459929d9a853d54471c93d226fbee13463"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers without displayable products",
+            "bodySha256": "fdd3267ed7b651f46b9c9987d791810460f60471742e280d27c59c3da5e1fb55"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask profile basis with balance and target axes",
+            "bodySha256": "e0f6f6507c0bd4f2a03032080ce2bd1cbfece4ef056f1be1dcf1a1aebb56997c"
+          },
+          {
+            "title": "projectSelectedProducts keeps mask comparison facts useful when fit axes match",
+            "bodySha256": "323aa5d227c45866f63fb1e5782f83a5c10456834c91ebf2c5a942a7e7e7b67a"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete mask differences over missing metadata",
+            "bodySha256": "26f4d96cbc33e12bf8dbfabe2cdc612cb71a95e8970e1d7d985a15c66d77fad6"
+          },
+          {
+            "title": "projectSelectedProducts keeps optional bondbuilder assessment with priced products",
+            "bodySha256": "8b9b404f10c821908bc815200930c31dde15cb68152b51252d26a6b4281fb12c"
+          },
+          {
+            "title": "projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims",
+            "bodySha256": "d0a181ac6cec5ce623b86b2bff68bcfb3531b9e5dc2dce1303be094128b76949"
+          },
+          {
+            "title": "projectSelectedProducts labels deep-cleansing reset facts without raw enum copy",
+            "bodySha256": "f70669b39131dc67c365aa82446ee0630e74af78ef676e1ea29cec1cb5c709e9"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only conditioner requests without products",
+            "bodySha256": "7205c3859e620b32deea2ae312b8f5881c471a666dc46125a4bc22ecf928899b"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only mask requests without products",
+            "bodySha256": "f86d9604924e3a7fe4bf1a3b780c52605d27dedcd2086d60cb4f400150a31593"
+          },
+          {
+            "title": "projectSelectedProducts returns explain-then-recommend policy for oily roots",
+            "bodySha256": "a656cd394d5fdd5fe2f62ac7e3cd883de55224ff1a44e9d446764239754926af"
+          },
+          {
+            "title": "projectSelectedProducts returns needs_more_info for blocking shampoo gaps",
+            "bodySha256": "cbd8767911e26206a7d8259750cc6a3be5b88756c727ee5010b8bc9df035e807"
+          },
+          {
+            "title": "projectSelectedProducts returns no_catalog_match when shampoo fits but no product is displayable",
+            "bodySha256": "c91c1d70792cfedf3f32d800ad0beb31d53cb4d12bbb5793cc99987fca4b8303"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when required profile info is missing",
+            "bodySha256": "f3ca84307ab381957202b03ae19ae32e954411ac7c2f3ca6060430819e84a0a3"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when protein balance is missing",
+            "bodySha256": "dbd8f90b462da58336c4057ac1b39f91e319d9159104841b7a440a04c787570e"
+          },
+          {
+            "title": "projectSelectedProducts blocks mask products when protein balance is missing",
+            "bodySha256": "d2bfc57cbd44e700db7345f21295813d4349f5597413a3ab68e8a4329d5af56c"
+          },
+          {
+            "title": "projectSelectedProducts preserves oil no-recommendation decisions as redirects",
+            "bodySha256": "1f7d34fc57a93f7edc3438245993cd2cde50a27a5bf07fb27f181c912ece4d25"
+          },
+          {
+            "title": "projectSelectedProducts returns not_recommended when shampoo is not the right lever",
+            "bodySha256": "9255cea31c0058ac75fe5c7eae3b0814853e5e89d61aa12c05279acfc22d8e6c"
+          },
+          {
+            "title": "projectSelectedProducts suppresses shampoo products when the category is not recommended",
+            "bodySha256": "3d7fe64d0b03898b501591de703aed5fd48b1b8f754ab2c20857683b91d47225"
+          },
+          {
+            "title": "projectSelectedProducts treats dry-length shampoo questions as not shampoo-first",
+            "bodySha256": "1a845feec72afa8008fd82c1b25d9a9f312517df55dd4cef28f79fa50c951244"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and dry-length shampoo prompts recommendable",
+            "bodySha256": "e9290624e577df259013825b68967e5b9efc6d08dcdbf4fb631cf33bb46deeac"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and frizz shampoo prompts recommendable",
+            "bodySha256": "dbaf4f8a29940dc2c4119c907cdfde2f88b9888e51f0c0acfc67c531c6c9f3b0"
+          },
+          {
+            "title": "`projectSelectedProducts uses shampoo policy for ${entry.label}`",
+            "bodySha256": "f11a9fe8775a5ed110e1094e5267cae5cb2334928df808729c63b2b62b5db8e3"
+          },
+          {
+            "title": "projectSelectedProducts still redirects weak-lever shampoo when the user is not explicitly asking for products",
+            "bodySha256": "93fbe7ddf9bda3ab6949ee10fd74ba57062e6e40ee7a1adfbeaa29a53a53bd99"
+          },
+          {
+            "title": "projectSelectedProducts still redirects compare-or-decide weak-lever shampoo without explicit product ask",
+            "bodySha256": "f2f4e2ac7831bedcb61b361b347b0b23f29ba44472da54bdb200438aefef42ff"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit compare-or-decide weak-lever shampoo as caveated recommendation",
+            "bodySha256": "552f9bcea1f49a804da75bd51c8fb5530efc627ea261c2ccb1d7027f592b4782"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit weak-lever shampoo asks as caveated even without userJob",
+            "bodySha256": "3f4b296a234ed843795d11ba39b1bbf86b6d162c64ef663f4ce2de7f46ea1500"
+          },
+          {
+            "title": "projectSelectedProducts keeps itchy dandruff cautious but offers a useful next step",
+            "bodySha256": "a3d9c453c877914ae38dacb2abbd92940f9bac66d8ff73adf05b5df44c2e7754"
+          },
+          {
+            "title": "projectSelectedProducts acknowledges oily-root shampoo troubleshooting",
+            "bodySha256": "cf906e0b70bc76544baf1ff2c981c6492164185d354f98cffaf41b97d5fe39a0"
+          },
+          {
+            "title": "projectSelectedProducts sanitizes weaker shampoo caveats and maps stale generic mismatch caveats",
+            "bodySha256": "81c42f3351a0782e51983b15281f18fb54348951e87512b1682232821981fb48"
+          },
+          {
+            "title": "projectSelectedProducts exposes structured shampoo comparison facts",
+            "bodySha256": "5b531954dad89a0b3749dd5f2af3519af2252f727d2e8c66670916e2a1afc0d2"
+          },
+          {
+            "title": "projectSelectedProducts exposes per-product shampoo claims from structured data only",
+            "bodySha256": "5a734fd60ce30d989a761a7dbedbb5d9ddb0b8ec1280d3c389434ccc8940c89b"
+          },
+          {
+            "title": "projectSelectedProducts writes shampoo fit reasons from structured claims, not product names",
+            "bodySha256": "69b9fd912aa2d56290b6235b6768c46341d5736e63d226904158d2891cd918d3"
+          },
+          {
+            "title": "projectSelectedProducts uses leave-in-specific missing-info when leave_in returns no products",
+            "bodySha256": "9d3ddaf66062f9954d8c421a1e0c9d4caad7bf782764f5dff5dbfe39c725a4ae"
+          },
+          {
+            "title": "projectSelectedProducts blocks leave-in products when texture or density is missing",
+            "bodySha256": "7dfe0726963858bac370d8866ec24b532637dfd9f24f8f5ac08cf8caad51915c"
+          },
+          {
+            "title": "projectSelectedProducts uses oil-specific missing-info when oil returns no products",
+            "bodySha256": "9d82bd2532768015db1ad8bcf91809644ac153bc9790455513e581ed05f58e2d"
+          },
+          {
+            "title": "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+            "bodySha256": "ee47446c091ec7bf688d90c07a9cc5b58d97ee07f747d31939ce59c4160b6bf4"
+          },
+          {
+            "title": "projectSelectedProducts exposes oil claims, caveats, and lean comparison facts",
+            "bodySha256": "6d8504e533cf5368a4eb56d1e4d00fd7e28acdc7e8c4d52336e2792fcf18475e"
+          },
+          {
+            "title": "projectSelectedProducts does not compare oil subtype against missing metadata",
+            "bodySha256": "98922bbd13d596ebe23cf6044a9659cbaffa0593400d336c2089f1a537eb1253"
+          },
+          {
+            "title": "selectProducts carries unsupported ingredient caveats for live oil requests",
+            "bodySha256": "4378b2a5830581f6a66215f95cb43a09b6396ad971dcead1010ad813762ffd31"
+          },
+          {
+            "title": "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+            "bodySha256": "7cec101a5508990ddad161d5413a76ec222f5bd4c87121e8c21eca92329d23fe"
+          },
+          {
+            "title": "selectProducts preserves supplied effective care context in runtime and care balance output",
+            "bodySha256": "5b08885d77b8cafe243ceeb56ee026d7fa44c18006031267a59be898cd967d48"
+          },
+          {
+            "title": "projectSelectedProducts does not turn therapy oil redirects into product recommendations",
+            "bodySha256": "3cf392d41a60b04a776c9e99c7575c8cf738e4f88ce081e80f3b48419fea02c3"
+          },
+          {
+            "title": "selectProducts applies oil thickness overrides to hard-gated oil selection",
+            "bodySha256": "37454c7149b17446b02723efa7fe28b9e39bda8163459ddc58c957eb151dadb6"
+          },
+          {
+            "title": "selectProducts applies oil density overrides to density-weight caution",
+            "bodySha256": "909056a32acb49d0acedeecf467fe7004775dbc3d133462b9a91f47c38219149"
+          },
+          {
+            "title": "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+            "bodySha256": "b11321a58e0fb6183d9270adc7f0178ae661c4c1015473c1025a3a0f0898f511"
+          },
+          {
+            "title": "oil purpose inference keeps negated scalp finish requests out of pre-wash",
+            "bodySha256": "d3be90821cb4c0d661ea3fbe55c50029a95931eb5d0ac8cec2b45dcf2739853c"
+          },
+          {
+            "title": "projectSelectedProducts uses mask-specific missing-info for explicit mask requests",
+            "bodySha256": "63af9e2c2fb10a82f0580cb4adc0e0ce913887f8b27f851761747045a46bebae"
+          },
+          {
+            "title": "projectSelectedProducts redirects deep-cleansing scalp treatment requests without products",
+            "bodySha256": "c78086f268801a2c340fd2a2d909f18c49920d03a88614c66d2791c883ca3029"
+          },
+          {
+            "title": "projectSelectedProducts keeps dry-shampoo scalp symptoms guidance-only",
+            "bodySha256": "129c5bf5f1355abe3c5d288a7290727cf428c73fa754d2261f5f1ceadc7176cd"
+          },
+          {
+            "title": "projectSelectedProducts redirects frequent dry-shampoo use to reset logic",
+            "bodySha256": "df28bb20ea30d2958a9eda099496b271441c9f0d29e28a949d40ad8988177e10"
+          },
+          {
+            "title": "projectSelectedProducts preserves no_catalog_match for relevant dry-shampoo requests",
+            "bodySha256": "0e45267caa2e618f05da13b2dbd22d597725becb5232d6e8d90b537eef0f713c"
+          },
+          {
+            "title": "selectProducts passes explicit dry-shampoo bridge context into category engine",
+            "bodySha256": "615962eaf7affe9dc97f85fbe430a57df314d93f8c5a38e20b073050b1d08c1a"
+          },
+          {
+            "title": "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+            "bodySha256": "7a564aa02eb8f129fa805cf217f4e39e80f7845fedb3c751173a606ec4b563a5"
+          },
+          {
+            "title": "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+            "bodySha256": "710d039897b518ee84016e8f9f08dda402e91159434bd6d45e77e352ab0da7a7"
+          },
+          {
+            "title": "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+            "bodySha256": "1d396fabac5d88253087a74c1abf96c7353b4b03ba881f783b0d4a9b67c4e7c1"
+          },
+          {
+            "title": "selectProducts tool only accepts engine-backed categories",
+            "bodySha256": "90c177b88a3f31aee87f5a0cca37c1c38826d2c48a71cccc628f02e4ebce7ef2"
+          }
+        ],
+        "cut": [
+          {
+            "title": "projectSelectedProducts returns authoritative shampoo recommendation payload",
+            "bodySha256": "1f10fdccb7d06127b6ea994beadb073cb71288d75fe4495153ca3a5e045a2b31"
+          },
+          {
+            "title": "projectSelectedProducts does not let profile length concerns veto direct shampoo picks",
+            "bodySha256": "65c0d22792abb580090391ace82109b3fb68cfe344519805d3e443c8df11471a"
+          },
+          {
+            "title": "projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant",
+            "bodySha256": "727f04210805b5c24605e0f4d7f5cdb7ab0732443e6b95a3ee99859f6fd80883"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner claims without density or damage drivers",
+            "bodySha256": "6b21986aa661bd0257f8d86e755acdf9517e0afceaf6f5f346024e8e48dd70ec"
+          },
+          {
+            "title": "projectSelectedProducts adds conditioner profile deviation notice when message overrides thickness",
+            "bodySha256": "d8150abf3c0e7a40bc46e36fa4af9ce69e121d32e82b3a2b92412d94146accd8"
+          },
+          {
+            "title": "projectSelectedProducts keeps unsupported color requests out of conditioner claims",
+            "bodySha256": "8b3e9f053c2dee63cdea4f6ca4e7c4907634f8cbf969a44f14b6a5087ccde618"
+          },
+          {
+            "title": "projectSelectedProducts keeps conditioner comparison facts useful when fit axes match",
+            "bodySha256": "4f91dbd76287a24b51061e1e6d29ad88e5ecac38e619772fb6d34117e1081596"
+          },
+          {
+            "title": "projectSelectedProducts exposes leave-in claims and unsupported ingredient caveats",
+            "bodySha256": "929f207e06338ea929acd0ed807894b5e6586e9a45b3d94a601c547d63668662"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete leave-in differences over missing metadata",
+            "bodySha256": "d708c497b9b35e707c7dfbe767b4ca9fbba1446f05199af3088effa05929b09a"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker leave-in alternatives without internal fallback wording",
+            "bodySha256": "9af285d2aade4bc27cf4fb02efdffda14a35e2f6fc9c56c67ee210114806aa37"
+          },
+          {
+            "title": "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+            "bodySha256": "9a601acbb231be679d69b9c18304c8c2f1fbc9c331f63b3594aad3dee741f507"
+          },
+          {
+            "title": "selectProducts includes owned verified non-recommended products for assessment",
+            "bodySha256": "75a1672cbd7a0b43eff9c876299b206a4952f1586784de0bdf43a8312d3592c1"
+          },
+          {
+            "title": "selectProducts narrows product-detail assessment grounding to target product ids",
+            "bodySha256": "fe8f42b4a9cb450fe1f814a42cd8886d03a8c841c129be6de51b10f5c52d0c5a"
+          },
+          {
+            "title": "selectProducts preserves resolved assessment target when engine returns no products",
+            "bodySha256": "3ed7287f9f2c991b24e76fdcc8e8015cc0425e8e45f3e9490bd85fd5dc50bfd8"
+          },
+          {
+            "title": "selectProducts applies leave-in texture and density overrides with profile notices",
+            "bodySha256": "7f9145df6ad48db5dcfe78f28006bf5ad913e83825749b8371f11f34af962cca"
+          },
+          {
+            "title": "selectProducts applies leave-in heat tool overrides to the runtime",
+            "bodySha256": "006881b476a3ba2431fc21d2c5ae21840037fd34ce12ab47e8f4633c57364e34"
+          },
+          {
+            "title": "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+            "bodySha256": "da82dc56675006e1af89ecee1fa08797ac988ae5f189295e28626a6d1f979548"
+          },
+          {
+            "title": "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+            "bodySha256": "69ed0113c9d68e8a6395631084f3aa4ce8bcdffc05f4e0c4f344c746b896db0f"
+          },
+          {
+            "title": "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests",
+            "bodySha256": "bb7940126b53aaadb3cceb3711edf417538e673e9060b8401b10c0f335933dd8"
+          },
+          {
+            "title": "selectProducts marks exact leave-in heat temperatures unsupported",
+            "bodySha256": "15f1b5e5f1e9e9a579d81a71a2f7fa0db1753672af4f18d9cc27a95aea458b68"
+          },
+          {
+            "title": "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+            "bodySha256": "0eda5c232ccdb13a610e657c8b83588adc9c703d229771ec5f785223d935c1cf"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+            "bodySha256": "ae2941b17e46070404fc9a25281b389cacc099adbf0c6b57a579b1209a354710"
+          },
+          {
+            "title": "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+            "bodySha256": "4c735ad1f35de7450d157e46942121508666799ffe4c5f6eb0ac5f1ad54ffb6c"
+          },
+          {
+            "title": "projectSelectedProducts exposes conditioner ingredient caveat even with no products",
+            "bodySha256": "7e3459588bbaf20b3d7a317d328be48baeab832314a0c54b7cc4a5b430db712c"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask ingredient caveat even with no products",
+            "bodySha256": "a81e125256f470f331e85b0fb8a1c8612065dc51c047e4bda43c5dee0ee4dccc"
+          },
+          {
+            "title": "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+            "bodySha256": "da1d3b14b55ed318c7c79e1b544949e207d8a834d1e5ff744dfa6ccbca58e541"
+          },
+          {
+            "title": "selectProducts tool passes request-aware mask runtime into category engine",
+            "bodySha256": "54f4e8b209f305a9ec1d9f3f7f3531bd0c9ef2178b5b6ce9db03addd40bb2186"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask claims and unsupported ingredient caveats",
+            "bodySha256": "eec7bc174767a80c71dfa273601f2c1522f4526bd55da0818bff4eb6bb2b1ff9"
+          },
+          {
+            "title": "projectSelectedProducts describes weaker mask alternatives without internal fallback wording",
+            "bodySha256": "5c6e3bd32ea43f4d7a63473d2e87dd308ddc5ce672ce29e3eea5376496d21daa"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers for mask products",
+            "bodySha256": "41e9e01236367f3cff95272ab05bba459929d9a853d54471c93d226fbee13463"
+          },
+          {
+            "title": "projectSelectedProducts preserves unsupported active qualifiers without displayable products",
+            "bodySha256": "fdd3267ed7b651f46b9c9987d791810460f60471742e280d27c59c3da5e1fb55"
+          },
+          {
+            "title": "projectSelectedProducts exposes mask profile basis with balance and target axes",
+            "bodySha256": "e0f6f6507c0bd4f2a03032080ce2bd1cbfece4ef056f1be1dcf1a1aebb56997c"
+          },
+          {
+            "title": "projectSelectedProducts keeps mask comparison facts useful when fit axes match",
+            "bodySha256": "323aa5d227c45866f63fb1e5782f83a5c10456834c91ebf2c5a942a7e7e7b67a"
+          },
+          {
+            "title": "projectSelectedProducts prefers concrete mask differences over missing metadata",
+            "bodySha256": "26f4d96cbc33e12bf8dbfabe2cdc612cb71a95e8970e1d7d985a15c66d77fad6"
+          },
+          {
+            "title": "projectSelectedProducts keeps optional bondbuilder assessment with priced products",
+            "bodySha256": "8b9b404f10c821908bc815200930c31dde15cb68152b51252d26a6b4281fb12c"
+          },
+          {
+            "title": "projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims",
+            "bodySha256": "d0a181ac6cec5ce623b86b2bff68bcfb3531b9e5dc2dce1303be094128b76949"
+          },
+          {
+            "title": "projectSelectedProducts labels deep-cleansing reset facts without raw enum copy",
+            "bodySha256": "f70669b39131dc67c365aa82446ee0630e74af78ef676e1ea29cec1cb5c709e9"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only conditioner requests without products",
+            "bodySha256": "7205c3859e620b32deea2ae312b8f5881c471a666dc46125a4bc22ecf928899b"
+          },
+          {
+            "title": "projectSelectedProducts redirects scalp-only mask requests without products",
+            "bodySha256": "f86d9604924e3a7fe4bf1a3b780c52605d27dedcd2086d60cb4f400150a31593"
+          },
+          {
+            "title": "projectSelectedProducts returns explain-then-recommend policy for oily roots",
+            "bodySha256": "a656cd394d5fdd5fe2f62ac7e3cd883de55224ff1a44e9d446764239754926af"
+          },
+          {
+            "title": "projectSelectedProducts returns needs_more_info for blocking shampoo gaps",
+            "bodySha256": "cbd8767911e26206a7d8259750cc6a3be5b88756c727ee5010b8bc9df035e807"
+          },
+          {
+            "title": "projectSelectedProducts returns no_catalog_match when shampoo fits but no product is displayable",
+            "bodySha256": "c91c1d70792cfedf3f32d800ad0beb31d53cb4d12bbb5793cc99987fca4b8303"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when required profile info is missing",
+            "bodySha256": "f3ca84307ab381957202b03ae19ae32e954411ac7c2f3ca6060430819e84a0a3"
+          },
+          {
+            "title": "projectSelectedProducts blocks conditioner products when protein balance is missing",
+            "bodySha256": "dbd8f90b462da58336c4057ac1b39f91e319d9159104841b7a440a04c787570e"
+          },
+          {
+            "title": "projectSelectedProducts blocks mask products when protein balance is missing",
+            "bodySha256": "d2bfc57cbd44e700db7345f21295813d4349f5597413a3ab68e8a4329d5af56c"
+          },
+          {
+            "title": "projectSelectedProducts preserves oil no-recommendation decisions as redirects",
+            "bodySha256": "1f7d34fc57a93f7edc3438245993cd2cde50a27a5bf07fb27f181c912ece4d25"
+          },
+          {
+            "title": "projectSelectedProducts suppresses shampoo products when the category is not recommended",
+            "bodySha256": "3d7fe64d0b03898b501591de703aed5fd48b1b8f754ab2c20857683b91d47225"
+          },
+          {
+            "title": "projectSelectedProducts treats dry-length shampoo questions as not shampoo-first",
+            "bodySha256": "1a845feec72afa8008fd82c1b25d9a9f312517df55dd4cef28f79fa50c951244"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and dry-length shampoo prompts recommendable",
+            "bodySha256": "e9290624e577df259013825b68967e5b9efc6d08dcdbf4fb631cf33bb46deeac"
+          },
+          {
+            "title": "projectSelectedProducts keeps mixed oily-root and frizz shampoo prompts recommendable",
+            "bodySha256": "dbaf4f8a29940dc2c4119c907cdfde2f88b9888e51f0c0acfc67c531c6c9f3b0"
+          },
+          {
+            "title": "`projectSelectedProducts uses shampoo policy for ${entry.label}`",
+            "bodySha256": "f11a9fe8775a5ed110e1094e5267cae5cb2334928df808729c63b2b62b5db8e3"
+          },
+          {
+            "title": "projectSelectedProducts still redirects weak-lever shampoo when the user is not explicitly asking for products",
+            "bodySha256": "93fbe7ddf9bda3ab6949ee10fd74ba57062e6e40ee7a1adfbeaa29a53a53bd99"
+          },
+          {
+            "title": "projectSelectedProducts still redirects compare-or-decide weak-lever shampoo without explicit product ask",
+            "bodySha256": "f2f4e2ac7831bedcb61b361b347b0b23f29ba44472da54bdb200438aefef42ff"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit compare-or-decide weak-lever shampoo as caveated recommendation",
+            "bodySha256": "552f9bcea1f49a804da75bd51c8fb5530efc627ea261c2ccb1d7027f592b4782"
+          },
+          {
+            "title": "projectSelectedProducts treats explicit weak-lever shampoo asks as caveated even without userJob",
+            "bodySha256": "3f4b296a234ed843795d11ba39b1bbf86b6d162c64ef663f4ce2de7f46ea1500"
+          },
+          {
+            "title": "projectSelectedProducts keeps itchy dandruff cautious but offers a useful next step",
+            "bodySha256": "a3d9c453c877914ae38dacb2abbd92940f9bac66d8ff73adf05b5df44c2e7754"
+          },
+          {
+            "title": "projectSelectedProducts acknowledges oily-root shampoo troubleshooting",
+            "bodySha256": "cf906e0b70bc76544baf1ff2c981c6492164185d354f98cffaf41b97d5fe39a0"
+          },
+          {
+            "title": "projectSelectedProducts sanitizes weaker shampoo caveats and maps stale generic mismatch caveats",
+            "bodySha256": "81c42f3351a0782e51983b15281f18fb54348951e87512b1682232821981fb48"
+          },
+          {
+            "title": "projectSelectedProducts exposes structured shampoo comparison facts",
+            "bodySha256": "5b531954dad89a0b3749dd5f2af3519af2252f727d2e8c66670916e2a1afc0d2"
+          },
+          {
+            "title": "projectSelectedProducts exposes per-product shampoo claims from structured data only",
+            "bodySha256": "5a734fd60ce30d989a761a7dbedbb5d9ddb0b8ec1280d3c389434ccc8940c89b"
+          },
+          {
+            "title": "projectSelectedProducts writes shampoo fit reasons from structured claims, not product names",
+            "bodySha256": "69b9fd912aa2d56290b6235b6768c46341d5736e63d226904158d2891cd918d3"
+          },
+          {
+            "title": "projectSelectedProducts uses leave-in-specific missing-info when leave_in returns no products",
+            "bodySha256": "9d3ddaf66062f9954d8c421a1e0c9d4caad7bf782764f5dff5dbfe39c725a4ae"
+          },
+          {
+            "title": "projectSelectedProducts blocks leave-in products when texture or density is missing",
+            "bodySha256": "7dfe0726963858bac370d8866ec24b532637dfd9f24f8f5ac08cf8caad51915c"
+          },
+          {
+            "title": "projectSelectedProducts uses oil-specific missing-info when oil returns no products",
+            "bodySha256": "9d82bd2532768015db1ad8bcf91809644ac153bc9790455513e581ed05f58e2d"
+          },
+          {
+            "title": "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+            "bodySha256": "ee47446c091ec7bf688d90c07a9cc5b58d97ee07f747d31939ce59c4160b6bf4"
+          },
+          {
+            "title": "projectSelectedProducts exposes oil claims, caveats, and lean comparison facts",
+            "bodySha256": "6d8504e533cf5368a4eb56d1e4d00fd7e28acdc7e8c4d52336e2792fcf18475e"
+          },
+          {
+            "title": "projectSelectedProducts does not compare oil subtype against missing metadata",
+            "bodySha256": "98922bbd13d596ebe23cf6044a9659cbaffa0593400d336c2089f1a537eb1253"
+          },
+          {
+            "title": "selectProducts carries unsupported ingredient caveats for live oil requests",
+            "bodySha256": "4378b2a5830581f6a66215f95cb43a09b6396ad971dcead1010ad813762ffd31"
+          },
+          {
+            "title": "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+            "bodySha256": "7cec101a5508990ddad161d5413a76ec222f5bd4c87121e8c21eca92329d23fe"
+          },
+          {
+            "title": "selectProducts preserves supplied effective care context in runtime and care balance output",
+            "bodySha256": "5b08885d77b8cafe243ceeb56ee026d7fa44c18006031267a59be898cd967d48"
+          },
+          {
+            "title": "projectSelectedProducts does not turn therapy oil redirects into product recommendations",
+            "bodySha256": "3cf392d41a60b04a776c9e99c7575c8cf738e4f88ce081e80f3b48419fea02c3"
+          },
+          {
+            "title": "selectProducts applies oil thickness overrides to hard-gated oil selection",
+            "bodySha256": "37454c7149b17446b02723efa7fe28b9e39bda8163459ddc58c957eb151dadb6"
+          },
+          {
+            "title": "selectProducts applies oil density overrides to density-weight caution",
+            "bodySha256": "909056a32acb49d0acedeecf467fe7004775dbc3d133462b9a91f47c38219149"
+          },
+          {
+            "title": "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+            "bodySha256": "b11321a58e0fb6183d9270adc7f0178ae661c4c1015473c1025a3a0f0898f511"
+          },
+          {
+            "title": "oil purpose inference keeps negated scalp finish requests out of pre-wash",
+            "bodySha256": "d3be90821cb4c0d661ea3fbe55c50029a95931eb5d0ac8cec2b45dcf2739853c"
+          },
+          {
+            "title": "projectSelectedProducts redirects deep-cleansing scalp treatment requests without products",
+            "bodySha256": "c78086f268801a2c340fd2a2d909f18c49920d03a88614c66d2791c883ca3029"
+          },
+          {
+            "title": "projectSelectedProducts keeps dry-shampoo scalp symptoms guidance-only",
+            "bodySha256": "129c5bf5f1355abe3c5d288a7290727cf428c73fa754d2261f5f1ceadc7176cd"
+          },
+          {
+            "title": "projectSelectedProducts redirects frequent dry-shampoo use to reset logic",
+            "bodySha256": "df28bb20ea30d2958a9eda099496b271441c9f0d29e28a949d40ad8988177e10"
+          },
+          {
+            "title": "projectSelectedProducts preserves no_catalog_match for relevant dry-shampoo requests",
+            "bodySha256": "0e45267caa2e618f05da13b2dbd22d597725becb5232d6e8d90b537eef0f713c"
+          },
+          {
+            "title": "selectProducts passes explicit dry-shampoo bridge context into category engine",
+            "bodySha256": "615962eaf7affe9dc97f85fbe430a57df314d93f8c5a38e20b073050b1d08c1a"
+          },
+          {
+            "title": "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+            "bodySha256": "7a564aa02eb8f129fa805cf217f4e39e80f7845fedb3c751173a606ec4b563a5"
+          },
+          {
+            "title": "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+            "bodySha256": "710d039897b518ee84016e8f9f08dda402e91159434bd6d45e77e352ab0da7a7"
+          },
+          {
+            "title": "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+            "bodySha256": "1d396fabac5d88253087a74c1abf96c7353b4b03ba881f783b0d4a9b67c4e7c1"
+          },
+          {
+            "title": "selectProducts tool only accepts engine-backed categories",
+            "bodySha256": "90c177b88a3f31aee87f5a0cca37c1c38826d2c48a71cccc628f02e4ebce7ef2"
+          }
+        ]
+      }
+    }
+  ]
+}

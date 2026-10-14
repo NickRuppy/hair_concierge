@@ -10,6 +10,11 @@ import { KeepsakeLockBadge } from "@/components/keepsake/keepsake-lock-badge"
 import { PersonalPlanStageEntrance } from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
+import {
+  ROUTINE_BUDGET_NOTICE_REVIEW_LABEL,
+  routineOverBudgetNoticeText,
+} from "@/lib/personal-plan/routine/budget-gate"
+
 import { routineCategoryLabel } from "./routine-item-card"
 
 import { RoutinePlanUpdatedToast } from "./routine-plan-updated-toast"
@@ -18,6 +23,7 @@ import {
   type RoutineRefinementBannerViewModel,
 } from "./routine-refinement-banner"
 import { RoutineSection } from "./routine-section"
+import { RoutineToolSection } from "./routine-tool-section"
 import { hasChosenPlannedProduct } from "./routine-status"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
@@ -58,6 +64,13 @@ export type RoutinePageProps = {
   onLockedEdit?: () => void
   /** T17 keepsake: „Gemerkt" stays readable, its save/remove affordances do not. */
   merklisteReadOnly?: boolean
+  /**
+   * Budget summary (Task 6): how many accepted products sit above the saved budget. One info
+   * notice above the list — never a per-product warning. 0/absent renders nothing.
+   */
+  overBudgetCount?: number
+  /** Opens the product-change entry (the Routine editor). Without it the notice has no link. */
+  onReviewOverBudget?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -94,6 +107,8 @@ export function RoutinePage({
   onGraduated,
   onLockedEdit,
   merklisteReadOnly = false,
+  overBudgetCount = 0,
+  onReviewOverBudget,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -163,6 +178,8 @@ export function RoutinePage({
         onRefine={onRefineFromBanner}
       />
     ) : null
+
+  const overBudgetText = routineOverBudgetNoticeText(overBudgetCount)
 
   return (
     <div className="min-h-dvh bg-[linear-gradient(180deg,#fffaf7_0%,var(--background)_38%,#fff_100%)]">
@@ -251,6 +268,25 @@ export function RoutinePage({
             <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />
           ) : null}
           {banner}
+          {overBudgetText ? (
+            <div
+              role="status"
+              data-routine-over-budget-notice="true"
+              className="rounded-[14px] bg-[var(--brand-plum-ice)] px-4 py-3 text-sm leading-snug text-[var(--brand-plum-darkest)]"
+            >
+              <p className="font-semibold">{overBudgetText}</p>
+              {onReviewOverBudget ? (
+                <button
+                  type="button"
+                  data-routine-over-budget-review="true"
+                  onClick={onReviewOverBudget}
+                  className="mt-1 min-h-[44px] text-sm font-semibold text-[var(--brand-plum)] underline underline-offset-2 transition-colors hover:text-[var(--brand-plum-dark)]"
+                >
+                  {ROUTINE_BUDGET_NOTICE_REVIEW_LABEL}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
           <RoutineSection
             title="Deine Basis"
             items={basisItems}
@@ -278,6 +314,9 @@ export function RoutinePage({
               productPresentation={view.productPresentation}
             />
           ) : null}
+          {/* Products first: `Deine Tools` follows every product section and stays a compact
+              asset list derived at read time — never a second Routine system. */}
+          <RoutineToolSection section={view.toolSection} />
           {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: Meta offer delivery requires recent quiz evidence and constructs the canonical event
+ok 1 - Meta offer delivery requires recent quiz evidence and constructs the canonical event
+  ---
+  duration_ms: 1.920333
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 652.55025

@@ -1,0 +1,715 @@
+[
+  {
+    "id": "C1-headline",
+    "file": "src/lib/scan/verdict-labels.ts",
+    "sourceSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "2f45c1f4c7ae7209e13dd8bc0b908d4757496f0ee14494ecd9ad78e6e86fce95",
+    "from": "export const SCAN_UNKNOWN_HEADLINE = \"Danke dir – das ist neu für uns!\"",
+    "to": "export const SCAN_UNKNOWN_HEADLINE = \"Danke dir – wir prüfen es!\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "SCAN_UNKNOWN_HEADLINE",
+      "scopeSha256": "82eb73b7a847b26461c4fdf8df712ef17631a69e618ffd6b30f4d5c023074aa6",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 281,
+        "text": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 273,
+        "text": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Danke dir – das ist neu für uns!/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C1-subline",
+    "file": "src/lib/scan/verdict-labels.ts",
+    "sourceSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "2334d916d86fdcab442c8177b6171b4a1ee40ea8d416a9dc97c530917afe85bf",
+    "from": "export const SCAN_UNKNOWN_SUBLINE = \"Wir nehmen es auf. Dein Ergebnis kommt in den Chat.\"",
+    "to": "export const SCAN_UNKNOWN_SUBLINE = \"Wir nehmen es auf. Es folgt später.\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "SCAN_UNKNOWN_SUBLINE",
+      "scopeSha256": "70e442bf86c13dbbac2223c34b7563cbd880e1628b95f8846011a21a4a5fefe1",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 282,
+        "text": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 274,
+        "text": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./"
+    ],
+    "intendedAssertion": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C1-question",
+    "file": "src/lib/scan/verdict-labels.ts",
+    "sourceSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "42643ae9b66a7b1380338f4f693b7b1555cdb1d4dfda8ee594116fee5c4eca63",
+    "from": "export const SCAN_UNKNOWN_QUESTION = \"Wobei benutzt du es?\"",
+    "to": "export const SCAN_UNKNOWN_QUESTION = \"Welche Kategorie?\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "SCAN_UNKNOWN_QUESTION",
+      "scopeSha256": "9c1b72deb32cab78e2b334ea6bc1ab290f59482579fb7934de869f248470dcdc",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 283,
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 275,
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Wobei benutzt du es\\?/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Wobei benutzt du es\\?/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C2-input",
+    "file": "src/components/scan/scan-unknown-flow.tsx",
+    "sourceSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "a4feff5810bae356ececbcf535030c3865536143dfb53ceb16762f1c485701c5",
+    "from": "<div className=\"flex flex-col gap-4\">",
+    "to": "<div className=\"flex flex-col gap-4\">\n      <input aria-label=\"audit field\" />",
+    "anchor": {
+      "kind": "function",
+      "scope": "ScanUnknownFlow",
+      "scopeSha256": "e7b7f76a9676f91aef4789673398e0243584aaef7a3c503bef25b4864f08c4ce",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 285,
+        "text": "assert.deepEqual(inputs, [])",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 277,
+        "text": "assert.deepEqual(inputs, [])",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal",
+      "- []"
+    ],
+    "intendedAssertion": "assert.deepEqual(inputs, [])",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C2-brand",
+    "file": "src/components/scan/scan-unknown-flow.tsx",
+    "sourceSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "f67f4e606a76c6aa78a4848e5b0004ec1ab60a22e90184d6070b6ab5992cde57",
+    "from": "<div className=\"flex flex-col gap-4\">",
+    "to": "<div className=\"flex flex-col gap-4\">\n      <p>Marke</p>",
+    "anchor": {
+      "kind": "function",
+      "scope": "ScanUnknownFlow",
+      "scopeSha256": "e7b7f76a9676f91aef4789673398e0243584aaef7a3c503bef25b4864f08c4ce",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 286,
+        "text": "assert.doesNotMatch(markup, /Marke/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 278,
+        "text": "assert.doesNotMatch(markup, /Marke/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Marke/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(markup, /Marke/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C2-product",
+    "file": "src/components/scan/scan-unknown-flow.tsx",
+    "sourceSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "55343044f87d5dab9243616a60944b8b62f4ba13253cfc45958d85e81e5a3584",
+    "from": "<div className=\"flex flex-col gap-4\">",
+    "to": "<div className=\"flex flex-col gap-4\">\n      <p>Produktname</p>",
+    "anchor": {
+      "kind": "function",
+      "scope": "ScanUnknownFlow",
+      "scopeSha256": "e7b7f76a9676f91aef4789673398e0243584aaef7a3c503bef25b4864f08c4ce",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 287,
+        "text": "assert.doesNotMatch(markup, /Produktname/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 279,
+        "text": "assert.doesNotMatch(markup, /Produktname/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Produktname/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(markup, /Produktname/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C2-submit",
+    "file": "src/components/scan/scan-unknown-flow.tsx",
+    "sourceSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "0db019a1271ead6105d2be8d36fbfe4694fabfc2e5c663ec3bead92d1e355f4d",
+    "from": "<div className=\"flex flex-col gap-4\">",
+    "to": "<div className=\"flex flex-col gap-4\">\n      <p>Zur Prüfung einreichen</p>",
+    "anchor": {
+      "kind": "function",
+      "scope": "ScanUnknownFlow",
+      "scopeSha256": "e7b7f76a9676f91aef4789673398e0243584aaef7a3c503bef25b4864f08c4ce",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "name": "ScanUnknownFlow: the bridge line sits under the headline, above the subline"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 288,
+        "text": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "startLine": 280,
+        "text": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Zur Prüfung einreichen/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-brand",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "0b6a70280366371e245a99e488219f41f41aca308b034172e34e70075ec27abd",
+    "from": "const RESEARCH_INTAKE_BRAND_LABEL = \"Marke\"",
+    "to": "const RESEARCH_INTAKE_BRAND_LABEL = \"Firma\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_BRAND_LABEL",
+      "scopeSha256": "ec04d637f347d4bfc7cd4fbe840cf30e509b0a92e09e34e5d4881f28aa411a6b",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 139,
+        "text": "assert.match(markup, /Marke/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 127,
+        "text": "assert.match(markup, /Marke/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Marke/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Marke/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-product",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "f185dcd6e4c128715de90a0d09b8ef79d6fa3a2c411bf380fd9aec752184c0fb",
+    "from": "const RESEARCH_INTAKE_PRODUCT_LABEL = \"Produktname\"",
+    "to": "const RESEARCH_INTAKE_PRODUCT_LABEL = \"Artikelname\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_PRODUCT_LABEL",
+      "scopeSha256": "cf583f7febd89bfd4dc80479ab44249866eaad2f4a630b0369884f18d9f1b8eb",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 140,
+        "text": "assert.match(markup, /Produktname/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 128,
+        "text": "assert.match(markup, /Produktname/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Produktname/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Produktname/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-question",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "ce7d06dfd0c75ad289014cbc91294c6309f3a76efef14473f71a0b1b8e0596d0",
+    "from": "const RESEARCH_INTAKE_CATEGORY_LABEL = \"Was ist es?\"",
+    "to": "const RESEARCH_INTAKE_CATEGORY_LABEL = \"Welche Art?\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_CATEGORY_LABEL",
+      "scopeSha256": "fa5ce12fea2179d16f87c9de443eb958a09536da7d400e6be586b38d7b61f13e",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 141,
+        "text": "assert.match(markup, /Was ist es\\?/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 129,
+        "text": "assert.match(markup, /Was ist es\\?/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Was ist es\\?/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Was ist es\\?/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-helper",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "6ef0ff9dfc75df41706cf61bb108c65d33b7c2a3fb4917b5ebe276cfce9b9ddb",
+    "from": "const RESEARCH_INTAKE_CATEGORY_HELPER = \"Tippe die Kategorie an – das reicht uns schon.\"",
+    "to": "const RESEARCH_INTAKE_CATEGORY_HELPER = \"Wähle eine Kategorie.\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_CATEGORY_HELPER",
+      "scopeSha256": "a3a7d78e59db1e5d2f28705f963a49aecb0250272079e850fef33a93457c4667",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 142,
+        "text": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 130,
+        "text": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Tippe die Kategorie an – das reicht uns schon\\./"
+    ],
+    "intendedAssertion": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-back",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "f154f43f446a86f8623c049671ec64e419547339074f534f4b19c2774e8b3234",
+    "from": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück\"",
+    "to": "const RESEARCH_INTAKE_BACK_LABEL = \"Abbrechen\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_BACK_LABEL",
+      "scopeSha256": "6ad26c0ea05a915f121f165e6b9083b3f17558572f3976923a6ba19bf812abf4",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 143,
+        "text": "assert.match(markup, /Zurück/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 131,
+        "text": "assert.match(markup, /Zurück/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/Zurück/"
+    ],
+    "intendedAssertion": "assert.match(markup, /Zurück/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C3-retailer",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "7eb9860089002ed9856bd151a477292e8b32ece019e9473b565cba3ae78e11dc",
+    "from": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück\"",
+    "to": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück dm\"",
+    "anchor": {
+      "kind": "variable",
+      "scope": "RESEARCH_INTAKE_BACK_LABEL",
+      "scopeSha256": "6ad26c0ea05a915f121f165e6b9083b3f17558572f3976923a6ba19bf812abf4",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 145,
+        "text": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 133,
+        "text": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/\\bdm\\b/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+    "proofKind": "actual source output, transferred assertion"
+  },
+  {
+    "id": "C4-alert",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "sourceSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "66249551640d6a49b753a4c6c1ce139197d14c9a162a24a4273db196f300f93e",
+    "from": "{error ? (",
+    "to": "{true ? (",
+    "anchor": {
+      "kind": "function",
+      "scope": "ScanResearchIntakeForm",
+      "scopeSha256": "5219d1460c2b5578f3aff3aee72446ee9b6f02c4a6da4baf3922e4b313e3ee9a",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "name": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--experimental-test-isolation=none",
+      "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 146,
+        "text": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "startLine": 134,
+        "text": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "/role=\"alert\"/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+    "proofKind": "actual source output, transferred assertion"
+  }
+]

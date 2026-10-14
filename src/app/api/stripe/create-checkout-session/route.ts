@@ -15,8 +15,6 @@ import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
 import {
   recordFunnelEvent,
-  assertPersonalPlanOneTimeCheckoutAuthorized,
-  PersonalPlanOneTimeCheckoutAuthorizationError,
   resolveFunnelCookieContext,
   resolveFunnelContextForLead,
   lookupFunnelContextForLead,
@@ -35,10 +33,7 @@ import {
   FREEMIUM_CHECKOUT_MARKER_VALUE,
   FREEMIUM_CHECKOUT_USER_KEY,
 } from "@/lib/freemium/checkout-metadata"
-import {
-  bindPersonalPlanOneTimeConsentProviderReference,
-  createPersonalPlanOneTimeCheckoutConsent,
-} from "@/lib/billing/personal-plan-one-time-consents"
+import { bindPersonalPlanOneTimeConsentProviderReference } from "@/lib/billing/personal-plan-one-time-consents"
 import { getStripe, getStripePriceId, resolveStripePriceId } from "@/lib/stripe/client"
 import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -619,143 +614,8 @@ export async function POST(req: NextRequest) {
       adminSupabase ??= createBillingAdminClient()
       return adminSupabase
     }
-    let oneTimeConsentId: string | null = null
-    let oneTimeProviderLocked: "stripe" | null = null
-
-    if (isOneTimePurchase) {
-      // Re-fetches the persisted arm; browser fields only select this guarded path.
-      let authorization
-      try {
-        authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
-          leadId: leadId!,
-          funnelSessionId,
-        })
-      } catch (error) {
-        if (
-          !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||
-          error.reason !== "not_authorized"
-        ) {
-          throw error
-        }
-        return isPreparation
-          ? await preparedCheckoutUnavailable({
-              ...preparedControlContext(),
-              cause: "authorization_unavailable",
-            })
-          : NextResponse.json({ error: "not found" }, { status: 404 })
-      }
-      checkoutIsInternalTest = authorization.isInternalTest
-      if (isPreparation) {
-        const { data: existing, error: lookupError } = await getAdminSupabase()
-          .from("personal_plan_one_time_checkout_consents")
-          .select("id, stripe_checkout_session_id, paypal_order_id")
-          .eq("lead_id", authorization.leadId)
-          .eq("funnel_session_id", authorization.sessionId)
-          .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
-          .maybeSingle()
-        if (lookupError) throw lookupError
-        if (existing?.paypal_order_id) {
-          await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
-          return NextResponse.json(
-            { error: "payment provider already selected", provider_locked: "paypal" },
-            { status: 409 },
-          )
-        }
-        if (existing?.stripe_checkout_session_id) {
-          oneTimeProviderLocked = "stripe"
-          const existingSession = await getStripe().checkout.sessions.retrieve(
-            existing.stripe_checkout_session_id,
-          )
-          const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
-          if (recovery.type === "reuse") {
-            return NextResponse.json({
-              status: "recovered",
-              client_secret: recovery.clientSecret,
-              session_id: existingSession.id,
-              expires_at: preparedCheckoutApplicationExpiresAt(existingSession.expires_at),
-              provider_locked: "stripe",
-            })
-          }
-          if (recovery.type === "complete") {
-            return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
-          }
-          if (recovery.type !== "replace") {
-            throw new Error("Existing one-time Stripe Session is not recoverable")
-          }
-        }
-      } else {
-        try {
-          const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {
-            leadId: authorization.leadId,
-            funnelSessionId: authorization.sessionId,
-            offerVariant: authorization.offerVariant,
-            userId: authenticatedUserId ?? null,
-          })
-          oneTimeConsentId = consent.id
-        } catch (error) {
-          // A retry must recover the immutable evidence/session, never create a second consent.
-          const { data: existing, error: lookupError } = await getAdminSupabase()
-            .from("personal_plan_one_time_checkout_consents")
-            .select("id, stripe_checkout_session_id, paypal_order_id")
-            .eq("lead_id", authorization.leadId)
-            .eq("funnel_session_id", authorization.sessionId)
-            .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
-            .maybeSingle()
-          if (lookupError || !existing) throw error
-          if (existing.paypal_order_id) {
-            await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
-            return NextResponse.json(
-              { error: "payment provider already selected", provider_locked: "paypal" },
-              { status: 409 },
-            )
-          }
-          if (existing.stripe_checkout_session_id) {
-            if (action === "claim") {
-              if (existing.stripe_checkout_session_id === preparedSessionId) {
-                oneTimeConsentId = existing.id
-              } else {
-                const existingSession = await getStripe().checkout.sessions.retrieve(
-                  existing.stripe_checkout_session_id,
-                )
-                const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
-                if (recovery.type === "complete") {
-                  return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
-                }
-                if (recovery.type !== "replace") {
-                  await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
-                  return NextResponse.json(
-                    { error: "payment provider already selected" },
-                    { status: 409 },
-                  )
-                }
-                oneTimeConsentId = existing.id
-              }
-            } else if (action === "create") {
-              const existingSession = await getStripe().checkout.sessions.retrieve(
-                existing.stripe_checkout_session_id,
-              )
-              const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
-              if (recovery.type === "reuse") {
-                return NextResponse.json({ client_secret: recovery.clientSecret })
-              }
-              if (recovery.type === "complete") {
-                return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
-              }
-              if (recovery.type !== "replace") {
-                throw new Error("Existing one-time Stripe Session is not reusable")
-              }
-            } else {
-              await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
-              return NextResponse.json(
-                { error: "payment provider already selected" },
-                { status: 409 },
-              )
-            }
-          }
-          oneTimeConsentId = existing.id
-        }
-      }
-    }
+    const oneTimeConsentId: string | null = null
+    const oneTimeProviderLocked: "stripe" | null = null
 
     if (checkoutContext === "membership_reactivation") {
       if (!authenticatedUserId || !checkoutAttemptId || leadId) {
@@ -1303,7 +1163,6 @@ export async function POST(req: NextRequest) {
                   }
                 : {}),
               ...(reactivationReservation ? { stripe_checkout_context_version: "1" } : {}),
-              ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
               ...(!isOneTimePurchase
                 ? { pricing_catalog: pricingCatalog, stripe_price_id: priceId }
                 : {}),
@@ -1664,19 +1523,6 @@ async function preparedCheckoutUnavailable(input: {
   // Detailed causes are safe to add to server-only diagnostics without becoming an oracle.
   await reportPreparedCheckoutControlOutcome(input)
   return NextResponse.json(preparedCheckoutUnavailablePayload())
-}
-
-async function preparedCheckoutProviderLocked(
-  input: {
-    commerceKind: "subscription" | "one_time"
-    isInternalTest: boolean
-    leadId?: string | null
-    checkoutAttemptId?: string | null
-    source: CheckoutRequestSource
-  },
-  provider: "paypal" | "stripe",
-) {
-  await reportPreparedCheckoutControlOutcome({ ...input, cause: `provider_locked_${provider}` })
 }
 
 export function hashPreparedCheckoutToken(token: string) {

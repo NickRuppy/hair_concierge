@@ -1,0 +1,925 @@
+TAP version 13
+# Subtest: dry-run parsing has no network and apply needs all exact gates
+ok 1 - dry-run parsing has no network and apply needs all exact gates
+  ---
+  duration_ms: 0.814584
+  ...
+# Subtest: rejects manifest count, duplicate identifiers, and mismatched email before calls
+ok 2 - rejects manifest count, duplicate identifiers, and mismatched email before calls
+  ---
+  duration_ms: 11.447
+  ...
+# Subtest: missing or invalid JWT proof stops before logout
+ok 3 - missing or invalid JWT proof stops before logout
+  ---
+  duration_ms: 1.173625
+  ...
+# Subtest: unbanned ban response is rejected and needs manual recovery
+ok 4 - unbanned ban response is rejected and needs manual recovery
+  ---
+  duration_ms: 1.158875
+  ...
+# Subtest: journal failure after confirmed ban preserves recovery state
+ok 5 - journal failure after confirmed ban preserves recovery state
+  ---
+  duration_ms: 0.723
+  ...
+# Subtest: ban marker must round-trip while unrelated app metadata is preserved and never journaled
+ok 6 - ban marker must round-trip while unrelated app metadata is preserved and never journaled
+  ---
+  duration_ms: 0.601291
+  ...
+# Subtest: ban marker must not replace pre-existing app metadata
+ok 7 - ban marker must not replace pre-existing app metadata
+  ---
+  duration_ms: 0.582166
+  ...
+# Subtest: preflights every identity before a journal or mutation
+ok 8 - preflights every identity before a journal or mutation
+  ---
+  duration_ms: 0.633959
+  ...
+# Subtest: initial private journal failure prevents every mutation
+ok 9 - initial private journal failure prevents every mutation
+  ---
+  duration_ms: 0.409958
+  ...
+# Subtest: global logout precedes 24h ban and journals no secrets
+ok 10 - global logout precedes 24h ban and journals no secrets
+  ---
+  duration_ms: 0.603292
+  ...
+# Subtest: delayed restrictions extend the conservative reset deadline beyond minted token expiry
+ok 11 - delayed restrictions extend the conservative reset deadline beyond minted token expiry
+  ---
+  duration_ms: 0.286666
+  ...
+# Subtest: mid-batch failure stops remaining accounts and never auto-unbans
+ok 12 - mid-batch failure stops remaining accounts and never auto-unbans
+  ---
+  duration_ms: 0.306792
+  ...
+# Subtest: maintenance link identity mismatch prevents global logout and ban
+ok 13 - maintenance link identity mismatch prevents global logout and ban
+  ---
+  duration_ms: 1.632208
+  ...
+# Subtest: uses manifest bytes as the sole plan input and refuses blocked bytes before writing
+ok 14 - uses manifest bytes as the sole plan input and refuses blocked bytes before writing
+  ---
+  duration_ms: 17.500125
+  ...
+# Subtest: refuses repository output paths without writing a private artifact
+ok 15 - refuses repository output paths without writing a private artifact
+  ---
+  duration_ms: 3.578458
+  ...
+# Subtest: refuses main-root, symlinked, and not-yet-created worktree descendants
+ok 16 - refuses main-root, symlinked, and not-yet-created worktree descendants
+  ---
+  duration_ms: 6.9465
+  ...
+# Subtest: requires an existing output parent to already be private
+ok 17 - requires an existing output parent to already be private
+  ---
+  duration_ms: 3.349584
+  ...
+# Subtest: production preparation refuses a missing, mismatched, or shortened maintenance journal
+ok 18 - production preparation refuses a missing, mismatched, or shortened maintenance journal
+  ---
+  duration_ms: 8.56875
+  ...
+# Subtest: production preparation binds a valid maintenance journal into the SQL header and receipt
+ok 19 - production preparation binds a valid maintenance journal into the SQL header and receipt
+  ---
+  duration_ms: 5.490875
+  ...
+# Subtest: production preparation waits out a JWT that could be minted before a delayed ban
+ok 20 - production preparation waits out a JWT that could be minted before a delayed ban
+  ---
+  duration_ms: 4.341542
+  ...
+# Subtest: production preparation consumes the actual applyMaintenance journal contract
+ok 21 - production preparation consumes the actual applyMaintenance journal contract
+  ---
+  duration_ms: 16.986125
+  ...
+# Subtest: writes private SQL and a redacted receipt without applying or making a network call
+ok 22 - writes private SQL and a redacted receipt without applying or making a network call
+  ---
+  duration_ms: 5.670958
+  ...
+# Subtest: blocks incomplete private manifest proof instead of generating reset SQL
+ok 23 - blocks incomplete private manifest proof instead of generating reset SQL
+  ---
+  duration_ms: 12.166916
+  ...
+# Subtest: blocks unclassified owner tables and billing-linked state
+ok 24 - blocks unclassified owner tables and billing-linked state
+  ---
+  duration_ms: 0.988792
+  ...
+# Subtest: production reset refuses missing payment replay cutoff proof
+ok 25 - production reset refuses missing payment replay cutoff proof
+  ---
+  duration_ms: 0.684958
+  ...
+# Subtest: the operational payment cutoff cannot be removed as legacy app metadata
+ok 26 - the operational payment cutoff cannot be removed as legacy app metadata
+  ---
+  duration_ms: 0.633
+  ...
+# Subtest: drains requests that may start immediately before the last JWT expires
+ok 27 - drains requests that may start immediately before the last JWT expires
+  ---
+  duration_ms: 0.555917
+  ...
+# Subtest: waits out tokens minted between global logout and the confirmed login restriction
+ok 28 - waits out tokens minted between global logout and the confirmed login restriction
+  ---
+  duration_ms: 1.657375
+  ...
+# Subtest: reset supports an exact fixture with no manual grants
+ok 29 - reset supports an exact fixture with no manual grants
+  ---
+  duration_ms: 800.46875
+  ...
+# Subtest: production SQL rechecks maintenance and clock inside the reset transaction
+ok 30 - production SQL rechecks maintenance and clock inside the reset transaction
+  ---
+  duration_ms: 494.616791
+  ...
+# Subtest: generated guarded SQL resets app state and preserves login identity
+ok 31 - generated guarded SQL resets app state and preserves login identity
+  ---
+  duration_ms: 418.200042
+  ...
+# Subtest: generated SQL aborts on count mismatch before deleting data
+ok 32 - generated SQL aborts on count mismatch before deleting data
+  ---
+  duration_ms: 402.511833
+  ...
+# Subtest: generated SQL aborts on same-count runtime payload drift before deleting data
+ok 33 - generated SQL aborts on same-count runtime payload drift before deleting data
+  ---
+  duration_ms: 440.673125
+  ...
+# Subtest: cross-owner exact-email lead blocks reset and preserves both owners' state
+ok 34 - cross-owner exact-email lead blocks reset and preserves both owners' state
+  ---
+  duration_ms: 544.243958
+  ...
+# Subtest: retain-zero billing and backup rows block reset without deleting evidence
+ok 35 - retain-zero billing and backup rows block reset without deleting evidence
+  ---
+  duration_ms: 774.110417
+  ...
+# Subtest: foreign funnel session or prepared artifact linked to an owned lead blocks reset
+ok 36 - foreign funnel session or prepared artifact linked to an owned lead blocks reset
+  ---
+  duration_ms: 880.088166
+  ...
+# Subtest: child residual checks keep frozen conversation ownership after parent deletion
+ok 37 - child residual checks keep frozen conversation ownership after parent deletion
+  ---
+  duration_ms: 541.653958
+  ...
+# Subtest: dry run makes no hosted calls and reads no environment
+ok 38 - dry run makes no hosted calls and reads no environment
+  ---
+  duration_ms: 1.041834
+  ...
+# Subtest: rejects wrong project, unsafe args, and non-production URL before apply
+ok 39 - rejects wrong project, unsafe args, and non-production URL before apply
+  ---
+  duration_ms: 0.348125
+  ...
+# Subtest: happy path uses independent parallel activation calls and exact guarded cleanup
+ok 40 - happy path uses independent parallel activation calls and exact guarded cleanup
+  ---
+  duration_ms: 4.61925
+  ...
+# Subtest: cleanup refuses to delete when fixture identity marker mismatches
+ok 41 - cleanup refuses to delete when fixture identity marker mismatches
+  ---
+  duration_ms: 1.487542
+  ...
+# Subtest: wrong email progress change fails the probe even when rejected
+ok 42 - wrong email progress change fails the probe even when rejected
+  ---
+  duration_ms: 1.496959
+  ...
+# Subtest: unexpected 4xx denials are not accepted as proof
+ok 43 - unexpected 4xx denials are not accepted as proof
+  ---
+  duration_ms: 3.592583
+  ...
+# Subtest: partial parallel activation response is recovered for cleanup but does not report success
+ok 44 - partial parallel activation response is recovered for cleanup but does not report success
+  ---
+  duration_ms: 1.539042
+  ...
+# Subtest: activation replay must have identical receipt fields and exact 2160 hour expiry
+ok 45 - activation replay must have identical receipt fields and exact 2160 hour expiry
+  ---
+  duration_ms: 0.5805
+  ...
+# Subtest: final journal failure marks the probe unsuccessful after cleanup
+ok 46 - final journal failure marks the probe unsuccessful after cleanup
+  ---
+  duration_ms: 0.371542
+  ...
+# Subtest: source keeps cleanup conservative around auth deletion and exact auth absence
+ok 47 - source keeps cleanup conservative around auth deletion and exact auth absence
+  ---
+  duration_ms: 3.871333
+  ...
+# Subtest: dry run makes no hosted calls
+ok 48 - dry run makes no hosted calls
+  ---
+  duration_ms: 41.345084
+  ...
+# Subtest: rejects wrong project, unsafe user arguments, and a non-hosted production URL before calls
+ok 49 - rejects wrong project, unsafe user arguments, and a non-hosted production URL before calls
+  ---
+  duration_ms: 0.422208
+  ...
+# Subtest: optional expiry observation checkpoints then proves only explicit PostgREST JWT-expired 401s
+ok 50 - optional expiry observation checkpoints then proves only explicit PostgREST JWT-expired 401s
+  ---
+  duration_ms: 10.19675
+  ...
+# Subtest: expired network failure cannot prove expiry and still cleans the fixture
+ok 51 - expired network failure cannot prove expiry and still cleans the fixture
+  ---
+  duration_ms: 0.773292
+  ...
+# Subtest: uses a verified maintenance JWT before the second ban and writes sanitized receipts
+ok 52 - uses a verified maintenance JWT before the second ban and writes sanitized receipts
+  ---
+  duration_ms: 2.038792
+  ...
+# Subtest: failed residual read is not absence
+ok 53 - failed residual read is not absence
+  ---
+  duration_ms: 0.479167
+  ...
+# Subtest: network failures cannot prove login restriction or refresh revocation
+ok 54 - network failures cannot prove login restriction or refresh revocation
+  ---
+  duration_ms: 0.3375
+  ...
+# Subtest: failed initial journal stops the probe but still cleans the created fixture
+ok 55 - failed initial journal stops the probe but still cleans the created fixture
+  ---
+  duration_ms: 0.353958
+  ...
+# Subtest: maintenance subject mismatch stops before logout and still cleans the exact fixture
+ok 56 - maintenance subject mismatch stops before logout and still cleans the exact fixture
+  ---
+  duration_ms: 0.608667
+  ...
+# Subtest: a thrown mid-probe operation still cleans fixture and writes a final receipt
+ok 57 - a thrown mid-probe operation still cleans fixture and writes a final receipt
+  ---
+  duration_ms: 2.174875
+  ...
+# Subtest: new organic moderator start clears the legacy quiz draft once before restore
+ok 58 - new organic moderator start clears the legacy quiz draft once before restore
+  ---
+  duration_ms: 0.451084
+  ...
+# Subtest: blocked browser storage fails closed
+ok 59 - blocked browser storage fails closed
+  ---
+  duration_ms: 0.089083
+  ...
+# Subtest: a failed first boundary can be safely initialized from the reused server session
+ok 60 - a failed first boundary can be safely initialized from the reused server session
+  ---
+  duration_ms: 0.079917
+  ...
+# Subtest: response parsing allows progress-routed and older active returns without quiz state
+ok 61 - response parsing allows progress-routed and older active returns without quiz state
+  ---
+  duration_ms: 0.309458
+  ...
+# Subtest: server-confirmed resume does not clear a current quiz draft in a new tab
+ok 62 - server-confirmed resume does not clear a current quiz draft in a new tab
+  ---
+  duration_ms: 0.203875
+  ...
+# Subtest: quiz response requires an explicit fresh-start flag
+ok 63 - quiz response requires an explicit fresh-start flag
+  ---
+  duration_ms: 0.082417
+  ...
+# Subtest: fresh moderator draft scope cannot restore legacy or another start's answers
+ok 64 - fresh moderator draft scope cannot restore legacy or another start's answers
+  ---
+  duration_ms: 0.515083
+  ...
+# Subtest: authenticated moderator entry clears only known unscoped quiz data
+ok 65 - authenticated moderator entry clears only known unscoped quiz data
+  ---
+  duration_ms: 0.358166
+  ...
+# Subtest: activation refuses an existing customer browser before creating or granting access
+ok 66 - activation refuses an existing customer browser before creating or granting access
+  ---
+  duration_ms: 3.566417
+  ...
+# Subtest: activation creates and signs in one scoped guest before the exact service transaction
+ok 67 - activation creates and signs in one scoped guest before the exact service transaction
+  ---
+  duration_ms: 2.292583
+  ...
+# Subtest: activation failure preserves the new guest session cookie for an exact retry
+ok 68 - activation failure preserves the new guest session cookie for an exact retry
+  ---
+  duration_ms: 0.9295
+  ...
+# Subtest: activation fails closed when the persistent rate limiter is unavailable
+ok 69 - activation fails closed when the persistent rate limiter is unavailable
+  ---
+  duration_ms: 0.426666
+  ...
+# Subtest: guest creation uses a non-deliverable synthetic identity and never returns persisted credentials
+ok 70 - guest creation uses a non-deliverable synthetic identity and never returns persisted credentials
+  ---
+  duration_ms: 0.899708
+  ...
+# Subtest: activation calls the service-only RPC with exact campaign, session, lead, guest, and event
+ok 71 - activation calls the service-only RPC with exact campaign, session, lead, guest, and event
+  ---
+  duration_ms: 0.279917
+  ...
+# Subtest: field-test offer analytics stay in PostHog with test_kind and are rejected by Meta
+ok 72 - field-test offer analytics stay in PostHog with test_kind and are rejected by Meta
+  ---
+  duration_ms: 1.15625
+  ...
+# Subtest: all non-commercial journey kinds are rejected by Meta
+ok 73 - all non-commercial journey kinds are rejected by Meta
+  ---
+  duration_ms: 0.174292
+  ...
+# Subtest: Customer.io keeps established field-test routing and suppresses only partner events
+ok 74 - Customer.io keeps established field-test routing and suppresses only partner events
+  ---
+  duration_ms: 9.990625
+  ...
+# Subtest: Customer.io traits mark a field test as ineligible for commercial automation
+ok 75 - Customer.io traits mark a field test as ineligible for commercial automation
+  ---
+  duration_ms: 0.317667
+  ...
+# Subtest: Customer.io traits mark partner journeys as ineligible for commercial automation
+ok 76 - Customer.io traits mark partner journeys as ineligible for commercial automation
+  ---
+  duration_ms: 0.402
+  ...
+# Subtest: campaign command defaults to a non-writing create preview
+ok 77 - campaign command defaults to a non-writing create preview
+  ---
+  duration_ms: 0.790792
+  ...
+# Subtest: campaign command supports an explicit regular-quiz flow while preserving Personal Plan defaults
+ok 78 - campaign command supports an explicit regular-quiz flow while preserving Personal Plan defaults
+  ---
+  duration_ms: 0.210834
+  ...
+# Subtest: email-bound Personal Plan campaigns require a roster and use the 90-day duration
+ok 79 - email-bound Personal Plan campaigns require a roster and use the 90-day duration
+  ---
+  duration_ms: 0.120542
+  ...
+# Subtest: campaign writes require explicit apply, write gate, project confirmation, and matching URL
+ok 80 - campaign writes require explicit apply, write gate, project confirmation, and matching URL
+  ---
+  duration_ms: 0.095709
+  ...
+# Subtest: inspect and revoke require an exact campaign id argument
+ok 81 - inspect and revoke require an exact campaign id argument
+  ---
+  duration_ms: 0.072041
+  ...
+# Subtest: regular-quiz creation writes its flow kind and emits only the regular quiz link
+ok 82 - regular-quiz creation writes its flow kind and emits only the regular quiz link
+  ---
+  duration_ms: 1.1885
+  ...
+# Subtest: email-bound creation atomically creates a pending exact-account roster through the dedicated RPC
+ok 83 - email-bound creation atomically creates a pending exact-account roster through the dedicated RPC
+  ---
+  duration_ms: 3.55875
+  ...
+# Subtest: regular-quiz revocation refuses a campaign from the Personal Plan flow
+ok 84 - regular-quiz revocation refuses a campaign from the Personal Plan flow
+  ---
+  duration_ms: 0.432125
+  ...
+# Subtest: valid bearer token is exchanged for signed HttpOnly cookies and a clean quiz URL
+ok 85 - valid bearer token is exchanged for signed HttpOnly cookies and a clean quiz URL
+  ---
+  duration_ms: 7.456
+  ...
+# Subtest: unavailable token fails before issuing any campaign or funnel cookie
+ok 86 - unavailable token fails before issuing any campaign or funnel cookie
+  ---
+  duration_ms: 1.485416
+  ...
+# Subtest: email-bound token only routes to account authentication without issuing guest credentials
+ok 87 - email-bound token only routes to account authentication without issuing guest credentials
+  ---
+  duration_ms: 0.2565
+  ...
+# Subtest: activation reaches its signed route checks before any auth or subscription gate
+ok 88 - activation reaches its signed route checks before any auth or subscription gate
+  ---
+  duration_ms: 0.962292
+  ...
+# Subtest: organic moderator activation reaches its account checks before the subscription gate
+ok 89 - organic moderator activation reaches its account checks before the subscription gate
+  ---
+  duration_ms: 0.294958
+  ...
+# Subtest: authenticated active moderator invite return opens the saved plan instead of a fresh quiz prompt
+ok 90 - authenticated active moderator invite return opens the saved plan instead of a fresh quiz prompt
+  ---
+  duration_ms: 67.371583
+  ...
+# Subtest: authenticated ready moderator invite still renders the fresh quiz start UI
+ok 91 - authenticated ready moderator invite still renders the fresh quiz start UI
+  ---
+  duration_ms: 1.685542
+  ...
+# Subtest: authenticated ended moderator invite returns the existing ended state
+ok 92 - authenticated ended moderator invite returns the existing ended state
+  ---
+  duration_ms: 1.091542
+  ...
+# Subtest: routing RPC exposes both exact field-test enrollment kinds without weakening paid provenance
+ok 93 - routing RPC exposes both exact field-test enrollment kinds without weakening paid provenance
+  ---
+  duration_ms: 3.576209
+  ...
+# Subtest: routing RPC remains owner-scoped and exposes only its authenticated wrapper
+ok 94 - routing RPC remains owner-scoped and exposes only its authenticated wrapper
+  ---
+  duration_ms: 0.844917
+  ...
+# Subtest: field-test schema is service-only and stores campaign credentials only as hashes
+ok 95 - field-test schema is service-only and stores campaign credentials only as hashes
+  ---
+  duration_ms: 0.636917
+  ...
+# Subtest: field-test enrollments bind the exact campaign, funnel, lead, guest, grant, and artifact
+ok 96 - field-test enrollments bind the exact campaign, funnel, lead, guest, grant, and artifact
+  ---
+  duration_ms: 0.149291
+  ...
+# Subtest: activation is a locked, private, service-role-only transaction with exact field-test correlations
+ok 97 - activation is a locked, private, service-role-only transaction with exact field-test correlations
+  ---
+  duration_ms: 0.495791
+  ...
+# Subtest: campaign revocation atomically ends enrollments and their tester grants
+ok 98 - campaign revocation atomically ends enrollments and their tester grants
+  ---
+  duration_ms: 0.119166
+  ...
+# Subtest: campaign token lookup stores and compares only the SHA-256 hash
+ok 99 - campaign token lookup stores and compares only the SHA-256 hash
+  ---
+  duration_ms: 0.9375
+  ...
+# Subtest: an authenticated field guest may retry only the exact campaign, session, lead, and user
+ok 100 - an authenticated field guest may retry only the exact campaign, session, lead, and user
+  ---
+  duration_ms: 0.133458
+  ...
+# Subtest: campaign cookie is revalidated against current database lifecycle and capacity
+ok 101 - campaign cookie is revalidated against current database lifecycle and capacity
+  ---
+  duration_ms: 0.497875
+  ...
+# Subtest: offer authorization requires the exact signed campaign, session, and lead
+ok 102 - offer authorization requires the exact signed campaign, session, and lead
+  ---
+  duration_ms: 0.205875
+  ...
+# Subtest: persisted field-test offer intent survives campaign authorization loss
+ok 103 - persisted field-test offer intent survives campaign authorization loss
+  ---
+  duration_ms: 0.096375
+  ...
+# Subtest: missing pre-migration field-test columns do not break ordinary paid results
+ok 104 - missing pre-migration field-test columns do not break ordinary paid results
+  ---
+  duration_ms: 0.090125
+  ...
+# Subtest: unexpected persisted-intent lookup failures remain non-commercial
+ok 105 - unexpected persisted-intent lookup failures remain non-commercial
+  ---
+  duration_ms: 0.123667
+  ...
+# Subtest: lead binding uses only server-resolved campaign and funnel context
+ok 106 - lead binding uses only server-resolved campaign and funnel context
+  ---
+  duration_ms: 0.295083
+  ...
+# Subtest: unknown campaign identity modes never fall back to guest
+ok 107 - unknown campaign identity modes never fall back to guest
+  ---
+  duration_ms: 0.301209
+  ...
+# Subtest: spent email-bound token can still reach account resolution without granting a new seat
+ok 108 - spent email-bound token can still reach account resolution without granting a new seat
+  ---
+  duration_ms: 1.0895
+  ...
+# Subtest: guest offer authorization cannot consume an email-bound campaign
+ok 109 - guest offer authorization cannot consume an email-bound campaign
+  ---
+  duration_ms: 2.41675
+  ...
+# Subtest: organic moderator offer authorization requires the exact email-bound organic campaign, session, and lead
+ok 110 - organic moderator offer authorization requires the exact email-bound organic campaign, session, and lead
+  ---
+  duration_ms: 0.996375
+  ...
+# Subtest: field-test quiz presents the approved persistent German banner
+ok 111 - field-test quiz presents the approved persistent German banner
+  ---
+  duration_ms: 4.800291
+  ...
+# Subtest: field-test offer replaces all payment presentation with the free activation card
+ok 112 - field-test offer replaces all payment presentation with the free activation card
+  ---
+  duration_ms: 16.142834
+  ...
+# Subtest: lost field-test authorization renders a dedicated non-commercial end state
+ok 113 - lost field-test authorization renders a dedicated non-commercial end state
+  ---
+  duration_ms: 0.507791
+  ...
+# Subtest: dedicated field-test end surface stays concise and payment-free
+ok 114 - dedicated field-test end surface stays concise and payment-free
+  ---
+  duration_ms: 0.20425
+  ...
+# Subtest: field-test lead binding must succeed before the quiz can open a result
+ok 115 - field-test lead binding must succeed before the quiz can open a result
+  ---
+  duration_ms: 0.114167
+  ...
+# Subtest: result routing preserves persisted field-test intent after authorization loss
+ok 116 - result routing preserves persisted field-test intent after authorization loss
+  ---
+  duration_ms: 0.090333
+  ...
+# Subtest: moderator offer promises account return and ninety days without guest-browser limits
+ok 117 - moderator offer promises account return and ninety days without guest-browser limits
+  ---
+  duration_ms: 5.249291
+  ...
+# Subtest: moderator activation requires an authenticated verified intent before allowing email-bound offer activation
+ok 118 - moderator activation requires an authenticated verified intent before allowing email-bound offer activation
+  ---
+  duration_ms: 4.896334
+  ...
+# Subtest: moderator activation never creates a guest and fails closed for wrong or missing accounts
+ok 119 - moderator activation never creates a guest and fails closed for wrong or missing accounts
+  ---
+  duration_ms: 0.729667
+  ...
+# Subtest: moderator activation replay for an active member does not depend on campaign admission capacity
+ok 120 - moderator activation replay for an active member does not depend on campaign admission capacity
+  ---
+  duration_ms: 0.634792
+  ...
+# Subtest: moderator activation rejects cross-origin posts before touching auth or activation
+ok 121 - moderator activation rejects cross-origin posts before touching auth or activation
+  ---
+  duration_ms: 0.464583
+  ...
+# Subtest: moderator activation returns controlled unavailable JSON when auth lookup fails
+ok 122 - moderator activation returns controlled unavailable JSON when auth lookup fails
+  ---
+  duration_ms: 0.48125
+  ...
+# Subtest: moderator activation distinguishes an absent session from an Auth outage
+ok 123 - moderator activation distinguishes an absent session from an Auth outage
+  ---
+  duration_ms: 0.438875
+  ...
+# Subtest: organic moderator activation uses the owned legacy result and never the Meta package
+ok 124 - organic moderator activation uses the owned legacy result and never the Meta package
+  ---
+  duration_ms: 0.823709
+  ...
+# Subtest: moderator member resolver returns ready only for the exact confirmed roster email
+ok 125 - moderator member resolver returns ready only for the exact confirmed roster email
+  ---
+  duration_ms: 1.273916
+  ...
+# Subtest: moderator access resolves active, expired, and none without guest app metadata
+ok 126 - moderator access resolves active, expired, and none without guest app metadata
+  ---
+  duration_ms: 0.356791
+  ...
+# Subtest: moderator access treats pre-migration missing roster as none and mismatched enrollment as ended
+ok 127 - moderator access treats pre-migration missing roster as none and mismatched enrollment as ended
+  ---
+  duration_ms: 2.438208
+  ...
+# Subtest: moderator intent is signed to one user, funnel, and optional lead
+ok 128 - moderator intent is signed to one user, funnel, and optional lead
+  ---
+  duration_ms: 0.979666
+  ...
+# Subtest: an expired invitation for a ready member is ended rather than the wrong account
+ok 129 - an expired invitation for a ready member is ended rather than the wrong account
+  ---
+  duration_ms: 0.105208
+  ...
+# Subtest: moderator intent accepts the organic quiz for the same roster account but rejects other packages
+ok 130 - moderator intent accepts the organic quiz for the same roster account but rejects other packages
+  ---
+  duration_ms: 0.231125
+  ...
+# Subtest: organic RPC adapters send confirmed ownership and accept artifact-free activation
+ok 131 - organic RPC adapters send confirmed ownership and accept artifact-free activation
+  ---
+  duration_ms: 5.834166
+  ...
+# Subtest: moderator journey authorizes only verified account and passes exact result ownership to intent verification
+ok 132 - moderator journey authorizes only verified account and passes exact result ownership to intent verification
+  ---
+  duration_ms: 1.540666
+  ...
+# Subtest: missing credentials or account proof cannot downgrade a persisted moderator funnel to commercial
+ok 133 - missing credentials or account proof cannot downgrade a persisted moderator funnel to commercial
+  ---
+  duration_ms: 1.213583
+  ...
+# Subtest: moderator journey treats database and authentication failures as unavailable
+ok 134 - moderator journey treats database and authentication failures as unavailable
+  ---
+  duration_ms: 0.757167
+  ...
+# Subtest: ordinary visitors and legacy guest funnels do not require account proof
+ok 135 - ordinary visitors and legacy guest funnels do not require account proof
+  ---
+  duration_ms: 0.137958
+  ...
+# Subtest: result ownership lookup does not treat database failure or disabled analytics as no moderator context
+ok 136 - result ownership lookup does not treat database failure or disabled analytics as no moderator context
+  ---
+  duration_ms: 0.196459
+  ...
+# Subtest: result account classification survives missing funnel context and fails closed on read errors
+ok 137 - result account classification survives missing funnel context and fails closed on read errors
+  ---
+  duration_ms: 0.137666
+  ...
+# Subtest: moderator migration adds email-bound roster state without changing guest defaults
+ok 138 - moderator migration adds email-bound roster state without changing guest defaults
+  ---
+  duration_ms: 0.693875
+  ...
+# Subtest: moderator migration exposes service-only atomic roster and activation RPCs
+ok 139 - moderator migration exposes service-only atomic roster and activation RPCs
+  ---
+  duration_ms: 0.322375
+  ...
+# Subtest: moderator migration fences existing guest RPCs away from email-bound campaigns
+ok 140 - moderator migration fences existing guest RPCs away from email-bound campaigns
+  ---
+  duration_ms: 0.102042
+  ...
+# Subtest: moderator campaign creation is atomic and rolls back duplicate roster inserts
+ok 141 - moderator campaign creation is atomic and rolls back duplicate roster inserts
+  ---
+  duration_ms: 1014.611
+  ...
+# Subtest: moderator save and activation are replay-safe with stable expiry
+ok 142 - moderator save and activation are replay-safe with stable expiry
+  ---
+  duration_ms: 550.44175
+  ...
+# Subtest: organic moderator save owns a legacy lead before any Customer.io outbox can dispatch
+ok 143 - organic moderator save owns a legacy lead before any Customer.io outbox can dispatch
+  ---
+  duration_ms: 536.18875
+  ...
+# Subtest: organic moderator activation writes a legacy enrollment and routing source without an artifact
+ok 144 - organic moderator activation writes a legacy enrollment and routing source without an artifact
+  ---
+  duration_ms: 549.112666
+  ...
+# Subtest: personal-plan test enrollment source shape rejects mixed artifact contracts
+ok 145 - personal-plan test enrollment source shape rejects mixed artifact contracts
+  ---
+  duration_ms: 523.487125
+  ...
+# Subtest: guest RPCs reject moderator campaigns while guest wrapper remains non-recursive
+ok 146 - guest RPCs reject moderator campaigns while guest wrapper remains non-recursive
+  ---
+  duration_ms: 480.939792
+  ...
+# Subtest: repreparing a moderator quiz must not leave the previous result without account context
+ok 147 - repreparing a moderator quiz must not leave the previous result without account context
+  ---
+  duration_ms: 424.123209
+  ...
+# Subtest: campaign revocation includes moderator membership and rolls back all rows on failure
+ok 148 - campaign revocation includes moderator membership and rolls back all rows on failure
+  ---
+  duration_ms: 642.425625
+  ...
+# Subtest: authenticated exact roster member gets a signed moderator intent and organic quiz destination
+ok 149 - authenticated exact roster member gets a signed moderator intent and organic quiz destination
+  ---
+  duration_ms: 5.13375
+  ...
+# Subtest: a valid ready organic intent reuses its session without creating or clearing a new start
+ok 150 - a valid ready organic intent reuses its session without creating or clearing a new start
+  ---
+  duration_ms: 0.538459
+  ...
+# Subtest: moderator start persists a schema-complete canonical organic funnel row
+ok 151 - moderator start persists a schema-complete canonical organic funnel row
+  ---
+  duration_ms: 0.157084
+  ...
+# Subtest: wrong accounts and cross-origin requests never create a funnel or intent
+ok 152 - wrong accounts and cross-origin requests never create a funnel or intent
+  ---
+  duration_ms: 0.597125
+  ...
+# Subtest: missing signing configuration fails before creating a funnel row
+ok 153 - missing signing configuration fails before creating a funnel row
+  ---
+  duration_ms: 0.550625
+  ...
+# Subtest: rollout-off stops new ready members before a funnel row is created
+ok 154 - rollout-off stops new ready members before a funnel row is created
+  ---
+  duration_ms: 0.4735
+  ...
+# Subtest: rollout-off preserves return routing for an already active moderator
+ok 155 - rollout-off preserves return routing for an already active moderator
+  ---
+  duration_ms: 0.5985
+  ...
+# Subtest: regular activation fails closed while the global field-test switch is disabled
+ok 156 - regular activation fails closed while the global field-test switch is disabled
+  ---
+  duration_ms: 4.255417
+  ...
+# Subtest: regular activation establishes a recoverable guest before atomic ownership and projection
+ok 157 - regular activation establishes a recoverable guest before atomic ownership and projection
+  ---
+  duration_ms: 6.182084
+  ...
+# Subtest: regular activation rejects an existing customer before guest or access writes
+ok 158 - regular activation rejects an existing customer before guest or access writes
+  ---
+  duration_ms: 0.836917
+  ...
+# Subtest: regular activation preserves the guest session when profile projection fails
+ok 159 - regular activation preserves the guest session when profile projection fails
+  ---
+  duration_ms: 0.87
+  ...
+# Subtest: regular quiz guest creation is synthetic and flow-scoped
+ok 160 - regular quiz guest creation is synthetic and flow-scoped
+  ---
+  duration_ms: 0.797
+  ...
+# Subtest: regular quiz activation uses only its service RPC and exact correlation
+ok 161 - regular quiz activation uses only its service RPC and exact correlation
+  ---
+  duration_ms: 0.615416
+  ...
+# Subtest: regular quiz field-test runtime is explicitly flag-gated and flow-scoped
+ok 162 - regular quiz field-test runtime is explicitly flag-gated and flow-scoped
+  ---
+  duration_ms: 3.6625
+  ...
+# Subtest: regular offer authorization needs the exact campaign, organic session, and legacy lead
+ok 163 - regular offer authorization needs the exact campaign, organic session, and legacy lead
+  ---
+  duration_ms: 3.382916
+  ...
+# Subtest: regular entry refuses authenticated browsers and only starts eligible regular campaigns
+ok 164 - regular entry refuses authenticated browsers and only starts eligible regular campaigns
+  ---
+  duration_ms: 21.359875
+  ...
+# Subtest: regular ended route is public and expired regular guests stay out of the Personal Plan ended surface
+ok 165 - regular ended route is public and expired regular guests stay out of the Personal Plan ended surface
+  ---
+  duration_ms: 4.16225
+  ...
+# Subtest: regular quiz rewrite never overrides authenticated routing and forces organic repackaging
+ok 166 - regular quiz rewrite never overrides authenticated routing and forces organic repackaging
+  ---
+  duration_ms: 0.182041
+  ...
+# Subtest: only a signed regular campaign cookie enters the server-validated quiz shell
+ok 167 - only a signed regular campaign cookie enters the server-validated quiz shell
+  ---
+  duration_ms: 1.057
+  ...
+# Subtest: an invalid regular cookie is cleared only when signature validation is configured
+ok 168 - an invalid regular cookie is cleared only when signature validation is configured
+  ---
+  duration_ms: 0.115625
+  ...
+# Subtest: lead binding runs only for exact regular field-test intent and organic context
+ok 169 - lead binding runs only for exact regular field-test intent and organic context
+  ---
+  duration_ms: 0.115833
+  ...
+# Subtest: regular quiz campaigns are flow-scoped without changing Personal Plan defaults
+ok 170 - regular quiz campaigns are flow-scoped without changing Personal Plan defaults
+  ---
+  duration_ms: 0.511291
+  ...
+# Subtest: regular quiz enrollments are service-only and do not require a Personal Plan artifact
+ok 171 - regular quiz enrollments are service-only and do not require a Personal Plan artifact
+  ---
+  duration_ms: 0.193417
+  ...
+# Subtest: regular quiz RPCs are service-only and enforce exact legacy/default-organic correlations
+ok 172 - regular quiz RPCs are service-only and enforce exact legacy/default-organic correlations
+  ---
+  duration_ms: 1.104041
+  ...
+# Subtest: campaign revocation branches by flow and revokes regular grants and enrollments
+ok 173 - campaign revocation branches by flow and revokes regular grants and enrollments
+  ---
+  duration_ms: 0.325833
+  ...
+# Subtest: regular quiz field-test banner uses the reviewed persistent German copy
+ok 174 - regular quiz field-test banner uses the reviewed persistent German copy
+  ---
+  duration_ms: 4.065875
+  ...
+# Subtest: regular quiz field-test activation card is payment-free and targets the activation API
+ok 175 - regular quiz field-test activation card is payment-free and targets the activation API
+  ---
+  duration_ms: 2.029333
+  ...
+# Subtest: regular quiz field-test activation consumes the exact server destination contract
+ok 176 - regular quiz field-test activation consumes the exact server destination contract
+  ---
+  duration_ms: 0.08975
+  ...
+# Subtest: regular quiz field-test organic offer replaces all commercial conversion surfaces
+ok 177 - regular quiz field-test organic offer replaces all commercial conversion surfaces
+  ---
+  duration_ms: 13.949916
+  ...
+# Subtest: email-bound moderator organic offer remains free and uses its dedicated activation route
+ok 178 - email-bound moderator organic offer remains free and uses its dedicated activation route
+  ---
+  duration_ms: 5.345667
+  ...
+# Subtest: partner organic offer keeps the ordinary journey and swaps only the payment position
+ok 179 - partner organic offer keeps the ordinary journey and swaps only the payment position
+  ---
+  duration_ms: 5.793166
+  ...
+# Subtest: partner activation accepts only the canonical plan-ready destination
+ok 180 - partner activation accepts only the canonical plan-ready destination
+  ---
+  duration_ms: 0.066417
+  ...
+# Subtest: partner activation shares one request and event across concurrent CTA clicks
+ok 181 - partner activation shares one request and event across concurrent CTA clicks
+  ---
+  duration_ms: 9.194292
+  ...
+# Subtest: legacy result client fails closed when regular field-test intent lost authorization
+ok 182 - legacy result client fails closed when regular field-test intent lost authorization
+  ---
+  duration_ms: 0.568083
+  ...
+# Subtest: result and quiz routing consume only server-derived regular field-test state
+ok 183 - result and quiz routing consume only server-derived regular field-test state
+  ---
+  duration_ms: 1.412792
+  ...
+1..183
+# tests 183
+# suites 0
+# pass 183
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26127.938542

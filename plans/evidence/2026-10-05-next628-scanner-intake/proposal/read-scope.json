@@ -1,0 +1,169 @@
+{
+  "readSet": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8",
+      "readScope": "routing read; current provided instructions",
+      "lineCount": 135
+    },
+    {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590",
+      "readScope": "FULL 414 lines all13 registrations and every helper",
+      "lineCount": 414
+    },
+    {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f",
+      "readScope": "FULL309 lines all13 registrations and every helper",
+      "lineCount": 309
+    },
+    {
+      "file": "src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+      "readScope": "FULL200 lines actual owner",
+      "lineCount": 200
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+      "readScope": "FULL1065 lines actual form and parent sheet, read in slices",
+      "lineCount": 1065
+    },
+    {
+      "file": "src/components/scan/scan-product-thumb.tsx",
+      "sha256": "879f42afc873074cb547bcaa90e98acb44273694e18cb635ed9883cad5af5962",
+      "readScope": "FULL70 lines owner",
+      "lineCount": 70
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha256": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2",
+      "readScope": "FULL category/role copy",
+      "lineCount": 137
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+      "readScope": "FULL cn adapter",
+      "lineCount": 6
+    },
+    {
+      "file": "src/lib/scan/verdict-labels.ts",
+      "sha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+      "readScope": "1-160; operative unknown copy/brand formatting fully read, rest out of scope",
+      "lineCount": 169
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+      "readScope": "1-145; category array/type and module imports; rest not semantically read",
+      "lineCount": 1547
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha256": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02",
+      "readScope": "1-208; unknown render DTO fully read",
+      "lineCount": 201
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+      "readScope": "787-940,1115-1235 plus imports/search; actual submit adapters and rendering props only, no complete ScanFlow re-audit",
+      "lineCount": 1327
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "sha256": "f5484cc86b14501866f9fb1aecb78904ab7d27a6ea9cee55ec2fa93558122122",
+      "readScope": "1-230,1300-1435,1720-2050; complete relevant harness plus cross-copy/parent intake registrations, rest not reread",
+      "lineCount": 3446
+    },
+    {
+      "file": "src/app/scan/scan-page-client.tsx",
+      "sha256": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6",
+      "readScope": "125-157 production entry caller",
+      "lineCount": 150
+    },
+    {
+      "file": "src/app/labs/scan/scan-lab-client.tsx",
+      "sha256": "9c9f8d5e8a6850a8ade4cebde8139aae5fab5fb41608f3fcbe4636db19011a49",
+      "readScope": "420-448 lab caller only",
+      "lineCount": 440
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-add-sheet.tsx",
+      "sha256": "2de3e61f36f21cd79ec46f8c4547c1114f434def03faf899a34fcd85eb59cfd9",
+      "readScope": "720-770 sibling caller, does not enable research intake",
+      "lineCount": 756
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "readScope": "FULL plain Node marker loader",
+      "lineCount": 10
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "readScope": "scripts49-73 and relevant searched lines only",
+      "lineCount": 275
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "readScope": "143-165 quality-node routing and searched browser job lines only",
+      "lineCount": 423
+    },
+    {
+      "file": "plans/scan-public-launch.md",
+      "sha256": "0b7cc3b05b5617cae538d3299688b00fd254cc3239851d08126cce84c20f61fb",
+      "readScope": "54,62,88-103 signed-off Task9 copy/one-tap",
+      "lineCount": 99
+    },
+    {
+      "file": "node_modules/react/cjs/react.development.js",
+      "sha256": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72",
+      "readScope": "268-280,451-464,515-530,774-789,1252-1270 element/Children/dispatcher semantics",
+      "lineCount": 1284
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+      "readScope": "FULL selector; no environment read",
+      "lineCount": 18
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+      "readScope": "1155-1182,5042-5076,9850-9878 SSR attribute/function/render entry semantics",
+      "lineCount": 9877
+    },
+    {
+      "file": "node_modules/next/dist/client/image-component.js",
+      "sha256": "7dcd5a10f44f1b52100554e2a2537dfe3d04083e310858d9a92c61a7db302753",
+      "readScope": "135-164,190-210 onError forwarding inspected; real network/optimizer not proved",
+      "lineCount": 311
+    },
+    {
+      "file": "node_modules/clsx/dist/clsx.mjs",
+      "sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522",
+      "readScope": "FULL classname flattening",
+      "lineCount": 1
+    }
+  ],
+  "limits": [
+    "No complete audit of other98/220 scanner cohorts or all26 test transitive dependencies.",
+    "Direct child calls use private React dispatcher; no browser mount, DOM focus, React reconciliation/timing or real network behavior proved.",
+    "React development excerpts inspected. Production runtime and full Next/React/vendor distribution not exhaustively semantically read.",
+    "Category constant/type slices read, not entire Personal Plan owner chain.",
+    "No source deletions proposed: components have live callers.",
+    "All runtime and actual owner mutations remain main-only."
+  ],
+  "history": [
+    "f61a7c64 initial one-tap unknown intake; current plan Task9 confirms copy/removed fields",
+    "2a87014e source+test diff added bridge order after phone-test contradiction",
+    "255ffa87 source+test diff F17 fixed stale tapped highlight with submitting conjunction",
+    "7072124b history introduced identified dm branch; full current branch tests retained",
+    "ac021a5b adds separate name-intake child; relevant source diff inspected and complete current child/test read"
+  ]
+}

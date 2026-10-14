@@ -1,0 +1,70 @@
+{
+  "blindId": "T205",
+  "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: Parfum at 8; positions 1-7 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (C1): the earliest prominent strong anionic is Sodium Laureth Sulfate (7, ether type), so it is the defining anionic; it is buffered by the prominent mild anionics Disodium Laureth Sulfosuccinate (3) and Sodium Lauryl Sulfoacetate (4) and the glucoside Lauryl Glucoside (6); no reinforcing strong anionic.",
+      "counterSignal": "SLES is listed last among the surfactants, behind two mild anionics and a glucoside, with Urea (2) high in the list: the chassis is mild-led and argues for low. Laureth-9 (5) recorded as an alcohol ethoxylate, not a C3 cleansing class/buffer.",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (bounded): one cationic conditioning polymer, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (15), plus trace Helianthus Annuus Seed Oil (21) and Urea (2) as humectant. C2 not met (no silicone, no prominent lipid, no pearlizing route).",
+      "counterSignal": "The only polymer sits after Sodium Benzoate and the oil is last: little substantive slip is realistic (neighbor low).",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: the only deposition routes are one late cationic starch polymer and a trace sunflower oil in last position, facing a buffered SLES/sulfosuccinate system.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Cationic starch (15, after preservative) and sunflower oil (21, last)."},
+        "persistence": {"value": "low", "rationale": "Light polysaccharide polymer and trace liquid oil are weakly retained."},
+        "resetCapacity": {"value": "moderate", "rationale": "Buffered C1 system with broad mild-anionic co-surfactants."}
+      },
+      "extractedEvidence": {
+        "cationic_polymer": [{"ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride", "position": 15}],
+        "payload_lipid": [{"ingredient": "Helianthus Annuus Seed Oil", "position": 21}],
+        "silicone": [], "weak_refatter": [], "protein_film": [], "film_former": [],
+        "reset": [{"ingredient": "Disodium Laureth Sulfosuccinate", "position": 3}, {"ingredient": "Sodium Lauryl Sulfoacetate", "position": 4}, {"ingredient": "Lauryl Glucoside", "position": 6}, {"ingredient": "Sodium Laureth Sulfate", "position": 7}],
+        "excluded": [{"ingredient": "PEG-120 Methyl Glucose Dioleate", "position": 9, "reason": "PEG thickener (6.4)"}, {"ingredient": "PEG/PPG-120/10 Trimethylolpropane Trioleate", "position": 13, "reason": "PEG thickener"}, {"ingredient": "Laureth-2", "position": 12, "reason": "low-ethoxylate thickener"}, {"ingredient": "Laureth-9", "position": 5, "reason": "ethoxylated nonionic, no deposition role"}],
+        "context_humectants": [{"ingredient": "Urea", "position": 2}]
+      },
+      "whyThisBand": "Only light, late routes with moderate reset: low anchor.",
+      "whyNotNeighborBand": "W2: two families present, but the cationic starch sits after a preservative and the oil is the last ingredient (both trace), with no silicone, film or protein; combined residue is unlikely to be noticeable.",
+      "limitingFactor": "Polymer level/charge unknown."
+    },
+    "focusPrimary": {"value": "scalp_active", "confidence": "low", "provisional": true, "rationale": "Pending claims. Formula is a comfort-route scalp architecture: Urea (2) and Laureth-9 (5, INCI name of polidocanol) prominent with a mild-led cleansing system; scalp_active requires an SC1 sensitive/dry claim. Lengths care-direction: nonspecific."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default; frequent possible with explicit frequency wording (cleansing not strong)."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "No positioning yet. CSA formula half met: prominent Urea (2) is on both E4 lists; Laureth-9 (5) = polidocanol (comfort list) if the synonym is accepted (immaterial, Urea alone suffices)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Urea", "position": 2, "role": "humectant; E4 comfort and humectant route"},
+    {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 3, "role": "mild anionic buffer"},
+    {"ingredient": "Sodium Lauryl Sulfoacetate", "position": 4, "role": "mild anionic buffer"},
+    {"ingredient": "Laureth-9", "position": 5, "role": "polidocanol (INCI Laureth-9); comfort-route candidate; not a C3 cleansing class"},
+    {"ingredient": "Lauryl Glucoside", "position": 6, "role": "nonionic buffer"},
+    {"ingredient": "Sodium Laureth Sulfate", "position": 7, "role": "defining anionic (ether type), last prominent position"},
+    {"ingredient": "Parfum", "position": 8, "role": "E3 fragrance marker"},
+    {"ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride", "position": 15, "role": "cationic_polymer"},
+    {"ingredient": "Helianthus Annuus Seed Oil", "position": 21, "role": "payload_lipid (trace)"}
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": ["Laureth-9 read as the INCI name of polidocanol (E4 comfort list names 'Polidocanol'); immaterial because prominent Urea already satisfies both E4 lists."]
+}

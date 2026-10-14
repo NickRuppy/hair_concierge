@@ -1,0 +1,189 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "mapping": [
+    {
+      "id": "D1",
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a module banner dismissal and reading it back reports that module dismissed",
+      "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+      "keeper": "dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)"
+    },
+    {
+      "id": "C1",
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "a user with no dismissals reads as no modules dismissed",
+      "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+      "keeper": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    {
+      "id": "C2",
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a nav surface visit and reading it back reports that surface visited",
+      "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+      "keeper": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    {
+      "id": "C3",
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts",
+      "keeperFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "keeper": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    {
+      "id": "C4",
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "the narrow Stage 2 access read never emits Stage 3 access timing",
+      "keeperFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "keeper": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads"
+    },
+    {
+      "id": "C5",
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a current Personal Plan membership resolves through its exact provider purchase and quiz lead",
+      "keeperFile": "tests/personal-plan-enrollment.test.ts",
+      "keeper": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    {
+      "id": "C6",
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a claimed partner invitation without a lead binding or activation never grants access",
+      "keeperFile": "tests/personal-plan-enrollment.test.ts",
+      "keeper": "a claimed partner's revoked tester enrollments never resurrect the old tester lead"
+    }
+  ],
+  "keepers": [
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads"
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    }
+  ],
+  "files": {
+    "tests/personal-plan-journey-access-loader.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-journey-access-loader.test.ts.before",
+        "sha256": "046978d3834b2d438bed697069fd167ae29ca4e751824a91ad8f2bff10baf7f3"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-journey-access-loader.test.ts.transferred",
+        "sha256": "7a8591eaf655f33377bd507f8f560ab7356cded49640d444ebc8c81329cac377"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-journey-access-loader.test.ts.cut",
+        "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      }
+    },
+    "tests/personal-plan-enrollment.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-enrollment.test.ts.before",
+        "sha256": "c75640c2e1faa358011609e35b91e8e475004dec04106b47c331862a644f4581"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-enrollment.test.ts.transferred",
+        "sha256": "8adbeba8151a0c4fc25ff74a7d806e7df2a3176a5ac6c19ae4759a5d567acd39"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-enrollment.test.ts.cut",
+        "sha256": "ba567e1486dad026768072511dcb890f5c6bba2b787305fd68d35a4e0adf25b2"
+      }
+    },
+    "tests/personal-plan-lifecycle-marks.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-lifecycle-marks.test.ts.before",
+        "sha256": "568a6467f58f07cb3beccaad5728cad2db9316de9903904bc18acfa1884356a5"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-lifecycle-marks.test.ts.transferred",
+        "sha256": "7e447bbd1a3f5884c6393419a40a4d7245ebf0e35d3a93bf2aac914b04e05be3"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-lifecycle-marks.test.ts.cut",
+        "sha256": "51afdffe9a0fae7b9871238bc5b2e23bae5d27ddeb9ffc7c258e08e4eeeb6712"
+      }
+    },
+    "tests/personal-plan-quiz.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-quiz.test.ts.before",
+        "sha256": "ba5504b797c71475feafd987efc94ce316d5ed05e11710005d24ae214e80e680"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-quiz.test.ts.transferred",
+        "sha256": "ba5504b797c71475feafd987efc94ce316d5ed05e11710005d24ae214e80e680"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-quiz.test.ts.cut",
+        "sha256": "ba5504b797c71475feafd987efc94ce316d5ed05e11710005d24ae214e80e680"
+      }
+    },
+    "tests/personal-plan-hair-assessment.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-hair-assessment.test.ts.before",
+        "sha256": "0450375638433caf6cfa3886c45678f6d04ad68acf374c7aa3cae7dfbfc3edc9"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-hair-assessment.test.ts.transferred",
+        "sha256": "0450375638433caf6cfa3886c45678f6d04ad68acf374c7aa3cae7dfbfc3edc9"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-journey-lifecycle-layer-staged/tests__personal-plan-hair-assessment.test.ts.cut",
+        "sha256": "0450375638433caf6cfa3886c45678f6d04ad68acf374c7aa3cae7dfbfc3edc9"
+      }
+    }
+  },
+  "counts": {
+    "tests/personal-plan-journey-access-loader.test.ts": {
+      "before": 25,
+      "transferred": 25,
+      "cut": 23
+    },
+    "tests/personal-plan-enrollment.test.ts": {
+      "before": 24,
+      "transferred": 24,
+      "cut": 22
+    },
+    "tests/personal-plan-lifecycle-marks.test.ts": {
+      "before": 18,
+      "transferred": 18,
+      "cut": 15
+    },
+    "tests/personal-plan-quiz.test.ts": {
+      "before": 18,
+      "transferred": 18,
+      "cut": 18
+    },
+    "tests/personal-plan-hair-assessment.test.ts": {
+      "before": 18,
+      "transferred": 18,
+      "cut": 18
+    }
+  },
+  "sources": {
+    "src/lib/personal-plan/lifecycle/repository.ts": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "src/lib/personal-plan/journey-access-loader.ts": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "src/lib/personal-plan/journey-access.ts": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "src/lib/personal-plan/enrollment.ts": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "src/lib/personal-plan/frontier-routing-loader.ts": "3602786d58e9ad2ac489a148b52ada98fb2f0b3f3fff2b915e8bc2ebfd57c135",
+    "src/lib/billing/subscriptions.ts": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "src/lib/personal-plan-quiz/flow.ts": "f027cfed94da99a0d1339124e4536c104f62ddcc52468788303b31988956715e",
+    "src/lib/personal-plan-quiz/draft.ts": "0e7229ba64337d19f8704790819dffdc3a98daca633860db330e21247bd5a60a",
+    "src/lib/personal-plan-quiz/hair-assessment.ts": "c79a891137127fcfa30110a41ddd1744640b7cbe2f76aafa1b4c30544604c3b5",
+    "src/lib/personal-plan-quiz/assessment-copy.ts": "77c25aa207451e902d4f378e5afab5a6bc32563459599886fc8fe3b4b6772480",
+    "src/lib/personal-plan-quiz/offer-adapter.ts": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4",
+    "src/lib/personal-plan-quiz/profile-summary.ts": "078c1d0b2c8189233b192484eaf6f94c22c9ab24522c0b3cf4c85338aa484ea1"
+  }
+}

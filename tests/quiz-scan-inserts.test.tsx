@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { readFileSync } from "node:fs"
 import { renderToStaticMarkup } from "react-dom/server"
+import { JSDOM } from "jsdom"
 
 import { QuizBrowserHistoryProvider } from "../src/components/quiz/quiz-browser-history"
 import { ScanInsertHomeView } from "../src/components/quiz/scan-inserts/scan-insert-home"
@@ -33,6 +34,25 @@ function renderInsert(step: QuizStep, answers: QuizAnswers) {
 /** next/image rewrites a local source into an encoded optimizer URL. */
 function imageUrl(file: string) {
   return new RegExp(`%2Fimages%2Ffunnels%2Fscan%2F${file.replace(".", "\\.")}`)
+}
+
+// Observe actual rendered text and source URLs without depending on optimizer
+// query ordering or accepting a matching substring with extra product copy.
+function readRenderedContent(html: string) {
+  const dom = new JSDOM(html)
+  try {
+    const document = dom.window.document
+    return {
+      paragraphs: Array.from(document.querySelectorAll("p"), (node) => node.textContent),
+      imageSources: Array.from(document.querySelectorAll("img"), (node) => {
+        const src = node.getAttribute("src") ?? ""
+        const url = new URL(src, "https://quiz-render.test")
+        return url.pathname === "/_next/image" ? url.searchParams.get("url") : src
+      }),
+    }
+  } finally {
+    dom.window.close()
+  }
 }
 
 test("the problem insert names the shelf moment and the answers already given", () => {
@@ -85,7 +105,8 @@ test("the solution insert quotes the scalp answer the user just gave", () => {
     /Du hast „Schuppen“ angegeben\. Jedes Shampoo, das nicht dazu passt, erkennt der Scanner in Sekunden – bevor es im Korb landet\./,
   )
   assert.match(html, imageUrl("regal-scan-flasche.webp"))
-  assert.match(html, /Passt nicht zu deiner Kopfhaut/)
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt nicht</)
 })
 
 test("the solution insert's positive card judges the scalp and names the match", () => {
@@ -95,7 +116,14 @@ test("the solution insert's positive card judges the scalp and names the match",
     thickness: "normal",
   })
 
-  assert.match(html, /Passt zu deiner Kopfhaut/)
+  const rendered = readRenderedContent(html)
+  assert.ok(rendered.paragraphs.includes("Balea Kopfhaut Sensitive Shampoo"))
+  assert.ok(rendered.paragraphs.includes("Shampoo · ca. 1,25 €"))
+  assert.ok(
+    rendered.imageSources.includes("/images/funnels/scan/example-balea-kopfhaut-sensitive.webp"),
+  )
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt</)
   assert.doesNotMatch(html, /Passt zu deinem Haar/)
   assert.match(html, /Kopfhaut trocken – genau dein Profil\./)
   assert.doesNotMatch(html, /Kopfhaut sensibel, trocken – genau dein Profil\./)
@@ -105,6 +133,11 @@ test("the solution insert's positive card judges the scalp and names the match",
 test("the home insert turns the user's own bathroom into the first shelf", () => {
   const html = renderInsert(18, { thickness: "fine", treatment: ["blondiert"] })
 
+  assert.ok(
+    readRenderedContent(html).paragraphs.includes(
+      "Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch",
+    ),
+  )
   assert.match(html, /Und zu Hause/)
   assert.match(html, /Dein Bad ist das erste Regal\./)
   assert.match(
@@ -114,7 +147,10 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
   assert.match(html, imageUrl("bad-ablage.webp"))
   assert.match(html, /Alterra Feuchtigkeits-Haarmaske/)
   assert.match(html, /Haarmaske · ca\. 2,79 €/)
-  assert.match(html, /Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch/)
+  assert.match(
+    html,
+    /Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch/,
+  )
 })
 
 test("every insert marks its card as an example and keeps the preceding question's counter", () => {
@@ -142,6 +178,10 @@ test("every example card shows the product's own packshot, not a glyph", () => {
   ]
   for (const [step, file] of expected) {
     const html = renderInsert(step, { thickness: "normal", scalp_type: "trocken" })
+    assert.ok(
+      readRenderedContent(html).imageSources.includes(`/images/funnels/scan/${file}`),
+      `insert ${step} exact packshot source`,
+    )
     assert.match(html, imageUrl(file), `insert ${step} packshot`)
     assert.ok(!html.includes("M10 2.75h4v2.5"), `insert ${step} drops the bottle glyph`)
   }

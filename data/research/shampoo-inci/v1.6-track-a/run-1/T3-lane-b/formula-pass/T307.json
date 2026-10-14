@@ -1,0 +1,181 @@
+{
+  "blindId": "T307",
+  "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "Marker asterisks stripped (provenance: * organic, ** fragrance components). Positions as listed.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C5: defining anionic Sodium Coco-Sulfate (3, alkyl sulfate); prominent buffers Cocamidopropyl Betaine (5), Lauryl Glucoside (6), Coco-Glucoside (24); no reinforcing route -> moderate. Sodium Cetearyl Sulfate (19) is paired with Cetearyl Alcohol (15) and is an emulsifier-grade fatty sulfate (C3a), not a route. Fragrance at 28.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Aloe juice at 2 and glycerin at 4 suggest a diluted, buffered system; C5 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with payload lipid in place of silicone: Helianthus Annuus Seed Oil (11) / Cetearyl Alcohol (15) + cationic Guar Hydroxypropyltrimonium Chloride (21) + fatty route Cetearyl Alcohol (15) + humectants Glycerin (4), Sodium Hyaluronate (10), Betaine (17). All prominent (Fragrance at 28).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Lipids and guar sit after Citric Acid (7) and extracts; guar is near the end; no silicone."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Converging payload lipids (sunflower oil 11, cetearyl alcohol 15), weak refatter (PCA Glyceryl Oleate 16) and cationic guar (21); W-RICH holds formally but reset is an effective C5 chassis (moderate).",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Several families but all after citric acid and extracts."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Fatty alcohol and oil modestly substantive; guar late."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C5 coco-sulfate with three buffers."
+        }
+      },
+      "whyThisBand": "Interacting light/moderate routes give bounded residue; ordinary reset.",
+      "whyNotNeighborBand": "Not low: three distinct deposition families incl. payload lipid and cationic polymer (W2). Not high: W-RICH but resetCapacity moderate, routes late, no silicone.",
+      "counterSignal": "W-RICH recorded; neighbor high per W-RICH rule (late positions argue lighter).",
+      "excluded": [
+        "Tridecane (23), Undecane (25): volatile alkanes, not persistent",
+        "Sodium Cetearyl Sulfate (19): C3a emulsifier",
+        "Citrus peel oils, Lavandula: fragrance materials"
+      ]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "Provisional. Care direction moisture_supported: humectant cluster Glycerin (4), Sodium Hyaluronate (10), Betaine (17) (+ aloe juice 2) with emollient lipids and guar.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 4",
+          "Sodium Hyaluronate 10",
+          "Betaine 17"
+        ],
+        "sharedConditioningRoutes": [
+          "Helianthus Annuus Seed Oil 11",
+          "Cetearyl Alcohol 15",
+          "PCA Glyceryl Oleate 16",
+          "Guar Hydroxypropyltrimonium Chloride 21"
+        ],
+        "repairRoutes": [
+          "Arginine 22 (trace)"
+        ],
+        "limitation": "Routes after citric acid; rinse-off."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "repair"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending positioning. CSA formula half passes: Glycerin (4), Sodium Hyaluronate (10), Betaine (17), sunflower oil (11) prominent humectant/refatting routes; no prominent comfort route.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": false,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Aloe Barbadensis Leaf Juice",
+      "position": 2,
+      "role": "plant juice (not a C2 humectant)"
+    },
+    {
+      "ingredient": "Sodium Coco-Sulfate",
+      "position": 3,
+      "role": "defining anionic, alkyl sulfate"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Lauryl Glucoside",
+      "position": 6,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Citric Acid",
+      "position": 7,
+      "role": "pH"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 10,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Helianthus Annuus (Sunflower) Seed Oil",
+      "position": 11,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Cetearyl Alcohol",
+      "position": 15,
+      "role": "payload_lipid / fatty route"
+    },
+    {
+      "ingredient": "PCA Glyceryl Oleate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Betaine",
+      "position": 17,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Sodium Cetearyl Sulfate",
+      "position": 19,
+      "role": "C3a emulsifier sulfate"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 21,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 24,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Fragrance (Parfum)",
+      "position": 28,
+      "role": "E3 point"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

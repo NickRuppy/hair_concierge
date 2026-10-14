@@ -1,0 +1,1043 @@
+[
+  {
+    "id": "annual-subject",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "d9276a5e482a37c5402537def5e5b21d51492da3d0ea925683bc68f151bf4d08",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: \"Reminder\", receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 86,
+        "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 86,
+        "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "Dein kostenloser Test endet am 21. September 2026"
+    ],
+    "intendedAssertion": "assert.equal(message.subject,",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-trial-time",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "7f96f67b6f0cb63671d07263998ead6df33e042c48789de1c9f08fb2ab415d31",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText.replace(\"12:00 Uhr MESZ\", \"10:00 Uhr UTC\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 87,
+        "text": "assert.match(message.receipt_text, /Testende: 21\\. September 2026 um 12:00 Uhr MESZ/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 87,
+        "text": "assert.match(message.receipt_text, /Testende: 21\\. September 2026 um 12:00 Uhr MESZ/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/Testende: 21\\. September 2026 um 12:00 Uhr MESZ/"
+    ],
+    "intendedAssertion": "assert.match(message.receipt_text, /Testende:",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-first-amount",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "48bd410cb1ea5bf0cea2b6d87fe846c3e082efe1d43d48c99dc03e9c006a9fb6",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText.replace(\"69,99\", \"0,00\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 88,
+        "text": "assert.match(message.receipt_text, /Erste Zahlung: 69,99\\s*€ am 21\\. September 2026/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 88,
+        "text": "assert.match(message.receipt_text, /Erste Zahlung: 69,99\\s*€ am 21\\. September 2026/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/Erste Zahlung: 69,99\\s*€ am 21\\. September 2026/"
+    ],
+    "intendedAssertion": "assert.match(message.receipt_text, /Erste Zahlung:",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-renewal",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "a15d43c982f30873e7deee0126b08daf1122cf7557a9794cd1a0b974f4ae0206",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText.replace(\"99,99\", \"0,00\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 89,
+        "text": "assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\\s*€ jährlich\\./)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 89,
+        "text": "assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\\s*€ jährlich\\./)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/Jahresmitgliedschaft: danach 99,99\\s*€ jährlich\\./"
+    ],
+    "intendedAssertion": "assert.match(message.receipt_text, /Jahresmitgliedschaft:",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-automatic-copy",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "489fc356af1046d96ac94a4d18a30147dae107de81e001a4551788b7c79415a5",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText.replace(\"Nach dem Test beginnt dein gewählter Tarif automatisch\", \"Dein Tarif startet später\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 90,
+        "text": "assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 90,
+        "text": "assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/Nach dem Test beginnt dein gewählter Tarif automatisch/"
+    ],
+    "intendedAssertion": "assert.match(message.receipt_text, /Nach dem Test",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-cancel-copy-link",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "6f3eff80200635c1a22e5b0cce9b6a1221e005452422bd39cb660f4e7f30fea5",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText.replace(\"Vor Testende kündigen: https://chaarlie.de/kuendigen\", \"Vor Testende kündigen: https://chaarlie.de/profile\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 91,
+        "text": "assert.match(message.receipt_text, /Vor Testende kündigen: https:\\/\\/chaarlie\\.de\\/kuendigen/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 91,
+        "text": "assert.match(message.receipt_text, /Vor Testende kündigen: https:\\/\\/chaarlie\\.de\\/kuendigen/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/Vor Testende kündigen: https:\\/\\/chaarlie\\.de\\/kuendigen/"
+    ],
+    "intendedAssertion": "assert.match(message.receipt_text, /Vor Testende",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-marketing-contamination",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "6694288f89f53c9862faa80ecadfd8b80db5def45d01e9a9d4b77813ab90a5dd",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText + \" Rabatt\", htmlBody: renderHtml(messageData), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 92,
+        "text": "assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 92,
+        "text": "assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression",
+      "/Rabatt|Angebot|scanner|quiz/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(message.receipt_text,",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-management-data",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "825655cee78695f927c08780ca9f4ce446307d509a4a0b46323668078ad61871",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, management_url: CANCELLATION_URL as typeof MANAGEMENT_URL } }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 93,
+        "text": "assert.equal(message.messageData.management_url, \"https://chaarlie.de/profile\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 93,
+        "text": "assert.equal(message.messageData.management_url, \"https://chaarlie.de/profile\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "https://chaarlie.de/profile"
+    ],
+    "intendedAssertion": "assert.equal(message.messageData.management_url,",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-cancel-data",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "cc529cdf41192f2a72cf92870f43d1287bfe388070c1a126cf8f7bff48065e9b",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, cancellation_url: MANAGEMENT_URL as typeof CANCELLATION_URL } }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 94,
+        "text": "assert.equal(message.messageData.cancellation_url, \"https://chaarlie.de/kuendigen\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 94,
+        "text": "assert.equal(message.messageData.cancellation_url, \"https://chaarlie.de/kuendigen\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "https://chaarlie.de/kuendigen"
+    ],
+    "intendedAssertion": "assert.equal(message.messageData.cancellation_url,",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-amount",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "d468b279db853742120f44eb46fa5df69f270b5df731eec741eb978010ab5d80",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace(\"69,99\", \"0,00\"), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 95,
+        "text": "assert.match(message.htmlBody, /69,99\\s*€/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 95,
+        "text": "assert.match(message.htmlBody, /69,99\\s*€/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/69,99\\s*€/"
+    ],
+    "intendedAssertion": "assert.match(message.htmlBody, /69,99",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-cancel",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "9e2c9ebe3bdc34894f346ca262cd9706bd8f554989aaf3f4114c24f4783760a1",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace('href=\"https://chaarlie.de/kuendigen\"', 'href=\"https://chaarlie.de/profile\"'), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 96,
+        "text": "assert.match(message.htmlBody, /href=\"https:\\/\\/chaarlie\\.de\\/kuendigen\"/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 96,
+        "text": "assert.match(message.htmlBody, /href=\"https:\\/\\/chaarlie\\.de\\/kuendigen\"/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/href=\"https:\\/\\/chaarlie\\.de\\/kuendigen\"/"
+    ],
+    "intendedAssertion": "assert.match(message.htmlBody, /href=",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-postal",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "20324af9576ec80f1996bdb39daccc61a19c02b07194334df967f5ddd85415d8",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace(\"1111B S Governors Ave # 84075\", \"ADDRESS OMITTED\"), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 97,
+        "text": "assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 97,
+        "text": "assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/1111B S Governors Ave # 84075/"
+    ],
+    "intendedAssertion": "assert.match(message.htmlBody, /1111B",
+    "proofKind": "C1",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-script",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "0a56b0e8e546dc50ddf1efefe7f090c6d79609987b4ebc3a0c45c115196b8d65",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData) + \"<script></script>\", messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 99,
+        "text": "assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 99,
+        "text": "assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression",
+      "/<script|onerror=/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(message.htmlBody, /<script",
+    "proofKind": "C2",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-unresolved-trigger",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "d009522bae08504bf8ca16c8dcb09d0128fb80748cd65f84bf1b5dc24409de52",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData) + \"{{ trigger.subject }}\", messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 100,
+        "text": "assert.doesNotMatch(message.htmlBody, /\\{\\{\\s*trigger\\./)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 100,
+        "text": "assert.doesNotMatch(message.htmlBody, /\\{\\{\\s*trigger\\./)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression",
+      "/\\{\\{\\s*trigger\\./"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(message.htmlBody, /\\{\\{",
+    "proofKind": "C2",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-html-link-inventory",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "8279301b9373bc8db345630283b0e42b050a588b45d40cb971b2a6c60d54f37a",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace('href=\"https://chaarlie.de/profile\"', 'href=\"https://chaarlie.de/removed\"'), messageData: messageData }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 101,
+        "text": "assert.deepEqual(\n    Array.from(message.htmlBody.matchAll(/href=\"([^\"]+)\"/g), (match) => match[1]),\n    [\n      \"https://chaarlie.de/profile\",\n      \"https://chaarlie.de/kuendigen\",\n      \"{% unsubscribe_url %}\",\n      \"https://chaarlie.de/impressum\",\n      \"https://chaarlie.de/datenschutz\",\n    ],\n  )",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 101,
+        "text": "assert.deepEqual(\n    Array.from(message.htmlBody.matchAll(/href=\"([^\"]+)\"/g), (match) => match[1]),\n    [\n      \"https://chaarlie.de/profile\",\n      \"https://chaarlie.de/kuendigen\",\n      \"{% unsubscribe_url %}\",\n      \"https://chaarlie.de/impressum\",\n      \"https://chaarlie.de/datenschutz\",\n    ],\n  )",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "https://chaarlie.de/removed",
+      "https://chaarlie.de/profile"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    Array.from(message.htmlBody.matchAll",
+    "proofKind": "C2",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "annual-trial-data",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "29e75e181390665e3ba6ea8acbe5f54ebfd825f5c09ae13291e525dbcda93301",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, trial_end_date: \"wrong date\" } }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 111,
+        "text": "assert.equal(message.messageData.trial_end_date, \"21. September 2026 um 12:00 Uhr MESZ\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 111,
+        "text": "assert.equal(message.messageData.trial_end_date, \"21. September 2026 um 12:00 Uhr MESZ\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "21. September 2026 um 12:00 Uhr MESZ"
+    ],
+    "intendedAssertion": "assert.equal(message.messageData.trial_end_date,",
+    "proofKind": "C2",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "stripe-charge-data",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "f0956bbd1c84ff62f04cb6bffd4dc9dae40d856e9525412381f171689c27edd7",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, first_charge_date: \"22. September 2026\" } }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 113,
+        "text": "assert.equal(message.messageData.first_charge_date, \"21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 113,
+        "text": "assert.equal(message.messageData.first_charge_date, \"21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "21. September 2026"
+    ],
+    "intendedAssertion": "assert.equal(message.messageData.first_charge_date,",
+    "proofKind": "C3",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "stripe-subject-data",
+    "file": "src/lib/billing/trial-reminders.ts",
+    "sourceSha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "mutatedSha256": "8c6364a8ebed2ae29053cacd22c7db9213f0c4eb9d91ad5eed6015193d0a5d79",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialReminderMessage",
+      "scopeSha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c",
+      "expectedOccurrences": 1
+    },
+    "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+    "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, subject: \"22. September 2026\" } }",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 114,
+        "text": "assert.match(message.messageData.subject, /21\\. September 2026/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 114,
+        "text": "assert.match(message.messageData.subject, /21\\. September 2026/)",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "/21\\. September 2026/"
+    ],
+    "intendedAssertion": "assert.match(message.messageData.subject,",
+    "proofKind": "C3",
+    "oldDonorSensitivity": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "meta-aggregate-url",
+    "file": "src/lib/analytics/page-url.ts",
+    "sourceSha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+    "mutatedSha256": "ad8425c5e9ccb988d6fe400592b9dcd62bef912346eb4f0d32521d9bf60f314d",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+      "expectedOccurrences": 1
+    },
+    "from": "export const META_OFFER_EVENT_SOURCE_URL = \"https://chaarlie.de/result\"",
+    "to": "export const META_OFFER_EVENT_SOURCE_URL = \"https://chaarlie.de/result/lead-123\"",
+    "test": {
+      "file": "tests/meta-offer-view.test.ts",
+      "name": "Meta offer delivery requires recent quiz evidence and constructs the canonical event"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^Meta offer delivery requires recent quiz evidence and constructs the canonical event$",
+      "tests/meta-offer-view.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 190,
+        "text": "assert.deepEqual(conversions, [\n    {\n      eventName: \"ViewContent\",\n      eventId: payload.metaEventId,\n      eventSourceUrl: \"https://chaarlie.de/result\",\n      user: {\n        clientIpAddress: \"203.0.113.7\",\n        clientUserAgent: undefined,\n        email: \"person@example.com\",\n        externalId: payload.leadId,\n        fbc: undefined,\n        fbp: undefined,\n        name: \"Änne Müller\",\n      },\n      customData: { content_name: \"quiz_result_offer_view\" },\n    },\n  ])",
+        "keeperSha256": "23f26b67e97390b64d13f1c1bac838f4b176c7e216f54e9e24aefe0479941e23",
+        "testFileSha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6"
+      },
+      "cut": {
+        "startLine": 190,
+        "text": "assert.deepEqual(conversions, [\n    {\n      eventName: \"ViewContent\",\n      eventId: payload.metaEventId,\n      eventSourceUrl: \"https://chaarlie.de/result\",\n      user: {\n        clientIpAddress: \"203.0.113.7\",\n        clientUserAgent: undefined,\n        email: \"person@example.com\",\n        externalId: payload.leadId,\n        fbc: undefined,\n        fbp: undefined,\n        name: \"Änne Müller\",\n      },\n      customData: { content_name: \"quiz_result_offer_view\" },\n    },\n  ])",
+        "keeperSha256": "23f26b67e97390b64d13f1c1bac838f4b176c7e216f54e9e24aefe0479941e23",
+        "testFileSha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "https://chaarlie.de/result/lead-123",
+      "https://chaarlie.de/result"
+    ],
+    "intendedAssertion": "assert.deepEqual(conversions, [",
+    "proofKind": "C4",
+    "oldDonorSensitivity": "Original exact URL assertion fails; includes literal lead-123 is also false-to-true. Existing actual conversion keeper catches identical value corruption.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  },
+  {
+    "id": "dispatcher-message-substitution",
+    "file": "src/lib/billing/trial-reminders-delivery.ts",
+    "sourceSha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e",
+    "mutatedSha256": "0dd182c3f2606c2b49f7edeffdad9701d7407fcd269135dbfddaa8c13c2448d1",
+    "anchor": {
+      "kind": "function",
+      "scope": "dispatchTrialReminders",
+      "scopeSha256": "add5fd269f6eba8621acf27ff0a784e58474f870000722e42c4a95b44cfd1eb4",
+      "expectedOccurrences": 1
+    },
+    "from": "          sender: d.sender.trim(),\n          message,",
+    "to": "          sender: d.sender.trim(),\n          message: { ...message, subject: \"Reminder\" },",
+    "test": {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+      "tests/trial-reminders-delivery.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 86,
+        "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      },
+      "cut": {
+        "startLine": 86,
+        "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+        "keeperSha256": "2c17101afe693f3fc7722278f9bbb52b83ded0ae472cf1e273a1ad3457ee3ae1",
+        "testFileSha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "Dein kostenloser Test endet am 21. September 2026"
+    ],
+    "intendedAssertion": "assert.equal(message.subject,",
+    "proofKind": "C1-C3-extra-delivery-strength",
+    "oldDonorSensitivity": "Original direct renderer donors survive this delivery-only fault; control proves new boundary strength, not original donor sensitivity.",
+    "messageMatcherProvenance": "Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven."
+  }
+]

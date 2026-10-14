@@ -20,8 +20,6 @@ import {
   applyLeaveInCalibration,
   classifyLeaveInCalibrationRun,
   buildLeaveInCalibrationPackage,
-  buildLeaveInCalibrationSnapshot,
-  leaveInCalibrationTargetFingerprint,
   parseLeaveInCalibrationApplyArgs,
   preflightLeaveInCalibration,
   verifyLeaveInCalibration,
@@ -157,21 +155,6 @@ test("the committed batch covers all nine calibration targets on the shared cont
   }
 })
 
-test("every manifest pins the fingerprint of the snapshot it was built from", () => {
-  for (const target of LEAVE_IN_CALIBRATION_TARGETS) {
-    const manifest = manifestFor(target.product_key)
-    const rebuilt = buildLeaveInCalibrationSnapshot(
-      target.product_id,
-      liveRowsFrom(manifest.current_catalog_target, manifest.research.live_protocol_roles),
-    )
-    assert.equal(
-      manifest.target_fingerprint,
-      leaveInCalibrationTargetFingerprint(rebuilt),
-      target.product_key,
-    )
-  }
-})
-
 test("planned spec rows are the frozen projection verbatim", () => {
   for (const target of LEAVE_IN_CALIBRATION_TARGETS) {
     const manifest = manifestFor(target.product_key)
@@ -233,6 +216,18 @@ test("preflight is read-only and gates on the publication dependency the apply w
   assert.equal(report.writes, false)
   assert.equal(report.summary.products, 9)
   assert.equal(report.summary.staleFingerprints, 0)
+  assert.equal(report.products.length, LEAVE_IN_CALIBRATION_TARGETS.length)
+  for (const target of LEAVE_IN_CALIBRATION_TARGETS) {
+    const product = report.products.find((entry) => entry.product_key === target.product_key)
+    assert.ok(product, target.product_key)
+    assert.equal(product.target_product_id, target.product_id)
+    assert.equal(product.target_fingerprint_matches, true, target.product_key)
+    assert.equal(
+      product.live_fingerprint,
+      manifestFor(target.product_key).target_fingerprint,
+      target.product_key,
+    )
+  }
   assert.equal(report.summary.totalDeleteRows, 27)
   for (const product of report.products) {
     const types = product.execution_order.map((operation) => operation.type)

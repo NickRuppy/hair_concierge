@@ -87,6 +87,10 @@ Exact, routine edits with no unresolved consequential choice, and faithful imple
 
 ## Orchestration
 
+### Verification resource budget
+
+Follow `docs/coding-verification.md`: use focused owner/sibling checks during iteration, queue heavy checks through the shared launcher, and consolidate required final verification in the orchestrator. Reuse valid evidence for unchanged content/environment; advisory reviewers identify a concrete gap before running more checks. Keep full CI contracts intact. Do not run `test:node` and the overlapping broad `test:personal-plan` in parallel; use the nested-only complement when combining suites. Raw commands and older worktrees use `~/.local/bin/coding-check -- <command> <args...>`; do not double-wrap gated npm scripts.
+
 The main session owns user intent, product and architecture decisions, decomposition, worktree and write-scope decisions, integration, final verification, artifact disposition, and the user-facing handoff.
 
 Delegate only bounded, independently executable work when parallelism materially helps or when noisy exploration would harm the main context. Prefer:

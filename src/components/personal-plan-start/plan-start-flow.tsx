@@ -29,6 +29,11 @@ import {
   type PersonalPlanTransitionDirection,
   type Stage1PreviewLoadState,
 } from "@/components/personal-plan-journey"
+import {
+  TOOL_CHECKPOINT_ADD_TOOLS_HREF,
+  ToolCheckpoint,
+} from "@/components/personal-plan-refinement/tool-checkpoint"
+import { BudgetQuestion } from "@/components/budget/budget-question"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
 import {
@@ -40,6 +45,7 @@ import {
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
 import { stage3BaselineAnalytics } from "@/lib/personal-plan/products/stage3-analytics"
+import { toolAnalytics } from "@/lib/personal-plan/tools/analytics"
 import {
   Stage3BootstrapContractError,
   type Stage3BootstrapContractViolation,
@@ -63,6 +69,11 @@ import {
   type Stage2ModuleRecomputeOutcome,
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import {
+  buildToolCheckpointGroups,
+  toolCheckpointAnalyticsCounts,
+  toolCheckpointInventory,
+} from "@/lib/personal-plan/tools/checkpoint"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 import {
   isStage1ProductExamplePreviewResponse,
@@ -96,11 +107,23 @@ export type PlanStartReadyViewModel = {
 }
 
 export type PlanStartInitialJourney =
-  | { stage: "stage1"; refinementAvailable?: boolean; directAcceptanceAvailable?: boolean }
+  | {
+      stage: "stage1"
+      refinementAvailable?: boolean
+      directAcceptanceAvailable?: boolean
+      /** See the shared note on `shoppingBudgetRequired` on the Stage-2 variant. */
+      shoppingBudgetRequired?: boolean
+    }
   | {
       stage: "stage2"
       refinementAvailable?: boolean
       directAcceptanceAvailable?: boolean
+      /**
+       * Server-projected: the shopping-budget gate is on and no budget is saved, so the
+       * Idealplan CTA asks the budget question before it can accept (journey 5). Absent = no
+       * budget step. The accept route re-checks it (`budget_required`) either way.
+       */
+      shoppingBudgetRequired?: boolean
       /**
        * Explicit Stage-2 re-entry (`/plan-start?refine=1`, the Routine
        * refinement nudge). Suppresses the bridge auto-handoff exactly like the
@@ -259,18 +282,6 @@ export function planStartRefinementExitDestination(
   return isPostAcceptModuleEntry(initialJourney) ? "routine" : "stage1"
 }
 
-/**
- * Whether the post-accept loop's chapter screens must stay suppressed for this
- * journey (field test 26.08.2026). Keyed on SCOPE alone: an explicit module
- * deep link is a directed request in both cohorts, and the escape-hatch arrival
- * must not regain the retired ceremony just because its plan is not live yet.
- */
-export function planStartSuppressesChapterCeremony(
-  initialJourney: PlanStartInitialJourney,
-): boolean {
-  return isExplicitModuleRefinementEntry(initialJourney)
-}
-
 export type PlanStartStage3BootstrapSource = "initial" | "stage2_handoff" | "correction"
 export type PlanStartStage3BootstrapMode = "baseline" | "optional_inventory"
 
@@ -316,6 +327,36 @@ export function moduleCompletionRoutineHref(
   return isPostAcceptModuleEntry(initialJourney) && recomputeOutcome === "applied"
     ? withRoutinePlanUpdatedSignal("/routine")
     : "/routine"
+}
+
+export type PlanStartModuleCompletionEffect =
+  | { kind: "open_routine"; href: string }
+  | { kind: "tools_checkpoint"; session: Stage2RefinementSession }
+
+/**
+ * Where a module that hands back to the host goes (Hair Tools port, Task 10).
+ *
+ *  - `tools` → the Tool-Checkpoint „Das hast du schon", once, before the Routine. A tools
+ *    completion recomputes nothing, so its way on is a plain `/routine` (the Routine then shows
+ *    the Gewohnheiten banner while that module is open) — never the „Plan aktualisiert" signal.
+ *    The checkpoint lives only in host state: a refresh or a later visit does not bring it back.
+ *  - everything else (`habits`; `products` never gets here — it bridges into Stage 3) → the
+ *    Routine, exactly as before (`moduleCompletionRoutineHref`).
+ *
+ * With the rollout off the tools module has no question, so it can never complete and this
+ * branch is unreachable.
+ */
+export function planStartModuleCompletionEffect(
+  initialJourney: PlanStartInitialJourney,
+  payload: Stage2ModuleCompletionPayload,
+): PlanStartModuleCompletionEffect {
+  if (payload.moduleCompletion.module === "tools") {
+    return { kind: "tools_checkpoint", session: payload.session }
+  }
+  return {
+    kind: "open_routine",
+    href: moduleCompletionRoutineHref(initialJourney, payload.moduleCompletion.recompute?.outcome),
+  }
 }
 
 /**
@@ -483,7 +524,11 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
     body.status === "completed" &&
     "outputSnapshot" in body
   ) {
-    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot)
+    // The Stage-1 route resolves the Hair Tools rollout server-side and echoes it; the browser
+    // only relays that echo to the adapter, it never decides it (absent means off).
+    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot, {
+      toolsEnabled: "toolsEnabled" in body && body.toolsEnabled === true,
+    })
     const personalPlanId =
       "personalPlanId" in body && typeof body.personalPlanId === "string"
         ? body.personalPlanId
@@ -531,9 +576,13 @@ export function PlanStartProductionGate({
   useEffect(() => {
     if (canBootstrapLaterStage || !shouldRequestPlanStartOnMount(initialPlan)) return
     let cancelled = false
-    void requestPlanStart().then(
+    void (async () => {
+      await Promise.resolve()
+      if (cancelled) return
+      return requestPlanStart()
+    })().then(
       (nextState) => {
-        if (!cancelled) setState(nextState)
+        if (!cancelled && nextState) setState(nextState)
       },
       () => {
         if (!cancelled) setState({ state: "retryable_error" })
@@ -722,6 +771,32 @@ export async function requestAcceptIdealPlan(
 export type PlanStartAcceptStatus = "idle" | "pending" | "error" | "unavailable"
 
 /**
+ * How many previewed roles show a different product (or none) once the proposal is re-derived
+ * under the freshly saved budget. Roles that show no product before and after do not count.
+ */
+export function countPlanStartBudgetSwaps(
+  before: Stage1ProductExamplePreviewResponse | null,
+  after: Stage1ProductExamplePreviewResponse,
+): number {
+  const productByRole = (response: Stage1ProductExamplePreviewResponse | null) =>
+    new Map(
+      (response?.previews ?? []).flatMap((preview) =>
+        preview.kind === "recommendation" ? [[preview.decisionKey, preview.productId]] : [],
+      ),
+    )
+  const previous = productByRole(before)
+  const next = productByRole(after)
+  const roles = new Set([...previous.keys(), ...next.keys()])
+  return [...roles].filter((role) => previous.get(role) !== next.get(role)).length
+}
+
+/** The note on the adjusted proposal after the budget question (journey 5). */
+export function planStartBudgetAdjustedNotice(swapCount: number): string {
+  if (swapCount === 0) return "Passt schon zu deinem Budget. Nichts getauscht."
+  return `An dein Budget angepasst: ${swapCount} ${swapCount === 1 ? "Produkt" : "Produkte"} getauscht.`
+}
+
+/**
  * What the Idealplan CTA says and whether it is blocked. The CTA speaks for
  * whatever it is actually doing: once acceptance has handed off to the
  * Feinschliff — because it is not offered, because the server sent us there, or
@@ -776,10 +851,29 @@ export function PlanStartCustomerJourney({
   replaceRoute?: (href: string) => void
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
+  /**
+   * The host stage after a tools completion: the Tool-Checkpoint over the session the module
+   * completed with. Host state only, so it shows once per completion (see
+   * `planStartModuleCompletionEffect`).
+   */
+  const [toolsCheckpoint, setToolsCheckpoint] = useState<{
+    session: Stage2RefinementSession
+  } | null>(null)
   const [acceptStatus, setAcceptStatus] = useState<PlanStartAcceptStatus>("idle")
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
+  /** No budget saved yet: the accept CTA opens the budget question first (journey 5). */
+  const [shoppingBudgetRequired, setShoppingBudgetRequired] = useState(
+    () =>
+      initialJourney.stage !== "stage3" &&
+      initialJourney.shoppingBudgetRequired === true &&
+      // An accepted plan keeps its existing behaviour: the accept resolves as
+      // `plan_already_accepted`, never as a budget question.
+      !isAcceptedPlanJourney(initialJourney),
+  )
+  const [budgetStepOpen, setBudgetStepOpen] = useState(false)
+  const [budgetNotice, setBudgetNotice] = useState<string | null>(null)
   /**
    * The Stage-1 preview request this render would make, or `null` when previews
    * are not requestable at all. One fact with three consumers — the effect that
@@ -843,6 +937,10 @@ export function PlanStartCustomerJourney({
     // read as "the user saw nothing", so failure is retried once and then
     // recorded — the CTA routes into the refinement rather than accepting blind.
     void (async () => {
+      // Hydration can replay effects. Let cleanup cancel the discarded setup before
+      // it starts a request; the surviving setup still owns the one silent retry.
+      await Promise.resolve()
+      if (cancelled) return
       for (let attempt = 0; attempt < 2; attempt += 1) {
         try {
           const response = await requestStage1ProductExamplePreviews({
@@ -989,9 +1087,13 @@ export function PlanStartCustomerJourney({
   useEffect(() => {
     if (initialJourney.stage !== "stage3") return
     let cancelled = false
-    void loadStage3Bootstrap(initialJourney.refinedVersionId).then(
+    void (async () => {
+      await Promise.resolve()
+      if (cancelled) return
+      return loadStage3Bootstrap(initialJourney.refinedVersionId)
+    })().then(
       (loaded) => {
-        if (cancelled) return
+        if (cancelled || !loaded) return
         installNewStage3Bootstrap(loaded)
         setStage3LoadState("idle")
       },
@@ -1090,6 +1192,12 @@ export function PlanStartCustomerJourney({
       openRefinementRoute()
       return
     }
+    // The budget question comes first; this tap never accepts (journey 5).
+    if (shoppingBudgetRequired) {
+      setBudgetNotice(null)
+      setBudgetStepOpen(true)
+      return
+    }
     setAcceptStatus("pending")
     const effect = await runAcceptIdealPlanFlow({
       seenRoles,
@@ -1117,6 +1225,14 @@ export function PlanStartCustomerJourney({
       void enterStage2()
       return
     }
+    if (effect.kind === "ask_budget") {
+      // The server found no saved budget (the projection was stale): nothing was written.
+      setAcceptStatus("idle")
+      setShoppingBudgetRequired(true)
+      setBudgetNotice(null)
+      setBudgetStepOpen(true)
+      return
+    }
     if (effect.kind === "open_refinement_route") {
       // The refinement produces an accepted plan too, so this is a detour, not
       // a failure. The CTA relabels to the Feinschliff while the route resolves.
@@ -1133,7 +1249,33 @@ export function PlanStartCustomerJourney({
     plan?.sourceInputHash,
     resolvedPreviewLoadState,
     seenRoles,
+    shoppingBudgetRequired,
   ])
+
+  /**
+   * After a saved budget the proposal is re-derived (the previews are budget-aware now) and
+   * shown again with how many products changed. Accepting takes a fresh, explicit tap.
+   */
+  const handleBudgetSaved = useCallback(() => {
+    const before = productExamplePreviews
+    setShoppingBudgetRequired(false)
+    setBudgetStepOpen(false)
+    if (!plan?.personalPlanId || !plan.sourceInputHash) return
+    const request = { personalPlanId: plan.personalPlanId, sourceInputHash: plan.sourceInputHash }
+    setPreviewLoadState("loading")
+    void (async () => {
+      try {
+        const refreshed = await requestStage1ProductExamplePreviews(request)
+        setProductExamplePreviews(refreshed)
+        setPreviewLoadState("ready")
+        setBudgetNotice(planStartBudgetAdjustedNotice(countPlanStartBudgetSwaps(before, refreshed)))
+      } catch {
+        // Same rule as the first load: a proposal we could not re-derive is never accepted
+        // blind — the CTA routes into the refinement instead.
+        setPreviewLoadState("unavailable")
+      }
+    })()
+  }, [plan?.personalPlanId, plan?.sourceInputHash, productExamplePreviews])
 
   const { intent: ctaIntent, status: ctaStatus } = planStartCtaState({
     acceptAvailable,
@@ -1161,6 +1303,20 @@ export function PlanStartCustomerJourney({
     [initialJourney, replaceRoute],
   )
 
+  if (toolsCheckpoint) {
+    return (
+      <ToolCheckpoint
+        groups={buildToolCheckpointGroups(toolCheckpointInventory(toolsCheckpoint.session))}
+        onContinue={() => openRoutineHref("/routine")}
+        onAddTools={() => {
+          // `router.replace` keeps this host mounted, so the checkpoint state must go BEFORE
+          // navigating: otherwise the refreshed edit entry renders underneath it, unreachable.
+          setToolsCheckpoint(null)
+          replaceRoute(TOOL_CHECKPOINT_ADD_TOOLS_HREF)
+        }}
+      />
+    )
+  }
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
     const initialStage2Session = stage2SeedRef.current
@@ -1188,17 +1344,22 @@ export function PlanStartCustomerJourney({
         }
         onHandoff={handleHandoff}
         onModuleComplete={(payload: Stage2ModuleCompletionPayload) => {
-          // Modul 2 without a Stage-3 handoff (habits first), OR the closing
-          // module on a post-accept run (Task 2.1): the user belongs back on
-          // their Routine. The "Plan aktualisiert" toast (Task 2.6) rides
-          // along only when the server actually recomputed it (Task 2.2) —
-          // see `moduleCompletionRoutineHref`.
-          openRoutineHref(
-            moduleCompletionRoutineHref(
-              initialJourney,
-              payload.moduleCompletion.recompute?.outcome,
-            ),
-          )
+          // A module without a Stage-3 handoff, OR the closing module on a
+          // post-accept run (Task 2.1). Tools → the Tool-Checkpoint first;
+          // otherwise the user belongs back on their Routine, with the "Plan
+          // aktualisiert" toast (Task 2.6) only when the server actually
+          // recomputed it (Task 2.2) — see `planStartModuleCompletionEffect`.
+          const effect = planStartModuleCompletionEffect(initialJourney, payload)
+          if (effect.kind === "tools_checkpoint") {
+            const inventory = toolCheckpointInventory(effect.session)
+            toolAnalytics.track(
+              "personal_plan_tools_checkpoint_viewed",
+              toolCheckpointAnalyticsCounts(inventory, buildToolCheckpointGroups(inventory)),
+            )
+            setToolsCheckpoint({ session: effect.session })
+            return
+          }
+          openRoutineHref(effect.href)
         }}
         autoHandoff={!returningToRefinement}
         stageEntrance={stage2EnteredLocally}
@@ -1285,6 +1446,15 @@ export function PlanStartCustomerJourney({
     return <PlanStartLoading />
   }
 
+  if (budgetStepOpen) {
+    return (
+      <PlanStartBudgetScreen
+        onSaved={handleBudgetSaved}
+        onCancel={() => setBudgetStepOpen(false)}
+      />
+    )
+  }
+
   return (
     <PlanStartFlow
       state="ready"
@@ -1294,7 +1464,8 @@ export function PlanStartCustomerJourney({
       }
       nextIntent={ctaIntent}
       nextStatus={ctaStatus}
-      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : null}
+      budgetFirst={acceptAvailable && shoppingBudgetRequired}
+      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : budgetNotice}
       initialStep={stage1ReturnStepRef.current}
       onContinue={(sourceStep) => {
         stage1ReturnStepRef.current = sourceStep
@@ -1337,6 +1508,8 @@ export function PlanStartFlow(
     nextIntent?: NeedPlanScreenNextIntent
     nextStatus?: NeedPlanScreenNextStatus
     nextNotice?: string | null
+    /** The accept CTA opens the budget question first and reads „Weiter". */
+    budgetFirst?: boolean
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -1372,6 +1545,7 @@ export function PlanStartFlow(
           nextIntent={nextIntent}
           nextStatus={props.nextStatus}
           nextNotice={props.nextNotice}
+          budgetFirst={props.budgetFirst}
           onNext={
             canContinue && props.onContinue ? () => props.onContinue?.("optional") : undefined
           }
@@ -1384,6 +1558,7 @@ export function PlanStartFlow(
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
         nextIntent={nextIntent}
+        budgetFirst={props.budgetFirst}
         {...(hasOptionalPage ? {} : { nextStatus: props.nextStatus, nextNotice: props.nextNotice })}
         onNext={
           hasOptionalPage
@@ -1439,6 +1614,27 @@ export function PlanStartFlow(
         </PersonalPlanStageEntrance>
       </div>
     </>
+  )
+}
+
+/**
+ * The budget question in front of a direct acceptance (journey 5). „Abbrechen" and the header's
+ * back both return to the proposal without accepting or storing anything.
+ */
+export function PlanStartBudgetScreen({
+  onSaved,
+  onCancel,
+}: {
+  onSaved: () => void
+  onCancel: () => void
+}) {
+  return (
+    <section className="min-h-dvh bg-[var(--background)]" data-plan-start-state="budget">
+      <PlanStartHeader stageLabel="Plan" onBack={onCancel} />
+      <main className="mx-auto w-full max-w-[430px] px-3 pb-10 pt-4 sm:max-w-[560px] sm:px-5">
+        <BudgetQuestion onSaved={onSaved} onCancel={onCancel} />
+      </main>
+    </section>
   )
 }
 

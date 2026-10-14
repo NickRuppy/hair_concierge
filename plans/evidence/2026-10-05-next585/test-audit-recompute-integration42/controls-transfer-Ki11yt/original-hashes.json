@@ -1,0 +1,4 @@
+{
+  "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+  "src/lib/personal-plan/routine-proposal-stager.ts": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b"
+}

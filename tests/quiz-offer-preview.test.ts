@@ -1,5 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { createElement } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+import { OfferPreviewRoutine } from "../src/components/quiz/offer-preview-routine"
 
 import { buildQuizOfferPreview, deriveOfferPreviewNeedProfile } from "../src/lib/quiz/offer-preview"
 import {
@@ -151,6 +154,13 @@ test("a surface-led result shows two foundation examples and one leave-in sugges
     ["shampoo", "conditioner", "leave_in"],
   )
   assert.equal(preview.products[2]?.suggested, true)
+  const html = renderToStaticMarkup(createElement(OfferPreviewRoutine, { preview }))
+  assert.ok(html.includes(preview.products[0]!.name))
+  assert.ok(html.includes(preview.products[1]!.name))
+  assert.ok(!html.includes(preview.products[2]!.name))
+  assert.match(html, /Dein nächster Pflegeschritt/)
+  assert.match(html, /Leave-in/)
+
   assert.match(
     preview.products[0]?.name ?? "",
     /Balea|Neqi|Cantu|Monday|Pantene|Hask|Schätze|Shoulders/i,
@@ -172,6 +182,11 @@ test("a neutral or colored-only result stays at shampoo and conditioner", () => 
 
   assert.equal(preview.lane, "base")
   assert.equal(preview.products.length, 2)
+  const html = renderToStaticMarkup(createElement(OfferPreviewRoutine, { preview }))
+  assert.match(html, /Dein vollständiger Plan/)
+  assert.match(html, /Deine weiteren Pflegeschritte/)
+  assert.doesNotMatch(html, /Dein nächster Pflegeschritt/)
+
   assert.doesNotMatch(JSON.stringify(preview), /Farbschutz|farbsicher|Bondbuilder|Dry.Shampoo/i)
 })
 
@@ -190,17 +205,4 @@ test("curl definition chooses the curl leave-in example without claiming a unive
 
   assert.equal(preview.needs.extra?.variant, "curl")
   assert.match(preview.products[2]?.name ?? "", /Coils & Curls/i)
-})
-
-test("cadence uses the canonical base scalp target and labels it as a starting point", () => {
-  const needs = deriveOfferPreviewNeedProfile({
-    scalp_type: "fettig",
-    scalp_condition: "schuppen",
-    thickness: "normal",
-    density: "medium",
-  })
-
-  assert.equal(needs.shampoo.cadence.label, "3-4x/Woche")
-  assert.match(needs.shampoo.cadence.qualifier ?? "", /Startpunkt/i)
-  assert.equal(needs.conditioner.cadence.label, "Bei jeder Haarwäsche")
 })

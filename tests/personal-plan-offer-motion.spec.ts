@@ -150,6 +150,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
       expect(afterBox!.width).toBeCloseTo(beforeBox!.width, 1)
       expect(afterBox!.height).toBeCloseTo(beforeBox!.height, 1)
       expect(beforeBox!.height).toBeCloseTo(44, 1)
+      if (viewport.width >= 640) expect(beforeBox!.width).toBeCloseTo(160, 1)
       expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth)
       expect(geometry.wordmarkRight).toBeLessThanOrEqual(geometry.ctaLeft ?? 0)
 
@@ -177,6 +178,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
 
     const stickyCta = page.locator("[data-offer-sticky-cta]")
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "pricing")
+    await expect(stickyCta).toHaveAttribute("data-offer-cta", "sticky_header")
     await expect(stickyCta).toHaveAttribute("data-offer-source-section", "hero")
     await expect(stickyCta).toHaveAttribute("data-offer-sticky-state", "before_pricing")
     await expect(stickyCta).toHaveText("Angebot ansehen")
@@ -189,6 +191,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await expect(stickyCta).toHaveAttribute("data-offer-sticky-state", "after_pricing")
 
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "checkout")
+    await expect(stickyCta).toHaveAttribute("data-offer-cta", "sticky_header")
     await expect(stickyCta).toHaveAttribute("data-offer-source-section", "pricing")
     await expect(stickyCta).toHaveAttribute("data-offer-selected-interval", "quarter")
     await expect(stickyCta).toContainText("Quartal · €34,99")
@@ -245,9 +248,11 @@ test.describe("@ci personal plan offer motion hooks", () => {
 
     const stickyCta = page.locator("[data-offer-sticky-cta]")
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "pricing")
+    await expect(stickyCta).toHaveAttribute("data-offer-cta", "sticky_header")
     await expect(stickyCta).toHaveAttribute("data-offer-source-section", "hero")
     await revealPricing(page)
     await expect(stickyCta).toHaveAttribute("data-offer-destination", "checkout")
+    await expect(stickyCta).toHaveAttribute("data-offer-cta", "sticky_header")
     await expect(stickyCta).toHaveAttribute("data-offer-source-section", "pricing")
     await expect(stickyCta).not.toHaveAttribute("data-offer-selected-interval")
     await expect(stickyCta).toContainText("Haarplan")

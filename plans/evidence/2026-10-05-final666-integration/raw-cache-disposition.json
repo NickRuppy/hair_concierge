@@ -1,0 +1,13 @@
+{
+  "directory": "/tmp/test-audit-retirement-final666-retry-proof/tmp",
+  "files": 2329,
+  "bytes": 4599459990,
+  "canonicalArchive": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/plans/evidence/2026-10-05-final666-integration",
+  "canonicalHashVerification": true,
+  "closedResult": {
+    "status": 1,
+    "signal": null,
+    "elapsedMs": 394254
+  },
+  "rawCacheOnly": true
+}

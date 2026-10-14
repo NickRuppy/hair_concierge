@@ -3,8 +3,6 @@ import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
-  getCommitHeading,
-  getLoadingHeading,
   getQuizTransitionPhase,
   QUIZ_TRANSITION_LOADING_MS,
   QUIZ_TRANSITION_READY_BEAT_MS,
@@ -36,13 +34,6 @@ test("phase resolution: commit until tapped, loading until elapsed AND ready, th
     getQuizTransitionPhase({ committed: true, loadingElapsed: true, ready: true }),
     "ready",
   )
-})
-
-test("headings personalize with a trimmed name and fall back grammatically", () => {
-  assert.equal(getCommitHeading(" Lena "), "Lena, bereit für den nächsten Schritt mit deinem Haar?")
-  assert.equal(getCommitHeading("  "), "Bereit für den nächsten Schritt mit deinem Haar?")
-  assert.equal(getLoadingHeading("Lena"), "Einen Moment, Lena.")
-  assert.equal(getLoadingHeading(""), "Einen Moment.")
 })
 
 test("loading beat holds for its minimum and cleanup cancels it", (context) => {
@@ -124,10 +115,10 @@ test("pending commit disables both buttons against double taps", () => {
 
 test("loading view shows the quiet beat copy with a status region and shimmer bar", () => {
   const html = renderToStaticMarkup(
-    <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="loading" />,
+    <QuizAnalysisView commitPending name=" Lena " onCommit={() => {}} phase="loading" />,
   )
 
-  assert.match(html, /Einen Moment, Lena\./)
+  assert.match(html, />Einen Moment, Lena\.</)
   assert.match(html, /Deine Haaranalyse wird erstellt\./)
   assert.match(html, /role="status"/)
   assert.match(html, /quiz-shimmer-bar/)
@@ -142,13 +133,14 @@ test("loading view carries the scan package's own line, not the post-purchase on
     <QuizAnalysisView
       commitPending
       copy={getQuizFunnelCopy("scan_v1")}
-      name="Lena"
+      name=""
       onCommit={() => {}}
       phase="loading"
     />,
   )
 
-  assert.match(html, /Einen Moment, Lena\./)
+  assert.match(html, />Einen Moment\.</)
+  assert.doesNotMatch(html, />Einen Moment,\s*\.</)
   assert.match(html, /Wir legen dein Haarprofil an\./)
   assert.match(html, /an deinem Haar – nicht am Durchschnitt\./)
   assert.doesNotMatch(html, /richten deinen Scanner ein/)

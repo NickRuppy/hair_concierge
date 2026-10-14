@@ -1,0 +1,15 @@
+# Paused cleanup checkpoint — 2026-10-06
+
+Nick requested pausing further pruning and committing all applied cleanup. No active formal Goal exists; all internal agents have closed. Pending profile/onboarding and browser proposals remain unapplied. Applied count:676 net test declaration removals (5.68%);11,216 declarations remain. Net source/test/support reduction:20,160 lines (9,387 application/tooling;10,773 tests/support). The20% target remains unfinished.
+
+Typecheck, lint and production build closed0. Full native/c8 closed1:11,329 cases,11,287 pass,27 fail,15 unchanged skips,0 cancelled.26 failures match the accepted baseline; one additional unchanged price-audit hostile-input test exceeded its1000ms wall-clock assertion (1323.931333ms). An isolated unchanged nine-case suite recheck closed0, with that case at15.866083ms. This does not turn the full run green. No threshold or test edits were made to resolve it.
+
+Actual global coverage changes from the original totals: lines/statements+0.348323pp;functions+0.208336pp;branches+0.028404pp. A conservative original-denominator lower bound remains within2pp, worst loss1.579827pp. Original baseline coverage-summary/TAP are no longer available at their TMP paths; original totals and failure names are taken from the accepted666 comparison, with666-to676 per-path denominator increases charged pessimistically. This is a bound, not an exact rerun of the missing original-path comparison. Raw per-file preservation is not newly certified.
+
+The10,280-path freeze retained the same membership and task identity. All source, tests, tooling, migrations and selected dependency bytes match; shared.git/config and.git/packed-refs drifted, so the unmodified strict freeze check failed and its failure is preserved. This is not source drift, and shared Git metadata is not restored. The checkpoint JSON records both hash pairs without copying raw shared configuration.
+
+All canonical coverage/TAP/commands, CI output, original freeze and failed verification, census, LOC and bound calculation are indexed. Raw V8 cache remains outside the repository. Artifact index hashes were checked after copying. Fresh-main reconciliation and counterpart review remain publication gates. This receipt records a local commit checkpoint; it does not authorize push, PR, merge or production writes.
+
+Staged implementation and plan whitespace checks pass. Whole staged whitespace checking also reads byte-exact archived TAP, snapshots and diffs; it reports historical whitespace in evidence files only. Those sealed artifacts remain unchanged to preserve their verified hashes.
+
+The normal pre-commit hook passed eslint/prettier and typecheck. It removed one additional blank line in src/lib/agent/compare/types.ts; the exact diff against its hook backup contains only that blank line. Final committed net reduction is20,161 lines (9,388 application/tooling;10,773 tests/support), across440 implementation paths. Earlier indexed census/LOC and freeze artifacts describe the pre-hook bytes and remain unchanged. The count stays676 test declarations.

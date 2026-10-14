@@ -1,0 +1,82 @@
+[
+  {
+    "id": "D1-ratio",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sourceSHA256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "to": "return washes / (weeks.size + 1)",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "shampoo cadence is the measured wash rhythm, not the self-report"
+    },
+    "intendedAssertion": "keeper shampoo.weeklyCadence literal 2 fails; donor also fails before cut",
+    "from": "return washes / weeks.size"
+  },
+  {
+    "id": "D2-missing-observation",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sourceSHA256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "to": "if (weeks.size < 2) return 0",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)"
+    },
+    "intendedAssertion": "keeper finds emitted shampoo instead of undefined; donor null also fails before cut",
+    "from": "if (weeks.size < 2) return null"
+  },
+  {
+    "id": "C1-basis",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sourceSHA256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "to": "      basis: \"wash_share\",",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "custom and unconfirmed days do not affect cadence denominators or category usage"
+    },
+    "intendedAssertion": "transferred mask.basis day_level fails; original keeper without transfer stays green for this isolated projection fault",
+    "from": "      basis: \"day_level\","
+  },
+  {
+    "id": "C1-anchor",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sourceSHA256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "to": "      anchorSource: \"self_reported\",",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "custom and unconfirmed days do not affect cadence denominators or category usage"
+    },
+    "intendedAssertion": "transferred mask.anchorSource null fails; original keeper without transfer stays green",
+    "from": "      anchorSource: null,"
+  },
+  {
+    "id": "C2-returned-direction",
+    "file": "src/lib/tracking/nudges.ts",
+    "sourceSHA256": "01d34c6d21825ad729f24ce8cc1a9fe13ee3d54290b8935e6373039b8dc0092e",
+    "to": "      direction: \"increase\",\n      observedWeekly:",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/tracker-nudges.test.ts",
+      "name": "dismissed direction stays hidden; other direction still fires"
+    },
+    "intendedAssertion": "otherDirection still length 1, transferred direction decrease fails; original keeper stays green",
+    "from": "      direction,\n      observedWeekly:"
+  }
+]

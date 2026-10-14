@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Tool-Checkpoint — Klarheits-Varianten</title>
+<style>
+  :root{
+    --bg:#fdfbf9; --card:#ffffff; --ink:#2a1845; --muted:#6f6880;
+    --plum:#5b3fa8; --plum-soft:#efeaf9; --plum-border:#d9cff0;
+    --coral:#c96f6d; --line:#ece6df; --ok:#3e7d5b; --ok-soft:#e7f2ec;
+    --warn-soft:#faf3e8; --warn:#9a6b2f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#efece7;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);padding:28px;display:flex;gap:28px;align-items:flex-start}
+  .frame{width:392px;background:var(--bg);border:1px solid #ddd6cc;border-radius:22px;overflow:hidden;flex-shrink:0}
+  .frame h1.tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#8a8294;background:#f3efe9;padding:10px 18px;border-bottom:1px solid var(--line);font-weight:700}
+  .inner{padding:22px 18px 26px}
+  h2.page{font-family:Georgia,"Times New Roman",serif;font-size:30px;margin-bottom:8px}
+  p.lead{font-size:15px;line-height:1.45;color:var(--muted);margin-bottom:18px}
+  .sec{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--plum);margin:20px 0 8px}
+  .sec small{display:block;letter-spacing:0;text-transform:none;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:12px;margin-bottom:10px}
+  .card.owned{background:var(--plum-soft);border-color:var(--plum-border)}
+  .thumb{width:56px;height:56px;border-radius:12px;background:#f2ede6;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px}
+  .cbody{flex:1;min-width:0}
+  .fam{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#8a8294;margin-bottom:2px}
+  .name{font-size:16.5px;font-weight:700;margin-bottom:2px}
+  .why{font-size:13px;color:var(--muted);line-height:1.4}
+  .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;margin-top:8px}
+  .pill.own{background:var(--plum);color:#fff}
+  .pill.open{background:var(--plum-soft);color:var(--plum)}
+  .pill.check{background:var(--warn-soft);color:var(--warn)}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)}
+  .alt{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .cta{display:block;text-align:center;background:var(--coral);color:#fff;font-weight:700;font-size:16px;border-radius:999px;padding:14px;margin-top:20px}
+  /* B: status icons + summary bar */
+  .sumbar{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:16px}
+  .sumbar b{font-size:14.5px}
+  .dots{display:flex;gap:6px;margin-top:8px}
+  .dot{height:6px;flex:1;border-radius:3px;background:#e7e0d6}
+  .dot.f{background:var(--plum)}
+  .stat{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;margin-top:14px}
+  .stat.own{background:var(--plum);color:#fff}
+  .stat.open{background:#fff;border:2px solid var(--plum-border);color:var(--plum)}
+  .stat.check{background:var(--warn-soft);color:var(--warn);border:2px solid #ecd9bd}
+  .you{font-size:12.5px;margin-top:6px;color:var(--ink)}
+  .you b{color:var(--plum)}
+  /* C: quiet list */
+  .quiet{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .qrow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:baseline}
+  .qrow:last-child{border-bottom:none}
+  .qrow .qname{font-weight:700;white-space:nowrap}
+  .qrow .qwhy{color:var(--muted);font-size:12.5px}
+  .linkish{color:var(--plum);font-weight:700;font-size:13.5px}
+</style>
+</head>
+<body>
+
+<!-- ============ VARIANTE A ============ -->
+<div class="frame" id="variant-a">
+  <h1 class="tag">Variante A — Drei klare Gruppen</h1>
+  <div class="inner">
+    <h2 class="page">Deine Tools</h2>
+    <p class="lead">Das braucht dein Haar. Wir haben es mit deinen Angaben abgeglichen.</p>
+
+    <div class="sec">Hast du schon<small>Nichts kaufen — nutze, was da ist.</small></div>
+    <div class="card owned">
+      <div class="thumb">🪮</div>
+      <div class="cbody">
+        <div class="fam">Bürsten &amp; Kämme</div>
+        <div class="name">Grobzinkiger Kamm</div>
+        <div class="why">Zum sanften Entwirren und Verteilen von Produkt</div>
+        <span class="pill own">Nutze deins</span>
+      </div>
+    </div>
+
+    <div class="sec">Fehlt dir noch<small>Geprüfte Produktempfehlung folgt — nichts musst du jetzt tun.</small></div>
+    <div class="card">
+      <div class="thumb">💨</div>
+      <div class="cbody">
+        <div class="fam">Haartrockner &amp; Luftstyler</div>
+        <div class="name">Föhn</div>
+        <div class="why">Damit dein Muster beim Trocknen erhalten bleibt</div>
+        <div class="alt">Auch ok: Air Multi-Styler</div>
+        <span class="pill open">Empfehlung folgt</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="thumb">🌙</div>
+      <div class="cbody">
+        <div class="fam">Nachtschutz</div>
+        <div class="name">Längen-/Spitzenschutz</div>
+        <div class="why">Für weniger Reibung über Nacht</div>
+        <div class="alt">Auch ok: Glatter Kissenbezug</div>
+        <span class="pill open">Empfehlung folgt</span>
+      </div>
+    </div>
+
+    <div class="sec">Noch offen<small>Sag uns kurz, was du hast — dann ordnen wir es zu.</small></div>
+    <div class="card">
+      <div class="thumb">🧺</div>
+      <div class="cbody">
+        <div class="fam">Handtücher &amp; Trocknungsmaterialien</div>
+        <div class="name">Mikrofaser-Handtuch, Baumwolltuch oder Haarturban</div>
+        <div class="why">Entscheidend ist die Technik: sanft ausdrücken statt rubbeln.</div>
+        <span class="pill check">Im Feinschliff angeben</span>
+      </div>
+    </div>
+
+    <a class="cta">Weiter zu deiner Routine</a>
+  </div>
+</div>
+
+<!-- ============ VARIANTE B ============ -->
+<div class="frame" id="variant-b">
+  <h1 class="tag">Variante B — Abgleich sichtbar gemacht</h1>
+  <div class="inner">
+    <h2 class="page">Deine Tools</h2>
+    <p class="lead">4 Dinge braucht dein Haar. So sieht der Abgleich mit deinen Angaben aus:</p>
+
+    <div class="sumbar">
+      <b>1 von 4 hast du schon</b> · 2 empfehlen wir dir später · 1 ist offen
+      <div class="dots"><div class="dot f"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+
+    <div class="card owned">
+      <div class="stat own">✓</div>
+      <div class="cbody">
+        <div class="fam">Entwirren</div>
+        <div class="name">Grobzinkiger Kamm</div>
+        <div class="why">Sanft entwirren, Produkt verteilen</div>
+        <div class="you">Deine Angabe: <b>Grobzinkiger Kamm</b> — passt, nutze deinen.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stat open">→</div>
+      <div class="cbody">
+        <div class="fam">Trocknen</div>
+        <div class="name">Föhn</div>
+        <div class="why">Damit dein Muster beim Trocknen erhalten bleibt</div>
+        <div class="you">Bei dir: nichts Passendes angegeben. <b>Geprüfte Empfehlung folgt.</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stat open">→</div>
+      <div class="cbody">
+        <div class="fam">Nachtschutz</div>
+        <div class="name">Längen-/Spitzenschutz</div>
+        <div class="why">Weniger Reibung über Nacht</div>
+        <div class="you">Bei dir: nichts Passendes angegeben. <b>Geprüfte Empfehlung folgt.</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stat check">?</div>
+      <div class="cbody">
+        <div class="fam">Sanft trocknen</div>
+        <div class="name">Handtuch oder Tuch</div>
+        <div class="why">Sanft ausdrücken statt rubbeln — die Technik zählt.</div>
+        <div class="you">Bei dir: <b>keine Angabe.</b> Ergänze es im Feinschliff.</div>
+      </div>
+    </div>
+
+    <a class="cta">Weiter zu deiner Routine</a>
+  </div>
+</div>
+
+<!-- ============ VARIANTE C ============ -->
+<div class="frame" id="variant-c">
+  <h1 class="tag">Variante C — Ruhig: Deins groß, Offenes leise</h1>
+  <div class="inner">
+    <h2 class="page">Deine Tools</h2>
+    <p class="lead">Was du schon hast, bauen wir direkt in deine Routine ein.</p>
+
+    <div class="card owned">
+      <div class="thumb">🪮</div>
+      <div class="cbody">
+        <div class="fam">Bürsten &amp; Kämme</div>
+        <div class="name">Grobzinkiger Kamm</div>
+        <div class="why">Zum sanften Entwirren und Verteilen von Produkt</div>
+        <span class="pill own">Nutze deins</span>
+      </div>
+    </div>
+
+    <div class="sec" style="margin-top:24px">Kommt noch<small>Dein Haar braucht das auch — sobald es geprüfte Produkte gibt, siehst du sie in deinem Plan.</small></div>
+    <div class="quiet">
+      <div class="qrow"><span class="qname">Föhn</span><span class="qwhy">fürs Trocknen mit erhaltenem Muster · auch ok: Air Multi-Styler</span></div>
+      <div class="qrow"><span class="qname">Nachtschutz</span><span class="qwhy">weniger Reibung über Nacht · auch ok: glatter Kissenbezug</span></div>
+    </div>
+
+    <div class="sec" style="margin-top:24px">Eine Frage ist offen</div>
+    <div class="card">
+      <div class="thumb">🧺</div>
+      <div class="cbody">
+        <div class="name" style="font-size:15px">Womit trocknest du dein Haar an?</div>
+        <div class="why">Sag es uns kurz — dann wissen wir, ob dir hier etwas fehlt.</div>
+        <div class="alt"><span class="linkish">Im Feinschliff ergänzen →</span></div>
+      </div>
+    </div>
+
+    <a class="cta">Weiter zu deiner Routine</a>
+  </div>
+</div>
+
+</body>
+</html>

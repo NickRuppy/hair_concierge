@@ -1,0 +1,21 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "before": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590",
+      "after": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+    },
+    {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "before": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f",
+      "after": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+    }
+  ]
+}

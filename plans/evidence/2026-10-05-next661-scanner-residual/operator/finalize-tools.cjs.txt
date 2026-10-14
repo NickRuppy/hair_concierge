@@ -1,0 +1,17 @@
+'use strict';
+// Tool-artifact-only seal update. Preserves every source/dependency/identity pin exactly.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),g=require('./operator-guard.cjs');
+const D=__dirname,sha=b=>crypto.createHash('sha256').update(b).digest('hex'),p=D+'/operator-pins.json',raw=fs.readFileSync(p),prior=JSON.parse(raw);
+if(sha(raw)!=='1f67eb774e13aa797f0b65bf2afe59982b58aec827dc944f4c4f06774d848045')throw Error('Wrong preliminary tool seal');
+g.identity(prior);for(const r of prior.readset)if(sha(fs.readFileSync(path.join(g.ROOT,r.file)))!==r.sha)throw Error('Source drift '+r.file);for(const d of prior.dependencies)g.checkFile(d);for(const t of prior.dependencyTrees)if(JSON.stringify(g.inventory(t.path))!==JSON.stringify(t.names))throw Error('Dependency membership drift');
+const allowed=new Set(['proof-attestation.cjs','prepare-tools.py','README.md']);
+for(const[f,h]of Object.entries(prior.artifactHashes))if(!(path.dirname(fs.realpathSync(f))===fs.realpathSync(D)&&allowed.has(path.basename(f)))&&sha(fs.readFileSync(f))!==h)throw Error('Unapproved artifact drift '+f);
+for(const[f,h]of Object.entries(prior.entrypointTemplateHashes))if(sha(fs.readFileSync(f,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'"))!==h)throw Error('Entrypoint drift');
+const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Strict proof policy drift');
+fs.writeFileSync(D+'/pre-finalization-pins.json',raw,{flag:'wx',mode:0o444});
+const next=JSON.parse(raw);for(const n of allowed)next.artifactHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n));for(const n of ['final-template-delta.patch','full-final-code.txt','finalize-tools.cjs','pre-finalization-pins.json','static-shape-corrected.txt'])next.artifactHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n));
+for(const key of ['readset','dependencies','dependencyTrees','identityFiles','node','metadataPolicy','original76Guards','entrypointTemplateHashes'])if(JSON.stringify(prior[key])!==JSON.stringify(next[key]))throw Error('Forbidden pin change '+key);
+const bytes=JSON.stringify(next,null,2)+'\n',pinSHA=sha(bytes);fs.chmodSync(p,0o644);fs.writeFileSync(p,bytes);fs.chmodSync(p,0o444);
+for(const file of Object.keys(next.entrypointTemplateHashes)){const s=fs.readFileSync(file,'utf8');if(s.split("const PIN_SHA='"+sha(raw)+"'").length!==2)throw Error('Entrypoint old seal');fs.writeFileSync(file,s.replace("const PIN_SHA='"+sha(raw)+"'","const PIN_SHA='"+pinSHA+"'"))}
+const receipt={oldPinSHA:sha(raw),pinSHA,changedArtifacts:[...allowed],addedToolArtifacts:['final-template-delta.patch','full-final-code.txt','finalize-tools.cjs','pre-finalization-pins.json','static-shape-corrected.txt'],sourceDependencyIdentityPinsChanged:0,strictProofPredicateChanged:false,reason:'Synthetic TAP must contain one actual message, not concatenated duplicate full-message and header fragments. Actual decoder/predicate unchanged.',repositoryWrites:0,children:0,ownerImports:0};
+fs.writeFileSync(D+'/finalization-receipt.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o444});console.log(JSON.stringify(receipt,null,2));

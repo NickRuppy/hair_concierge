@@ -1,0 +1,92 @@
+{
+  "slot": "A36",
+  "productId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+  "name": "OGX Rosemary Mint Shampoo",
+  "brand": "OGX",
+  "packSize": "385 ml",
+  "gtins": [
+    "3574661805931"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3574661805931 (PDP URL id + JSON-LD sku); 385 ml (1 L = 20,75 €), 7,99 EUR, InStock; contact Johnson & Johnson Santé Beauté France (OGX brand owner)",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "claimsVerbatim": "Erfrischen und klären Sie Ihr Haar mit dem Rosmarin-Minz-Shampoo. Dieses Shampoo mit Rosmarinöl und Pfefferminzextrakt entfernt sichtbar Öl und Rückstände und befreit Ihr fettiges Haar von Ablagerungen. | Warnhinweise: Bitte die Anwendungshinweise beachten. Darf nicht in die Augen gelangen. Bei Kontakt mit den Augen sofort ausspülen. Von Kindern fernhalten.",
+      "directionsVerbatim": "(none: 'Anwendung und Gebrauch' section empty on Rossmann PDP)"
+    },
+    {
+      "url": "https://www.rossmann.de/media-neu/150/MAM_15012738/MAM_15012738_SHOP_IMAGE_3.0.png (+ MAM_15012731/32/33/37/39/41 marketing images on the same PDP)",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "pack_front_image_on_rossmann_pdp",
+      "sourceKind": "pack_front",
+      "gtinShown": "no barcode visible; label reads \"385 ml e 13 US fl. oz.\"",
+      "inciVerbatim": "(not on front)",
+      "claimsVerbatim": "Pack front: 'refreshing scalp', 'rosemary mint SHAMPOO', 'Clarifying blend visibly helps remove oils and residue to clear away buildup.', 'SULPHATE-FREE SURFACTANTS', 'LIPI PRO SHIELD' badge, 'NEU'. Marketing images: 'FÜR GESÜNDERES HAAR IN NUR EINER WÄSCHE*' | 'Rosemary Mint HILFT SICHTBAR, ÖLE UND RÜCKSTÄNDE ZU ENTFERNEN UND ABLAGERUNGEN ZU BESEITIGEN' | 'JETZT MIT LIPI PRO SHIELD 2x MEHR Lipid- und Proteinschutz*' | 'FÜR ALLE Haartypen' | 'ERFRISCHEND & KLÄREND' | 'VORHER Strapazierte, geschädigte Haarfaser / NACHHER Geschützte Haarfaser JETZT MIT LIPI PRO SHIELD 2X MEHR Lipid- und Proteinschutz*' (*vs. nicht-pflegendem Shampoo, bei kontinuierlicher Anwendung)",
+      "directionsVerbatim": "(none)"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "claim_inci_check",
+      "detail": "Rossmann text says 'mit Rosmarinöl und Pfefferminzextrakt'; INCI has Rosmarinus Officinalis Leaf Oil (rosemary oil, matches) and Mentha Piperita Oil (peppermint oil, not extract). Wording only; not material."
+    },
+    {
+      "type": "market_formula_variance",
+      "detail": "GTIN 3574661805931 is also carried by US/UK listings for 'Refreshing Scalp+/Extra Strength/Clarifying Strength Rosemary Mint' whose lists differ (e.g. witch hazel in US lists). The DE Rossmann list (Sodium Methyl Cocoyl Taurate / Decyl Glucoside base, 'Lipi Pro Shield') is the only German-market list found. Hautschutzengel.de (support only; free view shows first 6 items) starts identically: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil."
+    },
+    {
+      "type": "claim_vs_inci_check",
+      "detail": "Pack 'SULPHATE-FREE SURFACTANTS' consistent with INCI (no sulfate surfactant). 'Lipi Pro Shield' is a marketing complex name with no matching INCI term."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua/Water/Eau",
+    "Sodium Methyl Cocoyl Taurate",
+    "Decyl Glucoside",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Rosmarinus Officinalis Leaf Oil",
+    "Mentha Piperita Oil",
+    "Menthol",
+    "Menthyl Lactate",
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+    "Amodimethicone",
+    "Coco-Glucoside",
+    "Coconut Acid",
+    "Disodium Tetrapropenyl Succinate",
+    "Glyceryl Oleate",
+    "Lecithin",
+    "Starch Hydroxypropyltrimonium Chloride",
+    "PEG-150 Distearate",
+    "Hexylene Glycol",
+    "Citric Acid",
+    "Sodium Lactate",
+    "Sodium Hydroxide",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Lactic acid",
+    "Urea",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Parfum/Fragrance"
+  ],
+  "canonicalReason": "Single German retailer (Rossmann PDP, GTIN in URL/JSON-LD) whose full 30-item list is identical to the v1.3/weight-final-rerun-v3 capture (2026-09-01). Pack front image on the same PDP confirms product identity (385 ml, refreshing scalp rosemary mint, sulphate-free surfactants, Lipi Pro Shield). No manufacturer DE/EU page, no pack back, and no second German retailer carries it (dm, Müller: not found), so only tier 4. Not a conflict, a thin-evidence freeze.",
+  "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 4,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Catalog name 'OGX Rosemary' / freeze name 'Rosemary Mint Shampoo' = OGX Refreshing Scalp+ Rosemary Mint, 385 ml (the earlier note that Rossmann pack size is 250 ml was a carousel artifact: 250 ml (1L=27,96) belongs to Alpecin Sensitiv-Shampoo).",
+    "Relaunch signal: 'NEU' + 'JETZT MIT LIPI PRO SHIELD' on the pack/marketing images; the INCI text on the PDP may or may not already reflect the relaunch. A physical-back-panel check would raise this to tier 1.",
+    "dm.de GTIN search: no hit; Müller: no Rosemary Mint product; manufacturer ogxbeauty.com only has a US page (not read as DE evidence).",
+    "Prior fingerprint 915d74b9... (formulaFingerprint in blind-packet) used the old scheme."
+  ]
+}

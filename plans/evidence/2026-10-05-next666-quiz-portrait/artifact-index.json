@@ -1,0 +1,1706 @@
+[
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/HANDOFF.json",
+    "archived": "proposal/HANDOFF.json",
+    "sha256": "6ebe6bf1eca77f494bba1879bca98caa206f6fbd47854d02b04fd0a36eb59ffe",
+    "bytes": 2784
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/artifact-hashes.json",
+    "archived": "proposal/artifact-hashes.json",
+    "sha256": "37984a60a159d7945961a1d030ab3981cf147144571a949a45f1c3ae1db11d3e",
+    "bytes": 16526
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/build-proposal.cjs",
+    "archived": "proposal/build-proposal.cjs.txt",
+    "sha256": "7757df53c405ffaa43826d49f03b81cacc7a4824eed87e038c33503d19e02d08",
+    "bytes": 11303
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "bcc0d13442aab637198580b88262bab3799fadf1fc0fc9d2402d90ce08a32793",
+    "bytes": 13515
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "23c2b2bb7386c97c06dcb5bb9a19e3a92c0c01371faad7efff57dff5a5151b61",
+    "bytes": 2083
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "8c9989d3cf4f635a2f566ec165d68d3dc556157fbf5a67871ad7717900a07e44",
+    "bytes": 8491
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/cut.diff",
+    "archived": "proposal/cut.diff",
+    "sha256": "e40ac92011a9c0899a9ec916c56f80ef93ddd8899857d43249d7b3a2aac4bce5",
+    "bytes": 1348
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/history-card.txt",
+    "archived": "proposal/history-card.txt",
+    "sha256": "5c2cd35ba67e53a2934b8ca035c35bed7d5aaaceb86795536f4de0217fd2d23c",
+    "bytes": 1314
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/history-config.txt",
+    "archived": "proposal/history-config.txt",
+    "sha256": "192dc0409ed834c9f0712cb5c34835506bc25dc2b73f935a3e44619beb3e9cb0",
+    "bytes": 2904
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/history-geometry.txt",
+    "archived": "proposal/history-geometry.txt",
+    "sha256": "6379bea0acfd1563359553747c34b4deabb2aab0c77776514af5923be8073b77",
+    "bytes": 1826
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/history-layout.txt",
+    "archived": "proposal/history-layout.txt",
+    "sha256": "0e40abdd6717904abe36d907f999b77b9d6ec44e99813bab5d1c7c3d6595d5b3",
+    "bytes": 1506
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "9d8ba2f6612d089840d12e2a89613dbb9dbde8d3e65e111f4389c094251f0df5",
+    "bytes": 13323
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "33aa0baf9474495048ae03822224627f797410c4ff66c3fb7bb43812f3d70733",
+    "bytes": 65374
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/ledger.md",
+    "archived": "proposal/ledger.md",
+    "sha256": "1d73ac90ad34367a12df9478fa3bfdf511d188404ad9571aab73fe663c5f86d2",
+    "bytes": 15590
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/main-commands.json",
+    "archived": "proposal/main-commands.json",
+    "sha256": "6ac0f446cd5503e41f3c32690a0533b8150a06cc2187c687f6ddb340b05dcaab",
+    "bytes": 1144
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "e8b4b24f8006005cee2ef25496b2ed9f8a78f171bf50883fd2fb84f765b1cff7",
+    "bytes": 26284
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/prior-evidence.json",
+    "archived": "proposal/prior-evidence.json",
+    "sha256": "d82b596a41fb3029d79ce4a4ae7783b3bda597d710175f461bbb0fbd3327ab5b",
+    "bytes": 1665
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/readonly-harness.json",
+    "archived": "proposal/readonly-harness.json",
+    "sha256": "879d49c8df5abdbf24934e9438dd29342b7daf7c45ecd751afbaa5df488a0a15",
+    "bytes": 303
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/readset.json",
+    "archived": "proposal/readset.json",
+    "sha256": "cfea3d4b35cc4c5b208124e9918fc323565c837f43623776aae994ce3eb8e1f4",
+    "bytes": 20324
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/site-map.json",
+    "archived": "proposal/site-map.json",
+    "sha256": "856a2abed5926e08cd1d21b35ecb483b7c20c59dac9a37b304d9b7c8a48abdda",
+    "bytes": 277454
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/hair-length-option-card.test.tsx",
+    "archived": "proposal/snapshots/before/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/hair-portrait-assets.test.ts",
+    "archived": "proposal/snapshots/before/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/hair-portrait-gallery.test.tsx",
+    "archived": "proposal/snapshots/before/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/hair-portrait-length-progression.test.ts",
+    "archived": "proposal/snapshots/before/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/hair-portrait.test.tsx",
+    "archived": "proposal/snapshots/before/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/portrait-config.test.ts",
+    "archived": "proposal/snapshots/before/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/quiz-motion-tokens.test.ts",
+    "archived": "proposal/snapshots/before/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/before/tests/quiz-option-card.test.tsx",
+    "archived": "proposal/snapshots/before/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "44d04311c4581efea17eb7f7b5442d1f680321763acbf0c913282c965b6150c7",
+    "bytes": 6734
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/hair-length-option-card.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "6f576124ad635d5558c86f77f6f0f6bb9fa40a6d25611f8a55564ff92a374588",
+    "bytes": 1548
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/hair-portrait-assets.test.ts",
+    "archived": "proposal/snapshots/cut/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/hair-portrait-gallery.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/hair-portrait-length-progression.test.ts",
+    "archived": "proposal/snapshots/cut/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/hair-portrait.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/portrait-config.test.ts",
+    "archived": "proposal/snapshots/cut/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/quiz-motion-tokens.test.ts",
+    "archived": "proposal/snapshots/cut/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/cut/tests/quiz-option-card.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "bytes": 7137
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/mutants/C1-decorative-body.tsx",
+    "archived": "proposal/snapshots/mutants/C1-decorative-body.tsx.txt",
+    "sha256": "0b960310eb6fe3b541f1029aa3a57edb089ea59f6f1dbfae708110ac9f7cea83",
+    "bytes": 1583
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/mutants/C1-description-association.tsx",
+    "archived": "proposal/snapshots/mutants/C1-description-association.tsx.txt",
+    "sha256": "835e1e297f8e23f1f5c8051a6addc5611eae81d1146b4a0624ca6366e025dda2",
+    "bytes": 4595
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/mutants/C1-fixed-responsive-frame.tsx",
+    "archived": "proposal/snapshots/mutants/C1-fixed-responsive-frame.tsx.txt",
+    "sha256": "ffe155f482fbcda66eac3d19ecfb4db9bd156bc97b2561ae05e945f6ef81c7f5",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/.github/workflows/ci.yml",
+    "archived": "proposal/snapshots/readset/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/clsx/dist/clsx.mjs",
+    "archived": "proposal/snapshots/readset/node_modules/clsx/dist/clsx.mjs.txt",
+    "sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522",
+    "bytes": 388
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/next/dist/client/image-component.js",
+    "archived": "proposal/snapshots/readset/node_modules/next/dist/client/image-component.js.txt",
+    "sha256": "7dcd5a10f44f1b52100554e2a2537dfe3d04083e310858d9a92c61a7db302753",
+    "bytes": 14142
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/next/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/next/package.json.txt",
+    "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
+    "bytes": 11243
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/react/package.json.txt",
+    "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
+    "bytes": 1248
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+    "archived": "proposal/snapshots/readset/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js.txt",
+    "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+    "bytes": 395194
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react-dom/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/react-dom/package.json.txt",
+    "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
+    "bytes": 3063
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react-dom/server.node.js",
+    "archived": "proposal/snapshots/readset/node_modules/react-dom/server.node.js.txt",
+    "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+    "bytes": 669
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/sharp/lib/channel.js",
+    "archived": "proposal/snapshots/readset/node_modules/sharp/lib/channel.js.txt",
+    "sha256": "4a699621c111427f9f6b3b767764a292f6a358616de2866e0078475830420f42",
+    "bytes": 5379
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/sharp/lib/input.js",
+    "archived": "proposal/snapshots/readset/node_modules/sharp/lib/input.js.txt",
+    "sha256": "d88bdf5d807ef57ce8aa5d9be29bc7b9199974eac385bf559f19d5fc06bd632a",
+    "bytes": 32973
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/sharp/lib/output.js",
+    "archived": "proposal/snapshots/readset/node_modules/sharp/lib/output.js.txt",
+    "sha256": "71cec9ac95f3db764ee4d2e26eec1deb16da63c47fdd352f6a41af4dbb0f1831",
+    "bytes": 61198
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/sharp/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/sharp/package.json.txt",
+    "sha256": "e6be69319929151be3aa240bf1485f25a3477cb6d2286f92510b9fceb3cbef26",
+    "bytes": 7478
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/tailwind-merge/dist/bundle-cjs.js",
+    "archived": "proposal/snapshots/readset/node_modules/tailwind-merge/dist/bundle-cjs.js.txt",
+    "sha256": "19aa176d1cb3f9026e4019206b6d05f11c754bbb1c3009c9b4193a1da4f95b92",
+    "bytes": 102887
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/typescript/lib/typescript.js",
+    "archived": "proposal/snapshots/readset/node_modules/typescript/lib/typescript.js.txt",
+    "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "bytes": 9112572
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/package-lock.json",
+    "archived": "proposal/snapshots/readset/package-lock.json.txt",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/package.json",
+    "archived": "proposal/snapshots/readset/package.json.txt",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/coily-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/coily-long.webp",
+    "sha256": "2e7c2a041c823ff0d61c31194a487a71ec4455afa96d9a45dded048a00e3942a",
+    "bytes": 33736
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/coily-medium.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/coily-medium.webp",
+    "sha256": "40132d90d313f0741ccc761e12c4b3f665de1bee243d1a99bd24da102e3a43cf",
+    "bytes": 31404
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/coily-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/coily-short.webp",
+    "sha256": "f9ca8393eb28d528ad32db291ba7d49fb2c3de817e336bd61efc4b2baa383107",
+    "bytes": 32582
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/coily-very-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/coily-very-long.webp",
+    "sha256": "deb58fd00318b540f1ea48fd408b4c35548675d2082529aece511e8a6fd8d8cc",
+    "bytes": 37104
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/coily-very-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/coily-very-short.webp",
+    "sha256": "a205f7ca6d9fce324e43e9cef80174559bbf96a52f40874d1d5671afe4941455",
+    "bytes": 24626
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/curly-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/curly-long.webp",
+    "sha256": "aab8143105fc0eb58dc9acc853a85f1b1ba063ebae461322576e9b6ddf7829df",
+    "bytes": 41252
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/curly-medium.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/curly-medium.webp",
+    "sha256": "65c4aa3e023590fb0ba1b9d1020f5239fe3c1a7aa03aa6084de29a809acda638",
+    "bytes": 36650
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/curly-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/curly-short.webp",
+    "sha256": "68651144ca243c629cc8844358f3c9bbd715da68948ad9c5b4ecc5bc39cf43a6",
+    "bytes": 30444
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/curly-very-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/curly-very-long.webp",
+    "sha256": "32ecc7e22c0505d1540164ef5545ec524e820a8183a821cb1d00f11ea43ca570",
+    "bytes": 39200
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/curly-very-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/curly-very-short.webp",
+    "sha256": "7f75791f5955b67d6a1ec3fadc86b89cf40326278919a944bb6821942486df06",
+    "bytes": 45110
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/generic.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/generic.webp",
+    "sha256": "84a15bb3ad980086685d1f1c1860a7341c0f409a5b8a54c0a11c6530079923f3",
+    "bytes": 16936
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/straight-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/straight-long.webp",
+    "sha256": "19b836288a846991f5d29877761caeaeeca8913f23c17dc1b25dc937b1c587bb",
+    "bytes": 28912
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/straight-medium.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/straight-medium.webp",
+    "sha256": "b02b92c24099df9a9328694a4d7066cdef7faf82e23764d31f6920da381b3392",
+    "bytes": 18564
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/straight-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/straight-short.webp",
+    "sha256": "0037a8c781ee7a9f4be30e42de064ada2aac8da7095fd26e339743ab01371d55",
+    "bytes": 19578
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/straight-very-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/straight-very-long.webp",
+    "sha256": "af4ec084e857e9a59a9bb5e77c8a8e18fb2b8b83de481b4a338f2531377a9727",
+    "bytes": 20686
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/straight-very-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/straight-very-short.webp",
+    "sha256": "05764009dac9a5998a88f1dc66666429b52967e44fa54a97e3cd9f6a31e7e094",
+    "bytes": 36030
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/wavy-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/wavy-long.webp",
+    "sha256": "72bc0d415c5af95cc3c44d70ad9c7d19354547ca9b1bfc23995c920db5934b61",
+    "bytes": 27110
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/wavy-medium.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/wavy-medium.webp",
+    "sha256": "a8f5d21bc030e39632b77cf8d9b03e2260d212a7e39befdd402995148a0c19ba",
+    "bytes": 25068
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/wavy-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/wavy-short.webp",
+    "sha256": "ae374bfae035b60cedf1e983c7229f2b56b9c879175535a6e5dc45c8b67cd4e1",
+    "bytes": 23722
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/wavy-very-long.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/wavy-very-long.webp",
+    "sha256": "836de168212044c82b6f949e537d080af60e28b40961459497c72cd57127d76a",
+    "bytes": 37580
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/public/images/quiz/hair-portrait/wavy-very-short.webp",
+    "archived": "proposal/snapshots/readset/public/images/quiz/hair-portrait/wavy-very-short.webp",
+    "sha256": "6c07425e3aeedb1c125c94516eeb83b5b4aa705fd491d1a2b26a68e3249ed0ad",
+    "bytes": 35058
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/scripts/portrait/measure-bounds.mjs",
+    "archived": "proposal/snapshots/readset/scripts/portrait/measure-bounds.mjs.txt",
+    "sha256": "ecb46c6127c45a5d0a8e0865494b4ad33bdfd8bce9982c3fb35a2581c51dd28a",
+    "bytes": 2028
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/scripts/portrait/measure-hair-fill.mjs",
+    "archived": "proposal/snapshots/readset/scripts/portrait/measure-hair-fill.mjs.txt",
+    "sha256": "69fef69455f777f67da3dbe0289571759cc3fe69065b53eeb3350a2991b4a2e6",
+    "bytes": 1726
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/scripts/portrait/normalize-hair-endpoint.mjs",
+    "archived": "proposal/snapshots/readset/scripts/portrait/normalize-hair-endpoint.mjs.txt",
+    "sha256": "6a261fff60a663d8e9d1ff13c7df074bbc6bf121eb418b526fb7728a88740c46",
+    "bytes": 3727
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/globals.css",
+    "archived": "proposal/snapshots/readset/src/app/globals.css",
+    "sha256": "0021b712cdc24524f0e91cab1009d627c74ea72d8e3db6c28df6a653fe9a2ea5",
+    "bytes": 40745
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/labs/portrait/page.tsx",
+    "archived": "proposal/snapshots/readset/src/app/labs/portrait/page.tsx.txt",
+    "sha256": "499f4b5a43109d8eb7fb48efa22622a22df61557a593885a5fc12792e1f1ad08",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/lp/[slug]/page.tsx",
+    "archived": "proposal/snapshots/readset/src/app/lp/[slug]/page.tsx.txt",
+    "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+    "bytes": 7375
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/quiz/layout.tsx",
+    "archived": "proposal/snapshots/readset/src/app/quiz/layout.tsx.txt",
+    "sha256": "40a1fc09f82f8d6832a57b76449af4b159fb4e2877989eb9e79bbbab99fe4e4d",
+    "bytes": 1097
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/quiz/page.tsx",
+    "archived": "proposal/snapshots/readset/src/app/quiz/page.tsx.txt",
+    "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+    "bytes": 16212
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/app/quiz/quiz-shell.tsx",
+    "archived": "proposal/snapshots/readset/src/app/quiz/quiz-shell.tsx.txt",
+    "sha256": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b",
+    "bytes": 10004
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/onboarding/screens/single-select-screen.tsx",
+    "archived": "proposal/snapshots/readset/src/components/onboarding/screens/single-select-screen.tsx.txt",
+    "sha256": "a1844574362f8e94236327a1dc4af339c833fd32f3423f05b99563c13faff365",
+    "bytes": 3704
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts",
+    "archived": "proposal/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts.txt",
+    "sha256": "c1f1a78eb4812605cd6ae2f3c551ffd02ae13d3d6775706549a6bd0d2e16d1d8",
+    "bytes": 1830
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+    "archived": "proposal/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx.txt",
+    "sha256": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+    "bytes": 9535
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "archived": "proposal/snapshots/readset/src/components/personal-plan-quiz/personal-plan-quiz.tsx.txt",
+    "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+    "bytes": 118811
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/hair-portrait-figure.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/hair-portrait-figure.tsx.txt",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/hair-portrait-gallery.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/hair-portrait-gallery.tsx.txt",
+    "sha256": "ef4121f68c8a4d0d0bc8a37b647c825415c526e83e0914a80bc8df252078feb3",
+    "bytes": 5844
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/hair-portrait.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/hair-portrait.tsx.txt",
+    "sha256": "c02b53466f11543a783ec59a22775104339c73817c28205054bb44857f792c39",
+    "bytes": 13653
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/legacy-quiz-visuals.ts",
+    "archived": "proposal/snapshots/readset/src/components/quiz/legacy-quiz-visuals.ts.txt",
+    "sha256": "e75ed193f9527dfda71029a5bb782f750491973aece3eaf3fc6de42752696ebb",
+    "bytes": 4238
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/quiz-main-problem-sheet.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/quiz-main-problem-sheet.tsx.txt",
+    "sha256": "4814352d9a51aca84c6dcc0a689ca012adc6fa4e17ebc10d3219042ecc48e25e",
+    "bytes": 3805
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/quiz-option-card.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/quiz-option-card.tsx.txt",
+    "sha256": "d3886b23445bfa5c3346cc9fa435968e0dbad35a6cecdb2d5a4ebf4dd0e391af",
+    "bytes": 9603
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/quiz-question.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/quiz-question.tsx.txt",
+    "sha256": "172dac405bc349fd011be368ed26ed24b2cddb0339c235bba8d23a8ae2b72de5",
+    "bytes": 6792
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/quiz/quiz-scalp-question.tsx",
+    "archived": "proposal/snapshots/readset/src/components/quiz/quiz-scalp-question.tsx.txt",
+    "sha256": "1fdb2a7ad5b48a7e05455fe09206dc2511047fa7efb2012b3ca6b6dfb8fb080f",
+    "bytes": 10504
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/components/ui/info-tip.tsx",
+    "archived": "proposal/snapshots/readset/src/components/ui/info-tip.tsx.txt",
+    "sha256": "c4493cb1d20e32e1d105b673598aee09b8636638b72c5f22e16a6082a77bcd7b",
+    "bytes": 5070
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/funnels/landing/personal-plan-quiz.tsx",
+    "archived": "proposal/snapshots/readset/src/funnels/landing/personal-plan-quiz.tsx.txt",
+    "sha256": "718ce1b880d55f4692e4f254b46c80aa63cb2f665e0134d26ef76487a4f828f4",
+    "bytes": 771
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/funnels/landing/registry.generated.ts",
+    "archived": "proposal/snapshots/readset/src/funnels/landing/registry.generated.ts.txt",
+    "sha256": "65f0783c1c3df689eee6e1efb45af8fe7190c2f490ed01abf6a040c3b17ba5f3",
+    "bytes": 516
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/funnels/landing/registry.ts",
+    "archived": "proposal/snapshots/readset/src/funnels/landing/registry.ts.txt",
+    "sha256": "72967737c0d013538f3c9d9e6fd966e482b896f35391f1719abdd42da3b7ed9e",
+    "bytes": 442
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/labs/offer-page-access.ts",
+    "archived": "proposal/snapshots/readset/src/lib/labs/offer-page-access.ts.txt",
+    "sha256": "6a1382da89073e84c54320a4531b8fe68ad89ad4c56c4384b211b36cdcf81ea4",
+    "bytes": 411
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/motion.ts",
+    "archived": "proposal/snapshots/readset/src/lib/motion.ts.txt",
+    "sha256": "ad6d8c7f8243297762beade95101fd15fc607c5ca3bc02b2512055d3a54cebdd",
+    "bytes": 769
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/quiz/hair-portrait-assets.ts",
+    "archived": "proposal/snapshots/readset/src/lib/quiz/hair-portrait-assets.ts.txt",
+    "sha256": "668a06934525cfccf0a134a49255792f239b4ded7186d01a0bd03e505483d960",
+    "bytes": 4806
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/quiz/normalization.ts",
+    "archived": "proposal/snapshots/readset/src/lib/quiz/normalization.ts.txt",
+    "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+    "bytes": 11376
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/quiz/portrait-config.ts",
+    "archived": "proposal/snapshots/readset/src/lib/quiz/portrait-config.ts.txt",
+    "sha256": "942805bc7427df2587da558526a5fb5db8d00d002e7b7de742f66ca6a68b2fba",
+    "bytes": 2875
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/utils.ts",
+    "archived": "proposal/snapshots/readset/src/lib/utils.ts.txt",
+    "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+    "bytes": 166
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/src/lib/vocabulary/hair-length.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/hair-length.ts.txt",
+    "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+    "bytes": 918
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/hair-length-option-card.test.tsx",
+    "archived": "proposal/snapshots/readset/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/hair-portrait-assets.test.ts",
+    "archived": "proposal/snapshots/readset/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/hair-portrait-gallery.test.tsx",
+    "archived": "proposal/snapshots/readset/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/hair-portrait-length-progression.test.ts",
+    "archived": "proposal/snapshots/readset/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/hair-portrait.test.tsx",
+    "archived": "proposal/snapshots/readset/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "proposal/snapshots/readset/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/personal-plan-quiz-funnel-entry.test.ts",
+    "archived": "proposal/snapshots/readset/tests/personal-plan-quiz-funnel-entry.test.ts.txt",
+    "sha256": "69895d850749036a8edf87a07af67c570ba80d5e44956b33c8860ec5b34fe99c",
+    "bytes": 16545
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/portrait-config.test.ts",
+    "archived": "proposal/snapshots/readset/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/quiz-motion-tokens.test.ts",
+    "archived": "proposal/snapshots/readset/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/quiz-option-card.test.tsx",
+    "archived": "proposal/snapshots/readset/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "44d04311c4581efea17eb7f7b5442d1f680321763acbf0c913282c965b6150c7",
+    "bytes": 6734
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tests/server-only-register.cjs",
+    "archived": "proposal/snapshots/readset/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/tsconfig.json",
+    "archived": "proposal/snapshots/readset/tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/hair-length-option-card.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/hair-portrait-assets.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/hair-portrait-gallery.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/hair-portrait-length-progression.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/hair-portrait.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/portrait-config.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/quiz-motion-tokens.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/transfer/tests/quiz-option-card.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "bytes": 7137
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/static-check.cjs",
+    "archived": "proposal/static-check.cjs.txt",
+    "sha256": "9630debdcc31b46509d9674b25787e204488e71f91c969badb742047b071045f",
+    "bytes": 4479
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/static-receipt.txt",
+    "archived": "proposal/static-receipt.txt",
+    "sha256": "4a94185b3a1f1786f2b2d59710bb763009391277460846e216133f25f4db9a09",
+    "bytes": 12874
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "dd52649c445d0ac0a19fbca761cab6d8dcd0a19a10e768ed439f836bde00b53c",
+    "bytes": 742
+  },
+  {
+    "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/write-ledger.py",
+    "archived": "proposal/write-ledger.py.txt",
+    "sha256": "12bc7bf8d75ea46f07b551faf56f04554370e36c5399c17709fe86d0a34b883d",
+    "bytes": 15463
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/HANDOFF.json",
+    "archived": "operator-kit/HANDOFF.json",
+    "sha256": "3aee879241014546011df3fb4129cdbe0967efd05fba92abd2e95215006a63c7",
+    "bytes": 5959
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/README.md",
+    "archived": "operator-kit/README.md",
+    "sha256": "0e05db0fd1cd9f379f34193341d1be4857804f84e2dff693697b3933d449533a",
+    "bytes": 8093
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/artifact-hashes.json",
+    "archived": "operator-kit/artifact-hashes.json",
+    "sha256": "849bc9efbd7fd8b70b700a29a2ecc473e93d71d8985e740f88feefc77ad348d4",
+    "bytes": 4238
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/decoder-provenance.json",
+    "archived": "operator-kit/decoder-provenance.json",
+    "sha256": "b602ebdb79dded054fb33d3a4ab5996985a440581af7bbf9148ebbb73ab1a9d1",
+    "bytes": 530
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/final-code-current.diff",
+    "archived": "operator-kit/final-code-current.diff",
+    "sha256": "4be65c47455c2f6c554190e94dbb5a77e7b7cca41e57ec1c436206550dfcbc53",
+    "bytes": 91134
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/full-final-code.txt",
+    "archived": "operator-kit/full-final-code.txt",
+    "sha256": "3f4b49a6787e59ab52614e1ec4febd66985fc74f8c83212a6a0d9e249e3bfe7c",
+    "bytes": 79531
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/full-native-command.json",
+    "archived": "operator-kit/full-native-command.json",
+    "sha256": "28d17a2ff99e28decff38d185cd56bd738e6ec749a7a269bd2220d2ce00cd011",
+    "bytes": 694
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/mutants/C1-decorative-body.tsx",
+    "archived": "operator-kit/mutants/C1-decorative-body.tsx.txt",
+    "sha256": "0b960310eb6fe3b541f1029aa3a57edb089ea59f6f1dbfae708110ac9f7cea83",
+    "bytes": 1583
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/mutants/C1-description-association.tsx",
+    "archived": "operator-kit/mutants/C1-description-association.tsx.txt",
+    "sha256": "835e1e297f8e23f1f5c8051a6addc5611eae81d1146b4a0624ca6366e025dda2",
+    "bytes": 4595
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/mutants/C1-fixed-responsive-frame.tsx",
+    "archived": "operator-kit/mutants/C1-fixed-responsive-frame.tsx.txt",
+    "sha256": "ffe155f482fbcda66eac3d19ecfb4db9bd156bc97b2561ae05e945f6ef81c7f5",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/intent.json",
+    "archived": "operator-kit/operator-apply-cut-353KSq/intent.json",
+    "sha256": "9b492b261b79f60fe59205a14f847e9da0aa2b1405687e95255849685fae5885",
+    "bytes": 2677
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/hair-length-option-card.test.tsx",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/hair-portrait-assets.test.ts",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/hair-portrait-gallery.test.tsx",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/hair-portrait-length-progression.test.ts",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/hair-portrait.test.tsx",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/portrait-config.test.ts",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/quiz-motion-tokens.test.ts",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/originals/tests/quiz-option-card.test.tsx",
+    "archived": "operator-kit/operator-apply-cut-353KSq/originals/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "bytes": 7137
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-cut-353KSq/receipt.json",
+    "archived": "operator-kit/operator-apply-cut-353KSq/receipt.json",
+    "sha256": "56ad4d12144f2c882c812275bc9eb1be94dad7d736704760960c227143e609fc",
+    "bytes": 1715
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/intent.json",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/intent.json",
+    "sha256": "09e8e7820d714707b46328eae7dc94c8cb1aaae7ade8a306945cec32fea272be",
+    "bytes": 2433
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/hair-length-option-card.test.tsx",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-assets.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-gallery.test.tsx",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-length-progression.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait.test.tsx",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/portrait-config.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/quiz-motion-tokens.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/originals/tests/quiz-option-card.test.tsx",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/originals/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "44d04311c4581efea17eb7f7b5442d1f680321763acbf0c913282c965b6150c7",
+    "bytes": 6734
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-apply-transfer-Amn3CF/receipt.json",
+    "archived": "operator-kit/operator-apply-transfer-Amn3CF/receipt.json",
+    "sha256": "4ede4f9762d2751363529c83e2add725ab73f6f73cc1caf98f553e0f980b93be",
+    "bytes": 1474
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-candidates.json",
+    "archived": "operator-kit/operator-candidates.json",
+    "sha256": "a27e699087335be461b44268101b56c8916b5ed3dd7de1e165b9f734973a3f41",
+    "bytes": 10316
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-controls-normalized.json",
+    "archived": "operator-kit/operator-controls-normalized.json",
+    "sha256": "4bd72186d34d54734608bc0c0fc05ec8146f9aa0efc078ea399a428a8d60084b",
+    "bytes": 8627
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-edit.cjs",
+    "archived": "operator-kit/operator-edit.cjs.txt",
+    "sha256": "6038492be3cfd1edd5407f7dc634cb3dfd222d625ee49f22fb79d595b754cbbc",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-evidence.json",
+    "archived": "operator-kit/operator-evidence.json",
+    "sha256": "4d2dfbed67d3f1294f354af35d115697e58a45a92516eaa1f361a571a4547ec7",
+    "bytes": 19804
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-guard.cjs",
+    "archived": "operator-kit/operator-guard.cjs.txt",
+    "sha256": "99a74eb4690e75865c71577b38ecc78ec31d2f1c5de2f8b4d0227e51799472a9",
+    "bytes": 17018
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body/originals/src/components/quiz/hair-portrait-figure.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body/originals/src/components/quiz/hair-portrait-figure.tsx.txt",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-after.tap",
+    "sha256": "2421922a5eefe519b8925ac3482d5a2e5a1a7457fe4940f4a954e40ccd97acbf",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-before.tap",
+    "sha256": "5628832bd5508f4e9a8d180fb5f2cdd555ba985afbae0f59a4ac78c363971b4c",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-decorative-body-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-decorative-body-fault.tap",
+    "sha256": "43bc901478c72e2b74d76f120f9496c372945f7ee332c34a3b8f166b1f7450cb",
+    "bytes": 7026
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association/originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association/originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-after.tap",
+    "sha256": "49b66721885a0f66bf4791379d1fd1ff2068a74e9a46e0f7e271d528d88323e6",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-before.tap",
+    "sha256": "4a3e072cea455abd8b84a4d4f2fc8907d5dfa2ea38367293e5c64fda369fa874",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-description-association-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-description-association-fault.tap",
+    "sha256": "519b682b8fb144a09047ad91b73dfbda74478de33aba40e9fd880822f9e2b500",
+    "bytes": 6971
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame/originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame/originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-after.tap",
+    "sha256": "0500a94e70d9af632c053287d0f7be5bbf67ee366bb94d0da8a01a0bc95610c1",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-before.tap",
+    "sha256": "3b66ef5499d91ddcef3543ed19b89686c93bd879f232f0f2236d5a1224011c81",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/C1-fixed-responsive-frame-fault.tap",
+    "sha256": "85e46bdcc20d5e497f52c9a0c768026b1bcf07519c6f8a5e4ceb95ac9ea7c92b",
+    "bytes": 7012
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/src/components/quiz/hair-portrait-figure.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/src/components/quiz/hair-portrait-figure.tsx.txt",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-length-option-card.test.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "6f576124ad635d5558c86f77f6f0f6bb9fa40a6d25611f8a55564ff92a374588",
+    "bytes": 1548
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-assets.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-gallery.test.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-length-progression.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait.test.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/portrait-config.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/quiz-motion-tokens.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/all-originals/tests/quiz-option-card.test.tsx",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/all-originals/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "bytes": 7137
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/complete.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/complete.json",
+    "sha256": "c9323f0ef5539e9dd11fa43d7a4d59704e35fced39bebfd22919ac2745142f5b",
+    "bytes": 15044
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/intent.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/intent.json",
+    "sha256": "6d22952bfab22c014fd271ffb37bb7ba439c96f90d690ec983e8c1a43bca6acb",
+    "bytes": 1488
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-cut-6ZzDoc/receipt.json",
+    "archived": "operator-kit/operator-mutations-cut-6ZzDoc/receipt.json",
+    "sha256": "cb03068fd9835ede7dc57ea1f0fc1094d1f8022c11aa072ac68364f6e6afcc83",
+    "bytes": 93119
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body/originals/src/components/quiz/hair-portrait-figure.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body/originals/src/components/quiz/hair-portrait-figure.tsx.txt",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-after.tap",
+    "sha256": "e8192c14bc0508940ede8e3fbf005dbd1ad5bcbede66a318be2c93e7380de6a8",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-before.tap",
+    "sha256": "b3d9b6e0a3bfba199b99e2120a9658231ea8b3f87b90b4770fa94cadaa91a1d9",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-decorative-body-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-decorative-body-fault.tap",
+    "sha256": "40fc59052ab7b3b278c90011caadb24f1baf67e422c54daa4a7b6140b26f546b",
+    "bytes": 7026
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association/originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association/originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-after.tap",
+    "sha256": "8061e47f17e2337d264833034d580b55b26658f985b558ad8c4b897325e360da",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-before.tap",
+    "sha256": "abc2b2367b62da3a68de33cffb293e9b9ad94e61f97e21450fdc0c73e2858032",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-description-association-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-description-association-fault.tap",
+    "sha256": "601923f41b59cd00d40b0088c8d9ef7374bb3a91c8bbfed6498f15a086987e1a",
+    "bytes": 6971
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame/originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame/originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-after.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-after.tap",
+    "sha256": "d1d2647e8f03202db0c09d67aad411b7715e33ee300d6367af1ea39bace0b855",
+    "bytes": 318
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-before.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-before.tap",
+    "sha256": "fa6c8cdff63e0bb30e472eb063f7d11751f5afbfda8b6787c4bd910a570ed80b",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-fault.command.json",
+    "sha256": "a56cef19c143236e99c3fece84f24b9bfa5b91b897844b840b774f2a06855f8d",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/C1-fixed-responsive-frame-fault.tap",
+    "sha256": "37f34f5d7fad6725b1000fa6a55ddbfbf0d8386f10bdf6dd0550f18a361ed32a",
+    "bytes": 7012
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/src/components/quiz/hair-length-option-card.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/src/components/quiz/hair-length-option-card.tsx.txt",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/src/components/quiz/hair-portrait-figure.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/src/components/quiz/hair-portrait-figure.tsx.txt",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-length-option-card.test.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-length-option-card.test.tsx.txt",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-assets.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-assets.test.ts.txt",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-gallery.test.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-gallery.test.tsx.txt",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-length-progression.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait-length-progression.test.ts.txt",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait.test.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/hair-portrait.test.tsx.txt",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/personal-plan-option-card-layout.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/personal-plan-option-card-layout.test.ts.txt",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/portrait-config.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/portrait-config.test.ts.txt",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/quiz-motion-tokens.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/quiz-motion-tokens.test.ts.txt",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/all-originals/tests/quiz-option-card.test.tsx",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/all-originals/tests/quiz-option-card.test.tsx.txt",
+    "sha256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "bytes": 7137
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/complete.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/complete.json",
+    "sha256": "64f52928de3d0607efc16d073059943c07199cf67067cb5c6c11af7f44ed614b",
+    "bytes": 15049
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/intent.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/intent.json",
+    "sha256": "bc63bbd09e739a269f2ec0c16791829c6dcd373b55b092cb133e95a5f6647323",
+    "bytes": 1493
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn/receipt.json",
+    "archived": "operator-kit/operator-mutations-transfer-B4cpLn/receipt.json",
+    "sha256": "2b2b5860d90d2dd80aeeeca907765d1c7acb576aeaa22ca5325f4144f598ddc5",
+    "bytes": 93179
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-native-proof.cjs",
+    "archived": "operator-kit/operator-native-proof.cjs.txt",
+    "sha256": "3facfd08d0ebbc24a028d857212f871dd63515be68eb0188934ee09048c9284a",
+    "bytes": 1795
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-pins.json",
+    "archived": "operator-kit/operator-pins.json",
+    "sha256": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396",
+    "bytes": 2265243
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-proof.cjs",
+    "archived": "operator-kit/operator-proof.cjs.txt",
+    "sha256": "d89281fa817a184fee4608229cc53491d23fb8eaa4230e07d1515a92c2060d46",
+    "bytes": 9782
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-readonly-preload.cjs",
+    "archived": "operator-kit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-run-controls.cjs",
+    "archived": "operator-kit/operator-run-controls.cjs.txt",
+    "sha256": "88068fe03a1359cc897fecf5028d3413b36bcf802f0921e9e39669a515c8c70b",
+    "bytes": 8067
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-selected-closure.json",
+    "archived": "operator-kit/operator-selected-closure.json",
+    "sha256": "c45749c977393a2690fa854c3a56492c2aec7814f9bcc838a497e826424ad1fe",
+    "bytes": 51575
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/preparation-receipt.txt",
+    "archived": "operator-kit/preparation-receipt.txt",
+    "sha256": "0d29e8d3131b68635a06b2a092da933cda7e2e50449a4383ec2cbb8f95043b72",
+    "bytes": 1808
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/prepare-pins.cjs",
+    "archived": "operator-kit/prepare-pins.cjs.txt",
+    "sha256": "7332a1446d22ec3ce1dcf0451be39a6044dd8869483f6a961e40cdaf5578a1a4",
+    "bytes": 16470
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/prepare-tools.py",
+    "archived": "operator-kit/prepare-tools.py.txt",
+    "sha256": "79f858049e6efe9d4795ebdd89dec10c128bfd3061811b1dc75fd30f36d9c80b",
+    "bytes": 9762
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/proof-attestation.cjs",
+    "archived": "operator-kit/proof-attestation.cjs.txt",
+    "sha256": "26284c69f461451eee03fbe4e10f7bd6fa16a55e639713ede0a0f5900874f9b9",
+    "bytes": 6116
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-1.txt",
+    "archived": "operator-kit/static-check-1.txt",
+    "sha256": "47730e02976397f00c0454ee81a2f96d8d1aa612c2835401ceb95b2af765f836",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-2.txt",
+    "archived": "operator-kit/static-check-2.txt",
+    "sha256": "d93eaab384be2020ea309aee7e1a94399350cbf0ee8b5bbf0d88f25439a96bd1",
+    "bytes": 433
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-3.txt",
+    "archived": "operator-kit/static-check-3.txt",
+    "sha256": "a7ed6d21e32729f6521e70dfb4a5a1a12fff06ef98bd869eee583381412e2855",
+    "bytes": 978
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-4.txt",
+    "archived": "operator-kit/static-check-4.txt",
+    "sha256": "c30105e5aef8a2494faa3a34cf7f8e9bced641c570c9d2a86bf39a98b060dc1d",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-integrity.cjs",
+    "archived": "operator-kit/static-integrity.cjs.txt",
+    "sha256": "41f1b915cc3035dc273b9fa23b556f402cf69f6f6b9b200748fd7da3fc95c660",
+    "bytes": 3501
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-delta.patch",
+    "archived": "operator-kit/template-delta.patch",
+    "sha256": "7a6a3724542c9afc84dd386d2c0ef5f30cb5d1f7fd545d67ce3470c21e340129",
+    "bytes": 25659
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/catalog99-operator-proof.cjs",
+    "archived": "operator-kit/template-originals/catalog99-operator-proof.cjs.txt",
+    "sha256": "3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0",
+    "bytes": 9081
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-HANDOFF.json",
+    "archived": "operator-kit/template-originals/scanner119-HANDOFF.json",
+    "sha256": "1361158887bae170f1231ec8f4c631c029b63a5242d7ba5a051327913ac8eab6",
+    "bytes": 5707
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-edit.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-edit.cjs.txt",
+    "sha256": "465be39962f79701f8f59d4a55bfd301789c840b94d490ef2c027f514b1407c1",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-guard.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-guard.cjs.txt",
+    "sha256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d",
+    "bytes": 16492
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-native-proof.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-native-proof.cjs.txt",
+    "sha256": "12a42b13f8f20091f6db09fb40774a066c216ce7d53a27d2ed8db77a782a3efc",
+    "bytes": 1879
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-pins.json",
+    "archived": "operator-kit/template-originals/scanner119-operator-pins.json",
+    "sha256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+    "bytes": 2233874
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-proof.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-proof.cjs.txt",
+    "sha256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6",
+    "bytes": 5737
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-readonly-preload.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-operator-run-controls.cjs",
+    "archived": "operator-kit/template-originals/scanner119-operator-run-controls.cjs.txt",
+    "sha256": "5f75556b152053a4a6c8ab12fb280a8a5c833d4c484e16c46a29fb369f1681e0",
+    "bytes": 8071
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-originals/scanner119-prepare-pins.cjs",
+    "archived": "operator-kit/template-originals/scanner119-prepare-pins.cjs.txt",
+    "sha256": "946fc90748b75a657447c3c667ffbc98fde789038f1dd7c6c8cd8b2e985c5362",
+    "bytes": 16575
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-provenance.json",
+    "archived": "operator-kit/template-provenance.json",
+    "sha256": "8f03093e0b62fbc7c9e8bb94b12896a0243b2aed0900fcc9ac2df2b97e901ecf",
+    "bytes": 2023
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-tools-bpihum9l/template-source-disposition.json",
+    "archived": "operator-kit/template-source-disposition.json",
+    "sha256": "7a8054d94d42209eba55399dfb2c854b509338032b42110c68a6354e3699a1ca",
+    "bytes": 55274
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-independent-preservation.md",
+    "archived": "independent-test-audit-quizportrait43-independent-preservation.md/test-audit-quizportrait43-independent-preservation.md",
+    "sha256": "404ad9e8086cbfa53f33feffa1ef1b8179dd9eb73d68dd4d35cbc2212b0211fe",
+    "bytes": 11740
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-independent-receipt.json",
+    "archived": "independent-test-audit-quizportrait43-independent-receipt.json/test-audit-quizportrait43-independent-receipt.json",
+    "sha256": "86ccf6145e80cf3c45170312d1f2c128226ea76316617308f45247bd0102c582",
+    "bytes": 999
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-independent-static.cjs",
+    "archived": "independent-test-audit-quizportrait43-independent-static.cjs/test-audit-quizportrait43-independent-static.cjs.txt",
+    "sha256": "07d2a87da26cb9a237705dc76777ab2bc91245f46f9d18b9ebe8e245b74ae8e8",
+    "bytes": 6293
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait43-independent-static.json",
+    "archived": "independent-test-audit-quizportrait43-independent-static.json/test-audit-quizportrait43-independent-static.json",
+    "sha256": "527215693a82f6ea904dec5320f2741a7e5697b404f73d4493397741d58e2c9d",
+    "bytes": 60913
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-before-native.command.json",
+    "archived": "main-test-audit-quizportrait46-main-before-native.command.json/test-audit-quizportrait46-main-before-native.command.json",
+    "sha256": "56c028dabe4837751e81a22d199069c2da8b59a68230597aabe36aa272922301",
+    "bytes": 682
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-before-native.result.json",
+    "archived": "main-test-audit-quizportrait46-main-before-native.result.json/test-audit-quizportrait46-main-before-native.result.json",
+    "sha256": "f059be363a6def993908ec25ae0ff98050c20ca9b62b5cc7d538e5726c84993a",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-before-native.tap",
+    "archived": "main-test-audit-quizportrait46-main-before-native.tap/test-audit-quizportrait46-main-before-native.tap",
+    "sha256": "2762b09f5ac95922683fac4ef59ae54e9a9336c4a2928286f4d1fc899cc266fb",
+    "bytes": 9927
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-transfer-native.command.json",
+    "archived": "main-test-audit-quizportrait46-main-transfer-native.command.json/test-audit-quizportrait46-main-transfer-native.command.json",
+    "sha256": "56c028dabe4837751e81a22d199069c2da8b59a68230597aabe36aa272922301",
+    "bytes": 682
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-transfer-native.result.json",
+    "archived": "main-test-audit-quizportrait46-main-transfer-native.result.json/test-audit-quizportrait46-main-transfer-native.result.json",
+    "sha256": "f059be363a6def993908ec25ae0ff98050c20ca9b62b5cc7d538e5726c84993a",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait46-main-transfer-native.tap",
+    "archived": "main-test-audit-quizportrait46-main-transfer-native.tap/test-audit-quizportrait46-main-transfer-native.tap",
+    "sha256": "ccd8f828e6e4a99ac25a987cfcbc13e5126335c9bc869e2dd6c4930e4eea6250",
+    "bytes": 9919
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait45-main-cut-native.command.json",
+    "archived": "main-test-audit-quizportrait45-main-cut-native.command.json/test-audit-quizportrait45-main-cut-native.command.json",
+    "sha256": "56c028dabe4837751e81a22d199069c2da8b59a68230597aabe36aa272922301",
+    "bytes": 682
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait45-main-cut-native.result.json",
+    "archived": "main-test-audit-quizportrait45-main-cut-native.result.json/test-audit-quizportrait45-main-cut-native.result.json",
+    "sha256": "9732ed35a05d683c93d7ec5743613ccf78ca74d36b3de5ffdc96e2aa54eb6234",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-quizportrait45-main-cut-native.tap",
+    "archived": "main-test-audit-quizportrait45-main-cut-native.tap/test-audit-quizportrait45-main-cut-native.tap",
+    "sha256": "7c409e1aab7763bdbd5fa3ed95222ea7a7b22d312ee75c2f0d8cc8243bb5f460",
+    "bytes": 9662
+  }
+]

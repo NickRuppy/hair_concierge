@@ -6,7 +6,6 @@ import { tmpdir } from "node:os"
 import { readReviewPackage } from "../scripts/product-intake/review-app"
 
 import {
-  parseProductIntakeResearchedPayload,
   validateProductIntakeApprovalPayload,
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
@@ -601,7 +600,6 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
     case "bondbuilder":
       return {
         product_bondbuilder_specs: {
-          bond_repair_intensity: "intensive",
           application_mode: "post_wash_leave_in",
           bond_repair_axis: "peptide_chain",
           treatment_mode: "leave_in",
@@ -828,11 +826,13 @@ test("Shampoo rejects an extra protocol for a role unsupported by its reviewed b
 
 test("Mask and Leave-in emit every canonical v3 fact", () => {
   for (const category of ["mask", "leave_in"] as const) {
-    const result = validateProductIntakeApprovalPayload(
-      reviewedPayload(category, validCategorySpecs(category)),
-    )
+    const payload = reviewedPayload(category, validCategorySpecs(category))
+    const result = validateProductIntakeApprovalPayload(payload)
     assert.equal(result.ok, true)
     if (!result.ok) continue
+    if (category === "mask") {
+      assert.deepEqual(result.normalizedPayload.draft, payload.draft)
+    }
     const row = result.targetSpecOperations.find(
       (operation) =>
         operation.table === (category === "mask" ? "product_mask_specs" : "product_leave_in_specs"),
@@ -1025,6 +1025,32 @@ test("field rationales must cover product and category spec conclusions", () => 
   )
 })
 
+test("market segment is optional in the reviewed package and needs a rationale only when present", () => {
+  const without = validateProductIntakeApprovalPayload(
+    reviewedPayload("mask", validCategorySpecs("mask")),
+  )
+  assert.equal(without.ok, true)
+
+  const withSegment = reviewedPayload("mask", validCategorySpecs("mask"))
+  ;(withSegment.final.product as Record<string, unknown>).market_segment = "professional"
+  const missingRationale = validateProductIntakeApprovalPayload(withSegment)
+  assert.equal(missingRationale.ok, false)
+  assert.deepEqual(missingRationale.missingFields, [
+    "final.field_rationales.product.market_segment",
+  ])
+
+  withSegment.final.field_rationales["product.market_segment"] =
+    "Sold through professional salon channels only."
+  const accepted = validateProductIntakeApprovalPayload(withSegment)
+  assert.equal(accepted.ok, true)
+  if (!accepted.ok) return
+  assert.equal(accepted.normalizedPayload.final.product.market_segment, "professional")
+
+  const invalid = reviewedPayload("mask", validCategorySpecs("mask"))
+  ;(invalid.final.product as Record<string, unknown>).market_segment = "luxury"
+  assert.equal(validateProductIntakeApprovalPayload(invalid).ok, false)
+})
+
 test("manual review flag is required before approval", () => {
   const payload = reviewedPayload("mask", validCategorySpecs("mask"))
   payload.final.review.manual_reviewed = false
@@ -1033,18 +1059,6 @@ test("manual review flag is required before approval", () => {
 
   assert.equal(result.ok, false)
   assert.ok(result.missingFields.includes("final.review.manual_reviewed"))
-})
-
-test("researched payload parser keeps draft and final JSON payloads", () => {
-  const payload = reviewedPayload("mask", validCategorySpecs("mask"))
-
-  const parsed = parseProductIntakeResearchedPayload(payload)
-  const validated = validateProductIntakeApprovalPayload(payload)
-
-  assert.ok(parsed.ok)
-  assert.deepEqual(parsed.payload.draft, payload.draft)
-  assert.ok(validated.ok)
-  assert.deepEqual(validated.normalizedPayload.draft, payload.draft)
 })
 
 test("each supported category emits expected target table operation shapes", () => {

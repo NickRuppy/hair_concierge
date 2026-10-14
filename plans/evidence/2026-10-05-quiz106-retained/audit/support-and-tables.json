@@ -1,0 +1,390 @@
+[
+  {
+    "file": "tests/quiz-normalization.test.ts",
+    "supportAssertions": [],
+    "tables": []
+  },
+  {
+    "file": "tests/quiz-primary-concern.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "COMPLETE",
+        "line": 27,
+        "literal": "{\n  structure: \"wavy\",\n  thickness: \"normal\",\n  density: \"medium\",\n  hair_length: \"medium\",\n  fingertest: \"glatt\",\n  pulltest: \"stretches_bounces\",\n  scalp_type: \"ausgeglichen\",\n  has_scalp_issue: false,\n  concerns: [],\n  treatment: [\"natur\"],\n  goals: [\"moisture\"],\n}",
+        "kind": "object",
+        "size": 11
+      },
+      {
+        "name": "STATED_TABLE",
+        "line": 43,
+        "literal": "[\n  { name: \"no concerns\", answers: { concerns: [] }, expected: null },\n  { name: \"concerns missing\", answers: {}, expected: null },\n  {\n    name: \"one concern, no pick\",\n    answers: { concerns: [\"frizz_flyaways\"] },\n    expected: \"frizz_flyaways\",\n  },\n  {\n    name: \"one concern with the same pick\",\n    answers: { concerns: [\"breakage\"], primary_concern: \"breakage\" },\n    expected: \"breakage\",\n  },\n  {\n    name: \"one concern with a stale pick falls back to the only concern\",\n    answers: { concerns: [\"breakage\"], primary_concern: \"low_shine\" },\n    expected: \"breakage\",\n  },\n  {\n    name: \"two concerns with a pick\",\n    answers: { concerns: [\"breakage\", \"frizz_flyaways\"], primary_concern: \"frizz_flyaways\" },\n    expected: \"frizz_flyaways\",\n  },\n  {\n    name: \"two concerns without a pick (legacy answers)\",\n    answers: { concerns: [\"breakage\", \"frizz_flyaways\"] },\n    expected: null,\n  },\n  {\n    name: \"two concerns with a stale pick\",\n    answers: { concerns: [\"breakage\", \"frizz_flyaways\"], primary_concern: \"tangling\" },\n    expected: null,\n  },\n  {\n    name: \"legacy aliases stay in their own vocabulary\",\n    answers: { concerns: [\"dryness\", \"frizz\"], primary_concern: \"dryness\" },\n    expected: \"dryness\",\n  },\n  {\n    name: \"non-legacy pick\",\n    answers: { concerns: [\"low_shine\", \"hair_damage\"], primary_concern: \"low_shine\" },\n    expected: \"low_shine\",\n  },\n  {\n    name: \"unknown pick value is ignored\",\n    answers: {\n      concerns: [\"low_shine\", \"hair_damage\"],\n      primary_concern: \"not_a_concern\" as never,\n    },\n    expected: null,\n  },\n]",
+        "kind": "array",
+        "size": 11
+      },
+      {
+        "name": "for-of",
+        "line": 100,
+        "iterable": "STATED_TABLE",
+        "fullSource": "for (const row of STATED_TABLE) {\n  test(`resolveStatedPrimaryConcern: ${row.name}`, () => {\n    assert.equal(resolveStatedPrimaryConcern(row.answers), row.expected)\n  })\n}"
+      },
+      {
+        "name": "for-of",
+        "line": 115,
+        "iterable": "[\"hair_damage\", \"split_ends\", \"breakage\", \"dryness\", \"frizz\", \"tangling\"]",
+        "fullSource": "for (const legacy of [\"hair_damage\", \"split_ends\", \"breakage\", \"dryness\", \"frizz\", \"tangling\"]) {\n    assert.equal(toLegacyQuizConcern(legacy as never), legacy)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 118,
+        "iterable": "[\n    \"low_shine\",\n    \"lost_shape\",\n    \"low_volume_or_weighed_down\",\n    \"hair_loss_or_thinning\",\n  ]",
+        "fullSource": "for (const nonLegacy of [\n    \"low_shine\",\n    \"lost_shape\",\n    \"low_volume_or_weighed_down\",\n    \"hair_loss_or_thinning\",\n  ]) {\n    assert.equal(toLegacyQuizConcern(nonLegacy as never), null)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 159,
+        "iterable": "[\n  \"low_shine\",\n  \"lost_shape\",\n  \"low_volume_or_weighed_down\",\n  \"hair_loss_or_thinning\",\n] as const",
+        "fullSource": "for (const nonLegacy of [\n  \"low_shine\",\n  \"lost_shape\",\n  \"low_volume_or_weighed_down\",\n  \"hair_loss_or_thinning\",\n] as const) {\n  test(`need lane: stated ${nonLegacy} falls back to no primary concern`, () => {\n    const resolution = resolveQuizNeed({\n      ...COMPLETE,\n      goals: [],\n      concerns: [nonLegacy, \"breakage\"],\n      primary_concern: nonLegacy,\n    })\n    assert.equal(resolution.primaryConcern, null)\n    assert.equal(resolution.lane, \"base\")\n  })\n}"
+      },
+      {
+        "name": "raw",
+        "line": 180,
+        "literal": "{ ...COMPLETE, goals: [], concerns: [\"dry_lengths\", \"low_shine\"] }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "NON_LEGACY_COPY",
+        "line": 242,
+        "literal": "{\n  low_shine: { before: \"wenig Glanz\" },\n  lost_shape: { before: \"Formverlust\" },\n  low_volume_or_weighed_down: { before: \"plattes, beschwertes Haar\" },\n  hair_loss_or_thinning: { before: \"Haarausfall oder dünner werdendes Haar\" },\n}",
+        "kind": "object",
+        "size": 4
+      },
+      {
+        "name": "for-of",
+        "line": 249,
+        "iterable": "Object.entries(NON_LEGACY_COPY)",
+        "fullSource": "for (const [concern, expected] of Object.entries(NON_LEGACY_COPY)) {\n  test(`narrative: stated ${concern} has its own copy and does not crash`, () => {\n    const narrative = buildQuizResultNarrative({\n      ...COMPLETE,\n      concerns: [concern as never, \"breakage\"],\n      primary_concern: concern as never,\n      goals: [\"moisture\"],\n    })\n    assert.equal(narrative.primaryConcern, concern)\n    assert.equal(narrative.rows[1].before, expected.before)\n    assert.ok(\n      narrative.intro.startsWith(`Du hast gesagt, dass dich vor allem ${expected.before} stört`),\n      narrative.intro,\n    )\n    assert.ok(narrative.rows[1].after.length > 0)\n  })\n}"
+      },
+      {
+        "name": "LEAD",
+        "line": 300,
+        "literal": "{ name: \"Lea\", email: \"lea@example.com\", marketingConsent: false }",
+        "kind": "object",
+        "size": 3
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-validators.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "concerns",
+        "line": 53,
+        "literal": "[\n    \"dry_lengths\",\n    \"frizz_flyaways\",\n    \"low_shine\",\n    \"lost_shape\",\n    \"low_volume_or_weighed_down\",\n    \"hair_damage\",\n    \"breakage\",\n    \"split_ends\",\n    \"tangling\",\n  ]",
+        "kind": "array",
+        "size": 9
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-draft.test.ts",
+    "supportAssertions": [
+      {
+        "line": 374,
+        "text": "assert.equal(useQuizStore.getState().restoreDraft(), true)"
+      }
+    ],
+    "tables": [
+      {
+        "name": "quizStateWithLeadFields",
+        "line": 43,
+        "literal": "{\n    step: 12 as const,\n    answers: {\n      structure: \"wavy\",\n      hair_length: \"medium\" as const,\n      goals: [\"shine\"] as \"shine\"[],\n    },\n    lead: {\n      name: \"Lea\",\n      email: \"lea@example.com\",\n      marketingConsent: true,\n    },\n    leadId: \"550e8400-e29b-41d4-a716-446655440000\",\n  }",
+        "kind": "object",
+        "size": 4
+      },
+      {
+        "name": "quizStateWithLeadFields",
+        "line": 78,
+        "literal": "{\n    step: 10 as const,\n    answers: { structure: \"curly\", hair_length: \"medium\" as const },\n    lead: { name: \"Mia\", email: \"mia@example.com\", marketingConsent: false },\n    leadId: \"550e8400-e29b-41d4-a716-446655440000\",\n  }",
+        "kind": "object",
+        "size": 4
+      },
+      {
+        "name": "for-of",
+        "line": 94,
+        "iterable": "[10, 11, 14]",
+        "fullSource": "for (const step of [10, 11, 14]) {\n    const storage = new MemoryStorage()\n\n    storage.setItem(\n      QUIZ_DRAFT_STORAGE_KEY,\n      JSON.stringify({\n        version: 1,\n        savedAt: Date.now(),\n        step,\n        answers: { structure: \"wavy\", hair_length: \"medium\" },\n      }),\n    )\n\n    const draft = loadQuizDraft(storage)\n\n    assert.equal(draft?.step, 9)\n    assert.deepEqual(draft?.answers, { structure: \"wavy\", hair_length: \"medium\" })\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 142,
+        "iterable": "[4, 5, 6, 7, 8, 9, 10, 11, 12, 14]",
+        "fullSource": "for (const step of [4, 5, 6, 7, 8, 9, 10, 11, 12, 14]) {\n    const storage = new MemoryStorage()\n\n    storage.setItem(\n      QUIZ_DRAFT_STORAGE_KEY,\n      JSON.stringify({\n        version: 1,\n        savedAt: Date.now(),\n        step,\n        answers: {\n          structure: \"wavy\",\n          thickness: \"normal\",\n          density: \"medium\",\n        },\n      }),\n    )\n\n    const draft = loadQuizDraft(storage)\n\n    assert.equal(draft?.step, 15)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 343,
+        "iterable": "[17, 18]",
+        "fullSource": "for (const step of [17, 18]) {\n    const storage = new MemoryStorage()\n\n    storage.setItem(\n      QUIZ_DRAFT_STORAGE_KEY,\n      JSON.stringify({\n        version: 2,\n        savedAt: Date.now(),\n        step,\n        answers: { structure: \"wavy\", thickness: \"normal\", density: \"medium\" },\n        funnelPackageKey: \"scan_v1\",\n      }),\n    )\n\n    assert.equal(loadQuizDraft(storage)?.step, 15)\n  }"
+      },
+      {
+        "name": "SCAN_DRAFT_ANSWERS",
+        "line": 381,
+        "literal": "{\n  structure: \"wavy\",\n  thickness: \"normal\",\n  density: \"medium\",\n  hair_length: \"medium\",\n  fingertest: \"leicht_uneben\",\n  pulltest: \"stretches_bounces\",\n  treatment: [\"natur\"],\n  scalp_type: \"ausgeglichen\",\n  has_scalp_issue: false,\n} satisfies QuizAnswers",
+        "kind": "object",
+        "size": 9
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-screen-order.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "TODAYS_STEP_ORDER",
+        "line": 28,
+        "literal": "[2, 3, 13, 15, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]",
+        "kind": "array",
+        "size": 14
+      },
+      {
+        "name": "TODAYS_MOTION_ORDER",
+        "line": 29,
+        "literal": "[2, 3, 13, 15, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]",
+        "kind": "array",
+        "size": 14
+      },
+      {
+        "name": "TODAYS_REGULAR_HISTORY_ORDER",
+        "line": 30,
+        "literal": "[\n    { step: 2 },\n    { step: 3 },\n    { step: 13 },\n    { step: 15 },\n    { step: 4 },\n    { step: 5 },\n    { step: 7 },\n    { step: 6 },\n    { step: 8 },\n    { step: 12 },\n    { step: 9, leadCaptureSubStep: \"name\" },\n    { step: 9, leadCaptureSubStep: \"email\" },\n    { step: 9, leadCaptureSubStep: \"consent\" },\n    { step: 10 },\n    { step: 11 },\n    { step: 14 },\n  ]",
+        "kind": "array",
+        "size": 16
+      },
+      {
+        "name": "SCAN_STEP_ORDER",
+        "line": 56,
+        "literal": "[2, 3, 13, 16, 15, 4, 5, 7, 6, 17, 8, 12, 18, 9, 10, 11, 14]",
+        "kind": "array",
+        "size": 17
+      },
+      {
+        "name": "for-of",
+        "line": 66,
+        "iterable": "[null, \"default_organic\", \"some_unknown_package\"]",
+        "fullSource": "for (const packageKey of [null, \"default_organic\", \"some_unknown_package\"]) {\n    assert.deepEqual([...getQuizScreenOrder(packageKey)], TODAYS_STEP_ORDER, `key ${packageKey}`)\n    assert.deepEqual([...getQuizStepOrder(packageKey)], TODAYS_STEP_ORDER, `key ${packageKey}`)\n    assert.deepEqual([...getQuizMotionOrder(packageKey)], TODAYS_MOTION_ORDER, `key ${packageKey}`)\n    assert.deepEqual(\n      [...getQuizHistoryScreenOrder(packageKey, \"regular\")],\n      TODAYS_REGULAR_HISTORY_ORDER,\n      `key ${packageKey}`,\n    )\n    assert.deepEqual(\n      [...getQuizHistoryScreenOrder(packageKey, \"partner\")],\n      TODAYS_PARTNER_HISTORY_ORDER,\n      `key ${packageKey}`,\n    )\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 130,
+        "iterable": "order",
+        "fullSource": "for (const entry of order) {\n    const position = getLegacyQuizScreenPosition(\n      entry.step,\n      entry.leadCaptureSubStep ?? \"name\",\n      \"regular\",\n      SCAN_FUNNEL_PACKAGE_KEY,\n    )\n    assert.ok(position > previous, `position of step ${entry.step} must increase`)\n    previous = position\n  }"
+      },
+      {
+        "name": "expectedNumbers",
+        "line": 153,
+        "literal": "[\n    [2, 1],\n    [3, 2],\n    [13, 3],\n    [15, 4],\n    [4, 5],\n    [5, 6],\n    [7, 7],\n    [6, 8],\n    [8, 9],\n    [12, 10],\n  ]",
+        "kind": "array",
+        "size": 10
+      },
+      {
+        "name": "for-of",
+        "line": 165,
+        "iterable": "expectedNumbers",
+        "fullSource": "for (const [step, number] of expectedNumbers) {\n    assert.equal(getQuizQuestionNumber(step), number, `question number of step ${step}`)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 168,
+        "iterable": "[16, 17, 18] as QuizStep[]",
+        "fullSource": "for (const step of [16, 17, 18] as QuizStep[]) {\n    assert.equal(getQuizQuestionNumber(step), undefined, `insert ${step} is not a question`)\n    assert.equal(isQuizInsertStep(step), true)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 174,
+        "iterable": "[null, SCAN_FUNNEL_PACKAGE_KEY]",
+        "fullSource": "for (const packageKey of [null, SCAN_FUNNEL_PACKAGE_KEY]) {\n    assert.deepEqual([...getQuizQuestionStepOrder(packageKey)], [...QUIZ_QUESTION_STEPS])\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 184,
+        "iterable": "QUIZ_QUESTION_STEPS",
+        "fullSource": "for (const step of QUIZ_QUESTION_STEPS) {\n    assert.equal(getQuizProgressStep(step, SCAN_FUNNEL_PACKAGE_KEY), step)\n    assert.equal(getQuizProgressStep(step, null), step)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 188,
+        "iterable": "[9, 10, 11, 14] as QuizStep[]",
+        "fullSource": "for (const step of [9, 10, 11, 14] as QuizStep[]) {\n    assert.equal(getQuizProgressStep(step, null), step)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 198,
+        "iterable": "SCAN_STEP_ORDER",
+        "fullSource": "for (const step of SCAN_STEP_ORDER) {\n    assert.equal(normalizeQuizStepForPackage(step, SCAN_FUNNEL_PACKAGE_KEY), step)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 201,
+        "iterable": "TODAYS_STEP_ORDER",
+        "fullSource": "for (const step of TODAYS_STEP_ORDER) {\n    assert.equal(normalizeQuizStepForPackage(step, null), step)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 208,
+        "iterable": "[null, SCAN_FUNNEL_PACKAGE_KEY]",
+        "fullSource": "for (const packageKey of [null, SCAN_FUNNEL_PACKAGE_KEY]) {\n    const order = getQuizStepOrder(packageKey)\n    for (const step of [...SCAN_STEP_ORDER, ...TODAYS_STEP_ORDER]) {\n      assert.ok(\n        order.includes(normalizeQuizStepForPackage(step, packageKey)),\n        `step ${step} under ${packageKey}`,\n      )\n    }\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 210,
+        "iterable": "[...SCAN_STEP_ORDER, ...TODAYS_STEP_ORDER]",
+        "fullSource": "for (const step of [...SCAN_STEP_ORDER, ...TODAYS_STEP_ORDER]) {\n      assert.ok(\n        order.includes(normalizeQuizStepForPackage(step, packageKey)),\n        `step ${step} under ${packageKey}`,\n      )\n    }"
+      },
+      {
+        "name": "transitions",
+        "line": 222,
+        "literal": "[\n    [13, 16],\n    [16, 15],\n    [6, 17],\n    [17, 8],\n    [12, 18],\n    [18, 9],\n  ]",
+        "kind": "array",
+        "size": 6
+      },
+      {
+        "name": "for-of",
+        "line": 230,
+        "iterable": "transitions",
+        "fullSource": "for (const [from, to] of transitions) {\n    useQuizStore.getState().setStep(from)\n    useQuizStore.getState().goNext()\n    assert.equal(useQuizStore.getState().step, to, `goNext from ${from}`)\n  }"
+      },
+      {
+        "name": "transitions",
+        "line": 240,
+        "literal": "[\n    [15, 16],\n    [16, 13],\n    [8, 17],\n    [17, 6],\n    [9, 18],\n    [18, 12],\n  ]",
+        "kind": "array",
+        "size": 6
+      },
+      {
+        "name": "for-of",
+        "line": 248,
+        "iterable": "transitions",
+        "fullSource": "for (const [from, to] of transitions) {\n    useQuizStore.getState().setStep(from)\n    useQuizStore.getState().goBack()\n    assert.equal(useQuizStore.getState().step, to, `goBack from ${from}`)\n  }"
+      },
+      {
+        "name": "seen",
+        "line": 266,
+        "literal": "[useQuizStore.getState().step]",
+        "kind": "array",
+        "size": 1
+      },
+      {
+        "name": "for-of",
+        "line": 289,
+        "iterable": "[16, 17, 18] as QuizStep[]",
+        "fullSource": "for (const step of [16, 17, 18] as QuizStep[]) {\n    assert.equal(shouldTrackQuizStepViewed(step), false)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 292,
+        "iterable": "TODAYS_STEP_ORDER",
+        "fullSource": "for (const step of TODAYS_STEP_ORDER) {\n    assert.equal(shouldTrackQuizStepViewed(step), true)\n  }"
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-preparation.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "input",
+        "line": 87,
+        "literal": "{\n    authLoading: false,\n    checkedAccessKey: null,\n    leadId: \"lead-1\",\n    profileHasAccess: false,\n    userId: \"user-1\",\n  }",
+        "kind": "object",
+        "size": 5
+      },
+      {
+        "name": "accessSignal",
+        "line": 103,
+        "literal": "{ current: null as AbortSignal | null }",
+        "kind": "object",
+        "size": 1
+      },
+      {
+        "name": "accessSignal",
+        "line": 127,
+        "literal": "{ current: null as AbortSignal | null }",
+        "kind": "object",
+        "size": 1
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-need-lane.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "BASE",
+        "line": 7,
+        "literal": "{\n  structure: \"wavy\",\n  thickness: \"normal\",\n  density: \"medium\",\n  fingertest: \"glatt\",\n  pulltest: \"stretches_bounces\",\n  scalp_type: \"ausgeglichen\",\n  has_scalp_issue: false,\n  concerns: [],\n  treatment: [\"natur\"],\n  goals: [],\n}",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "cases",
+        "line": 20,
+        "literal": "[\n  { name: \"colored hair alone\", answers: { treatment: [\"gefaerbt\"] }, lane: \"base\" },\n  {\n    name: \"bleach plus dryness\",\n    answers: { treatment: [\"blondiert\"], concerns: [\"dryness\"] },\n    lane: \"bond_repair\",\n  },\n  {\n    name: \"moderate treatment plus corroborated dry ends\",\n    answers: {\n      treatment: [\"gefaerbt\"],\n      concerns: [\"split_ends\"],\n      fingertest: \"rau\",\n    },\n    lane: \"bond_repair\",\n  },\n  {\n    name: \"moderate treatment plus uncorroborated dryness\",\n    answers: { treatment: [\"gefaerbt\"], concerns: [\"dryness\"] },\n    lane: \"surface_support\",\n  },\n  {\n    name: \"natural corroborated structural damage\",\n    answers: {\n      concerns: [\"hair_damage\"],\n      fingertest: \"rau\",\n      pulltest: \"snaps\",\n    },\n    lane: \"bond_repair\",\n  },\n  {\n    name: \"stretch test alone\",\n    answers: { pulltest: \"stretches_stays\" },\n    lane: \"base\",\n  },\n  {\n    name: \"stretch test plus repair intent\",\n    answers: { pulltest: \"stretches_stays\", goals: [\"strengthen\"] },\n    lane: \"protein\",\n  },\n  {\n    name: \"snap test plus dryness\",\n    answers: { pulltest: \"snaps\", concerns: [\"dryness\"] },\n    lane: \"deep_moisture\",\n  },\n  {\n    name: \"balanced test plus dryness\",\n    answers: { concerns: [\"dryness\"] },\n    lane: \"surface_support\",\n  },\n  {\n    name: \"curl definition\",\n    answers: { goals: [\"curl_definition\"] },\n    lane: \"surface_support\",\n  },\n  {\n    name: \"split ends\",\n    answers: { concerns: [\"split_ends\"] },\n    lane: \"ends_protection\",\n  },\n  {\n    name: \"shine goal\",\n    answers: { goals: [\"shine\"] },\n    lane: \"ends_protection\",\n  },\n  {\n    name: \"scalp condition without a length concern\",\n    answers: { scalp_condition: \"schuppen\", has_scalp_issue: true },\n    lane: \"scalp_focus\",\n  },\n  {\n    name: \"oily scalp alone\",\n    answers: { scalp_type: \"fettig\" },\n    lane: \"base\",\n  },\n]",
+        "kind": "array",
+        "size": 14
+      },
+      {
+        "name": "for-of",
+        "line": 97,
+        "iterable": "cases",
+        "fullSource": "for (const fixture of cases) {\n  test(`need lane: ${fixture.name}`, () => {\n    assert.equal(resolveQuizNeed({ ...BASE, ...fixture.answers }).lane, fixture.lane)\n  })\n}"
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-result-routing.test.ts",
+    "supportAssertions": [],
+    "tables": []
+  },
+  {
+    "file": "tests/quiz-email-return-selection.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "legacyLead",
+        "line": 10,
+        "literal": "{\n  id: \"10000000-0000-4000-8000-000000000001\",\n  email: \"lea@example.test\",\n  quizKind: \"legacy\",\n  quizAnswers: { structure: \"wavy\" },\n  createdAt: \"2026-07-01T12:00:00.000Z\",\n}",
+        "kind": "object",
+        "size": 5
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-email-return-choice.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "events",
+        "line": 14,
+        "literal": "[]",
+        "kind": "array",
+        "size": 0
+      }
+    ]
+  },
+  {
+    "file": "tests/quiz-email-return-edit.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "identity",
+        "line": 10,
+        "literal": "{\n  leadId: \"10000000-0000-4000-8000-000000000001\",\n  name: \"\",\n  email: \"nick@example.com\",\n  marketingConsent: true,\n  consentTimestamp: \"2026-05-28T10:00:00.000Z\",\n}",
+        "kind": "object",
+        "size": 5
+      }
+    ]
+  }
+]

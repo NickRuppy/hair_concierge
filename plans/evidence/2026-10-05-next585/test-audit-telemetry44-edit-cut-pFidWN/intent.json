@@ -1,0 +1,43 @@
+{
+  "from": "transfer",
+  "to": "cut",
+  "plan": "/tmp/test-audit-telemetry44-main-omow0m/plan.json",
+  "planSHA": "967d28feebe953f3296657d442fa673d3e1f20000b04eb78a18f957dda4c8fdc",
+  "files": [
+    {
+      "file": "tests/analytics-runtime.test.ts",
+      "before": "480aa5a6dd1368db7708a1c45eae71163e073172bbdb6fbb877605bb8089374b",
+      "after": "d9c2b1f139aa3d5ce2859e7999b7283a033d42cb8886709cd9d3ee3da0698d14"
+    },
+    {
+      "file": "tests/analytics-runtime-environment.test.ts",
+      "before": "3c2bb3baaf0c80a9b74e1d1f72815c895dadb0897c92ce9d7a819a747b67e488",
+      "after": "3c2bb3baaf0c80a9b74e1d1f72815c895dadb0897c92ce9d7a819a747b67e488"
+    },
+    {
+      "file": "tests/sentry-client-runtime.test.ts",
+      "before": "4fa7a2f8f1e750d1c34fc45139f59d1ecd0f8326bb50ebc6931b2ea3dbd31480",
+      "after": "4fa7a2f8f1e750d1c34fc45139f59d1ecd0f8326bb50ebc6931b2ea3dbd31480"
+    },
+    {
+      "file": "tests/instrumentation-client.test.ts",
+      "before": "55fc6486e5cd56d3ef2c082a6ea06fff91dd628e73c097159b60d4859f8fb580",
+      "after": "55fc6486e5cd56d3ef2c082a6ea06fff91dd628e73c097159b60d4859f8fb580"
+    },
+    {
+      "file": "tests/app-performance-telemetry.test.ts",
+      "before": "77f285379b680c59829c0884cfd915401c9720dd22a2ec5173088548f9a81a0a",
+      "after": "26e2ab5a9eed374c25528564799aefe9697fc99baa1ae6278b38efe2b00dfaef"
+    },
+    {
+      "file": "tests/speed-insights-integration.test.ts",
+      "before": "ea4147956e141ed43ebffec305996f081f4cfed8e5237f462e82d13b09ed638f",
+      "after": "ea4147956e141ed43ebffec305996f081f4cfed8e5237f462e82d13b09ed638f"
+    },
+    {
+      "file": "tests/customerio-tracking.test.ts",
+      "before": "f2cd43232a741e37751bc6111f30a15bcfe4d54aa52fe1a3c2201f057e758106",
+      "after": "f2cd43232a741e37751bc6111f30a15bcfe4d54aa52fe1a3c2201f057e758106"
+    }
+  ]
+}

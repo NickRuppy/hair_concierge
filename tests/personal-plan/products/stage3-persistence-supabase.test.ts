@@ -1385,10 +1385,24 @@ test("owned-product search delegates active identity and assessment readiness to
   }
 
   const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  for (const query of [" ", "x".repeat(121)]) {
+    await assert.rejects(
+      () =>
+        persistence.search({
+          userId: "owner-1",
+          category: "shampoo",
+          query,
+          requestToken: 3,
+          assessmentContext: shampooSearchContext,
+        }),
+      { code: "invalid_query" },
+    )
+  }
+  assert.deepEqual(calls, [])
   const result = await persistence.search({
     userId: "owner-1",
     category: "shampoo",
-    query: "ogx",
+    query: "  ogx  ",
     requestToken: 4,
     assessmentContext: shampooSearchContext,
   })
@@ -3905,6 +3919,7 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
@@ -3943,44 +3958,7 @@ test("authority facts translate an irritation need into the stored irritated rou
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
-    shampooBucket: "irritationen",
-    scalpRoute: "irritated",
-    cleansingIntensity: "gentle",
-    targetFit: "matched",
-  })
-})
-
-test("authority facts consistently use the derived irritation route", async () => {
-  const bundle = await loadStage3AuthorityFactBundle(
-    shampooAuthorityFactClient([
-      {
-        thickness: "normal",
-        shampoo_bucket: "irritationen",
-        scalp_route: "irritated",
-        cleansing_intensity: "gentle",
-      },
-    ]) as never,
-    {
-      draft: shampooAuthorityDraft({
-        scalpRoute: "balanced",
-        everydayConstraint: "irritation_compatible",
-      }),
-      subject: {
-        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
-        category: "shampoo",
-        role: "shampoo_everyday",
-        capturedProductId: "owned-shampoo-1",
-        subjectKind: "captured_product",
-      },
-      heatRoutes: [],
-      context: normalRefinedContext,
-    } as never,
-  )
-
-  assert.equal(bundle.productFacts?.category, "shampoo")
-  if (bundle.productFacts?.category !== "shampoo") return
-  assert.deepEqual(bundle.productFacts.spec, {
-    thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "irritationen",
     scalpRoute: "irritated",
     cleansingIntensity: "gentle",
@@ -4127,6 +4105,38 @@ test("complete nonmatching Shampoo rows load as a known semantic mismatch", asyn
   })
 })
 
+test("Shampoo retains a near thickness row when bucket and scalp route match", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: thickness is a degree axis, not a wrong-job gate.
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "fine",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.equal(bundle.productFacts.spec.targetFit, "matched")
+  assert.equal(bundle.productFacts.spec.thickness, "fine")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["fine"])
+})
+
 test("Shampoo comparison observations are row-order invariant and do not change authority fingerprints", async () => {
   const rows = [
     {
@@ -4202,6 +4212,7 @@ test("semantically identical contextual Shampoo rows canonicalize to one fact", 
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
@@ -4297,7 +4308,8 @@ test("authority facts select the single Conditioner spec matching the signed tar
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, "moisture")
 })
 
-test("Conditioner selection also filters by the actual refined thickness", async () => {
+test("Conditioner selection retains the nearest coherent thickness row for distance evaluation", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: thickness is a degree axis, not an exact loader gate.
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
       { thickness: "fine", protein_moisture_balance: "snaps" },
@@ -4348,7 +4360,8 @@ test("incomplete Conditioner specs remain unknown", async () => {
   assert.equal(bundle.productFacts.spec.targetFit, "unknown")
 })
 
-test("complete nonmatching Conditioner rows load as a known semantic mismatch", async () => {
+test("complete near Conditioner rows remain matched for distance evaluation", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: care direction is a degree axis, not a loader mismatch.
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
       { thickness: "normal", protein_moisture_balance: "stretches_stays" },
@@ -4369,7 +4382,9 @@ test("complete nonmatching Conditioner rows load as a known semantic mismatch", 
 
   assert.equal(bundle.productFacts?.category, "conditioner")
   if (bundle.productFacts?.category !== "conditioner") return
-  assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
+  assert.equal(bundle.productFacts.spec.targetFit, "matched")
+  assert.equal(bundle.productFacts.spec.thickness, "normal")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["normal"])
   assert.equal(bundle.productFacts.spec.balanceDirection, "moisture")
 })
 
@@ -4618,7 +4633,8 @@ test("Leave-in authority facts load plan-facing v3 columns instead of legacy rol
   assert.deepEqual(bundle.productFacts.spec.careBenefits, ["detangle"])
 })
 
-test("Oil combines every eligibility row while its product spec stays singular", async () => {
+test("Oil retains shared suitable thicknesses while its product spec stays singular", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: shared suitable_thicknesses is the oil thickness authority.
   const base = conditionerAuthorityDraft()
   const draft: Stage3ProductDraft = {
     ...base,
@@ -4763,7 +4779,217 @@ test("Oil combines every eligibility row while its product spec stays singular",
     dry_finish: true,
   })
   assert.equal(bundle.productFacts.spec.weight, "light")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["normal"])
   assert.equal(bundle.productFacts.spec.targetThicknessEligible, true)
   assert.equal(oilEligibilityMaybeSingleCalls, 0)
   assert.ok(oilSpecMaybeSingleCalls >= 1)
+})
+
+test("Diffusor rule: a marked Diffusor never qualifies a carrier requirement next to a Warmluftbürste", async () => {
+  const productId = "66666666-6666-4666-8666-666666666666"
+  const run = async (diffuserRuleIds: string[]) =>
+    loadStage3HeatCarrierCoverage(
+      completeCatalogFactClient(
+        {
+          products: [
+            {
+              id: productId,
+              name: "Heat-capable styling oil",
+              category_key: "oil",
+              is_active: true,
+              lifecycle_status: "active",
+              is_chaarlie_recommended: true,
+              suitable_thicknesses: ["normal"],
+              sort_order: 1,
+            },
+          ],
+          product_oil_specs: [
+            {
+              product_id: productId,
+              weight: "light",
+              role_support: ["leave_on_fibre_conditioning"],
+              provides_heat_protection: true,
+            },
+          ],
+          product_oil_eligibility: [
+            {
+              product_id: productId,
+              thickness: "normal",
+              oil_subtype: "styling-oel",
+              oil_purpose: "styling_finish",
+            },
+          ],
+          product_application_protocols: [
+            {
+              product_id: productId,
+              role: "leave_on_fibre_conditioning",
+              // Styling-Tag only: it cannot carry the wash-family Diffusor blow-dry.
+              guidance_payload: oilLeaveOnGuidancePayload(productId, ["styling_day"]),
+            },
+          ],
+          application_guidance_protocols: [],
+        },
+        [],
+      ) as never,
+      {
+        ...shampooAuthorityDraft(),
+        products: [
+          {
+            capturedProductId: "captured-oil-carrier",
+            identity: {
+              kind: "catalog_product",
+              productId,
+              displayName: "Heat-capable styling oil",
+              category: "oil",
+            },
+          },
+        ],
+        roleAssignments: [
+          {
+            capturedProductId: "captured-oil-carrier",
+            category: "oil",
+            roles: ["leave_on_fibre_conditioning"],
+          },
+        ],
+      } as never,
+      ["airflow_shaping"],
+      [
+        {
+          id: "heat:diffuser_airflow_shaping",
+          tool: "hair_dryer",
+          route: "airflow_shaping",
+          frequency: "weekly_2x",
+          sourceRuleIds: diffuserRuleIds,
+        },
+        {
+          id: "heat:dryer_brush",
+          tool: "dryer_brush",
+          route: "airflow_shaping",
+          frequency: "weekly_1x",
+          sourceRuleIds: [],
+        },
+      ],
+    )
+
+  // Rule on: only the Warmluftbürste qualifies, and the Styling-Tag oil covers it.
+  assert.deepEqual(await run(["heat_protectant.diffuser_as_blow_dry"]), {
+    carrierCategory: "oil",
+    verifiedRoutes: ["airflow_shaping"],
+    qualifyingEventIds: ["heat:dryer_brush"],
+    verifiedEventIds: ["heat:dryer_brush"],
+  })
+  // Rule off (today): the unmarked Diffusor qualifies and its wash-family blow-dry stays uncovered.
+  assert.deepEqual(await run([]), {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:diffuser_airflow_shaping", "heat:dryer_brush"],
+    verifiedEventIds: ["heat:dryer_brush"],
+  })
+})
+
+test("shopping context reads the owner's budget and stated concerns in one narrow query", async () => {
+  const reads: Array<{ table: string; columns: string; filters: Array<[string, unknown]> }> = []
+  const clientFor = (row: unknown, error: unknown = null) => ({
+    from(table: string) {
+      const read = { table, columns: "", filters: [] as Array<[string, unknown]> }
+      reads.push(read)
+      const chain = {
+        select: (columns: string) => {
+          read.columns = columns
+          return chain
+        },
+        eq: (column: string, value: unknown) => {
+          read.filters.push([column, value])
+          return chain
+        },
+        maybeSingle: async () => ({ data: row, error }),
+      }
+      return chain
+    },
+  })
+  const load = (row: unknown, error?: unknown) =>
+    createSupabaseStage3ProductionPersistence(clientFor(row, error) as never).loadShoppingContext(
+      "owner-1",
+    )
+  const none = { budget: null, currentConcerns: [], primaryConcern: null }
+
+  assert.deepEqual(
+    await load({
+      shopping_preferences: { budget: { kind: "capped", limitEur: 5, allowExceptions: true } },
+      diagnostics: {
+        currentConcerns: ["breakage", "low_volume_or_weighed_down", 7],
+        primaryConcern: "breakage",
+      },
+    }),
+    {
+      budget: { kind: "capped", limitEur: 5, allowExceptions: true },
+      currentConcerns: ["breakage", "low_volume_or_weighed_down"],
+      primaryConcern: "breakage",
+    },
+  )
+  assert.equal(reads.length, 1)
+  assert.deepEqual(reads[0], {
+    table: "hair_profiles",
+    columns: "shopping_preferences, diagnostics",
+    filters: [["user_id", "owner-1"]],
+  })
+  assert.deepEqual(await load({ shopping_preferences: { budget: { kind: "uncapped" } } }), {
+    ...none,
+    budget: { kind: "uncapped" },
+  })
+  // Absent, empty, or invalid documents are "not collected", never "uncapped".
+  assert.deepEqual(await load(null), none)
+  assert.deepEqual(await load({ shopping_preferences: null, diagnostics: null }), none)
+  assert.deepEqual(await load({ shopping_preferences: {}, diagnostics: [] }), none)
+  assert.deepEqual(
+    await load({
+      shopping_preferences: { budget: { kind: "capped", limitEur: 10 } },
+      diagnostics: { currentConcerns: "breakage", primaryConcern: 3 },
+    }),
+    none,
+  )
+  await assert.rejects(
+    () => load(null, { message: "boom" }),
+    /stage3_shopping_preferences_unavailable/,
+  )
+})
+
+test("catalog package prices are one batched commerce-only products read", async () => {
+  const reads: Array<{ table: string; columns: string; ids: unknown }> = []
+  const client = {
+    from(table: string) {
+      const read = { table, columns: "", ids: null as unknown }
+      reads.push(read)
+      const chain = {
+        select: (columns: string) => {
+          read.columns = columns
+          return chain
+        },
+        in: async (_column: string, ids: unknown) => {
+          read.ids = ids
+          return {
+            data: [
+              { id: "a", price_eur: 8, purchase_link_status: "available" },
+              { id: "b", price_eur: "9.5", purchase_link_status: "unavailable" },
+              { id: "c", price_eur: null, purchase_link_status: "weird" },
+            ],
+            error: null,
+          }
+        },
+      }
+      return chain
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  assert.deepEqual(await persistence.loadCatalogPackagePrices([]), [])
+  assert.equal(reads.length, 0)
+  assert.deepEqual(await persistence.loadCatalogPackagePrices(["a", "b", "c"]), [
+    { productId: "a", priceEur: 8, purchaseLinkStatus: "available" },
+    { productId: "b", priceEur: 9.5, purchaseLinkStatus: "unavailable" },
+    { productId: "c", priceEur: null, purchaseLinkStatus: null },
+  ])
+  assert.deepEqual(reads, [
+    { table: "products", columns: "id,price_eur,purchase_link_status", ids: ["a", "b", "c"] },
+  ])
 })

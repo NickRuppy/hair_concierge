@@ -1,0 +1,32 @@
+[
+  {
+    "id": "F1",
+    "file": "src/lib/personal-plan-quiz/draft.ts",
+    "from": "storage.removeItem(PERSONAL_PLAN_QUIZ_DRAFT_STORAGE_KEY)",
+    "to": "void storage",
+    "expected": "Existing final load(null) still passes because raw row is v3; earlier metadata/version assertions unchanged.",
+    "sourceSha256": "0e7229ba64337d19f8704790819dffdc3a98daca633860db330e21247bd5a60a",
+    "anchorLine": 242,
+    "status": "static hypothesis only; not executed or parsed; not a deletion control"
+  },
+  {
+    "id": "F2",
+    "file": "src/lib/personal-plan-quiz/server-draft-client.ts",
+    "from": "if (retryCount < 2) {",
+    "to": "if (retryCount < 3) {",
+    "expected": "Existing 850ms count sees three attempts; fourth arrives approximately 1500ms with no later assertion.",
+    "sourceSha256": "2f528abcd79e7bbc81a3dde00f1dab5bfa44da3df0324fb14bf14d0c4e445da9",
+    "anchorLine": 318,
+    "status": "static hypothesis only; not executed or parsed; not a deletion control"
+  },
+  {
+    "id": "F3",
+    "file": "src/lib/personal-plan-quiz/server-draft.ts",
+    "from": "!timingSafeEqual(Buffer.from(signature), Buffer.from(expected))",
+    "to": "false",
+    "expected": "Legitimate roundtrip passes and appended-x invalid cookie still fails independent signature-length guard.",
+    "sourceSha256": "ab6b88fa762756c3af1bc4a15154b7d8335728644edca577859a53cad5d1a576",
+    "anchorLine": 238,
+    "status": "static hypothesis only; not executed or parsed; not a deletion control"
+  }
+]

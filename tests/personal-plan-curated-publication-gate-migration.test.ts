@@ -95,3 +95,37 @@ test("review approval persists canonical protocol payloads in its existing trans
   assert.match(sql, /guidance_payload = EXCLUDED\.guidance_payload/i)
   assert.match(sql, /SET weight = row_data\.weight,\s*role_support = row_data\.role_support/i)
 })
+
+test("Leave-In v1.2 replaces the leave-in branch: pre-heat needs heat protection, not a pre_heat label (A1/R8 pins)", async () => {
+  const sql = await readFile(
+    path.join(
+      process.cwd(),
+      "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql",
+    ),
+    "utf8",
+  )
+  const branch = sql.slice(
+    sql.indexOf("replacement constant text"),
+    sql.indexOf("BEGIN\n  SELECT prosrc"),
+  )
+  // A1: the Gliss/Redken heat-only shape (no pre_heat stage) is publishable.
+  assert.match(
+    branch,
+    /OR \(''pre_heat_application'' = ANY\(li\.plan_roles\) AND li\.provides_heat_protection = true\)\)/,
+  )
+  // R8: a pre-heat role without a heat-protection claim still fails.
+  assert.doesNotMatch(branch, /pre_heat_application'' = ANY\(li\.plan_roles\)\)/)
+  // Activated products: pre-heat only, protected, routed, booster_only fit (I2, I4, I5, I6).
+  assert.match(branch, /CASE WHEN li\.heat_activation_required THEN/)
+  // Spec ↔ workflow agreement (S3 review R1): activated heat rows are the reviewed workflow,
+  // and no other product may carry it.
+  assert.match(branch, /IS DISTINCT FROM ''heat_activated_verified_product''/)
+  assert.match(branch, /ELSE NOT EXISTS \(SELECT 1 FROM public\.product_application_protocols ap/)
+  assert.match(branch, /li\.plan_roles = ARRAY\[''pre_heat_application''\]::text\[\]/)
+  assert.match(branch, /li\.heat_activation_route IS NOT NULL/)
+  assert.match(branch, /f\.conditioner_relationship <> ''booster_only''/)
+  assert.match(
+    sql,
+    /CREATE CONSTRAINT TRIGGER validate_personal_plan_curated_publication_dependency\nAFTER INSERT OR UPDATE OR DELETE ON public\.product_leave_in_fit_specs/,
+  )
+})

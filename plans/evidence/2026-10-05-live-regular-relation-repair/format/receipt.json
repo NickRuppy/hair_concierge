@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "beforeSHA256": "6db78313f6af24397dae0575c3e8e2a7ef257da57d8b54f4d9dfd7682d8d40b1",
+      "afterSHA256": "49ba377447eab9c20f0d6958d6d96efadc97963a778ada018f07fecd6ae9c2a2",
+      "changed": true
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

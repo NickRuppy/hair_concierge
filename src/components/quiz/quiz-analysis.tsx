@@ -13,12 +13,7 @@ export const QUIZ_TRANSITION_READY_BEAT_MS = 900
 
 const ORGANIC_QUIZ_FUNNEL_COPY = getQuizFunnelCopy(null)
 
-/** @deprecated Kept for its existing callers/tests; use `getQuizFunnelCopy(packageKey).commitHeading` for a package-aware heading. */
-export function getCommitHeading(name: string) {
-  return ORGANIC_QUIZ_FUNNEL_COPY.commitHeading(name)
-}
-
-export function getLoadingHeading(name: string) {
+function getLoadingHeading(name: string) {
   const normalized = name.trim()
   return normalized ? `Einen Moment, ${normalized}.` : "Einen Moment."
 }

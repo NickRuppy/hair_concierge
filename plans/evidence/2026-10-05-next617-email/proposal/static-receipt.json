@@ -1,0 +1,21 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "checks": 1026,
+  "repoWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "mutationsExecuted": 0,
+  "phaseCounts": {
+    "before": 94,
+    "transfer": 94,
+    "cut": 90,
+    "conditional-pp-transfer": 94,
+    "conditional-pp-cut": 89
+  },
+  "readset": 76,
+  "unrelatedCallbacks": 89,
+  "heldF": 8,
+  "controlRecipes": 20,
+  "manifestSHA256": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea"
+}

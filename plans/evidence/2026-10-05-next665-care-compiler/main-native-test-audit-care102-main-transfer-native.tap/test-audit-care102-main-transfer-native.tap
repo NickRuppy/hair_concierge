@@ -1,0 +1,520 @@
+TAP version 13
+# Subtest: missing shampoo still exposes the shampoo cadence target with null current frequency
+ok 1 - missing shampoo still exposes the shampoo cadence target with null current frequency
+  ---
+  duration_ms: 5.931833
+  ...
+# Subtest: conditioner follows the shampoo target and does not exceed shampoo cadence
+ok 2 - conditioner follows the shampoo target and does not exceed shampoo cadence
+  ---
+  duration_ms: 1.539542
+  ...
+# Subtest: leave-in exposes a high need target for curly dry frizzy tangled hair
+ok 3 - leave-in exposes a high need target for curly dry frizzy tangled hair
+  ---
+  duration_ms: 0.567
+  ...
+# Subtest: daily mask and oil are overuse against need-based support targets
+ok 4 - daily mask and oil are overuse against need-based support targets
+  ---
+  duration_ms: 0.413166
+  ...
+# Subtest: frequency target mapper projects need-based and reset policy without raw profile facts
+ok 5 - frequency target mapper projects need-based and reset policy without raw profile facts
+  ---
+  duration_ms: 0.358084
+  ...
+# Subtest: heat protectant target follows supported heat styling exposure
+ok 6 - heat protectant target follows supported heat styling exposure
+  ---
+  duration_ms: 0.428083
+  ...
+# Subtest: hot air brush requires heat protectant at the saved heat styling frequency
+ok 7 - hot air brush requires heat protectant at the saved heat styling frequency
+  ---
+  duration_ms: 0.200583
+  ...
+# Subtest: blow dryer and diffuser alone do not create a heat protectant target
+ok 8 - blow dryer and diffuser alone do not create a heat protectant target
+  ---
+  duration_ms: 0.197209
+  ...
+# Subtest: never heat styling keeps heat protectant target null even with a selected heat tool
+ok 9 - never heat styling keeps heat protectant target null even with a selected heat tool
+  ---
+  duration_ms: 0.370417
+  ...
+# Subtest: bondbuilder high damage allows weekly to twice weekly but not daily
+ok 10 - bondbuilder high damage allows weekly to twice weekly but not daily
+  ---
+  duration_ms: 2.632333
+  ...
+# Subtest: deep cleansing reaches weekly only for strong buildup without vulnerability
+ok 11 - deep cleansing reaches weekly only for strong buildup without vulnerability
+  ---
+  duration_ms: 1.019708
+  ...
+# Subtest: peeling target caps low on irritated scalp
+ok 12 - peeling target caps low on irritated scalp
+  ---
+  duration_ms: 0.31075
+  ...
+# Subtest: dry shampoo daily is overuse and remains a bridge target only
+ok 13 - dry shampoo daily is overuse and remains a bridge target only
+  ---
+  duration_ms: 0.596084
+  ...
+# Subtest: agent care balance context serializes the frequency target
+ok 14 - agent care balance context serializes the frequency target
+  ---
+  duration_ms: 1.129041
+  ...
+# Subtest: exact catalog bundle rejects foreign or incomplete canonical protocol scopes
+ok 15 - exact catalog bundle rejects foreign or incomplete canonical protocol scopes
+  ---
+  duration_ms: 9.581333
+  ...
+# Subtest: exact catalog bundle is byte-stable and its default preflight is read-only
+ok 16 - exact catalog bundle is byte-stable and its default preflight is read-only
+  ---
+  duration_ms: 16.40925
+  ...
+# Subtest: exact catalog bundle accepts same-role Leave-in variants only when their application families differ
+ok 17 - exact catalog bundle accepts same-role Leave-in variants only when their application families differ
+  ---
+  duration_ms: 5.005625
+  ...
+# Subtest: exact catalog bundle compares a legacy Leave-in V1 family against its derived V2 identity
+ok 18 - exact catalog bundle compares a legacy Leave-in V1 family against its derived V2 identity
+  ---
+  duration_ms: 0.695459
+  ...
+# Subtest: exact catalog bundle preflight refuses any persisted protocol authority drift and accepts identical replay
+ok 19 - exact catalog bundle preflight refuses any persisted protocol authority drift and accepts identical replay
+  ---
+  duration_ms: 5.009125
+  ...
+# Subtest: exact catalog bundle preflight accepts only the deterministic legacy Mask source text upgrade
+ok 20 - exact catalog bundle preflight accepts only the deterministic legacy Mask source text upgrade
+  ---
+  duration_ms: 0.777458
+  ...
+# Subtest: exact catalog bundle migration keeps the apply path atomic, conflict-safe, and private
+ok 21 - exact catalog bundle migration keeps the apply path atomic, conflict-safe, and private
+  ---
+  duration_ms: 14.880541
+  ...
+# Subtest: exact catalog bundle heat protocol migration maps canonical heat fields without widening access
+ok 22 - exact catalog bundle heat protocol migration maps canonical heat fields without widening access
+  ---
+  duration_ms: 7.423167
+  ...
+# Subtest: exact catalog bundle Oil migration creates a missing exact spec row without widening access
+ok 23 - exact catalog bundle Oil migration creates a missing exact spec row without widening access
+  ---
+  duration_ms: 3.763667
+  ...
+# Subtest: exact catalog bundle apply requires the reviewed head and a clean worktree
+ok 24 - exact catalog bundle apply requires the reviewed head and a clean worktree
+  ---
+  duration_ms: 5.606834
+  ...
+# Subtest: reviewed exact bundles are schema-valid, cohort-bound, and globally unique
+ok 25 - reviewed exact bundles are schema-valid, cohort-bound, and globally unique
+  ---
+  duration_ms: 135.780291
+  ...
+# Subtest: uses exact Bondbuilder courses only for the selected matching product and role
+ok 26 - uses exact Bondbuilder courses only for the selected matching product and role
+  ---
+  duration_ms: 2.547625
+  ...
+# Subtest: normalizes approved legacy Scalp Care cadence and preserves fallback provenance
+ok 27 - normalizes approved legacy Scalp Care cadence and preserves fallback provenance
+  ---
+  duration_ms: 0.323042
+  ...
+# Subtest: never promotes mismatched or suitability-only protocol cadence and keeps the generic fallback
+ok 28 - never promotes mismatched or suitability-only protocol cadence and keeps the generic fallback
+  ---
+  duration_ms: 0.374875
+  ...
+# Subtest: keeps category-owned cadence authoritative even when an exact protocol has a schedule
+ok 29 - keeps category-owned cadence authoritative even when an exact protocol has a schedule
+  ---
+  duration_ms: 0.519667
+  ...
+# Subtest: formats every category-owned cadence kind without consulting product protocols
+ok 30 - formats every category-owned cadence kind without consulting product protocols
+  ---
+  duration_ms: 0.180292
+  ...
+# Subtest: accepts the explicit delegated canonical cadence vocabulary only
+ok 31 - accepts the explicit delegated canonical cadence vocabulary only
+  ---
+  duration_ms: 0.317333
+  ...
+# Subtest: rejects unsupported, blank, malformed, and wrong-role delegated cadence
+ok 32 - rejects unsupported, blank, malformed, and wrong-role delegated cadence
+  ---
+  duration_ms: 0.084583
+  ...
+# Subtest: fails closed instead of choosing arbitrarily between duplicate exact cadence rows
+ok 33 - fails closed instead of choosing arbitrarily between duplicate exact cadence rows
+  ---
+  duration_ms: 0.048166
+  ...
+# Subtest: normalizes the approved legacy daily Scalp Care shape
+ok 34 - normalizes the approved legacy daily Scalp Care shape
+  ---
+  duration_ms: 0.54875
+  ...
+# Subtest: preserves legacy display fallbacks for old accepted Routine payloads
+ok 35 - preserves legacy display fallbacks for old accepted Routine payloads
+  ---
+  duration_ms: 0.897541
+  ...
+# Subtest: fails closed when exact-product cadence authority cannot be read
+ok 36 - fails closed when exact-product cadence authority cannot be read
+  ---
+  duration_ms: 0.609083
+  ...
+# Subtest: initial Routine compilation is deterministic and excludes volatile portfolio metadata
+ok 37 - initial Routine compilation is deterministic and excludes volatile portfolio metadata
+  ---
+  duration_ms: 16.0665
+  ...
+# Subtest: freezes matching delegated exact cadence into the initial Routine and fingerprints its fact
+ok 38 - freezes matching delegated exact cadence into the initial Routine and fingerprints its fact
+  ---
+  duration_ms: 0.52525
+  ...
+# Subtest: initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering
+ok 39 - initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering
+  ---
+  duration_ms: 0.479667
+  ...
+# Subtest: source revision participates in the compiler fingerprint
+ok 40 - source revision participates in the compiler fingerprint
+  ---
+  duration_ms: 0.525125
+  ...
+# Subtest: compiler rejects a portfolio role without a resolved refined category decision
+ok 41 - compiler rejects a portfolio role without a resolved refined category decision
+  ---
+  duration_ms: 0.297542
+  ...
+# Subtest: compiler fails closed on legacy supplemental product-load categories outside renderedOrder
+ok 42 - compiler fails closed on legacy supplemental product-load categories outside renderedOrder
+  ---
+  duration_ms: 0.164334
+  ...
+# Subtest: compiler reads a frozen v3 planned replacement by decision key, not its shared role
+ok 43 - compiler reads a frozen v3 planned replacement by decision key, not its shared role
+  ---
+  duration_ms: 11.735125
+  ...
+# Subtest: compiler gives a v3 selected replacement precedence over its pending source identity
+ok 44 - compiler gives a v3 selected replacement precedence over its pending source identity
+  ---
+  duration_ms: 2.249458
+  ...
+# Subtest: compiler accepts v4 snapshots but never turns retained inventory into routine items
+ok 45 - compiler accepts v4 snapshots but never turns retained inventory into routine items
+  ---
+  duration_ms: 4.964
+  ...
+# Subtest: compiler preserves a v1 pending assignment identity beside a same-role planned purchase
+ok 46 - compiler preserves a v1 pending assignment identity beside a same-role planned purchase
+  ---
+  duration_ms: 2.017709
+  ...
+# Subtest: routine items take the role tier, not the category aggregate
+ok 47 - routine items take the role tier, not the category aggregate
+  ---
+  duration_ms: 0.306958
+  ...
+# Subtest: categories without per-role tiers keep the category assessment
+ok 48 - categories without per-role tiers keep the category assessment
+  ---
+  duration_ms: 0.156584
+  ...
+# Subtest: Stage 3 owns canonical PlanProductRole authorities without fixture provenance
+ok 49 - Stage 3 owns canonical PlanProductRole authorities without fixture provenance
+  ---
+  duration_ms: 3.027166
+  ...
+# Subtest: every canonical role belongs to exactly one category policy
+ok 50 - every canonical role belongs to exactly one category policy
+  ---
+  duration_ms: 0.344667
+  ...
+# Subtest: captured products require exact identity, owned state, and canonical ProductFrequency
+ok 51 - captured products require exact identity, owned state, and canonical ProductFrequency
+  ---
+  duration_ms: 6.064084
+  ...
+# Subtest: role and decision schemas enforce category authority and explicit allowed choices
+ok 52 - role and decision schemas enforce category authority and explicit allowed choices
+  ---
+  duration_ms: 3.667333
+  ...
+# Subtest: replacement resolutions retain their semantic action and selected candidate in canonical state
+ok 53 - replacement resolutions retain their semantic action and selected candidate in canonical state
+  ---
+  duration_ms: 2.003
+  ...
+# Subtest: draft validation allows Conditioner coverage multiplicity but rejects duplicate Oil purpose ownership
+ok 54 - draft validation allows Conditioner coverage multiplicity but rejects duplicate Oil purpose ownership
+  ---
+  duration_ms: 3.000208
+  ...
+# Subtest: decision subjects are derived per assigned product-role or explicit gap
+ok 55 - decision subjects are derived per assigned product-role or explicit gap
+  ---
+  duration_ms: 0.302625
+  ...
+# Subtest: decision subjects keep category and role authority order after a reopened category is appended
+ok 56 - decision subjects keep category and role authority order after a reopened category is appended
+  ---
+  duration_ms: 0.215541
+  ...
+# Subtest: need-revision drafts and inventory-only dispositions are first-class schema contracts
+ok 57 - need-revision drafts and inventory-only dispositions are first-class schema contracts
+  ---
+  duration_ms: 3.578458
+  ...
+# Subtest: decision subjects cover unassigned captured inventory exactly once after role subjects
+ok 58 - decision subjects cover unassigned captured inventory exactly once after role subjects
+  ---
+  duration_ms: 0.350167
+  ...
+# Subtest: an uncovered role can carry only an unassigned or planned-purchase decision
+ok 59 - an uncovered role can carry only an unassigned or planned-purchase decision
+  ---
+  duration_ms: 0.814625
+  ...
+# Subtest: a pending source may retain a planned replacement only through select_replacement
+ok 60 - a pending source may retain a planned replacement only through select_replacement
+  ---
+  duration_ms: 1.29625
+  ...
+# Subtest: uses the shared Conditioner authority and maps its selected product back to the image, commerce and reasoning facts
+ok 61 - uses the shared Conditioner authority and maps its selected product back to the image, commerce and reasoning facts
+  ---
+  duration_ms: 24.10275
+  ...
+# Subtest: falls back to post_refinement when the shared authority product has no presentation image
+ok 62 - falls back to post_refinement when the shared authority product has no presentation image
+  ---
+  duration_ms: 0.68075
+  ...
+# Subtest: a null currency fails closed to no price label on the Stage 1 preview path too
+ok 63 - a null currency fails closed to no price label on the Stage 1 preview path too
+  ---
+  duration_ms: 0.71
+  ...
+# Subtest: selects the thirteenth injected complete-mode irritation Shampoo candidate
+ok 64 - selects the thirteenth injected complete-mode irritation Shampoo candidate
+  ---
+  duration_ms: 2.86875
+  ...
+# Subtest: surfaces a supportive Conditioner verdict for a basis decision now that supportive is allowed for basis categories
+ok 65 - surfaces a supportive Conditioner verdict for a basis decision now that supportive is allowed for basis categories
+  ---
+  duration_ms: 1.758625
+  ...
+# Subtest: evaluates the recommended Oil itself instead of rejecting the uncovered-slot verdict
+ok 66 - evaluates the recommended Oil itself instead of rejecting the uncovered-slot verdict
+  ---
+  duration_ms: 1.103208
+  ...
+# Subtest: evaluates an uncovered Scalp Care recommendation before exposing its image
+ok 67 - evaluates an uncovered Scalp Care recommendation before exposing its image
+  ---
+  duration_ms: 0.601041
+  ...
+# Subtest: returns an exact-fit Mask preview and falls back on an unsuitable thickness
+ok 68 - returns an exact-fit Mask preview and falls back on an unsuitable thickness
+  ---
+  duration_ms: 2.601041
+  ...
+# Subtest: uses a source-bound supportive Mask for both optional and required (basis) Mask decisions
+ok 69 - uses a source-bound supportive Mask for both optional and required (basis) Mask decisions
+  ---
+  duration_ms: 3.537292
+  ...
+# Subtest: returns an exact-fit Bondbuilder preview and falls back on an unsuitable thickness
+ok 70 - returns an exact-fit Bondbuilder preview and falls back on an unsuitable thickness
+  ---
+  duration_ms: 1.083542
+  ...
+# Subtest: a tied Bondbuilder shortlist previews the authority's tie default, not an illustration
+ok 71 - a tied Bondbuilder shortlist previews the authority's tie default, not an illustration
+  ---
+  duration_ms: 0.556959
+  ...
+# Subtest: keeps a matching Shampoo preview and an explicit fallback when another category candidate load fails
+ok 72 - keeps a matching Shampoo preview and an explicit fallback when another category candidate load fails
+  ---
+  duration_ms: 0.359709
+  ...
+# Subtest: emits one entry per required role, so a two-role Shampoo decision yields two previews
+ok 73 - emits one entry per required role, so a two-role Shampoo decision yields two previews
+  ---
+  duration_ms: 0.322791
+  ...
+# Subtest: shares a single candidate load across every role of a role-insensitive multi-role category (Oil)
+ok 74 - shares a single candidate load across every role of a role-insensitive multi-role category (Oil)
+  ---
+  duration_ms: 0.227709
+  ...
+# Subtest: issues a separate candidate load per role for Shampoo, whose spec is role-sensitive
+ok 75 - issues a separate candidate load per role for Shampoo, whose spec is role-sensitive
+  ---
+  duration_ms: 0.800208
+  ...
+# Subtest: preview route enforces authentication before reading plan or catalog data
+ok 76 - preview route enforces authentication before reading plan or catalog data
+  ---
+  duration_ms: 0.293959
+  ...
+# Subtest: preview route returns source-bound presentation data without mutating Stage 1
+ok 77 - preview route returns source-bound presentation data without mutating Stage 1
+  ---
+  duration_ms: 9.919958
+  ...
+# Subtest: oily scalp with weekly_1x shampoo is below the high target
+ok 78 - oily scalp with weekly_1x shampoo is below the high target
+  ---
+  duration_ms: 0.830875
+  ...
+# Subtest: oily scalp with weekly_2x shampoo is near the lower edge of the high target
+ok 79 - oily scalp with weekly_2x shampoo is near the lower edge of the high target
+  ---
+  duration_ms: 0.10025
+  ...
+# Subtest: oily scalp with weekly_3_4x shampoo is near the preferred high target
+ok 80 - oily scalp with weekly_3_4x shampoo is near the preferred high target
+  ---
+  duration_ms: 0.119042
+  ...
+# Subtest: oily scalp with weekly_5_6x shampoo is near the upper edge of the high target
+ok 81 - oily scalp with weekly_5_6x shampoo is near the upper edge of the high target
+  ---
+  duration_ms: 0.061833
+  ...
+# Subtest: oily scalp with daily shampoo is above the high target
+ok 82 - oily scalp with daily shampoo is above the high target
+  ---
+  duration_ms: 0.058083
+  ...
+# Subtest: balanced scalp maps to the medium target
+ok 83 - balanced scalp maps to the medium target
+  ---
+  duration_ms: 0.053292
+  ...
+# Subtest: irritated scalp takes precedence over oily scalp type and exposes oily caveat
+ok 84 - irritated scalp takes precedence over oily scalp type and exposes oily caveat
+  ---
+  duration_ms: 0.074333
+  ...
+# Subtest: dandruff maps to the high target
+ok 85 - dandruff maps to the high target
+  ---
+  duration_ms: 0.047375
+  ...
+# Subtest: dry flakes map to the low target
+ok 86 - dry flakes map to the low target
+  ---
+  duration_ms: 0.240208
+  ...
+# Subtest: balanced scalp with oily scalp concern moves up to the high target
+ok 87 - balanced scalp with oily scalp concern moves up to the high target
+  ---
+  duration_ms: 1.114834
+  ...
+# Subtest: healthy scalp goal can move balanced scalp up one band
+ok 88 - healthy scalp goal can move balanced scalp up one band
+  ---
+  duration_ms: 0.081333
+  ...
+# Subtest: multiple upward modifiers are capped to one band
+ok 89 - multiple upward modifiers are capped to one band
+  ---
+  duration_ms: 0.431042
+  ...
+# Subtest: oily scalp with stacked fiber fragility moves down to the medium target
+ok 90 - oily scalp with stacked fiber fragility moves down to the medium target
+  ---
+  duration_ms: 0.215875
+  ...
+# Subtest: oily scalp with up and down modifiers keeps the high base target and exposes both signals
+ok 91 - oily scalp with up and down modifiers keeps the high base target and exposes both signals
+  ---
+  duration_ms: 0.141459
+  ...
+# Subtest: known scalp target with no shampoo frequency falls back to rare shampoo cadence
+ok 92 - known scalp target with no shampoo frequency falls back to rare shampoo cadence
+  ---
+  duration_ms: 0.109792
+  ...
+# Subtest: less_than_monthly shampoo cadence is treated as current frequency and falls below oily target
+ok 93 - less_than_monthly shampoo cadence is treated as current frequency and falls below oily target
+  ---
+  duration_ms: 0.269166
+  ...
+# Subtest: hidden unselected shampoo fallback is hidden from inventory but still drives cadence delta
+ok 94 - hidden unselected shampoo fallback is hidden from inventory but still drives cadence delta
+  ---
+  duration_ms: 1.08875
+  ...
+# Subtest: visible shampoo with unknown frequency uses the same fallback as an empty shampoo row
+ok 95 - visible shampoo with unknown frequency uses the same fallback as an empty shampoo row
+  ---
+  duration_ms: 0.123291
+  ...
+# Subtest: cadence-relevant likely reset assessment moves a balanced scalp up to the high target
+ok 96 - cadence-relevant likely reset assessment moves a balanced scalp up to the high target
+  ---
+  duration_ms: 0.221667
+  ...
+# Subtest: strong reset assessment uses the same upward modifier as likely reset when cadence relevant
+ok 97 - strong reset assessment uses the same upward modifier as likely reset when cadence relevant
+  ---
+  duration_ms: 0.274333
+  ...
+# Subtest: mineral-only reset assessment does not move shampoo cadence upward
+ok 98 - mineral-only reset assessment does not move shampoo cadence upward
+  ---
+  duration_ms: 0.152333
+  ...
+# Subtest: weekly dry shampoo alone does not move shampoo cadence upward
+ok 99 - weekly dry shampoo alone does not move shampoo cadence upward
+  ---
+  duration_ms: 0.12675
+  ...
+# Subtest: twice-weekly dry shampoo moves shampoo cadence upward one band
+ok 100 - twice-weekly dry shampoo moves shampoo cadence upward one band
+  ---
+  duration_ms: 0.213334
+  ...
+# Subtest: dry-flake scalp condition outranks broad dandruff concern
+ok 101 - dry-flake scalp condition outranks broad dandruff concern
+  ---
+  duration_ms: 0.108875
+  ...
+# Subtest: dandruff concern without a specific scalp condition maps to the high target
+ok 102 - dandruff concern without a specific scalp condition maps to the high target
+  ---
+  duration_ms: 0.181459
+  ...
+1..102
+# tests 102
+# suites 0
+# pass 102
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6957.150458

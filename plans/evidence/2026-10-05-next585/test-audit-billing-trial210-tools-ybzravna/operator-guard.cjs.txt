@@ -1,0 +1,102 @@
+'use strict'
+// Shared main-only operator support. load/current/fault are strictly read-only and spawn no child.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const BASE='/tmp/test-audit-billing-trial210-tools-ybzravna/operator'
+const LOCK='/tmp/test-audit-pruning-operator-lock'
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex')
+const fail=message=>{throw Error(message)}
+function checkFile(pin){const exists=fs.existsSync(pin.path);if(pin.sha===null){if(exists)fail('Previously absent identity file appeared: '+pin.path);return}if(!exists||sha(fs.readFileSync(pin.path))!==pin.sha||fs.realpathSync(pin.path)!==pin.realpath)fail('Identity/dependency drift: '+pin.path)}
+function identity(pins){
+ if(process.cwd()!==ROOT||fs.realpathSync(process.cwd())!==ROOT||pins.root!==ROOT)fail('Exact real checkout required')
+ if(process.version!==pins.node.version||fs.realpathSync(process.execPath)!==pins.node.realpath||sha(fs.readFileSync(process.execPath))!==pins.node.sha)fail('Pinned Node binary required')
+ for(const pin of pins.identityFiles)checkFile(pin)
+ // Pinned actual Git metadata resolves this branch and exact HEAD without spawning git.
+ const head=fs.readFileSync(path.join(pins.gitDir,'HEAD'),'utf8').trim()
+ if(head!=='ref: refs/heads/'+pins.branch)fail('Branch drift')
+ const ref=path.join(pins.commonDir,'refs/heads',pins.branch)
+ const commit=fs.existsSync(ref)?fs.readFileSync(ref,'utf8').trim():fs.readFileSync(path.join(pins.commonDir,'packed-refs'),'utf8').split('\n').find(l=>l.endsWith(' refs/heads/'+pins.branch))?.split(' ')[0]
+ if(commit!==pins.head)fail('HEAD drift')
+}
+function parse(ts,file,text){const t=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(t.parseDiagnostics.length)fail('Parse: '+file);return t}
+
+function registrations(ts,file,text){
+ const sf=parse(ts,file,text),rows=new Map()
+ function walk(n){
+  if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+   const cb=n.arguments.at(-1),name=ts.isStringLiteral(n.arguments[0])?n.arguments[0].text:n.arguments[0].getText(sf)
+   if(!ts.isArrowFunction(cb)||!cb.body||rows.has(name))fail('Unexpected registration: '+file)
+   const assertions=[],calls=[]
+   function visit(x){if(ts.isCallExpression(x)){if(x.expression.getText(sf).startsWith('assert.'))assertions.push({startLine:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)});else calls.push(x.getText(sf))}ts.forEachChild(x,visit)}visit(cb)
+   rows.set(name,{name,statement:n.getText(sf),start:n.getStart(sf),end:n.end,callback:cb.getText(sf),assertions,calls:calls.sort()})
+  }
+  ts.forEachChild(n,walk)
+ }
+ walk(sf);return rows
+}
+function replaceOnce(text,from,to,label){if(text.split(from).length!==2)fail('Non-unique anchor: '+label);return text.replace(from,()=>to)}
+
+const PROPOSAL='/tmp/test-audit-billing-trial210-proposal-pj1NC1'
+function load(pinSHA){
+ const raw=fs.readFileSync(BASE+'-editor-pins.json');if(sha(raw)!==pinSHA)fail('Pins changed');const pins=JSON.parse(raw);identity(pins)
+ for(const pin of pins.dependencies)checkFile(pin)
+ for(const[file,hash]of Object.entries(pins.artifactHashes))if(sha(fs.readFileSync(file))!==hash)fail('Artifact drift: '+file)
+ for(const[file,hash]of Object.entries(pins.entrypointTemplateHashes)){const s=fs.readFileSync(file,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'");if(sha(s)!==hash)fail('Operator drift')}
+ const evidence=JSON.parse(fs.readFileSync(PROPOSAL+'/manifest.json')),candidates=JSON.parse(fs.readFileSync(PROPOSAL+'/candidates.json')),controls=JSON.parse(fs.readFileSync(BASE+'-controls-normalized.json')),ts=require(ROOT+'/node_modules/typescript')
+ if(evidence.root!==ROOT||evidence.expectedHead!==pins.head||evidence.expectedBranch!==pins.branch||candidates.length!==3||controls.length!==4||ts.version!==pins.typescriptVersion)fail('Identity/count mismatch')
+ const snapshots={},counts={before:0,transfer:0,cut:0};let untouched=0
+ for(const f of evidence.files){
+  snapshots[f.file]={}
+  for(const phase of Object.keys(counts)){
+   const p=f.phases[phase];if(p.path!==path.join(PROPOSAL,phase,f.file))fail('Unexpected snapshot location')
+   const bytes=fs.readFileSync(p.path),rows=registrations(ts,f.file,bytes.toString())
+   if(sha(bytes)!==p.sha256||rows.size!==p.count)fail('Phase bytes/count')
+   snapshots[f.file][phase]={bytes,rows};counts[phase]+=rows.size
+  }
+  const {before,transfer,cut}=snapshots[f.file];let reconstructed=before.bytes.toString()
+  for(const c of candidates.filter(c=>c.keeper.file===f.file)){
+   const k=before.rows.get(c.keeper.title),t=transfer.rows.get(c.keeper.title),after=cut.rows.get(c.keeper.title)
+   if(k?.statement!==c.keeper.declaration||sha(k.statement)!==c.keeper.sha256||k.callback!==c.keeper.body)fail('Keeper original')
+   if(t?.statement!==c.keeperAfterTransfer.declaration||sha(t.statement)!==c.keeperAfterTransfer.sha256||after?.statement!==c.keeperAfterCut.declaration||sha(after.statement)!==c.keeperAfterCut.sha256)fail('Keeper phase identity')
+   if(c.transfer===null){if(t.statement!==k.statement||after.statement!==k.statement)fail('C1/C3 keeper changed')}
+   else{
+    if(c.id!=='C2'||c.transfer!=='  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)\n')fail('Unexpected transfer')
+    const anchor='  const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)\n'
+    if(t.statement!==replaceOnce(k.statement,anchor,anchor+c.transfer,c.id))fail('Transfer is not exact single assertion')
+    if(JSON.stringify(k.calls)!==JSON.stringify(t.calls))fail('Added nonassertion call/input')
+    const originalAssertions=k.assertions.map(a=>a.text),actualAssertions=t.assertions.map(a=>a.text),added=c.transfer.trim()
+    if(JSON.stringify([...originalAssertions,added].sort())!==JSON.stringify(actualAssertions.sort()))fail('C2 assertion union')
+    reconstructed=replaceOnce(reconstructed,k.statement,t.statement,c.id)
+   }
+  }
+  if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated support')
+  for(const c of candidates.filter(c=>c.donor.file===f.file)){
+   const d=before.rows.get(c.donor.title);if(d?.statement!==c.donor.declaration||sha(d.statement)!==c.donor.sha256||d.callback!==c.donor.body)fail('Donor origin')
+   const suffix=reconstructed.includes(c.donor.declaration+'\n\n')?'\n\n':reconstructed.includes(c.donor.declaration+'\n')?'\n':''
+   reconstructed=replaceOnce(reconstructed,c.donor.declaration+suffix,'',c.id)
+  }
+  if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support')
+  for(const[name,row]of before.rows){
+   const donor=candidates.some(c=>c.donor.file===f.file&&c.donor.title===name),changed=candidates.some(c=>c.id==='C2'&&c.keeper.file===f.file&&c.keeper.title===name),t=transfer.rows.get(name),after=cut.rows.get(name)
+   if(!changed&&t?.statement!==row.statement)fail('Unrelated transfer callback changed')
+   if(donor){if(after)fail('Donor survived')}else{if(after?.statement!==t?.statement)fail('Retained bytes changed');if(!changed)untouched++}
+  }
+ }
+ if(Object.keys(snapshots).length!==31||JSON.stringify(counts)!=='{"before":210,"transfer":210,"cut":207}'||untouched!==206)fail('Conservation mismatch')
+ function guards(overrides={}){identity(pins);for(const p of pins.dependencies)checkFile(p);for(const[file,hash]of Object.entries(pins.artifactHashes))if(sha(fs.readFileSync(file))!==hash)fail('Artifact drift');for(const[file,hash]of Object.entries(pins.entrypointTemplateHashes)){const s=fs.readFileSync(file,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'");if(sha(s)!==hash)fail('Entrypoint drift')}for(const r of pins.readset)if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha))fail('Readset drift/fault active: '+r.file)}
+ function current(overrides={}){guards(overrides);const bytes=Object.fromEntries(Object.keys(snapshots).map(f=>[f,fs.readFileSync(path.join(ROOT,f))]));const phases=Object.keys(counts).filter(p=>Object.entries(bytes).every(([f,b])=>b.equals(snapshots[f][p].bytes)));if(phases.length!==1)fail('Mixed/unrecognized phase');return{phase:phases[0],bytes}}
+ return{pins,evidence,candidates,controls,ts,snapshots,counts,untouched,guards,current}
+}
+function fault(ctx,c){
+ const original=fs.readFileSync(path.join(ROOT,c.file));if(sha(original)!==c.sourceSha256)fail('Fault owner drift')
+ const text=original.toString(),sf=parse(ctx.ts,c.file,text),found=[]
+ function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+ if(found.length!==1||c.anchor.kind!=='function'||c.anchor.expectedOccurrences!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256)fail('Unique complete function anchor')
+ const n=found[0],mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+ parse(ctx.ts,c.file,mutated.toString());if(sha(mutated)!==c.mutatedSha256)fail('Fault hash mismatch')
+ for(const phase of['transfer','cut']){const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase];if(sha(row?.statement||'')!==o.keeperSha256||!row?.assertions.some(a=>a.startLine===o.startLine&&a.text===o.text))fail('Oracle drift')}
+ return{original,mutated}
+}
+function atomicCAS(file,expected,next){const target=path.join(ROOT,file),temp=target+'.test-audit-'+process.pid+'-'+crypto.randomUUID()+'.tmp';if(!fs.readFileSync(target).equals(expected))fail('Owned CAS refused: '+file);try{fs.writeFileSync(temp,next,{flag:'wx',mode:fs.statSync(target).mode});if(!fs.readFileSync(target).equals(expected))fail('Pre-rename CAS refused: '+file);fs.renameSync(temp,target)}finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}}
+function lock(){const token=crypto.randomUUID();fs.mkdirSync(LOCK);try{fs.writeFileSync(path.join(LOCK,'owner.json'),JSON.stringify({token,pid:process.pid,root:ROOT,operator:BASE}),{flag:'wx'})}catch(e){throw Error('New lock could not record owner; preserve lock: '+e)}return()=>{const owner=JSON.parse(fs.readFileSync(path.join(LOCK,'owner.json')));if(owner.token!==token)fail('Lock ownership changed; preserve lock');fs.unlinkSync(path.join(LOCK,'owner.json'));fs.rmdirSync(LOCK)}}
+module.exports={ROOT,BASE,LOCK,sha,fail,identity,load,fault,atomicCAS,lock}

@@ -1,0 +1,150 @@
+{
+  "blindId": "VT15",
+  "inciFingerprintSha256": "364c6bcda0e7f4561fe3efafe198e8b6a283683ef7e454eb1c14cdfb96b56f9b",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: Water/Aqua/Eau one entry; normalized one-based positions of the 22-entry list",
+    "e3ProminenceCutoff": "Fragrance/Parfum @14 -> positions 1-13 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Laureth Sulfate @2 - strong anionic, ether type, defining anionic",
+      "Coco-Glucoside @3 - nonionic glucoside, buffer",
+      "Cocamidopropyl Betaine @4 - amphoteric, buffer",
+      "No reinforcing strong anionic",
+      "Sorbitan Caprylate @10 - not a C3 cleansing class (multifunctional ester)"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9"],
+      "cationic_conditioner": [],
+      "payload_lipid": ["Hydrogenated Vegetable Oil @7 (waxy/hydrogenated lipid)"],
+      "weak_refatter": ["Glyceryl Oleate @8"],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": ["Panthenol @11"],
+      "excluded": ["Citrus Aurantium Peel Oil @16, Citrus Limon Peel Oil @17 (essential/fragrance oils, 6.4)", "Sorbitan Caprylate @10 (multifunctional ester, not a deposition family)", "Tetrasodium Glutamate Diacetate @12 (chelator)"]
+    },
+    "actives": ["Panthenol @11", "no recognized anti-dandruff active"],
+    "scalpExposureFlags": ["Fragrance @14 (not prominent); citrus peel oils and allergens after Fragrance", "no cooling agent", "E4 comfort route prominent: Panthenol @11", "E4 humectant/refatting routes prominent: Hydrogenated Vegetable Oil @7, Glyceryl Oleate @8, Panthenol @11"]
+  },
+  "wLine": {
+    "wLine": "Panthenol @11",
+    "candidateClasses": ["sub1_active"],
+    "cap": "e3Point @14 (Fragrance/Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "plausibilityOfWLine": "Panthenol @11: (i) cleansing surfactants before (@2-@4); (ii) between @11 and the cap @14 only Tetrasodium Glutamate Diacetate and Sodium Benzoate - no cleansing surfactant, alkanolamide or pearlizing wax",
+    "codes": [],
+    "payloadLipidMaterial": ["Hydrogenated Vegetable Oil @7"],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with prominent buffers Coco-Glucoside @3 and Cocamidopropyl Betaine @4 and no reinforcing strong anionic. This is the settled C1 core; refatting (Hydrogenated Vegetable Oil @7, Glyceryl Oleate @8) is recorded as counter-signal only.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: C2 is not met (no silicone; the prominent payload lipid Hydrogenated Vegetable Oil @7 can take the silicone's place and Guar HPTC @9 and Panthenol @11 supply the cationic and humectant elements, but there is no pearlizing/fatty route). One meaningful system (guar + waxy lipid) plus light routes (Glyceryl Oleate @8, Panthenol @11) is bounded rinse-off care. Neighbor high because only the pearlizing/fatty element is missing.",
+      "ruleIds": ["C2", "5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["material: Hydrogenated Vegetable Oil @7 (before W-line @11)"],
+        "weak_refatter": ["Glyceryl Oleate @8"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["strong anionic ether type: Sodium Laureth Sulfate @2", "nonionic: Coco-Glucoside @3", "amphoteric: Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Panthenol @11"],
+        "excluded": ["Citrus peel oils @16, @17 (fragrance oils)", "Sorbitan Caprylate @10"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - waxy hydrogenated lipid plus cationic guar plus a weak refatter",
+      "persistence": "moderate - hydrogenated (waxy) lipid is more substantive than a liquid oil; guar is moderately persistent",
+      "resetCapacity": "moderate - C1 SLES chassis with two buffers",
+      "counterevidence": "W-RICH holds (material waxy lipid @7 converging with cationic guar @9), which argues for high.",
+      "whyThisBand": "Moderate: a plausibly persistent lipid + guar deposition system leaves noticeable but bounded residue; calling it low would understate it.",
+      "whyNotNeighborBand": "Not high: W-RICH holds but reset is not limited (resetCapacity moderate, C1 SLES chassis), and the convergence route has only two families (one material lipid, one guar) that an effective ordinary chassis plausibly offsets; per W-RICH limited-reset rule the band is moderate with W-RICH as counter-signal and high as neighbor.",
+      "confidenceLimitingFactor": "W-RICH counter-signal; waxy lipid dose unknown.",
+      "rationale": "Moderate: W-line Panthenol @11 keeps Hydrogenated Vegetable Oil @7 material, so W-RICH holds, but resetCapacity is moderate (not limited), so the rich route does not reach high; W1 not applicable (no silicone).",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W1", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific (provisional)",
+        "moistureRoutes": ["Panthenol @11", "Hydrogenated Vegetable Oil @7", "Glyceryl Oleate @8"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @9"],
+        "limitation": "Single humectant (Panthenol), no protein or damage-care cluster"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Generic guar/lipid conditioning distinguishes neither repair nor moisture; no claims visible.",
+      "decisionTrace": "Claim direction null (blind); formula nonspecific for repair/moisture; provisional general. Volume/shine/clarifying cannot be judged without claims.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "7.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible (moderate formula)", "treatment impossible", "frequent needs U2 wording"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met (prominent Panthenol @11 comfort route; Hydrogenated Vegetable Oil @7, Glyceryl Oleate @8 refatting).",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "conditioningLevel: Glyceryl Oleate @8 not read as the C2 pearlizing/fatty route (weak_refatter); alternative reading would meet C2 and give high.",
+    "weightPotential moderate vs high: W-RICH holds with moderate reset; alternative high."
+  ]
+}

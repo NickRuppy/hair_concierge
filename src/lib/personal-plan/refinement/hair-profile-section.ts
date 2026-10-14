@@ -1,7 +1,7 @@
 import type { Stage3DecisionDeferralReason } from "@/lib/personal-plan/products/contracts"
 
 import type { RefinementStatusResponse } from "./refinement-status"
-import type { Stage2Module } from "./types"
+import { STAGE2_MODULES, type Stage2Module } from "./types"
 
 /**
  * View model of the Profil tab's „Dein Haarprofil" section (Task 2.5) — the
@@ -15,7 +15,12 @@ import type { Stage2Module } from "./types"
  * banner's button alone.
  */
 
-export type HairProfileSectionRowKey = "hair_analysis" | "ideal_plan" | "products" | "habits"
+export type HairProfileSectionRowKey =
+  | "hair_analysis"
+  | "ideal_plan"
+  | "products"
+  | "tools"
+  | "habits"
 
 export type HairProfileSectionRow = {
   key: HairProfileSectionRowKey
@@ -46,6 +51,7 @@ export type HairProfileSectionViewModel = {
 
 const MODULE_LABELS: Record<Stage2Module, string> = {
   products: "Deine Produkte",
+  tools: "Deine Tools",
   habits: "Deine Gewohnheiten",
 }
 
@@ -124,6 +130,14 @@ export function buildHairProfileSection(input: {
     }
   }
 
+  // A module the status response does not list as applicable (`not_applicable`, or absent from
+  // an older response) has no row at all, and the steps after it close up: with `tools` off the
+  // rows read 3 and 4 and the meter „x von 4", exactly as before the tools module existed.
+  const applicableModules = STAGE2_MODULES.filter((stage2Module) => {
+    const entry = input.status.modules.find((candidate) => candidate.module === stage2Module)
+    return entry !== undefined && entry.status !== "not_applicable"
+  })
+
   return {
     completedSteps,
     totalSteps,
@@ -150,8 +164,7 @@ export function buildHairProfileSection(input: {
         editHref: null,
         note: null,
       },
-      moduleRow("products", 3),
-      moduleRow("habits", 4),
+      ...applicableModules.map((stage2Module, index) => moduleRow(stage2Module, 3 + index)),
     ],
   }
 }

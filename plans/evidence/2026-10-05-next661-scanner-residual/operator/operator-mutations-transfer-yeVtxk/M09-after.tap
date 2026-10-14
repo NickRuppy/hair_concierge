@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+ok 1 - anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+  ---
+  duration_ms: 18.869666
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 952.144042

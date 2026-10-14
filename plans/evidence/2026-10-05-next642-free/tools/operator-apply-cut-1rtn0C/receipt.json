@@ -1,0 +1,33 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "pinsSHA": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp",
+    "completionSHA": "144328e7f57ce2f3b44e2d8e6c8ff8a996bf81ab7d35f1360d20bcd384848033",
+    "verified": 2,
+    "logFiles": 6,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/freemium-sheet-checkout-contract.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/free-registration-screen.test.tsx": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "tests/free-registration-recovery-terminal.test.ts": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "tests/free-snapshot-provisioning-acceptance.test.ts": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "tests/freemium-sheet-checkout-contract.test.ts": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5",
+    "tests/freemium-plan-provisioning.test.ts": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "tests/freemium-cutover-journey.test.ts": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "tests/personal-plan/persistence/free-snapshot-service.test.ts": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals"
+}

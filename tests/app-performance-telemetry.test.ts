@@ -127,17 +127,3 @@ test("maps response status to the bounded outcome without free-form details", ()
   assert.equal(outcomeForResponseStatus(404), "not_found")
   assert.equal(outcomeForResponseStatus(503), "transient_error")
 })
-
-test("accepts only generated UUID v4 correlation identifiers", () => {
-  assert.throws(
-    () =>
-      createAppPerformanceEvent({
-        routeGroup: "routine",
-        operation: "proxy_access",
-        outcome: "success",
-        durationMs: 1,
-        correlationId: "request-correlation-id",
-      }),
-    /correlationId/,
-  )
-})

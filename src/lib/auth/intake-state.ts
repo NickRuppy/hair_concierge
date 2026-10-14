@@ -25,10 +25,6 @@ type ProfileRow = {
   onboarding_completed?: boolean | null
 } | null
 
-export function hasQuizDiagnostics(profile: PersistedQuizDiagnosticsProfile): boolean {
-  return hasCompletedQuizDiagnostics(profile)
-}
-
 export function resolveIntakeState(
   profile: ProfileRow,
   hairProfile: PersistedQuizDiagnosticsProfile,
@@ -37,7 +33,7 @@ export function resolveIntakeState(
     return "ready"
   }
 
-  if (hasQuizDiagnostics(hairProfile)) {
+  if (hasCompletedQuizDiagnostics(hairProfile)) {
     return "needs_onboarding"
   }
 

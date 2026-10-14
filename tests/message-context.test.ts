@@ -46,7 +46,11 @@ test("legacy fallback strips source payloads and their rendered markers", () => 
   })
 
   assert.equal(normalized.content, "Shampoo ist fuer die Kopfhaut, nicht fuer die Laengen.")
-  assert.deepEqual(normalized.message_context, { response_mode: "answer_direct" })
+  assert.deepEqual(normalized, {
+    id: "message-legacy",
+    content: "Shampoo ist fuer die Kopfhaut, nicht fuer die Laengen.",
+    message_context: { response_mode: "answer_direct" },
+  })
   assert.equal("sources" in (normalized.message_context ?? {}), false)
 })
 
@@ -73,20 +77,6 @@ test("normalization preserves bracketed numbers when no legacy sources exist", (
   })
 
   assert.equal(normalized.content, "Nutze an Schritt [1] nur wenig Produkt.")
-})
-
-test("normalizeMessageContextRow exposes only the canonical client field", () => {
-  const normalized = normalizeMessageContextRow({
-    id: "message-1",
-    message_context: null,
-    rag_context: legacyContext,
-  })
-
-  assert.deepEqual(normalized, {
-    id: "message-1",
-    message_context: legacyContext,
-  })
-  assert.equal("rag_context" in normalized, false)
 })
 
 test("buildMessageContextWriteColumns dual-writes the exact same object", () => {

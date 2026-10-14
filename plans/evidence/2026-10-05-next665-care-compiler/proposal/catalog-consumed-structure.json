@@ -1,0 +1,6189 @@
+[
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+    "name": "Garnier Hair Food Aloe Vera",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+    "name": "Living Proof Restore Repair Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "0756a919-5fab-4b6c-a5da-8cb810869b6f"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit einer etwa münzgroßen Menge starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+    "name": "Isana Feuchtigkeits Leave-In (Hyaluron)",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "0b21f996-bb42-4b10-89bd-4881c4346d53"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine passende Menge für Längen und Spitzen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+    "name": "Redken All Soft Mega Curls Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "moisture_softness",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "0d5a4af5-d046-4378-b608-515c9d1d66ec"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge gleichmäßig verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+    "name": "EVO Head Mistress",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+    "name": "Color WOW Money Mist",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+    "name": "Redken Extreme Anti-Snap",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gezielt auf beschädigte Stellen oder insgesamt verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+    "name": "Curlsmith Multitasking Conditioner 3 in 1",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "detangle",
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge ins nasse Haar einarbeiten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+    "name": "Pantene Bonding Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "35a372b6-c7ef-45cb-be0b-99cef476f247"
+        },
+        "family": "between_wash_dry_care",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge Creme zwischen den Händen verreiben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "35a372b6-c7ef-45cb-be0b-99cef476f247"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge Creme zwischen den Händen verreiben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+    "name": "Redken One United",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530"
+        },
+        "family": "between_wash_damp_refresh",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+    "name": "EVO Happy Campers",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Direkt sprühen oder erst in die Hände sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+    "name": "Authentic Beauty Concept Hydrate Spray",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "43cb9fbf-4b04-4554-a86a-7cb168536233"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+    "name": "Urban Alchemy Repair & Revive Leave-In Spray",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "heat_protect",
+        "repair_support",
+        "smooth_anti_frizz",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "45f4fe15-c439-476d-8a86-3b2aac5053bd"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "großzügig und gleichmäßig"
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "45f4fe15-c439-476d-8a86-3b2aac5053bd"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "großzügig und gleichmäßig"
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "4827c174-92e9-4121-ab70-843d5c037ad0",
+    "name": "Olaplex No.5 Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "4827c174-92e9-4121-ab70-843d5c037ad0"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Feines Haar: 1 Pumpstoß; mittleres bis kräftiges Haar: 2 Pumpstöße."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "4827c174-92e9-4121-ab70-843d5c037ad0"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Feines Haar: 1 Pumpstoß; mittleres bis kräftiges Haar: 2 Pumpstöße."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+    "name": "Olaplex No.6 Bond Smoother",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "4e99706a-2232-4ee6-ba1b-9ca1029a7364"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit 1 Pumpstoß starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "4e99706a-2232-4ee6-ba1b-9ca1029a7364"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit 1 Pumpstoß starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+    "name": "Maria Nila Coils & Curls Oil in Cream",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "50951ef2-e16a-4a51-85c5-a709aa64c03a"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+    "name": "HASK Keratin 5-in-1 Spray",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Großzügig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Großzügig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+    "name": "Gliss Ultimate Repair Sprüh-Conditioner",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "648ba537-5180-440e-81ad-2b310b447d87",
+    "name": "Curlsmith Hydrate & Plump Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "moisture_softness",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "648ba537-5180-440e-81ad-2b310b447d87"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit einer kleinen, etwa münzgroßen Menge starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "695414e1-3435-4304-943b-76677408980c",
+    "name": "Maria Nila Structure Repair Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "repair_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "695414e1-3435-4304-943b-76677408980c"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge Creme verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-14-leave-in-exact-01.json",
+    "product": "696401be-16b5-4261-836f-28b57c1ecd59",
+    "name": "It’s a 10 Miracle Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "heat_protect",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "696401be-16b5-4261-836f-28b57c1ecd59"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "696401be-16b5-4261-836f-28b57c1ecd59"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+    "name": "Kevin Murphy Young Again",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "shine_support",
+        "smooth_anti_frizz",
+        "repair_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit einer kleinen Menge starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+    "name": "Elvital Öl Magique Midnight Serum",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "6b01025d-9e72-4514-b42e-bbb6065fbe1c"
+        },
+        "family": "between_wash_dry_care",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+    "name": "Moroccanoil All In One Leave In Conditioner",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "repair_support",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+    "name": "It’s a 10 Miracle Leave-In Lite",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "repair_support",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "7d65ed50-898c-40c3-8865-ebe5688774c8"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig in Längen und Spitzen sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "7d65ed50-898c-40c3-8865-ebe5688774c8"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig in Längen und Spitzen sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+    "name": "Curlsmith Weightless Air Dry Cream",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "curl_shape_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "8715f0f5-9104-46ec-b450-e73f1441c1fa"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine bis mittlere Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "915aa362-6479-41f2-bb59-0260493b3d58",
+    "name": "Paul Mitchell Full Circle Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "curl_shape_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "915aa362-6479-41f2-bb59-0260493b3d58"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine großzügige Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "94cf6959-a53b-421b-9f0f-05efc239171c",
+    "name": "Wella Ultimate Repair Protective Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "repair_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "94cf6959-a53b-421b-9f0f-05efc239171c"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "94cf6959-a53b-421b-9f0f-05efc239171c"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig vor Wärme verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+    "name": "OUAI Leave In Conditioner",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "repair_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "993f0e55-2450-4557-853d-e6e23ec0d1a9"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Einige Sprühstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "993f0e55-2450-4557-853d-e6e23ec0d1a9"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+    "name": "Alcina Hyaluron 2.0",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "9b664b11-fd11-47e3-9b7e-76e34736b43e"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Je nach Haarlänge 10–15 Sprühstöße."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "9b664b11-fd11-47e3-9b7e-76e34736b43e"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "10–15 Sprühstöße je nach Haarlänge."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "9f94c225-61ec-455d-b303-f39e885e222a",
+    "name": "Neqi Build Boost Leave-In Balm",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "protein",
+      "repair_support_level": "high",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "repair_support",
+        "heat_protect",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "9f94c225-61ec-455d-b303-f39e885e222a"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Großzügig und gleichmäßig in die Spitzen geben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "9f94c225-61ec-455d-b303-f39e885e222a"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig vor Wärme verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+    "name": "Redken Acidic Color Gloss Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "heat_protect",
+        "shine_support",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "a3b21686-fe35-46f1-b560-b8a563dc96ae"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "a3b21686-fe35-46f1-b560-b8a563dc96ae"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig vor Wärme verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "a72d630d-547a-465f-9846-3006b38af0a2",
+    "name": "Garnier Hair Food Macadamia",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "a72d630d-547a-465f-9846-3006b38af0a2"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+    "name": "EVO Day of Grace Leave-In",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig vor Wärme aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+    "name": "Neqi Leave-In Moisturizing Mist",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Leicht und gleichmäßig aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+    "name": "Balea Aqua Hyaluron 3in1",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "c6e80f39-20ba-401e-b041-6ee7c89a5996"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+    "name": "Cantu Leave-In Repair Cream",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "repair_support",
+        "curl_shape_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine großzügige Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "e6896862-523b-42b3-967d-41cbd16acf64",
+    "name": "Neqi Moisture Mystery",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e6896862-523b-42b3-967d-41cbd16acf64"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Großzügig und gleichmäßig in die Spitzen geben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e6896862-523b-42b3-967d-41cbd16acf64"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig vor Wärme verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+    "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "moisture",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "curl_shape_support",
+        "repair_support",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1–2 Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "section"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1–2 Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+    "name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "smooth_anti_frizz",
+        "heat_protect",
+        "repair_support",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "f8f3b51d-8e64-487d-bad5-4a47c58862ed"
+        },
+        "family": "between_wash_dry_care",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig auf die Spitzen sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "f8f3b51d-8e64-487d-bad5-4a47c58862ed"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig in Längen und Spitzen sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-15-leave-in-exact-02.json",
+    "product": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+    "name": "alverde Leave-In Sprühkur Express 7in1",
+    "expected": "leave_in",
+    "target": "leave_in",
+    "facts": {
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "plan_roles": [
+        "post_wash_leave_in"
+      ],
+      "functional_benefits": [
+        "detangle",
+        "moisture_softness",
+        "repair_support",
+        "shine_support"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c"
+        },
+        "family": "between_wash_dry_care",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Aus etwa 30 cm Abstand sprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "section",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "05e68c32-f096-457f-8b88-5cd3c0934873",
+    "name": "Jean&Len Repair Keratin & Mandel",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "05e68c32-f096-457f-8b88-5cd3c0934873"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit ein bis zwei Tropfen starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "05e68c32-f096-457f-8b88-5cd3c0934873"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit ein bis zwei Tropfen starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+    "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "07120c73-0171-4a2a-9d07-facd9ce90d8c"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Nur wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+    "name": "Pantene Pro-V Coconut Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+    "name": "Balea Oil Repair Haaröl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "rich",
+      "role_support": [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "pre_wash_fibre_treatment",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1c43bc07-e3c6-4b8a-9b62-943147052e07"
+        },
+        "family": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "rinse"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "1c43bc07-e3c6-4b8a-9b62-943147052e07"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "21a94166-3813-4c0f-8912-508fb8f704f1",
+    "name": "L’Oréal Öl Magique Midnight Serum",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "21a94166-3813-4c0f-8912-508fb8f704f1"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen arbeiten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "21a94166-3813-4c0f-8912-508fb8f704f1"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen arbeiten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+    "name": "Neqi Opulent Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Zwei bis drei Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Zwei bis drei Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "27a2dd61-6e54-4746-8e24-a698dbafbf91"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Zwei bis drei Pumpstöße verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+    "name": "OGX Miracle Coconut Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "rich",
+      "role_support": [
+        "leave_on_fibre_conditioning"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "2858a8b6-018b-4949-ae58-eedc348d20b4"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+    "name": "Nuxe Huile Prodigieuse Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "pre_wash_fibre_treatment",
+        "cadence": {
+          "kind": "frequency",
+          "copy_de": "Ein- bis zweimal pro Woche als intensive Pflege vor dem Shampoonieren."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+        },
+        "family": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 600,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Ein bis zwei Sprühstöße in die Handfläche geben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Ein bis zwei Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": {
+          "kind": "as_needed",
+          "copy_de": "Nach Bedarf als abschließende Pflege verwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5767f7a6-757c-40fa-b990-8e0a1abaea17"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Ein bis zwei Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+    "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5827a3b9-a488-4c74-b13a-4d655f94f1c3"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-16-oil-exact-01.json",
+    "product": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+    "name": "Urban Alchemy Smooth Supreme Öl Serum",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam in Längen und Spitzen verteilen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "663acf09-7090-40d8-9411-71154b9d60f3",
+    "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "663acf09-7090-40d8-9411-71154b9d60f3"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden; bei feinem Haar sehr sparsam starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "663acf09-7090-40d8-9411-71154b9d60f3"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden; bei feinem Haar sehr sparsam starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+    "name": "Dr. Scheller Reines Arganöl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "70ea52bc-2194-4bb3-82a8-3f4a2aede041"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1 bis 2 Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "70ea52bc-2194-4bb3-82a8-3f4a2aede041"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1 bis 2 Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "78e6f1b2-7262-46af-b689-a92af6702739",
+    "name": "NUTREEOIL Cacay Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "78e6f1b2-7262-46af-b689-a92af6702739"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sehr sparsam in den Spitzen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "78e6f1b2-7262-46af-b689-a92af6702739"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sehr sparsam in den Spitzen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+    "name": "Maria Nila True Soft Argan Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+    "name": "Olaplex No.7 Bonding Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit 2 bis 3 Tropfen starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit 2 bis 3 Tropfen starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Mit 2 bis 3 Tropfen starten."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+    "name": "Innersense Harmonic Treatment Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "7f5207e6-d281-416e-922c-3135dd9a8cc8"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1 bis 2 Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "aa349c07-1add-44d4-9161-d99190182e5c",
+    "name": "OGX Argan weightless Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Leicht aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+    "name": "HASK Argan Oil Repairing Shine Oil",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "b916efff-8b80-47d4-82cf-d8148d1eff53"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine münzgroße Menge verwenden und die Ansätze vermeiden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "b916efff-8b80-47d4-82cf-d8148d1eff53"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine münzgroße Menge verwenden und die Ansätze vermeiden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+    "name": "L’Oréal Elvital Öl Magique Jojoba",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "c05773dd-9656-4381-a0ab-8e9fc310c520"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "c05773dd-9656-4381-a0ab-8e9fc310c520"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "c320750f-6a1e-420d-8594-409f04e05319",
+    "name": "OGX Bond Protein Repair",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "c320750f-6a1e-420d-8594-409f04e05319"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "section",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "c320750f-6a1e-420d-8594-409f04e05319"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge aufsprühen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "section",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "c574ee6f-ad22-45c0-b936-57b847d93433",
+    "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "c574ee6f-ad22-45c0-b936-57b847d93433"
+        },
+        "family": "pre_heat_damp",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+    "name": "Garnier Fructis Wunderöl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "pre_heat_protection"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+        },
+        "family": "either_state_protection",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Wenige Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "tool"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+    "name": "Garnier Wahre Schätze Curl Revival Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "rich",
+      "role_support": [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "pre_wash_fibre_treatment",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+        },
+        "family": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 3600,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Als Ölkur von Kopfhaut bis Spitzen einmassieren."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam als Öl-Treatment oder Curl Refresh verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Sparsam als finales Finish verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+    "name": "Balea Traumlocken Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "medium",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "fd83b493-f7be-4071-9642-3d5b92e30dc2"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Ein paar Tropfen verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "fd83b493-f7be-4071-9642-3d5b92e30dc2"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Bei feinem Haar nur wenige Tropfen in trockene Spitzen geben."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "fe974387-b487-470e-9799-69bb4249070b",
+    "name": "Pantene Pro-V Keratin Protect Öl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "light",
+      "role_support": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ]
+    },
+    "factSourceCount": 3,
+    "protocols": [
+      {
+        "role": "leave_on_fibre_conditioning",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "fe974387-b487-470e-9799-69bb4249070b"
+        },
+        "family": "post_wash_damp_conditioning",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "dry"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "dry_finish",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "fe974387-b487-470e-9799-69bb4249070b"
+        },
+        "family": "dry_finish",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Eine kleine Menge verwenden."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-17-oil-exact-02.json",
+    "product": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+    "name": "NANOIL Avocadoöl",
+    "expected": "oil",
+    "target": "oil",
+    "facts": {
+      "weight": "rich",
+      "role_support": [
+        "pre_wash_fibre_treatment"
+      ]
+    },
+    "factSourceCount": 2,
+    "protocols": [
+      {
+        "role": "pre_wash_fibre_treatment",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "oil",
+          "productId": "ff13bc3a-8bc6-49df-85a0-7a67add26926"
+        },
+        "family": "pre_wash_lengths_treatment",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 900,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "none",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Auf Haar und Kopfhaut auftragen."
+          },
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "077a94ae-fede-4773-9435-17022c2b89c0",
+    "name": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "077a94ae-fede-4773-9435-17022c2b89c0"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+    "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "17c50884-3c17-479a-848a-10447464e086",
+    "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "17c50884-3c17-479a-848a-10447464e086"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+    "name": "Balea Professional Glow & Shine",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "1f3920fe-c91e-4298-a40e-99dccd13ea30"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "conditioner_before",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "22d41784-5fc6-40bb-a4dc-92841322f933",
+    "name": "Neqi Peptide Power",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "22d41784-5fc6-40bb-a4dc-92841322f933"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+    "name": "Balea Haarkur reparierend",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "29fc985e-3b7e-4567-b7bc-b416583139fe"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+    "name": "Schaebens Argan-Öl Haarmaske",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "3ce9a9da-4d58-4a66-a424-f8818960b5dc"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+    "name": "Bali Curls SOS Protein Treatment",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": {
+          "kind": "label_schedule",
+          "copy_de": "Alle 2–4 Wochen oder bei Bedarf anwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse",
+          "apply_product"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "47795618-40e7-4ef6-8034-0fd8eb747575",
+    "name": "Isana 3in1 Milchprotein & Mandel",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "detangling_slip",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "47795618-40e7-4ef6-8034-0fd8eb747575"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+    "name": "Syoss Intense Curls Haarmaske",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "4f6dc4e4-d163-405d-9c68-3b2467090078"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "52264c47-f339-49db-9fb2-207d1ad3b470",
+    "name": "Fructis Hair Food Aloe Vera",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "52264c47-f339-49db-9fb2-207d1ad3b470"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+    "name": "Balea Aqua Hyaluron 3 in 1",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "55727898-2a5e-4f01-ace1-bd91521d98ab"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+    "name": "Gliss Aqua Revive",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": {
+          "kind": "label_schedule",
+          "copy_de": "Laut Hersteller 2–3 Mal pro Woche; dein Plan kann seltener bleiben."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+    "name": "Hask Argan Oil Repairing Deep Conditioner",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7c057f58-3e9b-4347-b4c1-f04cc4213f94"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+    "name": "Pantene Bond Repair",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "869abd97-a499-4f39-97e5-2722773e46ae",
+    "name": "Sante Intense Hydration",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "detangling_slip",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "869abd97-a499-4f39-97e5-2722773e46ae"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-18-mask-exact-01.json",
+    "product": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+    "name": "Pomélo+Co Shine Therapy",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 300,
+          "conditionerRelationship": "no_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+    "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "8ef172f7-8e95-4ac7-a6a9-235ad760155b"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "961e3935-f823-44e7-8601-900c62855d3d",
+    "name": "Syoss Intense Keratin",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": {
+          "kind": "label_schedule",
+          "copy_de": "1–2 Mal pro Woche anwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "961e3935-f823-44e7-8601-900c62855d3d"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+    "name": "Balea Professional Plex Care 2in1",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+    "name": "Fructis Hair Food Papaya",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "9e1442c9-4ab8-4819-a851-66859a98ed80"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+    "name": "Pantene Hydra Glow",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 120,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "b281d528-b312-4e44-98be-3e01f7e56644",
+    "name": "Neqi Gloss Glaze",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b281d528-b312-4e44-98be-3e01f7e56644"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+    "name": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+    "name": "Jean&Len Tiefenreparatur Haarkur",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "b3932c84-d6e1-453d-b52e-bed1df190fed"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+    "name": "Neqi Build Boost",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "c7326c6b-6175-4ec2-865f-68baf476c986",
+    "name": "Guhl 30 sec. Feuchtigkeit",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "c7326c6b-6175-4ec2-865f-68baf476c986"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 30,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+    "name": "Syoss Haarkur Lamination Intense Glaze",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "cce6346c-8c92-4a17-b39b-cc7f300e84de"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+    "name": "Bali Curls Deep Repair Mask",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "d33543b0-6011-45f1-9bb2-125289ac849a",
+    "name": "Neqi Repair Reveal",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "shine"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d33543b0-6011-45f1-9bb2-125289ac849a"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "d5d67009-7aac-4299-938b-7218b8635a0c",
+    "name": "Balea 3 in 1 Intensivmaske",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "medium",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d5d67009-7aac-4299-938b-7218b8635a0c"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+    "name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "high",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "d9825ad6-f549-4b02-a62a-eaa3bf917936"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "ea353b65-544d-48a8-a057-c3e733b66326",
+    "name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "shine",
+        "smoothing_frizz_control"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "ea353b65-544d-48a8-a057-c3e733b66326"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 60,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-19-mask-exact-02.json",
+    "product": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+    "name": "Balea Natural Beauty 3in1 Locken",
+    "expected": "mask",
+    "target": "mask",
+    "facts": {
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smoothing_frizz_control",
+        "detangling_slip"
+      ]
+    },
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "intensive_conditioning_mask",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "mask",
+          "productId": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9"
+        },
+        "family": "post_shampoo_rinse_out_mask",
+        "facts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": 180,
+          "conditionerRelationship": "replaces_conditioner",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-20-deep-cleansing-repair.json",
+    "product": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+    "name": "Tiefenreinigungs-Shampoo",
+    "expected": null,
+    "target": "deep_cleansing_shampoo",
+    "facts": {},
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "residue_reset",
+        "cadence": {
+          "kind": "weekly_range",
+          "copy_de": "Ein- bis zweimal pro Woche anwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "05753f93-907f-427d-a4dc-0a690ff3a76d"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-20-deep-cleansing-repair.json",
+    "product": "07895098-a301-4137-b5c6-9061589b1800",
+    "name": "Deep Cleansing Shampoo",
+    "expected": null,
+    "target": "deep_cleansing_shampoo",
+    "facts": {},
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "residue_reset",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "07895098-a301-4137-b5c6-9061589b1800"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-20-deep-cleansing-repair.json",
+    "product": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+    "name": "Shampoo Tiefenreinigung",
+    "expected": null,
+    "target": "deep_cleansing_shampoo",
+    "facts": {},
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "residue_reset",
+        "cadence": {
+          "kind": "label_daily_suitable",
+          "copy_de": "Laut Produktseite für die tägliche Anwendung geeignet; im Plan nur als Reset-Baustein verwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "375ee7a0-3262-4b99-8e48-4f327c6e09aa"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-20-deep-cleansing-repair.json",
+    "product": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+    "name": "Tiefenreinigung Shampoo",
+    "expected": null,
+    "target": "deep_cleansing_shampoo",
+    "facts": {},
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "mineral_reset",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "898a5a1e-1cf1-4812-8f9e-f14563a740ca"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "rinse"
+        ],
+        "sourceMatched": true
+      },
+      {
+        "role": "residue_reset",
+        "cadence": null,
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "898a5a1e-1cf1-4812-8f9e-f14563a740ca"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "all_hair",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  },
+  {
+    "file": "S5-20-deep-cleansing-repair.json",
+    "product": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+    "name": "Professional Shampoo Tiefenreinigung",
+    "expected": null,
+    "target": "deep_cleansing_shampoo",
+    "facts": {},
+    "factSourceCount": 1,
+    "protocols": [
+      {
+        "role": "residue_reset",
+        "cadence": {
+          "kind": "label_daily_suitable",
+          "copy_de": "Laut Produktseite für die tägliche Haarwäsche geeignet; im Plan nur als Reset-Baustein verwenden."
+        },
+        "scope": {
+          "kind": "product",
+          "category": "deep_cleansing_shampoo",
+          "productId": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18"
+        },
+        "family": "reset_cleanse",
+        "facts": {
+          "applicationArea": "scalp_roots",
+          "rinse": "rinse_out",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "conditioner_after",
+          "reapplication": "none",
+          "amount": null,
+          "cautions": []
+        },
+        "stepActions": [
+          "apply_product",
+          "wait",
+          "rinse"
+        ],
+        "sourceMatched": true
+      }
+    ]
+  }
+]

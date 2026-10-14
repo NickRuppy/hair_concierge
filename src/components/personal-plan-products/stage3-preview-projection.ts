@@ -1,4 +1,6 @@
 import type { Stage3AuthoritySemanticIntent } from "@/lib/personal-plan/products/authority/contracts"
+import type { Stage3FitComparison } from "@/lib/personal-plan/products/fit-comparison"
+import type { Stage3AuthorityEvaluation } from "@/lib/personal-plan/products/authority/contracts"
 import type { Stage3DecisionReviewProjection } from "@/lib/personal-plan/products/gateway"
 import type { Stage3ReviewDraftChoice } from "@/lib/personal-plan/products/review-draft"
 
@@ -38,12 +40,23 @@ export function isCurrentStage3PreviewGeneration(
   return responseGeneration === currentGeneration
 }
 
-/** Whether the changed local choices need a fresh server projection. */
+/**
+ * Whether the changed local choices need a fresh server projection. With a saved budget the server
+ * allocates it over the whole proposal, so every changed product decision (plan, keep, skip) can
+ * move other roles' defaults and allowance. Without a budget only Oil can move Heat.
+ */
 export function shouldRefreshStage3Preview(input: {
   choices: Record<string, Stage3ReviewDraftChoice>
   leaveOnOilDecisionKeys: ReadonlySet<string>
   changedDecisionKeys: readonly string[]
+  budgetActive?: boolean
 }): boolean {
+  if (
+    input.budgetActive &&
+    input.changedDecisionKeys.some((key) => input.choices[key]?.kind === "decision")
+  ) {
+    return true
+  }
   const changedLeaveOnOil = input.changedDecisionKeys.some((key) =>
     input.leaveOnOilDecisionKeys.has(key),
   )
@@ -92,6 +105,89 @@ export function reconcileStage3PreviewProjection(input: {
         .map((subject) => subject.decisionKey),
     ),
     autoResolvedIntents: input.projection.autoResolvedIntents,
+  }
+}
+
+export type Stage3PreviewReviewBundle = {
+  authorityEvaluation: Stage3AuthorityEvaluation
+  fitComparison: Stage3FitComparison
+}
+
+/**
+ * Merges a read-only projection into the visible review bundles. Without a budget the projection
+ * only re-evaluates Heat after a local Oil selection; every other bundle stays the server
+ * snapshot. With a budget every returned role bundle replaces its predecessor, because the budget
+ * allocation spans the whole proposal.
+ */
+export function mergeStage3PreviewBundles(input: {
+  current: ReadonlyMap<string, Stage3PreviewReviewBundle>
+  projection: Extract<Stage3DecisionReviewProjection, { status: "ready" }>
+  budgetActive: boolean
+}): Map<string, Stage3PreviewReviewBundle> {
+  return new Map([
+    ...input.current,
+    ...input.projection.bundles
+      .filter(
+        (bundle) => input.budgetActive || bundle.authorityEvaluation.category === "heat_protectant",
+      )
+      .map((bundle) => [bundle.authorityEvaluation.subjectKey, bundle] as const),
+  ])
+}
+
+/** Whether a pending local decision is still offered by the current review bundle. */
+export function stage3DecisionIntentStillAllowed(
+  reviews: ReadonlyMap<string, Stage3PreviewReviewBundle>,
+  intent: Stage3AuthoritySemanticIntent,
+) {
+  const review = reviews.get(intent.subjectKey)
+  const evaluation = review?.authorityEvaluation
+  if (intent.action === "select_replacement") {
+    return Boolean(
+      review?.fitComparison.alternatives.some(
+        (candidate) =>
+          candidate.productId === intent.selectedCandidateId &&
+          candidate.factFingerprint === intent.selectedCandidateFactFingerprint,
+      ),
+    )
+  }
+  if (!evaluation?.allowedActions.some((allowedAction) => allowedAction === intent.action)) {
+    return false
+  }
+  if (intent.action !== "plan_recommendation") return true
+  if (!intent.selectedCandidateId) return false
+  return (
+    evaluation.status === "known" &&
+    evaluation.recommendation?.productId === intent.selectedCandidateId
+  )
+}
+
+/**
+ * Keeps every pending choice the refreshed bundles still allow. A user's own choice is never
+ * replaced by a new default; it is dropped only when its role no longer offers it.
+ */
+export function retainStage3ChoicesAllowedByBundles(input: {
+  choices: Record<string, Stage3ReviewDraftChoice>
+  order: string[]
+  reviews: ReadonlyMap<string, Stage3PreviewReviewBundle>
+}): { choices: Record<string, Stage3ReviewDraftChoice>; order: string[]; droppedKeys: string[] } {
+  const choices: Record<string, Stage3ReviewDraftChoice> = {}
+  const dropped = new Set<string>()
+  for (const [decisionKey, choice] of Object.entries(input.choices)) {
+    if (
+      choice.kind !== "decision" ||
+      stage3DecisionIntentStillAllowed(input.reviews, choice.intent)
+    )
+      choices[decisionKey] = choice
+    else dropped.add(decisionKey)
+  }
+  return {
+    choices,
+    order: input.order.filter((decisionKey) => Boolean(choices[decisionKey])),
+    // Review order first, so the earliest invalidated decision reopens first.
+    droppedKeys: [
+      ...input.order.filter((decisionKey) => dropped.has(decisionKey)),
+      ...[...dropped].filter((decisionKey) => !input.order.includes(decisionKey)),
+    ],
   }
 }
 

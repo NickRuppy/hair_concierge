@@ -468,7 +468,8 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
     // Twice on purpose: the sheet's sr-only dialog title and the verdict banner.
-    await expect(page.getByText("Passt zu deinem Haar")).toHaveCount(2)
+    // fit-verdict spec §1/§7b, ruled 2026-10-12
+    await expect(page.getByText("Passt", { exact: true })).toHaveCount(2)
 
     // The confirm window, measured rather than raced: the flow pads a fast response out
     // to the full 400ms before it repaints over the viewfinder.
@@ -1006,7 +1007,11 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await closeSheetContaining(page, "Chaarlie Premium").click()
 
     // …and the header bookmark, which keeps its symbol under a corner marker.
-    await closeSheetContaining(page, "Passt nicht zu deinem Haar").click()
+    // fit-verdict spec §1/§7b, ruled 2026-10-12
+    await page
+      .getByRole("dialog", { name: "Passt nicht", exact: true })
+      .getByRole("button", { name: "Schließen", exact: true })
+      .click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "scanning")
     const bookmark = page.getByRole("button", { name: "Merkliste öffnen — Premium" })
     await expect(bookmark.locator("svg.lucide-bookmark")).toBeVisible()

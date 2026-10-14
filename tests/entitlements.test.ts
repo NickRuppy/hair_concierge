@@ -4,19 +4,6 @@ import test from "node:test"
 import { deriveEntitlements, getEntitlements } from "../src/lib/entitlements"
 import type { Entitlements } from "../src/lib/entitlements"
 
-test("premium access grants every can* flag and ignores freeRevealAvailable", () => {
-  const result = deriveEntitlements({ hasAppAccess: true, freeRevealUsed: false })
-
-  assert.deepEqual(result, {
-    tier: "premium",
-    canSeeAlternatives: true,
-    canSave: true,
-    canChat: true,
-    canEditHairCheck: true,
-    freeRevealAvailable: false,
-  } satisfies Entitlements)
-})
-
 test("premium access with freeRevealUsed true still reports freeRevealAvailable false", () => {
   const result = deriveEntitlements({ hasAppAccess: true, freeRevealUsed: true })
 
@@ -26,32 +13,6 @@ test("premium access with freeRevealUsed true still reports freeRevealAvailable 
     canSave: true,
     canChat: true,
     canEditHairCheck: true,
-    freeRevealAvailable: false,
-  } satisfies Entitlements)
-})
-
-test("free tier with reveal available: all can* flags false, freeRevealAvailable true", () => {
-  const result = deriveEntitlements({ hasAppAccess: false, freeRevealUsed: false })
-
-  assert.deepEqual(result, {
-    tier: "free",
-    canSeeAlternatives: false,
-    canSave: false,
-    canChat: false,
-    canEditHairCheck: false,
-    freeRevealAvailable: true,
-  } satisfies Entitlements)
-})
-
-test("free tier with reveal used: all can* flags false, freeRevealAvailable false", () => {
-  const result = deriveEntitlements({ hasAppAccess: false, freeRevealUsed: true })
-
-  assert.deepEqual(result, {
-    tier: "free",
-    canSeeAlternatives: false,
-    canSave: false,
-    canChat: false,
-    canEditHairCheck: false,
     freeRevealAvailable: false,
   } satisfies Entitlements)
 })

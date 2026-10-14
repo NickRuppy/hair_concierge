@@ -1,0 +1,18 @@
+{
+  "directory": "/private/tmp/test-audit-dormant-rollout-tools-5cm3auh1",
+  "pinSHA": "f5e80b3913eec100e58a097a4a880797a77873ced3378eb7686aa79788a2dc7d",
+  "originalGuards": 56,
+  "wholePhaseFiles": 30,
+  "changedFiles": 9,
+  "localClosure": 428,
+  "readset": 450,
+  "dependencies": 3507,
+  "dependencyTrees": 28,
+  "controls": 14,
+  "phaseSpecificMutants": 28,
+  "nonliteralImports": [],
+  "attemptedRepositoryWrites": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

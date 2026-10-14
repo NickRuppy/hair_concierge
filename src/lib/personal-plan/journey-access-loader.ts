@@ -8,16 +8,12 @@ import type { Stage3AuthorityDraftInput, Stage3ProductDraft } from "./products/c
 import type { InitialNeedPlanSnapshot } from "./types"
 import {
   getPersonalPlanNewBuyerCohortCutoff,
-  canAccessPersonalPlanAppV1Rollout,
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
-  resolvePersonalPlanAppV1Rollout,
-  type PersonalPlanAppV1Rollout,
 } from "./release"
 import { canAccessPersonalPlanStage5 } from "./stage5-access"
-import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from "./rollout-access"
 import {
   resolvePersonalPlanJourneyAccess,
   type PersonalPlanJourneyAccess,
@@ -46,7 +42,6 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
   cohortCutoff: () => Date | null
   migrationEnabled?: () => boolean
   appEnabled: () => boolean
-  appRollout: () => PersonalPlanAppV1Rollout
   stage2Enabled: () => boolean
   stage3Enabled: () => boolean
   stage4Enabled: () => boolean
@@ -66,7 +61,6 @@ export type PersonalPlanJourneyAccessLoaderDeps = {
     planId: string,
     refinedVersionId: string,
   ) => Promise<JourneyDraft | null>
-  loadIsInternal: (userId: string) => Promise<boolean>
   /**
    * Server-only, non-identifying phase timing. It is intentionally optional so
    * deterministic loaders and the narrow Stage 2 authorization read stay silent.
@@ -86,16 +80,13 @@ export type PersonalPlanStage3AccessTiming = {
 
 export type PersonalPlanStage2Access = { allowed: boolean }
 
-type JourneyAuthorizationPrefix =
-  | { excludedByAppRollout: true }
-  | {
-      excludedByAppRollout: false
-      appEnabled: boolean
-      accessState: AccessState
-      isNewBuyerCohort: boolean
-      preparedSourceReady: boolean
-      plan: JourneyPlanRow | null
-    }
+type JourneyAuthorizationPrefix = {
+  appEnabled: boolean
+  accessState: AccessState
+  isNewBuyerCohort: boolean
+  preparedSourceReady: boolean
+  plan: JourneyPlanRow | null
+}
 
 type JourneyAccessPhaseReporter = Pick<
   PersonalPlanJourneyAccessLoaderDeps,
@@ -202,13 +193,6 @@ async function loadJourneyAuthorizationPrefixWithDeps(
     throw new Error("journey_access_user_required")
   }
   const appEnabled = deps.appEnabled()
-  const appRollout = deps.appRollout()
-  if (appEnabled && appRollout !== "all") {
-    const isInternal = appRollout === "internal" ? await deps.loadIsInternal(userId) : false
-    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {
-      return { excludedByAppRollout: true }
-    }
-  }
 
   const entitlementStartedAt = phaseStartedAt(reporter)
   let entitlement: Awaited<ReturnType<PersonalPlanJourneyAccessLoaderDeps["loadEntitlement"]>>
@@ -237,7 +221,6 @@ async function loadJourneyAuthorizationPrefixWithDeps(
   })
   if (!entitlementEligible) {
     return {
-      excludedByAppRollout: false,
       appEnabled,
       accessState: entitlement.accessState,
       // Preserve the full journey's legacy classification for an enrollment
@@ -281,7 +264,6 @@ async function loadJourneyAuthorizationPrefixWithDeps(
       durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
     })
     return {
-      excludedByAppRollout: false,
       appEnabled,
       accessState: "active",
       isNewBuyerCohort: true,
@@ -304,7 +286,6 @@ async function loadJourneyAuthorizationPrefixWithDeps(
     durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
   })
   return {
-    excludedByAppRollout: false,
     appEnabled,
     accessState: "active",
     isNewBuyerCohort: true,
@@ -319,7 +300,6 @@ export async function loadPersonalPlanStage2AccessWithDeps(
   userId = "user-id-required",
 ): Promise<PersonalPlanStage2Access> {
   const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId)
-  if (prefix.excludedByAppRollout) return { allowed: false }
   return {
     allowed:
       prefix.appEnabled &&
@@ -342,7 +322,6 @@ export async function loadPersonalPlanJourneyAccessWithDeps(
 ): Promise<PersonalPlanJourneyAccess> {
   const reporter: JourneyAccessPhaseReporter = deps
   const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId, reporter)
-  if (prefix.excludedByAppRollout) return { kind: "legacy" }
 
   if (prefix.accessState !== "active") {
     return resolvePersonalPlanJourneyAccess({
@@ -469,7 +448,6 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
     migrationEnabled: isPersonalPlanLegacyMigrationEnabled,
     appEnabled: isPersonalPlanAppV1Enabled,
-    appRollout: resolvePersonalPlanAppV1Rollout,
     stage2Enabled: isPersonalPlanStage2Enabled,
     stage3Enabled: isPersonalPlanStage3Enabled,
     stage4Enabled: isPersonalPlanStage4Enabled,
@@ -586,9 +564,6 @@ export function createSupabasePersonalPlanJourneyAccessLoader(
           ? (payloadRecord.roleAssignments as Stage3ProductDraft["roleAssignments"])
           : [],
       }
-    },
-    async loadIsInternal(userId) {
-      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)
     },
   }
 }

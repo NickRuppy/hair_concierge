@@ -1,0 +1,161 @@
+{
+  "directory": "/tmp/test-audit-quizportrait43-tools-bpihum9l",
+  "status": "Conditional main-only kit, semantic review and actual execution pending; zero removal credit",
+  "proposal": "/tmp/test-audit-quiz-portrait43-ygKLUS",
+  "proposalManifestSHA256": "e8b4b24f8006005cee2ef25496b2ed9f8a78f171bf50883fd2fb84f765b1cff7",
+  "proposalHandoffSHA256": "6ebe6bf1eca77f494bba1879bca98caa206f6fbd47854d02b04fd0a36eb59ffe",
+  "pinsSHA256": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396",
+  "artifactHashesSHA256": "849bc9efbd7fd8b70b700a29a2ecc473e93d71d8985e740f88feefc77ad348d4",
+  "counts": {
+    "files": 9,
+    "snapshots": 27,
+    "AST": {
+      "before": 43,
+      "transfer": 43,
+      "cut": 42
+    },
+    "native": {
+      "before": 46,
+      "transfer": 46,
+      "cut": 45
+    },
+    "candidates": 1,
+    "changedKeepers": 1,
+    "unchangedCallbacks": 41,
+    "heldFUnchanged": 2,
+    "donorAssertionUnion": 10,
+    "appendedAssertions": 8,
+    "alreadyPresentAssertions": 2,
+    "sourceControls": 3,
+    "fullTSXMutantsParsed": 3
+  },
+  "guards": {
+    "original82Exact": true,
+    "nonPhaseReadset": 90,
+    "literalLocalClosure": 39,
+    "inheritedDependencies": 5020,
+    "inheritedDistributionTrees": 32,
+    "firstNewDependencies": 109,
+    "firstNewTrees": 6,
+    "allDependencies": 5129,
+    "allTrees": 38,
+    "identity": "Exact scanner119 Node/parser/Git/shared-config/packed-target records preserved",
+    "sources": "No unrelated scanner source guards inherited; per-path disposition in template-source-disposition.json"
+  },
+  "staticChecks": [
+    {
+      "path": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-1.txt",
+      "sha256": "47730e02976397f00c0454ee81a2f96d8d1aa612c2835401ceb95b2af765f836",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-2.txt",
+      "sha256": "d93eaab384be2020ea309aee7e1a94399350cbf0ee8b5bbf0d88f25439a96bd1",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-3.txt",
+      "sha256": "a7ed6d21e32729f6521e70dfb4a5a1a12fff06ef98bd869eee583381412e2855",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-quizportrait43-tools-bpihum9l/static-check-4.txt",
+      "sha256": "c30105e5aef8a2494faa3a34cf7f8e9bced641c570c9d2a86bf39a98b060dc1d",
+      "exit": 0
+    }
+  ],
+  "syntheticChecks": 258,
+  "proof": "Scanner decoded-message/operator/code/named test/FIRST outer-frame base preserved; byte-identical catalog diagnosticValue plus exact regex-header/complete typed HTML and path-bound FIRST conjunction. Reject truncated/unknown/nested/forged shapes. Main must prove all3 controls in both phases.",
+  "nativeRuns": 0,
+  "repositoryWrites": 0,
+  "childrenStartedByTools": 0,
+  "ownerImports": 0,
+  "network": 0,
+  "readFirst": [
+    "README.md",
+    "template-provenance.json",
+    "template-delta.patch",
+    "final-code-current.diff",
+    "full-final-code.txt",
+    "operator-controls-normalized.json",
+    "operator-selected-closure.json",
+    "template-source-disposition.json",
+    "static-check-1.txt",
+    "static-check-2.txt",
+    "static-check-3.txt",
+    "static-check-4.txt"
+  ],
+  "files": [
+    {
+      "file": "operator-guard.cjs",
+      "sha256": "99a74eb4690e75865c71577b38ecc78ec31d2f1c5de2f8b4d0227e51799472a9"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "sha256": "6038492be3cfd1edd5407f7dc634cb3dfd222d625ee49f22fb79d595b754cbbc"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "sha256": "88068fe03a1359cc897fecf5028d3413b36bcf802f0921e9e39669a515c8c70b"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "sha256": "d89281fa817a184fee4608229cc53491d23fb8eaa4230e07d1515a92c2060d46"
+    },
+    {
+      "file": "operator-native-proof.cjs",
+      "sha256": "3facfd08d0ebbc24a028d857212f871dd63515be68eb0188934ee09048c9284a"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "prepare-tools.py",
+      "sha256": "79f858049e6efe9d4795ebdd89dec10c128bfd3061811b1dc75fd30f36d9c80b"
+    },
+    {
+      "file": "prepare-pins.cjs",
+      "sha256": "7332a1446d22ec3ce1dcf0451be39a6044dd8869483f6a961e40cdaf5578a1a4"
+    },
+    {
+      "file": "static-integrity.cjs",
+      "sha256": "41f1b915cc3035dc273b9fa23b556f402cf69f6f6b9b200748fd7da3fc95c660"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "sha256": "26284c69f461451eee03fbe4e10f7bd6fa16a55e639713ede0a0f5900874f9b9"
+    },
+    {
+      "file": "operator-controls-normalized.json",
+      "sha256": "4bd72186d34d54734608bc0c0fc05ec8146f9aa0efc078ea399a428a8d60084b"
+    },
+    {
+      "file": "operator-pins.json",
+      "sha256": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396"
+    },
+    {
+      "file": "full-native-command.json",
+      "sha256": "28d17a2ff99e28decff38d185cd56bd738e6ec749a7a269bd2220d2ce00cd011"
+    },
+    {
+      "file": "README.md",
+      "sha256": "0e05db0fd1cd9f379f34193341d1be4857804f84e2dff693697b3933d449533a"
+    },
+    {
+      "file": "final-code-current.diff",
+      "sha256": "4be65c47455c2f6c554190e94dbb5a77e7b7cca41e57ec1c436206550dfcbc53"
+    },
+    {
+      "file": "full-final-code.txt",
+      "sha256": "3f4b49a6787e59ab52614e1ec4febd66985fc74f8c83212a6a0d9e249e3bfe7c"
+    }
+  ],
+  "limitations": [
+    "No semantic acceptance or actual runtime proof provided by this kit.",
+    "Synthetic parser HTML is hand-authored, never rendered. Actual output length/formatter shape remains unobserved; fail closed if truncated or different.",
+    "Three controls are representative transferred clauses, not an exhaustive mutation claim.",
+    "New literal/dependency closure pins are byte inventory only, not full semantic read.",
+    "Main gates full46 baseline/transfer and45 cut, all3 actual controls both phases, broader coverage/CI; no worker tests or source cleanup."
+  ]
+}

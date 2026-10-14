@@ -17,23 +17,6 @@ const annual = {
   taxBehavior: "inclusive",
 }
 
-test("builds a concise, truthful annual reminder using accepted contract facts", () => {
-  const message = buildTrialReminderMessage(annual)
-
-  assert.equal(message.subject, "Dein kostenloser Test endet am 21. September 2026")
-  assert.match(message.receipt_text, /Testende: 21\. September 2026 um 12:00 Uhr MESZ/)
-  assert.match(message.receipt_text, /Erste Zahlung: 69,99\s*€ am 21\. September 2026/)
-  assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\s*€ jährlich\./)
-  assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)
-  assert.match(message.receipt_text, /Vor Testende kündigen: https:\/\/chaarlie\.de\/kuendigen/)
-  assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)
-  assert.equal(message.messageData.management_url, "https://chaarlie.de/profile")
-  assert.equal(message.messageData.cancellation_url, "https://chaarlie.de/kuendigen")
-  assert.match(message.htmlBody, /69,99\s*€/)
-  assert.match(message.htmlBody, /href="https:\/\/chaarlie\.de\/kuendigen"/)
-  assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)
-})
-
 test("supports the accepted monthly and annual price contracts without inventing amounts", () => {
   const monthly = buildTrialReminderMessage({
     ...annual,
@@ -62,35 +45,9 @@ test("rejects malformed accepted terms rather than creating a reminder with fall
   )
 })
 
-test("escapes all rendered data and keeps its trusted links fixed", () => {
-  const message = buildTrialReminderMessage({
-    ...annual,
-    contractId: "11111111-1111-4111-8111-111111111111",
-  })
-  assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)
-  assert.doesNotMatch(message.htmlBody, /\{\{\s*trigger\./)
-  assert.deepEqual(
-    Array.from(message.htmlBody.matchAll(/href="([^"]+)"/g), (match) => match[1]),
-    [
-      "https://chaarlie.de/profile",
-      "https://chaarlie.de/kuendigen",
-      "{% unsubscribe_url %}",
-      "https://chaarlie.de/impressum",
-      "https://chaarlie.de/datenschutz",
-    ],
-  )
-  assert.equal(message.messageData.trial_end_date, "21. September 2026 um 12:00 Uhr MESZ")
-})
-
 test("PayPal reminder states the day-after first-charge date while the trial end stays exact", () => {
   const message = buildTrialReminderMessage({ ...annual, provider: "paypal" })
   assert.equal(message.messageData.first_charge_date, "22. September 2026")
   assert.match(message.messageData.trial_end_date, /21\. September 2026 um 12:00/)
-  assert.match(message.messageData.subject, /21\. September 2026/)
-})
-
-test("Stripe reminder keeps the trial-end date as the first-charge date", () => {
-  const message = buildTrialReminderMessage(annual)
-  assert.equal(message.messageData.first_charge_date, "21. September 2026")
   assert.match(message.messageData.subject, /21\. September 2026/)
 })

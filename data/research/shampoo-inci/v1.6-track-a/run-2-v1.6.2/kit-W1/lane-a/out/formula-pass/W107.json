@@ -1,0 +1,148 @@
+{
+  "blindId": "W107",
+  "inciFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "normalization": "'Aqua (Water)' one entry; marker characters '*' (Betula Alba Leaf Extract @14, Aloe Barbadensis Leaf Juice Powder @16) and '**' (Parfum (Fragrance) @20, Vanillin @21) stripped and kept as provenance; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum (Fragrance) @20 (prominent = positions 1-19)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Ammonium Lauryl Sulfate @2 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @3 (amphoteric; the only buffer)"],
+      "notCleansing": []
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @8 (prominent)"],
+      "protein_film": ["Hydrolyzed Corn Protein @5", "Hydrolyzed Wheat Protein @7", "Hydrolyzed Soy Protein @9"],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": ["Glycerin @6"]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum (Fragrance) @20 (marked '**' in source); Vanillin @21",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Alcohol @11; Levulinic Acid @17 / Sodium Levulinate @18 (preservative-type acids, not on the E3 or W-line lists); Arginine @13; Aloe Barbadensis Leaf Juice Powder @16 (rejected E4 candidate)"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum (Fragrance) @20",
+      "wLine": "Benzoic Acid @12",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "Benzoic Acid @12: (i) ALS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 13-19",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": ["Glycerin @6 (humectant)"],
+    "unlistedRouteCandidates": ["Arginine @13 (prominent; rejected by R18)", "Aloe Barbadensis Leaf Juice Powder @16 (prominent; rejected by R18)"],
+    "mildBase": "not met: prominent strong anionic Ammonium Lauryl Sulfate @2; cleansing strong"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Strong: C5 alkyl-sulfate chassis (Ammonium Lauryl Sulfate @2) with only one prominent buffer (Cocamidopropyl Betaine @3); C5 needs at least two buffers for moderate (C3, C4, C5). Proteins and glycerin are counter-signals only.",
+      "ruleIds": ["C3", "C4", "C5"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: one meaningful cationic system (Guar Hydroxypropyltrimonium Chloride @8, prominent and early) supported by three hydrolyzed proteins (@5, @7, @9) and Glycerin @6. No silicone or payload lipid, no pearlizer, so neither C2 nor W-RICH supports high; the early guar keeps it above low. Strong cleansing does not lower conditioning (C2).",
+      "ruleIds": ["Section 5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @8"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Corn Protein @5", "Hydrolyzed Wheat Protein @7", "Hydrolyzed Soy Protein @9"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Ammonium Lauryl Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Glycerin @6"],
+        "excluded": ["Alcohol @11 (solvent)", "Arginine @13 (free amino acid, pH/humectant additive; no film route)", "Levulinic Acid @17, Sodium Levulinate @18 (preservative acids)", "Leuconostoc/Radish Root Ferment Filtrate @15 (preservative ferment)", "Botanical extracts @14, @16"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one guar plus three hydrolyzed proteins",
+      "persistence": "low - hydrolyzed proteins are low-persistence; no silicone or lipid",
+      "resetCapacity": "strong - ALS with a single betaine buffer",
+      "counterevidence": "Guar is early (@8) and three proteins form a second family (W2).",
+      "whyThisBand": "A strong ALS reset faces only light routes (one guar, hydrolyzed proteins).",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is hydrolyzed protein (water-soluble, low persistence), there is no silicone, payload lipid or film former, and the single guar faces a strong, barely buffered ALS reset - a strong reset against only light routes.",
+      "confidenceLimitingFactor": "Guar is fairly early; guar-anionic coacervate deposition could make residue noticeable",
+      "rationale": "Low: strong reset against one guar and hydrolyzed proteins (6.6, W2). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.6", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": ["Glycerin @6"],
+        "repairRoutes": ["Hydrolyzed Corn Protein @5", "Hydrolyzed Wheat Protein @7", "Hydrolyzed Soy Protein @9"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @8"],
+        "limitation": "Formula-only; protein cluster plus cationic, no lipid/silicone"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Strong ALS chassis; proteins are hydrolyzed and rinse-off",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; verdict repair_supported (three proteins + guar). Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2); repair is the formula-compatible candidate; strong cleansing would also be compatible with clarifying if positioned (F6).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "alternating",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; alternating would fire with moderate/high reset intent (strong cleansing, U4); frequent excluded by strong cleansing (U2).",
+      "ruleIds": ["9", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA formula half met via listed prominent Glycerin @6 (E4 humectant); no comfort-list route and MB excluded (prominent ALS, strong). Counter-signal strong cleansing. targeted needs SC1 positioning; S-SENSITIVE would fail (no comfort route or MB; unlisted_route_candidate: Arginine, Aloe Barbadensis Leaf Juice Powder).",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Weight low vs moderate: early guar (@8) with three proteins could be read as interacting light routes (moderate); low chosen because the reset is strong and every non-cationic family is hydrolyzed protein."
+  ]
+}

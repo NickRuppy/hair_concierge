@@ -1,0 +1,38 @@
+[
+  {
+    "phase": "before",
+    "file": "tests/scan-unknown-flow-ui.test.tsx",
+    "sha256": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590",
+    "lines": 414
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/scan-unknown-flow-ui.test.tsx",
+    "sha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+    "lines": 422
+  },
+  {
+    "phase": "cut",
+    "file": "tests/scan-unknown-flow-ui.test.tsx",
+    "sha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf",
+    "lines": 404
+  },
+  {
+    "phase": "before",
+    "file": "tests/scan-research-intake-form-ui.test.tsx",
+    "sha256": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f",
+    "lines": 309
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/scan-research-intake-form-ui.test.tsx",
+    "sha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb",
+    "lines": 317
+  },
+  {
+    "phase": "cut",
+    "file": "tests/scan-research-intake-form-ui.test.tsx",
+    "sha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a",
+    "lines": 300
+  }
+]

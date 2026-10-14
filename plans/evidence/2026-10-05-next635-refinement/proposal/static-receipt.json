@@ -1,0 +1,17 @@
+{
+  "originalNavigationPins": 5,
+  "files": 5,
+  "phaseFilesParsed": 15,
+  "counts": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  },
+  "controlsParsed": 13,
+  "unchangedSurvivors": 28,
+  "unrelatedExcludingAllDonorsAndKeepers": 23,
+  "sourceTestsImported": 0,
+  "childrenStarted": 0,
+  "repositoryWrites": 0,
+  "testsRun": 0
+}

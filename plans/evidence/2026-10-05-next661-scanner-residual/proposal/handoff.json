@@ -1,0 +1,16 @@
+{
+  "packet": "/tmp/test-audit-scanner-residual119",
+  "manifestSha256": "8f982b06fbe8e5481e90c5723c02ab18ebe9d26e46b4e5975f5937e849151048",
+  "layerPlanSha256": "2da4cb75f2928f1e540f786feacbf3a25a302592d3009c9123bc7d2fa0477b10",
+  "candidatesSha256": "675d588e88bfa35a9b55fcdf3d3bd2fcdb87b508b6010edf65fca7e63ca8bf76",
+  "controlsSha256": "a1d3886b6dc84cb99d8f60d293cb804508d09635ea73a8a3e58ec96a9db9e4c6",
+  "staticVerificationSha256": "bcc35fee710558b22d4ae9f58c2c19dd4098d2fafeb0e5410d1b275e1f29d4e0",
+  "proposal": "14 conditional whole declaration cuts;119→119→105; no repository mutation/runtime",
+  "limits": [
+    "16 TS mutants syntax parsed only;2 SQL recipes require parent local PGlite validation",
+    "No production/provider/browser/DB execution",
+    "No orphaned owner/source retirement",
+    "All119 callbacks read;236-file import graph navigation is not extra semantic credit"
+  ],
+  "next": "Parent review/independent preservation; baseline, transfer,18 actual source controls,cut,full native and campaign gates"
+}

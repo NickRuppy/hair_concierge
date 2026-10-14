@@ -1,0 +1,21 @@
+'use strict'
+// Static-only audit harness: reject filesystem mutations and child creation.
+const fs=require('node:fs'),cp=require('node:child_process'),wt=require('node:worker_threads'),mod=require('node:module')
+let writes=0,children=0
+const standardOutputWrites=Object.fromEntries(['write','writeSync','writev','writevSync'].map(n=>[n,fs[n]]))
+for(const name of['writeFileSync','appendFileSync','renameSync','unlinkSync','mkdirSync','rmdirSync','rmSync','copyFileSync','truncateSync','chmodSync','chownSync','symlinkSync','linkSync','utimesSync','mkdtempSync'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+for(const name of ['write','writeSync','writev','writevSync','writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','ftruncate','ftruncateSync','chmod','fchmod','fchmodSync','chown','fchown','fchownSync','symlink','link','utimes','futimes','futimesSync','mkdtemp','createWriteStream'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+for(const [name,original]of Object.entries(standardOutputWrites))fs[name]=function(fd,...args){if(fd===1||fd===2)return original.call(this,fd,...args);writes++;throw Error('Read-only check attempted file descriptor write '+name)}
+const originalOpen=fs.openSync
+fs.openSync=function(file,flags,...rest){if(typeof flags!=='string'||!['r','rs'].includes(flags)){writes++;throw Error('Read-only check attempted open '+flags)}return originalOpen.call(this,file,flags,...rest)}
+for(const name of['writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','chmod','chown','symlink','link','utimes','mkdtemp','open'])fs.promises[name]=async()=>{writes++;throw Error('Read-only check attempted async '+name)}
+for(const name of['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[name]=()=>{children++;throw Error('Read-only check attempted child '+name)}
+wt.Worker=function(){children++;throw Error('Read-only check attempted worker')};mod.syncBuiltinESMExports()
+process.on('exit',()=>process.stdout.write(JSON.stringify({staticReadOnlyEnforced:true,attemptedWrites:writes,attemptedChildren:children})+'\n'))
+
+const Module=require('node:module'),load=Module._load
+let ownerImports=0,networkCalls=0
+Module._load=function(request,parent,isMain){const resolved=Module._resolveFilename(request,parent,isMain);if(typeof resolved==='string'&&/^\/Users\/nick\/AI_work\/hair_conscierge\/\.worktrees\/test-audit-pruning\/(?:src|tests|scripts)\//.test(resolved)){ownerImports++;throw Error('Read-only check attempted product/test import')}return load.call(this,request,parent,isMain)}
+for(const name of ['node:http','node:https'])for(const method of ['request','get'])require(name)[method]=()=>{networkCalls++;throw Error('Read-only check attempted network')}
+globalThis.fetch=()=>{networkCalls++;throw Error('Read-only check attempted fetch')}
+process.on('exit',()=>process.stdout.write(JSON.stringify({attemptedOwnerImports:ownerImports,attemptedNetworkCalls:networkCalls})+'\n'))

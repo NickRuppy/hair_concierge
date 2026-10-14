@@ -4,8 +4,9 @@ import type { TrialOfferPricing } from "@/lib/billing/trial-offer"
 import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
-import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
 import type { PersonalPlanQuizResumeBootstrap } from "@/lib/personal-plan-quiz/types"
+
+export type FunnelOfferFocusTarget = "unlock-plan" | "pricing" | null
 
 export type FunnelLandingVariantProps = {
   personalPlanQuizResume?: PersonalPlanQuizResumeBootstrap
@@ -45,7 +46,7 @@ export type FunnelOfferVariantProps = {
   pricingSlot: ReactNode
   entryContext: OfferEntryContext
   focusRoutine?: boolean
-  focusTarget?: GuidedStoryFocusTarget
+  focusTarget?: FunnelOfferFocusTarget
   leadId: string | null
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant: string

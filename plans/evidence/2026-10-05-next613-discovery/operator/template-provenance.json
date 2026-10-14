@@ -1,0 +1,38 @@
+[
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs",
+    "templateSha256": "042c0a65c9685f722b4edff5a58f9c8afe84f006fcd1aca32d8258f58c64db15",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs",
+    "newSha256": "ed7a111d95e29d0754423208ab615cc95b0d197c381d0fbadf4245c606b5cff5"
+  },
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs",
+    "templateSha256": "fa3a139c304707975f792191b40babfbcbd534c4ad339241fe155ae74a997f2c",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs",
+    "newSha256": "f632302e868911745f20ca43300ff8d024c3af896b15b04bae0246da43de4136"
+  },
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-proof.cjs",
+    "templateSha256": "5996f0f10ad76dc01639cd8205ec6ded6a4b906d5179ddb9664bb96dc70dcfdc",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-proof.cjs",
+    "newSha256": "4508d0b31d5194a4024a690f0fd2abbd7018db057c23b3bfea1f10bcb27eeebc"
+  },
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs",
+    "templateSha256": "9a0f631a1d2df21d008989cb6feb36ba485d123b5537379f7d5bb4b8198cf1b4",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs",
+    "newSha256": "ce80a82c513a863c958e808a086981101bd29747dbb82815c003aed6a48491ce"
+  },
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-readonly-preload.cjs",
+    "templateSha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-readonly-preload.cjs",
+    "newSha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+  },
+  {
+    "template": "/tmp/test-audit-moderator183-tools-p18tq7i2/prepare-pins.cjs",
+    "templateSha256": "f80b29c5cc82d2ad08bfd58aa358f405f60e62a35bebd072aa8d5a71b994cef3",
+    "new": "/tmp/test-audit-discovery163-tools-70q2q9t7/prepare-pins.cjs",
+    "newSha256": "8f259b2c91b11f5d64abc2bf8e2ce8ce7b1cf6d0d4ac0d20a8290612c20d3a22"
+  }
+]

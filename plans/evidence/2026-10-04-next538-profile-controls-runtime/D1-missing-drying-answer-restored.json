@@ -1,0 +1,18 @@
+{
+  "log": "/tmp/profile-care-run-cMESmz/D1-missing-drying-answer-restored.tap",
+  "code": 0,
+  "signal": null,
+  "boundedFailure": null,
+  "spawnError": null,
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^unanswered plan leaves value null$",
+    "tests/profile-plan-overlay.test.ts"
+  ]
+}

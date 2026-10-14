@@ -1,0 +1,163 @@
+{
+  "blindId": "W418",
+  "inciFingerprintSha256": "2a4f486823aac7756eaf4825fed441c60bb4b95178d1478510fdc8420ad57138",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Slash synonyms (AQUA / WATER, PARFUM / FRAGRANCE, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER) are single entries; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @8; prominent = positions 1-7"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium C14-16 Olefin Sulfonate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Lauroyl Sarcosinate @7 (prominent buffer)"],
+      "amphoteric": ["Cocamidopropyl Betaine @5 (prominent buffer)", "Coco-Betaine @17 (after E3 point: recorded only)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Cocamide MEA @3 (alkanolamide)", "PEG-55 Propylene Glycol Oleate @12", "Carbomer @11", "Sodium Chloride @13"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: olefin-sulfonate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @21 (both after E3 point)"],
+      "payload_lipid": ["Butyrospermum Parkii (Shea) Butter @10 (after E3 point; non-material)"],
+      "weak_refatter": [],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @6"],
+      "humectants": ["Glycerin @4", "Sodium Hyaluronate @14"],
+      "notHumectantRoute": ["Hexylene Glycol @9", "Propylene Glycol @18", "Arginine @16 (rejected candidate, R18)"]
+    },
+    "wLine": {
+      "wLine": "PARFUM / FRAGRANCE @8 (= cap)",
+      "wLineClasses": ["fragrance"],
+      "cap": "e3Point @8",
+      "alphabeticalRun": "none before the cap",
+      "candidatesTested": ["PARFUM / FRAGRANCE @8: (i) ok; (ii) nothing between -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": ["Butyrospermum Parkii (Shea) Butter @10"]
+    },
+    "actives": {
+      "dandruffActives": [],
+      "otherActives": ["Salicylic Acid @23 (not a recognized dandruff active)"],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": ["Glycerin @4"],
+      "humectantRefattingRoutesNotProminent": ["Shea Butter @10", "Sodium Hyaluronate @14"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @8", "Linalool @25", "Limonene @26", "Citronellol @27", "Benzyl Alcohol @28"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 humectant route Glycerin @4",
+      "MB": "not met: Sodium C14-16 Olefin Sulfonate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "no prominent comfort route and no MB -> would fail",
+      "S-DRY formula half": "Glycerin @4 -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, weight low, conditioning moderate -> clause passes"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C1 chassis with Sodium C14-16 Olefin Sulfonate @2 as the defining ether/sulfonate-type anionic, prominent buffers Cocamidopropyl Betaine @5 and Sodium Lauroyl Sarcosinate @7, no reinforcing strong anionic. Counter-signal toward strong: the olefin sulfonate is the only early surfactant (alkanolamide and glycerin sit between it and the buffers), which lowers confidence but does not move the C1 value.",
+      "ruleIds": ["C3", "C4", "C1", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes - prominent Glycerin @4 and Glycol Distearate @6, plus Shea Butter @10, Sodium Hyaluronate @14 and two cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19, Polyquaternium-7 @21) after the E3 point. C2 not met (no early silicone or prominent payload lipid); no W-RICH. Counter-signal: all depositing routes are after Parfum, so the formula could read as cleansing-led (low).",
+      "ruleIds": ["Section 5 anchors", "C2", "W-RICH"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @21"],
+        "payload_lipid": ["Butyrospermum Parkii (Shea) Butter @10 (non-material, at/after W-line 8)"],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium C14-16 Olefin Sulfonate @2", "Cocamidopropyl Betaine @5", "Sodium Lauroyl Sarcosinate @7", "Coco-Betaine @17"],
+        "humectantContext": ["Glycerin @4", "Sodium Hyaluronate @14", "Hexylene Glycol @9", "Propylene Glycol @18", "Arginine @16"],
+        "excluded": ["Cocamide MEA @3 (alkanolamide)", "Glycol Distearate @6 (pearlizing wax, 6.4)", "Carbomer @11 (anionic acrylate rheology polymer, 6.4)", "PEG-55 Propylene Glycol Oleate @12 (PEG thickener)", "Parfum @8 and fragrance allergens", "Salicylic Acid @23, Benzoic Acid @24, Citric Acid @20"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine PARFUM / FRAGRANCE @8 (fragrance) = cap e3Point @8; no alphabetical run before the cap; no skipped candidates; no codes; material payload_lipid: none; non-material: Shea Butter @10.",
+      "depositionLoad": "light: two late cationic polymers and a post-line shea butter.",
+      "persistence": "low-to-moderate: shea is waxy but listed after Parfum; cationics are late and trace-like.",
+      "resetCapacity": "moderate: C1 olefin-sulfonate chassis with betaine and sarcosinate buffers.",
+      "counterevidence": "Two deposition families (cationic_polymer, payload_lipid) are present and shea butter is a waxy, substantive lipid.",
+      "whyThisBand": "Late, trace-positioned deposition routes face an effective sulfonate chassis; noticeable loss of movement or lift is unlikely.",
+      "whyNotNeighborBand": "Not moderate (W2): each family is late in the list - Shea Butter @10 after Parfum and beyond the W-line, both cationic polymers @19 and @21 after the salt and among the preservatives/fragrance allergens - and the moderate reset faces only these trace-positioned routes.",
+      "confidenceLimitingFactor": "A waxy lipid and two cationics are present, even if late; moderate remains realistic.",
+      "rationale": "Low: late cationic pair and post-line shea against moderate reset; W2 reason recorded.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @4", "Shea Butter @10", "Sodium Hyaluronate @14"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Glycol Distearate @6", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @21"],
+        "limitation": "Weak: only Glycerin is prominent; shea, hyaluronate and cationics are after Parfum."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass. Late routes make the moisture verdict weak; F6 clarifying conditions are met.",
+      "decisionTrace": "Blind: claim direction null; formula weakly moisture_supported; provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent humectant route Glycerin @4; MB not met (olefin sulfonate @2).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active; Salicylic Acid @23 alone does not count.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Surfactant chassis is the same as the lane's W402 packet (olefin sulfonate, Cocamide MEA, glycerin, betaine, glycol distearate, sarcosinate, Parfum @8); cleansing read identically.", "Claim-dependent properties are provisional."]
+}

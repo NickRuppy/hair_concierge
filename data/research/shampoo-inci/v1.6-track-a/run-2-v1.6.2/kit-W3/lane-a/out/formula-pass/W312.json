@@ -1,0 +1,130 @@
+{
+  "blindId": "W312",
+  "inciFingerprintSha256": "389e6c9ab6edb330ef33566bb360461478df9f3d653a9f68ee0a94905a0d5d7c",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized positions (ID-2). 23 entries.",
+    "e3ProminenceCutoff": "Parfum @21. Prominent = positions 1-20."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3 and Coco-Glucoside @4; no reinforcing strong anionic. Betaine @5 is the humectant INCI Betaine, not a surfactant.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system, the prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9, with a humectant cluster Betaine @5, Glycerin @6, Panthenol @7 and refatter Glyceryl Oleate @10. No silicone, payload lipid or pearlizer (C2 not met). Counter-signal: single guar could read as light care (low).",
+      "ruleIds": ["C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @10"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @4"],
+        "humectantContext": ["Betaine @5", "Glycerin @6", "Panthenol @7", "Erythritol @12", "Maltodextrin @16"],
+        "excluded": ["Sorbitan Caprylate @11 (booster/solubilizer)", "Tetrasodium Glutamate Diacetate @14 (chelator)", "Mentha Aquatica Leaf Extract @18, Tilia Cordata Flower Extract @19 (botanical extracts)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@7 Panthenol",
+        "classes": ["sub1_active"],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) SLES @2 etc. before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 8-20.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Two families present (cationic_polymer + weak_refatter).",
+      "whyThisBand": "One light guar plus one light refatting ester; humectants are context only; ordinary reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is only a weak_refatter (Glyceryl Oleate @10) plus humectants; no silicone, lipid or protein; the guar sits after the W-line (@7).",
+      "confidenceLimitingFactor": "Guar dose unknown.",
+      "rationale": "Low: light guar + one weak refatter vs ordinary reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Betaine @5", "Glycerin @6", "Panthenol @7"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9", "Glyceryl Oleate @10"],
+        "limitation": "Active-led formula; humectant cluster also reads as scalp comfort."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Piroctone Olamine @15 points to a dandruff role if claimed.",
+      "decisionTrace": "Blind: no claim; provisional general (R17.3).",
+      "rationale": "Provisional general.",
+      "ruleIds": ["7.2", "7.3", "R17.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent: active present; a qualifying dandruff claim (U3) would fire treatment.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent comfort route Panthenol @7 and humectant/refatting routes Betaine @5, Glycerin @6, Panthenol @7, Glyceryl Oleate @10. MB not met: Sodium Laureth Sulfate @2 prominent strong anionic. S-SENSITIVE and S-DRY formula halves pass.",
+      "counterSignals": "Mentha Aquatica Leaf Extract @18 is a botanical extract, not a listed cooling agent or mint oil: recorded only.",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Piroctone Olamine @15.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @2 (defining)", "Cocamidopropyl Betaine @3", "Coco-Glucoside @4"],
+    "conditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9", "Glyceryl Oleate @10"],
+    "humectants": ["Betaine @5", "Glycerin @6", "Panthenol @7", "Erythritol @12"],
+    "actives": ["Piroctone Olamine @15 (anti-dandruff active)", "Lactic Acid @8"],
+    "exposure": ["Parfum @21", "Mentha Aquatica Leaf Extract @18", "CI 42090 @22", "Caramel @23"],
+    "preservatives": ["Piroctone Olamine @15", "Sodium Benzoate @20"]
+  },
+  "unresolvedMaterialIngredients": []
+}

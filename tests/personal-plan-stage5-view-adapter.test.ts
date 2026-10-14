@@ -89,7 +89,8 @@ test("adapts compiler output into the product-led Anwendung view", () => {
     ],
   )
   assert.equal(view.days[0].cadenceDe, "Bei deiner nächsten Haarwäsche")
-  assert.equal(view.days[0].shelf[0]?.category, "shampoo")
+  const firstSlot = view.days[0].shelf[0]
+  assert.equal(firstSlot?.kind === "product" ? firstSlot.category : null, "shampoo")
   assert.equal(
     view.days[0].steps.find((step) => step.kind === "product")?.imageUrl,
     "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/mildes-shampoo.webp",
@@ -271,7 +272,7 @@ test("passes a provisional-status block through the adapter without special visu
     ["confirmed", "provisional", "open"],
   )
   assert.deepEqual(
-    view.days[0]!.shelf.map((slot) => slot.category),
+    view.days[0]!.shelf.map((slot) => (slot.kind === "tool" ? null : slot.category)),
     ["shampoo", "conditioner", "leave_in"],
   )
 
@@ -321,24 +322,6 @@ test("uses a neutral shelf fallback when a confirmed catalog image is missing", 
   assert.doesNotMatch(html, /\(bestätigt\)/)
 })
 
-test("uses a neutral contained fallback for nonstandard product imagery", () => {
-  const compiled = compiledView()
-  compiled.days[0]!.productBlocks[0]!.imageUrl = "https://owner.example/uploads/shampoo.jpg"
-  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
-  if (productStep?.kind === "product") {
-    productStep.block.imageUrl = "https://owner.example/uploads/shampoo.jpg"
-  }
-
-  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
-  assert.equal(view.state, "ready")
-  if (view.state !== "ready") return
-
-  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  assert.match(html, /data-application-image-treatment="fallback"/)
-  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
-  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
-})
-
 test("keeps the provisional status data hook accessible for nonstandard product imagery", () => {
   const compiled = compiledView()
   compiled.days[0]!.productBlocks[0]!.status = "provisional"
@@ -359,6 +342,10 @@ test("keeps the provisional status data hook accessible for nonstandard product 
   assert.match(html, /data-application-shelf-slot="provisional"/)
   assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
   assert.doesNotMatch(html, /\(vorläufig\)/)
+
+  assert.match(html, /data-application-image-treatment="fallback"/)
+  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
+  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
 })
 
 test("renders the ten approved category-specific product silhouettes", () => {
@@ -503,4 +490,47 @@ test("counts open placeholders toward the five-slot shelf row cap", () => {
   const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
   assert.equal((html.match(/data-application-shelf-row="true"/g) ?? []).length, 2)
   assert.equal((html.match(/data-application-shelf-slot="open"/g) ?? []).length, 6)
+})
+
+test("a variant heading keeps its section kind; instructions carry none", () => {
+  const compiled = compiledView()
+  const block = compiled.days[0]!.productBlocks[0]!
+  const withVariants = {
+    ...block,
+    steps: [
+      {
+        stepKey: "method-dry",
+        action: "section" as const,
+        copyDe: "Auf trockenem Haar (empfohlen)",
+      },
+      // A preparation step the compiler also files as `section` — an instruction, not a heading.
+      { stepKey: "wet", action: "section" as const, copyDe: "Haare anfeuchten." },
+      ...block.steps,
+    ],
+  }
+  const view = toApplicationPageView({
+    compiled: {
+      ...compiled,
+      days: [
+        {
+          ...compiled.days[0]!,
+          productBlocks: [withVariants],
+          outerSequence: [{ kind: "product", block: withVariants }],
+        },
+        compiled.days[1]!,
+      ],
+    } as CompiledApplicationViewV1,
+    dayDefinitions: definitions,
+  })
+  const step = view.state === "ready" ? view.days[0]!.steps[0]! : null
+  assert.equal(step?.kind, "product")
+  if (step?.kind !== "product") return
+  assert.deepEqual(
+    step.actions.map((action) => [action.copyDe, action.kind ?? null]),
+    [
+      ["Auf trockenem Haar (empfohlen)", "variant_heading"],
+      ["Haare anfeuchten.", null],
+      ["Auf die nasse Kopfhaut geben und sanft einmassieren.", null],
+    ],
+  )
 })

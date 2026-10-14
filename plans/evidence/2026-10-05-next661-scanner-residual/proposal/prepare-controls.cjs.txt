@@ -1,0 +1,54 @@
+// Static descriptors only: no owner imports, subprocesses, source writes or tests.
+const fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P=__dirname,ts=require(R+'/node_modules/typescript');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=n=>JSON.parse(fs.readFileSync(P+'/'+n)),candidates=read('candidates.json'),controls=[];
+const clone=x=>JSON.parse(JSON.stringify(x));
+const comparison={rows:[{rowId:'shampoo.scalp_route',label:'Kopfhaut-Fokus',state:'match'}],summaryScore:1};
+const keyList=['comparison','label','rowId','rows','state','summaryScore','verdict','verdictLabel'];
+function make(id,ids,file,owner,from,to,assertionNeedle,expected,actual,operator='strictEqual',message=null){
+ const c=candidates.find(x=>x.id===ids[0]),source=fs.readFileSync(R+'/'+file,'utf8');
+ if(source.split(from).length!==2)throw Error(id+' nonunique source anchor');
+ const mutant=source.replace(from,()=>to),sql=file.endsWith('.sql');
+ let ownerBefore=source,ownerAfter=mutant;
+ if(!sql){
+  const parse=s=>{const sf=ts.createSourceFile(file,s,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);if(sf.parseDiagnostics.length)throw Error(id+' syntax');return sf};
+  const sf=parse(source),mf=parse(mutant);let beforeNode,afterNode;
+  function find(n,isAfter){if(ts.isFunctionDeclaration(n)&&n.name?.text===owner){if(isAfter)afterNode=n;else beforeNode=n}ts.forEachChild(n,x=>find(x,isAfter))}find(sf,false);find(mf,true);
+  if(!beforeNode||!afterNode)throw Error(id+' function missing');ownerBefore=beforeNode.getText(sf);ownerAfter=afterNode.getText(mf);
+  if(!ownerBefore.includes(from))throw Error(id+' anchor outside owner');
+ }
+ const phases={};for(const phase of ['Transfer','Cut']){
+  const keeper=c['keeper'+phase],matches=keeper.assertions.filter(a=>a.text.includes(assertionNeedle));
+  if(matches.length!==1)throw Error(id+' oracle ambiguity '+phase+' '+matches.length);
+  phases[phase.toLowerCase()]={file:keeper.file,title:keeper.title,callbackSha256:keeper.sha256,line:matches[0].line,assertion:matches[0].text,firstKeeperFrameRequired:true};
+ }
+ const synthetic=new assert.AssertionError({actual,expected,operator,...(message?{message}:{})});
+ controls.push({id,candidates:ids,file,owner,sourceSha256:sha(source),mutantSha256:sha(mutant),from,to,ownerBefore,ownerAfter,prospectiveTsParsed:!sql,sqlLimit:sql?'SQL text recipe inspected only; main must validate local PGlite support and intended assertion before acceptance. No database ran.':null,oracles:phases,expectedError:{code:'ERR_ASSERTION',operator,actual,expected,decodedMessage:synthetic.message,messageGeneratedFromLiteralShapeOnly:true},acceptance:'Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet.'});
+}
+const A='src/lib/scan/alternative-comparison.ts',M='src/lib/scan/masked-alternative.ts',S='src/lib/scan/triggers/session-marker.ts';
+make('M01',['C1'],A,'deriveAlternativeComparison','summaryScore: rows.length > 0 ? matchCount / rows.length : 0,','summaryScore: rows.length > 0 ? matchCount / rows.length : 1,','masked.comparison,',{rows:[],summaryScore:0},{rows:[],summaryScore:1},'deepStrictEqual');
+let v=clone(comparison);v.rows[0].state='partial';v.summaryScore=0;
+make('M02',['C2'],A,'comparisonRowState','case "pass":\n      return "match"','case "pass":\n      return "partial"','masked.alternatives[0].comparison',comparison,v,'deepStrictEqual');
+v=clone(comparison);v.rows[0].debug=true;
+make('M03',['C3'],A,'deriveAlternativeComparison','rowId: criterion.criterionId,','...{ debug: true },\n      rowId: criterion.criterionId,','masked.alternatives[0].comparison',comparison,v,'deepStrictEqual');
+make('M04',['C4'],M,'maskAlternative','verdict: alternative.verdict,','...{ productId: alternative.productId },\n    verdict: alternative.verdict,','Object.keys(entry)',['comparison','verdict','verdictLabel'],['comparison','productId','verdict','verdictLabel'],'deepStrictEqual');
+make('M05',['C5'],M,'maskAlternative','verdict: alternative.verdict,','verdict: "ideal",','body.alternatives[1].verdict,','supportive','ideal');
+make('M06',['C5'],M,'maskAlternative','verdictLabel: alternative.verdictLabel,','verdictLabel: "Passt",','body.alternatives[1].verdictLabel,','Passt eingeschränkt','Passt');
+v=clone(comparison);v.rows[0].rowId='Kopfhaut-Fokus';
+make('M07',['C6'],A,'deriveAlternativeComparison','rowId: criterion.criterionId,','rowId: criterion.label,','masked.alternatives[0].comparison',comparison,v,'deepStrictEqual');
+v=clone(comparison);v.summaryScore=0;
+make('M08',['C6'],A,'deriveAlternativeComparison','summaryScore: rows.length > 0 ? matchCount / rows.length : 0,','summaryScore: 0,','masked.alternatives[0].comparison',comparison,v,'deepStrictEqual');
+make('M09',['C7'],M,'maskScanVerdictPayload','alternatives: verdict.alternatives.map(maskAlternative),','alternatives: verdict.alternatives.slice(0, 1).map(maskAlternative),','body.alternatives.length,',2,1);
+make('M10',['C7'],M,'maskAlternative','verdict: alternative.verdict,','...{ debug: true },\n    verdict: alternative.verdict,','[...keysSeen].sort()',keyList,[...keyList,'debug'].sort(),'deepStrictEqual');
+make('M11',['C8'],A,'deriveAlternativeComparison','label: criterion.label,','label: "Kriterium",','labels.sort()',['Kopfhaut-Fokus','Reinigungsstärke'],['Kriterium','Kriterium'],'deepStrictEqual');
+make('M12',['C9'],S,'recordScanSession','    return count\n','    return previous === null ? 0 : count\n','recordScanSession(storage, 1_000),',1,0);
+make('M13',['C9'],S,'recordScanSession','    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))','    if (previous !== null) storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))','fresh session must persist',true,null,'==','fresh session must persist the session record');
+make('M14',['C10'],S,'recordScanSession','    return count\n','    return count === 2 ? 1 : count\n','recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES),',2,1);
+const hair={texture:'wavy',thickness:'fine',density:'medium',length:'long',surface:'rough',elasticity:'stretches_bounces',chemicalTreatments:['natural']};
+make('M15',['C11'],'src/lib/scan/profile-context.ts','loadScanEvaluationContext','  return loaded?.prepared ?? null','  return loaded ? { ...loaded.prepared, snapshot: { ...loaded.prepared.snapshot, profile: { ...loaded.prepared.snapshot.profile, hair: { ...loaded.prepared.snapshot.profile.hair, thickness: "coarse" } } } } : null','context?.snapshot.profile.hair',hair,{...hair,thickness:'coarse'},'deepStrictEqual');
+make('M16',['C12'],'src/lib/scan/pending-submission.ts','findOpenScanSubmission','  if (!data) return null','  if (!data) return { submissionId: "unexpected", status: "researching" }','await findOpenScanSubmission(',null,{submissionId:'unexpected',status:'researching'});
+const Q='supabase/migrations/20260920160000_scan_name_only_submission_intake.sql';const sql=fs.readFileSync(R+'/'+Q,'utf8');
+make('M17',['D1'],Q,'migration',sql,sql+'\nCREATE RULE audit_drop_ean AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NOT NULL DO INSTEAD NOTHING;\n','(rows.rows[0] as { count: number }).count',2,1);
+make('M18',['D2'],Q,'migration',sql,sql+'\nCREATE RULE audit_drop_name AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NULL DO INSTEAD NOTHING;\n','(rows.rows[0] as { count: number }).count',2,1);
+fs.writeFileSync(P+'/controls.json',JSON.stringify(controls,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({controls:controls.length,parsedTsMutants:controls.filter(c=>c.prospectiveTsParsed).length,sqlTextOnly:2,ownerImports:0,sourceWrites:0,children:0}));

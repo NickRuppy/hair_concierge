@@ -54,45 +54,15 @@ function v3Snapshot(): ProposedProductPortfolio {
   }
 }
 
-test("loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation", async () => {
-  const calls: Array<[string, string]> = []
-  const query: any = {
-    select: () => query,
-    eq: (column: string, value: string) => {
-      calls.push([column, value])
-      return query
-    },
-    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot: v3Snapshot() }, error: null }),
-  }
-  const result = await loadOwnerPortfolioPresentation(
-    {
-      from: () => query,
-    },
-    ids.user,
-    ids.plan,
-    ids.portfolio,
-  )
-
-  assert.equal(result?.schemaVersion, 3)
-  assert.equal(result?.retainedOwnedProducts[0]?.displayName, "Altes Shampoo")
-  assert.deepEqual(calls, [
-    ["id", ids.portfolio],
-    ["user_id", ids.user],
-    ["personal_plan_id", ids.plan],
-  ])
-})
-
-test("uses v3-only labels for a replacement and an informed override, preserving legacy wording", () => {
+test("uses the v3 informed-override fit label while preserving legacy wording", () => {
   const v3 = routinePresentationLabels({
     schemaVersion: 3,
     plannedPurchaseDecisionKeys: ["decision-replace"],
     retainedOwnedProducts: [],
   })
-  assert.equal(v3.plannedLabelFor(["decision-replace"]), "Noch kaufen")
   assert.equal(v3.fitLabelFor("informed_override"), "Mit Einschränkung")
 
   const legacy = routinePresentationLabels(null)
-  assert.equal(legacy.plannedLabelFor(["decision-replace"]), null)
   assert.equal(legacy.fitLabelFor("informed_override"), null)
 })
 
@@ -131,10 +101,6 @@ test("presents v4 replacement metadata while leaving retained inventory display-
 
   assert.equal(presentation?.schemaVersion, 4)
   assert.deepEqual(presentation?.retainedInventoryProducts, snapshot.retainedInventoryProducts)
-  assert.equal(
-    routinePresentationLabels(presentation).plannedLabelFor(["decision-replace"]),
-    "Noch kaufen",
-  )
 })
 
 test("fails closed when a stored portfolio snapshot is not strict", async () => {
@@ -151,38 +117,7 @@ test("fails closed when a stored portfolio snapshot is not strict", async () => 
   )
 })
 
-test("marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product", async () => {
-  const snapshot = v3Snapshot()
-  snapshot.retainedOwnedProducts = []
-  snapshot.plannedPurchases[0].sourceDecisionKey = "decision-pending-replace"
-  snapshot.categoryResolutions = [
-    {
-      decisionKey: "decision-pending-replace",
-      category: "shampoo",
-      role: "shampoo_everyday",
-      verdict: "unknown",
-      choiceState: "planned_purchase",
-      capturedProductId: "captured-pending",
-      executable: false,
-      gapPreserved: true,
-    },
-  ]
-  const query = {
-    select: () => query,
-    eq: () => query,
-    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),
-  }
-  const presentation = await loadOwnerPortfolioPresentation(
-    { from: () => query },
-    ids.user,
-    ids.plan,
-    ids.portfolio,
-  )
-  const labels = routinePresentationLabels(presentation)
-  assert.equal(labels.plannedLabelFor(["decision-pending-replace"]), "Noch kaufen")
-})
-
-test("marks a v3 planned purchase without an owned source as Noch kaufen", async () => {
+test("projects a v3 planned purchase decision key without an owned source", async () => {
   const snapshot = v3Snapshot()
   snapshot.retainedOwnedProducts = []
   snapshot.categoryResolutions = [
@@ -211,10 +146,6 @@ test("marks a v3 planned purchase without an owned source as Noch kaufen", async
   )
 
   assert.deepEqual(presentation?.plannedPurchaseDecisionKeys, ["decision-replace"])
-  assert.equal(
-    routinePresentationLabels(presentation).plannedLabelFor(["decision-replace"]),
-    "Noch kaufen",
-  )
 })
 
 test("carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one", async () => {
@@ -303,12 +234,14 @@ test("presents one retained owned product when the same product filled multiple 
 
 test("profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays", async () => {
   const calls: Array<[string, string]> = []
+  const portfolioCalls: Array<[string, string]> = []
   const client = {
     from(table: string) {
       const query: any = {
         select: () => query,
         eq: (column: string, value: string) => {
           calls.push([column, value])
+          if (table === "personal_plan_portfolio_versions") portfolioCalls.push([column, value])
           return query
         },
         maybeSingle: async () => ({
@@ -337,6 +270,12 @@ test("profile presentation API authenticates, owner-scopes its active portfolio,
   const body = await response.json()
 
   assert.equal(response.status, 200)
+  assert.equal(body.presentation.schemaVersion, 3)
+  assert.deepEqual(portfolioCalls, [
+    ["id", ids.portfolio],
+    ["user_id", ids.user],
+    ["personal_plan_id", ids.plan],
+  ])
   assert.equal(response.headers.get("Cache-Control"), "no-store")
   assert.deepEqual(body.presentation.plannedPurchaseDecisionKeys, ["decision-replace"])
   assert.deepEqual(

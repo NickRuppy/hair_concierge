@@ -1,0 +1,60 @@
+'use strict'
+// Shared read-only TAP proof validation. Cut revalidates logs instead of trusting a boolean.
+const fs=require('node:fs'),path=require('node:path')
+const g=require('./operator-guard.cjs')
+function parseTAP(text){
+ const number=key=>{const all=[...text.matchAll(new RegExp('^# '+key+' (\\d+)$','gm'))];return all.length===1?Number(all[0][1]):null}
+ return {tests:number('tests'),pass:number('pass'),fail:number('fail'),skipped:number('skipped'),cancelled:number('cancelled'),todo:number('todo')}
+}
+function named(control,run){const names=[...run.text.matchAll(/^# Subtest: (.+)$/gm)].map(m=>m[1]);return names.length===1&&names[0]===control.test.name}
+function clean(control,run){return run.status===0&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===1&&run.fail===0&&run.skipped===0&&run.cancelled===0&&run.todo===0&&named(control,run)}
+// Decode only the scalar styles emitted by Node TAP; unknown syntax fails closed.
+function errorMessage(text){
+ const lines=text.split('\n'),i=lines.findIndex(x=>/^  error: /.test(x));if(i<0)return null
+ const scalar=lines[i].slice('  error: '.length)
+ if(['|-','|','|+'].includes(scalar)){
+  const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}
+  return body.join('\n')
+ }
+ if(scalar.startsWith('"')){try{const value=JSON.parse(scalar);return typeof value==='string'?value:null}catch{return null}}
+ if(scalar.startsWith("'")){if(!scalar.endsWith("'"))return null;return scalar.slice(1,-1).replaceAll("''", "'")}
+ if(!scalar||/^[>|&*!{[]/.test(scalar))return null
+ return scalar
+}
+function intended(control,run,phase){
+ const oracle=control.oracles[phase],stackToken=control.test.file+':'+oracle.startLine+':'
+ const stack=run.text.match(/\n  operator: [^\n]*\n  stack:\s*\|-?\n((?: {4,}[^\n]*\n?)*)/)
+ const firstFrame=stack?.[1].split('\n').find(line=>/:\d+:\d+\)?\s*$/.test(line))||''
+ const operator=run.text.match(/^\s{2}operator:\s*['"]([^'"]+)['"]\s*$/m)?.[1]||''
+ const message=errorMessage(run.text)
+ const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
+ const messageMatches=typeof message==='string'&&control.errorMessageIncludes.length>=2&&control.errorMessageIncludes.every(t=>message.includes(t))
+ return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
+}
+function validateTransferReceipt(ctx,pinSHA,dir,completionSHA){
+ if(!dir||!new RegExp('^'+g.BASE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'-mutations-transfer-[A-Za-z0-9]+$').test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
+ if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+ const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+ const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==13||complete.cleanRuns!==26||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required13 controls absent or out of order')
+ for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+ if(Object.keys(complete.allTestHashes||{}).length!==7)g.fail('Full cohort proof missing')
+ const records=JSON.parse(receiptBytes);if(records.length!==13)g.fail('Thirteen records required')
+ function reload(record,label,c){
+  const p=path.join(dir,c.id+'-'+label+'.tap')
+  if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+  const commandPath=path.join(dir,c.id+'-'+label+'.command.json'),command=fs.readFileSync(commandPath)
+  if(g.sha(command)!==record.commandSHA256)g.fail('Command log hash drift')
+  const parsed=JSON.parse(command);if(parsed.executable!==process.execPath||parsed.cwd!==g.ROOT||JSON.stringify(parsed.args)!==JSON.stringify(c.command.slice(1)))g.fail('Command differs from pinned exact selection')
+  const text=fs.readFileSync(p,'utf8');return {...record,...parseTAP(text),text}
+ }
+ for(let i=0;i<ctx.controls.length;i++){
+  const c=ctx.controls[i],r=records[i]
+  if(r.id!==c.id||r.phase!=='transfer'||r.verified!==true||r.sourceBefore!==c.sourceSha256||r.sourceFault!==c.mutatedSha256||r.actualSourceFault!==c.mutatedSha256||r.sourceRestored!==c.sourceSha256||r.byteExactRestored!==true)g.fail('Source/verification receipt mismatch: '+c.id)
+  for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+  if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+ }
+ return {dir,completionSHA,verified:13,logFiles:39,phase:'transfer'}
+}
+module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt}

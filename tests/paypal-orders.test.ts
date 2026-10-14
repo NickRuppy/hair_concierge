@@ -1,12 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  buildPayPalPersonalPlanOrder,
-  createPayPalOrderIntent,
-  paypalOrderRequestId,
-  type PayPalOrderIntentRow,
-} from "../src/lib/paypal/order-intents"
+import { paypalOrderRequestId, type PayPalOrderIntentRow } from "../src/lib/paypal/order-intents"
 import {
   captureAndActivatePayPalOrder,
   finalizeLockedPersonalPlanFromPreparedArtifact,
@@ -62,45 +57,6 @@ test("retired one-time PayPal order creation fails before it can reach provider 
   })
 })
 
-test("builds one fixed PayPal digital-goods order without a Billing Plan", () => {
-  const payload = buildPayPalPersonalPlanOrder(intent.token, "MERCHANT-1")
-
-  assert.deepEqual(payload, {
-    intent: "CAPTURE",
-    purchase_units: [
-      {
-        reference_id: "personal_plan_once",
-        custom_id: intent.token,
-        payee: { merchant_id: "MERCHANT-1" },
-        amount: {
-          currency_code: "EUR",
-          value: "29.99",
-          breakdown: { item_total: { currency_code: "EUR", value: "29.99" } },
-        },
-        items: [
-          {
-            name: "Persönlicher Haarplan",
-            description: "Einmalige Erstellung eines persönlichen Haarplans · Kein Abo",
-            sku: "personal_plan_once",
-            quantity: "1",
-            category: "DIGITAL_GOODS",
-            unit_amount: { currency_code: "EUR", value: "29.99" },
-          },
-        ],
-      },
-    ],
-    application_context: { shipping_preference: "NO_SHIPPING" },
-  })
-  assert.equal("plan_id" in payload, false)
-})
-
-test("one-time PayPal order creation fails closed without a merchant identifier", () => {
-  assert.throws(
-    () => buildPayPalPersonalPlanOrder(intent.token, ""),
-    /PAYPAL_MERCHANT_ID is not set/,
-  )
-})
-
 test("uses separate stable idempotency keys for PayPal create and capture", () => {
   assert.equal(
     paypalOrderRequestId(intent.token, "create"),
@@ -119,60 +75,6 @@ test("requests the full PayPal representation for a capture", async () => {
   )
 
   assert.match(source, /(?:["']Prefer["']|Prefer):\s*["']return=representation["']/)
-})
-
-test("reuses the consent-linked PayPal intent when a later checkout attempt hits the consent uniqueness guard", async () => {
-  const existing = {
-    ...intent,
-    provider_order_id: null,
-    checkout_attempt_id: "11111111-1111-4111-8111-111111111111",
-  }
-  let filterColumn = ""
-  const query = {
-    insert() {
-      return this
-    },
-    select() {
-      return this
-    },
-    eq(column: string) {
-      filterColumn = column
-      return this
-    },
-    async maybeSingle() {
-      return {
-        data: filterColumn === "consent_id" ? existing : null,
-        error: null,
-      }
-    },
-    async single() {
-      return {
-        data: null,
-        error: {
-          code: "23505",
-          message:
-            'duplicate key value violates unique constraint "paypal_order_intents_consent_id_key"',
-        },
-      }
-    },
-  }
-  const supabase = {
-    from(table: string) {
-      assert.equal(table, "paypal_order_intents")
-      return query
-    },
-  }
-
-  const recovered = await createPayPalOrderIntent(supabase as never, {
-    checkoutAttemptId: "22222222-2222-4222-8222-222222222222",
-    funnelSessionId: existing.funnel_session_id,
-    consentId: existing.consent_id,
-    leadId: existing.lead_id,
-    email: existing.email!,
-  })
-
-  assert.equal(recovered.id, existing.id)
-  assert.equal(recovered.checkout_attempt_id, existing.checkout_attempt_id)
 })
 
 test("validates PayPal capture status, identity, amount, and currency", () => {

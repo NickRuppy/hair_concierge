@@ -1,0 +1,30 @@
+{
+  "status": "verified",
+  "phase": "transfer",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "verified": 7,
+  "controlIds": [
+    "closing-lineage-disabled",
+    "module-projection-disabled",
+    "provenance-flag-ignored",
+    "provenance-clears-active",
+    "provenance-bumps-cas",
+    "adapter-rejects-null-receipt",
+    "adapter-drops-provenance-flag"
+  ],
+  "cleanRuns": 14,
+  "driverSha256": "d28c19a89afc4272ddf161d509d61e3e1a198e431b4784a09acf446b86319da3",
+  "guardSha256": "d43a29b7fc60c9a4d9ce55f93b64be66b8866d1e67afa49a9542e87cb1f8b2bd",
+  "controlSha256": "186f19da16e8a8a3a179f65c3de2a22be4865948488a5880eadf3ae917876a88",
+  "receiptSha256": "dab2a2f38bd60aa669ae81fe82643059fc0f1e26831a07040a2ed70be4458e6e",
+  "testPhaseHashes": {
+    "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+    "tests/personal-plan-refinement-recompute-activation.test.ts": "d74930b61b7e29279c75d30fc9bdd11a6b206eb285eb1ac77cad576b24c970be",
+    "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+    "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+    "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+    "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "145ed952300cd34887513df866d4bbabda737436c3f1117e18e08d1144d93f4f",
+    "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e"
+  }
+}

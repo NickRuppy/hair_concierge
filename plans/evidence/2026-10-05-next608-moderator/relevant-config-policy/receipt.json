@@ -1,0 +1,27 @@
+{
+  "disposition": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/disposition.json",
+  "sha256": "04de875c4e62e53c69af322fcc215bf0c04f8098c0ebd3bc3ef46eba730f1ecf",
+  "tools": [
+    {
+      "directory": "/tmp/test-audit-discovery163-tools-70q2q9t7",
+      "priorPinsSha256": "014b77aea202bc5fbf01029c9462c3fe809a14fd926755479da3b5dffef8e325",
+      "currentPinsSha256": "26cc5e7ef1f54dd63818654e7b1da43f2679e5ca6d95cef4db28a8613e41c873",
+      "guardSha256": "fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c",
+      "backup": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7"
+    },
+    {
+      "directory": "/tmp/test-audit-email94-tools-c435q0q0",
+      "priorPinsSha256": "6216824dfb0ecfd4c3d46757e762b80dc8cc1ab6d92d9f442ca734829b4c2220",
+      "currentPinsSha256": "8db29deac5c1912150516ef3298bca3e373ead46adc697ec48572a093500043e",
+      "guardSha256": "3c7aa53343600ad6b1b5a9f6079b0febb6772d3450b0b7aff58b63cd0f5c2449",
+      "backup": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0"
+    },
+    {
+      "directory": "/tmp/test-audit-moderator183-tools-p18tq7i2",
+      "priorPinsSha256": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432",
+      "currentPinsSha256": "fe3690f6e980e146ae42ee388c67389117b924a4e312e6cbbbf273c26224a29d",
+      "guardSha256": "4c19cce3fc2d79c7dfddc5556f9d69ddb63fbb1a72d6263341169bb3e09fee20",
+      "backup": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2"
+    }
+  ]
+}

@@ -5,7 +5,10 @@ import {
   buildGuidedStoryProductCards,
   deriveGuidedStoryNeedProfile,
 } from "../src/lib/quiz/guided-story-products"
-import type { GuidedStoryPriority } from "../src/lib/quiz/guided-story-priorities"
+import {
+  rankGuidedStoryPriorities,
+  type GuidedStoryPriority,
+} from "../src/lib/quiz/guided-story-priorities"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 
 type Evidence = Pick<
@@ -86,6 +89,28 @@ test("bond care wins for Tier-1 damage plus chemical treatment", () => {
     [priority("strength_damage", 1, ["breakage"], ["anti_breakage"])],
   )
   assert.equal(needs.extra?.category, "bondbuilder")
+
+  const answers: QuizAnswers = {
+    ...base,
+    structure: "wavy",
+    hair_length: "long",
+    fingertest: "rau",
+    pulltest: "snaps",
+    scalp_type: "trocken",
+    has_scalp_issue: false,
+    concerns: ["breakage", "dryness", "frizz"],
+    treatment: ["blondiert"],
+    goals: ["anti_breakage", "moisture", "less_frizz"],
+  }
+  const priorities = rankGuidedStoryPriorities(answers)
+  assert.equal(priorities[0]?.family, "strength_damage")
+  const rankedNeeds = deriveGuidedStoryNeedProfile(answers, priorities)
+  assert.equal(rankedNeeds.conditioner.balance, "moisture")
+  assert.equal(rankedNeeds.extra?.category, "bondbuilder")
+  assert.deepEqual(
+    buildGuidedStoryProductCards(answers, priorities).map((card) => card.category),
+    ["shampoo", "conditioner", "bondbuilder"],
+  )
 })
 
 test("matching priorities unlock protein and moisture masks", () => {
@@ -111,6 +136,19 @@ test("matching priorities unlock protein and moisture masks", () => {
 })
 
 test("rough surface unlocks a complementary leave-in and texture chooses its variant", () => {
+  for (const structure of ["straight", "wavy"] as const) {
+    const answers: QuizAnswers = {
+      ...base,
+      structure,
+      fingertest: "rau",
+      pulltest: "snaps",
+      concerns: ["dryness"],
+      goals: ["moisture"],
+    }
+    const priorities = rankGuidedStoryPriorities(answers)
+    assert.equal(deriveGuidedStoryNeedProfile(answers, priorities).extra?.category, "leave_in")
+    assert.equal(buildGuidedStoryProductCards(answers, priorities)[2]?.category, "leave_in")
+  }
   const wavy = deriveGuidedStoryNeedProfile(
     { ...base, structure: "wavy", fingertest: "rau", pulltest: "snaps", concerns: ["dryness"] },
     [priority("moisture_dryness", 2, ["dryness"])],

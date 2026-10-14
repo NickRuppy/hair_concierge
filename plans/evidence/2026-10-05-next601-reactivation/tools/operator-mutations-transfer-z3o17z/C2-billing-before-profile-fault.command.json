@@ -1,0 +1,17 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^competing subscription insert is adopted only for the same immutable account$",
+    "tests/reactivation-retained-account-activation.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

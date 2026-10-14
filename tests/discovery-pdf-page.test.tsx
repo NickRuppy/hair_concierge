@@ -524,7 +524,35 @@ test("a brandless catalog name reads with its brand on the paper", async () => {
   assert.ok(markup.includes("Schwarzkopf Klärendes Serum"))
 })
 
-test("the document is written to the participant, step by step", async () => {
+test("a step deliberately left without a product is not printed — no „Empfehlung folgt“ promise", async () => {
+  // „Ohne Produkt weiter" in the call = keep of the EMPTY step (Nomi, 2026-10-09).
+  const skipped: DiscoveryCallDecision[] = [
+    ...decisions,
+    {
+      decisionKey: maskStep.decisionKey,
+      decision: "keep",
+      swapProductId: null,
+      intakeItemId: null,
+    },
+  ]
+  const routine = composeDiscoveryRefinedRoutine({
+    steps,
+    items,
+    decisions: skipped,
+    swapProducts,
+    ownedProducts: discoveryOwnedProductIdentities(verdicts),
+  })
+  const markup = await renderPdf({
+    loadIntake: async () => ({ ...intake, finalizedSourceHash: routine.sourceHash }),
+    loadModel: async () => ({ ...readyModel(), routine }),
+  })
+  assert.ok(!markup.includes("Gibt den Längen eine intensive, auswaschbare Pflegeeinheit."))
+  assert.ok(markup.includes("4 Schritte — 1 bleibt, 2 sind neu, 1 ist noch offen."))
+  // Only her undecided oil still says „Noch offen".
+  assert.equal(markup.split("Noch offen – Empfehlung folgt").length - 1, 1)
+})
+
+test("the shelf says what happens to every product she brought", async () => {
   const markup = await renderPdf()
 
   // Addressed to her, in her own words — no cockpit chrome anywhere on the paper.
@@ -565,10 +593,6 @@ test("the document is written to the participant, step by step", async () => {
   // The on-screen sheet shrinks to fit narrow viewports; that rule is screen-only, so the
   // printed A4 page is untouched.
   assert.ok(markup.includes("@media screen {\n  .dcp-page { width: 100%; max-width: 210mm; }"))
-})
-
-test("the shelf says what happens to every product she brought", async () => {
-  const markup = await renderPdf()
 
   assert.ok(markup.includes("Deine bisherigen Produkte"))
   // „in deiner Routine", not „geprüft": this counts only the step-bound products.

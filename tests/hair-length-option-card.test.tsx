@@ -21,33 +21,6 @@ const ownBodyPortraitConfig = {
   treatedLengthPattern: "straight" as const,
 }
 
-test("shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame", () => {
-  const html = renderToStaticMarkup(
-    <HairLengthOptionCard
-      config={portraitConfig}
-      description="Taille oder länger."
-      label="Sehr lang"
-      onClick={() => {}}
-      selected={false}
-      selectionVariant="regular"
-    />,
-  )
-
-  assert.match(html, /data-hair-length-card="true" data-selection-variant="regular"/)
-  assert.match(html, /h-\[184px\]/)
-  assert.match(html, /h-\[140px\]/)
-  assert.match(html, /\[@media\(max-height:700px\)\]:h-\[152px\]/)
-  assert.match(html, /data-hair-portrait-media="true"/)
-  assert.match(
-    html,
-    /class="flex h-full w-full items-center justify-center scale-\[0\.9\]" data-hair-portrait-art="true"/,
-  )
-  assert.match(html, /<svg aria-hidden="true"/)
-  assert.match(html, /<img alt=""/)
-  assert.match(html, /aria-pressed="false"/)
-  assert.match(html, /aria-describedby="[^"]+"/)
-})
-
 test("shared portrait figure keeps very-short own-body assets self-contained", () => {
   const html = renderToStaticMarkup(<HairPortraitFigure config={ownBodyPortraitConfig} />)
 

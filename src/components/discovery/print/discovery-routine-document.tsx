@@ -84,7 +84,8 @@ type PrintStep = {
  * Ruled (2026-09-22): a kept product keeps its own name badged „bleibt"; a swap and an open
  * step with the Idealplan's own recommendation read „neu"; an undecided step — and any step
  * whose named product could not be read — says „Noch offen" rather than quietly promoting a
- * different product into the slot.
+ * different product into the slot. An empty step deliberately left without a product never
+ * gets here (`printSteps` leaves it out).
  */
 function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
   switch (step.outcome) {
@@ -135,6 +136,12 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
   const steps: PrintStep[] = []
   const byKey = new Map<string, PrintStep>()
   for (const step of view.steps) {
+    // „Ohne Produkt weiter": the EMPTY step decided without a product (keep, or a drop the
+    // radios never offer) is not part of her routine — printing it would promise an
+    // „Empfehlung folgt" nobody is preparing. Her own unreadable product still prints open.
+    if (step.intakeItemId === null && (step.outcome === "kept" || step.outcome === "dropped")) {
+      continue
+    }
     let printed = byKey.get(step.decisionKey)
     if (!printed) {
       printed = {
@@ -494,6 +501,7 @@ function UnassignedLine({
  * All copy is the compiled, verified guidance; this component only lays it out.
  */
 function ApplicationDay({ day }: { day: DiscoveryApplicationPrintDay }) {
+  const positions = stepPositions(day.steps)
   return (
     <section className="dcp-day">
       <div className="dcp-day-head">
@@ -503,11 +511,26 @@ function ApplicationDay({ day }: { day: DiscoveryApplicationPrintDay }) {
       <p className="dcp-day-summary">{day.summary}</p>
       <ol className="dcp-day-steps">
         {day.steps.map((step, index) => (
-          <ApplicationStep key={`${day.dayType}:${index}`} step={step} position={index + 1} />
+          <ApplicationStep
+            key={`${day.dayType}:${index}`}
+            step={step}
+            position={positions[index] ?? null}
+          />
         ))}
       </ol>
     </section>
   )
+}
+
+/**
+ * Print numbering: only products (and unresolved product slots) count as steps. A transition
+ * („Danach mit dem nächsten Schritt fortfahren.") is a hint between steps — numbering it made
+ * a four-product wash day read as seven steps (Nomi, 2026-10-09). The printed sheet diverges
+ * from `/anwendung` here on purpose.
+ */
+function stepPositions(steps: readonly DiscoveryApplicationPrintStep[]): (number | null)[] {
+  let position = 0
+  return steps.map((step) => (step.kind === "transition" ? null : (position += 1)))
 }
 
 function ApplicationStep({
@@ -515,12 +538,12 @@ function ApplicationStep({
   position,
 }: {
   step: DiscoveryApplicationPrintStep
-  position: number
+  position: number | null
 }) {
   if (step.kind === "transition") {
     return (
       <li className="dcp-apply-transition">
-        <span className="dcp-apply-num dcp-apply-num-quiet">{position}</span>
+        <span aria-hidden="true" />
         <p>{step.copy}</p>
       </li>
     )
@@ -552,14 +575,46 @@ function ApplicationStep({
             <p className="dcp-apply-purpose">{step.purpose}</p>
           </div>
         </div>
-        <ol className="dcp-apply-actions">
-          {step.actions.map((action, index) => (
-            <li key={index}>{action}</li>
-          ))}
-        </ol>
+        <ApplicationActions actions={step.actions} headings={step.headings ?? []} />
         {step.note ? <p className="dcp-apply-note">{step.note}</p> : null}
       </div>
     </li>
+  )
+}
+
+/**
+ * The product's instructions. Variant headings („Auf trockenem Haar (empfohlen)" / „Nach
+ * leichtem Anfeuchten") are printed as unnumbered subheadings, each variant numbering its
+ * own actions from 1 — never as numbered actions of one list.
+ */
+function ApplicationActions({
+  actions,
+  headings,
+}: {
+  actions: readonly string[]
+  headings: readonly number[]
+}) {
+  const groups: { heading: string | null; actions: string[] }[] = []
+  actions.forEach((action, index) => {
+    if (headings.includes(index)) groups.push({ heading: action, actions: [] })
+    else if (groups.length === 0) groups.push({ heading: null, actions: [action] })
+    else groups[groups.length - 1]!.actions.push(action)
+  })
+  return (
+    <>
+      {groups.map((group, index) => (
+        <div key={index}>
+          {group.heading ? <p className="dcp-apply-variant">{group.heading}</p> : null}
+          {group.actions.length > 0 ? (
+            <ol className="dcp-apply-actions">
+              {group.actions.map((action, actionIndex) => (
+                <li key={actionIndex}>{action}</li>
+              ))}
+            </ol>
+          ) : null}
+        </div>
+      ))}
+    </>
   )
 }
 
@@ -828,6 +883,15 @@ const DOCUMENT_STYLES = `
   color: var(--dcp-text);
 }
 .dcp-apply-actions li + li { margin-top: 3px; }
+.dcp-apply-variant {
+  margin: 10px 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dcp-plum);
+}
+.dcp-apply-variant + .dcp-apply-actions { margin-top: 4px; }
 .dcp-apply-note {
   margin: 8px 0 0;
   font-size: 12px;

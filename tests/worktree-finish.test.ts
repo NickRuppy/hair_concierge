@@ -210,21 +210,6 @@ test("dry-run proves a multi-commit squash merge without mutation", (t) => {
   assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.baseSha)
 })
 
-test("apply fast-forwards root and removes exact task artifacts", (t) => {
-  const fixture = createFixture(t, 3)
-  const result = runFinish(fixture, { apply: true })
-
-  assert.equal(result.status, 0, result.stderr)
-  assert.match(result.stdout, /FINISHED/)
-  assert.equal(localRef(fixture), null)
-  assert.equal(remoteRef(fixture), null)
-  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.mergeSha)
-  assert.equal(
-    git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(fixture.taskWorktree),
-    false,
-  )
-})
-
 test("a completed cleanup is idempotent", (t) => {
   const fixture = createFixture(t)
   const first = runFinish(fixture, { apply: true })
@@ -413,6 +398,12 @@ test("an unrelated detached worktree is preserved without blocking exact cleanup
   assert.equal(
     git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(detached),
     true,
+  )
+  assert.match(result.stdout, /FINISHED/)
+  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.mergeSha)
+  assert.equal(
+    git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(fixture.taskWorktree),
+    false,
   )
 })
 

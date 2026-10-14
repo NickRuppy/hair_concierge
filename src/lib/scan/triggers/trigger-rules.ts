@@ -3,16 +3,9 @@ import type { PremiumFeatureId } from "@/lib/premium-sheet/context"
 import type { ScanVerdict } from "@/lib/scan/types"
 
 /**
- * Deterministic trigger rules for the freemium scan surface (T10, PR2). The 8-trigger
- * catalog is binding verbatim from `.superpowers/sdd/plan/task-10-brief.md` — this module
- * is a pure function of explicit inputs, no I/O, so the whole rule set (including the
- * fatigue rule and the unknown-never-pitches ruling) is unit-testable without a DOM, a
- * network, or a scanner.
- *
- * Two classes, exactly as ruled (journey sign-off, binding):
- * - `user_initiated` gates are always available and never fatigue-limited.
- * - `proactive` pitches are governed by the fatigue rule: at most ONE fires per app
- *   session, across all four combined — see `resolveProactiveScanTrigger`.
+ * Trigger IDs and live two-scans/proactive rules for the freemium scan surface.
+ * Proactive pitches share one session budget. Reveal and Merken gates are routed
+ * by ScanFlow; unknown-product rescue never selects a trigger in its reducer.
  */
 
 export const SCAN_TRIGGER_IDS = [
@@ -27,19 +20,6 @@ export const SCAN_TRIGGER_IDS = [
 ] as const
 
 export type ScanTriggerId = (typeof SCAN_TRIGGER_IDS)[number]
-
-export type ScanTriggerClass = "user_initiated" | "proactive"
-
-export const SCAN_TRIGGER_CLASS: Record<ScanTriggerId, ScanTriggerClass> = {
-  erster_passt_nicht: "user_initiated",
-  zwei_scans_gleiche_kategorie: "user_initiated",
-  merken_tap: "user_initiated",
-  unbekanntes_produkt: "user_initiated",
-  kategorien_luecke: "proactive",
-  passt_gut_moment: "proactive",
-  frust_serie: "proactive",
-  wiederkehrer: "proactive",
-}
 
 export type ScanProactiveTriggerId =
   | "kategorien_luecke"
@@ -80,25 +60,9 @@ export function scanTriggersEnabled(gate: ScanTriggerGate): boolean {
 
 // --- sheet-opening contract ------------------------------------------------------
 
-/**
- * Controller ruling on the feature mapping (binding, surfaced to Nick separately, not
- * re-litigated here): scan-context gates (1, 2) → `empfehlungen`; Merken (3) →
- * `merkliste`; the 3 sheet-opening proactive pitches (6-8) → `routine`. Deliberately has
- * no entry for `kategorien_luecke` (links into the gated Routine page instead of opening
- * the sheet — journey ruling) or `unbekanntes_produkt` (never pitches at all).
- *
- * Fix round 1 (F6, adjudicated — keep as-is, do not rewire): `erster_passt_nicht` and
- * `merken_tap` below are the canonical rule models for triggers 1 and 3, but their actual
- * surfaces shipped in T9 as the reveal CTA and the Merken lock, both opening the sheet with
- * `source: "scan:verdict"` (`scan-flow.tsx`'s `MERKLISTE_GATE`/`EMPFEHLUNGEN_GATE`), not
- * `trigger:erster-passt-nicht` / `trigger:merken-tap`. That is intentional: T9's sources are
- * not renamed, and no production caller uses these two registry entries — they exist so the
- * mapping itself stays independently testable.
- */
+/** Live two-scans and proactive sheet contexts; reveal and Merken use scan:verdict in ScanFlow. */
 const SCAN_TRIGGER_SHEET_FEATURE: Partial<Record<ScanTriggerId, PremiumFeatureId>> = {
-  erster_passt_nicht: "empfehlungen",
   zwei_scans_gleiche_kategorie: "empfehlungen",
-  merken_tap: "merkliste",
   passt_gut_moment: "routine",
   frust_serie: "routine",
   wiederkehrer: "routine",
@@ -118,29 +82,6 @@ export function scanTriggerSheetContext(id: ScanTriggerId): ScanTriggerSheetCont
   return { feature, source: `trigger:${id.replace(/_/g, "-")}` }
 }
 
-// --- 1. Erster "passt nicht" ------------------------------------------------------
-
-/**
- * Surface behavior is T9 (the reveal CTA keyed off `freeRevealAvailable`, T8's
- * server-authoritative signal); this rule only makes that condition explicit for the test
- * lane, without inventing a parallel client-side "is this the first mismatch ever"
- * detector — the server-derived `freeRevealAvailable` already IS that answer.
- */
-export function firesErsterPasstNicht(input: {
-  isMismatchVerdict: boolean
-  freeRevealAvailable: boolean
-}): boolean {
-  return input.isMismatchVerdict && input.freeRevealAvailable
-}
-
-/** The exact complement: a later passt-nicht shows "Was passt stattdessen?" → sheet. */
-export function firesWasPasstStattdessen(input: {
-  isMismatchVerdict: boolean
-  freeRevealAvailable: boolean
-}): boolean {
-  return input.isMismatchVerdict && !input.freeRevealAvailable
-}
-
 // --- 2. Zwei Scans, gleiche Kategorie ---------------------------------------------
 
 export function firesZweiScansGleicheKategorie(input: {
@@ -148,25 +89,6 @@ export function firesZweiScansGleicheKategorie(input: {
   categoriesScannedBeforeThisScan: readonly PersonalPlanCategory[]
 }): boolean {
   return input.categoriesScannedBeforeThisScan.includes(input.category)
-}
-
-// --- 3. Merken-Taps ------------------------------------------------------------------
-
-export function firesMerkenTap(input: { merkenLocked: boolean }): boolean {
-  return input.merkenLocked
-}
-
-// --- 4. Unbekanntes Produkt: never pitches --------------------------------------------
-
-/**
- * Ruled 2026-09-09 (supersedes the original catalog copy): unknown product is an honest
- * rescue flow, never a premium pitch — no sheet, ever. Modeled as an explicit function
- * (rather than simply omitted from the catalog) so the test lane can assert
- * unknown-never-pitches for every input, including one that looks pitchable.
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the test lane's explicit rule signature
-export function firesUnbekanntesProdukt(_input: { isUnknownProduct: boolean }): false {
-  return false
 }
 
 // --- 5. Kategorien-Lücke ---------------------------------------------------------------
@@ -271,7 +193,7 @@ const PROACTIVE_PRIORITY: readonly ScanProactiveTriggerId[] = [
  * has already been shown this session — a later call always answers `null` regardless of
  * what newly qualifies, which is exactly "a fired proactive pitch suppresses the other
  * three for the rest of the session." User-initiated gates take no fatigue flag at all —
- * they are exempt by construction (see the 4 `fires*` functions above).
+ * they are routed separately by the live scanner.
  */
 export function resolveProactiveScanTrigger(
   input: ScanProactiveTriggerInput,

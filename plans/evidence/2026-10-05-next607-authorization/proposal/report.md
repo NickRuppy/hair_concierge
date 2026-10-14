@@ -1,0 +1,50 @@
+# Retired one-time pricing authorization helper — exact closure
+
+Verdict: the bounded helper/type/error plus its sole dominated Stripe caller block are eligible for a conditional source-retirement proposal. The two direct helper tests can be D only together with that source cleanup and main's independent acceptance/verification. Do not delete the tests alone. No broader one-time payment, consent, browser, QA, attribution, activation or recovery retirement is supported. Zero campaign credit.
+
+## Concrete dominance and entry proof
+
+`src/app/api/stripe/create-checkout-session/route.ts` exports POST. After parsing the strict Zod schema, it destructures purchaseKind and binds a single const isOneTimePurchase to comparison with PERSONAL_PLAN_ONCE_KIND. Lines578–580 immediately return410 with one_time_purchase_retired when true. That guard precedes all feature flags, cookies, auth, admin construction, provider work, trial or reactivation branching. It is unconditional: no caller identity, environment flag, stored arm, internal-test value, QA token or action can opt around it.
+
+The only call to assertPersonalPlanOneTimeCheckoutAuthorized is inside a later `if (isOneTimePurchase)` at625–758. The earlier guard dominates it using the same immutable boolean. When true, POST has returned; when false, the inner block is skipped. Bad schema inputs return400 even earlier. Valid one-time prepare/claim reaches410; direct creation remains schema-invalid. There is no exported alternate function that executes this block. Full POST550–1474 was read, including trial, paid membership, legacy membership prepare/claim, reactivation and Premium-sheet paths. Do not delete shared prepare/claim helpers or collapse schema: retained membership compatibility still reaches them.
+
+The existing native test `retired one-time purchase requests stop before account or provider work` in tests/stripe-checkout-session-route-contract.test.ts:94 invokes actual POST with both valid prepare and claim rows. It asserts schema success, HTTP410 and exact error JSON. The complete callback is pinned in proposal.json and remains byte exact. No input or extra test is proposed. Its status/body assertions prove the boundary response; source dominance supplies the no-later-helper argument. This audit did not execute it.
+
+## Symbol, module and dynamic closure
+
+Current text search across source/scripts/tests/Supabase/workflows/plans/docs and public code found target helper/type/error names only in three files: funnel/server.ts definition group, Stripe route named import/call/catch, and personal-plan-pricing-experiment.test.ts named imports/two callbacks. Full names and line evidence are in symbol-text.txt.
+
+AST scan read3121 tracked JavaScript/TypeScript files without importing them. It found28 named imports of funnel/server, no funnel/server re-export, namespace import or dynamic import/require. Complete import declarations and identifier parents are in module-closure.json. Other imports select specific unrelated symbols such as cookie context, lookup, milestones and experiment resolution; these stay byte exact. The package is private and declares no public exports/bin entry for this helper. Next does not publish arbitrary src/lib exports as HTTP handlers; the module is not a use-server action module.
+
+All production computed module loads in that scan resolve fixed paths to payment-integrity-runtime or agent orchestrator/model-client. None chooses funnel/server. Test-local require adapters load actual route/page source or named mocks; their funnel/server mock exports unrelated funnel functions. The returning-checkout fixture can read historical Stripe/PayPal route source from5a3e33f1 under an explicit test flag, but replaces funnel/server with a named mock and does not supply or exercise this helper. The result-page VM calls the actual result export with a named funnel mock. Other test loaders target welcome, reactivate, admin-users, content-research or shampoo research replay helpers. No source-to-function extraction or computed target-name access surfaced. This is repository closure, not a claim about unknown out-of-repository consumer code.
+
+## Current product intent and historical access
+
+Approved plans/free-trial-launch/plan.md:31 says no new one-time purchases and explicitly preserves historic fulfillment/recovery; docs/free-trial-launch-runbook.md:11 agrees. Commit318cf157 (#549) added the unconditional Stripe410, replaced new pricing allocation with membership, and mapped historic unpaid one-time presentation to base without changing stored attribution. Later route changes1291bad1/ca176e7d leave this guard intact. This is concrete retirement evidence, not inferred from a currently disabled flag or anonymous denial.
+
+Retained paths were traced separately:
+
+- `/api/paypal/create-order-intent` is its own unconditional410 endpoint. `/api/paypal/capture-order` remains live and invokes captureAndActivatePayPalOrder for an existing token; it does not use the target pricing helper.
+- `/welcome` reads provider/session or PayPal token. Stripe one-time results call ensureOneTimeCheckoutAccount; PayPal one-time results call existing order recovery. Browser one-time SDK recovery goes to welcome/status. Neither re-enters new checkout authorization.
+- `/api/billing/one-time-activation-status` remains live: Stripe verifies provider session, confirms personal_plan_once metadata and ensures the existing account; PayPal verifies an already captured order, records capture if needed and activates. Its comment and actual code expressly avoid creating/capturing a new payment on the status path.
+- `ensureOneTimeCheckoutAccount` and `verifyStripeOneTimePaymentForRecovery` use `assertStripeOneTimeConsentReference`, which reads the existing consent ID and binds Stripe session, lead/funnel and stored variant. This is a different, active authorization boundary and must remain.
+- `scripts/billing/one-time-recover.ts` imports verified provider recovery, existing activation and stored receipt/consent lookup. Its fixed dynamic imports are admin, provider, tier and quiz-profile linker, never the pricing helper.
+- `assignPersonalPlanOneTimeQa`, token generation, current result session/attribution resolution, purchase tables, consent copy/history, shared one-time constants, refunds/revocation and fulfillment workers are outside this retirement and unchanged. The current QA result call does not invoke the target helper. Mounted one-time lab checkout uses intercepted request fixtures; it is not evidence of a live new-purchase admission path. Its recovery/layout contracts remain.
+
+## Minimum prospective change, not applied
+
+Three full before/cut files and exact removed bodies/hashes are in proposal.json/phases:
+
+1. funnel/server.ts: remove the four contiguous declarations PersonalPlanOneTimeCheckoutAuthorization, PersonalPlanOneTimeCheckoutAuthorizationError, private PersonalPlanOneTimeCheckoutSession, assertPersonalPlanOneTimeCheckoutAuthorized. They have no module-init side effects. Keep createAdminClient import: many live functions still use it.
+2. Stripe route: remove named helper/error imports and the complete dominated625–758 block (authorization, preparation lookup, consent creation/reuse). Remove its now-unused createPersonalPlanOneTimeCheckoutConsent import. Keep all active provider/refund/activation/consent readers. Two now-unassigned local null bindings become const to avoid prefer-const lint; their uses stay byte exact. Keep the early410, Zod schema and every other POST statement byte exact.
+3. pricing test: remove only the two direct authorization callbacks and the two now-unused imports. All12 other callbacks byte exact; pricing14→12. No new assertions, inputs, calls, rows, skips or replacement tests.
+
+This exposes already-unreachable neighboring helpers textually: createPersonalPlanOneTimeCheckoutConsent and the route's recovery classifiers still have direct tests but no remaining production call through this POST block. They were not runtime-reachable before this proposal either. Do not silently expand this packet to remove their tests or the entire consent module: stored consent readers/binders are actively used in fulfillment/recovery. A separate owner-closure lane can judge these exclusive creation/classifier declarations with their own full files. This packet claims closure only for the named pricing authorization helper and its caller.
+
+## Verification and remaining limits
+
+Static only: six complete prospective TypeScript files parse, all12 unrelated pricing callbacks match byte for byte, exact helper identifiers are absent from the three cuts, and early retirement guard bytes remain. Read-only scans, local Git history and parser only; no native tests, source mutations, env-file reads, DB, provider or browser execution.
+
+Main still owns risk acceptance, review of full source diff, native before/after, semantic typecheck/lint/build, broad full-suite/coverage reconciliation and CI. `main-commands.json` names retained native proof and proposed representative response-status fault. Do not bypass the gate as a fault: that would enter cookies/provider setup and produce a wrong failure class. A safe representative fault can alter early410 to409 and must fail the retained test's exact first response.status equality, then restore byte exact. That control proves retained retirement response, not every membership or legacy recovery branch.
+
+The source read scope is bounded: complete target helper, entire dominated block and POST, complete native donor callbacks and retained retirement callback; complete status and PayPal endpoint files; selected actual welcome/activation/operator function bodies. Full transitive provider/SDK internals were not audited. No source cleanup beyond the proposed minimal group and no claim all historical recovery is unnecessary. Offer87's frozen four-C packet is separate and unchanged; these two D tests remain R in that packet unless main accepts this source-retirement follow-up.

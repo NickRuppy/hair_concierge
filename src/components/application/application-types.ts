@@ -2,10 +2,20 @@ import type {
   ApplicationDayTypeKey,
   PersonalPlanCategory,
 } from "@/lib/routines/personal-plan/application/contracts"
+import type { ToolShelfSlotView, ToolUseSectionView } from "@/lib/personal-plan/tools/application"
+
+export type { ToolShelfSlotView, ToolUseSectionView }
 
 export type ApplicationProductActionView = {
   actionKey: string
   copyDe: string
+  /**
+   * `variant_heading`: „Auf trockenem Haar (empfohlen)" / „Nach leichtem Anfeuchten" — the
+   * compiler merges two method variants of one product under such headings (`method-*`
+   * steps). Not an instruction. (The compiler's `section` action alone does not mean this: it
+   * also marks real preparation steps such as „wet" or „towel-dry".)
+   */
+  kind?: "variant_heading"
 }
 
 export type ApplicationProductStepView = {
@@ -43,6 +53,7 @@ export type ApplicationOuterStepView =
   | ApplicationProductStepView
   | ApplicationUnresolvedProductStepView
   | ApplicationTransitionStepView
+  | ToolUseSectionView
 
 export type ApplicationDayView = {
   dayType: ApplicationDayTypeKey
@@ -58,6 +69,7 @@ export type ApplicationDayView = {
 }
 
 export type ApplicationShelfSlotView =
+  | ToolShelfSlotView
   | {
       kind: "product"
       productId: string

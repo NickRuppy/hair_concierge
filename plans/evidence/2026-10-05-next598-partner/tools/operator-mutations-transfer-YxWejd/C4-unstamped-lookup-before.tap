@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: a signed-in user without the claim stamp never reads the invitation table
+ok 1 - a signed-in user without the claim stamp never reads the invitation table
+  ---
+  duration_ms: 0.905375
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 232.582334

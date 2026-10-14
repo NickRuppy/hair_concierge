@@ -1,0 +1,4 @@
+agreement 150/153 = 98.0% over 9 products
+DIFF VS07 focusPrimary "repair" "general" 
+DIFF VS08 conditioningLevel "moderate" "high" 
+DIFF VS08 fit.coarse "acceptable" "ideal" tier

@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: fresh plan with no refinement draft: both modules open, progress 2/4
+not ok 1 - fresh plan with no refinement draft: both modules open, progress 2/4
+  ---
+  duration_ms: 5.692792
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-status-route.test.ts:2:3142'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   completedSteps: 1,
+    -   completedSteps: 2,
+        totalSteps: 4
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    completedSteps: 2
+    totalSteps: 4
+  actual:
+    completedSteps: 1
+    totalSteps: 4
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-status-route.test.ts:135:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 332.643083

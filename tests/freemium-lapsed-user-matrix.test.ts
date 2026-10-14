@@ -6,6 +6,7 @@ import { NextRequest } from "next/server"
 
 import {
   resolveAuthenticatedAppAccessState,
+  resolveAuthenticatedAppPageTier,
   type AuthenticatedAppAccessState,
 } from "../src/lib/auth/authenticated-app-route-access"
 import { resolveGatedPageMode } from "../src/lib/gated-preview/gate"
@@ -108,14 +109,16 @@ test("lapsed = composite denied AND an accepted Routine version exists", async (
 })
 
 test("a premium tier never performs the keepsake read at all", async () => {
-  await resolveAuthenticatedAppAccessState(
-    accessStateDeps({
-      tier: "premium",
-      keepsake: () => {
-        throw new Error("keepsake read must not run for a premium user")
-      },
-    }),
-  )
+  let keepsakeReads = 0
+  const state = await resolveAuthenticatedAppAccessState({
+    ...accessStateDeps({ tier: "premium" }),
+    hasKeepsakeContent: async () => {
+      keepsakeReads += 1
+      return false
+    },
+  })
+  assert.equal(state, "premium")
+  assert.equal(keepsakeReads, 0)
 })
 
 test("both lookups fail closed, in opposite directions", async () => {
@@ -397,6 +400,31 @@ test("the page mode maps the three access states onto the three renders", async 
     }),
     "premium",
   )
+
+  for (const failure of ["auth", "paid"] as const) {
+    let keepsakeReads = 0
+    const mode = await resolveGatedPageMode(() =>
+      resolveAuthenticatedAppAccessState({
+        loadTier: () =>
+          resolveAuthenticatedAppPageTier({
+            getUser: async () => {
+              if (failure === "auth") throw new Error("auth.getUser unavailable")
+              return { id: USER_ID, email: "owner@example.com" }
+            },
+            resolvePaidAccess: async () => {
+              throw new Error("paid access read unavailable")
+            },
+          }),
+        getUserId: async () => USER_ID,
+        hasKeepsakeContent: async () => {
+          keepsakeReads += 1
+          return false
+        },
+      }),
+    )
+    assert.equal(mode, "premium", failure)
+    assert.equal(keepsakeReads, 0, failure)
+  }
 })
 
 // --- 3. Routine read: their OWN routine, not the Beispiel composition -------

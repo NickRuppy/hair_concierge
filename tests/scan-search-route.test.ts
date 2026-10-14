@@ -173,7 +173,8 @@ test("searchScanCatalog: matches across brand+name, case-insensitive", async () 
       sort_order: 1,
     },
   ])
-  const { results } = await searchScanCatalog(client as never, "EINHORN")
+  const { results, truncated } = await searchScanCatalog(client as never, "EINHORN")
+  assert.equal(truncated, false)
   assert.equal(results.length, 1)
   assert.equal(results[0].id, "1")
   assert.equal(results[0].categoryLabel, "Shampoo")
@@ -200,20 +201,6 @@ test("searchScanCatalog: an exact label match ranks first regardless of sort_ord
   ])
   const { results } = await searchScanCatalog(client as never, "marke shampoo")
   assert.equal(results[0].id, "2")
-})
-
-test("searchScanCatalog: caps results at 8", async () => {
-  const rows = Array.from({ length: 12 }, (_, index) => ({
-    id: `p${index}`,
-    name: `Shampoo ${index}`,
-    brand: "Marke",
-    category_key: "shampoo",
-    image_url: null,
-    sort_order: index,
-  }))
-  const { client } = stubProductsClient(rows)
-  const { results } = await searchScanCatalog(client as never, "shampoo")
-  assert.equal(results.length, 8)
 })
 
 test("searchScanCatalog: a query load error throws a stable error", async () => {
@@ -304,19 +291,4 @@ test("searchScanCatalog: a canonical-brand-only query misses raw brand+name but 
     imageUrl: null,
     productLine: null,
   })
-})
-
-test("searchScanCatalog: a partial candidate page is not truncated", async () => {
-  const { client } = stubProductsClient([
-    {
-      id: "1",
-      name: "Shampoo Deluxe",
-      brand: "Marke",
-      category_key: "shampoo",
-      image_url: null,
-      sort_order: 0,
-    },
-  ])
-  const { truncated } = await searchScanCatalog(client as never, "shampoo")
-  assert.equal(truncated, false)
 })

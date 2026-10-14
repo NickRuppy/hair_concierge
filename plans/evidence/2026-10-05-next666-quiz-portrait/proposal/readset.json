@@ -1,0 +1,628 @@
+[
+  {
+    "file": "tests/hair-length-option-card.test.tsx",
+    "sha256": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "bytes": 2518,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/hair-portrait-assets.test.ts",
+    "sha256": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "bytes": 4148,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/hair-portrait-gallery.test.tsx",
+    "sha256": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "bytes": 1180,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/hair-portrait-length-progression.test.ts",
+    "sha256": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "bytes": 2177,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/hair-portrait.test.tsx",
+    "sha256": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "bytes": 13173,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/portrait-config.test.ts",
+    "sha256": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "bytes": 4522,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/quiz-option-card.test.tsx",
+    "sha256": "44d04311c4581efea17eb7f7b5442d1f680321763acbf0c913282c965b6150c7",
+    "bytes": 6734,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/quiz-motion-tokens.test.ts",
+    "sha256": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "bytes": 2060,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "tests/personal-plan-option-card-layout.test.ts",
+    "sha256": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "bytes": 1164,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/hair-length-option-card.tsx",
+    "sha256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "bytes": 4625,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/hair-portrait-figure.tsx",
+    "sha256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "bytes": 1582,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/quiz-option-card.tsx",
+    "sha256": "d3886b23445bfa5c3346cc9fa435968e0dbad35a6cecdb2d5a4ebf4dd0e391af",
+    "bytes": 9603,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/hair-portrait.tsx",
+    "sha256": "c02b53466f11543a783ec59a22775104339c73817c28205054bb44857f792c39",
+    "bytes": 13653,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/hair-portrait-gallery.tsx",
+    "sha256": "ef4121f68c8a4d0d0bc8a37b647c825415c526e83e0914a80bc8df252078feb3",
+    "bytes": 5844,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/quiz/hair-portrait-assets.ts",
+    "sha256": "668a06934525cfccf0a134a49255792f239b4ded7186d01a0bd03e505483d960",
+    "bytes": 4806,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/quiz/portrait-config.ts",
+    "sha256": "942805bc7427df2587da558526a5fb5db8d00d002e7b7de742f66ca6a68b2fba",
+    "bytes": 2875,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/legacy-quiz-visuals.ts",
+    "sha256": "e75ed193f9527dfda71029a5bb782f750491973aece3eaf3fc6de42752696ebb",
+    "bytes": 4238,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/quiz-question.tsx",
+    "sha256": "172dac405bc349fd011be368ed26ed24b2cddb0339c235bba8d23a8ae2b72de5",
+    "bytes": 6792,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/quiz-scalp-question.tsx",
+    "sha256": "1fdb2a7ad5b48a7e05455fe09206dc2511047fa7efb2012b3ca6b6dfb8fb080f",
+    "bytes": 10504,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/quiz/quiz-main-problem-sheet.tsx",
+    "sha256": "4814352d9a51aca84c6dcc0a689ca012adc6fa4e17ebc10d3219042ecc48e25e",
+    "bytes": 3805,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/app/quiz/quiz-shell.tsx",
+    "sha256": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b",
+    "bytes": 10004,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/onboarding/screens/single-select-screen.tsx",
+    "sha256": "a1844574362f8e94236327a1dc4af339c833fd32f3423f05b99563c13faff365",
+    "bytes": 3704,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/components/ui/info-tip.tsx",
+    "sha256": "c4493cb1d20e32e1d105b673598aee09b8636638b72c5f22e16a6082a77bcd7b",
+    "bytes": 5070,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/labs/offer-page-access.ts",
+    "sha256": "6a1382da89073e84c54320a4531b8fe68ad89ad4c56c4384b211b36cdcf81ea4",
+    "bytes": 411,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/app/labs/portrait/page.tsx",
+    "sha256": "499f4b5a43109d8eb7fb48efa22622a22df61557a593885a5fc12792e1f1ad08",
+    "bytes": 326,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/utils.ts",
+    "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+    "bytes": 166,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/motion.ts",
+    "sha256": "ad6d8c7f8243297762beade95101fd15fc607c5ca3bc02b2512055d3a54cebdd",
+    "bytes": 769,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "scripts/portrait/measure-hair-fill.mjs",
+    "sha256": "69fef69455f777f67da3dbe0289571759cc3fe69065b53eeb3350a2991b4a2e6",
+    "bytes": 1726,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "scripts/portrait/measure-bounds.mjs",
+    "sha256": "ecb46c6127c45a5d0a8e0865494b4ad33bdfd8bce9982c3fb35a2581c51dd28a",
+    "bytes": 2028,
+    "readDepth": "full semantic read"
+  },
+  {
+    "file": "src/lib/quiz/normalization.ts",
+    "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+    "bytes": 11376,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        1,
+        250
+      ]
+    ]
+  },
+  {
+    "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+    "bytes": 118811,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        185,
+        272
+      ],
+      [
+        448,
+        687
+      ],
+      [
+        760,
+        910
+      ],
+      [
+        1150,
+        1200
+      ],
+      [
+        2530,
+        2624
+      ]
+    ]
+  },
+  {
+    "file": "src/app/globals.css",
+    "sha256": "0021b712cdc24524f0e91cab1009d627c74ea72d8e3db6c28df6a653fe9a2ea5",
+    "bytes": 40745,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        88,
+        110
+      ],
+      [
+        1020,
+        1068
+      ],
+      [
+        1453,
+        1473
+      ]
+    ]
+  },
+  {
+    "file": ".github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        146,
+        164
+      ],
+      [
+        276,
+        311
+      ]
+    ]
+  },
+  {
+    "file": "node_modules/next/dist/client/image-component.js",
+    "sha256": "7dcd5a10f44f1b52100554e2a2537dfe3d04083e310858d9a92c61a7db302753",
+    "bytes": 14142,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        135,
+        205
+      ]
+    ]
+  },
+  {
+    "file": "node_modules/sharp/lib/channel.js",
+    "sha256": "4a699621c111427f9f6b3b767764a292f6a358616de2866e0078475830420f42",
+    "bytes": 5379,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        35,
+        75
+      ]
+    ]
+  },
+  {
+    "file": "node_modules/sharp/lib/input.js",
+    "sha256": "d88bdf5d807ef57ce8aa5d9be29bc7b9199974eac385bf559f19d5fc06bd632a",
+    "bytes": 32973,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        575,
+        614
+      ]
+    ]
+  },
+  {
+    "file": "node_modules/sharp/lib/output.js",
+    "sha256": "71cec9ac95f3db764ee4d2e26eec1deb16da63c47fdd352f6a41af4dbb0f1831",
+    "bytes": 61198,
+    "readDepth": "bounded operative function/contract ranges; entire file bytes pinned",
+    "ranges": [
+      [
+        1255,
+        1306
+      ]
+    ]
+  },
+  {
+    "file": "package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "package-lock.json",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "tests/server-only-register.cjs",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "node_modules/typescript/lib/typescript.js",
+    "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "bytes": 9112572,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "node_modules/react/package.json",
+    "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
+    "bytes": 1248,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "node_modules/react-dom/package.json",
+    "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
+    "bytes": 3063,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "node_modules/next/package.json",
+    "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
+    "bytes": 11243,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "node_modules/sharp/package.json",
+    "sha256": "e6be69319929151be3aa240bf1485f25a3477cb6d2286f92510b9fceb3cbef26",
+    "bytes": 7478,
+    "readDepth": "tool/config/dependency identity pin; selective routing/source inspected separately"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/coily-long.webp",
+    "sha256": "2e7c2a041c823ff0d61c31194a487a71ec4455afa96d9a45dded048a00e3942a",
+    "bytes": 33736,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/coily-medium.webp",
+    "sha256": "40132d90d313f0741ccc761e12c4b3f665de1bee243d1a99bd24da102e3a43cf",
+    "bytes": 31404,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/coily-short.webp",
+    "sha256": "f9ca8393eb28d528ad32db291ba7d49fb2c3de817e336bd61efc4b2baa383107",
+    "bytes": 32582,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/coily-very-long.webp",
+    "sha256": "deb58fd00318b540f1ea48fd408b4c35548675d2082529aece511e8a6fd8d8cc",
+    "bytes": 37104,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/coily-very-short.webp",
+    "sha256": "a205f7ca6d9fce324e43e9cef80174559bbf96a52f40874d1d5671afe4941455",
+    "bytes": 24626,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/curly-long.webp",
+    "sha256": "aab8143105fc0eb58dc9acc853a85f1b1ba063ebae461322576e9b6ddf7829df",
+    "bytes": 41252,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/curly-medium.webp",
+    "sha256": "65c4aa3e023590fb0ba1b9d1020f5239fe3c1a7aa03aa6084de29a809acda638",
+    "bytes": 36650,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/curly-short.webp",
+    "sha256": "68651144ca243c629cc8844358f3c9bbd715da68948ad9c5b4ecc5bc39cf43a6",
+    "bytes": 30444,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/curly-very-long.webp",
+    "sha256": "32ecc7e22c0505d1540164ef5545ec524e820a8183a821cb1d00f11ea43ca570",
+    "bytes": 39200,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/curly-very-short.webp",
+    "sha256": "7f75791f5955b67d6a1ec3fadc86b89cf40326278919a944bb6821942486df06",
+    "bytes": 45110,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/generic.webp",
+    "sha256": "84a15bb3ad980086685d1f1c1860a7341c0f409a5b8a54c0a11c6530079923f3",
+    "bytes": 16936,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/straight-long.webp",
+    "sha256": "19b836288a846991f5d29877761caeaeeca8913f23c17dc1b25dc937b1c587bb",
+    "bytes": 28912,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/straight-medium.webp",
+    "sha256": "b02b92c24099df9a9328694a4d7066cdef7faf82e23764d31f6920da381b3392",
+    "bytes": 18564,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/straight-short.webp",
+    "sha256": "0037a8c781ee7a9f4be30e42de064ada2aac8da7095fd26e339743ab01371d55",
+    "bytes": 19578,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/straight-very-long.webp",
+    "sha256": "af4ec084e857e9a59a9bb5e77c8a8e18fb2b8b83de481b4a338f2531377a9727",
+    "bytes": 20686,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/straight-very-short.webp",
+    "sha256": "05764009dac9a5998a88f1dc66666429b52967e44fa54a97e3cd9f6a31e7e094",
+    "bytes": 36030,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/wavy-long.webp",
+    "sha256": "72bc0d415c5af95cc3c44d70ad9c7d19354547ca9b1bfc23995c920db5934b61",
+    "bytes": 27110,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/wavy-medium.webp",
+    "sha256": "a8f5d21bc030e39632b77cf8d9b03e2260d212a7e39befdd402995148a0c19ba",
+    "bytes": 25068,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/wavy-short.webp",
+    "sha256": "ae374bfae035b60cedf1e983c7229f2b56b9c879175535a6e5dc45c8b67cd4e1",
+    "bytes": 23722,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/wavy-very-long.webp",
+    "sha256": "836de168212044c82b6f949e537d080af60e28b40961459497c72cd57127d76a",
+    "bytes": 37580,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "public/images/quiz/hair-portrait/wavy-very-short.webp",
+    "sha256": "6c07425e3aeedb1c125c94516eeb83b5b4aa705fd491d1a2b26a68e3249ed0ad",
+    "bytes": 35058,
+    "readDepth": "binary input bytes frozen; no pixel decoder/native execution"
+  },
+  {
+    "file": "node_modules/react-dom/server.node.js",
+    "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+    "bytes": 669,
+    "readDepth": "full dependency export routing"
+  },
+  {
+    "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+    "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+    "bytes": 395194,
+    "readDepth": "bounded SSR useId and static-render implementation",
+    "ranges": [
+      [
+        9722,
+        9748
+      ],
+      [
+        9860,
+        9880
+      ]
+    ]
+  },
+  {
+    "file": "node_modules/clsx/dist/clsx.mjs",
+    "sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522",
+    "bytes": 388,
+    "readDepth": "full class assembly implementation"
+  },
+  {
+    "file": "node_modules/tailwind-merge/dist/bundle-cjs.js",
+    "sha256": "19aa176d1cb3f9026e4019206b6d05f11c754bbb1c3009c9b4193a1da4f95b92",
+    "bytes": 102887,
+    "readDepth": "bounded merge entry and height/min-height groups",
+    "ranges": [
+      [
+        460,
+        490
+      ],
+      [
+        1425,
+        1443
+      ]
+    ]
+  },
+  {
+    "file": "src/lib/vocabulary/hair-length.ts",
+    "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+    "bytes": 918,
+    "readDepth": "full axis/label contract"
+  },
+  {
+    "file": "scripts/portrait/normalize-hair-endpoint.mjs",
+    "sha256": "6a261fff60a663d8e9d1ff13c7df074bbc6bf121eb418b526fb7728a88740c46",
+    "bytes": 3727,
+    "readDepth": "full read-only caller inspection; script never executed"
+  },
+  {
+    "file": "src/app/quiz/page.tsx",
+    "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+    "bytes": 16212,
+    "readDepth": "bounded actual QuizQuestion entry dispatch",
+    "ranges": [
+      [
+        360,
+        391
+      ]
+    ]
+  },
+  {
+    "file": "src/app/quiz/layout.tsx",
+    "sha256": "40a1fc09f82f8d6832a57b76449af4b159fb4e2877989eb9e79bbbab99fe4e4d",
+    "bytes": 1097,
+    "readDepth": "full route shell mounting"
+  },
+  {
+    "file": "tests/personal-plan-quiz-funnel-entry.test.ts",
+    "sha256": "69895d850749036a8edf87a07af67c570ba80d5e44956b33c8860ec5b34fe99c",
+    "bytes": 16545,
+    "readDepth": "bounded sibling shared-portrait source-binding test",
+    "ranges": [
+      [
+        258,
+        279
+      ]
+    ]
+  },
+  {
+    "file": "src/funnels/landing/personal-plan-quiz.tsx",
+    "sha256": "718ce1b880d55f4692e4f254b46c80aa63cb2f665e0134d26ef76487a4f828f4",
+    "bytes": 771,
+    "readDepth": "full active registry landing component"
+  },
+  {
+    "file": "src/funnels/landing/registry.ts",
+    "sha256": "72967737c0d013538f3c9d9e6fd966e482b896f35391f1719abdd42da3b7ed9e",
+    "bytes": 442,
+    "readDepth": "full registry renderer"
+  },
+  {
+    "file": "src/funnels/landing/registry.generated.ts",
+    "sha256": "65f0783c1c3df689eee6e1efb45af8fe7190c2f490ed01abf6a040c3b17ba5f3",
+    "bytes": 516,
+    "readDepth": "generated registration membership"
+  },
+  {
+    "file": "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+    "sha256": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+    "bytes": 9535,
+    "readDepth": "bounded progressive continuation caller",
+    "ranges": [
+      [
+        1,
+        14
+      ],
+      [
+        30,
+        90
+      ],
+      [
+        261,
+        286
+      ]
+    ]
+  },
+  {
+    "file": "src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts",
+    "sha256": "c1f1a78eb4812605cd6ae2f3c551ffd02ae13d3d6775706549a6bd0d2e16d1d8",
+    "bytes": 1830,
+    "readDepth": "bounded literal dynamic import closures",
+    "ranges": [
+      [
+        1,
+        38
+      ]
+    ]
+  },
+  {
+    "file": "src/app/lp/[slug]/page.tsx",
+    "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+    "bytes": 7375,
+    "readDepth": "bounded registered landing route/flag entry",
+    "ranges": [
+      [
+        1,
+        80
+      ]
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "oldConfigSha": "0c8e95adf438f1a7ff98d364731136030b301dc9b96d949904ed64520b12fcb0",
+  "newConfigSha": "fa8f253ad47c8a699de1f682fe6c4198b11441933be1bd66cfd998863bbf0986",
+  "disposition": "Main adopts only shared config metadata drift. Other five identity pins, task branch tracking, all fixed readsets, installed dependencies and immutable proposal artifacts independently verified unchanged. Previous config bytes/provenance unavailable. No source/test/dependency/ref writes. Preserve original tool pins/entrypoints, replace only identity config pin and entrypoint pin digest, append this disposition to artifact guard."
+}

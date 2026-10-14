@@ -1,0 +1,2138 @@
+[
+  {
+    "original": "/tmp/test-audit-email-delivery94/README.md",
+    "archived": "proposal/README.md",
+    "sha256": "b57c332bcae8a6678416ba032aec494929afc0817d5733c4936415cecbc47a8a",
+    "bytes": 2246
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-funnel-attribution.test.ts",
+    "archived": "proposal/before/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-page-view.test.ts",
+    "archived": "proposal/before/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-quiz-traits.test.ts",
+    "archived": "proposal/before/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-server.test.ts",
+    "archived": "proposal/before/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "proposal/before/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-transactional.test.ts",
+    "archived": "proposal/before/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/customerio-trial-reminder.test.ts",
+    "archived": "proposal/before/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/email-deliverability.test.ts",
+    "archived": "proposal/before/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "proposal/before/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "proposal/before/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "proposal/before/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "proposal/before/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "proposal/before/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-delivery.test.ts",
+    "archived": "proposal/before/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+    "bytes": 5586
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-route.test.ts",
+    "archived": "proposal/before/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-sql.test.ts",
+    "archived": "proposal/before/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders.test.ts",
+    "archived": "proposal/before/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "c3b510722101c5c2a22b314abbae014b82061869ed8f4eeb18e9ef55d2950812",
+    "bytes": 26822
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/check.cjs",
+    "archived": "proposal/check.cjs.txt",
+    "sha256": "a3e1833647d61f0d38cd73d3166ae9c68fb8e010c3a79804307104084c12cd8d",
+    "bytes": 6405
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/commands.json",
+    "archived": "proposal/commands.json",
+    "sha256": "00b3bc71b884f66c20d25e0dcb1b47e0d09fab82de7644f3b7121ea6b5269d61",
+    "bytes": 1361
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "03f2d6ca4231edad45438d63a0458737dd8dd37877bbe20e66a4aee5855a66ae",
+    "bytes": 26666
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "4e0efa7cb7c930bb2cbd34fd34fbfce0d14cad2a0d073184128378a573ce7941",
+    "bytes": 6512
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-complete.diff",
+    "archived": "proposal/conditional-pp-complete.diff",
+    "sha256": "5f91950c88152d639fa991a3a0bdf35b1900008a52d3879a5db4e08f2c2f322d",
+    "bytes": 11155
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-funnel-attribution.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-page-view.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-page-view.test.ts.txt",
+    "sha256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "bytes": 3204
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-quiz-traits.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-server.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-transactional.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-trial-reminder.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/email-deliverability.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "94cbf3ae1d264c071610c164673790acc1349fd155a1c1d4a8b2f44ef26b0f57",
+    "bytes": 9464
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-delivery.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-route.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-sql.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders.test.ts",
+    "archived": "proposal/conditional-pp-cut/tests/trial-reminders.test.ts.txt",
+    "sha256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "bytes": 2094
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-funnel-attribution.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-page-view.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-quiz-traits.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-server.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-transactional.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-trial-reminder.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/email-deliverability.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "37b875d0de42f2c6a11ee510e73326ee1f5e5b62aadb6ef20b04cdb693a747e7",
+    "bytes": 11485
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-delivery.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-route.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-sql.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders.test.ts",
+    "archived": "proposal/conditional-pp-transfer/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp.json",
+    "archived": "proposal/conditional-pp.json",
+    "sha256": "99d068005cfc6f81eadff36beea25a926549305ccd752308d0bc453aed9693a2",
+    "bytes": 14865
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/conditional-pp.md",
+    "archived": "proposal/conditional-pp.md",
+    "sha256": "f246db5283bdbe8110c77eb50b6c7ba7eaa9c5bdb0a45bc74ad88f12ee5630aa",
+    "bytes": 3489
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/controls-prepare.cjs",
+    "archived": "proposal/controls-prepare.cjs.txt",
+    "sha256": "f34d11917328ccd95fbf7d042b81e14a06c0b919025b95b8beaad9318e47cb24",
+    "bytes": 8713
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "5ba306e627bd4580f4d5ad2f6ed36e933566a487cf2b67e670de4734abfe77af",
+    "bytes": 94146
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-funnel-attribution.test.ts",
+    "archived": "proposal/cut/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-page-view.test.ts",
+    "archived": "proposal/cut/tests/customerio-page-view.test.ts.txt",
+    "sha256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "bytes": 3204
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-quiz-traits.test.ts",
+    "archived": "proposal/cut/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-server.test.ts",
+    "archived": "proposal/cut/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "proposal/cut/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-transactional.test.ts",
+    "archived": "proposal/cut/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/customerio-trial-reminder.test.ts",
+    "archived": "proposal/cut/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/email-deliverability.test.ts",
+    "archived": "proposal/cut/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "proposal/cut/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "proposal/cut/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "proposal/cut/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "proposal/cut/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "proposal/cut/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-delivery.test.ts",
+    "archived": "proposal/cut/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-route.test.ts",
+    "archived": "proposal/cut/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-sql.test.ts",
+    "archived": "proposal/cut/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders.test.ts",
+    "archived": "proposal/cut/tests/trial-reminders.test.ts.txt",
+    "sha256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "bytes": 2094
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "8d36c62f094b9503825e060dac55b51b540bfa8d599111564bc8ead1f0405afb",
+    "bytes": 13308
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/history.json",
+    "archived": "proposal/history.json",
+    "sha256": "cba65a8064bd09c2077bd5f3f5dab4a201c998a2134281ccd5719c02b6d95170",
+    "bytes": 3562
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/inventory.cjs",
+    "archived": "proposal/inventory.cjs.txt",
+    "sha256": "ab68dbc98d04a146f121282b59825c7f45b32b3a62bde5103e18ec4efb15b40e",
+    "bytes": 1715
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/inventory.json",
+    "archived": "proposal/inventory.json",
+    "sha256": "bbde796b6bd3577fc92c978f460b0d6e115574b4139ce2dc25dc9c94c347fde8",
+    "bytes": 193832
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/judgments.py",
+    "archived": "proposal/judgments.py.txt",
+    "sha256": "37bebd85f49ce5e55c051d8c5aa512f250019b24181ad34894f6df8de9e0aaab",
+    "bytes": 19793
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "ab3a4a24914dffdab7a402f6aa34e577dd33d1027db8508351ebf09237374a17",
+    "bytes": 16548
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "039d4b36610aae16370be4877de16af1e59ccbce46d74186857ef6fabe8b6fc1",
+    "bytes": 212207
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea",
+    "bytes": 156210
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/prepare.cjs",
+    "archived": "proposal/prepare.cjs.txt",
+    "sha256": "6237465feddc04a816f43411244da936b6bb8bb649771e08e2bb6a9eaa0962f0",
+    "bytes": 10301
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/readonly-preload.cjs",
+    "archived": "proposal/readonly-preload.cjs.txt",
+    "sha256": "bfb7ec75255342c619a8cd6698412d3279a86a80a04785cbc4a9fe0f1ce17f3d",
+    "bytes": 1173
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "bd35509c2d28e523e3cc703d52b7aea6baa7204c162f5ec7fea65932b4255eb0",
+    "bytes": 467
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-funnel-attribution.test.ts",
+    "archived": "proposal/transfer/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-page-view.test.ts",
+    "archived": "proposal/transfer/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-quiz-traits.test.ts",
+    "archived": "proposal/transfer/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-server.test.ts",
+    "archived": "proposal/transfer/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "proposal/transfer/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-transactional.test.ts",
+    "archived": "proposal/transfer/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-trial-reminder.test.ts",
+    "archived": "proposal/transfer/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/email-deliverability.test.ts",
+    "archived": "proposal/transfer/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "proposal/transfer/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "proposal/transfer/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "proposal/transfer/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "proposal/transfer/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "proposal/transfer/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-delivery.test.ts",
+    "archived": "proposal/transfer/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-route.test.ts",
+    "archived": "proposal/transfer/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-sql.test.ts",
+    "archived": "proposal/transfer/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders.test.ts",
+    "archived": "proposal/transfer/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email-delivery94/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "d6934e135b56306a9a95cbce1f7bd5d74836fc89eed7904234b2743e09d80599",
+    "bytes": 2966
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/README.md",
+    "archived": "operator/README.md",
+    "sha256": "723112fa8ac93d769946d409c0d136953019527a71e8f338c4eb1f0521bc4549",
+    "bytes": 5964
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/approved-template-delta.diff",
+    "archived": "operator/approved-template-delta.diff",
+    "sha256": "f2f4d201375ec49f7379ad71e9d5465df736c809b9a25eacc28e03b6def8ee75",
+    "bytes": 20997
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/approved-template-delta.json",
+    "archived": "operator/approved-template-delta.json",
+    "sha256": "63aa95238705a2895bbbfab3870f11e80785bb55493da6a08550ed39e71c9fc9",
+    "bytes": 1849
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/controls-check.log",
+    "archived": "operator/controls-check.log",
+    "sha256": "2f083faff8ec39b58dbce2379581246b3175c46e30729f25b181c0e235a46f83",
+    "bytes": 364
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/delta-summary.md",
+    "archived": "operator/delta-summary.md",
+    "sha256": "1fba13cb3c35aac14fa1e410a4ff78ae33b480bbc3aaee6f1ea62c8b7a3aa302",
+    "bytes": 2056
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/editor-check.log",
+    "archived": "operator/editor-check.log",
+    "sha256": "05e7a7a50b84e54cfc0fbacc212e2c0c1b4437de2af86433ff5324bc3ba336cb",
+    "bytes": 485
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/handoff.json",
+    "archived": "operator/handoff.json",
+    "sha256": "7257cca80cdabf5e61708bd8320d0e7a4d2ebf7f1bf4e39c3b0515e470fc432d",
+    "bytes": 886
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/harden-static.py",
+    "archived": "operator/harden-static.py.txt",
+    "sha256": "f7a6505095a2f404dde59fcaf4f7a7803817650954f4fbad3d396c168bb3a567",
+    "bytes": 4421
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/message-hardening-receipt.json",
+    "archived": "operator/message-hardening-receipt.json",
+    "sha256": "77f819390ebc8d5604052e7bfa95272bef70125ceb5e517b9bc9275da2ae4c9d",
+    "bytes": 568
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/metadata-disposition.json",
+    "archived": "operator/metadata-disposition.json",
+    "sha256": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "bytes": 2428
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/intent.json",
+    "archived": "operator/operator-apply-cut-jgoT8c/intent.json",
+    "sha256": "ed37e108f1b023e3b387dca5477b2c8e7541dd045afe4237f4cb6fbcffdae7d9",
+    "bytes": 4829
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-funnel-attribution.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-page-view.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-quiz-traits.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-server.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-transactional.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/customerio-trial-reminder.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/email-deliverability.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/meta-offer-view.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-route.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-sql.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/originals/tests/trial-reminders.test.ts",
+    "archived": "operator/operator-apply-cut-jgoT8c/originals/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-cut-jgoT8c/receipt.json",
+    "archived": "operator/operator-apply-cut-jgoT8c/receipt.json",
+    "sha256": "b0db4dab0dbf3a7606211dc7c08a3d9e98176b4ec62dad131fea0369fc82200d",
+    "bytes": 2807
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/intent.json",
+    "archived": "operator/operator-apply-transfer-5g8X18/intent.json",
+    "sha256": "8b20d7fa34830308dac1f12d9309f95f45c1118a70670eee125ef0dd998a6870",
+    "bytes": 4590
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-funnel-attribution.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-page-view.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-quiz-traits.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-server.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-transactional.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/customerio-trial-reminder.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/email-deliverability.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/meta-offer-view.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+    "bytes": 5586
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-route.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-sql.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/originals/tests/trial-reminders.test.ts",
+    "archived": "operator/operator-apply-transfer-5g8X18/originals/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-apply-transfer-5g8X18/receipt.json",
+    "archived": "operator/operator-apply-transfer-5g8X18/receipt.json",
+    "sha256": "107eb89775c6568f2594e2622277b4c0c52e3faba387e7883c1e1a422b9aac8a",
+    "bytes": 2545
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-candidates.json",
+    "archived": "operator/operator-candidates.json",
+    "sha256": "c3b510722101c5c2a22b314abbae014b82061869ed8f4eeb18e9ef55d2950812",
+    "bytes": 26822
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-controls-normalized.json",
+    "archived": "operator/operator-controls-normalized.json",
+    "sha256": "4e86ca053561c6b5de3a5bf37cf16c7f431602a3abd7f4bca228be7f9976b270",
+    "bytes": 52021
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-edit.cjs",
+    "archived": "operator/operator-edit.cjs.txt",
+    "sha256": "223c47c035b692acf71ccd14441c0699ecf5463f5185c2cc389f3e2e4bb82fea",
+    "bytes": 3563
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-evidence.json",
+    "archived": "operator/operator-evidence.json",
+    "sha256": "8268fa7dd80fd7fa86f14ffc9e8364a11f1d7fbe9208a50c5b42b28cf2dc6710",
+    "bytes": 7629
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-guard.cjs",
+    "archived": "operator/operator-guard.cjs.txt",
+    "sha256": "3c7aa53343600ad6b1b5a9f6079b0febb6772d3450b0b7aff58b63cd0f5c2449",
+    "bytes": 13621
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/src/lib/analytics/page-url.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/src/lib/analytics/page-url.ts.txt",
+    "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/src/lib/billing/trial-reminders-delivery.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/src/lib/billing/trial-reminders-delivery.ts.txt",
+    "sha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e",
+    "bytes": 8079
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-funnel-attribution.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-funnel-attribution.test.ts.txt",
+    "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "bytes": 2538
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-page-view.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-quiz-traits.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-quiz-traits.test.ts.txt",
+    "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "bytes": 6733
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-server.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-server.test.ts.txt",
+    "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "bytes": 3049
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-stripe-lifecycle.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-stripe-lifecycle.test.ts.txt",
+    "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "bytes": 4289
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-transactional.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-transactional.test.ts.txt",
+    "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "bytes": 6694
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-trial-reminder.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/customerio-trial-reminder.test.ts.txt",
+    "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "bytes": 3579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/email-deliverability.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/email-deliverability.test.ts.txt",
+    "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "bytes": 9622
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/meta-offer-view.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-backfill.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-backfill.test.ts.txt",
+    "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "bytes": 4480
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-outbox-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-outbox-migration.test.ts.txt",
+    "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "bytes": 2579
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-outbox.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-outbox.test.ts.txt",
+    "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "bytes": 6775
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-reconcile-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-reconcile-route.test.ts.txt",
+    "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "bytes": 1927
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-sync.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/personal-plan-customerio-sync.test.ts.txt",
+    "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "bytes": 9715
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-route.test.ts.txt",
+    "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "bytes": 2853
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-sql.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders-sql.test.ts.txt",
+    "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "bytes": 14852
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders.test.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/all-originals/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-after.tap",
+    "sha256": "47832be0c1c14a9385edab3885808f183258946cf7686490d68d82a5d50416a5",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-before.tap",
+    "sha256": "0424e4aa05ac7e447dba1e34ce114acaca8fc3391fceed9d8042ae56471ebb38",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-automatic-copy-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-automatic-copy-fault.tap",
+    "sha256": "702a43c8bf14c2e3164cc6aebe94f04d2d0f94479ba2ab632a7bc6b9c7ab56c3",
+    "bytes": 2722
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-after.tap",
+    "sha256": "da12a6bb289e00b0d113f79ccebea3aa7a0a82429646be297e128b56009d55cc",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-before.tap",
+    "sha256": "36517d0e0c607ce515f75c8a3953215f3c735d1f0344345a3377893afe30032b",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-copy-link-fault.tap",
+    "sha256": "a7c5880d782d20fb1617506170e84eca55457742400afc3edaf98ced0f65c628",
+    "bytes": 2778
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-after.tap",
+    "sha256": "6261b2f13cf10ea23be81e1a82b932e531c1fdb9fc535ed2c8cdf00d5d02379b",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-before.tap",
+    "sha256": "4e74423e0ce78f5f1115258bf49cec2375d125d823a01a7af591e0a0805aa605",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-cancel-data-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-cancel-data-fault.tap",
+    "sha256": "8c7590366b3b1d1c16b612db0193d6090211b869ca634aeb0ff87ab91fd44522",
+    "bytes": 1160
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-after.tap",
+    "sha256": "1f98c417b24896814f6057d6041cec5b86d858b93309fe4a842b0e3d2d8a0473",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-before.tap",
+    "sha256": "f90bfcb49d874c5170190eeb2bfc3976e561b2bafe52f5509ff51f91826e4497",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-first-amount-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-first-amount-fault.tap",
+    "sha256": "601197cc12236798f0c46c9ed666c1bf6c28e156a72170b42a9f9ca93856f451",
+    "bytes": 2772
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-after.tap",
+    "sha256": "f3b28ff46d4e37d6ef4920ffe7eaad9af7f71ca139363604e577234aa48dc5b2",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-before.tap",
+    "sha256": "52d0e72a89e6e3a42d7bea86395410116a8f1f6a57ecc1c41c25da60d595ad39",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-amount-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-amount-fault.tap",
+    "sha256": "b9a665d14f11892137f37ffee0740b6d7bc904ea7f5d9812eaa5a6ea65626d08",
+    "bytes": 8105
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-after.tap",
+    "sha256": "07e887ea461190d87c80ef3ca9ab312b0e71b726535e504ca2ee0157258026e5",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-before.tap",
+    "sha256": "3a491a44a638a4338300a4ebd16db90ef762f97cd5ed3603a00aba75e7f90d28",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-cancel-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-cancel-fault.tap",
+    "sha256": "e43522e4dff906a9c07fd70875d92093fda8d09b55580fad981a43eaf553f8ff",
+    "bytes": 8132
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-after.tap",
+    "sha256": "78b5674abb9881dc51ef27fc7d063cb5aea40fbb74c9a65fed46f76e61e6e1bb",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-before.tap",
+    "sha256": "559b9c9f13a3295dcfebb15081d1c00cd073ff46062824a5aec1524e1cd3d174",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-link-inventory-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-link-inventory-fault.tap",
+    "sha256": "af8c8e99bd0b3aabac9fbbe9d1198107f3470145e842adf54166f6a4131e2c56",
+    "bytes": 1631
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-after.tap",
+    "sha256": "ecd0e3c270ea14254563969786e6d659d0781a6eb0ec91053f07be59318357d0",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-before.tap",
+    "sha256": "ed8295899ef3501bebfc91e0bc69db2461af5fb6c98ed582e8e4c5d63e7a5675",
+    "bytes": 354
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-postal-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-postal-fault.tap",
+    "sha256": "95f29c261755c4f0f277e7ed6f9161b7f5580354d3efe4da682387c22aaa933e",
+    "bytes": 8095
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-after.tap",
+    "sha256": "0703ebe53a4894e299ea9cffd7e5bb445d3925d423e804d9d7494a838e3c35ac",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-before.tap",
+    "sha256": "1c845ef34b8d8191c4b2f9419d3b397e20e66bdabf25190ec68ff1c49bb4c011",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-script-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-script-fault.tap",
+    "sha256": "0bb9b25023b61b6051f5b9a9f91228d7098e65694502865376222ed0bb0cc0c6",
+    "bytes": 8166
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-after.tap",
+    "sha256": "3542d4470a099857ab79633892015131a6691e3f1ba649e49d764586e11df95b",
+    "bytes": 354
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-before.tap",
+    "sha256": "79a66707d998241a2195711eaddc557fe16dcc33d356a6d9594d262f0e9a1fb7",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-html-unresolved-trigger-fault.tap",
+    "sha256": "e7a4f4a2d9c5d43fe879203b5894077e95fabebc0edf1923580eedfbe2c42832",
+    "bytes": 8174
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-after.tap",
+    "sha256": "df132c22b442b08a3f3cd39fd3c360a63fb9c06633a29f95878f12b731542294",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-before.tap",
+    "sha256": "dd2c0be1d733dd6b895771f6ce9c568c63ea88a347c4430a4c20079af7f51658",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-management-data-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-management-data-fault.tap",
+    "sha256": "4493d033eee183bdb0b793479b3f3227b8c9f1963544ecd28f791227759bd7be",
+    "bytes": 1160
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-after.tap",
+    "sha256": "1f732222a0764c246ad57d4fcd963778d2cb778c0e3b7fb6af81e155dd513d03",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-before.tap",
+    "sha256": "3a9972b18f6f8bce7879db1742ef03ea1597fd81ace0efb0aa5840423347403d",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-marketing-contamination-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-marketing-contamination-fault.tap",
+    "sha256": "baf265a430dd7c197467f3f293cf8c97a27a59b74fe1cb1b262431d698376bef",
+    "bytes": 2786
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-after.tap",
+    "sha256": "bc83a31aa8d0b67af8712e6cfce50dd199d5dee4ef7c41969ab6045a5357aee5",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-before.tap",
+    "sha256": "ac2532e28275566187b1fd252808f4a17ed71774d091f6129f3b779414ffaf8b",
+    "bytes": 356
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-renewal-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-renewal-fault.tap",
+    "sha256": "4f63de027c7fbc32143569f2ba5b7a5b389d5ef10f3d385ad4b33f0b48c3e6f0",
+    "bytes": 2775
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-after.tap",
+    "sha256": "a465f815072c499b5d786ce8d6a670ba4a89c59ec96fe0b82b0fb8b193a5c671",
+    "bytes": 357
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-before.tap",
+    "sha256": "84664219b8a6bcc6a9a05fd94cee22b7a292cee19c593414d74661f99951a0d0",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-subject-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-subject-fault.tap",
+    "sha256": "1fc91f707ddc4894aab8cfe381dcaaebc0d4294228cf2f9f0eaf402f0f8a73c3",
+    "bytes": 1134
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-after.tap",
+    "sha256": "e0d7c1c50f7b953411ad09b645f70b0e012532e242a244c74d9657cd37c1acfd",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-before.tap",
+    "sha256": "94fef0169006be43425e758f4e0c16a4556c163e599abff55b4f7bd5ae301d4d",
+    "bytes": 357
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-data-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-data-fault.tap",
+    "sha256": "e1dd41fc7e7bc0adcf1c6b46987945f80c54b175b9d606019a3189215bc2dd01",
+    "bytes": 1112
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-after.tap",
+    "sha256": "598eedad87b1de96bfe7cded39fd641a2183d6b94756e6a4bf0482969a5fd906",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-before.tap",
+    "sha256": "9594a8670e323177143f8b8ddabef41a4ee8b41d85ca557ab640505698aaeb7c",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/annual-trial-time-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/annual-trial-time-fault.tap",
+    "sha256": "67f0994593d23a02968ce5a47b79c476917ce3100d213de8f3e20295a3c2cea4",
+    "bytes": 2770
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/complete.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/complete.json",
+    "sha256": "3634ad0e9f4ee76ff945de3d27b587f866ee5496eb2a196b85d1b026034b1f69",
+    "bytes": 13351
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution/originals/src/lib/billing/trial-reminders-delivery.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution/originals/src/lib/billing/trial-reminders-delivery.ts.txt",
+    "sha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e",
+    "bytes": 8079
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-after.tap",
+    "sha256": "bfbb17f585e722cca5b7c7fd5e61a710ce929568d6f6d62233fed2a202207a79",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-before.tap",
+    "sha256": "6e7d04fdf7636cced0c9ce1d9edcd677add40730a01a57857edf798480079bf5",
+    "bytes": 356
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/dispatcher-message-substitution-fault.tap",
+    "sha256": "1ac8778abce551ecefac148f1afb38e57b878be52fd3b40e6987393966f61bbd",
+    "bytes": 1131
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/intent.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/intent.json",
+    "sha256": "ecb966e772fba6599bdb93c906d7bfdf0aa02a0f5a9d86a365b57e402bceb670",
+    "bytes": 3128
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url/originals/src/lib/analytics/page-url.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url/originals/src/lib/analytics/page-url.ts.txt",
+    "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-after.command.json",
+    "sha256": "0de7b21551168cbf526c34ab7a1fce2a8319798dc70c29eef276d3185c374bf4",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-after.tap",
+    "sha256": "e013601d1ab0dc14940168ff85a145d085ef1c48a9d51bd387446424258497c5",
+    "bytes": 342
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-before.command.json",
+    "sha256": "0de7b21551168cbf526c34ab7a1fce2a8319798dc70c29eef276d3185c374bf4",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-before.tap",
+    "sha256": "c930fa793198bcc536a0203ae924648b071cfc35a924aabe05e225a40459fe2e",
+    "bytes": 342
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-fault.command.json",
+    "sha256": "0de7b21551168cbf526c34ab7a1fce2a8319798dc70c29eef276d3185c374bf4",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/meta-aggregate-url-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/meta-aggregate-url-fault.tap",
+    "sha256": "b2b2095afce0f8d538dba6fa175b402719a2ff418f2d99321ac7394a6eee8fec",
+    "bytes": 2279
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/receipt.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/receipt.json",
+    "sha256": "49dd955aa5c5ce16ff443dbe89c99c78a942d600c7d36e5e331d7a1b25108519",
+    "bytes": 414281
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-after.tap",
+    "sha256": "87256e20c31036d89cbe110af258de4c57afa14983bdddcbdc41356fdc94df54",
+    "bytes": 356
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-before.tap",
+    "sha256": "d4f9aa649b2a67b68d7ba41697e78c85125fc6cad5565a9155b3829df95be665",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-charge-data-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-charge-data-fault.tap",
+    "sha256": "1d3cd75d9b8434a7b086cee7e8f6d1e93a3308ed468cb7d908b866fd29002c7d",
+    "bytes": 1093
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data/originals/src/lib/billing/trial-reminders.ts",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data/originals/src/lib/billing/trial-reminders.ts.txt",
+    "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+    "bytes": 8087
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-after.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-after.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-after.tap",
+    "sha256": "0520a08710269bb5f1ca324c0885149979e326d366b9b4fa297bfaf55fc45df6",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-before.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-before.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-before.tap",
+    "sha256": "12484bff03211c5c7fb34cb8e58db88d182a54e87d99a6a1b3ef16e0ea3e1f7c",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-fault.command.json",
+    "sha256": "6d85c770f26927d1e3f529106e33940f023163f29af612313dde99e09218a1a2",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-mutations-transfer-6wEId5/stripe-subject-data-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6wEId5/stripe-subject-data-fault.tap",
+    "sha256": "0832ed5bd103099ef6ebba76c3817517098f45eed63534499bc1448941505146",
+    "bytes": 1051
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "archived": "operator/operator-pins.json",
+    "sha256": "17b3d560a371e23ff452bedfa05532f665e64b0c56e86a1781149e63ef49e3d3",
+    "bytes": 75987
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-proof.cjs",
+    "archived": "operator/operator-proof.cjs.txt",
+    "sha256": "7358f9d79d532f9c7b01a7a31d3f2a4b91d29d4e4d07f5cb7c67ad984eee71d1",
+    "bytes": 5717
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-readonly-preload.cjs",
+    "archived": "operator/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs",
+    "archived": "operator/operator-run-controls.cjs.txt",
+    "sha256": "2a32edd3d275f359b3a3066c32b84b4d0285222285a48e12dfad282154bfd729",
+    "bytes": 8060
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/operator-selected-closure.json",
+    "archived": "operator/operator-selected-closure.json",
+    "sha256": "80000582f4f34f9a8e8f538ade290ad8245360aa3ed2e80b2e6fe13ffb7d21b3",
+    "bytes": 12600
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/prepare-pins.cjs",
+    "archived": "operator/prepare-pins.cjs.txt",
+    "sha256": "dd416240803debdd607aa418f2f232c83bcc8ed9e82a48163a584daac50ddf92",
+    "bytes": 12934
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/replace-guard.py",
+    "archived": "operator/replace-guard.py.txt",
+    "sha256": "27df059761e489f5cc594f88e954e2cdd4f224b99195d96acbcc1999e5708ace",
+    "bytes": 5239
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/customerio-page-view.test.ts",
+    "archived": "operator/snapshots/before/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/snapshots/before/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+    "bytes": 5586
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/trial-reminders.test.ts",
+    "archived": "operator/snapshots/before/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/customerio-page-view.test.ts",
+    "archived": "operator/snapshots/cut/tests/customerio-page-view.test.ts.txt",
+    "sha256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "bytes": 3204
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/snapshots/cut/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/trial-reminders.test.ts",
+    "archived": "operator/snapshots/cut/tests/trial-reminders.test.ts.txt",
+    "sha256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "bytes": 2094
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/customerio-page-view.test.ts",
+    "archived": "operator/snapshots/transfer/tests/customerio-page-view.test.ts.txt",
+    "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "bytes": 3475
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/trial-reminders-delivery.test.ts",
+    "archived": "operator/snapshots/transfer/tests/trial-reminders-delivery.test.ts.txt",
+    "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "bytes": 7535
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/trial-reminders.test.ts",
+    "archived": "operator/snapshots/transfer/tests/trial-reminders.test.ts.txt",
+    "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "bytes": 4227
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/static-receipt.json",
+    "archived": "operator/static-receipt.json",
+    "sha256": "e8c0e2702317cd56c25bb7718e2679460049e009c874646f56bbb345e67f021f",
+    "bytes": 1229
+  },
+  {
+    "original": "/tmp/test-audit-email94-tools-c435q0q0/tool-code-hashes.json",
+    "archived": "operator/tool-code-hashes.json",
+    "sha256": "413e94f5a2aaae8e4aefa7c05e72d74873a87b93723a7e0beb93471d0dd918f1",
+    "bytes": 1832
+  },
+  {
+    "original": "/tmp/test-audit-email94-independent-preservation.md",
+    "archived": "independent/test-audit-email94-independent-preservation.md",
+    "sha256": "36d9d5a315092a9ec20fd37b5cadd3b89979d8c67de317c69bfc4c6f5e4d7060",
+    "bytes": 11015
+  },
+  {
+    "original": "/tmp/test-audit-email94-independent-static.json",
+    "archived": "independent/test-audit-email94-independent-static.json",
+    "sha256": "c05fced3159d54ea9f164da7c83002d64b0386051f55de1218cdda14df698d66",
+    "bytes": 22604
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-diagnostic-review.json",
+    "archived": "main-review/test-audit-email94-main-diagnostic-review.json",
+    "sha256": "0ba8621c4a2688f7fbd1eeb1f43e1257788d2b0d8a722df6250021e4d55115f2",
+    "bytes": 39887
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-before.tap",
+    "archived": "native/test-audit-email94-main-before.tap",
+    "sha256": "47c01bdc0b1bc72c87ce9a96438a52144b331e34b1259087f551210983c3ccb9",
+    "bytes": 22142
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-before.command.json",
+    "archived": "native/test-audit-email94-main-before.command.json",
+    "sha256": "d914c3e3bd6be25ace2bddb5f0a5c66c387d64c2d72949d6f67e2bc7e75efff3",
+    "bytes": 1082
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-transfer.tap",
+    "archived": "native/test-audit-email94-main-transfer.tap",
+    "sha256": "736a2daa1ef952a3062b8b383af77af952ee2b3bdd30722f64c007bbfeb97cef",
+    "bytes": 22138
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-transfer.command.json",
+    "archived": "native/test-audit-email94-main-transfer.command.json",
+    "sha256": "d914c3e3bd6be25ace2bddb5f0a5c66c387d64c2d72949d6f67e2bc7e75efff3",
+    "bytes": 1082
+  },
+  {
+    "original": "/tmp/test-audit-email94-main-transfer.result.json",
+    "archived": "native/test-audit-email94-main-transfer.result.json",
+    "sha256": "edfc48c2f99b8b08a6842e9add80ef2a1e5e75f385ec600765dfb333e6c14ba6",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-email90-main-cut.tap",
+    "archived": "native/test-audit-email90-main-cut.tap",
+    "sha256": "41b912e06fbfb7008559e0bed27d7a32116f11b3a7a2117dbee05647d3625394",
+    "bytes": 21365
+  },
+  {
+    "original": "/tmp/test-audit-email90-main-cut.command.json",
+    "archived": "native/test-audit-email90-main-cut.command.json",
+    "sha256": "d914c3e3bd6be25ace2bddb5f0a5c66c387d64c2d72949d6f67e2bc7e75efff3",
+    "bytes": 1082
+  },
+  {
+    "original": "/tmp/test-audit-email90-main-cut.result.json",
+    "archived": "native/test-audit-email90-main-cut.result.json",
+    "sha256": "4998a5809a8af2a42f91b573c9f697871d642b6d6908ca87c2b23eefefec043a",
+    "bytes": 173
+  }
+]

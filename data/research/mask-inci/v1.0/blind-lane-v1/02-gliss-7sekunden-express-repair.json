@@ -1,0 +1,139 @@
+{
+  "productId": "02-gliss-7sekunden-express-repair",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions: after shampooing ('Nach dem Shampoonieren'), stated contact time 7 seconds, rinsed ('gründlich ausspülen'). Express Kur at any dwell is in scope (F2); dwell carries zero classification credit and the 7-second segment is dwell_efficacy: unknown.",
+    "evidenceSignals": [
+      "after cleansing",
+      "contact time: 7 s (express)",
+      "rinse"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "Parfum (Fragrance)",
+    "index": 8,
+    "status": "unresolved",
+    "note": "Earliest tail-class species is Parfum @8. Implausible on two limbs: (1) it outranks the formula's sole cationic, Cetrimonium Chloride @9, an architecture-establishing species; (2) the list is solvent/glycol-continuous (Propylene Glycol @1, Alcohol denat. @2, Aqua only @5) — a low-water / non-emulsion architecture where the ~1% band does not sit where an O/W emulsion's does. → tail_marker_unresolved; neither qualify nor disqualify; confidence ≤ moderate; review."
+  },
+  "bondRoute": "gluconamide",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Read on own merits (marker unresolved). S1 fails on the entire list: Cetrimonium Chloride @9 is the only long-chain cationic, so high is unreachable under any marker reading. S2: Myristyl Alcohol @3 (rank-based, marker-independent) → not low. → moderate; capped at moderate by the unresolved marker.",
+      "evidenceSignals": [
+        "S2: Myristyl Alcohol @3",
+        "lipids: Dicaprylyl Carbonate @4, Caprylic/Capric Triglyceride @7"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved (material counter-signal a)",
+        "single cationic on full list"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "No R4b heavy lipid anywhere on the list (Dicaprylyl Carbonate @4 = light ester; Caprylic/Capric Triglyceride @7 read as R4a light) → high unavailable. On its own merits the formula looks lean (single cationic Cetrimonium Chloride @9, no silicone), but §9.2 makes the low leanness test unavailable on an unreadable segment → moderate fallback + uncertain_fields. Because the value rests on the marker state alone, confidence drops to low (§3.1.1 consequence 3).",
+      "evidenceSignals": [
+        "no R4b",
+        "no silicone",
+        "single cationic on full list"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved — low not available",
+        "Caprylic/Capric Triglyceride band (R4a vs R4b) is a reviewer reading, not lexicon-explicit"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Hydrolyzed Keratin @13 is the only R5 species; read on its own merits it fails the material-R5 test either way (single species, not within the first eight ranks), so no protein leg. Gluconamide bond tokens are not R5 (§6 rule 4). Humectants: Glycerin @6 only (Propylene Glycol @1 is the solvent phase, not on the R9 list). No film/acid route for balanced (b). → moisture; confidence capped by the unresolved marker.",
+      "evidenceSignals": [
+        "conditioning/emollient base: Myristyl Alcohol @3, Dicaprylyl Carbonate @4, Caprylic/Capric Triglyceride @7, Cetrimonium Chloride @9"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "Hydrolyzed Keratin @13 single, rank > 8"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "high",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "Named gluconamide pair Hydroxypropylgluconamide @11 + Hydroxypropylammonium Gluconate @12. Nominally after Parfum @8, but that marker is implausible and may not disqualify (§3.1.1 consequence 1); read on ordinal merits the pair outranks the structural fatty alcohols Lauryl Alcohol @14 / Cetyl Alcohol @15. bond_route gluconamide → high, but the above-tail position cannot be confirmed, so confidence is low and the call routes to tail_marker_unresolved review. Alternative reading (pair sub-1 % → bond_route none, repair low) is live. Comparative formula potential only: none of the bond routes has strong independent product-level substantiation at drugstore concentrations, and gluconamide bonding's own literature reports the hair mechanism as unknown.",
+      "evidenceSignals": [
+        "Hydroxypropylgluconamide @11",
+        "Hydroxypropylammonium Gluconate @12"
+      ],
+      "counterSignals": [
+        "marker unresolved: above-tail position of the pair is not established",
+        "Hydrolyzed Keratin @13 single, not a material R5 route"
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair: R7 named bond chemistry (gluconamide pair @11–12) clears the repair route; 'Express-Repair, Ultimate Repair' naming corroborates only. Inherits the bond-position uncertainty → low confidence. If review adopts the sub-1 % reading, repair loses its route and the headline falls to general (no moisture cluster, no film). focus_care_verdict: repair_supported; claim_role: corroborating.",
+      "evidenceSignals": [
+        "gluconamide pair @11–12"
+      ],
+      "counterSignals": [
+        "marker unresolved",
+        "competing fallback: general"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary: humectant cluster absent (Glycerin @6 only), no silicone/polymer optical or smoothing route.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved (Parfum @8: outranks sole cationic Cetrimonium Chloride @9; solvent/glycol-continuous list)",
+        "note": "Implausible marker: may neither qualify nor disqualify; every field capped at moderate, weight and bond/repair at low; routes to human review."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "tail_marker_unresolved",
+    "express_dwell_unknown",
+    "low_confidence_field"
+  ]
+}

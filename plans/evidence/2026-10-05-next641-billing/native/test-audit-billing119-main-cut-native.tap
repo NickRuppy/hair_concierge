@@ -1,0 +1,605 @@
+TAP version 13
+# Subtest: no subscription row summarizes as none
+ok 1 - no subscription row summarizes as none
+  ---
+  duration_ms: 0.769
+  ...
+# Subtest: active trial reports trial status with the trial end date
+ok 2 - active trial reports trial status with the trial end date
+  ---
+  duration_ms: 0.387709
+  ...
+# Subtest: trial canceled before its end reports trial_canceled and keeps the end date
+ok 3 - trial canceled before its end reports trial_canceled and keeps the end date
+  ---
+  duration_ms: 0.101834
+  ...
+# Subtest: converted trial reports active with paid-through as period end
+ok 4 - converted trial reports active with paid-through as period end
+  ---
+  duration_ms: 0.064208
+  ...
+# Subtest: converted trial with pending cancellation reports canceled_at_period_end
+ok 5 - converted trial with pending cancellation reports canceled_at_period_end
+  ---
+  duration_ms: 0.117042
+  ...
+# Subtest: trial in renewal grace reports past_due
+ok 6 - trial in renewal grace reports past_due
+  ---
+  duration_ms: 0.057917
+  ...
+# Subtest: trial that ran out without payment and was canceled reports expired
+ok 7 - trial that ran out without payment and was canceled reports expired
+  ---
+  duration_ms: 0.794958
+  ...
+# Subtest: plain active subscription reports active
+ok 8 - plain active subscription reports active
+  ---
+  duration_ms: 0.13
+  ...
+# Subtest: legacy active subscription without period end reports active
+ok 9 - legacy active subscription without period end reports active
+  ---
+  duration_ms: 0.309
+  ...
+# Subtest: past_due entitlement reports past_due
+ok 10 - past_due entitlement reports past_due
+  ---
+  duration_ms: 0.338125
+  ...
+# Subtest: canceled subscription with remaining access reports canceled_at_period_end
+ok 11 - canceled subscription with remaining access reports canceled_at_period_end
+  ---
+  duration_ms: 0.093333
+  ...
+# Subtest: canceled subscription past its period end reports expired
+ok 12 - canceled subscription past its period end reports expired
+  ---
+  duration_ms: 0.045917
+  ...
+# Subtest: active entitlement within the 24h expiry grace still reports active
+ok 13 - active entitlement within the 24h expiry grace still reports active
+  ---
+  duration_ms: 0.109167
+  ...
+# Subtest: active entitlement just beyond the 24h expiry grace reports expired
+ok 14 - active entitlement just beyond the 24h expiry grace reports expired
+  ---
+  duration_ms: 0.036375
+  ...
+# Subtest: past_due beyond the expiry grace reports expired instead of pending payment
+ok 15 - past_due beyond the expiry grace reports expired instead of pending payment
+  ---
+  duration_ms: 0.045042
+  ...
+# Subtest: reserved trial admission reports trial_pending, not an active trial
+ok 16 - reserved trial admission reports trial_pending, not an active trial
+  ---
+  duration_ms: 0.041
+  ...
+# Subtest: row pick prefers an active subscription over a later-ending canceled row
+ok 17 - row pick prefers an active subscription over a later-ending canceled row
+  ---
+  duration_ms: 0.099292
+  ...
+# Subtest: row pick prefers any access-holding row over lapsed rows
+ok 18 - row pick prefers any access-holding row over lapsed rows
+  ---
+  duration_ms: 0.04325
+  ...
+# Subtest: row pick falls back to the most recently updated lapsed row
+ok 19 - row pick falls back to the most recently updated lapsed row
+  ---
+  duration_ms: 9.04375
+  ...
+# Subtest: trusted match validates owner and freezes original submitted time and verification reference
+ok 20 - trusted match validates owner and freezes original submitted time and verification reference
+  ---
+  duration_ms: 999.754084
+  ...
+# Subtest: late processing of timely unpaid trial cancellation preserves original declaration time and queues provider work once
+ok 21 - late processing of timely unpaid trial cancellation preserves original declaration time and queues provider work once
+  ---
+  duration_ms: 447.384542
+  ...
+# Subtest: charge winning before apply never creates unpaid cancellation; paid and withdrawal require external completion/refund evidence
+ok 22 - charge winning before apply never creates unpaid cancellation; paid and withdrawal require external completion/refund evidence
+  ---
+  duration_ms: 443.331792
+  ...
+# Subtest: withdrawal and extraordinary declarations never enter ordinary-trial cancellation queue or resolve from email state
+ok 23 - withdrawal and extraordinary declarations never enter ordinary-trial cancellation queue or resolve from email state
+  ---
+  duration_ms: 768.274083
+  ...
+# Subtest: a successful in-flight charge after accepted cancellation prevents resolution until refund evidence exists
+ok 24 - a successful in-flight charge after accepted cancellation prevents resolution until refund evidence exists
+  ---
+  duration_ms: 342.793125
+  ...
+# Subtest: null/queued-mail evidence cannot resolve, and direct status updates still require match/completion records
+ok 25 - null/queued-mail evidence cannot resolve, and direct status updates still require match/completion records
+  ---
+  duration_ms: 348.587125
+  ...
+# Subtest: operator commands validate exact scope and require a complete evidence file; they never dispatch providers
+ok 26 - operator commands validate exact scope and require a complete evidence file; they never dispatch providers
+  ---
+  duration_ms: 32.97925
+  ...
+# Subtest: no-cookie public request returns only its own durable receipt after both limits pass
+ok 27 - no-cookie public request returns only its own durable receipt after both limits pass
+  ---
+  duration_ms: 24.137375
+  ...
+# Subtest: database failure cannot report a received declaration or reveal internal account data
+ok 28 - database failure cannot report a received declaration or reveal internal account data
+  ---
+  duration_ms: 0.590542
+  ...
+# Subtest: rate limits and unavailable rate storage stop persistence; address budget is shared across kinds
+ok 29 - rate limits and unavailable rate storage stop persistence; address budget is shared across kinds
+  ---
+  duration_ms: 5.299292
+  ...
+# Subtest: rejects cross-site requests, oversized bodies and account-authority fields before persistence
+ok 30 - rejects cross-site requests, oversized bodies and account-authority fields before persistence
+  ---
+  duration_ms: 1.362958
+  ...
+# Subtest: public legal pages and exact submission API bypass auth, including during auth outages
+ok 31 - public legal pages and exact submission API bypass auth, including during auth outages
+  ---
+  duration_ms: 1.458583
+  ...
+# Subtest: accepts a cancellation without authentication and normalizes only surrounding whitespace/email
+ok 32 - accepts a cancellation without authentication and normalizes only surrounding whitespace/email
+  ---
+  duration_ms: 0.979333
+  ...
+# Subtest: keeps withdrawal separate; rejects cancellation timing/reason and unknown account-authority fields
+ok 33 - keeps withdrawal separate; rejects cancellation timing/reason and unknown account-authority fields
+  ---
+  duration_ms: 0.227333
+  ...
+# Subtest: bounds untrusted text, requires usable contact/contract, and rejects control characters
+ok 34 - bounds untrusted text, requires usable contact/contract, and rejects control characters
+  ---
+  duration_ms: 0.146458
+  ...
+# Subtest: durably saves unmatched declaration and receipt atomically; identical replay keeps original timestamp
+ok 35 - durably saves unmatched declaration and receipt atomically; identical replay keeps original timestamp
+  ---
+  duration_ms: 1070.1945
+  ...
+# Subtest: receipt enqueue failure rolls back acceptance; retry can then succeed
+ok 36 - receipt enqueue failure rolls back acceptance; retry can then succeed
+  ---
+  duration_ms: 459.673208
+  ...
+# Subtest: unprivileged roles cannot read or submit; service can submit but cannot rewrite immutable snapshots
+ok 37 - unprivileged roles cannot read or submit; service can submit but cannot rewrite immutable snapshots
+  ---
+  duration_ms: 441.282042
+  ...
+# Subtest: withdrawal and extraordinary declarations keep their distinct text without asserting refund/effective date
+ok 38 - withdrawal and extraordinary declarations keep their distinct text without asserting refund/effective date
+  ---
+  duration_ms: 365.055166
+  ...
+# Subtest: operator review queue stays pending after receipt delivery and exposes details only to service-role exact reads
+ok 39 - operator review queue stays pending after receipt delivery and exposes details only to service-role exact reads
+  ---
+  duration_ms: 343.676875
+  ...
+# Subtest: read-only operator CLI rejects mutation arguments without calling the database
+ok 40 - read-only operator CLI rejects mutation arguments without calling the database
+  ---
+  duration_ms: 0.510209
+  ...
+# Subtest: billing reconcile declares a 60 second maximum duration
+ok 41 - billing reconcile declares a 60 second maximum duration
+  ---
+  duration_ms: 0.602458
+  ...
+# Subtest: billing reconcile reports bounded browser recovery cleanup without changing payment health
+ok 42 - billing reconcile reports bounded browser recovery cleanup without changing payment health
+  ---
+  duration_ms: 2.0385
+  ...
+# Subtest: browser recovery cleanup calls both purges once with the 500-row bound and isolates errors
+ok 43 - browser recovery cleanup calls both purges once with the 500-row bound and isolates errors
+  ---
+  duration_ms: 0.244834
+  ...
+# Subtest: billing reconcile keeps retry disabled by default and still runs integrity first
+ok 44 - billing reconcile keeps retry disabled by default and still runs integrity first
+  ---
+  duration_ms: 0.252875
+  ...
+# Subtest: billing reconcile runs one-time fulfillment retry only behind its dedicated flag
+ok 45 - billing reconcile runs one-time fulfillment retry only behind its dedicated flag
+  ---
+  duration_ms: 0.292
+  ...
+# Subtest: billing reconcile runs paid-access monitor after one-time fulfillment retry
+ok 46 - billing reconcile runs paid-access monitor after one-time fulfillment retry
+  ---
+  duration_ms: 0.534041
+  ...
+# Subtest: billing reconcile does not start unattended branches before one-time fulfillment finishes
+ok 47 - billing reconcile does not start unattended branches before one-time fulfillment finishes
+  ---
+  duration_ms: 0.447917
+  ...
+# Subtest: default one-time fulfillment dispatchers pass quiz linking to both provider processors
+ok 48 - default one-time fulfillment dispatchers pass quiz linking to both provider processors
+  ---
+  duration_ms: 0.172334
+  ...
+# Subtest: billing reconcile drains all destinations with a limit of ten when enabled
+ok 49 - billing reconcile drains all destinations with a limit of ten when enabled
+  ---
+  duration_ms: 0.51825
+  ...
+# Subtest: billing reconcile isolates and sanitizes one analytics destination rejection
+ok 50 - billing reconcile isolates and sanitizes one analytics destination rejection
+  ---
+  duration_ms: 0.599916
+  ...
+# Subtest: billing reconcile authenticates before entitlement, integrity, analytics, and one-time retry work
+ok 51 - billing reconcile authenticates before entitlement, integrity, analytics, and one-time retry work
+  ---
+  duration_ms: 0.155167
+  ...
+# Subtest: billing reconcile isolates entitlement failure from integrity, analytics, and one-time retry
+ok 52 - billing reconcile isolates entitlement failure from integrity, analytics, and one-time retry
+  ---
+  duration_ms: 0.756208
+  ...
+# Subtest: billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it
+ok 53 - billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it
+  ---
+  duration_ms: 0.339334
+  ...
+# Subtest: billing reconcile isolates one-time fulfillment failure from other branches
+ok 54 - billing reconcile isolates one-time fulfillment failure from other branches
+  ---
+  duration_ms: 0.245583
+  ...
+# Subtest: billing reconcile isolates integrity failure and marks the daily check-in error
+ok 55 - billing reconcile isolates integrity failure and marks the daily check-in error
+  ---
+  duration_ms: 0.283041
+  ...
+# Subtest: OpenAI cleanup reports deletion and isolates database failures
+ok 56 - OpenAI cleanup reports deletion and isolates database failures
+  ---
+  duration_ms: 0.33125
+  ...
+# Subtest: Vercel cannot query or claim Slack deliveries even when explicitly requested
+ok 57 - Vercel cannot query or claim Slack deliveries even when explicitly requested
+  ---
+  duration_ms: 1.321333
+  ...
+# Subtest: EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window
+ok 58 - EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window
+  ---
+  duration_ms: 0.573791
+  ...
+# Subtest: hasCurrentBillingAccess: past_due row exactly at the grace boundary has access
+ok 59 - hasCurrentBillingAccess: past_due row exactly at the grace boundary has access
+  ---
+  duration_ms: 1.420958
+  ...
+# Subtest: hasCurrentBillingAccess: past_due row just past the grace boundary has no access
+ok 60 - hasCurrentBillingAccess: past_due row just past the grace boundary has no access
+  ---
+  duration_ms: 0.286417
+  ...
+# Subtest: hasCurrentBillingAccess: canceled row with cancel_at_period_end until a future period end has access
+ok 61 - hasCurrentBillingAccess: canceled row with cancel_at_period_end until a future period end has access
+  ---
+  duration_ms: 0.227458
+  ...
+# Subtest: hasCurrentBillingAccess: canceled row past its period end has no access (existing behavior preserved)
+ok 62 - hasCurrentBillingAccess: canceled row past its period end has no access (existing behavior preserved)
+  ---
+  duration_ms: 0.130333
+  ...
+# Subtest: hasCurrentBillingAccess: canceled row without cancel_at_period_end has no access regardless of period end
+ok 63 - hasCurrentBillingAccess: canceled row without cancel_at_period_end has no access regardless of period end
+  ---
+  duration_ms: 0.136042
+  ...
+# Subtest: hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access
+ok 64 - hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access
+  ---
+  duration_ms: 0.148917
+  ...
+# Subtest: hasCurrentLegacyProfileAccess: active profile 12 hours past period end is within grace
+ok 65 - hasCurrentLegacyProfileAccess: active profile 12 hours past period end is within grace
+  ---
+  duration_ms: 0.099708
+  ...
+# Subtest: hasCurrentLegacyProfileAccess: active profile with null period end keeps existing (grants access) behavior
+ok 66 - hasCurrentLegacyProfileAccess: active profile with null period end keeps existing (grants access) behavior
+  ---
+  duration_ms: 0.353583
+  ...
+# Subtest: hasCurrentLegacyProfileAccess: canceled profile past period end has no access (existing behavior preserved)
+ok 67 - hasCurrentLegacyProfileAccess: canceled profile past period end has no access (existing behavior preserved)
+  ---
+  duration_ms: 0.623667
+  ...
+# Subtest: hasCurrentLegacyProfileAccess: canceled profile before a future period end has access
+ok 68 - hasCurrentLegacyProfileAccess: canceled profile before a future period end has access
+  ---
+  duration_ms: 0.119291
+  ...
+# Subtest: settlement grace skips recent provider success without local lookup
+ok 69 - settlement grace skips recent provider success without local lookup
+  ---
+  duration_ms: 1.30325
+  ...
+# Subtest: subscription provider success requires billing success and active entitlement
+ok 70 - subscription provider success requires billing success and active entitlement
+  ---
+  duration_ms: 1.639292
+  ...
+# Subtest: duplicate provider representations produce one finding per subscription invariant
+ok 71 - duplicate provider representations produce one finding per subscription invariant
+  ---
+  duration_ms: 0.793084
+  ...
+# Subtest: local funnel classification promotes historical provider findings to internal tests
+ok 72 - local funnel classification promotes historical provider findings to internal tests
+  ---
+  duration_ms: 0.430417
+  ...
+# Subtest: one-time provider success depends only on its paid purchase record
+ok 73 - one-time provider success depends only on its paid purchase record
+  ---
+  duration_ms: 0.686834
+  ...
+# Subtest: provider failure conflicts only with same-commerce billing success, not retained access
+ok 74 - provider failure conflicts only with same-commerce billing success, not retained access
+  ---
+  duration_ms: 0.306459
+  ...
+# Subtest: provider lookup errors become monitor failures, not payment findings
+ok 75 - provider lookup errors become monitor failures, not payment findings
+  ---
+  duration_ms: 0.134167
+  ...
+# Subtest: incomplete pagination and cap overflow are monitor failures and only the hard cap is checked
+ok 76 - incomplete pagination and cap overflow are monitor failures and only the hard cap is checked
+  ---
+  duration_ms: 0.849542
+  ...
+# Subtest: deadline exhaustion stops remaining checks and reports monitor failure
+ok 77 - deadline exhaustion stops remaining checks and reports monitor failure
+  ---
+  duration_ms: 0.306916
+  ...
+# Subtest: candidate checks are bounded to concurrency four by default
+ok 78 - candidate checks are bounded to concurrency four by default
+  ---
+  duration_ms: 2.905
+  ...
+# Subtest: reporter throws are contained and do not abort the scan
+ok 79 - reporter throws are contained and do not abort the scan
+  ---
+  duration_ms: 0.187041
+  ...
+# Subtest: result and reporter payloads expose only aggregates and bounded opaque descriptors
+ok 80 - result and reporter payloads expose only aggregates and bounded opaque descriptors
+  ---
+  duration_ms: 0.232542
+  ...
+# Subtest: PayPal test classification dry-run is PII-safe and does not write
+ok 81 - PayPal test classification dry-run is PII-safe and does not write
+  ---
+  duration_ms: 1.280042
+  ...
+# Subtest: PayPal test classification apply requires every production gate
+ok 82 - PayPal test classification apply requires every production gate
+  ---
+  duration_ms: 1.236292
+  ...
+# Subtest: PayPal test classification applies a metadata-only optimistic update
+ok 83 - PayPal test classification applies a metadata-only optimistic update
+  ---
+  duration_ms: 3.196375
+  ...
+# Subtest: PayPal test classification refuses ambiguous, post-cutover, or non-PayPal rows
+ok 84 - PayPal test classification refuses ambiguous, post-cutover, or non-PayPal rows
+  ---
+  duration_ms: 0.292
+  ...
+# Subtest: payment monitor reserves response time around its 40 second work deadline
+ok 85 - payment monitor reserves response time around its 40 second work deadline
+  ---
+  duration_ms: 0.501916
+  ...
+# Subtest: paid-access finding live tag follows the finding provider only
+ok 86 - paid-access finding live tag follows the finding provider only
+  ---
+  duration_ms: 0.07725
+  ...
+# Subtest: payment monitor uses fixed-size constant-time auth comparison input
+ok 87 - payment monitor uses fixed-size constant-time auth comparison input
+  ---
+  duration_ms: 0.506292
+  ...
+# Subtest: payment monitor rejects auth failures before rate limit, work, or check-in
+ok 88 - payment monitor rejects auth failures before rate limit, work, or check-in
+  ---
+  duration_ms: 0.898542
+  ...
+# Subtest: payment monitor rate limits before payment work or Sentry check-in
+ok 89 - payment monitor rate limits before payment work or Sentry check-in
+  ---
+  duration_ms: 0.245625
+  ...
+# Subtest: payment monitor runs with a 40 second deadline and returns aggregate-only counters
+ok 90 - payment monitor runs with a 40 second deadline and returns aggregate-only counters
+  ---
+  duration_ms: 0.467959
+  ...
+# Subtest: production monitor mode requires start and finish check-in receipts plus a flushed transport
+ok 91 - production monitor mode requires start and finish check-in receipts plus a flushed transport
+  ---
+  duration_ms: 0.189083
+  ...
+# Subtest: payment monitor contains runner and Sentry failures without exposing errors
+ok 92 - payment monitor contains runner and Sentry failures without exposing errors
+  ---
+  duration_ms: 0.392458
+  ...
+# Subtest: payment monitor returns safe failure categories and flushes telemetry before responding
+ok 93 - payment monitor returns safe failure categories and flushes telemetry before responding
+  ---
+  duration_ms: 0.540917
+  ...
+# Subtest: payment monitor fails closed when an emitted incident has no Sentry receipt
+ok 94 - payment monitor fails closed when an emitted incident has no Sentry receipt
+  ---
+  duration_ms: 0.416542
+  ...
+# Subtest: payment monitor uses uncapped incident counters when requiring Sentry receipts
+ok 95 - payment monitor uses uncapped incident counters when requiring Sentry receipts
+  ---
+  duration_ms: 0.192792
+  ...
+# Subtest: payment monitor runs paid-access branch with aggregate-only output
+ok 96 - payment monitor runs paid-access branch with aggregate-only output
+  ---
+  duration_ms: 0.311584
+  ...
+# Subtest: payment monitor branch emits paid-access findings when runner returns no receipt
+ok 97 - payment monitor branch emits paid-access findings when runner returns no receipt
+  ---
+  duration_ms: 0.434042
+  ...
+# Subtest: payment monitor fails closed on partial paid-access receipts without duplicate reporting
+ok 98 - payment monitor fails closed on partial paid-access receipts without duplicate reporting
+  ---
+  duration_ms: 0.298583
+  ...
+# Subtest: payment monitor fails closed when paid-access finding has no Sentry receipt
+ok 99 - payment monitor fails closed when paid-access finding has no Sentry receipt
+  ---
+  duration_ms: 0.17525
+  ...
+# Subtest: payment monitor preserves a canonical paid-access conflict category
+ok 100 - payment monitor preserves a canonical paid-access conflict category
+  ---
+  duration_ms: 0.201416
+  ...
+# Subtest: payment monitor omits unexpected runtime failure categories from its response
+ok 101 - payment monitor omits unexpected runtime failure categories from its response
+  ---
+  duration_ms: 0.117208
+  ...
+# Subtest: local trigger encloses the server monitor deadline
+ok 102 - local trigger encloses the server monitor deadline
+  ---
+  duration_ms: 1.172375
+  ...
+# Subtest: runs the HTTPS monitor with a Keychain secret that never enters argv or logs
+ok 103 - runs the HTTPS monitor with a Keychain secret that never enters argv or logs
+  ---
+  duration_ms: 22.277625
+  ...
+# Subtest: rejects non-HTTPS endpoints before Keychain access
+ok 104 - rejects non-HTTPS endpoints before Keychain access
+  ---
+  duration_ms: 0.469875
+  ...
+# Subtest: rejects every HTTPS host, path, query, or fragment except the production monitor route
+ok 105 - rejects every HTTPS host, path, query, or fragment except the production monitor route
+  ---
+  duration_ms: 0.192209
+  ...
+# Subtest: returns a nonzero, secret-free result for Keychain, network, and HTTP failures
+ok 106 - returns a nonzero, secret-free result for Keychain, network, and HTTP failures
+  ---
+  duration_ms: 2.700583
+  ...
+# Subtest: logs only privacy-safe monitor failure categories from the authenticated endpoint
+ok 107 - logs only privacy-safe monitor failure categories from the authenticated endpoint
+  ---
+  duration_ms: 0.375041
+  ...
+# Subtest: logs paid-access monitor failures with stable dedupe
+ok 108 - logs paid-access monitor failures with stable dedupe
+  ---
+  duration_ms: 0.293625
+  ...
+# Subtest: requires the endpoint argument and does not place a Keychain value in process arguments
+ok 109 - requires the endpoint argument and does not place a Keychain value in process arguments
+  ---
+  duration_ms: 0.093792
+  ...
+# Subtest: the durable declaration starts locally queued and only a later matching provider confirmation can mark it sent
+ok 110 - the durable declaration starts locally queued and only a later matching provider confirmation can mark it sent
+  ---
+  duration_ms: 637.765083
+  ...
+# Subtest: a Customer.io acknowledgement records queued, never sent, and uses the declared recipient
+ok 111 - a Customer.io acknowledgement records queued, never sent, and uses the declared recipient
+  ---
+  duration_ms: 15.580167
+  ...
+# Subtest: missing receipt-template configuration fails closed before a declaration is claimed
+ok 112 - missing receipt-template configuration fails closed before a declaration is claimed
+  ---
+  duration_ms: 0.181333
+  ...
+# Subtest: missing Customer.io credentials fail closed before a declaration is claimed
+ok 113 - missing Customer.io credentials fail closed before a declaration is claimed
+  ---
+  duration_ms: 0.079375
+  ...
+# Subtest: ambiguous Customer.io outcomes are parked for support and are never blindly retried
+ok 114 - ambiguous Customer.io outcomes are parked for support and are never blindly retried
+  ---
+  duration_ms: 0.419709
+  ...
+# Subtest: Customer.io HTTP failures are parked without retaining provider text because acceptance is unconfirmed
+ok 115 - Customer.io HTTP failures are parked without retaining provider text because acceptance is unconfirmed
+  ---
+  duration_ms: 0.220834
+  ...
+# Subtest: a malformed claim aborts the whole invocation before any receipt can be sent
+ok 116 - a malformed claim aborts the whole invocation before any receipt can be sent
+  ---
+  duration_ms: 0.159875
+  ...
+# Subtest: a settlement failure after a queue acknowledgement aborts without a second settlement
+ok 117 - a settlement failure after a queue acknowledgement aborts without a second settlement
+  ---
+  duration_ms: 0.29925
+  ...
+# Subtest: the worker uses one bounded active claim and a lease longer than its route budget
+ok 118 - the worker uses one bounded active claim and a lease longer than its route budget
+  ---
+  duration_ms: 0.2685
+  ...
+# Subtest: the cron route requires its secret and exposes aggregates only
+ok 119 - the cron route requires its secret and exposes aggregates only
+  ---
+  duration_ms: 1.24625
+  ...
+1..119
+# tests 119
+# suites 0
+# pass 119
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4015.267041

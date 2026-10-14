@@ -1,0 +1,10 @@
+{
+  "authorizedBy": "Parent explicit adoption ONLY shared Git config hash; HEAD/branch independently reverified; no source/test/dependency repin",
+  "file": "/Users/nick/AI_work/hair_conscierge/.git/config",
+  "oldSHA256": "70c63e8c0a3215a4fae7e4ce3157e36e08c6649054e14886c0034cb0a134b6d0",
+  "newSHA256": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1",
+  "priorPinsSHA256": "c90b62d704a00aabbe3c482e1e89ae9051a3a62151b358fc73a577ae145ff6f5",
+  "pinsSHA256": "c03eb01e9d76ae5743ec83f15a64de8a486803caf7f1ce4e0dc37478be4f59d9",
+  "change": "exact one identity hash and two dependent entrypoint PIN_SHA literals",
+  "limits": "Old Git config bytes unavailable; unrelated shared branch tracking entries reported by main; no provenance claim for change."
+}

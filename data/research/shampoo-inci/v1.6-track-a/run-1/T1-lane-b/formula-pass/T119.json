@@ -1,0 +1,164 @@
+{
+  "blindId": "T119",
+  "inciFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 27,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "PARFUM / FRAGRANCE at 27 (last): positions 1-26 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffers Cocamidopropyl Betaine (5) and Coco-Betaine (10), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met: early silicone (Dimethicone 6), cationic polymer (Guar HPTC 8), pearlizing route (Glycol Distearate 3) and a closed-list humectant (Sodium Hyaluronate 13); late Amodimethicone (23) supports -> high.",
+      "counterSignal": "The humectant element is a single, probably trace, hyaluronate.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "W1 applies: C1 sulfate chassis with prominent buffers, deposition = silicone (Dimethicone 6) + cationic guar (8) + late amodimethicone (23), no further converging family (glycol distearate, PEG-100 stearate, steareth-6 and carbomer are excluded) and no W-RICH -> moderate.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Dimethicone 6 + guar 8 + amodimethicone 23."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Silicone/guar coacervate plus amino-silicone."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "Exact W1 set in a C1 chassis.",
+      "whyNotNeighborBand": "Not high: W1 conditions (a)-(c) all hold, no prominent payload lipid, protein or film former. Not low: an early silicone with a cationic guar is a deliberate deposition system.",
+      "limitingFactor": "None material (settled W1 pattern)."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole; salicylic acid alone does not count.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "note": "Silicone/guar conditioning is generic; a single hyaluronate token is not a humectant cluster."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes via humectant list: Sodium Hyaluronate (13) prominent. No E4 comfort route."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE comfort route fails; S-DRY passes; S-OILY clause fails on conditioningLevel high.",
+  "formulaFacts": [
+    {
+      "ingredient": "SODIUM LAURETH SULFATE",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "GLYCOL DISTEARATE",
+      "position": 3,
+      "role": "pearlizing route (C2); excluded from weight"
+    },
+    {
+      "ingredient": "COCAMIDOPROPYL BETAINE",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "DIMETHICONE",
+      "position": 6,
+      "role": "silicone, prominent/early"
+    },
+    {
+      "ingredient": "CI 60730 / EXT. VIOLET 2",
+      "position": 7,
+      "role": "colorant"
+    },
+    {
+      "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "position": 8,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "COCAMIDE MEA",
+      "position": 9,
+      "role": "foam booster, not a route"
+    },
+    {
+      "ingredient": "COCO-BETAINE",
+      "position": 10,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "SODIUM HYALURONATE",
+      "position": 13,
+      "role": "humectant (C2/E4 list)"
+    },
+    {
+      "ingredient": "STEARETH-6",
+      "position": 14,
+      "role": "emulsifier, excluded"
+    },
+    {
+      "ingredient": "PEG-100 STEARATE",
+      "position": 17,
+      "role": "PEG emulsifier, excluded"
+    },
+    {
+      "ingredient": "SALICYLIC ACID",
+      "position": 20,
+      "role": "not a dandruff active (Section 11)"
+    },
+    {
+      "ingredient": "AMODIMETHICONE",
+      "position": 23,
+      "role": "amino-silicone, late"
+    },
+    {
+      "ingredient": "CARBOMER",
+      "position": 24,
+      "role": "anionic acrylate thickener, excluded (6.4)"
+    },
+    {
+      "ingredient": "HEXYLENE GLYCOL",
+      "position": 26,
+      "role": "solvent"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

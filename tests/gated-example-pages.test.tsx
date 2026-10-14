@@ -13,62 +13,12 @@ import { GatedRoutineExample } from "../src/components/gated-preview/gated-routi
 import { GATED_EXAMPLE_COPY } from "../src/lib/gated-preview/example-copy"
 import { GATED_EXAMPLE_PRODUCTS } from "../src/lib/gated-preview/fixtures/example-products"
 import { GATED_CHAT_EXAMPLE_MESSAGES } from "../src/lib/gated-preview/fixtures/chat-example"
-import { resolveGatedPageMode, shouldRenderGatedExample } from "../src/lib/gated-preview/gate"
+import { resolveGatedPageMode } from "../src/lib/gated-preview/gate"
 import {
   loadAuthenticatedAppAccessState,
   loadAuthenticatedAppPageTier,
-  resolveAuthenticatedAppPageTier,
 } from "../src/lib/auth/authenticated-app-route-access"
 import { PREMIUM_FEATURES } from "../src/lib/premium-sheet/context"
-
-/**
- * T12: the free tier's Routine / Anwendung / Chat are the REAL components fed static
- * example data, framed by T11's `GatedPreview`. These tests pin the two halves that a
- * refactor could silently break: which tier gets the example at all, and what the example
- * actually says.
- */
-
-// --- tier branching ---------------------------------------------------------
-
-test("only the free tier renders the example", async () => {
-  assert.equal(await shouldRenderGatedExample(async () => "free"), true)
-  assert.equal(await shouldRenderGatedExample(async () => "premium"), false)
-})
-
-// PR3 Codex fix (X1): the billing reads behind the tier composite throw on a query error
-// instead of returning "unavailable" (see src/lib/billing/subscriptions.ts,
-// src/lib/billing/purchases.ts). Uncaught, that throw used to become a hard server error on
-// /chat and reject the whole Promise.all on /routine and /anwendung. `shouldRenderGatedExample`
-// must fail closed to premium (never free, never a rethrow) for any tier-lookup failure,
-// exactly like a returned "unavailable" already does.
-test("a thrown tier-lookup failure fails closed to premium, not a rethrow", async () => {
-  const rendersExample = await shouldRenderGatedExample(async () => {
-    throw new Error("billing read failed")
-  })
-  assert.equal(rendersExample, false)
-})
-
-test("a thrown failure anywhere in the real tier composite (getUser or the paid-access read) still fails closed to premium", async () => {
-  const throwingGetUser = await shouldRenderGatedExample(() =>
-    resolveAuthenticatedAppPageTier({
-      getUser: async () => {
-        throw new Error("auth.getUser() unavailable")
-      },
-      resolvePaidAccess: async () => "denied",
-    }),
-  )
-  assert.equal(throwingGetUser, false)
-
-  const throwingBillingRead = await shouldRenderGatedExample(() =>
-    resolveAuthenticatedAppPageTier({
-      getUser: async () => ({ id: "user-1", email: "user@example.com" }),
-      resolvePaidAccess: async () => {
-        throw new Error("findCurrentBillingSubscriptionForUser: query failed")
-      },
-    }),
-  )
-  assert.equal(throwingBillingRead, false)
-})
 
 test("with the freemium flag off the tier resolves premium without any lookup", async () => {
   const previous = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
@@ -78,7 +28,6 @@ test("with the freemium flag off the tier resolves premium without any lookup", 
     // returns before `createClient()`, which is why this call can run at all in a plain
     // node test with no request context.
     assert.equal(await loadAuthenticatedAppPageTier(), "premium")
-    assert.equal(await shouldRenderGatedExample(), false)
     // T17: the three pages branch on `resolveGatedPageMode`, whose flag-off short-circuit
     // is the same one — `"premium"` before any client is created, so neither the tier
     // composite nor the keepsake read happens.
@@ -340,13 +289,11 @@ test("the Chat example is a short, capability-true transcript through the real b
   // No feedback affordance and no product card: both need live handlers.
   assert.doesNotMatch(html, /Antwort positiv bewerten/)
   assert.doesNotMatch(html, /weitere Empfehlungen/)
-})
 
-test("no example message carries a timestamp — a formatted one would mismatch on hydration", () => {
   for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {
     assert.equal(message.created_at, "")
   }
-  assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground">\d\d:\d\d/)
+  assert.doesNotMatch(html, /type-caption text-muted-foreground">\d\d:\d\d/)
 })
 
 test("every example is framed by GatedPreview with its own label, benefit and one CTA", () => {

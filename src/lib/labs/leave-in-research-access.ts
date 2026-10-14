@@ -15,14 +15,15 @@ import {
 
 type Environment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV">>
 
-// Standard v1.1 (T20): the fixture is the v1.1 overlay of the frozen v1.0
-// fixture (scripts/leave-in-research/build-lab-fixture-v1.1.mjs). The local,
-// gitignored review state and rework queue stay where Nick's approvals already
-// live, in the v1.0 artifact root — so every approval on an untouched property
-// still matches by fingerprint, and only the reopened care_direction rows need
-// review again.
+// Standard v1.2 (T21 heat activation): the fixture is the v1.2 overlay of the
+// v1.1 fixture (scripts/leave-in-research/build-v1.2-calibration.ts), which is
+// itself the v1.1 overlay of the frozen v1.0 fixture. The local, gitignored
+// review state and rework queue stay where Nick's approvals already live, in the
+// v1.0 artifact root — so every approval on an untouched property still matches
+// by fingerprint; only slot 13 (Neqi) gains the heat-activation row for HA-8
+// review.
 const ARTIFACT_DIRECTORY = join(process.cwd(), "data/research/leave-in-inci/v1.0")
-const FIXTURE_PATH = join(process.cwd(), "data/research/leave-in-inci/v1.1/lab-fixture.json")
+const FIXTURE_PATH = join(process.cwd(), "data/research/leave-in-inci/v1.2/lab-fixture.json")
 
 const hashSchema = z.string().regex(/^[a-f0-9]{64}$/)
 
@@ -164,7 +165,7 @@ const fixtureSchema = z
     keyVersion: z.string().trim().min(1),
     derivedFromRun: z.string().trim().min(1),
     // Approval persistence key only (compared by the staleness check); never
-    // rendered. The v1.1 overlay fixture keeps the v1.0 stamp so untouched
+    // rendered. The v1.1/v1.2 overlay fixtures keep the v1.0 stamp so untouched
     // approvals survive — the visible standard is `effectiveStandard`.
     standardVersion: z.string().trim().min(1),
     effectiveStandard: z

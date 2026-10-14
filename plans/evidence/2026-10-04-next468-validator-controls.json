@@ -1,0 +1,255 @@
+[
+  {
+    "id": "D1-broad-false-lookup-demand",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateNamedProductLookupRequired",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    !modelRequiresLookup &&\n    !deterministicContextRequiresLookup &&\n    !visibleNamedProductClaimRequiresLookup",
+    "to": "    false &&\n    !modelRequiresLookup &&\n    !deterministicContextRequiresLookup &&\n    !visibleNamedProductClaimRequiresLookup",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator accepts explicit one and two product recommendation counts"
+    },
+    "phase": "cut",
+    "intendedAssertion": "First one.ok=true fails because broad base recommendation now gets product_lookup_required.",
+    "sensitivityLimit": "Existing exact base input; no assertion on explicit-one metadata claimed.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "D2-active-alternatives-exemption-removed",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateNamedProductLookupRequired",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  if (isGroundedActiveProductAlternativesAnswer(answer, context)) return",
+    "to": "  if (false && isGroundedActiveProductAlternativesAnswer(answer, context)) return",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator diet softens unknown hard rule metadata on grounded product alternatives"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Keeper ok=true fails for product_lookup_required. Unknown-rule warning cannot soften this error.",
+    "sensitivityLimit": "Need inspect targeted error, not mere process nonzero; a type/parse error is invalid proof.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "D3-informational-offer-demands-action",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validatePendingFollowupAction",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  if (nextStepOffer && !answer.pending_followup_action && hasConfirmableOffer) {",
+    "to": "  if (nextStepOffer && !answer.pending_followup_action) {",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "AgentV2 validator strips hidden pending action behind informational next step"
+    },
+    "phase": "cut",
+    "intendedAssertion": "After hidden action is actually removed, recollection reports pending_followup_action_missing; keeper ok/zero-errors fail.",
+    "sensitivityLimit": "Only proves the informational null-action contract and actual revalidation, not all offer grammar.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "D5-natural-product-prose-overblocked",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateProductAnswerShape",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  if (rawPropertyPattern.test(userFacing)) {",
+    "to": "  if (userFacing.length > 0 || rawPropertyPattern.test(userFacing)) {",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator accepts explicit one and two product recommendation counts"
+    },
+    "phase": "cut",
+    "intendedAssertion": "First one.ok=true fails for product_answer_shape when the raw-property filter incorrectly blocks all prose.",
+    "sensitivityLimit": "Natural positive-format acceptance, no claim that different natural wording defines a new input branch.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "D4-missing-recommended-names-ignored",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateVisiblePayloadRendered",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    if (unrenderedProductNames.length > 0) {",
+    "to": "    if (unrenderedProductNames.length > 99) {",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator blocks incomplete product prose that omits a final recommendation"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Missing Second Shampoo finding disappears, strengthened keeper fails; baseline keeper ok=false should also fail as consistent input has no other blocker.",
+    "sensitivityLimit": "",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "C1-found-exact-treated-unresolved",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateProductLookupResultClaims",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    isAgentV2ProductLookupUnresolvedStatus(result.status),",
+    "to": "    result.status === \"found_exact\" || isAgentV2ProductLookupUnresolvedStatus(result.status),",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator allows claims for exact lookup products when another lookup is unresolved"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Exact shampoo becomes relevant unresolved result; retained absence assertion fails.",
+    "sensitivityLimit": "Positive found-exact acceptance within mixed-list boundary; no claim this executes empty-list fast path.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": null,
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "C1-full-validity-guidance-reversed",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateRequiredGuidance",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "getRequiredGuidancePackageIds(answer, context).filter((id) => !loaded.has(id))",
+    "to": "getRequiredGuidancePackageIds(answer, context).filter((id) => loaded.has(id))",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator allows claims for exact lookup products when another lookup is unresolved"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Transferred ok=true fails on required_guidance_loaded; old keeper checking only absence of product_lookup_unresolved remains green.",
+    "sensitivityLimit": "Run original keeper separately before transfer if demonstrating strengthening; mutation is reversed loaded-membership predicate, not a mock.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": "Expected old selected keeper GREEN, donor2115 RED, transferred keeper RED.",
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "F2-routine-missing-name-masked-by-offer",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "validateVisiblePayloadRendered",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    if (unrenderedProductNames.length > 0) {",
+    "to": "    if (unrenderedProductNames.length > 0 && !answer.routine_context.active) {",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator blocks incomplete routine product deep dive prose that omits the product"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Transferred missingProduct assertion fails while the unrelated hidden-offer visible_payload_not_rendered remains.",
+    "sensitivityLimit": "No new input; demonstrates old generic-ID rejection is false green.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": "Expected old selected keeper GREEN, strengthened keeper RED.",
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "F3-wrong-memory-record-accepted",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "sanitizeSessionMemoryWrites",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    accepted.push(memory)",
+    "to": "    accepted.push(AgentV2SessionMemoryWriteSchema.parse(record.session_memory_writes.at(-1)))",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator drops invalid session memory without blocking valid final answer"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Exact accepted and sanitized memory contents fail: wrong array element (unverified hair-texture write) was retained with same lengths.",
+    "sensitivityLimit": "Mutation models choosing the wrong record after validating current record; counts and dropped validator ID are unchanged.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": "Expected old selected keeper GREEN, strengthened keeper RED.",
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "F3-wrong-memory-drop-attribution",
+    "file": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "sourceSha256": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "anchor": {
+      "kind": "function",
+      "scope": "sanitizeSessionMemoryWrites",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        path: [\"session_memory_writes\", index, \"evidence_quote\"],\n        write: rawWrite,",
+    "to": "        path: [\"session_memory_writes\", index, \"evidence_quote\"],\n        write: record.session_memory_writes[0],",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator drops invalid session memory without blocking valid final answer"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Exact dropped.write fails when receipt attributes the rejected second write to the first valid write.",
+    "sensitivityLimit": "Actual owner receipt mutation, not fixture-owned behavior.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": "Expected old selected keeper GREEN, strengthened keeper RED.",
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  },
+  {
+    "id": "F1-extra-field-strictness-diagnostic",
+    "file": "src/lib/agent-v2/contracts.ts",
+    "sourceSha256": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "anchor": {
+      "kind": "declaration",
+      "scope": "AgentV2ProductAssessmentPayloadSchema",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "export const AgentV2ProductAssessmentPayloadSchema = z.strictObject({",
+    "to": "export const AgentV2ProductAssessmentPayloadSchema = z.object({",
+    "test": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator rejects recommendation-card payload fields for product assessment"
+    },
+    "phase": "before",
+    "intendedAssertion": "EXPECTED GREEN for this selected original test: missing assessment_kind and assessed_product_ids still cause terminal_schema.",
+    "sensitivityLimit": "Diagnostic of current weak oracle, NOT a red mutation or deletion proof. Keep donor; no repair/input change in staging.",
+    "staticFileOccurrences": 1,
+    "expectedOldAssertion": "Expected original test GREEN under unsafe strictness relaxation; do not count as a passed red control.",
+    "restoration": "Main only: save byte-exact original; require source hash and unique anchor; write one fault; execute only selected native declaration; finally restore original bytes and verify SHA256 even on failure. No concurrent test/source writer."
+  }
+]

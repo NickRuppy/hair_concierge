@@ -2,10 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  resolveScanPageTier,
+  resolveAuthenticatedAppPageTier,
   resolveScanRouteAccess,
   resolveTrackerRouteAccess,
-  type ScanPageTierDependencies,
+  type AuthenticatedAppPageTierDependencies,
   type ScanRouteAccessDependencies,
   type TrackerRouteAccessDependencies,
 } from "../src/lib/auth/authenticated-app-route-access"
@@ -60,8 +60,12 @@ test("tracker boundary fails closed when the authenticated-user read is unavaila
 })
 
 test("scan boundary allows an authenticated user with a completed quiz", async () => {
-  const result = await resolveScanRouteAccess(scanDependencies())
-  assert.deepEqual(result, { kind: "allow" })
+  for (const profile of [completeQuizProfile, { ...completeQuizProfile, scalp_condition: null }]) {
+    const result = await resolveScanRouteAccess(
+      scanDependencies({ getHairProfile: async () => profile }),
+    )
+    assert.deepEqual(result, { kind: "allow" })
+  }
 })
 
 test("scan boundary redirects without an authenticated user", async () => {
@@ -77,12 +81,20 @@ test("scan boundary redirects when the quiz diagnostics are incomplete", async (
 })
 
 test("scan boundary redirects when a single quiz field is missing", async () => {
-  const result = await resolveScanRouteAccess(
-    scanDependencies({
-      getHairProfile: async () => ({ ...completeQuizProfile, density: null }),
-    }),
-  )
-  assert.deepEqual(result, { kind: "redirect", href: "/quiz" })
+  const missingDensityProfile: Partial<typeof completeQuizProfile> = { ...completeQuizProfile }
+  delete missingDensityProfile.density
+  for (const profile of [
+    missingDensityProfile,
+    { ...completeQuizProfile, density: null },
+    { ...completeQuizProfile, chemical_treatment: [] },
+    { ...completeQuizProfile, concerns: null },
+    { ...completeQuizProfile, concerns: undefined },
+  ]) {
+    const result = await resolveScanRouteAccess(
+      scanDependencies({ getHairProfile: async () => profile }),
+    )
+    assert.deepEqual(result, { kind: "redirect", href: "/quiz" })
+  }
 })
 
 test("scan boundary fails closed when the authenticated-user read is unavailable", async () => {
@@ -107,25 +119,18 @@ test("scan boundary fails closed when the hair-profile read is unavailable", asy
   assert.deepEqual(result, { kind: "redirect", href: "/quiz" })
 })
 
-// --- resolveScanPageTier (PR2 review fix, C1) --------------------------------
+// --- resolveAuthenticatedAppPageTier (PR2 review fix, C1) --------------------------------
 
-function tierDependencies(overrides: Partial<ScanPageTierDependencies> = {}) {
+function tierDependencies(overrides: Partial<AuthenticatedAppPageTierDependencies> = {}) {
   return {
     getUser: async () => ({ id: "user-1", email: "user@example.com" }),
     resolvePaidAccess: async () => "denied" as FreemiumAccessResult,
     ...overrides,
-  } satisfies ScanPageTierDependencies
+  } satisfies AuthenticatedAppPageTierDependencies
 }
 
-test("scan page tier: a paid-access composite of 'allowed' is premium", async () => {
-  const tier = await resolveScanPageTier(
-    tierDependencies({ resolvePaidAccess: async () => "allowed" }),
-  )
-  assert.equal(tier, "premium")
-})
-
 test("scan page tier: a paid-access composite of 'denied' is free", async () => {
-  const tier = await resolveScanPageTier(
+  const tier = await resolveAuthenticatedAppPageTier(
     tierDependencies({ resolvePaidAccess: async () => "denied" }),
   )
   assert.equal(tier, "free")
@@ -133,7 +138,7 @@ test("scan page tier: a paid-access composite of 'denied' is free", async () => 
 
 test("scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free", async () => {
   const seenArgs: Array<[string, string | null | undefined, boolean]> = []
-  const tier = await resolveScanPageTier(
+  const tier = await resolveAuthenticatedAppPageTier(
     tierDependencies({
       getUser: async () => ({ id: "user-1", email: "grant@example.com" }),
       resolvePaidAccess: async (userId, email, fieldTestGuest) => {
@@ -150,7 +155,7 @@ test("scan page tier: an email-only manual/moderator grant is premium (C1 repro)
 
 test("scan page tier: a field-test guest is passed through to the paid-access composite", async () => {
   let sawFieldTestGuest = false
-  await resolveScanPageTier(
+  await resolveAuthenticatedAppPageTier(
     tierDependencies({
       getUser: async () => ({
         id: "user-1",
@@ -167,13 +172,15 @@ test("scan page tier: a field-test guest is passed through to the paid-access co
 })
 
 test("scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable", async () => {
-  const tier = await resolveScanPageTier(
+  const tier = await resolveAuthenticatedAppPageTier(
     tierDependencies({ resolvePaidAccess: async () => "unavailable" }),
   )
   assert.equal(tier, "premium")
 })
 
 test("scan page tier: no authenticated user is premium (never free)", async () => {
-  const tier = await resolveScanPageTier(tierDependencies({ getUser: async () => null }))
+  const tier = await resolveAuthenticatedAppPageTier(
+    tierDependencies({ getUser: async () => null }),
+  )
   assert.equal(tier, "premium")
 })

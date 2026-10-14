@@ -1,0 +1,19 @@
+{
+  "directory": "/private/tmp/test-audit-refinement37-tools-5ce9vx77",
+  "pinSHA": "217ed9c232bfa6de76730c77f3c32f991b71ea06a6b84dbb21685256df71ec1b",
+  "originalGuards": 47,
+  "phaseTests": 5,
+  "snapshots": 15,
+  "readset": 57,
+  "localClosure": 41,
+  "dependencies": 3489,
+  "dependencyTrees": 28,
+  "controls": 13,
+  "nonliteralImports": [],
+  "repositoryWrites": 0,
+  "attemptedRepositoryWrites": 0,
+  "childrenStarted": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

@@ -5,6 +5,7 @@ import {
   createStage2OptionalEntryRouteHandler,
   type Stage2OptionalEntryRouteDeps,
 } from "../src/app/api/personal-plan/stage-2/optional-entry/route"
+import { Stage2OptionalEntryError } from "../src/lib/personal-plan/persistence/stage2-optional-entry"
 import type { Stage2PersistedDraft } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import type { PersonalPlanStage2Access } from "../src/lib/personal-plan/journey-access-loader"
@@ -38,6 +39,7 @@ function deps(overrides: Partial<Stage2OptionalEntryRouteDeps> = {}): Stage2Opti
     enabled: () => true,
     getUserId: async () => "owner-1",
     loadStage2Access: async () => stage2Access,
+    toolsEnabled: async () => false,
     openOptionalRefinement: async () => draft,
     ...overrides,
   }
@@ -96,7 +98,7 @@ test("optional Stage 2 entry accepts only the module body and derives the user s
   response = await handler(request({ module: "habits" }))
   assert.equal(response.status, 200)
   assert.match(response.headers.get("Server-Timing") ?? "", /operation;dur=/)
-  assert.deepEqual(calls, [{ userId: "owner-1", module: "habits" }])
+  assert.deepEqual(calls, [{ userId: "owner-1", module: "habits", toolsEnabled: false }])
   assert.deepEqual((await response.json()).answers, { currentProductCategories: ["shampoo"] })
 })
 
@@ -115,4 +117,97 @@ test("optional Stage 2 entry maps conflict, validation and temporary failures", 
     )(request({ module: "products" }))
     assert.deepEqual([response.status, await response.json()], [status, { error: code }])
   }
+})
+
+test("an unexpected optional-entry failure stays a generic 503 but reports its real cause", async () => {
+  const reports: Array<{ route: string; error: unknown }> = []
+  const response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async () => {
+        throw new Stage2OptionalEntryError("stage2_legacy_profile_read_failed")
+      },
+      reportUnexpectedError: (route, error) => reports.push({ route, error }),
+    }),
+  )(request({ module: "habits" }))
+
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [503, { error: "temporarily_unavailable" }],
+  )
+  assert.equal(reports.length, 1)
+  assert.equal(reports[0].route, "stage2_optional_entry")
+  assert.equal((reports[0].error as Error).message, "stage2_legacy_profile_read_failed")
+})
+
+test("an optional-entry access failure is reported too", async () => {
+  const reports: string[] = []
+  const response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      loadStage2Access: async () => {
+        throw new Error("journey read failed")
+      },
+      reportUnexpectedError: (route) => reports.push(route),
+    }),
+  )(request({ module: "habits" }))
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(reports, ["stage2_optional_entry_access"])
+})
+
+test("optional Stage 2 entry accepts the tools body and rejects a not_applicable module as invalid_module", async () => {
+  const calls: unknown[] = []
+  let response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async (input) => {
+        calls.push(input)
+        return draft
+      },
+    }),
+  )(request({ module: "tools" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(calls, [{ userId: "owner-1", module: "tools", toolsEnabled: false }])
+
+  const reported: unknown[] = []
+  response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async () => {
+        throw new Stage2OptionalEntryError("invalid_module")
+      },
+      reportUnexpectedError: (_route, error) => reported.push(error),
+    }),
+  )(request({ module: "tools" }))
+  assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_module" }])
+  // A caller error, not an outage: nothing is reported to Sentry.
+  assert.deepEqual(reported, [])
+})
+
+test("optional Stage 2 entry takes the Hair Tools rollout from the server, never from the body", async () => {
+  const calls: Array<{ toolsEnabled: boolean }> = []
+  const open = async (input: { toolsEnabled: boolean }) => {
+    calls.push(input)
+    return draft
+  }
+
+  const forged = await createStage2OptionalEntryRouteHandler(
+    deps({ openOptionalRefinement: open }),
+  )(request({ module: "tools", toolsEnabled: true }))
+  assert.deepEqual([forged.status, await forged.json()], [400, { error: "invalid_request" }])
+  assert.equal(calls.length, 0)
+
+  await createStage2OptionalEntryRouteHandler(
+    deps({ toolsEnabled: async () => true, openOptionalRefinement: open }),
+  )(request({ module: "tools" }))
+  await createStage2OptionalEntryRouteHandler(
+    deps({
+      toolsEnabled: async () => {
+        throw new Error("flag lookup failed")
+      },
+      openOptionalRefinement: open,
+    }),
+  )(request({ module: "tools" }))
+  assert.deepEqual(
+    calls.map((call) => call.toolsEnabled),
+    [true, false],
+    "the server decision is relayed; a failing lookup fails closed",
+  )
 })

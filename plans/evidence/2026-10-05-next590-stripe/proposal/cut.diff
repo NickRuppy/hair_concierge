@@ -1,0 +1,98 @@
+--- transfer/tests/stripe-trial-invoice.test.ts
++++ cut/tests/stripe-trial-invoice.test.ts
+@@ -368,20 +368,9 @@
+   })
+ })
+ 
+-test("zero authorization invoice records no payment or revenue", async () => {
+-  const f = fixture()
+-  Object.assign(f.invoice, { billing_reason: "subscription_create", amount_due: 0, amount_paid: 0 })
+-  f.sub.status = "trialing"
+-  assert.equal((await f.run())?.payment, null)
+-  assert.equal(f.recorded.length, 0)
+-  assert.equal(f.calls.includes("intent"), false)
+-})
+-
+-test("a late failure delivery follows the retrieved successful payment", async () => {
+-  const f = fixture()
+-  assert.equal((await f.run("failed"))?.payment?.result.phase, "first_paid")
+-  assert.equal(f.recorded[0].outcome, "succeeded")
+-})
++
++
++
+ 
+ test("unpaid first invoice enters payment ledger without paid conversion", async () => {
+   const f = fixture()
+--- transfer/tests/stripe-trial-account-activation.test.ts
++++ cut/tests/stripe-trial-account-activation.test.ts
+@@ -339,22 +339,7 @@
+   assert.ok(f.effects.some((effect) => effect[0] === "link_quiz"))
+ })
+ 
+-test("a used card receives no profile/billing access and its trial agreement is canceled without invoicing", async () => {
+-  const f = fixture()
+-  f.deny()
+-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+-    assert.ok(error instanceof CheckoutRecoveryError)
+-    assert.equal(error.code, "trial_unavailable")
+-    return true
+-  })
+-  assert.equal(f.tables.billing_subscriptions.length, 0)
+-  assert.equal(f.tables.profiles[0].subscription_status, null)
+-  assert.deepEqual(
+-    f.effects.find((e) => e[0] === "cancel"),
+-    ["cancel", "sub_trial", { invoice_now: false, prorate: false }],
+-  )
+-  assert.ok(f.effects.some((e) => e[0] === "release_trial_enrollment"))
+-})
++
+ 
+ test("unexpected Stripe admission state requires reconciliation without neutralizing the agreement", async () => {
+   const f = fixture()
+@@ -370,19 +355,7 @@
+   assert.ok(!f.effects.some((effect) => effect[0] === "release_trial_enrollment"))
+ })
+ 
+-test("provider neutralization timeout remains retryable and does not release the claim or grant access", async () => {
+-  const f = fixture()
+-  f.deny()
+-  f.failCancel()
+-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+-    assert.ok(error instanceof CheckoutRecoveryError)
+-    assert.equal(error.code, "trial_reconciliation_required")
+-    assert.match(String(error.cause), /provider timeout/)
+-    return true
+-  })
+-  assert.equal(f.tables.billing_subscriptions.length, 0)
+-  assert.ok(!f.effects.some((e) => e[0] === "release_trial_enrollment"))
+-})
++
+ 
+ test("missing runtime, foreign enrollment, revoked admission and invalid card proof fail before account writes", async () => {
+   for (const mutate of [
+--- transfer/tests/stripe-trial-authorization.test.ts
++++ cut/tests/stripe-trial-authorization.test.ts
+@@ -170,21 +170,7 @@
+   }
+ }
+ 
+-test("verifies a server-retrieved seven-day card trial and records later invoice proof obligations", () => {
+-  assert.deepEqual(verify(), {
+-    enrollmentId: ENROLLMENT_ID,
+-    providerAgreementId: SUBSCRIPTION_ID,
+-    authorizationSucceededAt: "2026-09-13T12:00:00.000Z",
+-    trialEndAt: "2026-09-20T12:00:00.000Z",
+-    customerId: CUSTOMER_ID,
+-    paymentMethodId: PAYMENT_METHOD_ID,
+-    cardFingerprint: "fp_server_only",
+-    unverifiedFutureInvoiceObligations: [
+-      "verify_first_paid_invoice_amount",
+-      "verify_renewal_invoice_amount",
+-    ],
+-  })
+-})
++
+ 
+ test("requires Stripe's exact seven-day provider interval and the current time to remain inside it", () => {
+   assert.equal(verify({ subscription: { trial_end: TRIAL_END - 1 } }), null)

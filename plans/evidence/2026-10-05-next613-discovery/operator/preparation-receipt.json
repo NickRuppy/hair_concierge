@@ -1,0 +1,25 @@
+{
+  "directory": "/private/tmp/test-audit-discovery163-tools-70q2q9t7",
+  "pinSHA": "20ab258c185f196292423b6c5bd313a6ba8a81957cc4b629e9302dd4e0f064ac",
+  "originalReadsets": 81,
+  "originalPackages": 8,
+  "phaseAwareTests": 24,
+  "fixedReadsets": 338,
+  "localClosure": 301,
+  "dependencies": 3167,
+  "dependencyTrees": 27,
+  "nonliteralImports": [],
+  "controls": 5,
+  "repositoryWrites": 0,
+  "attemptedRepositoryWrites": 0,
+  "childrenStarted": 0,
+  "attemptedChildren": 0,
+  "metadataDisposition": {
+    "path": "/tmp/test-audit-next607-shared-config-disposition.json",
+    "sha256": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "changedFile": "/Users/nick/AI_work/hair_conscierge/.git/config",
+    "oldSha256": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1",
+    "newSha256": "0c8e95adf438f1a7ff98d364731136030b301dc9b96d949904ed64520b12fcb0",
+    "authority": "Main explicitly approved this single shared config metadata change after verifying other five identity pins and exact task branch/HEAD/root; prior config bytes unavailable, no exact provenance claim."
+  }
+}

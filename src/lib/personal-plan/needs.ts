@@ -166,11 +166,33 @@ const CADENCE_BY_SCALP: Record<
   dry: { preferred: "weekly_1x", minimum: "biweekly_1x", maximum: "weekly_1x" },
 }
 
+/**
+ * Dry scalp on straight or wavy hair (Nomi consult finish T4, ruled 2026-10-09): no evidence
+ * that washing 2×/week with a mild shampoo harms a dry scalp, while long gaps tend to worsen
+ * flaking, and straight/wavy lengths flatten sooner. Indirect evidence, a conservative
+ * judgment band — curly and coily hair keep the stricter dry row.
+ */
+const DRY_STRAIGHT_WAVY_CADENCE: Pick<
+  PlanShampooCadenceAssessment,
+  "preferred" | "minimum" | "maximum"
+> = { preferred: "weekly_2x", minimum: "weekly_1x", maximum: "weekly_3_4x" }
+
+function shampooCadenceBand(profile: PlanProfile) {
+  const straightOrWavy = profile.hair.texture === "straight" || profile.hair.texture === "wavy"
+  return profile.scalp.oiliness === "dry" && straightOrWavy
+    ? DRY_STRAIGHT_WAVY_CADENCE
+    : CADENCE_BY_SCALP[profile.scalp.oiliness]
+}
+
 function buildShampooCadenceAssessment(profile: PlanProfile): PlanShampooCadenceAssessment {
-  const target = CADENCE_BY_SCALP[profile.scalp.oiliness]
+  const target = shampooCadenceBand(profile)
   return {
     knowledgeState: profile.routine.shampooFrequency.state === "known" ? "known" : "partial",
-    sourceFacts: [`scalp.oiliness:${profile.scalp.oiliness}`],
+    sourceFacts: [
+      `scalp.oiliness:${profile.scalp.oiliness}`,
+      // Only the dry route depends on the hair pattern.
+      ...(profile.scalp.oiliness === "dry" ? [`hair.texture:${profile.hair.texture}`] : []),
+    ],
     scalpRoute: profile.scalp.oiliness,
     ...target,
     current: profile.routine.shampooFrequency,

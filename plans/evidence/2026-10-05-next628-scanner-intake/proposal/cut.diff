@@ -1,0 +1,64 @@
+--- transfer/tests/scan-unknown-flow-ui.test.tsx
++++ cut/tests/scan-unknown-flow-ui.test.tsx
+@@ -262,14 +262,6 @@
+   assert.match(renderToStaticMarkup(tree.value), /role="alert"/)
+ })
+ 
+-test("ScanUnknownFlow: renders the signed-off headline and question verbatim", () => {
+-  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
+-  const markup = renderToStaticMarkup(tree.value)
+-  assert.match(markup, /Danke dir – das ist neu für uns!/)
+-  assert.match(markup, /Wir nehmen es auf\. Dein Ergebnis kommt in den Chat\./)
+-  assert.match(markup, /Wobei benutzt du es\?/)
+-})
+-
+ /**
+  * The viewfinder just said "✓ Gelesen – wird geprüft" and this sheet says the product is
+  * new: without the bridge line the two read as a contradiction (Nick's phone test,
+@@ -294,16 +286,6 @@
+   assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)
+ })
+ 
+-test("ScanUnknownFlow: renders no brand or product-name inputs (step 2 is gone)", () => {
+-  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
+-  const inputs = findAll(tree.value, (element) => element.type === "input")
+-  assert.deepEqual(inputs, [])
+-  const markup = renderToStaticMarkup(tree.value)
+-  assert.doesNotMatch(markup, /Marke/)
+-  assert.doesNotMatch(markup, /Produktname/)
+-  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)
+-})
+-
+ test("ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step", () => {
+   const submissions: ScanSubmissionInput[] = []
+   const tree = renderFlow({
+--- transfer/tests/scan-research-intake-form-ui.test.tsx
++++ cut/tests/scan-research-intake-form-ui.test.tsx
+@@ -121,18 +121,6 @@
+   )
+ }
+ 
+-test("ScanResearchIntakeForm: renders the signed-off heading copy, Marke/Produktname fields, and the category helper", () => {
+-  const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
+-  const markup = renderToStaticMarkup(tree.value)
+-  assert.match(markup, /Marke/)
+-  assert.match(markup, /Produktname/)
+-  assert.match(markup, /Was ist es\?/)
+-  assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\./)
+-  assert.match(markup, /Zurück/)
+-  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.
+-  assert.doesNotMatch(markup, /\bdm\b/)
+-})
+-
+ test("ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)", () => {
+   const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
+   const markup = renderToStaticMarkup(tree.value)
+@@ -310,8 +298,3 @@
+   assert.match(markup, /aria-live="polite"/)
+   assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\./)
+ })
+-
+-test("ScanResearchIntakeForm: no error renders no alert", () => {
+-  const tree = renderForm({ error: null, onSubmit: () => undefined })
+-  assert.doesNotMatch(renderToStaticMarkup(tree.value), /role="alert"/)
+-})

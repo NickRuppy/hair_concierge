@@ -1,0 +1,43 @@
+{
+  "blindId": "T116",
+  "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 3, "identityConfidence": "high", "e3ProminenceCutoff": "Parfum at 8 -> positions 1-7 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C6: no strong anionic. Earliest cleansing surfactant Sodium Cocoyl Isethionate (2, mild anionic) with prominent amphoterics Lauramidopropyl Betaine (3) and Cocamidopropyl Betaine (4); Sodium Lauroyl Sarcosinate (5) is a further mild anionic -> low.",
+      "counterSignals": "Three-to-four surfactants in a sulfate-free system give a complete foaming cleanse; convention keeps low."},
+    "conditioningLevel": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "Cleansing-led architecture: the only conditioning agent is Polyquaternium-10 (11), listed after Parfum and preservatives; Glycerin (24) and Cocos Nucifera Fruit Juice (25) are trace.",
+      "counterSignals": "Polyquaternium-10 is a meaningful conditioning polymer and isethionate leaves a soft feel; moderate is a realistic neighbor."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "A single late cationic polymer, no reinforcing route.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Polyquaternium-10 (11) only, after the preservatives."},
+        "persistence": {"value": "low", "rationale": "Low level; PQ-10 can build up with repeated use, but alone and late."},
+        "resetCapacity": {"value": "moderate", "rationale": "Mild isethionate/sarcosinate/betaine chassis (C6 low) with nothing heavy to offset; between weak and moderate."}},
+      "evidenceByFamily": {"cationic_polymer": ["Polyquaternium-10 (11)"], "anionic_surfactant": ["Sodium Cocoyl Isethionate (2, mild)", "Sodium Lauroyl Sarcosinate (5, mild)"], "amphoteric_surfactant": ["Lauramidopropyl Betaine (3)", "Cocamidopropyl Betaine (4)"], "humectant_context": ["Glycerin (24)", "Cocos Nucifera Fruit Juice (25)"]},
+      "excluded": ["Citrus Aurantium Peel Oil (17) and fragrance materials: fragrance (6.4)", "Tetrasodium EDTA (13): chelator", "Histidine (18): amino acid additive"],
+      "unresolved": [],
+      "whyThisBand": "One light, late polymer.",
+      "whyNotNeighborBand": "Single deposition family without a reinforcing route; the polymer is after preservatives (trace). A mild chassis gives limited reset, which is the reason confidence is moderate rather than high.",
+      "confidenceLimitingFactor": "PQ-10 buildup potential with a mild chassis; step toward moderate realistic."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: mild sulfate-free cleansing with little care; no specialist route.",
+      "careDirectionVerdictProvisional": "nonspecific"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["volume"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; frequent with explicit frequency wording."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "CSA not met: no E4 comfort or humectant route in positions 1-7 (Glycerin 24 late)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Cocoyl Isethionate", "position": 2, "role": "earliest cleansing surfactant (mild anionic)"},
+    {"ingredient": "Lauramidopropyl Betaine", "position": 3, "role": "amphoteric co-surfactant"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 4, "role": "amphoteric co-surfactant"},
+    {"ingredient": "Sodium Lauroyl Sarcosinate", "position": 5, "role": "mild anionic"},
+    {"ingredient": "Parfum", "position": 8, "role": "E3 fragrance marker"},
+    {"ingredient": "Polyquaternium-10", "position": 11, "role": "cationic_polymer, late"},
+    {"ingredient": "Glycerin", "position": 24, "role": "humectant, trace"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

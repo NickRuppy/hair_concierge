@@ -1,0 +1,77 @@
+{
+  "slot": "A12",
+  "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+  "name": "Guhl Kraft & Fülle Shampoo (kräftigendes Shampoo)",
+  "brand": "Guhl",
+  "packSize": "250 ml",
+  "gtins": [
+    "4072600703502"
+  ],
+  "sources": [
+    {
+      "url": "https://www.guhl.com/produkt/kraft-fuelle/kraft-und-fuelle-shampoo/",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE product page (Guhl Ikebana / Kao); schema.org gtin13 in markup",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4072600703502 (schema.org gtin13 and identifier PropertyValue; image file name 4072600703502_Guhl_Kraft_und_Fuelle_Shampoo_250ml)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes",
+      "claimsVerbatim": "Kraft & Fülle | kräftigendes Shampoo | Rosmarin & Biotin-Aktiv-Komplex | ohne Silikone | Für dünner-werdendes, zu Haarausfall neigendes Haar | Schenke deinem Haar neue Energie mit unserem Kraft & Fülle Shampoo und unterstütze das natürliche Haarwachstum*. | Die Formulierung mit vitalisierendem Rosmarinextrakt und Biotin-Aktiv-Komplex  hilft, die Durchblutung der Kopfhaut anzuregen und stimuliert die Haarwurzel. Unser Shampoo kräftigt dünner werdendes und zu Haarausfall neigendes Haar – ohne es zu beschweren. Es reinigt sanft und gründlich und stärkt fühlbar vom Ansatz an. Verleihe deinem Haar in Kombination mit dem Tonikum wieder mehr Kraft und Fülle! | *Bei regelmäßiger Verwendung des Kraft & Fülle Kopfhaut Tonikum | Inhaltsstoffe zu 93% natürlichen Ursprungs* und zu 98% biologisch abbaubar** | ohne Silikone | keine Parabene | keine Mikroplastik | *gem. ISO 16128, inkl. 80% Wasser **gem. OECD Richtlinien & inkl. Wasser | Guhl Kraft & Fülle kräftigendes Shampoo (250 ml) für dünner werdendes, zu Haarausfall neigendes Haar, mit Rosmarinextrakt und Biotin-Aktiv-Komplex; ohne Silikone, vegan, hergestellt in Deutschland.",
+      "directionsVerbatim": "Beim Guhl Kraft & Fülle kräftigenden Shampoo wird eine kleine Menge zwei Minuten lang ins nasse Haar einmassiert und anschließend ausgespült. Die Einwirkzeit von zwei Minuten gehört zur Anwendung, weil die Formulierung mit Rosmarinextrakt und Biotin-Aktiv-Komplex an der Kopfhaut wirkt und nicht nur in den Längen. Eine kleine Menge genügt: Alle Guhl Shampoos sind dank ihres reichhaltigen Schaums besonders ergiebig. (FAQ 'Anwendung und Ergiebigkeit')"
+    },
+    {
+      "url": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded)",
+      "sourceKind": "retailer",
+      "gtinShown": "4072600703502 (page 'GTIN:' line; dm-Artikelnummer 3043222; title 'Shampoo Kraft & Fülle, 250 ml')",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes.",
+      "claimsVerbatim": "Sanfte Reinigung für gestärktes Haar | Regt die Durchblutung der Kopfhaut an | Mit Rosmarin & Biotin | Das Shampoo Kraft & Fülle von GUHL ist die ideale Wahl für feines, dünner werdendes Haar. Die sanfte Formel reinigt effektiv und regt die Durchblutung der Kopfhaut an, was zu einer spürbaren Stärkung des Haares führt. Angereichert mit Rosmarinextrakt und Biotin unterstützt es das Haarwachstum und sorgt für mehr Fülle. Die silikonfreie Rezeptur lässt das Haar leicht und luftig wirken. | Haartyp: feines Haar, dünner werdendes Haar, normales Haar, kurzes Haar",
+      "directionsVerbatim": "Anwendung: Eine kleine Menge 2 Minuten lang ins nasse Haar einmassieren. Ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Lactic Acid",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Glyceryl Oleate",
+    "Sorbitan Caprylate",
+    "Panthenol",
+    "Tetrasodium Glutamate Diacetate",
+    "Menthol",
+    "Caffeine",
+    "Glycerin",
+    "Rosmarinus Officinalis Leaf Extract",
+    "Alcohol",
+    "Dimethylhydroxy Dihydroflavone",
+    "Lecithin",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Leuconostoc/Radish Root Ferment Filtrate",
+    "Tocopheryl Acetate",
+    "Biotin",
+    "Tocopherol",
+    "Sodium Benzoate",
+    "Parfum",
+    "Limonene",
+    "Linalool",
+    "Tetramethyl Acetyloctahydronaphthalenes"
+  ],
+  "canonicalReason": "Manufacturer DE page for the exact 250 ml GTIN and dm.de (same GTIN) publish a character-identical 28-item list; also identical to the 2026-08-10 v1.3 capture, so no reformulation. Claims (Rosmarin, Biotin, silikonfrei) are all backed by the INCI (Rosmarinus Officinalis Leaf Extract, Biotin; no silicone); Caffeine/Menthol are in the INCI but not named in claims (not a conflict).",
+  "inciFingerprintSha256": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "The manufacturer page's HTML breaks 'Hydroxypropyl Guar Hydroxypropyltrimonium Chloride' across tags; the joined form is confirmed by the dm.de text.",
+    "dm lists the product as 'Lieferbar' on 2026-10-10.",
+    "Manufacturer page claims 'Inhaltsstoffe zu 93% natürlichen Ursprungs' / '98% biologisch abbaubar'; INCI unaffected.",
+    "Prior v1.4 fingerprint (comma-joined) d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3 - list unchanged. Pack photo not read."
+  ]
+}

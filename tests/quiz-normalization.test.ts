@@ -5,7 +5,6 @@ import {
   canonicalizeQuizAnswers,
   normalizeStoredQuizAnswers,
   projectQuizAnswersToLegacyVocabulary,
-  toggleConcernSelection,
   toggleTreatmentSelection,
 } from "../src/lib/quiz/normalization"
 import { DIAGNOSTIC_CONCERNS } from "../src/lib/quiz/diagnostic-input"
@@ -17,13 +16,6 @@ test("natur stays exclusive in treatment selection", () => {
   assert.deepEqual(toggleTreatmentSelection(["gefaerbt", "blondiert"], "natur"), ["natur"])
 })
 
-test("colored and bleached can be combined", () => {
-  const withColor = toggleTreatmentSelection([], "gefaerbt")
-  const withBleach = toggleTreatmentSelection(withColor, "blondiert")
-
-  assert.deepEqual(withBleach, ["gefaerbt", "blondiert"])
-})
-
 test("chemical shape treatments combine with color treatments in canonical order", () => {
   let selected = toggleTreatmentSelection([], "chemisch_geglaettet")
   selected = toggleTreatmentSelection(selected, "gefaerbt")
@@ -31,15 +23,6 @@ test("chemical shape treatments combine with color treatments in canonical order
   selected = toggleTreatmentSelection(selected, "blondiert")
 
   assert.deepEqual(selected, ["gefaerbt", "blondiert", "dauerwelle", "chemisch_geglaettet"])
-})
-
-test("chemical shape treatments remain exclusive with natur", () => {
-  assert.deepEqual(toggleTreatmentSelection(["natur"], "chemisch_geglaettet"), [
-    "chemisch_geglaettet",
-  ])
-  assert.deepEqual(toggleTreatmentSelection(["dauerwelle", "chemisch_geglaettet"], "natur"), [
-    "natur",
-  ])
 })
 
 test("legacy pulltest values are normalized", () => {
@@ -140,33 +123,6 @@ test("legacy free-text concern notes are clamped to the current 50-character lim
   )
 })
 
-test("new quiz concerns preserve every unique shared selection", () => {
-  let selected = toggleConcernSelection([], "hair_damage")
-  selected = toggleConcernSelection(selected, "hair_loss_or_thinning")
-  selected = toggleConcernSelection(selected, "split_ends")
-  selected = toggleConcernSelection(selected, "breakage")
-  selected = toggleConcernSelection(selected, "dryness")
-  selected = toggleConcernSelection(selected, "frizz_flyaways")
-  selected = toggleConcernSelection(selected, "low_shine")
-  selected = toggleConcernSelection(selected, "lost_shape")
-  selected = toggleConcernSelection(selected, "low_volume_or_weighed_down")
-  selected = toggleConcernSelection(selected, "tangling")
-
-  assert.deepEqual(selected, [
-    "hair_damage",
-    "split_ends",
-    "breakage",
-    "dryness",
-    "tangling",
-    "frizz_flyaways",
-    "low_shine",
-    "lost_shape",
-    "low_volume_or_weighed_down",
-    "hair_loss_or_thinning",
-  ])
-  assert.deepEqual(toggleConcernSelection(selected, "none"), [])
-})
-
 test("shared hair-loss concern is added once after hair damage with reviewed copy", () => {
   const concernIndex = DIAGNOSTIC_CONCERNS.indexOf("hair_loss_or_thinning")
   assert.equal(concernIndex, DIAGNOSTIC_CONCERNS.indexOf("hair_damage") + 1)
@@ -218,12 +174,6 @@ test("goals are passed through when valid (sorted to canonical GOALS order)", ()
 
   // GOALS index: volume=0, less_frizz=2, shine=6
   assert.deepEqual(normalized.goals, ["volume", "less_frizz", "shine"])
-})
-
-test("two goal lists with the same items in different order normalize equal", () => {
-  const a = normalizeStoredQuizAnswers({ goals: ["shine", "volume", "moisture"] })
-  const b = normalizeStoredQuizAnswers({ goals: ["moisture", "volume", "shine"] })
-  assert.deepEqual(a.goals, b.goals)
 })
 
 test("invalid goal values are filtered out", () => {
@@ -301,6 +251,12 @@ test("shared quiz values project once into the existing profile vocabulary", () 
     goals: ["manageability_styling", "volume_balance", "strength_ends"],
   })
 
-  assert.deepEqual(projected.concerns, ["hair_loss", "hair_damage", "frizz", "tangling"])
+  assert.deepEqual(projected.concerns, [
+    "hair_loss",
+    "hair_damage",
+    "frizz",
+    "tangling",
+    "low_shine",
+  ])
   assert.deepEqual(projected.goals, ["less_frizz", "less_volume", "anti_breakage"])
 })

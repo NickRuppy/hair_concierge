@@ -1,0 +1,23 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "command": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan/refinement/refinement-status.test.ts",
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts",
+    "tests/personal-plan-refinement-status-route.test.ts"
+  ],
+  "status": "NOT_RUN",
+  "beforeTransferCut": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  }
+}

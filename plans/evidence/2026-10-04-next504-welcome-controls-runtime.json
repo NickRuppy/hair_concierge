@@ -1,0 +1,738 @@
+[
+  {
+    "id": "C1-stage",
+    "runDirectory": "/tmp/test-audit-welcome-controls-rC8WAC",
+    "restoration": {
+      "restored": true,
+      "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+      "source": "src/app/welcome/welcome-client.tsx",
+      "allPinnedGuardsMatch": true
+    },
+    "before": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1588,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/before/stderr.txt"
+      }
+    },
+    "mutant": {
+      "process": {
+        "code": 1,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1065,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "intended assertion failure",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/mutant/stderr.txt"
+      }
+    },
+    "after": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1066,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-stage/after/stderr.txt"
+      }
+    },
+    "actualErrors": [
+      {
+        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -9,9 +9,9 @@\u001b[39m\n\u001b[2m      \"provider\": \"paypal\",\u001b[22m\n\u001b[2m      \"providerReferencePresent\": true,\u001b[22m\n\u001b[2m      \"retryable\": \"true\",\u001b[22m\n\u001b[2m      \"signal\": \"customer_payment_error_observed\",\u001b[22m\n\u001b[2m      \"source\": \"welcome\",\u001b[22m\n\u001b[32m-     \"stage\": \"paypal_activation_status_poll\",\u001b[39m\n\u001b[31m+     \"stage\": \"checkout_return\",\u001b[39m\n\u001b[2m      \"truth\": \"unknown\",\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m  ]\u001b[22m",
+        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -9,9 +9,9 @@\u001b[39m\n\u001b[2m      \"provider\": \"paypal\",\u001b[22m\n\u001b[2m      \"providerReferencePresent\": true,\u001b[22m\n\u001b[2m      \"retryable\": \"true\",\u001b[22m\n\u001b[2m      \"signal\": \"customer_payment_error_observed\",\u001b[22m\n\u001b[2m      \"source\": \"welcome\",\u001b[22m\n\u001b[32m-     \"stage\": \"paypal_activation_status_poll\",\u001b[39m\n\u001b[31m+     \"stage\": \"checkout_return\",\u001b[39m\n\u001b[2m      \"truth\": \"unknown\",\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m  ]\u001b[22m\n    at /Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts:258:22",
+        "location": {
+          "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts",
+          "column": 22,
+          "line": 258
+        },
+        "snippet": "  256 |       () => (globalThis as typeof globalThis & { __welcomePaymentFailures?: unknown[] }).__welcomePaymentFailures ?? [],\n  257 |     )\n> 258 |     expect(failures).toEqual([{\n      |                      ^\n  259 |       signal: \"customer_payment_error_observed\",\n  260 |       provider: \"paypal\",\n  261 |       stage: \"paypal_activation_status_poll\","
+      }
+    ]
+  },
+  {
+    "id": "C1-token-leak",
+    "runDirectory": "/tmp/test-audit-welcome-controls-rC8WAC",
+    "restoration": {
+      "restored": true,
+      "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+      "source": "src/app/welcome/welcome-client.tsx",
+      "allPinnedGuardsMatch": true
+    },
+    "before": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1064,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/before/stderr.txt"
+      }
+    },
+    "mutant": {
+      "process": {
+        "code": 1,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1047,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "intended assertion failure",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/mutant/stderr.txt"
+      }
+    },
+    "after": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1059,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "PayPal poll timeout replaces the spinner with status-retry feedback$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C1-token-leak/after/stderr.txt"
+      }
+    },
+    "actualErrors": [
+      {
+        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -10,8 +10,9 @@\u001b[39m\n\u001b[2m      \"providerReferencePresent\": true,\u001b[22m\n\u001b[2m      \"retryable\": \"true\",\u001b[22m\n\u001b[2m      \"signal\": \"customer_payment_error_observed\",\u001b[22m\n\u001b[2m      \"source\": \"welcome\",\u001b[22m\n\u001b[2m      \"stage\": \"paypal_activation_status_poll\",\u001b[22m\n\u001b[31m+     \"token\": \"fixture-token\",\u001b[39m\n\u001b[2m      \"truth\": \"unknown\",\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m  ]\u001b[22m",
+        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -10,8 +10,9 @@\u001b[39m\n\u001b[2m      \"providerReferencePresent\": true,\u001b[22m\n\u001b[2m      \"retryable\": \"true\",\u001b[22m\n\u001b[2m      \"signal\": \"customer_payment_error_observed\",\u001b[22m\n\u001b[2m      \"source\": \"welcome\",\u001b[22m\n\u001b[2m      \"stage\": \"paypal_activation_status_poll\",\u001b[22m\n\u001b[31m+     \"token\": \"fixture-token\",\u001b[39m\n\u001b[2m      \"truth\": \"unknown\",\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m  ]\u001b[22m\n    at /Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts:258:22",
+        "location": {
+          "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts",
+          "column": 22,
+          "line": 258
+        },
+        "snippet": "  256 |       () => (globalThis as typeof globalThis & { __welcomePaymentFailures?: unknown[] }).__welcomePaymentFailures ?? [],\n  257 |     )\n> 258 |     expect(failures).toEqual([{\n      |                      ^\n  259 |       signal: \"customer_payment_error_observed\",\n  260 |       provider: \"paypal\",\n  261 |       stage: \"paypal_activation_status_poll\","
+      }
+    ]
+  },
+  {
+    "id": "C2-label",
+    "runDirectory": "/tmp/test-audit-welcome-controls-rC8WAC",
+    "restoration": {
+      "restored": true,
+      "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+      "source": "src/app/welcome/welcome-client.tsx",
+      "allPinnedGuardsMatch": true
+    },
+    "before": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1216,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "email send failure keeps password input and allows a successful resend$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/before/stderr.txt"
+      }
+    },
+    "mutant": {
+      "process": {
+        "code": 1,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 6022,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "email send failure keeps password input and allows a successful resend$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "intended assertion failure",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/mutant/stderr.txt"
+      }
+    },
+    "after": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 1409,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+            "test",
+            "--config",
+            "/tmp/test-audit-welcome-static-playwright.config.cjs",
+            "--grep",
+            "email send failure keeps password input and allows a successful resend$",
+            "--reporter=json",
+            "--output",
+            "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after/browser-output"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 90000,
+          "reporterFile": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after/report.json",
+          "environmentOverrides": {
+            "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after/report.json",
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "pw",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/C2-label/after/stderr.txt"
+      }
+    },
+    "actualErrors": [
+      {
+        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Chaarlie-E-Mail', { exact: true })\nExpected: \u001b[32m\"alex@example.com\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Chaarlie-E-Mail', { exact: true })\u001b[22m\n",
+        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Chaarlie-E-Mail', { exact: true })\nExpected: \u001b[32m\"alex@example.com\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Chaarlie-E-Mail', { exact: true })\u001b[22m\n\n    at /Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts:126:71",
+        "location": {
+          "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-outcomes.spec.ts",
+          "column": 71,
+          "line": 126
+        },
+        "snippet": "  124 |     })\n  125 |     await page.goto(`${origin}/welcome`)\n> 126 |     await expect(page.getByLabel(\"Chaarlie-E-Mail\", { exact: true })).toHaveValue(\"alex@example.com\")\n      |                                                                       ^\n  127 |     await expect(page.getByText(\"E-Mail aus deinem Checkout\", { exact: true })).toHaveCount(0)\n  128 |     await page.getByLabel(\"Passwort\", { exact: true }).fill(\"Example123\")\n  129 |     await page.getByRole(\"button\", { name: \"Login-Link senden\" }).click()"
+      }
+    ]
+  },
+  {
+    "id": "D1-revoked",
+    "runDirectory": "/tmp/test-audit-welcome-controls-rC8WAC",
+    "restoration": {
+      "restored": true,
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+      "source": "src/app/welcome/page.tsx",
+      "allPinnedGuardsMatch": true
+    },
+    "before": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 523,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/before",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^Stripe verification failures keep paid one-time returns pending and classify terminal failures$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/before/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/before/stderr.txt"
+      }
+    },
+    "mutant": {
+      "process": {
+        "code": 1,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 454,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/mutant",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^Stripe verification failures keep paid one-time returns pending and classify terminal failures$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "intended assertion failure",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/mutant/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/mutant/stderr.txt"
+      }
+    },
+    "after": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 528,
+        "dir": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/after",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^Stripe verification failures keep paid one-time returns pending and classify terminal failures$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/after/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-rC8WAC/D1-revoked/after/stderr.txt"
+      }
+    },
+    "actualErrorTap": "TAP version 13\n# Subtest: Stripe verification failures keep paid one-time returns pending and classify terminal failures\nnot ok 1 - Stripe verification failures keep paid one-time returns pending and classify terminal failures\n  ---\n  duration_ms: 74.522583\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-return.test.ts:3:1479'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'support_needed'\n    - 'revoked'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'revoked'\n  actual: 'support_needed'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-return.test.ts:217:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 407.7725\n"
+  },
+  {
+    "id": "D2-preflight",
+    "runDirectory": "/tmp/test-audit-welcome-controls-ReeSD5",
+    "restoration": {
+      "restored": true,
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+      "source": "src/app/welcome/page.tsx",
+      "allPinnedGuardsMatch": true
+    },
+    "before": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 494,
+        "dir": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/before",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/before/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/before/stderr.txt"
+      }
+    },
+    "mutant": {
+      "process": {
+        "code": 1,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 468,
+        "dir": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/mutant",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "intended assertion failure",
+        "stdout": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/mutant/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/mutant/stderr.txt"
+      }
+    },
+    "after": {
+      "process": {
+        "code": 0,
+        "signal": null,
+        "spawnError": null,
+        "timeout": false,
+        "stopReason": null,
+        "durationMs": 511,
+        "dir": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/after",
+        "command": {
+          "executable": "/usr/local/bin/node",
+          "argv": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern=^persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns$",
+            "tests/welcome-activation-return.test.ts"
+          ],
+          "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+          "timeoutMs": 45000,
+          "reporterFile": null,
+          "environmentOverrides": {
+            "FORCE_COLOR": "0",
+            "NO_COLOR": "1"
+          },
+          "environmentRemoved": [
+            "NODE_V8_COVERAGE"
+          ]
+        }
+      },
+      "verdict": {
+        "ok": true,
+        "kind": "node",
+        "exactSelected": 1,
+        "expectedOutcome": "pass",
+        "stdout": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/after/stdout.txt",
+        "stderr": "/tmp/test-audit-welcome-controls-ReeSD5/D2-preflight/after/stderr.txt"
+      }
+    },
+    "actualErrorTap": "TAP version 13\n# Subtest: persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns\nnot ok 1 - persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns\n  ---\n  duration_ms: 77.487958\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-return.test.ts:3:665'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'activation_temporary'\n    - 'trial_unavailable'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'trial_unavailable'\n  actual: 'activation_temporary'\n  operator: 'strictEqual'\n  stack: |-\n    assertRecoveryPanel (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-return.test.ts:185:10)\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/welcome-activation-return.test.ts:192:5)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 420.836375\n"
+  }
+]

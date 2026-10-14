@@ -17,6 +17,12 @@ import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "@/lib/personal-plan/pe
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { projectArtifactToFacts } from "@/lib/user-facts/project-artifact"
 import { toStage1SourceFromFacts, UserFactsReadError, type UserFacts } from "@/lib/user-facts/read"
+import {
+  getStage2ModulePathStates,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
+import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import type { Stage2QuestionId } from "@/lib/personal-plan/refinement/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "../fixtures"
 
 /**
@@ -47,6 +53,7 @@ function uneditedFacts(revision = 4): UserFacts {
     diagnostics: projected.diagnostics,
     careHabits: null,
     quizContext: projected.quizContext,
+    shoppingPreferences: null,
     provenance: {},
     revision,
   }
@@ -100,6 +107,8 @@ type World = {
   existingInitialId: string | null
   draft: FactsRecomputeSourceDraft | null
   rpc: Array<PersonalPlanRebaseOnFactsResult | Error>
+  /** The member's server-resolved Hair Tools rollout; an Error makes the lookup throw. */
+  toolsEnabled?: boolean | Error
 }
 
 function plan(overrides: Partial<FactsRecomputePlan> = {}): FactsRecomputePlan {
@@ -163,6 +172,7 @@ function createDeps(world: Partial<World> = {}) {
     loadPlan: 0,
     loadFacts: 0,
     loadSourceDraft: 0,
+    toolsEnabled: 0,
   }
   let ids = 0
   const deps: FactsRecomputeDeps = {
@@ -195,6 +205,12 @@ function createDeps(world: Partial<World> = {}) {
       if (!next) throw new Error("unexpected rebase call")
       if (next instanceof Error) throw next
       return next
+    },
+    async toolsEnabled(userId) {
+      assert.equal(userId, USER_ID)
+      calls.toolsEnabled += 1
+      if (state.toolsEnabled instanceof Error) throw state.toolsEnabled
+      return state.toolsEnabled ?? false
     },
     newId: () => (ids++ === 0 ? FRESH_ID : `fresh-${ids}`),
     now: () => NOW,
@@ -271,6 +287,7 @@ test("rebased with an in-progress source draft and a refined head: the RPC gets 
     sourceId: ARTIFACT_ID,
     hasRefinedHead: true,
     now: NOW,
+    toolsEnabled: false,
   })
   assert.deepEqual(params, {
     p_user_id: USER_ID,
@@ -462,6 +479,7 @@ test("a projection that cannot meet the refinement contract → invalid_source, 
   const ids = [
     "current_product_categories",
     "wet_wash_frequency",
+    "bondbuilder_timing",
     "towel_handling",
     "drying_routes",
     "additional_heat_tools",
@@ -472,6 +490,7 @@ test("a projection that cannot meet the refinement contract → invalid_source, 
       answers: {
         currentProductCategories: [],
         wetWashFrequency: "bogus" as never,
+        bondbuilderTiming: "after_wash",
         towel: { material: "frottee", technique: "rough_rubbing" },
         dryingRoutes: ["air_dry"],
         additionalHeatTools: [],
@@ -566,4 +585,133 @@ test("an RPC result with an unknown status → unexpected_error", async () => {
     reason: "unexpected_error",
     retryable: true,
   })
+})
+
+test("the facts lane stays product-only: no tool plan in the initial snapshot, no rollout flag in the refined input", async () => {
+  const { deps, calls } = createDeps()
+  await run(deps)
+  const params = calls.rebase[0]!
+  const initial = params.p_initial_output_snapshot as unknown as {
+    toolPlan?: unknown
+    renderedOrder: string[]
+  }
+  assert.equal("toolPlan" in initial, false)
+  assert.equal(
+    initial.renderedOrder.some((category) => category.startsWith("tool")),
+    false,
+  )
+  const refinedInput = params.p_refined_input_snapshot as unknown as {
+    triggerContext: Record<string, unknown>
+  }
+  assert.equal("toolsEnabled" in refinedInput.triggerContext, false)
+})
+
+/* ── Hair Tools: the refined clone follows the member's real rollout ───────── */
+
+const TOOLS_IDS: Stage2QuestionId[] = [
+  "tools_overview",
+  "tools:drying_textiles:1",
+  "tools:brushes_combs:1",
+  "tools:brushes_combs:2",
+  "tools:night_protection:1",
+]
+
+/** A complete draft of a flagged-on member: Produkte, Deine Tools and Gewohnheiten answered. */
+function toolsCompleteDraft(): FactsRecomputeSourceDraft {
+  const ids: Stage2QuestionId[] = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    ...TOOLS_IDS,
+    "towel_handling",
+    "drying_routes",
+  ]
+  return draft({
+    status: "complete",
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "daily_1x",
+      toolFamiliesWithSomething: ["drying_textiles", "brushes_combs", "night_protection"],
+      toolForms: {
+        "wash_application:1": [],
+        "drying_textiles:1": ["frottee"],
+        "brushes_combs:1": ["wide_tooth_comb"],
+        "brushes_combs:2": [],
+        "airflow:1": [],
+        "heated_styling:1": [],
+        "heatless_styling:1": [],
+        "securing_sectioning:1": [],
+        "securing_sectioning:2": [],
+        "night_protection:1": ["bonnet"],
+      },
+      towel: { material: "frottee", technique: "gentle_press" },
+      dryingRoutes: ["air_dry"],
+      additionalHeatTools: [],
+      nightProtection: ["silk_satin_bonnet"],
+    },
+    completedQuestionIds: ids,
+    answerProvenance: Object.fromEntries(ids.map((id) => [id, "user"])),
+  })
+}
+
+test("a flagged-on member's facts rebase keeps a complete tools module complete in the clone", async () => {
+  const { deps, calls } = createDeps({ draft: toolsCompleteDraft(), toolsEnabled: true })
+  const result = await run(deps)
+  assert.equal(result.status, "rebased")
+  assert.equal(calls.toolsEnabled, 1)
+  const params = calls.rebase[0]!
+
+  const cloneIds = params.p_clone_completed_question_ids as Stage2QuestionId[]
+  for (const id of TOOLS_IDS) assert.ok(cloneIds.includes(id), `${id} stays completed`)
+  const cloneAnswers = params.p_clone_answers as never as ReturnType<
+    typeof toolsCompleteDraft
+  >["answers"]
+  assert.deepEqual(cloneAnswers.toolForms, toolsCompleteDraft().answers.toolForms)
+  const provenance = params.p_clone_answer_provenance as Record<string, string>
+  for (const id of TOOLS_IDS) assert.equal(provenance[id], "user")
+
+  // Against the refined clone's own (rollout-on) path the tools module is complete.
+  const triggerContext = deriveStage2TriggerContext(stage1(editedFacts()).snapshot as never, {
+    toolsEnabled: true,
+  })
+  const contract = resolveStage2RefinementContract({
+    triggerContext,
+    answers: cloneAnswers,
+    completedQuestionIds: cloneIds,
+  })
+  const modules = getStage2ModulePathStates(
+    contract.path.orderedQuestionIds,
+    contract.path.completedQuestionIds,
+  )
+  assert.equal(modules.tools.status, "complete")
+  assert.equal(contract.isComplete, true)
+
+  // The refined input carries the flag; the initial snapshot stays product-only.
+  const refinedInput = params.p_refined_input_snapshot as unknown as {
+    triggerContext: Record<string, unknown>
+  }
+  assert.equal(refinedInput.triggerContext.toolsEnabled, true)
+  const initial = params.p_initial_output_snapshot as unknown as { toolPlan?: unknown }
+  assert.equal("toolPlan" in initial, false)
+  // The facts write carries the per-page keys of the confirmed inventory.
+  const patch = params.p_care_habits_patch as Record<string, unknown>
+  assert.deepEqual(patch.toolForms_drying_textiles_1, ["frottee"])
+})
+
+test("the rollout lookup failing makes the rebase tools-off (fails closed)", async () => {
+  const { deps, calls } = createDeps({ toolsEnabled: new Error("profiles read failed") })
+  const result = await run(deps)
+  assert.equal(result.status, "rebased")
+  const refinedInput = calls.rebase[0]!.p_refined_input_snapshot as unknown as {
+    triggerContext: Record<string, unknown>
+  }
+  assert.equal("toolsEnabled" in refinedInput.triggerContext, false)
+})
+
+test("no source draft: the rollout is not looked up", async () => {
+  const { deps, calls } = createDeps({
+    draft: null,
+    plan: plan({ currentRefinedNeedVersionId: null }),
+  })
+  await run(deps)
+  assert.equal(calls.toolsEnabled, 0)
 })

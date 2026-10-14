@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free
+ok 1 - R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free
+  ---
+  duration_ms: 36.830709
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1019.967625

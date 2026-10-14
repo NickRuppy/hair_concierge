@@ -1,0 +1,151 @@
+{
+  "blindId": "T101",
+  "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 23,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 20: positions 1-19 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1 ether-sulfate chassis: SLES (2) is the defining anionic with two prominent buffers (Coco-Glucoside 3, Cocamidopropyl Betaine 4) and no reinforcing anionic -> moderate.",
+      "counterSignal": "Prominent refatting (Hydrogenated Vegetable Oil 6, Glyceryl Oleate 8) argues slightly milder; does not move the C1 convention.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH rich architecture: a prominent payload lipid (Hydrogenated Vegetable Oil 6) converges with a prominent cationic polymer (Guar HPTC 9), plus a weak refatter (Glyceryl Oleate 8) and a humectant route (Glycerin 12, Panthenol 13, Sodium Hyaluronate 18) -> high anchor. C2 itself is not met (no separate pearlizing/fatty route besides the lipid that stands in for the silicone).",
+      "counterSignal": "No silicone; C2 not met; the hydrogenated oil amount after NaCl is unknown and may be small.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Two converging deposition families (waxy payload lipid 6, cationic guar 9) plus a weak refatter make noticeable but bounded residue plausible; W-RICH holds but the C1 chassis gives moderate reset, so it is not limited reset -> moderate.",
+      "counterSignal": "W-RICH (prominent hydrogenated lipid + cationic guar) argues high.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Cationic guar (9) plus prominent hydrogenated vegetable oil (6) plus glyceryl oleate (8); no silicone, no protein film."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Waxy/hydrogenated lipid is more substantive than a liquid oil; guar coacervate deposition; no silicone."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES chassis buffered by glucoside and betaine: effective ordinary cleansing."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent lipid/polymer system with a second family converging, faced by ordinary (not limited) reset.",
+      "whyNotNeighborBand": "Not high: W-RICH is present but resetCapacity is moderate (not limited); no silicone, no second cationic polymer, no film former. Not low: two distinct families (waxy lipid + cationic guar) both prominent, so 'lightweight' would understate residue risk (W2).",
+      "limitingFactor": "Unknown concentration of the hydrogenated vegetable oil and guar; W-RICH vs. moderate reset boundary."
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (15) present in a complete INCI -> supported (Section 11). Whether a dandruff target follows depends on the claim (S-DANDRUFF, R17.3).",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "note": "Humectant cluster (Glycerin 12, Panthenol 13, Hydrolyzed Hyaluronic Acid 17, Sodium Hyaluronate 18) plus emollient/deposition support (Hydrogenated Vegetable Oil 6, Guar 9). No protein; repair cluster weak."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes: prominent E4 comfort route Panthenol (13); prominent humectant/refatting routes Glycerin (12), Panthenol (13), Sodium Hyaluronate (18), Glyceryl Oleate (8), Hydrogenated Vegetable Oil (6)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE formula comfort route: yes (Panthenol 13). S-DRY humectant route: yes. S-OILY clause: fails on conditioningLevel high (cleansing moderate ok, weight moderate ok).",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type (C1)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 3,
+      "role": "buffer, nonionic glucoside"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Hydrogenated Vegetable Oil",
+      "position": 6,
+      "role": "payload_lipid, waxy/hydrogenated, prominent"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 8,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 9,
+      "role": "cationic_polymer, prominent"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 12,
+      "role": "humectant (C2/E4 list)"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 13,
+      "role": "humectant + E4 comfort route, prominent"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 15,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Hydrolyzed Hyaluronic Acid",
+      "position": 17,
+      "role": "humectant context"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 18,
+      "role": "humectant (C2/E4 list)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 20,
+      "role": "E3 marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

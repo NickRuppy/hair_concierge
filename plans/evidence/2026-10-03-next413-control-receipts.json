@@ -1,0 +1,2810 @@
+{
+  "quiz": [
+    {
+      "id": "D1-latest-treatment-only",
+      "phase": "new",
+      "intended": "Exact four-token selected array loses earlier chemical/color values; donor pair also fails.",
+      "originalHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D1-latest-treatment-only-before.tap",
+        "tapSHA256": "52c2bdd9757aca5555ac94a5a8cb8853e7b13c82888f92e136f45e737533af98"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D1-latest-treatment-only-fault.tap",
+        "tapSHA256": "91ba69678509f95888c4cc1e6626c5a212f3b7c148a6fbcfbfc63b0b3ab6bb99"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D1-latest-treatment-only-after.tap",
+        "tapSHA256": "c66c0668dc8568dda30c15b7ec7e9588a708304b14bcca689d1cf3b8bb252f6c"
+      },
+      "restoredHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "keeperAssertionLines": [
+        32
+      ],
+      "assertionStacks": [
+        32
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "D2-natur-blocks-new-treatment",
+      "phase": "new",
+      "intended": "Natur\u2192gefaerbt remains natur; same branch donor natur\u2192chemisch also fails. Simple omission of set.delete would NOT be a valid control because sortTreatments also removes natur conflicts.",
+      "originalHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-blocks-new-treatment-before.tap",
+        "tapSHA256": "4390f1ea1f4e6897991c96972506a1b14d6af3d867d9d4bc46d12cfe5a3deee9"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-blocks-new-treatment-fault.tap",
+        "tapSHA256": "ead5afd9a201b8046119a432d7269fe74da63d0bb4d76d6b6a263b2c874f0385"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-blocks-new-treatment-after.tap",
+        "tapSHA256": "68d35c0ff47a68e963aefd54b5a0235339632dc5540d122a39e88ef4d9096ca0"
+      },
+      "restoredHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "keeperAssertionLines": [
+        14,
+        15,
+        16
+      ],
+      "assertionStacks": [
+        15
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "D2-natur-does-not-clear",
+      "phase": "new",
+      "intended": "Old non-natural values survive; sorter removes newly selected natur so exact [natur] assertion fails.",
+      "originalHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-does-not-clear-before.tap",
+        "tapSHA256": "f8a5ef9eff8c0a114048c648664f79704fb2897160d729bd031fdf4b59dd9d21"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-does-not-clear-fault.tap",
+        "tapSHA256": "f96811224f646f3926d4410cf63c8111e68b0c87698203c24fa34f925fca29f2"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D2-natur-does-not-clear-after.tap",
+        "tapSHA256": "2e08b1bcc06abb9acd5c5635b7df4f4d13a59fcf004a3ff0397c0d309f582b7d"
+      },
+      "restoredHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "keeperAssertionLines": [
+        14,
+        15,
+        16
+      ],
+      "assertionStacks": [
+        16
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "D3-insertion-order",
+      "phase": "new",
+      "intended": "Exact expected [volume,less_frizz,shine] fails on input order [volume,shine,less_frizz]; permutation donor also fails.",
+      "originalHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D3-insertion-order-before.tap",
+        "tapSHA256": "5766a21e204d9493d29784c909dfe8225618d9a0f574dde078e4fbb9950ad1f2"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D3-insertion-order-fault.tap",
+        "tapSHA256": "3884a6cc9487f1af23442581aaf1e303f1ddbe3edba99de866d3f2650524c6ab"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D3-insertion-order-after.tap",
+        "tapSHA256": "a85e10dbd0c1e6127083921763d96d9c524890122a3b98f33b9853d7a76915a4"
+      },
+      "restoredHash": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "keeperAssertionLines": [
+        192
+      ],
+      "assertionStacks": [
+        192
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "D4-duplicate-goals-accepted",
+      "phase": "new",
+      "intended": "Existing duplicate moisture parse no longer throws; positive shared/historical goal inputs remain valid, so failure is intended rejection loss.",
+      "originalHash": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D4-duplicate-goals-accepted-before.tap",
+        "tapSHA256": "0c2814297205a86e3f500c24b7485b9bb02378ca3c8a3e1d211f7893c69f0de3"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D4-duplicate-goals-accepted-fault.tap",
+        "tapSHA256": "dc62882a7ac2dd1998ebd55cc16265d3dafcb84b70bc50989b57cd28e4312a3b"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D4-duplicate-goals-accepted-after.tap",
+        "tapSHA256": "8a9519b03f99bc1d7ee7143321d0fc448245723c67926654b665159268c58aaf"
+      },
+      "restoredHash": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0",
+      "keeperAssertionLines": [
+        147,
+        148,
+        155
+      ],
+      "assertionStacks": [
+        155
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "D5-present-hair-length-redirected",
+      "phase": "new",
+      "intended": "Existing version1 step4+medium length becomes step15; direct donor also detects it.",
+      "originalHash": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D5-present-hair-length-redirected-before.tap",
+        "tapSHA256": "c204ab55028714ef8cd950be26fbc76bbba648a46956738d549e580e68740fdd"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D5-present-hair-length-redirected-fault.tap",
+        "tapSHA256": "48211bda8fa3ce2e5ec1b88eaf2817063c80e5c1c17706f9e613c04511093c88"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/D5-present-hair-length-redirected-after.tap",
+        "tapSHA256": "8195b9f57c80f17358cd5c36bc33751703ea8019d04e7d9d0b8489b46fad6a4e"
+      },
+      "restoredHash": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "keeperAssertionLines": [
+        365,
+        366,
+        367
+      ],
+      "assertionStacks": [
+        365
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C1-contained-pick-lost",
+      "phase": "new",
+      "intended": "Existing back-edit keeping breakage must highlight breakage; selected becomes undefined.",
+      "originalHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-contained-pick-lost-before.tap",
+        "tapSHA256": "6414e6d2c8f78d90e6659c29cee842eab139ad0bba5d508af2887b8268faf949"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-contained-pick-lost-fault.tap",
+        "tapSHA256": "f8bf3d7303b660544b84046bd7cfb2e7df9c1e4ebc59f720750e22e7892b1303"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-contained-pick-lost-after.tap",
+        "tapSHA256": "e5303f84f1ea8192db39c2749bd6b96ce276be85a1fff23c53ff09c3f9745f50"
+      },
+      "restoredHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "keeperAssertionLines": [
+        242
+      ],
+      "assertionStacks": [
+        242
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C1-stale-pick-survives",
+      "phase": "new",
+      "intended": "After deselecting breakage the actual sheet selected prop must be undefined, not stale breakage.",
+      "originalHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-stale-pick-survives-before.tap",
+        "tapSHA256": "c7d92f02a1f644bb08c792f0b25df274cb0eeab6a5ec8082b799b636a621fb9a"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-stale-pick-survives-fault.tap",
+        "tapSHA256": "c15c7270803adb1eaa62ba7c80a5125a601d7e6b3ea9348c36b5a8454d782e39"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-stale-pick-survives-after.tap",
+        "tapSHA256": "9597d51d0b634c0a4101ce7278198269c8a5a636b51f7feb87c50a4b51be26e3"
+      },
+      "restoredHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "keeperAssertionLines": [
+        224,
+        225,
+        226
+      ],
+      "assertionStacks": [
+        225
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C1-undefined-auto-pick",
+      "phase": "new",
+      "intended": "New selected===undefined assertion fails on auto-picked low_shine; pre-transfer selected prop was unasserted.",
+      "originalHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-undefined-auto-pick-before.tap",
+        "tapSHA256": "5c43dfa6bcf637908a910e7e547eb64f2fa264cb5e13ceb511d018bf42b6d407"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-undefined-auto-pick-fault.tap",
+        "tapSHA256": "3e305820308bc0ad0a890a566e7e982434eb70f19437cb578cf9aa0a49097384"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C1-undefined-auto-pick-after.tap",
+        "tapSHA256": "ecd18cc03387e5313bf160be6f2f8350554eda9d572aca4f8971fab3c77445cf"
+      },
+      "restoredHash": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "keeperAssertionLines": [
+        141,
+        151,
+        152,
+        153,
+        157,
+        159,
+        160
+      ],
+      "assertionStacks": [
+        152
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C2-organic-load-becomes-scan",
+      "phase": "new",
+      "intended": "Actual store writes step3, then strengthened load projection must be null; mutant yields scan_v1. Original organic donor also fails.",
+      "originalHash": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C2-organic-load-becomes-scan-before.tap",
+        "tapSHA256": "186e62b3797617bba100ceee20f2d90fdc3d5b9332f2118fb1050ab9596e8047"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C2-organic-load-becomes-scan-fault.tap",
+        "tapSHA256": "067943a455586d90faef22326cc238e85087d18baf3f449a8509ad2dd1817bc2"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C2-organic-load-becomes-scan-after.tap",
+        "tapSHA256": "6eb7422601782fcc391c21fbec0da2d8a8f403311811383cc8a3bde60f51a546"
+      },
+      "restoredHash": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "keeperAssertionLines": [
+        279,
+        280,
+        281,
+        284,
+        285
+      ],
+      "assertionStacks": [
+        280
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C3-product-name-suffix",
+      "phase": "new",
+      "intended": "Exact paragraph name assertion fails; substring-only name matching would not.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-name-suffix-before.tap",
+        "tapSHA256": "dfde1bdd40c1eb005a2e3d15db607d20c7b303488be8c8189b3c933cdf13b4ea"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-name-suffix-fault.tap",
+        "tapSHA256": "49bc4e64d52b0b5d59761b4d2d728e2cb31a733447d7fd445be1e9f3e6b284eb"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-name-suffix-after.tap",
+        "tapSHA256": "69a06e471c240f2421668b86f2eaf0a37266ac7f33a229029049f1661a21bcd3"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        119,
+        120,
+        121,
+        124,
+        125,
+        126,
+        127,
+        128
+      ],
+      "assertionStacks": [
+        119
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C3-product-category",
+      "phase": "new",
+      "intended": "Exact Shampoo \u00b7 ca.1,25 \u20ac paragraph fails; correct name/image and positive scalp remain.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-category-before.tap",
+        "tapSHA256": "2580edf15e4c7bb149fe8395bbbf37c5a4b861f7af18704ed5a0b86a55e4fb8f"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-category-fault.tap",
+        "tapSHA256": "638bd4469979bf732e26784021792aaf112c9f0cf7491f9e654b38c3ffe3901e"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-category-after.tap",
+        "tapSHA256": "a04e1324362cd2e3279c2390dd4dcc6d500ede2bcf7faefce77ac34d6cea80a0"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        119,
+        120,
+        121,
+        124,
+        125,
+        126,
+        127,
+        128
+      ],
+      "assertionStacks": [
+        120
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C3-product-price-suffix",
+      "phase": "new",
+      "intended": "Exact category/price paragraph fails even though expected price remains a substring.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-price-suffix-before.tap",
+        "tapSHA256": "99a34cfce4e82f8f6fa26cd98942e7b4ebf8b1e9ef9988782f7b38f9adc561bd"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-price-suffix-fault.tap",
+        "tapSHA256": "083b49d321ad67ab50a7a7ba4028c6939e468b30c5cb8cec40fb23259a3160be"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-price-suffix-after.tap",
+        "tapSHA256": "ce7322d6cd67e94f5074986c48ab820a488237589967a38e4e6c29da81b8981d"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        119,
+        120,
+        121,
+        124,
+        125,
+        126,
+        127,
+        128
+      ],
+      "assertionStacks": [
+        120
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C3-product-image-suffix",
+      "phase": "new",
+      "intended": "Decoded actual src is not exact expected canonical image path; original donor fails. No image fetch needed for static render.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-image-suffix-before.tap",
+        "tapSHA256": "14ab7a6c8063d8aad25f5da2a8001c66085097652a1f65759e4e68d405a0d1ab"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-image-suffix-fault.tap",
+        "tapSHA256": "fea14e9b6ccf52b062f8e7d0e64c0d35bab1d825b59952910888eba38497396a"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C3-product-image-suffix-after.tap",
+        "tapSHA256": "115d8ca57ac0bafaf115fdbb4aa85b00834a706a6ce3d7ccb1baf6a85cd5d39d"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        119,
+        120,
+        121,
+        124,
+        125,
+        126,
+        127,
+        128
+      ],
+      "assertionStacks": [
+        121
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-coarse-problem-verdict",
+      "phase": "new",
+      "intended": "Only coarse problem-card verdict changes; existing row/headline/deviation assertions would pass, new verdict===literal status fails. Donor also fails.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C4-coarse-problem-verdict-before.tap",
+        "tapSHA256": "562c249324ea5134bef57ce50d915f6b13ebb55c31f6250a79c69c096a7c9145"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C4-coarse-problem-verdict-fault.tap",
+        "tapSHA256": "9c3ee69cd8312f54cef13ff5708414ddc2af7960d00c489740c53bfe9ac56a7a"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C4-coarse-problem-verdict-after.tap",
+        "tapSHA256": "524108ca01ea8ee6833cca92efac024b09fa2046249114f1086ec4b21aef8da4"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "assertionStacks": [
+        62
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-deviation-suffix",
+      "phase": "new",
+      "intended": "Exact rendered deviation paragraph fails while old contiguous phrase regex still matches; donor exact equality fails.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-suffix-before.tap",
+        "tapSHA256": "24fdedca6e762d20420fe1148229bf8e0a76662856c03b0e4e400ff26eed9a12"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-suffix-fault.tap",
+        "tapSHA256": "e148ea6a1a0d46f73520fcfffbcd6bb0c5434d601d0df5dc3804e39b64c8c5b1"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-suffix-after.tap",
+        "tapSHA256": "aab5cd2c4c8fad9dbce5665f49f666d55ab35958377c8afcdd10496e8c72eea2"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        134,
+        139,
+        140,
+        141,
+        145,
+        146,
+        147,
+        148
+      ],
+      "assertionStacks": [
+        134
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-deviation-order",
+      "phase": "new",
+      "intended": "Existing home card must preserve weight then repair order; reverse fails both exact paragraph and existing regex.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-order-before.tap",
+        "tapSHA256": "211c8e50da96cd8a65159fc7a6211959c2df41b0f53539e62be9ba358141671b"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-order-fault.tap",
+        "tapSHA256": "c8b9075f0e06021d6a97d716fb9e7ff2cb5e6b9e1aa73c73370a000437b9f1f0"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C5-deviation-order-after.tap",
+        "tapSHA256": "4e2c68ec822b6b0f68354821f34a86467bb224fb26ce7d93946fb32d64f80eaf"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        134,
+        139,
+        140,
+        141,
+        145,
+        146,
+        147,
+        148
+      ],
+      "assertionStacks": [
+        134
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C6-image-ogx-suffix",
+      "phase": "new",
+      "intended": "Exact decoded ogx packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-ogx-suffix-before.tap",
+        "tapSHA256": "03d6730a2fe8994b99e8731e2e1fea91f0ddeda7854b0859554ae811119a55ee"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-ogx-suffix-fault.tap",
+        "tapSHA256": "10a00e2a38e463d4dd505f70f176394837108f16c126e16a65189f3f9ba28f50"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-ogx-suffix-after.tap",
+        "tapSHA256": "ef373dacec9ccc039b15b8dc2a01ca1b95708e8485337ececf9b8d34025035f4"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        176,
+        180,
+        181
+      ],
+      "assertionStacks": [
+        176
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C6-image-balea-suffix",
+      "phase": "new",
+      "intended": "Exact decoded balea packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-balea-suffix-before.tap",
+        "tapSHA256": "9314bd2e3ecf8f3ff00871852694c1840e55ac2428bf44de666c5a94806a81f8"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-balea-suffix-fault.tap",
+        "tapSHA256": "7f512b02c6c44c02c58cf9b7c7c2f0202f7000d087b28f9e09cba29c18f00545"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-balea-suffix-after.tap",
+        "tapSHA256": "ee990566828e3073d703d1919ad739f331d6ae35a0c0032618274c86bdd63f12"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        176,
+        180,
+        181
+      ],
+      "assertionStacks": [
+        176
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C6-image-alterra-suffix",
+      "phase": "new",
+      "intended": "Exact decoded alterra packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-alterra-suffix-before.tap",
+        "tapSHA256": "e607bf2f1e3395a7701293a634c1c0dc1710d9f0d79d9450aa72b08e170883c6"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-alterra-suffix-fault.tap",
+        "tapSHA256": "c2ac6c5fb7334f18fbd350f2bf803ccf913539406ec876e87bfc082ef2535604"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-new/C6-image-alterra-suffix-after.tap",
+        "tapSHA256": "da0662bf02695ebaa596495fe96ea2c1cb33cc8cd08b5c1232dc2dad0cbaac18"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "keeperAssertionLines": [
+        176,
+        180,
+        181
+      ],
+      "assertionStacks": [
+        176
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    }
+  ],
+  "scanner": [
+    {
+      "id": "C1-reason-ids-leak",
+      "phase": "new",
+      "intended": "Copied exact German reasons array differs; raw mask reason identifiers are returned.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "notNeededReasons",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C1-reason-ids-leak-before.tap",
+        "tapSHA256": "c17e1eeb4288d1f1c3e7fca8ac6cd21ec7351c80e714404643708a20dba596bf"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C1-reason-ids-leak-fault.tap",
+        "tapSHA256": "1fd08c7ad22b3a008df749c056e13174311d2e2d42160609814ea6fcc5b59073"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C1-reason-ids-leak-after.tap",
+        "tapSHA256": "c3fca555c6e02a1b96db266efc56acacc32b62bc0933bffe299b295ec49e48c2"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        336,
+        338,
+        339,
+        340,
+        341,
+        343,
+        344,
+        345,
+        347,
+        348,
+        349
+      ],
+      "assertionStacks": [
+        347
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C2-covering-category-label",
+      "phase": "new",
+      "intended": "Copied coveredBy exact label Conditioner differs from Maske.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "coveredBy",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-category-label-before.tap",
+        "tapSHA256": "2ad0692367edac4c2b3d3ef26e56f06e9d5a47760539738626db53852212b8b5"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-category-label-fault.tap",
+        "tapSHA256": "1584ba7aff575c62174a2666dd5afcec569bc9f6789917c3533f96014b460776"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-category-label-after.tap",
+        "tapSHA256": "025c91e9f051cb706e861956c600ad731085c792623559c722238603cb8bbc71"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        336,
+        338,
+        339,
+        340,
+        341,
+        343,
+        344,
+        345,
+        347,
+        348,
+        349
+      ],
+      "assertionStacks": [
+        349
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C2-covering-job-copy",
+      "phase": "new",
+      "intended": "Copied coveredBy detail Repair-Pflege differs from null.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "coveredBy",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-job-copy-before.tap",
+        "tapSHA256": "1a3b976794f39eeef998225e7bb233edd6752941a05c10ae054570252ea526c2"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-job-copy-fault.tap",
+        "tapSHA256": "1f4fe478e50ce7e400c1b751befc40bf6f817144a97277caca122889d6b1f44c"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C2-covering-job-copy-after.tap",
+        "tapSHA256": "f532cf9da6ab77b613ca806b3dc0574798806b6f118a6e0c12efd23f62248ede"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        336,
+        338,
+        339,
+        340,
+        341,
+        343,
+        344,
+        345,
+        347,
+        348,
+        349
+      ],
+      "assertionStacks": [
+        349
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C3-null-facts-dimensions",
+      "phase": "new",
+      "intended": "Copied dimensions deepEqual [] fails on a spurious dimension for absent catalog facts.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "productOnlyDimensions",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C3-null-facts-dimensions-before.tap",
+        "tapSHA256": "f049663fe73cc6eb005fca3117901bc681663e7ae7c16428f52232e7dd0bdd53"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C3-null-facts-dimensions-fault.tap",
+        "tapSHA256": "52cb1f413f22873a487717a5151368cdcc236692334eb73132a81a0f8e464600"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C3-null-facts-dimensions-after.tap",
+        "tapSHA256": "2fc786ff6eae6b1dbca7e2a5ce108f6741d1c9fc5b5a14eebe1e27236a001027"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        380,
+        382,
+        384
+      ],
+      "assertionStacks": [
+        384
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-label",
+      "phase": "new",
+      "intended": "Transferred Passt label assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-label-before.tap",
+        "tapSHA256": "169ba4597a0426034f6b0e52121776a91917d85349b4d9390a648c0c370f2299"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-label-fault.tap",
+        "tapSHA256": "b5033c00c9c26b7d9b9a7db28d35b0b8f292ceb9a7302bb5e8a1589ede3f05dc"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-label-after.tap",
+        "tapSHA256": "63b2ab1207939de30242ab062fae6aff793ae2f85fb3d205e62706fd41ef9b78"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        648
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-title",
+      "phase": "new",
+      "intended": "Transferred Passt zu deinem Haar title assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-title-before.tap",
+        "tapSHA256": "9c35bfa34c9259d50679d060ccbbe246713e849546a8fc8492cc8df4ba953fdb"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-title-fault.tap",
+        "tapSHA256": "2322c482df125fe8480995df4a6bb5513d1fc7b8bb2e38ce03a1a8b636518677"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-title-after.tap",
+        "tapSHA256": "dc3f783221d3babd77f23b215df2f5dce0121212c55c2ed4a34880a531b9ad5f"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        649
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-status",
+      "phase": "new",
+      "intended": "Transferred ok status assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-status-before.tap",
+        "tapSHA256": "3f479f94ddf5338e03ed215fa88897ead366cf62bfbdb7c01d4be8ba1d50016b"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-status-fault.tap",
+        "tapSHA256": "a05d66d2833cc179f08b9a8c1f23d55533aaadfbc02d132725c6a30aa8c515b4"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-status-after.tap",
+        "tapSHA256": "6506159c313b6e2bfeb42f028985ed65f442b113d06c502485be961df1c16a3e"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        650
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-role",
+      "phase": "new",
+      "intended": "Transferred conditioner_rinse_out evaluated role assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-before.tap",
+        "tapSHA256": "7b4987c9738b392df1b8f8a174eefa1b8ee4e9d9e0d1e0d0b1f96e70e559acc4"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-fault.tap",
+        "tapSHA256": "9703e472b4d893d0ee8680935c78c6113f5d638a0cc4c384f7a28f3b11e0d17c"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-after.tap",
+        "tapSHA256": "aa280a95ba5b454083e2e85b9477b209a839da970951259433df0676a66da444"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        651
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-role-label",
+      "phase": "new",
+      "intended": "Transferred Pflege nach der W\u00e4sche role label assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-label-before.tap",
+        "tapSHA256": "08d2f39651e869abc2085a7c75376ac3ddf141142333a604140f117b639be57b"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-label-fault.tap",
+        "tapSHA256": "954880a4d886072e13e0053742c43595288f9c962a452e4a43a06c0f9810aef6"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-role-label-after.tap",
+        "tapSHA256": "73e0f5cd6130b9260cc1e1ccd99038ab135d943d4fc0db4a530441d231057a74"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        652
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-coverage",
+      "phase": "new",
+      "intended": "Transferred 4 of4 exact coverage assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-coverage-before.tap",
+        "tapSHA256": "72a0089e25cf73abd960492666cffb8c532f13002b74ef1310e1148596a8b1ed"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-coverage-fault.tap",
+        "tapSHA256": "c200e2a959d1423961c99356ca7a6bb4b15272a2d4274fd629fcadf85d0c0a23"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-coverage-after.tap",
+        "tapSHA256": "35161286fe60fb98c8b64543537e969af6e45142f4d82479eb15cc88b09bd84e"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        653
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-subtitle",
+      "phase": "new",
+      "intended": "Transferred 4 von4 target subtitle assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-subtitle-before.tap",
+        "tapSHA256": "323ed146d8dc75c456c6b0d1867cfa6a6204fd0f4d95dff23de2761e40fce748"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-subtitle-fault.tap",
+        "tapSHA256": "c9d8be6ec58fcc37e7db1de15bfd18fbbb643b5f171dd4304e463950fce5e807"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new/C4-subtitle-after.tap",
+        "tapSHA256": "ab2bec4172ff299fe801eca4cccd19f3bbeecc9480fe4856c6a13972299359c5"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        654
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-criteria",
+      "phase": "new",
+      "intended": "Transferred positive nonempty criteria assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-criteria-before.tap",
+        "tapSHA256": "ccdf28af3449a80db1c290d55f431e23e0dc9a1cfcf51fe491e5ae74968f876a"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-criteria-fault.tap",
+        "tapSHA256": "240dcef3ed5754a819ea432f36c28e26ac1d76600399aff0b0d0d0bbb42eb3cd"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-criteria-after.tap",
+        "tapSHA256": "73dc689b3d58458391ca2bf04f09fc75d3b82d1b8a00de78492f35f57a394c5c"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        655
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-narrative",
+      "phase": "new",
+      "intended": "Transferred exact fitNarrative pair assertion fails.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-narrative-before.tap",
+        "tapSHA256": "5e64bbb3ed35bceabf2962a21f1b0567a37891e570853dad16fc69279adf0b6c"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-narrative-fault.tap",
+        "tapSHA256": "8da70e187cb6b823b74cde74b63317fb117105ade58c7b2ffff3d280f0644995"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-narrative-after.tap",
+        "tapSHA256": "a76a97a6b4c5ded2491a77a984f7486f1df44ca859c1431ce032caa079ecca4d"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        671
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-dimension-sequence",
+      "phase": "new",
+      "intended": "Copied four dimension IDs lose conditioner.weight, preserving alternatives and verdict.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-dimension-sequence-before.tap",
+        "tapSHA256": "e27fa2ff95f1bfde98691d36e8aedcb49b361d31d997826761216e8ca50ddbcb"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-dimension-sequence-fault.tap",
+        "tapSHA256": "de2386ab2e8c1facb5d1c4a29baaa32e3e19c2054f718568e2458ba2bc4ab4cd"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-dimension-sequence-after.tap",
+        "tapSHA256": "aefaa9320aaf10660911124d5ad6b9940287a578d0053dcc15d8574ae0bbea08"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        656
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-weight-target",
+      "phase": "new",
+      "intended": "Copied weight targetStopIds [light] differs.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "scanDimension",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-target-before.tap",
+        "tapSHA256": "71ac457274f3b0fd83cf0640128de8fa239ef045ed82583ced965777fb2abc9f"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-target-fault.tap",
+        "tapSHA256": "71e6f8f6ad0e7a297de2845b17f7ab658e370ae6a4b57fb4f3a2ee8e6ac20529"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-target-after.tap",
+        "tapSHA256": "0a2a45d4f6683ffe2d960d4718b15dfe72117aa04395a564489761c66502005e"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        668
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-weight-product",
+      "phase": "new",
+      "intended": "Copied weight productStopIds [light] differs.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "scanDimension",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-product-before.tap",
+        "tapSHA256": "bb671ca84f3b931e02d1ac27d7fd119252772c1d5632a24ad8b0ba7ffee6fc8c"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-product-fault.tap",
+        "tapSHA256": "806292ca90e6e9d1b76faac891c3f80981ae7dd4c7f72e3f451bb6423a0070d3"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-product-after.tap",
+        "tapSHA256": "aa932336d1773d037b57a59ba3c24e4af354fe00e499aa8783aebb6cdf1c68aa"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        669
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C4-weight-state",
+      "phase": "new",
+      "intended": "Copied ideal weight state in_target differs.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "scanDimension",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-state-before.tap",
+        "tapSHA256": "092a3c135cd7508973016ee0cbc82c37b3be53126975a3d4c6dfdb65fb357fd8"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-state-fault.tap",
+        "tapSHA256": "a034912220626a0e1cc95a15d2f9903b1f7384e37aa6b22632027eeed09a2c11"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C4-weight-state-after.tap",
+        "tapSHA256": "77bbcb3e63c51b4e3b47e91a8c4d3606dd603dcc449f40262538e192d4c96245"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        638,
+        640,
+        642,
+        643,
+        644,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        668,
+        669,
+        670,
+        671
+      ],
+      "assertionStacks": [
+        670
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-label",
+      "phase": "new",
+      "intended": "Transferred mismatch Passt nicht assertion fails; alternative payload copy remains intact.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-label-before.tap",
+        "tapSHA256": "7f7b041dbb41ad37804ae88496d62c0608eb5d426aa3556d905a7442ec043b0e"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-label-fault.tap",
+        "tapSHA256": "ab9051b7ecd9faad4c2a5bcae12c402e14654a8167b38ebeae26d73a5aa03959"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-label-after.tap",
+        "tapSHA256": "b60c2119e4bb359a80d746ef3ced75228e55bef21cba2b93dd014f70cf2d0d12"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        696,
+        698,
+        699,
+        700,
+        703,
+        708,
+        710,
+        711,
+        712,
+        714,
+        715,
+        716,
+        720,
+        721
+      ],
+      "assertionStacks": [
+        714
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-title",
+      "phase": "new",
+      "intended": "Transferred mismatch Passt nicht zu deinem Haar assertion fails; alternative payload copy remains intact.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-title-before.tap",
+        "tapSHA256": "38483fce3f12c3ab6d04b75f26eee62b4df153e0416492e6553e0472a805128e"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-title-fault.tap",
+        "tapSHA256": "5ac8c7865018acb5942c05950161ce5858cdeabe7067516c86fa7fdc776eb4ab"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-title-after.tap",
+        "tapSHA256": "9326eba47128a07dacac08508763a61a9d4613e9d2d9bee5ad04e423b8663b14"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        696,
+        698,
+        699,
+        700,
+        703,
+        708,
+        710,
+        711,
+        712,
+        714,
+        715,
+        716,
+        720,
+        721
+      ],
+      "assertionStacks": [
+        715
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-status",
+      "phase": "new",
+      "intended": "Transferred mismatch danger assertion fails; alternative payload copy remains intact.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "inCatalogPayload",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-status-before.tap",
+        "tapSHA256": "b37fc8fbe44f20fa7af48c040a19633472d3116fdbc7eaaaa9f6b6367a34ac9a"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-status-fault.tap",
+        "tapSHA256": "63c087d7c693e4c5da83b260e05b3a157342de6e97adcb885f04dfa952d16bc5"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-status-after.tap",
+        "tapSHA256": "1abf49d4cfc20e1358a181f90475fda3bc508d5f7f702cd49612b8304436aa9d"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        696,
+        698,
+        699,
+        700,
+        703,
+        708,
+        710,
+        711,
+        712,
+        714,
+        715,
+        716,
+        720,
+        721
+      ],
+      "assertionStacks": [
+        716
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-missed-axis",
+      "phase": "new",
+      "intended": "Transferred weight.state outside_target now in_target.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "dimensionState",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-missed-axis-before.tap",
+        "tapSHA256": "683b4cd6233e720a8176b57f592205de498935dfd150098656aa403dcf2c6a1d"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-missed-axis-fault.tap",
+        "tapSHA256": "d1a14713bf7c5c8a8aab81195349a6341016f20761e18b69302089a051e192b0"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-missed-axis-after.tap",
+        "tapSHA256": "cbdf6fc94d6a944ed2fbd7463df56e6217981b21d6c6d4de4c873d3737f99476"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        696,
+        698,
+        699,
+        700,
+        703,
+        708,
+        710,
+        711,
+        712,
+        714,
+        715,
+        716,
+        720,
+        721
+      ],
+      "assertionStacks": [
+        720
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C5-rich-product-stop",
+      "phase": "new",
+      "intended": "Transferred mismatch weight.productStopIds [rich] now empty.",
+      "source": "src/lib/scan/resolve-verdict.ts",
+      "scope": "scanDimension",
+      "originalHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-rich-product-stop-before.tap",
+        "tapSHA256": "ccef34332716b812504ae7f9068ce85302e68f10164417d748d46ff15c47f026"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-rich-product-stop-fault.tap",
+        "tapSHA256": "1b326311b822329593ecaa170e02aa9ba9fef0708d2e4886ac9fa3efe6d7ce6a"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C5-rich-product-stop-after.tap",
+        "tapSHA256": "ea98cee6582df98882cc7233dac059c49f80eb0c74d7013c13cbefbc560f231d"
+      },
+      "restoredHash": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+      "keeperAssertionLines": [
+        696,
+        698,
+        699,
+        700,
+        703,
+        708,
+        710,
+        711,
+        712,
+        714,
+        715,
+        716,
+        720,
+        721
+      ],
+      "assertionStacks": [
+        721
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C6-masked-name-leak",
+      "phase": "new",
+      "intended": "Transferred absent Lab Shampoo literal becomes present in positively found masked block.",
+      "source": "src/components/scan/scan-masked-alternatives.tsx",
+      "scope": "ScanMaskedAlternatives",
+      "originalHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-name-leak-before.tap",
+        "tapSHA256": "e04d62bdae486cf195ef3ac467121641368419999cbf1fa8a850e0f3482897a2"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-name-leak-fault.tap",
+        "tapSHA256": "3c83e4f7554920c8827fdea03c9138d4b73fa22a5f652ede8e801047199296fc"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-name-leak-after.tap",
+        "tapSHA256": "3bcc9e7f497ae7880279898f4965e5d03aa7b734fbc6e24170ac2dff1a1f836a"
+      },
+      "restoredHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "keeperAssertionLines": [
+        186,
+        190,
+        193,
+        194,
+        196,
+        202,
+        204,
+        205
+      ],
+      "assertionStacks": [
+        204
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C6-masked-price-leak",
+      "phase": "new",
+      "intended": "Transferred absent 9,99 literal becomes present in positively found masked block.",
+      "source": "src/components/scan/scan-masked-alternatives.tsx",
+      "scope": "ScanMaskedAlternatives",
+      "originalHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-price-leak-before.tap",
+        "tapSHA256": "90f7adccb85bc7fcd1bd411c2707a20522e189bfafdc6fa05cefb72f26539ae3"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-price-leak-fault.tap",
+        "tapSHA256": "8c21607c25a1500ec0c5b942980bb80a2f7e133fdbe52d528ffb359b6914caea"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C6-masked-price-leak-after.tap",
+        "tapSHA256": "cb7470a8352ea94b7f1e7afd56816c5dfa01b0cb7771bd602c29808249bb4fbb"
+      },
+      "restoredHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "keeperAssertionLines": [
+        186,
+        190,
+        193,
+        194,
+        196,
+        202,
+        204,
+        205
+      ],
+      "assertionStacks": [
+        205
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C7-first-why-entry",
+      "phase": "new",
+      "intended": "Transferred actionLabels negative catches extra Warum button while existing CTA label/count/callback still work.",
+      "source": "src/components/scan/scan-masked-alternatives.tsx",
+      "scope": "ScanMaskedAlternatives",
+      "originalHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-first-why-entry-before.tap",
+        "tapSHA256": "6eb3718af81307a193b2051b11129d48b197cd6a03db4d38dc76f73787bc2af8"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-first-why-entry-fault.tap",
+        "tapSHA256": "2fdc281cc4082eda61739713ef74634ae97f96326a2a9dbd641facc2d53532f9"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-first-why-entry-after.tap",
+        "tapSHA256": "bdc768e8433a292abfd3c6fe6bcde74851c317c67157a2de76a2fcb90b0fca6c"
+      },
+      "restoredHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "keeperAssertionLines": [
+        224,
+        225,
+        226,
+        229,
+        231
+      ],
+      "assertionStacks": [
+        231
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C7-spent-why-entry",
+      "phase": "new",
+      "intended": "Transferred actionLabels negative catches extra Warum button while existing CTA label/count/callback still work.",
+      "source": "src/components/scan/scan-masked-alternatives.tsx",
+      "scope": "ScanMaskedAlternatives",
+      "originalHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-spent-why-entry-before.tap",
+        "tapSHA256": "0aca1acf916c517ba0a75c8b0f4f6f2763bc35d847e840f3f9c30e6737dcd72f"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-spent-why-entry-fault.tap",
+        "tapSHA256": "3653203b4b92c025dc2980c0300b077a6cd7759a67528d0d59e34f4b14555918"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-spent-why-entry-after.tap",
+        "tapSHA256": "d5d54a54049aeb4333ee1d14eb55c655094692eb7f71273bf0a52c7f0ba6db10"
+      },
+      "restoredHash": "6304eba150bb686d680c0778003c94942be0a01c59f48aa26dad77c381e789ab",
+      "keeperAssertionLines": [
+        297,
+        299,
+        300,
+        302,
+        305,
+        307
+      ],
+      "assertionStacks": [
+        307
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C7-revealed-why-entry",
+      "phase": "new",
+      "intended": "Transferred revealed-list actionLabels negative catches additional Warum entry; Gamma card remains.",
+      "source": "src/components/scan/scan-verdict-sections.tsx",
+      "scope": "ScanAlternativesList",
+      "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-revealed-why-entry-before.tap",
+        "tapSHA256": "b4b7316840641b2584d61b6c7696551aab5e4bea7c4922db0fc8a46cf4064164"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-revealed-why-entry-fault.tap",
+        "tapSHA256": "bb911da72e750413e78c06a13bb96c37b06b1aa0f89a0f77da432e63946ce5fd"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C7-revealed-why-entry-after.tap",
+        "tapSHA256": "d53542e2217548e18657fc84facb0ca284e11a8dbe410dbab875d07f0e8c74e9"
+      },
+      "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "keeperAssertionLines": [
+        247,
+        249,
+        252,
+        255,
+        256,
+        258,
+        259,
+        261
+      ],
+      "assertionStacks": [
+        261
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C8-masked-marker",
+      "phase": "new",
+      "intended": "Transferred premium absence check fails for masked-marker despite full alternative heading/card still rendering.",
+      "source": "src/components/scan/scan-result-card.tsx",
+      "scope": "ScanResultCard",
+      "originalHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-masked-marker-before.tap",
+        "tapSHA256": "e5eac119c618d5a80a77a16cc47cc24afb99540b73dae4f43c915d74b5d27a49"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-masked-marker-fault.tap",
+        "tapSHA256": "a6df285ee57e38e05b0a0708c39565973c1fe40b38dd32231c7a218cc5aa316f"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-masked-marker-after.tap",
+        "tapSHA256": "e442e98c2d846b1519e4860f067709848a21dc64f18be6d74c47484680df8793"
+      },
+      "restoredHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "keeperAssertionLines": [
+        358,
+        359,
+        361,
+        362,
+        363,
+        364,
+        365,
+        367,
+        368
+      ],
+      "assertionStacks": [
+        361
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C8-reveal-marker",
+      "phase": "new",
+      "intended": "Transferred premium absence check fails for reveal-marker despite full alternative heading/card still rendering.",
+      "source": "src/components/scan/scan-result-card.tsx",
+      "scope": "ScanResultCard",
+      "originalHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-reveal-marker-before.tap",
+        "tapSHA256": "249b1ebe9a6121a35f869c33186f670c6395855bbfa0c4be48f1a5ad95fe954c"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-reveal-marker-fault.tap",
+        "tapSHA256": "8f2d66f16e25b16d61c86b11b60780958ef43b35a8774e3e90c50b2944a2ed71"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-reveal-marker-after.tap",
+        "tapSHA256": "ef645dbb94a5174679827f1b0355cbfe1b23de533421d625e93808f516e86c51"
+      },
+      "restoredHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "keeperAssertionLines": [
+        358,
+        359,
+        361,
+        362,
+        363,
+        364,
+        365,
+        367,
+        368
+      ],
+      "assertionStacks": [
+        363
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C8-premium-marker",
+      "phase": "new",
+      "intended": "Transferred premium absence check fails for premium-marker despite full alternative heading/card still rendering.",
+      "source": "src/components/scan/scan-result-card.tsx",
+      "scope": "ScanResultCard",
+      "originalHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-premium-marker-before.tap",
+        "tapSHA256": "ab37a89fe7b4e522136d9bb5ade409461679b9de9f119b98a2864bba291b39c1"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-premium-marker-fault.tap",
+        "tapSHA256": "ddd33f0897b269abd6efe34de6c87617d23c441ecbea825cb94faac0c5bd22c4"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-premium-marker-after.tap",
+        "tapSHA256": "952f290343c34716dbcd36741423f24d7f85b998f15dd4a71ff63d0e0687dd70"
+      },
+      "restoredHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "keeperAssertionLines": [
+        358,
+        359,
+        361,
+        362,
+        363,
+        364,
+        365,
+        367,
+        368
+      ],
+      "assertionStacks": [
+        364
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "C8-unblur",
+      "phase": "new",
+      "intended": "Transferred premium absence check fails for unblur despite full alternative heading/card still rendering.",
+      "source": "src/components/scan/scan-result-card.tsx",
+      "scope": "ScanResultCard",
+      "originalHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-unblur-before.tap",
+        "tapSHA256": "9516abe191ccc1951bebba2b5bd37495468c459e01235b0d35928cb402eea39e"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-unblur-fault.tap",
+        "tapSHA256": "6e1768ab9756784a19ee1d4800887c78e17f8bc20f12ced21ccf30f7bf343b55"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/C8-unblur-after.tap",
+        "tapSHA256": "127f12aa7b0bf655483fdcc6993d79829f54a56fe57ef3b388bb1e0d1a97c78d"
+      },
+      "restoredHash": "43b5ad3ad79530260f4dc565fdf165c3d44400edbbb2b71c3383ed498d46f2fb",
+      "keeperAssertionLines": [
+        358,
+        359,
+        361,
+        362,
+        363,
+        364,
+        365,
+        367,
+        368
+      ],
+      "assertionStacks": [
+        365
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedFailureInspected": true
+    },
+    {
+      "id": "F-renderer-unexpected-exception",
+      "phase": "new",
+      "intended": "Old catch-based selected keeper GREEN; explicit-thumbnail-skip repaired keeper RED on unique audit-unexpected-verdict-section error. This exception is the intended oracle, not harness failure.",
+      "source": "src/components/scan/scan-verdict-sections.tsx",
+      "scope": "ScanVerdictSections",
+      "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/F-renderer-unexpected-exception-before.tap",
+        "tapSHA256": "d216f7ed3d56a33044be117aeb22f16518d26e4fb4ab1fe5055b65bbc524e07b"
+      },
+      "fault": {
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/F-renderer-unexpected-exception-fault.tap",
+        "tapSHA256": "868c6ed26cf4ac31b7cfd5b22b89c98a806e561c732a1822c421ee471ecf40d8"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-new-continued2/F-renderer-unexpected-exception-after.tap",
+        "tapSHA256": "361cc296b94ee5ce04c5e5d0e10645b97b6ceae1a86b3527e38bd17354751a3c"
+      },
+      "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "intendedException": true,
+      "mainIntendedFailureInspected": true
+    }
+  ],
+  "oldFalsePasses": [
+    {
+      "id": "C3-product-name-suffix",
+      "phase": "old",
+      "intended": "Exact paragraph name assertion fails; substring-only name matching would not.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-name-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-name-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-name-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C3-product-price-suffix",
+      "phase": "old",
+      "intended": "Exact category/price paragraph fails even though expected price remains a substring.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-price-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-price-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-price-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C3-product-image-suffix",
+      "phase": "old",
+      "intended": "Decoded actual src is not exact expected canonical image path; original donor fails. No image fetch needed for static render.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-image-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-image-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C3-product-image-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C4-coarse-problem-verdict",
+      "phase": "old",
+      "intended": "Only coarse problem-card verdict changes; existing row/headline/deviation assertions would pass, new verdict===literal status fails. Donor also fails.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C4-coarse-problem-verdict-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C4-coarse-problem-verdict-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C4-coarse-problem-verdict-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C5-deviation-suffix",
+      "phase": "old",
+      "intended": "Exact rendered deviation paragraph fails while old contiguous phrase regex still matches; donor exact equality fails.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C5-deviation-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C5-deviation-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C5-deviation-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C6-image-ogx-suffix",
+      "phase": "old",
+      "intended": "Exact decoded ogx packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-ogx-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-ogx-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-ogx-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C6-image-balea-suffix",
+      "phase": "old",
+      "intended": "Exact decoded balea packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-balea-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-balea-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-balea-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "C6-image-alterra-suffix",
+      "phase": "old",
+      "intended": "Exact decoded alterra packshot source fails; old encoded substring regex would pass. Each fixed product constant is faulted separately.",
+      "originalHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-alterra-suffix-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-alterra-suffix-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-quiz-mutations-old/C6-image-alterra-suffix-after.tap"
+      },
+      "restoredHash": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3",
+      "oldFalsePass": true
+    },
+    {
+      "id": "F-renderer-unexpected-exception",
+      "phase": "old",
+      "intended": "Old catch-based selected keeper GREEN; explicit-thumbnail-skip repaired keeper RED on unique audit-unexpected-verdict-section error. This exception is the intended oracle, not harness failure.",
+      "source": "src/components/scan/scan-verdict-sections.tsx",
+      "scope": "ScanVerdictSections",
+      "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "before": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-old/F-renderer-unexpected-exception-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-old/F-renderer-unexpected-exception-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next413-scanner-mutations-old/F-renderer-unexpected-exception-after.tap"
+      },
+      "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "oldFalsePass": true
+    }
+  ],
+  "limits": "Main inspected every intended assertion or exact exception. Two interrupted C4-criteria attempts receive no credit. Source restored after interruption. An explicit diagnostic message on the same keeper assertion avoided the Node 22 assertion-formatting spin; its exact intended red subsequently passed. No input or contract changed."
+}

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
+import { JSDOM } from "jsdom"
 
 import { ProductCard } from "@/components/chat/product-card"
 import type { Product } from "@/lib/types"
@@ -67,14 +68,17 @@ test("compact product card renders identity, price, whitelisted facts, and a qui
 
   assert.match(html, /Wella Ultimate Repair Leave-In/)
   assert.match(html, /Wella/)
-  assert.match(html, /Leave-in/)
-  assert.match(html, /Lotion/)
-  assert.match(html, /Hitzeschutz/)
+  assert.equal(
+    JSDOM.fragment(html).querySelector("button")?.textContent,
+    "WellaWella Ultimate Repair Leave-InLeave-inLotionHitzeschutz18,51 €Produktdetails öffnen",
+  )
+
+  assert.doesNotMatch(html, /Mittel/)
   assert.doesNotMatch(html, /Pflege:/)
   assert.match(html, /lucide-sparkles/)
   assert.doesNotMatch(html, /lucide-shower-head/)
 
-  assert.match(html, /18,51\s*€/)
+  assert.match(html, />18,51 €</)
   assert.doesNotMatch(html, /Zielprofil|grossen Teilen|Routine-Rolle/)
   assert.doesNotMatch(html, /score|0\.91/i)
   assert.doesNotMatch(html, /Tags|Profil-Match|Zielprofil/i)
@@ -84,34 +88,16 @@ test("compact product card renders identity, price, whitelisted facts, and a qui
   assert.match(html, /lucide-chevron-right[\s\S]*aria-hidden="true"/)
 })
 
-test("compact product card surfaces the product category as the first fact chip", () => {
-  const product = {
-    ...createWellaLikeLeaveIn(),
-    name: "Ultimate Repair",
-    category: "Leave-in",
-  }
-
-  const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
-
-  const categoryIndex = html.indexOf(">Leave-in<")
-  const formatIndex = html.indexOf(">Lotion<")
-
-  assert.notEqual(categoryIndex, -1)
-  assert.notEqual(formatIndex, -1)
-  assert.ok(categoryIndex < formatIndex)
-  assert.match(html, /Hitzeschutz/)
-  assert.doesNotMatch(html, /Mittel/)
-  assert.doesNotMatch(html, /Pflege:/)
-})
-
 test("compact product card uses product image when available", () => {
   const product = createWellaLikeLeaveIn()
   product.image_url = "https://example.com/wella-leave-in.webp"
+  product.currency = "NOT_A_CURRENCY"
 
   const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
 
   assert.match(html, /wella-leave-in\.webp/)
   assert.doesNotMatch(html, /lucide-sparkles/)
+  assert.match(html, />18,51 €</)
 })
 
 test("compact product card renders product line as identity metadata", () => {

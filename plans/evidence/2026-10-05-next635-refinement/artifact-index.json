@@ -1,0 +1,1184 @@
+[
+  {
+    "original": "/tmp/test-audit-refinement-status37/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "e12d21510e24f5d7be53a7c4bf15a86d084ec939833d2d47bf51ea6fbcdb5e48",
+    "bytes": 44906
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/commands.json",
+    "archived": "proposal/commands.json",
+    "sha256": "4f7ac5b217e28c73b5c788efe07018c42e19b29df4466691fd7fc5656eb0c707",
+    "bytes": 664
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "10f4e8faa7551fc862f360cea314c676199ef4f2341e3b02fa6ff7b0a8f9d7c4",
+    "bytes": 25515
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "a89172f4b51844f248ac515268add7947ceb2865088eb97a7b8c9189f1f14abb",
+    "bytes": 9018
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "a32963928b3a6f5dacb3a638b6933a8b89052fec81b0d62e65dadb02e9cc69c1",
+    "bytes": 43121
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "9bf451758eab49e3b0593eae2a96dfcf969c771bbb829da1b5c407438fd11789",
+    "bytes": 1819
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "1329747c8b79dfd9e091a532238182bddcf83433ca37e5451d256dbd083a3014",
+    "bytes": 13873
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "9a43224a97905922c4c16571fc787fae24191f85881fbb3d01b51a83fa1403de",
+    "bytes": 83357
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "20e860ff28dbf2fed2d9fdfd07482242f66a18988ab2dc4bc5514edf243f2ce6",
+    "bytes": 10438
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/prepare.cjs",
+    "archived": "proposal/prepare.cjs.txt",
+    "sha256": "e54a5bb28d93f637da211b1e66c3b72739b1406b4c18fd059ef0e15e34217a07",
+    "bytes": 17630
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/sites.json",
+    "archived": "proposal/sites.json",
+    "sha256": "63211b8cef2856972657ffb08be0a16343345f219c3bffa3f9026a4d43ca4de3",
+    "bytes": 182346
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/before/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+    "bytes": 3653
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/before/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/before/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/before/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+    "bytes": 11940
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/before/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "fe82e2afc422d04e8eb673f89659c055cc139c72b79001f37f2bbc824269f1a5",
+    "bytes": 11451
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/cut/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f",
+    "bytes": 3386
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/cut/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0",
+    "bytes": 2905
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/cut/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/cut/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b",
+    "bytes": 11298
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/cut/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+    "bytes": 11655
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/transfer/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+    "bytes": 3653
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/transfer/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/transfer/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/transfer/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+    "bytes": 11940
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/snapshots/transfer/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+    "bytes": 11655
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "a7d34fe57aa547c89faf80d1e90054acc9626ca1cee9196db287770593b53bde",
+    "bytes": 338
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/survivors.json",
+    "archived": "proposal/survivors.json",
+    "sha256": "fbf73696ed49904776e2416ebb538e6b98f1fab288c9e9f0a9e4e901adadc5e0",
+    "bytes": 11310
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "863657c826ef2fc3dcf4353549b6f0d17d72d13138f284c76940af64be847d32",
+    "bytes": 856
+  },
+  {
+    "original": "/tmp/test-audit-refinement-status37/write-ledger.py",
+    "archived": "proposal/write-ledger.py.txt",
+    "sha256": "2ef86a7709b1ab3642545b17f971e349dd9fdd3607a8d41d2847ebbec77fc866",
+    "bytes": 15352
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/HANDOFF.json",
+    "archived": "toolkit/HANDOFF.json",
+    "sha256": "487f6f999f242bd1625498105b1881d3c65bf5a236003a1fa4adae7dbfa28cbb",
+    "bytes": 1656
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/README.md",
+    "archived": "toolkit/README.md",
+    "sha256": "f54567f125154d4c685110480e5494050df735e70bebfad5d089160caab5c5c8",
+    "bytes": 8298
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/artifact-hashes.json",
+    "archived": "toolkit/artifact-hashes.json",
+    "sha256": "0daa5074590bcc3b2d87d1d779f3e2014642fb2290b7886804c10704537ef148",
+    "bytes": 4923
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/finalization-receipt-final.json",
+    "archived": "toolkit/finalization-receipt-final.json",
+    "sha256": "da57cc9920cd5d84312835b0a0687bccf44cc0870b2f12b5b267f41898724861",
+    "bytes": 396
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/finalization-receipt.json",
+    "archived": "toolkit/finalization-receipt.json",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/finalize-static.cjs",
+    "archived": "toolkit/finalize-static.cjs.txt",
+    "sha256": "d81274105b0cd9f162aa186699245335183f8ff621e9d0969cd2271842b513d5",
+    "bytes": 6666
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/intent.json",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/intent.json",
+    "sha256": "933b3eabf5ff26f6ae788869d70daccd8fe9de9f4f07a6123ac65f70e0e2a316",
+    "bytes": 1851
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/originals/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+    "bytes": 3653
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/originals/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+    "bytes": 11940
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/originals/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+    "bytes": 11655
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/receipt.json",
+    "archived": "toolkit/operator-apply-cut-PH1QYs/receipt.json",
+    "sha256": "e93129fe4ebdc89c53f2c285fe6932c4310d133f5fae5505cefc211b373bbbf0",
+    "bytes": 1514
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/intent.json",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/intent.json",
+    "sha256": "76d4da126757a53b70aefe28f965fbe7aec9de0cad2c6eb5a00a66ac336380e7",
+    "bytes": 1607
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/originals/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/originals/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+    "bytes": 3653
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/originals/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/originals/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+    "bytes": 11940
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/originals/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "fe82e2afc422d04e8eb673f89659c055cc139c72b79001f37f2bbc824269f1a5",
+    "bytes": 11451
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-transfer-G7x84H/receipt.json",
+    "archived": "toolkit/operator-apply-transfer-G7x84H/receipt.json",
+    "sha256": "e6ccee846f62747b2da314714faa28a080ebe66e8a3452f32118fc09d2ab8dc6",
+    "bytes": 1150
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-candidates.json",
+    "archived": "toolkit/operator-candidates.json",
+    "sha256": "32b95d10f59c1e5060cd2e6d5baa453a9c3495e11dd11ff00b48244c7f5773f1",
+    "bytes": 36010
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-controls-normalized.json",
+    "archived": "toolkit/operator-controls-normalized.json",
+    "sha256": "cb4dc74210b28373f716447b8dd0ef1894f8da3a82b422f01fd18d193100f007",
+    "bytes": 32680
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-edit.cjs",
+    "archived": "toolkit/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-evidence.json",
+    "archived": "toolkit/operator-evidence.json",
+    "sha256": "8b9b38fdb2869857a9ba154c4ac7ef013c8d8dd2d7fcf68754ea00b36e19c0e4",
+    "bytes": 5929
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-guard.cjs",
+    "archived": "toolkit/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-after.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-after.tap",
+    "sha256": "e85a47d421000a8830e1b5f97bd1c86fb76a1b8a092c7da291efad24df2dea11",
+    "bytes": 308
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-before.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-before.tap",
+    "sha256": "994fa2c4942b8708ac32bb9fa0ae92ad9cede6fa87ab5c1bd63d87a04c167f5e",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-fault.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-open-count-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-open-count-fault.tap",
+    "sha256": "d7b0583c2364e81602d952cee1afcfa7d5eda750b646461e2729690f86035b30",
+    "bytes": 950
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-after.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-after.tap",
+    "sha256": "3740fa65322ebd54009588962cc3242ca3f84a14305aa6979012ef8c54d504d2",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-before.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-before.tap",
+    "sha256": "292e85714dbf0ebed2685ca6f10993f4bbbc48627866b5615331bedf19da48e1",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-fault.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-order-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-order-fault.tap",
+    "sha256": "d8d7d3065289ad349196d93d61eb02087e040a04db9edad08e0b2ed84c1c5893",
+    "bytes": 1328
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-after.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-after.tap",
+    "sha256": "f5df353c85eb29cb1f278aaca446a5d2927189f46b469986b29d7496229e8997",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-before.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-before.tap",
+    "sha256": "2ace088bc3c0ad9be8686d1652ceda57cbd505cd37d068269b1b53a76edd80b4",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-fault.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-progress-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-progress-fault.tap",
+    "sha256": "2f7801dc4e1af0eb890005b70c744de9ceb00fb78a80f0a48afe80010b252661",
+    "bytes": 1157
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-after.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-after.tap",
+    "sha256": "7088bc3045823d7cb5af3b5797277cf2192e1900845abe56a8e2b2a0c1d54546",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-before.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-before.tap",
+    "sha256": "7cb85457a66f481ac424a8c4149ae2ae4489392fec1dcb07da952fed1c97cc23",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-fault.command.json",
+    "sha256": "97873fdf29f9dc240ac232f39a71cca002d081575d46cfbd7d12895297e6fa03",
+    "bytes": 460
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C1-schema-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C1-schema-fault.tap",
+    "sha256": "430371cf89c4739d0a01632a1216a7565c8ecf41a4f0f4bb9cde597b2694a6b3",
+    "bytes": 975
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-after.command.json",
+    "sha256": "bb0a43dda639c9a3f07e9efa77415943e83b47957e3503710bd248de54ccff3c",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-after.tap",
+    "sha256": "28a21ef39823f7cfbe1e8eda5676bd195072fcc899e1557175dc041522041fce",
+    "bytes": 337
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-before.command.json",
+    "sha256": "bb0a43dda639c9a3f07e9efa77415943e83b47957e3503710bd248de54ccff3c",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-before.tap",
+    "sha256": "eabd2b8f925955f1040fa8e3579661f1222395bf4d35c8eb5fccf3d567982cad",
+    "bytes": 336
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-fault.command.json",
+    "sha256": "bb0a43dda639c9a3f07e9efa77415943e83b47957e3503710bd248de54ccff3c",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C2-open-count-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C2-open-count-fault.tap",
+    "sha256": "cf830eea2b03ed0723ff6a7d68fa2c431911e408e7cf5f20070295d88a12b22e",
+    "bytes": 994
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-after.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-after.tap",
+    "sha256": "97171767b3aef216b54081b5a96c6e9c6da2c09f84a5999271813273944f4d3b",
+    "bytes": 317
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-before.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-before.tap",
+    "sha256": "9643c80ecce729b4a865e8b09e036128809ffd3fc4000925cc0b405da672bb6f",
+    "bytes": 314
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-fault.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-handoff-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-handoff-fault.tap",
+    "sha256": "add9be68fbcecd90da1f49d02f895e2cd30896082896f9dff026876a42d422a3",
+    "bytes": 988
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-after.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-after.tap",
+    "sha256": "8b28ccc40a82585fb4dbd8579afbe6cb83fb9618eba3f6150a7a210a09d9a7bc",
+    "bytes": 317
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-before.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-before.tap",
+    "sha256": "b173147b33a835d4d61d566f88f3d6ec2e9ee3adc47f5997b42ac919d93b3998",
+    "bytes": 317
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-fault.command.json",
+    "sha256": "d42e612f419545eaacb92e954177ae0130443aad0d7ec64c21d34688a07c5a0b",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C3-next-module-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C3-next-module-fault.tap",
+    "sha256": "16231a225305f6f16bc419cf14549e9deb1a917946b013b1db4a2f1a84bcff1b",
+    "bytes": 1231
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-after.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-after.tap",
+    "sha256": "0090434a4748510fbc87ac85688e09a9a6872e9e5c70d975e4a9fae41ffe9488",
+    "bytes": 227
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-before.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-before.tap",
+    "sha256": "380331635a646aabca0b2f9070ff51434f3a791ab5ccc635f5bc48b42669502b",
+    "bytes": 227
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-fault.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-dismissed-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-dismissed-fault.tap",
+    "sha256": "7ee3b63c7e79b573e07bffb5e7552eadbf0db2804b1c718fbc929e6ba9b5e0d7",
+    "bytes": 1120
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-after.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-after.tap",
+    "sha256": "6a18c7df40dbb81a224323bb13420edb2b3a9873260d1b9445f2b0be11a098d7",
+    "bytes": 226
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-before.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-before.tap",
+    "sha256": "c5b9e567225c425829994210b46d3123aa70cb3245178ec92e10a5fc5f6915c1",
+    "bytes": 227
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-fault.command.json",
+    "sha256": "7df4409b01a46364d6ed32793d9926bd6ebf5e23f5211c346994b989b3667a2c",
+    "bytes": 418
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C4-progress-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C4-progress-fault.tap",
+    "sha256": "2d6dc2f92284c8eedcf1bc6199f02fd1f28188f1cc172620791611066dec6125",
+    "bytes": 1073
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal/originals/src/lib/personal-plan/lifecycle/repository.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal/originals/src/lib/personal-plan/lifecycle/repository.ts.txt",
+    "sha256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "bytes": 9783
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-after.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-after.tap",
+    "sha256": "3e93b4cddecd2bc0146484c1551a6153633b8daa41b04c9178e8261dd9ac0793",
+    "bytes": 299
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-before.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-before.tap",
+    "sha256": "4f7771fd13f5c6a5d26970898710a163919830d254899d6f4578aa53c2014ad7",
+    "bytes": 297
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-fault.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-dismissal-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-dismissal-fault.tap",
+    "sha256": "c95340998a904ad4f0de474d1960afa411192ece56e313b8f9142b110d6b468d",
+    "bytes": 1236
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status/originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status/originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-after.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-after.tap",
+    "sha256": "4ad073872b58716e990c2b2f6997ec848de889a4b37fa14c0cf4293deca2674a",
+    "bytes": 298
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-before.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-before.tap",
+    "sha256": "8aa69c75a75ba9c0b887a0c997501c7a36d16b9fa0432cfb7b500fb842de25f4",
+    "bytes": 299
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-fault.command.json",
+    "sha256": "831fb5bde0ebbe5cbe4135a5d2214136e060ac1d1e11b230f2f65a302d989300",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/C5-status-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/C5-status-fault.tap",
+    "sha256": "a57a29ba8abbaaddfec27c31d9697b3e2c899183a3c0fea933c7dc83b1904bf3",
+    "bytes": 984
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions/originals/src/lib/personal-plan/refinement/module-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions/originals/src/lib/personal-plan/refinement/module-status.ts.txt",
+    "sha256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e",
+    "bytes": 2417
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-after.command.json",
+    "sha256": "0cb1ad3064e8edccd1a0686862e44f007b36b047b49a5ead59bd3b8f53b37969",
+    "bytes": 468
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-after.tap",
+    "sha256": "682e43c0e5888cb1821d894a52b43d73fee2942744321c0d6ada665bcf4e7b3c",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-before.command.json",
+    "sha256": "0cb1ad3064e8edccd1a0686862e44f007b36b047b49a5ead59bd3b8f53b37969",
+    "bytes": 468
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-before.tap",
+    "sha256": "bbfa0a75d6628bd796a9d656357c9f04448c3d8b7b18b18ac20d3bd4259b9dfa",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-fault.command.json",
+    "sha256": "0cb1ad3064e8edccd1a0686862e44f007b36b047b49a5ead59bd3b8f53b37969",
+    "bytes": 468
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D1-assumptions-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D1-assumptions-fault.tap",
+    "sha256": "2e0c81b9254a36b8b8c52fecd06eb2b8526cef833ab9feb5253ed1429ffbbcb1",
+    "bytes": 1089
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine/originals/src/app/api/personal-plan/refinement-presentation/route.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine/originals/src/app/api/personal-plan/refinement-presentation/route.ts.txt",
+    "sha256": "0a0410de7b32d02ee2da0b68f4e04df952042864e3b42396d0509bc3d52f7c44",
+    "bytes": 6215
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-after.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-after.command.json",
+    "sha256": "d30e6382e77656f9acec6603a7d2cc16ec2f7d12cffb7cf59478624588bd59af",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-after.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-after.tap",
+    "sha256": "65f251f0762aa980dc2bf8805d8f5cf20ec20f05885bdb30599ea0e0e8fa6734",
+    "bytes": 301
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-before.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-before.command.json",
+    "sha256": "d30e6382e77656f9acec6603a7d2cc16ec2f7d12cffb7cf59478624588bd59af",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-before.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-before.tap",
+    "sha256": "94e14580ab412a86f6e458ea8281e21697eea4713fee785af25051c957d2aaa6",
+    "bytes": 299
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-fault.command.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-fault.command.json",
+    "sha256": "d30e6382e77656f9acec6603a7d2cc16ec2f7d12cffb7cf59478624588bd59af",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/D2-no-routine-fault.tap",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/D2-no-routine-fault.tap",
+    "sha256": "12ca32787040c8d45376dca690f75eaf99df0fe8ca85dff8fd7b760dff37f609",
+    "bytes": 972
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/src/app/api/personal-plan/refinement-presentation/route.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/src/app/api/personal-plan/refinement-presentation/route.ts.txt",
+    "sha256": "0a0410de7b32d02ee2da0b68f4e04df952042864e3b42396d0509bc3d52f7c44",
+    "bytes": 6215
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/lifecycle/repository.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/lifecycle/repository.ts.txt",
+    "sha256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "bytes": 9783
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/refinement/module-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/refinement/module-status.ts.txt",
+    "sha256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e",
+    "bytes": 2417
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/refinement/refinement-status.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/src/lib/personal-plan/refinement/refinement-status.ts.txt",
+    "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "bytes": 4154
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan/refinement/module-status.test.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan/refinement/module-status.test.ts.txt",
+    "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+    "bytes": 3653
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan/refinement/refinement-status.test.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan/refinement/refinement-status.test.ts.txt",
+    "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-answer-provenance-migration.test.ts.txt",
+    "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "bytes": 15960
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-presentation-route.test.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-presentation-route.test.ts.txt",
+    "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+    "bytes": 11940
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-status-route.test.ts",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/all-originals/tests/personal-plan-refinement-status-route.test.ts.txt",
+    "sha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+    "bytes": 11655
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/complete.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/complete.json",
+    "sha256": "775e7a57ebf26e3e7da0ecd10d20fadf4a817edee7a4c166385851f1749db0aa",
+    "bytes": 10099
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/intent.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/intent.json",
+    "sha256": "c6b283cfe5740763b33b03dea33041582fc9ab5a3155746a4d29a1e340cfb9a2",
+    "bytes": 1577
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7/receipt.json",
+    "archived": "toolkit/operator-mutations-transfer-eNiJl7/receipt.json",
+    "sha256": "859725446a33d33a968e9a787f986148d6e70c6dcdc1e761f1eb5ab8d2fc0126",
+    "bytes": 224517
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-pins.json",
+    "archived": "toolkit/operator-pins.json",
+    "sha256": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+    "bytes": 1532925
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-proof.cjs",
+    "archived": "toolkit/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-readonly-preload.cjs",
+    "archived": "toolkit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-run-controls.cjs",
+    "archived": "toolkit/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-selected-closure.json",
+    "archived": "toolkit/operator-selected-closure.json",
+    "sha256": "0e38b03061bffeb7270ccea8a9ccaddb63c8cc69c17d602ec46b3cdc005d5793",
+    "bytes": 30202
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/pre-finalization-pins.json",
+    "archived": "toolkit/pre-finalization-pins.json",
+    "sha256": "217ed9c232bfa6de76730c77f3c32f991b71ea06a6b84dbb21685256df71ec1b",
+    "bytes": 1532778
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/preparation-receipt.json",
+    "archived": "toolkit/preparation-receipt.json",
+    "sha256": "d6efda80bfd1a5df7f4f1b0b17a86e743ae5904c599872268b6cac389759e644",
+    "bytes": 517
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/prepare-pins.cjs",
+    "archived": "toolkit/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/prepare-tools.py",
+    "archived": "toolkit/prepare-tools.py.txt",
+    "sha256": "67d1e2946f17a5e1bf82c187d39ebb9d8f07ebc57ce48b7660d5b6a484139184",
+    "bytes": 7842
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/proof-attestation-receipt-final.txt",
+    "archived": "toolkit/proof-attestation-receipt-final.txt",
+    "sha256": "37bfed50f7c5b71177b9d4c2aeaef51552e42105b6b66a08f0fa7b26ca3160bb",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/proof-attestation-receipt.txt",
+    "archived": "toolkit/proof-attestation-receipt.txt",
+    "sha256": "32d04a5bf1f60a81e745abd64b5a9c2a94d9b1ed5ed5b01954c64e3e1cb34ec6",
+    "bytes": 128
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/proof-attestation.cjs",
+    "archived": "toolkit/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/static-controls-receipt.txt",
+    "archived": "toolkit/static-controls-receipt.txt",
+    "sha256": "318af9258d7584a16f5a9e4860fa42e4f827a935081d975c3d80d4620c647070",
+    "bytes": 412
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/static-editor-receipt.txt",
+    "archived": "toolkit/static-editor-receipt.txt",
+    "sha256": "9856a9e26576122efe92fb13eafa58b18cfdffaf238f54dcc32de13394d884c2",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/static-integrity-receipt.txt",
+    "archived": "toolkit/static-integrity-receipt.txt",
+    "sha256": "c622a5b37ebee8b32b769ae7ae2396e6b22de2ba96bd37ef6cef8464d5c7a82f",
+    "bytes": 1321
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/static-integrity.cjs",
+    "archived": "toolkit/static-integrity.cjs.txt",
+    "sha256": "142cd300830ad608fdaa53424b18e97dcf24a5f65bcaa253fdc4c6f8d043c906",
+    "bytes": 2047
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-delta.patch",
+    "archived": "toolkit/template-delta.patch",
+    "sha256": "8955ffd7ce3241617ccc2612777ceecb85fcf5d4a97cf508d109df8a1f6ebd75",
+    "bytes": 19896
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-edit.cjs",
+    "archived": "toolkit/template-originals/operator-edit.cjs.txt",
+    "sha256": "6a77a8227068e44d776f7ae515ec2c92add0902604f8aab551244d920bc3ff80",
+    "bytes": 3657
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-guard.cjs",
+    "archived": "toolkit/template-originals/operator-guard.cjs.txt",
+    "sha256": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a",
+    "bytes": 12929
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-pins.json",
+    "archived": "toolkit/template-originals/operator-pins.json",
+    "sha256": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+    "bytes": 1549191
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-proof.cjs",
+    "archived": "toolkit/template-originals/operator-proof.cjs.txt",
+    "sha256": "ccb2967f1b8ebb1cf11321f54239872cac7ff344470c56e0480c9269d54194c9",
+    "bytes": 5729
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-readonly-preload.cjs",
+    "archived": "toolkit/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/operator-run-controls.cjs",
+    "archived": "toolkit/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "a30bf8e42c8a9ba79966633ef1eb94e0ccad5d41eb71eabe6ba8f0cfa186878b",
+    "bytes": 8070
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-originals/proof-attestation.cjs",
+    "archived": "toolkit/template-originals/proof-attestation.cjs.txt",
+    "sha256": "648eb62fcc1ade4a4bcd69ca71ba92f5b9898108a50913f27e144f1773ff7bd3",
+    "bytes": 3340
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-tools-5ce9vx77/template-provenance.json",
+    "archived": "toolkit/template-provenance.json",
+    "sha256": "62c6cf44f1b84e825774bb1988c40ad273ee96f9b095d1b6ce68c44c6be4394d",
+    "bytes": 2151
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-independent-preservation.md",
+    "archived": "main/test-audit-refinement37-independent-preservation.md",
+    "sha256": "e399d29d8455c9816b9545cb8886ff05d4d1cb4ff42f63591826b82007ff6330",
+    "bytes": 8450
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-independent-preservation.json",
+    "archived": "main/test-audit-refinement37-independent-preservation.json",
+    "sha256": "2d9e61f8bfb71d99b6b86914cd244a415a38d6dc1590cbc8e85adfe99df2a8db",
+    "bytes": 12086
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-independent-static.json",
+    "archived": "main/test-audit-refinement37-independent-static.json",
+    "sha256": "2a31175ea4e8f4b96be31e370c1d9f2d96f19146cc261324d0f93ef77f545e3b",
+    "bytes": 40330
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-independent-static.cjs",
+    "archived": "main/test-audit-refinement37-independent-static.cjs.txt",
+    "sha256": "df8c274c8c89f52871eea2dfdbf91501c1c279f7eb2688762a6cab119fa20882",
+    "bytes": 5585
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-native-command.json",
+    "archived": "main/test-audit-refinement37-main-native-command.json",
+    "sha256": "9496c03690206d0c9ee3ef7440c5ce9d78e8a9599bb93e219c70c8e8ad19f98f",
+    "bytes": 556
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-before-native.command.json",
+    "archived": "native/test-audit-refinement37-main-before-native.command.json",
+    "sha256": "9496c03690206d0c9ee3ef7440c5ce9d78e8a9599bb93e219c70c8e8ad19f98f",
+    "bytes": 556
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-before-native.tap",
+    "archived": "native/test-audit-refinement37-main-before-native.tap",
+    "sha256": "96fda2db9290a1f53aa79715a8184e9c62e5ad7b353612d5d6ea34e6a5c06993",
+    "bytes": 7561
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-before-native.result.json",
+    "archived": "native/test-audit-refinement37-main-before-native.result.json",
+    "sha256": "889b158306390c3d54d4576b991e5f06d5573b297e181b19794f0859a8b1323a",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-transfer-native.command.json",
+    "archived": "native/test-audit-refinement37-main-transfer-native.command.json",
+    "sha256": "9496c03690206d0c9ee3ef7440c5ce9d78e8a9599bb93e219c70c8e8ad19f98f",
+    "bytes": 556
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-transfer-native.tap",
+    "archived": "native/test-audit-refinement37-main-transfer-native.tap",
+    "sha256": "a555c6714fb8d7f4aafc3075ed88e6462620a4de8e93a21e4ac030e6c81aeaa0",
+    "bytes": 7558
+  },
+  {
+    "original": "/tmp/test-audit-refinement37-main-transfer-native.result.json",
+    "archived": "native/test-audit-refinement37-main-transfer-native.result.json",
+    "sha256": "889b158306390c3d54d4576b991e5f06d5573b297e181b19794f0859a8b1323a",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-refinement30-main-cut-native.command.json",
+    "archived": "native/test-audit-refinement30-main-cut-native.command.json",
+    "sha256": "9496c03690206d0c9ee3ef7440c5ce9d78e8a9599bb93e219c70c8e8ad19f98f",
+    "bytes": 556
+  },
+  {
+    "original": "/tmp/test-audit-refinement30-main-cut-native.tap",
+    "archived": "native/test-audit-refinement30-main-cut-native.tap",
+    "sha256": "9088d87aafb094c7d9ec0c4ec28e1e9a57bf9dc8792a23c915d52c5ac2dcc0f3",
+    "bytes": 6196
+  },
+  {
+    "original": "/tmp/test-audit-refinement30-main-cut-native.result.json",
+    "archived": "native/test-audit-refinement30-main-cut-native.result.json",
+    "sha256": "5eb6211ecef464a8305ee7cf35fbb3cf2d8bc7a2218552599a239a9c5e2f2170",
+    "bytes": 170
+  }
+]

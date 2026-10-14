@@ -1,0 +1,136 @@
+{
+  "blindId": "W304",
+  "inciFingerprintSha256": "40ead763a1b427f155a84a395ced2c62d6791b49f162ade2103ab9473ad978d7",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized ID-2 positions (23 entries).",
+    "e3Point": "Parfum @11. Prominent = positions 1-10."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @4 and no reinforcing strong anionic. Sodium Xylenesulfonate @3 (hydrotrope) and Cocamide MEA @7 (alkanolamide) are neither routes nor buffers (C3).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture; the only cationic, Guar Hydroxypropyltrimonium Chloride @12, sits after Parfum (not prominent), with Glycol Distearate @8 as pearlizer and late Glycerin @22. No silicone, no payload lipid. Counter-signal: the late guar still gives some slip, so moderate is the neighbor.",
+      "ruleIds": ["C2", "E3", "5"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @12"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Glycerin @22"],
+        "excluded": ["Glycol Distearate @8 (pearlizing wax, 6.4)", "Cocamide MEA @7 (alkanolamide thickener)", "Sodium Xylenesulfonate @3 (hydrotrope)", "Aloe Barbadensis Leaf Juice @20, Avena Sativa Kernel Extract @23 (botanicals)", "Linalool @16, Hexamethylindanopyran @17, Tetramethyl Acetyloctahydronaphthalenes @18, Hexyl Cinnamal @19 (fragrance)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 9,
+        "inci": "Piroctone Olamine",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @11 (Parfum)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "Piroctone Olamine @9 is the earliest candidate: (i) SLES @2 before it; (ii) only Sodium Chloride @10 between it and the cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "A cationic guar is present.",
+      "whyThisBand": "Single light cationic guar listed after Parfum, no other deposition family, effective C1 reset.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, late (after Parfum) and light, facing moderate reset (W2 single family, no polymer floor).",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: one late guar @12 against moderate C1 reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @12"],
+        "limitation": "Formula is active-led (Piroctone Olamine @9), not a lengths-care decision."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized anti-dandruff active Piroctone Olamine @9 makes scalp_active the likely final focus if a dandruff claim appears.",
+      "decisionTrace": "Claim direction null (blind). Active present but the claim defines the path (R17.3); provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "R17.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; dandruffSupport supported means treatment fires if a moderate/high-graded E2 dandruff claim appears (U3).",
+      "ruleIds": ["9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": "formula half decided; positioning hidden",
+      "rationale": "Not_targeted whatever the positioning: CSA fails. No prominent E4 comfort route (Avena Sativa Kernel Extract @23 after Parfum) and no prominent E4 humectant/refatting route (Glycerin @22, Aloe juice not listed); MB excluded by prominent Sodium Laureth Sulfate @2.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine @9.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "amphoteric": ["Cocamidopropyl Betaine @4"],
+      "notCleansing": ["Sodium Xylenesulfonate @3 (hydrotrope)", "Cocamide MEA @7 (alkanolamide)", "Sodium Citrate @5", "Citric Acid @6", "Sodium Chloride @10"]
+    },
+    "conditioningRoutes": ["Glycol Distearate @8 (pearlizer)", "Guar Hydroxypropyltrimonium Chloride @12 (after Parfum)"],
+    "weightRoutes": ["cationic_polymer @12"],
+    "humectants": ["Glycerin @22 (late)"],
+    "actives": ["Piroctone Olamine @9 (recognized anti-dandruff active)", "Avena Sativa Kernel Extract @23 (E4 comfort, not prominent)"],
+    "exposure": ["Parfum @11", "Linalool @16, Hexyl Cinnamal @19 (allergens)"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Sodium Benzoate @13", "Sodium Salicylate @14"]
+  },
+  "unresolvedMaterialIngredients": []
+}

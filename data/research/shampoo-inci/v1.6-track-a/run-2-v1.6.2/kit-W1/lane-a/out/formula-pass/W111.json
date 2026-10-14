@@ -1,0 +1,147 @@
+{
+  "blindId": "W111",
+  "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 1,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "'Aqua (Water, Eau)' and 'Parfum (Fragrance)' are single entries; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum (Fragrance) @7 (prominent = positions 1-6)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @4 (amphoteric)"],
+      "nonProminentSurfactants": ["Coco-Glucoside @9 (after the E3 point; recorded only)"],
+      "notCleansing": ["Laureth-4 @14 (thickener)", "PEG-120 Methyl Glucose Dioleate @16 (PEG thickener)", "PEG-7 Glyceryl Cocoate @12 (refatter)"]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6 (prominent)"],
+      "protein_film": ["Pisum Sativum (Pea) Peptide @5 (prominent)"],
+      "weak_refatter": ["Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+      "payload_lipid": ["Hydrogenated Castor Oil @15 (not prominent)"],
+      "pearlizingFattyRoute": ["Glycol Distearate @13 (not prominent)"],
+      "silicone": [],
+      "humectants": []
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum (Fragrance) @7; Benzyl Alcohol @18 (allergen/preservative)",
+      "essentialOils": [],
+      "coolingAgents": []
+    },
+    "wLine": {
+      "cap": "e3Point Parfum (Fragrance) @7",
+      "wLine": "Parfum (Fragrance) @7",
+      "wLineClasses": ["fragrance"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @7 plausible ((i) SLES @2 before; (ii) nothing between)",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @15"]
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @4, no reinforcing strong anionic (C3, C4, C1).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: one meaningful prominent cationic system (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6, before the fragrance) with light routes (Pea Peptide @5, Glyceryl Oleate @10, PEG-7 Glyceryl Cocoate @12, Glycol Distearate @13, Hydrogenated Castor Oil @15). No prominent silicone or payload lipid and no humectant -> neither C2 nor W-RICH; the early guar keeps it above low.",
+      "ruleIds": ["Section 5", "C2", "W-RICH"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "payload_lipid": ["Hydrogenated Castor Oil @15 (non-material, W-line @7)"],
+        "weak_refatter": ["Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+        "silicone": [],
+        "protein_film": ["Pisum Sativum (Pea) Peptide @5"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "Coco-Glucoside @9 (non-prominent)"],
+        "humectantContext": ["Propylene Glycol @19 (solvent)"],
+        "excluded": ["Glycol Distearate @13 (pearlizing wax, 6.4)", "Laureth-4 @14 (thickener)", "PEG-120 Methyl Glucose Dioleate @16 (PEG thickener, 6.4)", "Leuconostoc/Radish Root Ferment Filtrate @20 (preservative ferment)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one guar, a peptide, weak refatters; lipid non-material",
+      "persistence": "low - no silicone; peptide low-persistence; hydrogenated castor oil only post-line",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "Guar is prominent (before fragrance); several light families interact (W2).",
+      "whyThisBand": "A single cationic polymer with only light companions against an effective SLES reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the guar has no persistent partner - no silicone, the only payload lipid (Hydrogenated Castor Oil @15) is non-material under the W-line @7, the peptide is a low-persistence hydrolysate and the refatters are weak and post-fragrance; a buffered SLES reset faces only these light routes.",
+      "confidenceLimitingFactor": "Guar is prominent and its share unknown",
+      "rationale": "Low: one guar plus light routes; non-material HCO (6.6, W2, W-LINE). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": ["Pisum Sativum (Pea) Peptide @5"],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6", "Glyceryl Oleate @10", "PEG-7 Glyceryl Cocoate @12"],
+        "limitation": "Formula-only; one protein token is not a repair cluster"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Prominent pea peptide plus guar could carry a repair or volume role if positioned",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; nonspecific care. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible with explicit frequency wording (U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA not met - no listed E4 route is prominent (Glyceryl Oleate @10, PEG-7 Glyceryl Cocoate @12 are after Parfum @7) and MB is excluded (prominent SLES). A sensitive/dry claim would fail its formula gate.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Weight low vs moderate: the guar is before the fragrance; low chosen because it is the only persistent-type route and every companion is light or non-material."
+  ]
+}

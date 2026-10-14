@@ -1,11 +1,11 @@
 import { z } from "zod"
 
+import { HEAT_ACTIVATION_ROUTES } from "@/lib/heat-activation/contract"
 import { PRODUCT_BALANCE_TARGETS } from "@/lib/product-specs/constants"
 import {
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
   PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   DRY_SHAMPOO_FORMATS,
@@ -100,6 +100,7 @@ type ProductIntakeSpecRowByTable = {
     roles: string[]
     provides_heat_protection: boolean
     heat_activation_required: boolean
+    heat_activation_route?: (typeof HEAT_ACTIVATION_ROUTES)[number] | null
     care_benefits: string[]
     ingredient_flags: string[]
     application_stage: string[]
@@ -142,7 +143,6 @@ type ProductIntakeSpecRowByTable = {
     color_treated_suitability: string
   }
   product_bondbuilder_specs: {
-    bond_repair_intensity?: string | null
     application_mode?: string | null
     bond_repair_axis?: string | null
     treatment_mode?: string | null
@@ -290,6 +290,8 @@ const reviewedProductSchema = z
     price_checked_at: isoDateString,
     net_content_value: z.number().finite().positive().nullable().optional(),
     net_content_unit: netContentUnit.nullable().optional(),
+    /** Drogerie/Profi bucket; promotion requires it, approval does not copy it. */
+    market_segment: z.enum(["drugstore", "professional"]).optional(),
   })
   .strict()
   .refine((product) => (product.net_content_value == null) === (product.net_content_unit == null), {
@@ -337,18 +339,6 @@ const legacyApprovalPayloadSchema = researchedPayloadSchema.extend({
 export type ProductIntakeFinalReviewedPayload = z.infer<typeof finalPayloadSchema>
 export type ProductIntakeResearchedPayload = z.infer<typeof researchedPayloadSchema>
 
-export type ProductIntakeResearchedPayloadParseResult =
-  | {
-      ok: true
-      missingFields: []
-      payload: ProductIntakeResearchedPayload
-    }
-  | {
-      ok: false
-      missingFields: string[]
-      payload: null
-    }
-
 export type ProductIntakeApprovalValidationResult =
   | {
       ok: true
@@ -380,25 +370,6 @@ function uniquePaths(paths: string[]): string[] {
 
 function parseErrors(error: z.ZodError, prefix: string[] = []): string[] {
   return uniquePaths(error.issues.map((issue) => issuePath(issue, prefix)))
-}
-
-export function parseProductIntakeResearchedPayload(
-  value: unknown,
-): ProductIntakeResearchedPayloadParseResult {
-  const parsed = researchedPayloadSchema.safeParse(value)
-  if (!parsed.success) {
-    return {
-      ok: false,
-      missingFields: parseErrors(parsed.error),
-      payload: null,
-    }
-  }
-
-  return {
-    ok: true,
-    missingFields: [],
-    payload: parsed.data,
-  }
 }
 
 function withProductId<Table extends ProductIntakeTargetSpecTable>(
@@ -455,9 +426,11 @@ const REQUIRED_REVIEWED_PRODUCT_RATIONALES = [
 function validateFieldRationales(
   finalPayload: ProductIntakeFinalReviewedPayload,
 ): ProductIntakeApprovalValidationResult | null {
-  const missing = REQUIRED_REVIEWED_PRODUCT_RATIONALES.filter(
-    (key) => !finalPayload.field_rationales[key],
-  )
+  const required =
+    finalPayload.product.market_segment === undefined
+      ? REQUIRED_REVIEWED_PRODUCT_RATIONALES
+      : [...REQUIRED_REVIEWED_PRODUCT_RATIONALES, "product.market_segment"]
+  const missing = required.filter((key) => !finalPayload.field_rationales[key])
 
   for (const key of Object.keys(finalPayload.category_specs)) {
     const rationaleKey = `category_specs.${key}`
@@ -566,7 +539,9 @@ const maskSpecsSchema = z
         ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)),
         repair_support_level: z.enum(["low", "medium", "high"]),
         functional_benefits: z
-          .array(z.enum(["smoothing_frizz_control", "detangling_slip", "shine"]))
+          .array(
+            z.enum(["smoothing_frizz_control", "detangling_slip", "shine", "moisture_softness"]),
+          )
           .min(1),
       })
       .strict(),
@@ -603,8 +578,48 @@ const leaveInSpecsSchema = z
             ]),
           )
           .min(1),
+        // Leave-In v1.2 (AD-7). Optional so legacy payloads that predate the
+        // column still validate; a missing route reads as NULL (the DB default).
+        heat_activation_route: z.enum(HEAT_ACTIVATION_ROUTES).nullable().optional(),
       })
-      .strict(),
+      .strict()
+      .superRefine((specs, context) => {
+        // Mirrors the product_leave_in_specs CHECKs (S3 plan §2.6):
+        // heat_activation_route_iff_required and heat_activation_pre_heat_only.
+        const route = specs.heat_activation_route ?? null
+        if (specs.heat_activation_required !== (route !== null)) {
+          context.addIssue({
+            code: "custom",
+            path: ["heat_activation_route"],
+            message:
+              "heat_activation_route_iff_required: the route is set exactly when heat_activation_required is true",
+          })
+        }
+        if (!specs.heat_activation_required) return
+        if (specs.plan_roles.length !== 1 || specs.plan_roles[0] !== "pre_heat_application") {
+          context.addIssue({
+            code: "custom",
+            path: ["plan_roles"],
+            message:
+              "heat_activation_pre_heat_only: plan_roles must be exactly [pre_heat_application]",
+          })
+        }
+        if (!specs.application_stage.includes("pre_heat")) {
+          context.addIssue({
+            code: "custom",
+            path: ["application_stage"],
+            message: "heat_activation_pre_heat_only: application_stage must include pre_heat",
+          })
+        }
+        if (specs.roles.includes("replacement_conditioner")) {
+          context.addIssue({
+            code: "custom",
+            path: ["roles"],
+            message:
+              "heat_activation_pre_heat_only: roles must not include replacement_conditioner",
+          })
+        }
+      }),
     product_leave_in_fit_specs: z
       .object({
         weight: z.enum(LEAVE_IN_WEIGHTS),
@@ -682,7 +697,6 @@ const bondbuilderSpecsSchema = z
   .object({
     product_bondbuilder_specs: z
       .object({
-        bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
         application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
         bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
         treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
@@ -710,7 +724,6 @@ const bondbuilderSpecsSchema = z
           "research_profile",
         ] as const
         const legacyKeys = [
-          "bond_repair_intensity",
           "application_mode",
           "bond_repair_axis",
           "treatment_mode",
@@ -1155,6 +1168,36 @@ function validateExactProtocol(
     }
   }
 
+  // Leave-In v1.2 (S3 review R1): activation and the reviewed exact workflow come as a
+  // pair — an activated product's heat rows must be heat_activated_verified_product, and
+  // that workflow is never accepted for a product that is not activated.
+  if (categoryKey === "leave_in" && validateRoles) {
+    const activated =
+      (
+        (categorySpecs as Record<string, unknown>).product_leave_in_specs as
+          | { heat_activation_required?: unknown }
+          | undefined
+      )?.heat_activation_required === true
+    const mismatched = protocols.data.product_application_protocols.some((protocol) => {
+      const workflowId = (
+        (protocol.guidance_payload as { protocolFacts?: { workflowId?: unknown } }).protocolFacts ??
+        {}
+      ).workflowId
+      const isActivatedWorkflow = workflowId === "heat_activated_verified_product"
+      return activated
+        ? protocol.role === "pre_heat_protection" && !isActivatedWorkflow
+        : isActivatedWorkflow
+    })
+    if (mismatched)
+      return {
+        ok: false,
+        missingFields: [
+          "final.category_specs.product_application_protocols.guidance_payload.protocolFacts.workflowId",
+        ],
+        targetSpecOperations: [],
+      }
+  }
+
   let protocolsWithV2: Array<
     (typeof protocols.data.product_application_protocols)[number] & {
       guidance_payload_v2: Record<string, unknown>
@@ -1196,11 +1239,16 @@ export function requiredProtocolRoles(
         rows.map((row) => (row as { shampoo_bucket?: string | null }).shampoo_bucket),
       )
     }
-    case "leave_in":
-      return (specs.product_leave_in_specs as { provides_heat_protection?: unknown })
-        ?.provides_heat_protection === true
+    case "leave_in": {
+      const leaveIn = specs.product_leave_in_specs as
+        | { provides_heat_protection?: unknown; heat_activation_required?: unknown }
+        | undefined
+      // Leave-In v1.2 (AD-7, I8): an activated product needs the pre-heat protocol only.
+      if (leaveIn?.heat_activation_required === true) return ["pre_heat_protection"]
+      return leaveIn?.provides_heat_protection === true
         ? ["post_wash_leave_in", "pre_heat_protection"]
         : ["post_wash_leave_in"]
+    }
     case "oil": {
       return (specs.product_oil_specs as { role_support?: string[] })?.role_support ?? []
     }

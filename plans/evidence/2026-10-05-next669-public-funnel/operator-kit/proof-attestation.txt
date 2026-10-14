@@ -1,0 +1,13 @@
+{
+  "status": "PASS_STATIC_SYNTHETIC_PARSER_ONLY",
+  "controls": 20,
+  "phases": 2,
+  "assertions": 1200,
+  "children": 0,
+  "ownerImports": 0,
+  "repositoryWrites": 0,
+  "runtimeClaims": 0,
+  "limits": "Synthetic literal diagnostic shapes, including full/explicitly truncated prefix and omitted undefined. Not actual SSR bytes or native fault evidence."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

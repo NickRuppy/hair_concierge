@@ -1,0 +1,146 @@
+{
+  "blindId": "W114",
+  "inciFingerprintSha256": "63ff429b1232526889e28ca4e04999b7b98cfcef5c7171ac2c375d4077114816",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @9 (prominent = positions 1-8)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Lauryl Glucoside @3 (nonionic glucoside)", "Sodium Lauroyl Sarcosinate @4 (mild anionic, sarcosinate)"],
+      "notCleansing": []
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @6 (prominent)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": []
+    },
+    "actives": ["Piroctone Olamine @7 (recognized anti-dandruff active)"],
+    "exposure": {
+      "fragrance": "Parfum @9 (not prominent)",
+      "essentialOils": [],
+      "coolingAgents": ["Menthol @8 (prominent cooling agent)"],
+      "otherNotes": "Colourants CI 42090 @13, CI 47005 @14"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @9",
+      "wLine": "Piroctone Olamine @7",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "Piroctone Olamine @7: (i) SLES @2 before; (ii) Menthol @8 is not a surfactant, alkanolamide or pearlizing wax",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 with prominent buffers Lauryl Glucoside @3 and Sodium Lauroyl Sarcosinate @4, no reinforcing strong anionic (C3, C4, C1).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system - prominent cationic starch Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @6 (before the active and fragrance). Nothing else conditions (no silicone, lipid, refatter, pearlizer or humectant), so low is the realistic neighbor (Section 5).",
+      "ruleIds": ["Section 5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @6"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Lauryl Glucoside @3", "Sodium Lauroyl Sarcosinate @4"],
+        "humectantContext": [],
+        "excluded": ["Menthol @8 (cooling agent)", "Piroctone Olamine @7 (active)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one cationic starch polymer",
+      "persistence": "low-to-moderate - single polysaccharide cationic, no reinforcing route",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "The cationic starch is prominent (@6).",
+      "whyThisBand": "A single deposition family without a reinforcing route faces a moderate reset (W2: can remain low).",
+      "whyNotNeighborBand": "Not moderate: one cationic starch alone, no silicone, lipid, protein or refatter to converge with it, against a buffered SLES chassis; one route kind is a clue, not a moderate floor (6.6).",
+      "confidenceLimitingFactor": "Polymer share/charge density unknown",
+      "rationale": "Low: single cationic polymer vs moderate reset (6.4, 6.6, W2). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @6"],
+        "limitation": "No lengths-care cluster"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Piroctone Olamine @7 and Menthol @8 point to an anti-dandruff/scalp role if positioned",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; dandruff active present. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; treatment if a moderate/high dandruff claim (supported active, U3); frequent possible with frequency wording (U2).",
+      "ruleIds": ["9", "U1", "U2", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA not met - no listed E4 comfort or humectant/refatting route is prominent and MB is excluded (prominent SLES @2). Counter-signal: prominent Menthol @8. A sensitive/dry claim would fail its formula gate.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Piroctone Olamine @7 in the complete INCI (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Conditioning moderate vs low: a single prominent cationic starch is read as one meaningful system."
+  ]
+}

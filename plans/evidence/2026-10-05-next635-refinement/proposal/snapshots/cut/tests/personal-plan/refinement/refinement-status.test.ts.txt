@@ -1,0 +1,76 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+
+import { buildRefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
+import type { ModuleBannerDismissalState } from "@/lib/personal-plan/lifecycle/repository"
+import type {
+  PersonalPlanRefinementAnswersV1,
+  Stage2QuestionId,
+  Stage2TriggerContext,
+} from "@/lib/personal-plan/refinement/types"
+
+/**
+ * Pure derivation tests for the module-status API contract (Task 1.7): progress math,
+ * the persisted Modul-1 handoff marker, and the banner's "next open module" + dismissal
+ * wiring. Route-level wiring (auth, no-plan, real Supabase reads) lives in
+ * tests/personal-plan-refinement-status-route.test.ts.
+ */
+
+const TRIGGER_CONTEXT: Stage2TriggerContext = {
+  relevantCategories: ["shampoo", "conditioner"],
+  hasReportedIrritatedScalp: false,
+  dryShampooBridgeEligibility: "ineligible",
+}
+
+const NO_DISMISSALS: ModuleBannerDismissalState = { dismissedModules: new Set() }
+
+function dismissals(...modules: Array<"products" | "habits">): ModuleBannerDismissalState {
+  return { dismissedModules: new Set(modules) }
+}
+
+test("assumed-only answers (no user provenance) count as open, matching direct-accept semantics", () => {
+  const result = buildRefinementStatusResponse({
+    moduleStatusInput: {
+      triggerContext: TRIGGER_CONTEXT,
+      answers: { currentProductCategories: ["shampoo"], wetWashFrequency: "daily_1x" },
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+      ] as Stage2QuestionId[],
+      answerProvenance: {
+        current_product_categories: "assumed",
+        wet_wash_frequency: "assumed",
+      },
+    },
+    moduleProjections: {},
+    bannerDismissals: NO_DISMISSALS,
+  })
+
+  assert.equal(result.modules.find((m) => m.module === "products")?.status, "open")
+  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })
+})
+
+test("banner reappears once a different module becomes the next open one, even if the old dismissal is still stored", () => {
+  const productsAnswers: PersonalPlanRefinementAnswersV1 = {
+    currentProductCategories: ["shampoo"],
+    wetWashFrequency: "daily_1x",
+  }
+  const result = buildRefinementStatusResponse({
+    moduleStatusInput: {
+      triggerContext: TRIGGER_CONTEXT,
+      answers: productsAnswers,
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+      ] as Stage2QuestionId[],
+      answerProvenance: { current_product_categories: "user", wet_wash_frequency: "user" },
+    },
+    moduleProjections: {
+      products: { needVersionId: "need-v2", projectedAtRevision: 1, stage3Handoff: true },
+    },
+    // "products" was dismissed earlier, but it is no longer the open module.
+    bannerDismissals: dismissals("products"),
+  })
+
+  assert.deepEqual(result.banner, { visible: true, module: "habits", dismissed: false })
+})

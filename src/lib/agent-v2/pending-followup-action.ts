@@ -47,7 +47,7 @@ export function readPendingFollowupAction(value: unknown): AgentV2PendingFollowu
   return legacyRoutineActionToFollowup(value.pending_routine_action)
 }
 
-export function isPendingRoutineMutation(
+function isPendingRoutineMutation(
   action: AgentV2PendingFollowupAction | null | undefined,
 ): action is Extract<AgentV2PendingFollowupAction, { kind: "routine_mutation" }> {
   return action?.kind === "routine_mutation"

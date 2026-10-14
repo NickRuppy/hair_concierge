@@ -1,0 +1,130 @@
+src/providers/funnel-context-bootstrap.tsx:5:import { bootstrapFunnelContext, recordBrowserFunnelMilestone } from "@/lib/funnel/client"
+src/providers/funnel-context-bootstrap.tsx:10:      ? (recordBrowserFunnelMilestone("landing_viewed"), bootstrapFunnelContext())
+src/providers/funnel-context-bootstrap.tsx:11:      : bootstrapFunnelContext()
+src/providers/public-funnel-context-bootstrap.tsx:5:import { bootstrapFunnelContext } from "@/lib/funnel/client"
+src/providers/public-funnel-context-bootstrap.tsx:9:    void bootstrapFunnelContext()
+src/components/chat/chat-container.tsx:122:  // T17 keepsake gate. Same opener shape as `GatedPreview`'s and T15's Profil opener.
+src/components/editorial/editorial-shell.tsx:9:  bootstrapFunnelContext = false,
+src/components/editorial/editorial-shell.tsx:12:  bootstrapFunnelContext?: boolean
+src/components/editorial/editorial-shell.tsx:16:      {bootstrapFunnelContext ? <PublicFunnelContextBootstrap /> : null}
+src/lib/openai-ads/browser.ts:4:import { bootstrapFunnelContext } from "@/lib/funnel/client"
+src/lib/openai-ads/browser.ts:154:  await bootstrapFunnelContext().catch(() => null)
+src/app/methodik/page.tsx:217:    <EditorialShell bootstrapFunnelContext>
+src/components/gated-preview/gated-preview.tsx:36:export interface GatedPreviewProps {
+src/components/gated-preview/gated-preview.tsx:51:export function GatedPreview({
+src/components/gated-preview/gated-preview.tsx:58:}: GatedPreviewProps) {
+src/components/gated-preview/gated-chat-example.tsx:8:import { GatedPreview } from "./gated-preview"
+src/components/gated-preview/gated-chat-example.tsx:9:import { InertExample } from "./inert-example"
+src/components/gated-preview/gated-chat-example.tsx:32: * and `InertExample` cancels the activation before it could be reached.
+src/components/gated-preview/gated-chat-example.tsx:36:export function GatedChatExample() {
+src/components/gated-preview/gated-chat-example.tsx:39:    <GatedPreview
+src/components/gated-preview/gated-chat-example.tsx:46:      <InertExample className="flex min-h-full flex-col">
+src/components/gated-preview/gated-chat-example.tsx:55:      </InertExample>
+src/components/gated-preview/gated-chat-example.tsx:56:    </GatedPreview>
+src/components/gated-preview/inert-example.tsx:6: * Presentation-only wrapper for the example content inside `GatedPreview` (T12).
+src/components/gated-preview/inert-example.tsx:37:export function InertExample({
+src/components/gated-preview/gated-routine-example.tsx:5:import { GatedPreview } from "./gated-preview"
+src/components/gated-preview/gated-routine-example.tsx:6:import { InertExample } from "./inert-example"
+src/components/gated-preview/gated-routine-example.tsx:23:export function GatedRoutineExample() {
+src/components/gated-preview/gated-routine-example.tsx:26:    <GatedPreview
+src/components/gated-preview/gated-routine-example.tsx:33:      <InertExample className="[&>div]:min-h-0 [&_main]:py-0 [&_main]:pb-2">
+src/components/gated-preview/gated-routine-example.tsx:35:      </InertExample>
+src/components/gated-preview/gated-routine-example.tsx:36:    </GatedPreview>
+src/components/gated-preview/gated-anwendung-example.tsx:5:import { GatedPreview } from "./gated-preview"
+src/components/gated-preview/gated-anwendung-example.tsx:6:import { InertExample } from "./inert-example"
+src/components/gated-preview/gated-anwendung-example.tsx:15: * `InertExample` (the day cards are `<Link>`s whose click handler would `pushState`).
+src/components/gated-preview/gated-anwendung-example.tsx:21:export function GatedAnwendungExample() {
+src/components/gated-preview/gated-anwendung-example.tsx:24:    <GatedPreview
+src/components/gated-preview/gated-anwendung-example.tsx:31:      <InertExample className="[&>div]:min-h-0 [&_section]:px-0 [&_section]:py-0">
+src/components/gated-preview/gated-anwendung-example.tsx:33:      </InertExample>
+src/components/gated-preview/gated-anwendung-example.tsx:34:    </GatedPreview>
+tests/gated-example-pages.test.tsx:10:import { GatedAnwendungExample } from "../src/components/gated-preview/gated-anwendung-example"
+tests/gated-example-pages.test.tsx:11:import { GatedChatExample } from "../src/components/gated-preview/gated-chat-example"
+tests/gated-example-pages.test.tsx:12:import { GatedRoutineExample } from "../src/components/gated-preview/gated-routine-example"
+tests/gated-example-pages.test.tsx:45:  ["app/routine/page.tsx", "GatedRoutineExample"],
+tests/gated-example-pages.test.tsx:46:  ["app/anwendung/page.tsx", "GatedAnwendungExample"],
+tests/gated-example-pages.test.tsx:47:  ["app/chat/page.tsx", "GatedChatExample"],
+tests/gated-example-pages.test.tsx:48:  ["app/chat/[conversationId]/page.tsx", "GatedChatExample"],
+tests/gated-example-pages.test.tsx:147:  assert.match(segmentBody, /return <GatedChatExample \/>/)
+tests/gated-example-pages.test.tsx:227:  const html = render(GatedRoutineExample)
+tests/gated-example-pages.test.tsx:251:  const html = render(GatedAnwendungExample)
+tests/gated-example-pages.test.tsx:272:  const html = render(GatedChatExample)
+tests/gated-example-pages.test.tsx:298:  assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground">\d\d:\d\d/)
+tests/gated-example-pages.test.tsx:301:test("every example is framed by GatedPreview with its own label, benefit and one CTA", () => {
+tests/gated-example-pages.test.tsx:303:    [GatedRoutineExample, GATED_EXAMPLE_COPY.routine],
+tests/gated-example-pages.test.tsx:304:    [GatedAnwendungExample, GATED_EXAMPLE_COPY.anwendung],
+tests/gated-example-pages.test.tsx:305:    [GatedChatExample, GATED_EXAMPLE_COPY.chat],
+src/lib/analytics/scanner-quiz-view.ts:2:  bootstrapFunnelContext,
+src/lib/analytics/scanner-quiz-view.ts:28:  bootstrap = bootstrapFunnelContext,
+src/components/quiz/quiz-funnel-package-provider.tsx:5:import { bootstrapFunnelContext } from "@/lib/funnel/client"
+src/components/quiz/quiz-funnel-package-provider.tsx:88:    void bootstrapFunnelContext().then((context) => {
+src/lib/analytics/destinations/customerio.ts:3:  bootstrapFunnelContext,
+src/lib/analytics/destinations/customerio.ts:50:  void bootstrapFunnelContext().then((context) => {
+src/app/api/stripe/create-checkout-session/route.ts:917:        const recorded = await recordFunnelEvent({
+src/app/api/stripe/create-checkout-session/route.ts:1269:      ? await recordFunnelEvent({
+src/app/api/stripe/create-checkout-session/route.ts:2219:  const funnelRecorded = await recordFunnelEvent({
+src/lib/analytics/destinations/meta.ts:11:import { bootstrapFunnelContext, getCurrentFunnelContext } from "@/lib/funnel/client"
+src/lib/analytics/destinations/meta.ts:48:  void bootstrapFunnelContext().then((context) => {
+src/app/api/funnel/session/route.ts:58:    await recordFunnelEvent({
+src/components/routine/personal-plan/personal-plan-routine-client.tsx:316:  // T17 keepsake: the one gate this page can open. Same shape as `GatedPreview`'s and
+tests/gated-preview-component.test.tsx:5:import { GatedPreview } from "../src/components/gated-preview/gated-preview"
+tests/gated-preview-component.test.tsx:9: * `GatedPreview` is a "use client" component with a single `useState` (the sheet's
+tests/gated-preview-component.test.tsx:101:function renderPreview(overrides: Partial<Parameters<typeof GatedPreview>[0]> = {}) {
+tests/gated-preview-component.test.tsx:103:    GatedPreview({
+tests/acquisition-funnel-tracking.test.ts:142:  assert.doesNotMatch(source, /bootstrapFunnelContext\(\)\.then/)
+tests/acquisition-funnel-tracking.test.ts:153:  assert.doesNotMatch(profilePricingSource, /bootstrapFunnelContext\(\)\.then/)
+src/lib/billing/analytics-destinations/funnel.ts:2:import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
+src/lib/billing/analytics-destinations/funnel.ts:48:  const result = await recordFunnelPurchaseFromSession(input.supabase, {
+src/lib/funnel/server.ts:483:export async function recordFunnelEvent(input: {
+src/lib/funnel/server.ts:558:export async function recordFunnelPurchaseFromSession(
+src/lib/funnel/client.ts:179:export function bootstrapFunnelContext() {
+tests/editorial-pages.test.tsx:67:  assert.match(methodikSource, /<EditorialShell bootstrapFunnelContext>/)
+tests/editorial-pages.test.tsx:68:  assert.match(shellSource, /bootstrapFunnelContext = false/)
+tests/editorial-pages.test.tsx:71:  assert.match(bootstrapSource, /import \{ bootstrapFunnelContext \} from "@\/lib\/funnel\/client"/)
+tests/editorial-pages.test.tsx:74:    /useEffect\(\(\) => \{\s*void bootstrapFunnelContext\(\)\s*\}, \[\]\)/,
+tests/editorial-pages.test.tsx:92:  assert.doesNotMatch(notFoundSource, /bootstrapFunnelContext|funnel\/session|LandingTracking/)
+src/app/api/quiz/personal-plan-lead/route.ts:231:            .recordFunnelEvent({
+src/app/api/quiz/lead/route.ts:398:              .recordFunnelEvent({
+src/app/api/quiz/lead/route.ts:471:            .recordFunnelEvent({
+tests/gated-pages-zero-mutation.test.tsx:10:import { GatedAnwendungExample } from "../src/components/gated-preview/gated-anwendung-example"
+tests/gated-pages-zero-mutation.test.tsx:11:import { GatedChatExample } from "../src/components/gated-preview/gated-chat-example"
+tests/gated-pages-zero-mutation.test.tsx:12:import { GatedRoutineExample } from "../src/components/gated-preview/gated-routine-example"
+tests/gated-pages-zero-mutation.test.tsx:13:import { InertExample } from "../src/components/gated-preview/inert-example"
+tests/gated-pages-zero-mutation.test.tsx:84:  ["routine", GatedRoutineExample],
+tests/gated-pages-zero-mutation.test.tsx:85:  ["anwendung", GatedAnwendungExample],
+tests/gated-pages-zero-mutation.test.tsx:86:  ["chat", GatedChatExample],
+tests/gated-pages-zero-mutation.test.tsx:272:    assert.ok(inertStart > -1, "the example is wrapped in InertExample")
+tests/gated-pages-zero-mutation.test.tsx:282:test("InertExample cancels activation before the wrapped component's own handler runs", () => {
+tests/gated-pages-zero-mutation.test.tsx:283:  const element = InertExample({ children: null }) as React.ReactElement<Record<string, any>>
+tests/gated-pages-zero-mutation.test.tsx:302:test("InertExample also cancels keyboard activation", () => {
+tests/gated-pages-zero-mutation.test.tsx:303:  const element = InertExample({ children: null }) as React.ReactElement<Record<string, any>>
+src/app/anwendung/page.tsx:4:import { GatedAnwendungExample } from "@/components/gated-preview/gated-anwendung-example"
+src/app/anwendung/page.tsx:318:    return <GatedAnwendungExample />
+src/app/anwendung/page.tsx:322:  // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+src/app/anwendung/page.tsx:326:  if (renderGatedExample) return <GatedAnwendungExample />
+src/app/chat/page.tsx:4:import { GatedChatExample } from "@/components/gated-preview/gated-chat-example"
+src/app/chat/page.tsx:19:// load. The client-reference manifest explains why — `GatedPreview`'s (and therefore
+src/app/chat/page.tsx:31:  if (mode === "example") return <GatedChatExample />
+src/app/chat/page.tsx:55:  // `<GatedChatExample />` for free) streams in once resolved. `ChatTierSegment` is an async
+src/app/chat/[conversationId]/page.tsx:4:import { GatedChatExample } from "@/components/gated-preview/gated-chat-example"
+src/app/chat/[conversationId]/page.tsx:38:  if (mode === "example") return <GatedChatExample />
+tests/reactivation-checkout-recovery.spec.ts:19:      "let n=0;export const createFunnelEventId=()=>`00000000-0000-4000-8000-${String(++n).padStart(12,'0')}`;export const getCurrentFunnelContext=()=>null;export const bootstrapFunnelContext=async()=>null",
+src/app/result/[leadId]/page.tsx:151:  await recordFunnelEvent({
+tests/funnel-server.test.ts:7:  recordFunnelPurchaseFromSession,
+tests/funnel-server.test.ts:152:  assert.deepEqual(await recordFunnelPurchaseFromSession(client({ row: null }), purchase), {
+tests/funnel-server.test.ts:157:  const transient = await recordFunnelPurchaseFromSession(
+src/app/routine/page.tsx:4:import { GatedRoutineExample } from "@/components/gated-preview/gated-routine-example"
+src/app/routine/page.tsx:325:    return <GatedRoutineExample />
+src/app/routine/page.tsx:329:  // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+src/app/routine/page.tsx:333:  if (renderGatedExample) return <GatedRoutineExample />
+tests/freemium-lapsed-user-matrix.test.ts:372:      keepsakeBranch.indexOf("<GatedRoutineExample />"),
+tests/freemium-lapsed-user-matrix.test.ts:518:  // The keepsake branch mounts the real PersonalPlanRoutineClient — never GatedRoutineExample
+tests/freemium-lapsed-user-matrix.test.ts:525:      keepsakeBranch.indexOf("<GatedRoutineExample />"),
+src/app/labs/gated-preview/page.tsx:3:import { GatedAnwendungExample } from "@/components/gated-preview/gated-anwendung-example"
+src/app/labs/gated-preview/page.tsx:4:import { GatedChatExample } from "@/components/gated-preview/gated-chat-example"
+src/app/labs/gated-preview/page.tsx:5:import { GatedRoutineExample } from "@/components/gated-preview/gated-routine-example"
+src/app/labs/gated-preview/page.tsx:8: * Dev-only harness for the gated „Beispiel" pages (T11's `GatedPreview` frame + T12's
+src/app/labs/gated-preview/page.tsx:23:  routine: GatedRoutineExample,
+src/app/labs/gated-preview/page.tsx:24:  anwendung: GatedAnwendungExample,
+src/app/labs/gated-preview/page.tsx:25:  chat: GatedChatExample,
+src/app/labs/gated-preview/page.tsx:35:export default async function GatedPreviewLabPage({

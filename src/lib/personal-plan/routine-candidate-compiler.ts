@@ -13,6 +13,7 @@ import type {
 import {
   STAGE1_CATEGORY_ORDER,
   type InitialNeedPlanSnapshot,
+  type PlanDamageLevel,
   type PlanCategoryDecision,
   type PlanNeedTier,
   type PlanProductRole,
@@ -248,6 +249,7 @@ function makeItem(input: {
   decision: PlanCategoryDecision
   portfolio: AnyProposedProductPortfolio
   cadenceAuthorityFacts: readonly ProductCadenceAuthorityFact[]
+  structuralDamageLevel: PlanDamageLevel | null
 }): RoutineItem {
   const { resolution, decision, portfolio, cadenceAuthorityFacts } = input
   if (!resolution.role) {
@@ -311,6 +313,7 @@ function makeItem(input: {
     recommended: decision.frequency,
     userOverride: null,
     authorityFacts: cadenceAuthorityFacts,
+    structuralDamageLevel: input.structuralDamageLevel,
   })
   return {
     itemKey,
@@ -415,6 +418,7 @@ export async function compileInitialRoutineCandidate(
       decision,
       portfolio,
       cadenceAuthorityFacts: input.cadenceAuthorityFacts ?? [],
+      structuralDamageLevel: input.refinedNeedSnapshot.assessments?.damage?.structuralLevel ?? null,
     })
   })
   for (const item of items) {

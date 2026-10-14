@@ -149,6 +149,7 @@ test("two concerns: Weiter opens the sheet with only her selected concerns", () 
 
   const sheet = sheetOf(tree)
   assert.equal(sheet.props.open, true)
+  assert.equal(sheet.props.selected, undefined)
   assert.deepEqual(
     sheet.props.options.map((option: { value: string }) => option.value),
     ["low_shine", "breakage"],

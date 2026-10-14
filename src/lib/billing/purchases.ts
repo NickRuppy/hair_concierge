@@ -18,12 +18,6 @@ export type OneTimePurchaseEntitlement = {
   consent: PersonalPlanOneTimeCheckoutConsentRow | null
 }
 
-export function hasCurrentOneTimePurchaseAccess(
-  entitlement: OneTimePurchaseEntitlement | null,
-): boolean {
-  return resolveOneTimePurchaseAccessState(entitlement) === "active"
-}
-
 export function resolveOneTimePurchaseAccessState(
   entitlement: OneTimePurchaseEntitlement | null,
 ): OneTimeAccessState {

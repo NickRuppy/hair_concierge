@@ -68,7 +68,9 @@ export const bondbuilderInternalAdmissionSchema = z
             claim_trust_level: z.enum(["low", "medium", "high"]),
             trust_basis: z.enum(["owner_anchor", "owner_calibration", "owner_default"]),
             research_profile: bondbuilderResearchProfileSchema,
-            application_mode: z.enum(["pre_shampoo", "post_wash_leave_in"]).optional(),
+            application_mode: z
+              .enum(["pre_shampoo", "post_wash_leave_in", "bedtime_leave_in"])
+              .optional(),
             treatment_mode: z.enum(["rinse_out", "leave_in"]).optional(),
             product_format: z.enum(["cream_treatment", "spray_treatment"]).optional(),
           })

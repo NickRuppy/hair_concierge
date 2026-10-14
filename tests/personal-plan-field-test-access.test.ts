@@ -162,7 +162,6 @@ test("field-test activation qualifies Stage 1 and the journey without a payment 
       }),
       cohortCutoff: () => new Date("2026-08-11T00:00:00.000Z"),
       appEnabled: () => true,
-      appRollout: () => "all",
       stage2Enabled: () => false,
       stage3Enabled: () => false,
       stage4Enabled: () => false,
@@ -170,7 +169,6 @@ test("field-test activation qualifies Stage 1 and the journey without a payment 
       loadPlan: async () => null,
       loadCurrentRefinedNeed: async () => null,
       loadCurrentProductDraft: async () => null,
-      loadIsInternal: async () => false,
     },
     "user-1",
   )

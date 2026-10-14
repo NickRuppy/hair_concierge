@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+ok 1 - Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+  ---
+  duration_ms: 80.596167
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 239.580334

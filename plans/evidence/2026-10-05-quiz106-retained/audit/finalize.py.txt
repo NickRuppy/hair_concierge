@@ -1,0 +1,92 @@
+from pathlib import Path
+import hashlib,json,collections,shutil
+D=Path(__file__).parent
+P=json.loads((D/'start-pins.json').read_text());ROOT=Path(P['root']);I=json.loads((D/'inventory.json').read_text());J=json.loads((D/'judgments.json').read_text())
+def sha(b):return hashlib.sha256(b).hexdigest()
+def write(name,obj): (D/name).write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n')
+# Guard all originally pinned test and source bytes; never refresh them.
+for v in P['pins']:
+ assert sha((ROOT/v['file']).read_bytes())==v['sha256'], 'DRIFT: '+v['file']
+full=[v['file'] for v in P['pins']]+[
+ 'src/lib/onboarding/goal-flow.ts','src/lib/profile/chemical-treatment.ts',
+ 'src/lib/quiz/offer-preview-products.ts','src/lib/quiz/offer-preview-types.ts',
+ 'src/lib/quiz/email-return-context.ts','src/lib/quiz/email-return-constants.ts','src/lib/quiz/email-return-server.ts','src/lib/quiz/email-return-prefill.ts','src/lib/quiz/email-return-edit.ts',
+ 'src/lib/quiz/result-navigation.ts','src/lib/quiz/lead-capture-mode.ts','src/lib/quiz/migration-prefill-init.ts',
+ 'src/lib/funnel/cookie.ts','src/lib/supabase/admin.ts',
+ 'src/app/quiz/page.tsx','src/components/quiz/quiz-concerns-question.tsx','src/app/result/[leadId]/page.tsx',
+ 'src/lib/vocabulary/index.ts','src/lib/vocabulary/concerns-goals.ts','src/lib/vocabulary/onboarding-goals.ts','src/lib/vocabulary/hair-types.ts','src/lib/vocabulary/hair-length.ts','src/lib/vocabulary/frequencies.ts',
+ 'tests/quiz-result-narrative.test.ts','tests/quiz-offer-preview.test.ts','tests/quiz-email-return-credential.test.ts','tests/server-only-register.cjs',
+ 'node_modules/zustand/vanilla.js','node_modules/zustand/react.js','node_modules/zod/package.json','node_modules/zod/index.cjs','node_modules/zod/v4/classic/parse.cjs','node_modules/next/dist/server/web/spec-extension/response.d.ts','node_modules/next/dist/server/web/spec-extension/response.js','node_modules/next/dist/server/web/spec-extension/cookies.d.ts',
+]
+slices={
+ 'src/components/quiz/quiz-lead-capture.tsx':[[220,340],[380,475]],
+ 'src/app/api/quiz/lead/route.ts':[[110,170],[308,368]],
+ 'src/components/personal-plan-quiz/personal-plan-quiz.tsx':[[2820,2870]],
+ 'src/lib/personal-plan/input.ts':[[75,145]],
+ 'src/lib/recommendation-engine/categories/shared.ts':[[1,75]],
+ 'src/lib/recommendation-engine/shampoo-cadence.ts':[[1,175]],
+ 'src/lib/vocabulary/profile-labels.ts':[[1,150]],
+ 'src/app/quiz/quiz-shell.tsx':[[1,110]],
+ 'src/components/quiz/quiz-question.tsx':[[1,128]],
+ '.github/workflows/ci.yml':[[120,165]],
+ 'plans/discovery-refinement-b7/plan.md':[[1,41]],
+ 'node_modules/zod/v4/classic/schemas.cjs':[[190,250],[866,889],[1461,1464]],
+ 'node_modules/zod/v4/core/schemas.cjs':[[785,837],[1686,1712]],
+ 'node_modules/zod/v4/core/api.cjs':[[1102,1138]],
+ 'node_modules/zod/v4/core/parse.cjs':[[1,87]],
+ 'node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts':[[167,201]],
+ 'node_modules/@types/node/test.d.ts':[[1800,1827],[1903,1944]],
+}
+# Partial package/script inventory and parser are mechanical only, not full semantic reads.
+mechanical=['package.json','package-lock.json','tsconfig.json','node_modules/typescript/lib/typescript.js']
+readscope=[]
+for f in dict.fromkeys(full+list(slices)+mechanical):
+ b=(ROOT/f).read_bytes();n=len(b.decode().splitlines());mode='complete' if f in full else 'slices' if f in slices else 'mechanical-only'
+ row={'file':f,'sha256':sha(b),'bytes':len(b),'lineCount':n,'readMode':mode,'ranges':[[1,n]] if mode=='complete' else slices.get(f,[]),'originalStartPin':any(p['file']==f for p in P['pins'])}
+ if f not in mechanical:
+  dst=D/'read-snapshots'/f;dst.parent.mkdir(parents=True,exist_ok=True);dst.write_bytes(b);row['snapshot']=str(dst)
+ readscope.append(row)
+write('read-scope.json',{'root':str(ROOT),'head':'21e0e41fa996ec6a725c258ab3766971f0edb94d','branch':'codex/test-audit-pruning','entries':readscope,'limits':[
+ 'Complete 11 owned tests and all their inline fixtures/helpers/tables are read. Three overlapping tests are read only as comparison evidence, not assigned new campaign classifications.',
+ 'Complete operative quiz core modules and result/preparation/return route owners are read; large consumer files are explicitly scoped to listed slices.',
+ 'No full recursive dependency or caller-graph semantic audit. Zod/Zustand/NextResponse implementation and named installed type slices inspected, not executed.',
+ 'No browser, native, compile, owner import, source fault, network, provider, environment-file or database operation performed. Baseline is UNRUN in this lane.',
+ 'Historical memory was navigation only; current draft source explicitly uses v2 records with v1 compatibility and 14-day TTL.',
+ 'Existing broad migration/mobile/billing/free/refinement/scanner/dormant cohorts are excluded. Reading common pure callees does not confer their cohort credit.',
+ 'All source pins are guard evidence, not evidence of full human reads outside the stated ranges. No live deployment/provider fact is inferred from local source.',
+]})
+ledger=[]
+for f in I:
+ k=Path(f['file']).name.removesuffix('.test.ts');a=J[k];assert len(a)==len(f['rows']),(k,len(a),len(f['rows']))
+ for row,t in zip(f['rows'],a):
+  status,contract,regression,owner=t
+  ledger.append({'id':k+':'+str(row['ordinal']),'file':f['file'],'line':row['line'],'endLine':row['endLine'],'nameExpression':row['title'],'classification':status,'observableContract':contract,'credibleRegressionOrGap':regression,'ownerEvidence':owner,'assertions':row['assertions'],'calls':row['calls'],'callbackSHA256':row['callbackSHA256'],'registrationSHA256':row['registrationSHA256'],'disposition':'unchanged; F repairs are deferred with zero credit' if status=='F' else 'retain unchanged at this existing boundary','baseline':'UNRUN; parent owns runtime'})
+counts=collections.Counter(r['classification'] for r in ledger);assert counts=={'R':101,'F':5},counts
+write('ledger.json',{'scopeDeclarations':len(ledger),'classifications':dict(counts),'declarations':ledger})
+# Expand only literal-table registration sites, without evaluating tests or owners.
+exp=[{'file':'tests/quiz-primary-concern.test.ts','line':101,'table':'STATED_TABLE','rowCount':11,'classification':'R'}, {'file':'tests/quiz-primary-concern.test.ts','line':165,'table':'inline nonLegacy list','rowCount':4,'classification':'R'}, {'file':'tests/quiz-primary-concern.test.ts','line':250,'table':'NON_LEGACY_COPY own entries','rowCount':4,'classification':'R'}, {'file':'tests/quiz-need-lane.test.ts','line':98,'table':'cases','rowCount':14,'classification':'R'}]
+expected=len(ledger)+sum(r['rowCount']-1 for r in exp);assert expected==135
+write('registration-counts.json',{'declarations':106,'expectedRuntimeRegistrations':expected,'runtimeWasExecuted':False,'expandedSites':exp,'perFile':[{'file':f['file'],'declarations':len(f['rows']),'expectedRegistrations':len(f['rows'])+sum(r['rowCount']-1 for r in exp if r['file']==f['file'])} for f in I]})
+phases=[]
+for f in I:
+ b=(ROOT/f['file']).read_bytes();phase={}
+ for name in ['before','transfer','cut']:
+  out=D/'snapshots'/name/f['file'];out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(b);phase[name]={'path':str(out),'sha256':sha(b),'bytes':len(b),'declarations':f['registrationCount']}
+ phases.append({'file':f['file'],'phases':phase})
+write('candidates.json',{'acceptedOrConditionalCandidates':[],'deletionCredit':0,'sourceRetirements':[],'reason':'No complete same-input assertion-union transfer justified in this scope.'})
+write('controls.json',{'controls':[],'status':'NO_CUT_NO_CONTROLS_REQUIRED','runtime':'UNRUN','note':'Held F repair ideas are not mutation recipes, implemented repairs, or deletion credit.'})
+(D/'transfer.diff').write_bytes(b'');(D/'cut.diff').write_bytes(b'');(D/'complete.diff').write_bytes(b'')
+write('manifest.json',{'schemaVersion':1,'packet':str(D),'scopeLabel':'quiz taxonomy (parent navigation label113; exact owned declaration count106)','root':str(ROOT),'head':'21e0e41fa996ec6a725c258ab3766971f0edb94d','branch':'codex/test-audit-pruning','verdict':'NO_CUT','counts':{'before':106,'transfer':106,'cut':106,'expectedRuntimeBefore':135,'expectedRuntimeAfter':135,'R':101,'F':5,'C':0,'D':0},'all106CallbacksByteExact':True,'allFixturesAndSupportByteExact':True,'phaseFiles':phases,'sourceChanges':[],'testChanges':[],'readScopeSHA256':sha((D/'read-scope.json').read_bytes()),'initialPinsSHA256':sha((D/'start-pins.json').read_bytes())})
+lines=['# Quiz normalization / input taxonomy — complete 106-site ledger','','Exact owned scope: 11 files; 106 AST declaration sites and 135 statically expected registrations. R=101, F=5, C=0, D=0. All bytes retained. Baseline/native/browser/mutations UNRUN by this lane.','','Each entry is a human semantic judgment from the complete callback/support/fixture plus the stated owner path. Full assertion and call expressions are preserved in `ledger.json`; full original text is in the snapshots. Counts alone are not audit evidence.']
+for f in I:
+ lines+=['',f'## {f["file"]}','']
+ for row in [x for x in ledger if x['file']==f['file']]:
+  lines += [f'### {row["classification"]} · L{row["line"]} · {row["nameExpression"]}', '',row['observableContract'],'', 'Credible regression / gap: '+row['credibleRegressionOrGap'],'','Owner: `'+row['ownerEvidence']+'`. '+row['disposition']+'.','']
+(D/'complete-ledger.md').write_text('\n'.join(lines)+'\n')
+# Recheck the frozen original scope and all emitted phase byte identities.
+checks=[]
+for f in phases:
+ bs=[Path(f['phases'][p]['path']).read_bytes() for p in ['before','transfer','cut']];assert bs[0]==bs[1]==bs[2]==(ROOT/f['file']).read_bytes();checks.append(f['file'])
+for v in P['pins']:assert sha((ROOT/v['file']).read_bytes())==v['sha256'],'DRIFT '+v['file']
+write('static-check.json',{'status':'PASS_STATIC_ONLY','original32PinsUnchanged':True,'wholePhaseFiles':33,'sameBytesBeforeTransferCut':checks,'declarations':[106,106,106],'classifications':dict(counts),'expectedRuntime':[135,135,135],'removedCallbacks':0,'modifiedCallbacks':0,'unchangedCallbacks':106,'newCalls':0,'newInputs':0,'newTableRows':0,'skipCancelTodoChanges':0,'productionLOCChange':0,'testLOCChange':0,'testsExecuted':False,'sourceFaultsExecuted':False,'repositoryWrites':0,'childTestRunners':0,'ownerImports':0,'providerNetworkDatabaseOperations':0,'note':'Artifact script and TypeScript parsing only. This receipt does not attest native test success or runtime closure.'})
+print(json.dumps({'packet':str(D),'counts':dict(counts),'declarations':len(ledger),'expectedRegistrations':expected,'readEntries':len(readscope),'wholePhaseFiles':33,'initial32Drift':False}))

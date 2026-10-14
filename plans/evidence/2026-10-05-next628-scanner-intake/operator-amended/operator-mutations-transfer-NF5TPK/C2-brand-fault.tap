@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: ScanUnknownFlow: the bridge line sits under the headline, above the subline
+not ok 1 - ScanUnknownFlow: the bridge line sits under the headline, above the subline
+  ---
+  duration_ms: 11.002959
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-unknown-flow-ui.test.tsx:2:9109'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input was expected to not match the regular expression /Marke/. Input:
+    
+    '<div class="flex flex-col gap-4"><p>Marke</p><div><h2 class="font-header text-2xl leading-tight text-foreground pr-12">Danke dir – das ist neu für uns!</h2><p class="mt-2 text-sm leading-6 text-foreground">Barcode gelesen – das Produkt fehlt noch in unserer Datenbank.</p><p class="mt-1 text-sm leading-6 text-[var(--text-sub)]">Wir nehmen es auf. Dein Ergebnis kommt in den Chat.</p></div><p class="text-[15px] font-semibold leading-6 text-foreground">Wobei benutzt du es?</p><div class="grid gap-2"><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Shampoo</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Conditioner</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Leave-in</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Öl</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Maske</span></button><button type="button" class="flex min-h-[56px] items-center justify-between rounded-xl border border-dashed border-[var(--brand-plum-light)] p-3 text-left text-[15px] font-semibold text-[var(--brand-plum)] transition-colors hover:border-[var(--brand-plum)] disabled:cursor-not-allowed"><span>Weitere Produktarten</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div><p class="text-center text-xs tabular-nums text-muted-foreground">Barcode 4006381333931</p></div>'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: '<div class="flex flex-col gap-4"><p>Marke</p><div><h2 class="font-header text-2xl leading-tight text-foreground pr-12">Danke dir – das ist neu für uns!</h2><p class="mt-2 text-sm leading-6 text-foreground">Barcode gelesen – das Produkt fehlt noch in unserer Datenbank.</p><p class="mt-1 text-sm leading-6 text-[var(--text-sub)]">Wir nehmen es auf. Dein Ergebnis kommt in den Chat.</p></div><p class="text-[15px] font-semibold leading-6 text-foreground">Wobei benutzt du es?</p><div class="grid gap-2"><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Shampoo</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Conditioner</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Leave-in</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Öl</span></button><button type="button" aria-pressed="false" class="flex min-h-[56px] items-center rounded-xl border p-3 text-left transition-colors disabled:cursor-not-allowed border-border bg-card hover:border-[var(--brand-plum)]/40"><span class="block text-[17px] font-bold text-foreground">Maske</span></button><button type="button" class="flex min-h-[56px] items-center justify-between rounded-xl border border-dashed border-[var(--brand-plum-light)] p-3 text-left text-[15px] font-semibold text-[var(--brand-plum)] transition-colors hover:border-[var(--brand-plum)] disabled:cursor-not-allowed"><span>Weitere Produktarten</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div><p class="text-center text-xs tabular-nums text-muted-foreground">Barcode 4006381333931</p></div>'
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-unknown-flow-ui.test.tsx:286:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 294.596875

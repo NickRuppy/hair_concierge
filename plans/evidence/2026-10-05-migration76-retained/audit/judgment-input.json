@@ -1,0 +1,98 @@
+{
+"personal-plan-frontier-routing.test.ts": [
+["R","Recovery, Stage 1 and Stage 2 are distinct narrow-frontier outputs for missing source, initial and refined pointers.","Changing sourceReady precedence or treating missing initial as Stage 2 loses a literal output. Other narrow fixtures do not contain all three input/output pairs."],
+["R","Pending proposal routes Stage 4; accepted routine routes Stage 5, with routine/application redirect exemptions.","Treating pending as accepted or redirecting the routine owner despite its durable pointer fails. Loader stage4 fixture lacks accepted and redirect invocations."],
+["R","Legacy users and explicit old onboarding edits stay unchanged; auth/routine requests use canonical unfinished destination.","Applying frontier redirects to legacy/onboarding or failing auth redirection fails. No existing keeper calls the same route union."],
+["R","Chat root and nested chat paths remain exempt across Stage 1/3/5 and recovery.","Adding chat to controlled paths fails. Stage derivation tests never call this path union."],
+["R","Owner RPC legacy purchase on cutoff enters recovery without private-table queries when initial pointer is absent.","Routing directly to Stage 1 based on a lead alone or adding private from reads fails. Pure reducer cannot catch RPC wiring."],
+["R","Regular-quiz field-test owner bypasses customer cutover/cutoff but waits for initial source readiness.","Applying customer cutover to field-test owners fails. Paid and partner rows enter different source branches."],
+["R","Null primary source invokes additive partner owner RPC in order and routes partner recovery.","Dropping fallback, wrong RPC, or premature legacy result fails. Missing-function keeper intentionally returns no partner source."],
+["R","Exact absent partner-function deployment fallback tolerates matching PGRST202; unrelated 42883 propagates.","Swallowing arbitrary database errors fails; successful fallback cannot establish failure discrimination."],
+["R","Paid legacy source with customer cutover disabled stays legacy.","Treating all paid legacy leads as eligible fails. Migration-enabled historical source exercises a different explicit release exception."],
+["R","Owner-source durable pointers yield Stage 4, while a cutoff one millisecond later rejects the same row.","Ignoring cutoff or plan pointers fails. Pure reducer does not consume qualified_at or source_kind."],
+["R","Moderator application entry redirects recovery and unfinished Stage 1 using two literal source-readiness rows.","Leaving application open without readiness/initial facts fails. Earlier pure frontier test does not invoke application redirects for both rows."],
+["R","Candidate requires migration gate; ready bound enrollment resumes despite gate/cutoff; invented status fails closed.","Applying candidate gate to ready bindings, or accepting arbitrary status, fails. Historical paid row is not a bound migration row."],
+["R","Historical paid source predating cutoff reaches preparation under migration release.","Applying old cutoff unconditionally fails. Explicit migration candidate tests do not exercise source_kind paid."]
+],
+"personal-plan-journey-access.test.ts": [
+["R","Full journey output exposes contiguous allowed stages and persisted plan/routine identifiers.","Dropping a stage, pointer or pending indicator fails deep equality; narrow routing lacks the full admission payload."],
+["R","Missing Stage 2/3/4 gates, current authority and routine facts stop the respective downstream admission.","Admitting a later stage despite a missing prerequisite fails. Happy-path test cannot cover the five negative inputs."],
+["R","Prepared source with no aggregate returns explicit Stage 1 start without an empty plan id.","Manufacturing empty aggregate identity fails. Existing plan fixtures never enter the null-plan branch."],
+["R","Legacy cohort, provisioning and disabled app choose their distinct route contracts.","Conflating paid_pending recovery with active admission or losing global gate fails. Narrow routing lacks access-state semantics."],
+["R","None/revoked remain legacy; accepted immutable routine survives stale Stage 3 authority only with downstream gates.","Reviving revoked access or suppressing an accepted routine due to later draft staleness fails. Pending proposal is not equivalent authority."]
+],
+"personal-plan-legacy-cutover-eligibility.test.ts": [
+["R","Exact owned lead at cutoff passes; foreign returned owner and one-millisecond pre-cutoff purchase reject.","Removing returned-row ownership or inclusive cutoff validation fails. Fake builder ignores eq so returned-row guard is operative."],
+["R","Independent cutover disabled and injected app exclusion deny eligibility.","Ignoring either dependency result fails. Public app currently returns true, but cutover remains configurable and owner contract still accepts the dependency."],
+["F","Eligible PayPal activation emits exact aggregate dimensions and no raw user/lead identifiers; title additionally promises excluded events.","Adding identifiers or wrong eligible dimensions fails; an excluded-only telemetry leak can survive because no excluded input is invoked. Hold unchanged; no repair/removal credit."]
+],
+"personal-plan-legacy-prefill.test.ts": [
+["R","Unknown submitted night value remains unanswered rather than explicit none.","Normalizing unknown nonempty input to confirmed empty fails. Historical empty fixture has different submitted evidence."],
+["R","Canonical profile vocabulary and supported visible usage categories map; sentinel shampoo and unsupported category do not become answers.","Including sentinel/unsupported category or wrong towel/drying/heat/night mapping fails. Other fixtures lack this canonical union."],
+["R","Partial/ambiguous profile values remain omitted while independently submitted empty night is accepted.","Guessing invalid frequency/towel/drying/tool facts or ignoring submitted evidence fails. No same-input keeper has all clauses."],
+["R","Historical empty arrays without submitted evidence remain absent.","Treating old default arrays as explicit none fails. Submitted empty and unknown nonempty branches are distinct."],
+["R","Confirmed empty styling tools map to empty; mixed known/unknown input preserves the recognized straightener.","Discarding known tools or turning unconfirmed unknown data into none fails. No other callback supplies these two inputs."],
+["R","Current eligible exact catalog inventory is distinct from invalid-frequency repair and retired/unmatched name hints.","Promoting ineligible catalog rows or losing repair/name hints fails. Boolean matched status alone is not current publication authority."],
+["R","Category-mismatched catalog identity is rejected; repeated same input yields a stable versioned fingerprint.","Trusting mismatched catalog category fails even if fingerprint equality survives. Order-invariance keeper has different match input."],
+["R","Semantically equivalent objects and reversed usage rows yield equal versioned fingerprint.","Hashing raw insertion/row order fails. Repeating identical input elsewhere does not establish canonicalization."],
+["R","Conflicting frequencies for one product produce repair hint instead of arbitrary exact seed.","First-row-wins exact inventory fails. Single invalid frequency does not exercise conflicting duplicate grouping."]
+],
+"personal-plan-migration-admission-migration.test.ts": [
+["R","Real SQL resolver admits active paid authority, excludes manual-only grants and writes no enrollment.","Manual grant as payment or resolver INSERT fails. Route fakes supply authority and do not execute SQL."],
+["R","Real begin binding replacement before Stage 1, routing identity, idempotent initial need and frozen source after Stage 1; forged lead/enrollment rejected.","Changing bound source after initial plan or accepting foreign enrollment fails. Entire stateful sequence is not reproduced by DTO tests."],
+["R","Real one-time delivered purchase admits and routes; legacy profile fallback admits; canceled non-renewing subscription rejects.","Removing fallback or accepting non-current canceled authority fails. Other subscriptions never execute one-time join or profile authority branch."],
+["R","Bound personal-plan artifact is accepted as migration Stage 1 source.","Rejecting attached artifact source fails. Legacy quiz-source keeper takes the alternate source-kind clause."],
+["R","Ambiguous two owned leads stay pending; explicit owned choice binds; explicit captured lead is accepted.","Guessing latest lead or requiring linked status for explicit choice fails. Single exact paid-lead fixture lacks ambiguity."],
+["R","Existing eligible moderator field-test routing outranks unbound migration candidate and creates no migration ledger.","Choosing candidate before field-test fails. Ready binding precedence in another sequence is materially different."],
+["R","Wrong-owner requested lead cannot bind; expired previous authority is replaced by current subscription in resolve and begin.","Trusting requested foreign id or stale authority fails. Stage 1 forged enrollment tests exercise a later RPC, not begin/resolve."],
+["R","Existing non-migration initial plan prevents creating a migration enrollment.","Creating a migration ledger for an existing non-migration plan fails. Bound migration retry does not enter this guard."],
+["R","Actual installed function/table privileges exclude anon/authenticated and allow service-role begin/save.","Granting authenticated execution or anon insert fails SQL privilege introspection. Service-client route fakes cannot observe grants."],
+["R","Fresh save binds legacy lead, exact retry reuses identity, persists all fields and creates only one lead.","Duplicate lead on retry or dropping persisted consent/name/answers fails. TypeScript wrappers cannot prove database writes."],
+["R","Changed ready legacy source gets a fresh lead while original answers/status remain unchanged.","Mutating old lead in place fails. Exact-retry case deliberately reuses identity; personal-plan source has distinct quiz_kind."],
+["R","Unused bound personal-plan source can recover into a fresh legacy lead, preserving original kind/answers.","Rejecting personal-plan recovery or overwriting old source fails. Legacy-source replacement does not enter quiz-kind difference."],
+["R","Save rejects foreign enrollment, email mismatch, expired paid authority and post-Stage-1 edits.","Bypassing each explicit guard makes its literal invalid_context oracle fail. Independent sequence returns to valid access before Stage 1 check."],
+["R","Table check forbids pending enrollment with nonnull quiz source.","Removing database ready/pending structural CHECK admits invalid row. RPC fakes and normal valid writes cannot catch direct invalid insert."]
+],
+"personal-plan-migration-admission.test.ts": [
+["R","Migration new starts default off and exact true switch only; candidate is resolved then suppressed without writes.","Treating missing/other truthy strings as enabled or returning candidate when off fails. SQL has no release environment gate."],
+["R","Enabled resolve converts complete snake_case ready SQL row into canonical typed result.","Losing admission/time/source fields fails full DTO equality. SQL parser spot status assertions are not full DTO union."],
+["R","Gate-off begin uses resolver and retains existing pending binding.","Calling write RPC while paused or hiding existing binding fails. Candidate default-off test has no enrollment."],
+["R","Enabled begin sends only server-owned user and requested owned lead to exact RPC, then returns normalized ready row.","Forwarding authority fields or wrong RPC/arguments fails. Raw SQL calls bypass wrapper argument construction."],
+["R","Missing requested source is sent as explicit null and pending row is normalized.","Omitting/null-default error or forcing ready fails. Explicit-lead keeper uses a different consumed argument."],
+["R","Malformed ready RPC row throws rather than inventing an admission.","Fail-open parser accepting malformed authority/date fails. Fixture has multiple invalid fields, so it proves aggregate rejection only, not each validation independently."]
+],
+"personal-plan-migration-quiz-context.test.ts": [
+["R","Signed context roundtrip binds enrollment/user, rejects other user, tamper and expired time.","Accepting wrong signature/user or expiration fails. Route fixtures use valid signatures without this complete crypto/time union."],
+["R","Missing secret and malformed identity cannot issue valid recovery context.","Issuing cookie with absent key or invalid IDs fails. Valid-cookie consumers cannot cover issuance rejection."],
+["R","Canonical recovery href and HTTP-only same-site path/age cookie options are fixed server-owned values.","Changing destination, privacy flags or lifetime fails. No route fixture asserts complete serialized/constant option union."]
+],
+"personal-plan-migration-quiz-prefill.test.ts": [
+["R","Missing recovery cookie returns recover without auth/admin creation.","Creating session or admin for ordinary cookie-free request fails. Signed-user mismatch crosses session auth first."],
+["R","Valid signed unused bound legacy source returns exact canonical answers, private cache and RPC/plan/lead read categories.","Losing canonical normalization or cache privacy fails. Fake query builder does not prove SQL eq ownership filtering; retain actual positive output only."],
+["R","Pending same enrollment returns fresh_blank and never queries a lead.","Guessing another draft from pending binding fails. Ready personal-plan source additionally checks consumed-plan guard."],
+["R","Ready personal-plan source returns fresh_blank without reading legacy lead.","Trying legacy prefill for personal-plan artifact fails. Pending-source keeper exits before source-consumption/kind branches."],
+["R","Signed context for different enrollment cannot use a pending binding.","Ignoring pending enrollment identity fails. Wrong-user cookie fails before admission, so it cannot replace this guard."],
+["R","Already-consumed initial source returns recover.","Reusing source after Stage 1 fails. All other route plan rows are null; SQL source freezing does not cover HTTP prefill."],
+["R","Other signed user context returns recover before admin creation.","Using a valid signature for wrong session owner fails. Missing cookie does not exercise decode identity binding."],
+["R","Authoritative admission failure returns unavailable rather than blank/recover and must not continue table lookups.","Swallowing outage as empty quiz fails. Valid no-data paths are not outages."],
+["R","Parsed prefill resumes first missing question, preserves active answers, and gives recover/unavailable precedence; fresh blank remains explicit.","Overwriting active work or wrong first missing step fails. Page retry covers only active-work ignore, not full union."],
+["R","Only exact recovery query mode/destination activates migration; fallback failures distinguish recovery from ordinary starts; null payload unavailable.","Broad returnTo or wrong mode acceptance fails. Direct nextHref helper uses response data, not URL intent."],
+["R","Only exact relative server nextHref accepted; recovery redirect requires non-ok 403, not 503.","Open redirect or sending outage to recovery fails. Page uses context response, not lead completion response."],
+["R","Real QuizPage callback retries unavailable context in place, retaining live Zustand answers/step without reload/navigation.","Retry calling reload, stale captured state overwriting answers, or no retry fetch fails. Custom dispatcher is not DOM/browser event propagation or React scheduler proof."]
+],
+"personal-plan-migration-ready-route.test.ts": [
+["R","HTTP GET is read-only discovery; POST binds before canonical source projection and returns readiness.","GET writing binding or POST projecting before bind fails captured order. Dependencies inject readiness, so this is sequencing not SQL persistence proof."],
+["R","Cross-origin POST and inactive access reject before migration/source calls.","Moving writes before origin/access checks fails. Paid_pending is a distinct 200 recovery response."],
+["R","Paid_pending returns private recovery response before migration lookup.","Treating provisioning as forbidden/ready or reading migration early fails. Expired access fixture has none, not paid_pending."],
+["R","POST obeys injected app admission gate before any source work.","Ignoring appAllowed dependency fails. Default release is all, but handler dependency contract remains until separate owner cleanup."],
+["R","GET and POST preserve package resolved by readiness in HTTP JSON.","Dropping/replacing scan_v1 package fails. Basic ready fixture omits package and cannot catch transport loss."],
+["R","Package-resolution failures produce transient_error for GET/POST instead of fabricated organic ready.","Turning an authoritative exception into ready output fails. Success package forwarding keeper does not throw."]
+],
+"personal-plan-rollout-access.test.ts": [
+["R","Released app admission returns true without reading profile/internal state.","Reintroducing internal DB lookup fails throwing fixture. This is current released default behavior, not a dormant branch."],
+["R","Dormant helper validates personal-plan tester enrollment/grant and admits without email allowlist.","Removing positive enrollment/grant path fails direct helper test. Hold until cross-scope retired-seam cleanup accepted; no claim default loader reaches it."],
+["R","Dormant helper falls through to regular-quiz enrollment and validates active tester grant in exact table order.","Omitting fallback or querying wrong table fails. Separate SQL field-test owner remains live and is not a substitute for this helper contract."],
+["R","Dormant helper treats exact missing field-test relations as no owner signal.","Propagating known pre-migration absence or treating it as authority fails. Hold with dormant seam; unrelated error takes distinct branch."],
+["R","Dormant helper propagates unrelated database error rather than declaring absence.","Swallowing XX000 fails rejection. Hold with cross-scope seam rather than delete isolated failure guard."]
+]
+}

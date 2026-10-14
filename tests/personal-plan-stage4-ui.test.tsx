@@ -749,7 +749,7 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   )
 
   assert.match(html, /Empfohlen, aber nicht eingeplant/)
-  assert.match(html, /Noch in Prüfung/)
+  assert.match(html, /Nicht geprüft/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
   assert.match(html, /Offen/)
   assert.match(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
@@ -1126,55 +1126,38 @@ test("fresh state (products open, 2 von 4): banner renders above the routine blo
   assert.equal(refined, 1)
 })
 
-test("post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(
-    <RoutinePage
-      view={view}
-      refinementBanner={{ module: "habits", completedSteps: 3, totalSteps: 4 }}
-      onDismissRefinementBanner={() => undefined}
-      onRefineFromBanner={() => undefined}
-    />,
-  )
+test("banner copy for the tools module and for habits after tools (x von 5)", () => {
+  const view = activeViewFor(payload([item()]))
+  const render = (banner: {
+    module: "tools" | "habits"
+    completedSteps: number
+    totalSteps: number
+  }) =>
+    renderToStaticMarkup(
+      <RoutinePage
+        view={view}
+        refinementBanner={banner}
+        onDismissRefinementBanner={() => undefined}
+        onRefineFromBanner={() => undefined}
+      />,
+    )
 
-  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
-  assert.match(html, />3 von 4</)
-  assert.match(html, /Weiter · 3 Min\./)
-  // Field test 26.08.2026: below the blocks the second ask scrolled out of
-  // view and was never seen, so both modules share the products slot.
-  assert.ok(html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"))
-})
+  const tools = render({ module: "tools", completedSteps: 3, totalSteps: 5 })
+  assert.match(tools, /Als Nächstes: Deine Tools\./)
+  assert.match(tools, />3 von 5</)
+  assert.match(tools, /Weiter · 3 Min\./)
+  assert.ok(tools.indexOf("Als Nächstes: Deine Tools.") < tools.indexOf("Deine Basis"))
 
-test("dismissed state: refinementBanner absent renders no banner", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(<RoutinePage view={view} refinementBanner={null} />)
+  const habitsAfterTools = render({ module: "habits", completedSteps: 4, totalSteps: 5 })
+  assert.match(habitsAfterTools, /Letzter Schritt: deine Gewohnheiten\./)
+  assert.match(habitsAfterTools, />4 von 5</)
+  assert.match(habitsAfterTools, /Weiter · 3 Min\./)
+  assert.doesNotMatch(habitsAfterTools, /Noch ein Schritt/)
 
-  assert.doesNotMatch(html, /Mach deinen Plan genauer\./)
-  assert.doesNotMatch(html, /Noch ein Schritt: deine Gewohnheiten\./)
-  assert.doesNotMatch(html, /Hinweis schließen/)
-})
-
-test("all-done state: no refinementBanner prop at all renders no banner", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(<RoutinePage view={view} />)
-
-  assert.doesNotMatch(html, /Hinweis schließen/)
-  assert.doesNotMatch(html, /von 4/)
-})
-
-test("Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(
-    <RoutinePage view={view} showPlanUpdatedToast onDismissPlanUpdatedToast={() => undefined} />,
-  )
-
-  assert.match(html, /role="status"/)
-  assert.match(html, /Plan aktualisiert/)
-  assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"))
+  // Tools not applicable (x von 4): today's habits copy.
+  const habitsWithoutTools = render({ module: "habits", completedSteps: 3, totalSteps: 4 })
+  assert.match(habitsWithoutTools, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(habitsWithoutTools, /Letzter Schritt/)
 })
 
 test("Task 2.6: the plan-updated toast is absent without the signal", () => {
@@ -1191,6 +1174,11 @@ test("Task 2.6: the plan-updated toast is absent without the signal", () => {
   // Without a dismiss handler the toast must not render even if the flag is
   // (incorrectly) set — there would be no way to ever clear it.
   const withoutHandler = renderToStaticMarkup(<RoutinePage view={view} showPlanUpdatedToast />)
+
+  assert.doesNotMatch(withoutFlag, /Mach deinen Plan genauer\./)
+  assert.doesNotMatch(withoutFlag, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(withoutFlag, /Hinweis schließen/)
+  assert.doesNotMatch(withoutFlag, /von 4/)
 
   for (const html of [withoutFlag, withFlagFalse, withoutHandler]) {
     assert.doesNotMatch(html, /Plan aktualisiert/)
@@ -1212,8 +1200,91 @@ test("Task 2.6: the plan-updated toast and the refinement banner can render on t
   )
 
   assert.match(html, /Plan aktualisiert/)
+  assert.match(html, /role="status"/)
+  assert.ok(
+    html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"),
+    "plan-updated toast remains above the routine blocks",
+  )
+  assert.match(html, />3 von 4</)
+  assert.match(html, /Weiter · 3 Min\./)
+  assert.ok(
+    html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"),
+    "habits refinement banner remains above the routine blocks",
+  )
   assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
   // Toast at the very top, banner further down (mockup screen 3): the two
   // never fight for the same slot.
   assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Noch ein Schritt"))
+})
+
+test("Deine Tools renders after the product sections iff the view carries a tool section", () => {
+  const routine = payload([item()])
+  const comb = {
+    assetKey: "asset:brushes_combs:wide_tooth_comb",
+    family: "brushes_combs",
+    productTypes: ["wide_tooth_comb"],
+    capabilities: ["detangle"],
+    ownership: "owned_generic",
+    presentationState: "use_yours",
+    routeKeys: ["tool:brushes_combs:detangling_foundation"],
+    labelKey: "Grobzinkiger Kamm",
+    purposeKey: "Zum sanften Entwirren",
+    imageKey: "wide_tooth_comb",
+  } as const
+  const withTools = renderToStaticMarkup(
+    <RoutinePage
+      view={{
+        ...activeViewFor(routine),
+        toolSection: {
+          assets: [
+            {
+              ...comb,
+              productTypes: [...comb.productTypes],
+              capabilities: [...comb.capabilities],
+              routeKeys: [...comb.routeKeys],
+            },
+          ],
+          derivedAssetKeys: [],
+        },
+      }}
+    />,
+  )
+  assert.ok(withTools.includes("data-routine-tool-section"))
+  assert.ok(withTools.indexOf("Deine Basis") < withTools.indexOf("data-routine-tool-section"))
+  const without = renderToStaticMarkup(<RoutinePage view={activeViewFor(routine)} />)
+  assert.equal(without.includes("data-routine-tool-section"), false)
+  assert.equal(without.includes("Deine Tools"), false)
+})
+test("S4: a Bondbuilder card shows one muted line only when the timing cannot be met", () => {
+  const bondbuilder = (authorityRuleIds: string[]) =>
+    item({
+      itemKey: "item:bondbuilder:specialized_bond_treatment:planned",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      purposeKey: "specialized_bond_treatment",
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+      },
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned:bond",
+        productId: "44444444-4444-4444-8444-444444444444",
+        displayName: "OLAPLEX No.3PLUS",
+      },
+      authorityRuleIds,
+      executable: false,
+    })
+  const render = (authorityRuleIds: string[]) =>
+    renderToStaticMarkup(
+      <RoutinePage
+        view={proposalView(payload([bondbuilder(authorityRuleIds)]))}
+        onItemDetail={() => undefined}
+      />,
+    )
+  const line = "Nach dem Waschen gerade nicht möglich. Kommt vor dem Waschen ins Haar."
+  assert.ok(render(["bondbuilder.stage3.timing_unmet.after_wash.before_wash"]).includes(line))
+  assert.ok(!render(["bondbuilder.stage3.tie_ordered"]).includes("gerade nicht möglich"))
 })

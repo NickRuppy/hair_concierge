@@ -1,0 +1,213 @@
+{
+  "blindId": "T408",
+  "inciFingerprintSha256": "c9faf0a554eb9cfc104111236fb4f01e3302870bca19e9218540a49a7ddb83bb",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 12,
+  "e3ProminenceMarker": "Parfum/Fragrance at 11",
+  "prominentThroughPosition": 10,
+  "surfactantArchitecture": "SLES (2) defining; CAPB (3) buffer; C1 -> moderate.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (3); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Zinc Sulfate (8) is an astringent salt, not a cleansing route.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful system - prominent cationic Guar Hydroxypropyltrimonium Chloride (7) - with Hydrolyzed Keratin (6) and Glycerin (5) as light protein and humectant routes.",
+      "counterSignal": "No silicone, lipid or pearlizer; cleansing-led architecture with menthol argues toward low.",
+      "neighboringAlternative": "low",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: a single guar plus a soluble keratin hydrolysate give light, low-persistence deposition against an effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (7) plus a hydrolyzed protein (6)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Water-soluble protein hydrolysate and a single guar are largely rinsed away; nothing waxy or silicone-based."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            7
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [
+          [
+            "Hydrolyzed Keratin",
+            6
+          ]
+        ],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            5
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Zinc Sulfate",
+          8,
+          "astringent salt, not deposition"
+        ],
+        [
+          "Menthol",
+          9,
+          "cooling agent"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two deposition families, both prominent.",
+      "whyThisBand": "Low: a single guar plus a soluble keratin hydrolysate give light, low-persistence deposition against an effective C1 reset.",
+      "whyNotNeighborBand": "W2 (two families): combined residue stays below noticeable because the protein is a low-molecular, water-soluble hydrolysate that does not build a persistent film in rinse-off, the guar is the only polymer, and there is no silicone, lipid or film former to converge.",
+      "confidenceLimitingFactor": "Two families present; protein and guar levels unknown, so moderate is a realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. Prominent menthol and zinc sulfate suggest a refreshing/oily-scalp role; needs claims.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is met.",
+      "csaFormulaHalf": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 5,
+        "prominent": true
+      }
+    ],
+    "coolingAgents": [
+      {
+        "ingredient": "MENTHOL",
+        "position": 9,
+        "prominent": true
+      }
+    ],
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "csaFormulaHalf": true
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant, prominent E4 route"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 6,
+      "role": "protein film"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 7,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Zinc Sulfate",
+      "position": 8,
+      "role": "astringent salt (not a recognized dandruff active)"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 9,
+      "role": "cooling agent, prominent"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 11,
+      "role": "E3 marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": []
+}

@@ -1,0 +1,19 @@
+{
+  "status": "READONLY_FULL39_PLUS_NESTED9_NO_CUT",
+  "manifestSha256": "46d4e786c2d9c56b76bb8d49565416792b6109544d1afac88e6acc839a7cfec8",
+  "ledgerSha256": "88dc55272478ee0bf914b7b86d0ebc4098c4a3deadb4822387a88a6bb6260a3d",
+  "layerPlanSha256": "8fbdecbb7a2cfaf6c0e5f11900833836e45352e40ebf0c5978997cf80af18ad3",
+  "marks": {
+    "F": 5,
+    "R": 34
+  },
+  "nestedMarks": {
+    "F": 1,
+    "R": 8
+  },
+  "sourceEdits": 0,
+  "testsRun": 0,
+  "faultsRun": 0,
+  "snapshotFiles": 24,
+  "readSetFiles": 49
+}

@@ -1,0 +1,677 @@
+[
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "renders Basis before Optional and groups multiple roles into one Bedarfsplan category card",
+    "line": 106,
+    "start": 3786,
+    "end": 6259,
+    "text": "test(\"renders Basis before Optional and groups multiple roles into one Bedarfsplan category card\", () => {\n  const routine = payload(\n    [\n      item({\n        itemKey: \"shampoo-cleanse\",\n        purposeKey: \"shampoo_everyday\",\n        role: \"shampoo_everyday\",\n      }),\n      item({\n        itemKey: \"shampoo-treatment\",\n        assignmentKey: \"shampoo-treatment\",\n        purposeKey: \"shampoo_dandruff\",\n        role: \"shampoo_dandruff\",\n        roleOrder: 1,\n        product: { kind: \"owned\", displayName: \"Kopfhautserum\" },\n      }),\n      item({\n        itemKey: \"mask\",\n        category: \"mask\",\n        purposeKey: \"intensive_conditioning_mask\",\n        role: \"intensive_conditioning_mask\",\n        state: {\n          systemAssessment: \"optional\",\n          inclusion: \"included\",\n          availability: \"planned\",\n          fitDecision: \"standard\",\n        },\n        // Contract-valid planned-without-product shape (productId is nullable\n        // in the routine payload even though Stage 3 always chooses one).\n        product: {\n          kind: \"planned\",\n          plannedPurchaseId: \"planned:mask\",\n          productId: null,\n          displayName: \"Pflegemaske\",\n        },\n        executable: false,\n      }),\n    ],\n    [\n      { key: \"basis\", itemKeys: [\"shampoo-cleanse\", \"shampoo-treatment\"] },\n      { key: \"optional\", itemKeys: [\"mask\"] },\n    ],\n  )\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,\n  )\n\n  assert.ok(html.indexOf(\"Deine Basis\") < html.indexOf(\"Optional\"))\n  assert.equal((html.match(/aria-label=\"Kategorie: Shampoo/g) ?? []).length, 1)\n  assert.match(html, /Regelmäßige Reinigung/)\n  assert.match(html, /Schuppenpflege/)\n  assert.ok(html.indexOf(\"Sanftes Shampoo\") < html.indexOf(\"Kopfhautserum\"))\n  assert.equal((html.match(/data-routine-detail-button=\"true\"/g) ?? []).length, 3)\n  assert.doesNotMatch(html, />Details</)\n  assert.match(\n    html,\n    /aria-label=\"Zweck: Regelmäßige Reinigung; Produkt: Sanftes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich\"/,\n  )\n  assert.match(\n    html,\n    /aria-label=\"Zweck: Schuppenpflege; Produkt: Kopfhautserum; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich\"/,\n  )\n  assert.match(html, />2 Anwendungen</)\n  // A planned item without a concrete product choice reads \"Offen\", same as\n  // availability \"none\" — a selected catalog product is instantly Aktiv.\n  assert.match(html, /Status: Offen/)\n})",
+    "sha256": "fd53844b09012e2bef353670bcbcf66e65b8a430e66e0bb188407ccfa0dee813"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)",
+    "line": 174,
+    "start": 6261,
+    "end": 6639,
+    "text": "test(\"Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)\", () => {\n  const routine = payload([item()])\n  const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)\n\n  assert.doesNotMatch(html, /data-personal-plan-journey-header/)\n  assert.doesNotMatch(html, /role=\"progressbar\"/)\n  assert.doesNotMatch(html, /Personal-Plan-Stufen/)\n})",
+    "sha256": "94dda91b241ebb84301e32d4343c47da7560b9592f8874f4f62b87175babbd11"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "a basis slot with a planned ref but no chosen product blocks the Anwendung",
+    "line": 183,
+    "start": 6641,
+    "end": 7450,
+    "text": "test(\"a basis slot with a planned ref but no chosen product blocks the Anwendung\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"item:shampoo:planned-open\",\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n      },\n      product: {\n        kind: \"planned\",\n        plannedPurchaseId: \"planned:open\",\n        productId: null,\n        displayName: \"Noch offenes Shampoo\",\n      },\n      executable: false,\n    }),\n  ])\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,\n  )\n\n  assert.match(html, /Status: Offen/)\n  assert.match(html, /Mindestens ein Basis-Baustein fehlt noch/)\n  assert.doesNotMatch(html, /Anwendung ansehen/)\n})",
+    "sha256": "ee90392ad87f127ef7dd81f9b1f49facddba064ffc3f902a9cf4468f5cbdf448"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "a planned item with a chosen catalog product is a full routine member",
+    "line": 211,
+    "start": 7452,
+    "end": 8605,
+    "text": "test(\"a planned item with a chosen catalog product is a full routine member\", () => {\n  // Faithful payload shape: planned items are never executable in real\n  // portfolios (executable = owned catalog product), yet they must read Aktiv.\n  const routine = payload([\n    item({\n      itemKey: \"item:shampoo:shampoo_everyday:planned\",\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n      },\n      product: {\n        kind: \"planned\",\n        plannedPurchaseId: \"planned:decision-1\",\n        productId: \"33333333-3333-4333-8333-333333333333\",\n        displayName: \"Empfohlenes Shampoo\",\n      },\n      executable: false,\n    }),\n  ])\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} onItemDetail={() => undefined} />,\n  )\n\n  assert.match(\n    html,\n    /aria-label=\"Zweck: Regelmäßige Reinigung; Produkt: Empfohlenes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich\"/,\n  )\n  assert.doesNotMatch(html, /Nicht einsatzbereit/)\n  assert.doesNotMatch(html, /Geplant/)\n  assert.doesNotMatch(html, /Status: Offen/)\n})",
+    "sha256": "a4ac1019a296a716a80a92618cb403e837cf01df28e4c2993016e3ec961439fa"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "uses proposal copy initially and never offers an Anwendung hero button",
+    "line": 245,
+    "start": 8607,
+    "end": 9997,
+    "text": "test(\"uses proposal copy initially and never offers an Anwendung hero button\", () => {\n  const active = payload([item({ product: { kind: \"owned\", displayName: \"Aktives Shampoo\" } })])\n  const candidate = payload([\n    item({\n      product: { kind: \"planned\", displayName: \"Neues Shampoo\" },\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n      },\n    }),\n  ])\n  const activeWithPending: PersonalPlanRoutineView = {\n    ...proposalView(candidate),\n    status: \"active\",\n    activeVersion: { id: active.versionId, payload: active },\n  }\n\n  assert.doesNotMatch(\n    renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),\n    /Routine bestätigen/,\n  )\n  const html = renderToStaticMarkup(<RoutinePage view={activeWithPending} />)\n  assert.match(html, /Deine Routine/)\n  assert.doesNotMatch(html, /Deine Routine steht/)\n  assert.match(html, /Aktives Shampoo/)\n  assert.doesNotMatch(html, /Neues Shampoo/)\n  // Field test 26.08.2026: the Anwendung hero button is gone for good — the\n  // Bottom-Nav's Anwendung tab is the only route to that surface now.\n  assert.doesNotMatch(html, /Anwendung ansehen/)\n  assert.doesNotMatch(html, /href=\"\\/anwendung\"/)\n  assert.doesNotMatch(\n    renderToStaticMarkup(<RoutinePage view={proposalView(candidate)} />),\n    /Anwendung ansehen/,\n  )\n})",
+    "sha256": "ac72c3c33eca3b25979ba0b1f6c12537d7fc7e05c466a474549126d416b5718e"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "the edit affordance is a quiet link in the heading row, not a hero button",
+    "line": 283,
+    "start": 9999,
+    "end": 11393,
+    "text": "test(\"the edit affordance is a quiet link in the heading row, not a hero button\", () => {\n  const routine = payload([item()])\n  const view: PersonalPlanRoutineView = {\n    status: \"active\",\n    personalPlanId: routine.planId,\n    planRevision: 1,\n    sourceRevision: 1,\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n  }\n  const html = renderToStaticMarkup(<RoutinePage view={view} onEdit={() => undefined} />)\n\n  assert.match(html, />Anpassen</)\n  // The repo's quiet-affordance idiom (Haarprofil \"Angaben ändern\"): a plum\n  // underlined text control, never a filled/outline button.\n  assert.match(html, /<button[^>]*underline[^>]*>Anpassen</)\n  assert.doesNotMatch(html, /funnelCta/)\n  // It sits in the heading row, directly after the H1 — not in a CTA dock.\n  assert.ok(html.indexOf(\"Deine Routine\") < html.indexOf(\"Anpassen\"))\n  assert.ok(html.indexOf(\"Anpassen\") < html.indexOf(\"Deine Basis\"))\n\n  let edited = 0\n  const tree = RoutinePage({ view, onEdit: () => (edited += 1) })\n  const editButton = findElement(\n    tree,\n    (element) => element.type === \"button\" && element.props.children === \"Anpassen\",\n  )\n  assert.ok(editButton, \"expected the Anpassen affordance to render\")\n  ;(editButton.props.onClick as () => void)()\n  assert.equal(edited, 1)\n\n  assert.doesNotMatch(renderToStaticMarkup(<RoutinePage view={view} />), />Anpassen</)\n})",
+    "sha256": "730e2543b92841a464527f75b442d7ed0e07906fa49c818a1b95a7c939ee2279"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "uses presentation-only catalog image and name facts outside the Routine payload",
+    "line": 317,
+    "start": 11395,
+    "end": 12520,
+    "text": "test(\"uses presentation-only catalog image and name facts outside the Routine payload\", () => {\n  const routine = payload([\n    item({\n      product: {\n        kind: \"owned\",\n        capturedProductId: \"captured-shampoo\",\n        productId: \"product-shampoo\",\n        displayName: \"Eingefrorener Produktname\",\n      },\n    }),\n  ])\n  const view: PersonalPlanRoutineView = {\n    ...proposalView(routine),\n    status: \"active\",\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n    productPresentation: {\n      catalogProducts: [\n        {\n          productId: \"product-shampoo\",\n          displayName: \"Aktueller Katalogname\",\n          imageUrl: \"https://example.test/shampoo.webp\",\n          verifiedLeaveOnHeatProtection: false,\n        },\n      ],\n    },\n  }\n\n  const html = renderToStaticMarkup(<RoutinePage view={view} />)\n\n  assert.match(html, /Aktueller Katalogname/)\n  assert.match(html, /src=\"https:\\/\\/example.test\\/shampoo.webp\"/)\n  assert.doesNotMatch(html, /Eingefrorener Produktname/)\n  assert.equal(routine.items[0]?.product.displayName, \"Eingefrorener Produktname\")\n})",
+    "sha256": "8b53020982a60305ee27146aa7b7bf1c68ee7fb4b97b2502817a7f129478b812"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "shows verified Oil heat capability in the existing Stage 4 metadata line only",
+    "line": 353,
+    "start": 12522,
+    "end": 14217,
+    "text": "test(\"shows verified Oil heat capability in the existing Stage 4 metadata line only\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"oil-leave-on\",\n      assignmentKey: \"oil-leave-on\",\n      category: \"oil\",\n      role: \"leave_on_fibre_conditioning\",\n      purposeKey: \"leave_on_fibre_conditioning\",\n      product: {\n        kind: \"owned\",\n        capturedProductId: \"captured-oil\",\n        productId: \"product-oil\",\n        displayName: \"Haaröl\",\n      },\n    }),\n    item({\n      itemKey: \"oil-finish\",\n      assignmentKey: \"oil-finish\",\n      category: \"oil\",\n      role: \"dry_finish\",\n      purposeKey: \"dry_finish\",\n      product: {\n        kind: \"owned\",\n        capturedProductId: \"captured-oil\",\n        productId: \"product-oil\",\n        displayName: \"Haaröl\",\n      },\n    }),\n  ])\n  const view: PersonalPlanRoutineView = {\n    ...proposalView(routine),\n    status: \"active\",\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n    productPresentation: {\n      catalogProducts: [\n        {\n          productId: \"product-oil\",\n          displayName: \"Haaröl\",\n          imageUrl: null,\n          verifiedLeaveOnHeatProtection: true,\n        },\n      ],\n    },\n  }\n\n  const html = renderToStaticMarkup(<RoutinePage view={view} />)\n\n  assert.equal((html.match(/Hitzeschutz: bestätigt/g) ?? []).length, 2)\n  assert.match(\n    html,\n    /aria-label=\"Zweck: Pflege ohne Ausspülen; Produkt: Haaröl; Kategorie: Öl; Status: Aktiv; Rhythmus: Täglich; Hitzeschutz: bestätigt\"/,\n  )\n  assert.match(html, /Nach der Wäsche · Hitzeschutz: bestätigt · <span[^>]*>Aktiv/)\n  assert.doesNotMatch(html, /Im trockenen Haar · Hitzeschutz: bestätigt/)\n})",
+    "sha256": "fe3918fdbb94f2d330f7db5c0e38f60fdce7e5f066a3951114cbfa66e7793a6a"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "renders active routine as product-led result with separated later additions",
+    "line": 410,
+    "start": 14219,
+    "end": 17724,
+    "text": "test(\"renders active routine as product-led result with separated later additions\", () => {\n  const routine = payload(\n    [\n      item({\n        itemKey: \"basis-shampoo\",\n        product: {\n          kind: \"owned\",\n          capturedProductId: \"captured-ogx\",\n          productId: \"product-ogx\",\n          displayName: \"OGX Renewing + Argan Oil of Morocco Shampoo\",\n        },\n        cadence: { recommended: null, userOverride: \"weekly_3_4x\", displayKey: \"weekly_3_4x\" },\n      }),\n      item({\n        itemKey: \"basis-conditioner\",\n        assignmentKey: \"basis-conditioner\",\n        category: \"conditioner\",\n        purposeKey: \"conditioner_rinse_out\",\n        role: \"conditioner_rinse_out\",\n        state: {\n          systemAssessment: \"basis\",\n          inclusion: \"included\",\n          availability: \"owned\",\n          fitDecision: \"informed_override\",\n        },\n        product: {\n          kind: \"owned\",\n          capturedProductId: \"captured-conditioner\",\n          productId: \"product-conditioner\",\n          displayName: \"Bali Curls Moisturising Conditioner\",\n        },\n        cadence: {\n          recommended: { kind: \"after_each_eligible_wash\" },\n          userOverride: null,\n          displayKey: \"personal_plan.cadence.after_each_eligible_wash\",\n        },\n      }),\n      item({\n        itemKey: \"optional-mask-gap\",\n        assignmentKey: \"optional-mask-gap\",\n        category: \"mask\",\n        purposeKey: \"intensive_conditioning_mask\",\n        role: \"intensive_conditioning_mask\",\n        state: {\n          systemAssessment: \"optional\",\n          inclusion: \"included\",\n          availability: \"none\",\n          fitDecision: \"standard\",\n        },\n        product: { kind: \"none\", displayName: null },\n        executable: false,\n      }),\n    ],\n    [\n      { key: \"basis\", itemKeys: [\"basis-shampoo\", \"basis-conditioner\"] },\n      { key: \"optional\", itemKeys: [\"optional-mask-gap\"] },\n    ],\n  )\n  const view: PersonalPlanRoutineView = {\n    ...proposalView(routine),\n    status: \"active\",\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={view} onEdit={() => undefined} onItemDetail={() => undefined} />,\n  )\n\n  assert.match(html, /Routine aktiv/)\n  assert.match(html, /Deine Routine/)\n  assert.doesNotMatch(html, /Deine Routine ist bereit/)\n  assert.match(html, /OGX Renewing \\+ Argan Oil of Morocco Shampoo/)\n  assert.match(html, /Bali Curls Moisturising Conditioner/)\n  assert.doesNotMatch(html, /Regelmäßige Reinigung für deine Kopfhaut/)\n  assert.doesNotMatch(html, /Pflegt und entwirrt die Längen nach der Haarwäsche/)\n  assert.match(html, /3–4× pro Woche/)\n  assert.match(html, /Nach jeder Haarwäsche/)\n  assert.match(html, /Haarwäsche/)\n  assert.match(html, /Nach Shampoo/)\n  assert.doesNotMatch(html, /✓ Passt/)\n  assert.match(html, /Bewusste Wahl/)\n  assert.doesNotMatch(html, /Anwendungsdetails/)\n  assert.doesNotMatch(html, />Details</)\n  assert.equal((html.match(/data-routine-detail-button=\"true\"/g) ?? []).length, 3)\n  assert.match(html, /Später ergänzen/)\n  assert.match(html, /Maske optional/)\n  assert.doesNotMatch(html, /Kein Bestandteil deiner aktiven Routine/)\n  assert.ok(html.indexOf(\"Bali Curls Moisturising Conditioner\") < html.indexOf(\"Später ergänzen\"))\n  assert.doesNotMatch(html, /Anwendung ansehen/)\n  assert.match(html, />Anpassen</)\n  assert.doesNotMatch(html, /Routine bestätigen/)\n  assert.doesNotMatch(html, /Kein Produkt ausgewählt/)\n})",
+    "sha256": "5d42ac899d8bcd9686e093cae75e8d50c74ae3264a77d92c24dd0c82fb0660e6"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "shows v3 replacement labels and retained owned products without adding them to Routine items",
+    "line": 505,
+    "start": 17726,
+    "end": 20268,
+    "text": "test(\"shows v3 replacement labels and retained owned products without adding them to Routine items\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"replacement\",\n      sourceDecisionKeys: [\"decision-replace\"],\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n      },\n      // Faithful v3 replacement shape: Stage3PlannedPurchase.productId is a\n      // required non-null string, so real replacement items always carry one.\n      product: {\n        kind: \"planned\",\n        plannedPurchaseId: \"planned:decision-replace\",\n        productId: \"44444444-4444-4444-8444-444444444444\",\n        displayName: \"Neues Shampoo\",\n      },\n      executable: false,\n    }),\n    item({\n      itemKey: \"override\",\n      assignmentKey: \"override\",\n      sourceDecisionKeys: [\"decision-override\"],\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n      },\n      product: { kind: \"owned\", displayName: \"Bewusst behalten\" },\n    }),\n  ])\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 3,\n    plannedPurchaseDecisionKeys: [\"decision-replace\"],\n    retainedOwnedProducts: [\n      {\n        capturedProductId: \"captured-old\",\n        userProductId: \"usage-old\",\n        productId: \"product-old\",\n        displayName: \"Altes Shampoo\",\n        category: \"shampoo\",\n        role: \"shampoo_everyday\",\n        sourceDecisionKey: \"decision-replace\",\n        planStatus: \"not_used\",\n      },\n    ],\n  }\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,\n  )\n\n  // A selected catalog product is instantly Aktiv, so the v3 decision-keyed\n  // \"Noch kaufen\" replacement label no longer surfaces anywhere.\n  assert.match(html, /Zweck: Regelmäßige Reinigung; Produkt: Neues Shampoo;[^\"]*Status: Aktiv/)\n  assert.doesNotMatch(html, /Noch kaufen/)\n  assert.match(html, /Mit Einschränkung/)\n  assert.match(html, /Nicht eingeplant \\(1\\)/)\n  assert.match(html, /Altes Shampoo/)\n  assert.equal((html.match(/Altes Shampoo/g) ?? []).length, 1)\n  assert.match(html, /<details class=/)\n  assert.doesNotMatch(html, /<details[^>]* open/)\n\n  const emptyHtml = renderToStaticMarkup(\n    <RoutinePage\n      view={proposalView(routine)}\n      portfolioPresentation={{ ...presentation, retainedOwnedProducts: [] }}\n    />,\n  )\n  assert.doesNotMatch(emptyHtml, /Nicht eingeplant/)\n})",
+    "sha256": "b2da97f6c8fb0f5107b851daae7358f403600864f285743b1d75a20e82e8aec4"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "shows v4 retained inventory as stored, non-executable product context",
+    "line": 579,
+    "start": 20270,
+    "end": 21491,
+    "text": "test(\"shows v4 retained inventory as stored, non-executable product context\", () => {\n  const routine = payload([item()])\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 4,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    retainedInventoryProducts: [\n      {\n        kind: \"catalog_product\",\n        capturedProductId: \"inventory-captured\",\n        userProductId: \"inventory-user-product\",\n        productId: \"inventory-product\",\n        displayName: \"Nicht verwendetes Trockenshampoo\",\n        category: \"dry_shampoo\",\n        role: null,\n        sourceDispositionKey: \"inventory:dry-shampoo:1\",\n        planStatus: \"not_used\",\n        reason: \"category_not_in_final_plan\",\n      },\n    ],\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage\n      view={{\n        ...proposalView(routine),\n        status: \"active\",\n        activeVersion: { id: routine.versionId, payload: routine },\n        pendingProposal: null,\n      }}\n      portfolioPresentation={presentation}\n    />,\n  )\n\n  assert.match(html, /Nicht eingeplant/)\n  assert.match(html, /Nicht verwendetes Trockenshampoo/)\n  assert.match(html, /Nicht eingeplant/)\n  assert.doesNotMatch(html, /inventory-captured/)\n})",
+    "sha256": "81e6a7edde0440262fa917e0eda69cca3a2d17b809781a36c5753298dbe0cd8b"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "explains confirmed unnecessary heat protection in the not-planned routine section",
+    "line": 619,
+    "start": 21493,
+    "end": 22593,
+    "text": "test(\"explains confirmed unnecessary heat protection in the not-planned routine section\", () => {\n  const routine = payload([item()])\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 4,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    retainedInventoryProducts: [\n      {\n        kind: \"catalog_product\",\n        capturedProductId: \"heat-captured\",\n        userProductId: \"heat-user-product\",\n        productId: \"heat-product\",\n        displayName: \"Hitzeschutz Spray\",\n        category: \"heat_protectant\",\n        role: null,\n        sourceDispositionKey: \"inventory:heat_protectant:heat-captured\",\n        planStatus: \"not_used\",\n        reason: \"category_not_in_final_plan\",\n      },\n    ],\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,\n  )\n\n  assert.match(html, /Nicht eingeplant \\(1\\)/)\n  assert.match(html, /Kein separater Hitzeschutz nötig/)\n  assert.match(html, /Für deine angegebene Routine brauchst du dieses Produkt nicht/)\n  assert.match(html, /Meine Produkte/)\n})",
+    "sha256": "6f3e7a65e0e837c83aa335fc77b668833276c527eee2685ff66da2bf00b6252b"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "keeps required Basis gaps explicit and renders a named recovery state without payload",
+    "line": 651,
+    "start": 22595,
+    "end": 24503,
+    "text": "test(\"keeps required Basis gaps explicit and renders a named recovery state without payload\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"basis-gap\",\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n      },\n      product: { kind: \"none\", displayName: null },\n      executable: false,\n    }),\n  ])\n  const gapView: PersonalPlanRoutineView = {\n    ...proposalView(routine),\n    status: \"active\",\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n  }\n  const gapHtml = renderToStaticMarkup(<RoutinePage view={gapView} />)\n\n  assert.match(gapHtml, /Basis-Lücke/)\n  assert.match(gapHtml, /Für diesen Basis-Baustein fehlt noch ein Produkt/)\n  assert.doesNotMatch(gapHtml, /href=\"\\/anwendung\"/)\n\n  const missingPayloadView: PersonalPlanRoutineView = {\n    status: \"stage4_not_available\",\n    personalPlanId: \"plan-1\",\n    planRevision: 1,\n    sourceRevision: 1,\n    activeVersion: null,\n    pendingProposal: null,\n  }\n  const recoveryHtml = renderToStaticMarkup(<RoutinePage view={missingPayloadView} />)\n  assert.match(recoveryHtml, /Routine noch nicht verfügbar/)\n  assert.match(recoveryHtml, /Produkte prüfen/)\n  // T2.3: the non-repair fallback CTA must use the directed products-module\n  // entry, not bare \"/plan-start\" — the D3 guard would otherwise dead-end an\n  // accepted+complete owner straight back onto this same recovery view.\n  assert.match(recoveryHtml, /href=\"\\/plan-start\\?refine=products\"/)\n  assert.doesNotMatch(recoveryHtml, /href=\"\\/plan-start\"/)\n  // Fix round 1 (minor): the no-payload/authority-repair recovery branch has\n  // no journey header either (Task 2.7 covered only the main render before).\n  assert.doesNotMatch(recoveryHtml, /data-personal-plan-journey-header/)\n  assert.doesNotMatch(recoveryHtml, /role=\"progressbar\"/)\n})",
+    "sha256": "3ab935e9c826fe6bd12c8042dbb0ea9c0f35ad08638f8a538f33c45583492dab"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "states non-executable conditions plainly and keeps editing global",
+    "line": 699,
+    "start": 24505,
+    "end": 26567,
+    "text": "test(\"states non-executable conditions plainly and keeps editing global\", () => {\n  const routine = payload([\n    item(),\n    item({\n      itemKey: \"excluded\",\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n      },\n      product: { kind: \"none\", displayName: null },\n      executable: false,\n    }),\n    item({\n      itemKey: \"pending\",\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n      },\n      product: { kind: \"pending_review\", displayName: \"Unbekanntes Serum\" },\n      executable: false,\n    }),\n    item({\n      itemKey: \"included-override\",\n      state: {\n        systemAssessment: \"not_recommended\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n      },\n      product: { kind: \"owned\", displayName: \"Lieblingsöl\" },\n      executable: false,\n    }),\n    item({\n      itemKey: \"uncovered\",\n      state: {\n        systemAssessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n      },\n      product: { kind: \"none\", displayName: null },\n      executable: false,\n    }),\n  ])\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} onEdit={() => undefined} />,\n  )\n\n  assert.match(html, /Empfohlen, aber nicht eingeplant/)\n  assert.match(html, /Noch in Prüfung/)\n  assert.match(html, /Nicht empfohlen · von dir eingeplant/)\n  assert.match(html, /Offen/)\n  assert.match(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)\n  assert.doesNotMatch(html, /Analyse läuft/)\n  assert.doesNotMatch(html, /Optional offen/)\n  assert.doesNotMatch(html, /Bewusste Wahl/)\n  assert.match(html, />Anpassen</)\n  assert.doesNotMatch(html, />Bearbeiten</)\n  assert.match(\n    html,\n    /aria-label=\"Zweck: Regelmäßige Reinigung; Produkt: Sanftes Shampoo; Kategorie: Shampoo; Status: Aktiv; Rhythmus: Täglich\"/,\n  )\n})",
+    "sha256": "7392150d5d4e0a3bab406bf15d2cb124bb7a481f74460ced566fcd2aca907baa"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)",
+    "line": 781,
+    "start": 26890,
+    "end": 28857,
+    "text": "test(\"renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)\", () => {\n  const routine = payload([\n    deferredItem({\n      itemKey: \"deferred-refinement\",\n      category: \"shampoo\",\n      role: \"shampoo_dandruff\",\n      purposeKey: \"shampoo_dandruff\",\n      sourceDecisionKeys: [\"decision-refinement\"],\n    }),\n    deferredItem({\n      itemKey: \"deferred-no-product\",\n      category: \"oil\",\n      role: \"pre_wash_fibre_treatment\",\n      purposeKey: \"pre_wash_fibre_treatment\",\n      sourceDecisionKeys: [\"decision-no-product\"],\n    }),\n    deferredItem({\n      itemKey: \"deferred-preview\",\n      category: \"mask\",\n      role: \"intensive_conditioning_mask\",\n      purposeKey: \"intensive_conditioning_mask\",\n      sourceDecisionKeys: [\"decision-preview\"],\n    }),\n  ])\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 1,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    deferredRoleReasons: {\n      \"decision-refinement\": \"refinement_required\",\n      \"decision-no-product\": \"no_product\",\n      \"decision-preview\": \"preview_unavailable\",\n    },\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,\n  )\n\n  assert.match(html, /Empfehlung folgt — 2 Min\\. im Feinschliff\\./)\n  assert.match(html, /Für diese Kategorie haben wir noch kein passendes Produkt\\./)\n  assert.match(html, /Empfehlung wird geprüft\\./)\n  assert.equal((html.match(/href=\"\\/plan-start\\?refine=products\"/g) ?? []).length, 1)\n  assert.match(html, /aria-label=\"Kategorie: Shampoo\"/)\n  assert.match(html, /aria-label=\"Kategorie: Öl\"/)\n  assert.match(html, /aria-label=\"Kategorie: Maske\"/)\n  // Quiet: no alarm styling, no claim the plan is unusable, no stale generic label.\n  assert.doesNotMatch(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)\n  assert.doesNotMatch(html, /Basis-Lücke/)\n  assert.doesNotMatch(html, /Empfohlen, aber nicht eingeplant/)\n})",
+    "sha256": "da6b13851562ecf171157edf74c965e21729eabb3d751dd3a829ba576439154d"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "an excluded item with no matching server deferral reason keeps the generic excluded copy",
+    "line": 833,
+    "start": 28859,
+    "end": 29728,
+    "text": "test(\"an excluded item with no matching server deferral reason keeps the generic excluded copy\", () => {\n  const routine = payload([\n    deferredItem({ itemKey: \"excluded-no-reason\", sourceDecisionKeys: [\"decision-unmatched\"] }),\n  ])\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 1,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    // Present, but keyed for an unrelated decision — must not false-positive match.\n    deferredRoleReasons: { \"decision-other\": \"no_product\" },\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,\n  )\n\n  assert.match(html, /Empfohlen, aber nicht eingeplant/)\n  assert.doesNotMatch(html, /Empfehlung folgt/)\n  assert.doesNotMatch(html, /kein passendes Produkt/)\n  assert.doesNotMatch(html, /Empfehlung wird geprüft/)\n})",
+    "sha256": "e8163637d7cddf88074d74a8c914e69d10fd74dcfd58abf96166c3b4d6cf095d"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic",
+    "line": 855,
+    "start": 29730,
+    "end": 30934,
+    "text": "test(\"a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"resolved\",\n      sourceDecisionKeys: [\"decision-refinement\"],\n      state: {\n        systemAssessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"standard\",\n      },\n      product: { kind: \"owned\", displayName: \"Jetzt empfohlenes Shampoo\" },\n    }),\n  ])\n  // A stale portfolio-presentation read can still carry the old deferral\n  // entry for this decision key (e.g. a race with the recompute); the Routine\n  // item itself is the source of truth for whether the role is still deferred.\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 1,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    deferredRoleReasons: { \"decision-refinement\": \"refinement_required\" },\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={proposalView(routine)} portfolioPresentation={presentation} />,\n  )\n\n  assert.doesNotMatch(html, /Empfehlung folgt/)\n  assert.match(html, /Jetzt empfohlenes Shampoo/)\n  assert.match(html, />Aktiv</)\n})",
+    "sha256": "1ad08960bc671710b27ad9f8e0df815d10020a6af1a5661ffb5c7596d76d2f1d"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "the all-deferred shape (zero-recommendation accept) renders only placeholders",
+    "line": 888,
+    "start": 30936,
+    "end": 32664,
+    "text": "test(\"the all-deferred shape (zero-recommendation accept) renders only placeholders\", () => {\n  const routine = payload([\n    deferredItem({\n      itemKey: \"deferred-shampoo\",\n      category: \"shampoo\",\n      role: \"shampoo_everyday\",\n      sourceDecisionKeys: [\"decision-shampoo\"],\n    }),\n    deferredItem({\n      itemKey: \"deferred-conditioner\",\n      category: \"conditioner\",\n      role: \"conditioner_rinse_out\",\n      sourceDecisionKeys: [\"decision-conditioner\"],\n    }),\n  ])\n  const activeView: PersonalPlanRoutineView = {\n    status: \"active\",\n    personalPlanId: \"plan-1\",\n    planRevision: 1,\n    sourceRevision: 1,\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: null,\n  }\n  const presentation: PortfolioPresentation = {\n    schemaVersion: 1,\n    plannedPurchaseDecisionKeys: [],\n    retainedOwnedProducts: [],\n    deferredRoleReasons: {\n      \"decision-shampoo\": \"refinement_required\",\n      \"decision-conditioner\": \"refinement_required\",\n    },\n  }\n\n  const html = renderToStaticMarkup(\n    <RoutinePage view={activeView} portfolioPresentation={presentation} />,\n  )\n\n  assert.match(html, /Deine Routine/)\n  // 2.8: the zero-recommendation cohort gets the honest subtitle, never a\n  // readiness claim over a page of placeholders.\n  assert.match(html, /Noch ohne konkrete Produkte\\./)\n  assert.doesNotMatch(html, /Deine Routine ist bereit/)\n  assert.equal((html.match(/<a[^>]*href=\"\\/plan-start\\?refine=products\"[^>]*>/g) ?? []).length, 2)\n  assert.doesNotMatch(html, /Mindestens ein Basis-Baustein fehlt noch/)\n  // No Anwendung CTA to dead-end any more (26.08.2026): the page never offers\n  // one, the Bottom-Nav tab does.\n  assert.doesNotMatch(html, /href=\"\\/anwendung\"/)\n})",
+    "sha256": "e624fe71404c4b1818ee98f378b8eddd73ba17a7bd5f20b6ac0bac71543cf173"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "translates structured Personal Plan cadence without exposing internal keys",
+    "line": 937,
+    "start": 32666,
+    "end": 34430,
+    "text": "test(\"translates structured Personal Plan cadence without exposing internal keys\", () => {\n  const routine = payload([\n    item({\n      itemKey: \"mask\",\n      assignmentKey: \"mask\",\n      category: \"mask\",\n      role: \"intensive_conditioning_mask\",\n      purposeKey: \"intensive_conditioning_mask\",\n      product: { kind: \"owned\", displayName: \"Pflegemaske\" },\n      cadence: {\n        recommended: {\n          kind: \"mask_regular_interval\",\n          role: \"intensive_conditioning_mask\",\n          needStrength: \"standard\",\n          baseInterval: \"biweekly_1x\",\n          placementState: \"placed_on_eligible_wash\",\n        },\n        userOverride: null,\n        displayKey: \"personal_plan.cadence.mask_regular_interval\",\n      },\n    }),\n    item({\n      itemKey: \"oil-pre-wash\",\n      assignmentKey: \"oil-pre-wash\",\n      category: \"oil\",\n      role: \"pre_wash_fibre_treatment\",\n      purposeKey: \"pre_wash_fibre_treatment\",\n      product: { kind: \"owned\", displayName: \"Arganöl\" },\n      cadence: {\n        recommended: {\n          kind: \"role_based_wash_linked\",\n          roleFrequencies: [\n            {\n              role: \"pre_wash_fibre_treatment\",\n              tier: \"basis\",\n              cadence: \"before_every_compatible_wash\",\n            },\n          ],\n        },\n        userOverride: null,\n        displayKey: \"personal_plan.cadence.role_based_wash_linked\",\n      },\n    }),\n  ])\n\n  const html = renderToStaticMarkup(<RoutinePage view={proposalView(routine)} />)\n\n  assert.match(html, /Etwa alle 2 Wochen · Nach Shampoo/)\n  assert.match(html, /Vor jeder Haarwäsche · Vor der Haarwäsche/)\n  assert.doesNotMatch(html, /personal_plan\\.cadence\\.mask_regular_interval/)\n  assert.doesNotMatch(html, /personal_plan\\.cadence\\.role_based_wash_linked/)\n})",
+    "sha256": "1168aba1b8d6180b9ccccf496224cff3a8de45f259757b333f5784f249cd5d65"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "presents every structured cadence kind and keeps a user override authoritative",
+    "line": 990,
+    "start": 34432,
+    "end": 36894,
+    "text": "test(\"presents every structured cadence kind and keeps a user override authoritative\", () => {\n  const cadenceCases = [\n    {\n      role: \"shampoo_everyday\",\n      recommended: { kind: \"wet_wash_total\", target: \"weekly_2x\" },\n      expected: \"2× pro Woche\",\n    },\n    {\n      role: \"conditioner_rinse_out\",\n      recommended: { kind: \"after_each_eligible_wash\" },\n      expected: \"Nach jeder Haarwäsche\",\n    },\n    {\n      role: \"pre_heat_protection\",\n      recommended: { kind: \"event_based\" },\n      expected: \"Vor jeder passenden Hitze-Anwendung\",\n    },\n    {\n      role: \"residue_reset\",\n      recommended: { kind: \"every_nth_wash\", every: 4 },\n      expected: \"Bei jeder vierten Haarwäsche\",\n    },\n    {\n      role: \"scalp_comfort\",\n      recommended: { kind: \"unscheduled_as_needed\" },\n      expected: \"Bei Bedarf\",\n    },\n    {\n      role: \"intensive_conditioning_mask\",\n      recommended: { kind: \"mask_regular_interval\", baseInterval: \"every_3_weeks\" },\n      expected: \"Etwa alle 3 Wochen\",\n    },\n    {\n      role: \"dry_finish\",\n      recommended: {\n        kind: \"role_based_wash_linked\",\n        roleFrequencies: [{ role: \"dry_finish\", cadence: \"finish_after_every_compatible_wash\" }],\n      },\n      expected: \"Als Finish nach jeder Haarwäsche\",\n    },\n    {\n      role: \"specialized_bond_treatment\",\n      recommended: { kind: \"product_protocol_course\" },\n      expected: \"Nach Herstellerangabe\",\n    },\n    {\n      role: \"scalp_exfoliant\",\n      recommended: {\n        kind: \"role_keyed_product_protocol\",\n        roleFrequencies: [{ role: \"scalp_exfoliant\", cadence: \"occasional_according_to_product\" }],\n      },\n      expected: \"Gelegentlich nach Herstellerangabe\",\n    },\n  ]\n\n  for (const cadenceCase of cadenceCases) {\n    const routineItem = item({\n      role: cadenceCase.role,\n      cadence: {\n        recommended: cadenceCase.recommended,\n        userOverride: null,\n        displayKey: `personal_plan.cadence.${cadenceCase.recommended.kind}`,\n      },\n    }) as unknown as RoutinePayloadV1[\"items\"][number]\n    assert.equal(routineCadenceLabel(routineItem), cadenceCase.expected)\n  }\n\n  const overridden = item({\n    cadence: {\n      recommended: { kind: \"mask_regular_interval\", baseInterval: \"every_3_weeks\" },\n      userOverride: \"daily_1x\",\n      displayKey: \"personal_plan.cadence.mask_regular_interval\",\n    },\n  }) as unknown as RoutinePayloadV1[\"items\"][number]\n  assert.equal(routineCadenceLabel(overridden), \"Täglich\")\n})",
+    "sha256": "d2acc77019a3758a56fc48cab4c967ab0297d5024c53b23d1c14fb7196ac6f17"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "fresh state (products open, 2 von 4): banner renders above the routine blocks",
+    "line": 1076,
+    "start": 37134,
+    "end": 38687,
+    "text": "test(\"fresh state (products open, 2 von 4): banner renders above the routine blocks\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  let dismissed = 0\n  let refined = 0\n  const html = renderToStaticMarkup(\n    <RoutinePage\n      view={view}\n      refinementBanner={{ module: \"products\", completedSteps: 2, totalSteps: 4 }}\n      onDismissRefinementBanner={() => {\n        dismissed += 1\n      }}\n      onRefineFromBanner={() => {\n        refined += 1\n      }}\n    />,\n  )\n\n  assert.match(html, /Mach deinen Plan genauer\\./)\n  assert.match(html, />2 von 4</)\n  assert.match(html, /Weiter · 2 Min\\./)\n  assert.ok(html.indexOf(\"Mach deinen Plan genauer.\") < html.indexOf(\"Deine Basis\"))\n\n  const tree = RoutinePage({\n    view,\n    refinementBanner: { module: \"products\", completedSteps: 2, totalSteps: 4 },\n    onDismissRefinementBanner: () => {\n      dismissed += 1\n    },\n    onRefineFromBanner: () => {\n      refined += 1\n    },\n  })\n  const dismissButton = findElement(\n    tree,\n    (element) => element.props[\"aria-label\"] === \"Hinweis schließen\",\n  )\n  assert.ok(dismissButton)\n  ;(dismissButton.props.onClick as () => void)()\n  assert.equal(dismissed, 1)\n\n  const refineButton = findElement(\n    tree,\n    (element) =>\n      element.type === \"button\" &&\n      Boolean(element.props.children) &&\n      JSON.stringify(element.props.children).includes(\"Weiter\"),\n  )\n  assert.ok(refineButton, \"expected the banner CTA button to render\")\n  ;(refineButton.props.onClick as () => void)()\n  assert.equal(refined, 1)\n})",
+    "sha256": "1bad565cd5215d597972aa58d80d61e7bf3e164c7d1e317ec91359994037009a"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too",
+    "line": 1129,
+    "start": 38689,
+    "end": 39488,
+    "text": "test(\"post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const html = renderToStaticMarkup(\n    <RoutinePage\n      view={view}\n      refinementBanner={{ module: \"habits\", completedSteps: 3, totalSteps: 4 }}\n      onDismissRefinementBanner={() => undefined}\n      onRefineFromBanner={() => undefined}\n    />,\n  )\n\n  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\\./)\n  assert.match(html, />3 von 4</)\n  assert.match(html, /Weiter · 3 Min\\./)\n  // Field test 26.08.2026: below the blocks the second ask scrolled out of\n  // view and was never seen, so both modules share the products slot.\n  assert.ok(html.indexOf(\"Noch ein Schritt\") < html.indexOf(\"Deine Basis\"))\n})",
+    "sha256": "33e6ad51f4bb3b3528de0f1ff62c12de8df75ef9e44da54e1b85574e7e9701dd"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "dismissed state: refinementBanner absent renders no banner",
+    "line": 1149,
+    "start": 39490,
+    "end": 39908,
+    "text": "test(\"dismissed state: refinementBanner absent renders no banner\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const html = renderToStaticMarkup(<RoutinePage view={view} refinementBanner={null} />)\n\n  assert.doesNotMatch(html, /Mach deinen Plan genauer\\./)\n  assert.doesNotMatch(html, /Noch ein Schritt: deine Gewohnheiten\\./)\n  assert.doesNotMatch(html, /Hinweis schließen/)\n})",
+    "sha256": "bc49cb3cbb39ff3c9655ad593238394aef38e6b5b709fe2aedef3380f29ba6bd"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "all-done state: no refinementBanner prop at all renders no banner",
+    "line": 1159,
+    "start": 39910,
+    "end": 40220,
+    "text": "test(\"all-done state: no refinementBanner prop at all renders no banner\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const html = renderToStaticMarkup(<RoutinePage view={view} />)\n\n  assert.doesNotMatch(html, /Hinweis schließen/)\n  assert.doesNotMatch(html, /von 4/)\n})",
+    "sha256": "7e192fb8cf192ced6ccd931e74c569719c4183ac1527500cf9540ac73344ba75"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks",
+    "line": 1168,
+    "start": 40222,
+    "end": 40708,
+    "text": "test(\"Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const html = renderToStaticMarkup(\n    <RoutinePage view={view} showPlanUpdatedToast onDismissPlanUpdatedToast={() => undefined} />,\n  )\n\n  assert.match(html, /role=\"status\"/)\n  assert.match(html, /Plan aktualisiert/)\n  assert.ok(html.indexOf(\"Plan aktualisiert\") < html.indexOf(\"Deine Basis\"))\n})",
+    "sha256": "26c91922083f1655169bb1492f962e05b130a546a5ab1b43d283b9af218a4afa"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "Task 2.6: the plan-updated toast is absent without the signal",
+    "line": 1180,
+    "start": 40710,
+    "end": 41477,
+    "text": "test(\"Task 2.6: the plan-updated toast is absent without the signal\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const withoutFlag = renderToStaticMarkup(<RoutinePage view={view} />)\n  const withFlagFalse = renderToStaticMarkup(\n    <RoutinePage\n      view={view}\n      showPlanUpdatedToast={false}\n      onDismissPlanUpdatedToast={() => undefined}\n    />,\n  )\n  // Without a dismiss handler the toast must not render even if the flag is\n  // (incorrectly) set — there would be no way to ever clear it.\n  const withoutHandler = renderToStaticMarkup(<RoutinePage view={view} showPlanUpdatedToast />)\n\n  for (const html of [withoutFlag, withFlagFalse, withoutHandler]) {\n    assert.doesNotMatch(html, /Plan aktualisiert/)\n  }\n})",
+    "sha256": "9211ea1df6ecd0719fd70a3cb84673bd4740cd4b2b30342545a0b920c655a838"
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "title": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "line": 1200,
+    "start": 41479,
+    "end": 42292,
+    "text": "test(\"Task 2.6: the plan-updated toast and the refinement banner can render on the same visit\", () => {\n  const routine = payload([item()])\n  const view = activeViewFor(routine)\n  const html = renderToStaticMarkup(\n    <RoutinePage\n      view={view}\n      showPlanUpdatedToast\n      onDismissPlanUpdatedToast={() => undefined}\n      refinementBanner={{ module: \"habits\", completedSteps: 3, totalSteps: 4 }}\n      onDismissRefinementBanner={() => undefined}\n      onRefineFromBanner={() => undefined}\n    />,\n  )\n\n  assert.match(html, /Plan aktualisiert/)\n  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\\./)\n  // Toast at the very top, banner further down (mockup screen 3): the two\n  // never fight for the same slot.\n  assert.ok(html.indexOf(\"Plan aktualisiert\") < html.indexOf(\"Noch ein Schritt\"))\n})",
+    "sha256": "c4ea21364d6742162f89fe01a9462b81ab5c77d5e94d05dac115f204200d6228"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver preserves legacy only for people without a Personal Plan",
+    "line": 49,
+    "start": 1538,
+    "end": 3113,
+    "text": "test(\"Routine resolver preserves legacy only for people without a Personal Plan\", async () => {\n  const noPlan = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => ({ kind: \"legacy\" }),\n    stage4Enabled: () => true,\n    readView: async () => ({ status: \"no_personal_plan\" }),\n  })\n  assert.deepEqual(noPlan, { kind: \"legacy\" })\n\n  const personalPlan = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => false,\n    readView: async ({ enabled }) => {\n      assert.equal(enabled, false)\n      return activeView\n    },\n  })\n  assert.equal(personalPlan.kind, \"personal_plan\")\n  if (personalPlan.kind === \"personal_plan\") {\n    assert.equal(personalPlan.enabled, false)\n    assert.equal(personalPlan.view.activeVersion?.id, \"routine-1\")\n    // Field test 26.08.2026: the Routine page no longer resolves Stage-5\n    // reachability at all — the \"Anwendung ansehen\" hero button is gone and the\n    // Bottom-Nav owns that destination behind its own `allowed.stage5` gate.\n    assert.equal(\"stage5Reachable\" in personalPlan, false)\n  }\n\n  const stage5Plan = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => ({\n      ...stage4Access,\n      frontier: \"stage5\" as const,\n      nextHref: \"/anwendung\" as const,\n      allowed: { ...stage4Access.allowed, stage5: true },\n    }),\n    stage4Enabled: () => true,\n    readView: async () => activeView,\n  })\n  assert.equal(stage5Plan.kind, \"personal_plan\")\n})",
+    "sha256": "cbeb33cb29cf53a10cee9eea7ecf289955abba55cb2b4e6aa19cd531e7e554de"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure",
+    "line": 91,
+    "start": 3115,
+    "end": 3527,
+    "text": "test(\"Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure\", async () => {\n  const result = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => true,\n    readView: async () => {\n      throw new Error(\"database unavailable\")\n    },\n  })\n  assert.deepEqual(result, { kind: \"unavailable\" })\n})",
+    "sha256": "7de9ddf2d1e5fbb4839a8fada4830f6bda51b5079515da442cee2c2e2c20d719"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver loads v3 presentation from an initial proposal candidate",
+    "line": 103,
+    "start": 3529,
+    "end": 4565,
+    "text": "test(\"Routine resolver loads v3 presentation from an initial proposal candidate\", async () => {\n  let loadedPortfolioVersionId: string | null = null\n  const proposal: PersonalPlanRoutineView = {\n    ...activeView,\n    status: \"proposal\",\n    activeVersion: null,\n    pendingProposal: {\n      id: \"proposal-1\",\n      candidateVersionId: \"routine-candidate\",\n      sourceRevision: 4,\n      delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 0 },\n      candidate: { ...activeView.activeVersion!.payload, versionId: \"routine-candidate\" },\n    },\n  }\n  const result = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => true,\n    readView: async () => proposal,\n    readPortfolioPresentation: async (_userId, _planId, portfolioVersionId) => {\n      loadedPortfolioVersionId = portfolioVersionId\n      return null\n    },\n  })\n  assert.equal(result.kind, \"personal_plan\")\n  assert.equal(loadedPortfolioVersionId, \"portfolio-1\")\n})",
+    "sha256": "efd9092417031398f4f1d5acf819c9f5850f889c8b87acbc795f211fd3265103"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver threads the refinement banner view model through from readRefinementBanner",
+    "line": 131,
+    "start": 4567,
+    "end": 5264,
+    "text": "test(\"Routine resolver threads the refinement banner view model through from readRefinementBanner\", async () => {\n  const result = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => true,\n    readView: async () => activeView,\n    readRefinementBanner: async (userId) => {\n      assert.equal(userId, \"user-1\")\n      return { module: \"products\", completedSteps: 2, totalSteps: 4 }\n    },\n  })\n  assert.equal(result.kind, \"personal_plan\")\n  if (result.kind === \"personal_plan\") {\n    assert.deepEqual(result.refinementBanner, {\n      module: \"products\",\n      completedSteps: 2,\n      totalSteps: 4,\n    })\n  }\n})",
+    "sha256": "7097831b0846c480c4380a7f889ef59d1703f85503607775f470a9a160d8ae21"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver degrades to no banner when readRefinementBanner is absent or fails",
+    "line": 152,
+    "start": 5266,
+    "end": 6193,
+    "text": "test(\"Routine resolver degrades to no banner when readRefinementBanner is absent or fails\", async () => {\n  const withoutDep = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => true,\n    readView: async () => activeView,\n  })\n  assert.equal(withoutDep.kind, \"personal_plan\")\n  if (withoutDep.kind === \"personal_plan\") assert.equal(withoutDep.refinementBanner, null)\n\n  const withFailingDep = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    loadJourneyAccess: async () => stage4Access,\n    stage4Enabled: () => true,\n    readView: async () => activeView,\n    readRefinementBanner: async () => {\n      throw new Error(\"temporarily_unavailable\")\n    },\n  })\n  assert.equal(withFailingDep.kind, \"personal_plan\")\n  if (withFailingDep.kind === \"personal_plan\") {\n    assert.equal(withFailingDep.refinementBanner, null)\n  }\n})",
+    "sha256": "19ed6f0d3f80cae067e58e9d1879f381d28614d24ef702352fcae3f54554047a"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine unavailable recovery offers an explicit reload action",
+    "line": 177,
+    "start": 6195,
+    "end": 6909,
+    "text": "test(\"Routine unavailable recovery offers an explicit reload action\", () => {\n  const html = renderToStaticMarkup(\n    RoutineUnavailableState({\n      retryAction: createElement(RetryRefreshButtonView, {\n        label: \"Erneut laden\",\n        onRetry: () => undefined,\n      }),\n    }),\n  )\n  assert.match(html, /<button[^>]*type=\"button\"/)\n  assert.match(html, />Erneut laden<\\/button>/)\n\n  let retries = 0\n  const retry = RetryRefreshButtonView({ label: \"Erneut laden\", onRetry: () => retries++ })\n  retry.props.onClick()\n  assert.equal(retries, 1)\n\n  const retrySource = readFileSync(\"src/components/ui/retry-refresh-button.tsx\", \"utf8\")\n  assert.match(retrySource, /onRetry=\\{\\(\\) => router\\.refresh\\(\\)\\}/)\n})",
+    "sha256": "a1bb5a4329d56e6420d7f267ba8685e6a671427a94039133390119b26ce6ecc0"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine unavailable recovery also offers a forward CTA out of the dead end",
+    "line": 198,
+    "start": 6911,
+    "end": 7414,
+    "text": "test(\"Routine unavailable recovery also offers a forward CTA out of the dead end\", () => {\n  const html = renderToStaticMarkup(\n    RoutineUnavailableState({\n      retryAction: createElement(RetryRefreshButtonView, {\n        label: \"Erneut laden\",\n        onRetry: () => undefined,\n      }),\n    }),\n  )\n  assert.match(html, /<a[^>]*href=\"\\/plan-start\"[^>]*>Zum Plan<\\/a>/)\n  // Both actions stay reachable side by side; the reload button is unchanged.\n  assert.match(html, />Erneut laden<\\/button>/)\n})",
+    "sha256": "71dcbc9d38d3af5517fa9f8a20df8813cdd02a4642927afa51aaf245237d26d6"
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "title": "Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable",
+    "line": 212,
+    "start": 7416,
+    "end": 8091,
+    "text": "test(\"Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable\", async () => {\n  let read = false\n  const result = await resolveRoutinePage({\n    getUserId: async () => \"user-1\",\n    stage4Enabled: () => true,\n    loadJourneyAccess: async () => ({\n      kind: \"personal_plan\",\n      personalPlanId: \"plan-1\",\n      frontier: \"stage3\",\n      nextHref: \"/plan-start\",\n      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },\n    }),\n    readView: async () => {\n      read = true\n      return activeView\n    },\n  } as never)\n\n  assert.deepEqual(result, { kind: \"unavailable\" })\n  assert.equal(read, false)\n})",
+    "sha256": "b7f215bd446612cf3db3afef96adfcb46d70f80efd8a91728dbe75f2b8b37c46"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "global editor renders the complete Routine and submits a local operation batch",
+    "line": 204,
+    "start": 6452,
+    "end": 8836,
+    "text": "test(\"global editor renders the complete Routine and submits a local operation batch\", () => {\n  const operations: RoutineEditOperation[][] = []\n  const routine = payload([\n    item(),\n    item({\n      itemKey: \"item:oil:dry_finish:planned\",\n      assignmentKey: \"assignment:oil:dry_finish:planned\",\n      category: \"oil\",\n      role: \"dry_finish\",\n      purposeKey: \"dry_finish\",\n      state: {\n        systemAssessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n      },\n      product: {\n        kind: \"planned\",\n        plannedPurchaseId: \"planned-oil\",\n        productId: \"product-oil\",\n        displayName: \"Leichtes Haaröl\",\n      },\n      executable: false,\n    }),\n  ])\n  let tree = withClientHooks(() =>\n    RoutineEditor({\n      routine,\n      productOptions: {\n        \"assignment:shampoo:cleanse:owned\": [\n          {\n            label: \"Mildes Ersatzshampoo\",\n            productRef: { kind: \"planned\", plannedPurchaseId: \"planned-new\", productId: \"p-new\" },\n          },\n        ],\n      },\n      supportedCadences: [\"daily\", \"weekly_2x\"],\n      supportedRolesByCategory: { shampoo: [\"cleanse\"], oil: [\"dry_finish\"] },\n      onSubmitOperations: (batch) => {\n        operations.push([...batch])\n      },\n    }),\n  )\n  assert.match(renderToStaticMarkup(tree.value), /Aktive Routine bleibt unverändert/)\n  assert.match(renderToStaticMarkup(tree.value), /Deine Basis/)\n  assert.match(renderToStaticMarkup(tree.value), /Optional/)\n  // Task 2.7: the Routine editor's chrome keeps Back, but the 5-stage journey\n  // bar retires (Bottom-Nav carries stage orientation elsewhere).\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), /role=\"progressbar\"/)\n\n  const select = findAll(tree.value, (element) => element.type === \"select\")[0]\n  assert.ok(select)\n  select.props.onChange({ target: { value: \"planned:planned-new:p-new\" } })\n  tree.value = tree.rerender()\n  findAll(\n    tree.value,\n    (element) =>\n      textContent(element) === \"Änderungen prüfen\" && typeof element.props.onClick === \"function\",\n  )[0]?.props.onClick()\n\n  assert.equal(operations.length, 1)\n  assert.deepEqual(operations[0], [\n    {\n      kind: \"assignment_replace\",\n      assignmentKey: \"assignment:shampoo:cleanse:owned\",\n      productRef: { kind: \"planned\", plannedPurchaseId: \"planned-new\", productId: \"p-new\" },\n    },\n  ])\n})",
+    "sha256": "22000c5e60e7f8dee05a566946c78fe392796b6ddc0ab759f454493b8e46d263"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "global editor blocks invalid controls and asks before discarding dirty edits",
+    "line": 274,
+    "start": 8838,
+    "end": 10577,
+    "text": "test(\"global editor blocks invalid controls and asks before discarding dirty edits\", () => {\n  let canceled = 0\n  const routine = payload([item()])\n  let tree = withClientHooks(() =>\n    RoutineEditor({\n      routine,\n      productOptions: {},\n      supportedCadences: [\"weekly_2x\"],\n      supportedRolesByCategory: { shampoo: [] },\n      onCancel: () => {\n        canceled += 1\n      },\n      onSubmitOperations: () => undefined,\n    }),\n  )\n\n  assert.match(\n    renderToStaticMarkup(tree.value),\n    /Keine gültige Rolle für diese Kategorie verfügbar/,\n  )\n  const checkbox = findAll(\n    tree.value,\n    (element) => element.type === \"input\" && element.props.type === \"checkbox\",\n  )[0]\n  assert.ok(checkbox)\n  checkbox.props.onChange({ target: { checked: false } })\n  tree.value = tree.rerender()\n  // Fix round 1 (I-1): the journey header retired entirely from the Routine\n  // editor too — Abbrechen is now an in-editor control next to Save, and it\n  // still gates a dirty exit behind the discard-confirmation sheet.\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), /data-personal-plan-journey-header/)\n  const cancelButton = findAll(\n    tree.value,\n    (element) =>\n      textContent(element) === \"Abbrechen\" && typeof element.props.onClick === \"function\",\n  )[0]\n  assert.ok(cancelButton)\n  cancelButton.props.onClick()\n  tree.value = tree.rerender()\n\n  assert.equal(canceled, 0)\n  const sheet = findAll(tree.value, (element) => element.type === BottomSheet)[0]\n  assert.ok(sheet)\n  assert.equal(sheet.props.open, true)\n  const confirmBody = findAll(\n    tree.value,\n    (element) => element.type === RoutineDiscardConfirmBody,\n  )[0]\n  assert.ok(confirmBody)\n  confirmBody.props.onDiscard()\n  assert.equal(canceled, 1)\n})",
+    "sha256": "901e3b56294ff46104b1ed9964fa82e07c097c10c1a91eb5a46516fc7d8c0f27"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "Routine discard confirmation uses the reviewed visible actions",
+    "line": 327,
+    "start": 10579,
+    "end": 10964,
+    "text": "test(\"Routine discard confirmation uses the reviewed visible actions\", () => {\n  const html = renderToStaticMarkup(\n    <RoutineDiscardConfirmBody onKeepEditing={() => {}} onDiscard={() => {}} />,\n  )\n\n  assert.match(html, /Änderungen verwerfen\\?/)\n  assert.match(html, /Weiter bearbeiten/)\n  assert.match(html, /Änderungen verwerfen/)\n  assert.match(html, /safe-area-inset-bottom/)\n})",
+    "sha256": "227eb4ae8c104af6fc9049ba29912355efe1be9c7ef547f14a0377bee49a6a6e"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "global editor starts at the recommendation and can clear a cadence override",
+    "line": 338,
+    "start": 10966,
+    "end": 12388,
+    "text": "test(\"global editor starts at the recommendation and can clear a cadence override\", () => {\n  const operations: RoutineEditOperation[][] = []\n  const routine = payload([\n    item({\n      cadence: { recommended: null, userOverride: null, displayKey: \"daily\" },\n    }),\n  ])\n  let tree = withClientHooks(() =>\n    RoutineEditor({\n      routine,\n      productOptions: {},\n      supportedCadences: [\"weekly_2x\"],\n      supportedRolesByCategory: { shampoo: [\"cleanse\"] },\n      onSubmitOperations: (batch) => {\n        operations.push([...batch])\n      },\n    }),\n  )\n\n  const cadenceSelect = findAll(tree.value, (element) => element.type === \"select\")[2]\n  assert.ok(cadenceSelect)\n  assert.equal(cadenceSelect.props.value, \"\")\n  assert.match(renderToStaticMarkup(tree.value), /Keine Abweichung – Empfehlung verwenden/)\n\n  cadenceSelect.props.onChange({ target: { value: \"weekly_2x\" } })\n  tree.value = tree.rerender()\n  findAll(tree.value, (element) => element.type === \"select\")[2].props.onChange({\n    target: { value: \"\" },\n  })\n  tree.value = tree.rerender()\n  findAll(\n    tree.value,\n    (element) =>\n      textContent(element) === \"Änderungen prüfen\" && typeof element.props.onClick === \"function\",\n  )[0]?.props.onClick()\n\n  assert.deepEqual(operations, [\n    [\n      {\n        kind: \"cadence_override\",\n        assignmentKey: \"assignment:shampoo:cleanse:owned\",\n        cadenceOverride: null,\n      },\n    ],\n  ])\n})",
+    "sha256": "559e9790fbb95ed6b15784ee0a861c7f7bec8430206522443a4d9c2bc8015077"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "routine client never renders raw server error tokens",
+    "line": 385,
+    "start": 12390,
+    "end": 12774,
+    "text": "test(\"routine client never renders raw server error tokens\", () => {\n  assert.equal(\n    friendlyError(\"unauthorized\", \"Änderungen konnten nicht geprüft werden.\"),\n    \"Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.\",\n  )\n  assert.equal(\n    friendlyError(\"internal_error\", \"Änderungen konnten nicht geprüft werden.\"),\n    \"Änderungen konnten nicht geprüft werden.\",\n  )\n})",
+    "sha256": "9dc3ff379f79e0afb6342488eefabcac184e5274a768ed1bb69b7d26b8bba4ff"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "Routine entry never blocks actions and defers reconciliation behind a pending proposal",
+    "line": 396,
+    "start": 12776,
+    "end": 13206,
+    "text": "test(\"Routine entry never blocks actions and defers reconciliation behind a pending proposal\", () => {\n  assert.equal(routineEntrySyncTiming({ enabled: false, hasPendingProposal: false }), \"disabled\")\n  assert.equal(routineEntrySyncTiming({ enabled: true, hasPendingProposal: false }), \"after_render\")\n  assert.equal(\n    routineEntrySyncTiming({ enabled: true, hasPendingProposal: true }),\n    \"after_proposal_resolution\",\n  )\n})",
+    "sha256": "cfa742477cd188861945aa92abc6eebbdb4e223633e1c5c5071ece1fb31dd4e8"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "the entry sync reloads for a healed module recompute, not only for a staged proposal",
+    "line": 405,
+    "start": 13208,
+    "end": 14242,
+    "text": "test(\"the entry sync reloads for a healed module recompute, not only for a staged proposal\", () => {\n  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: false, recomputeApplied: false }), {\n    reload: false,\n    outcome: \"unchanged\",\n  })\n  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: false, recomputeApplied: true }), {\n    reload: true,\n    outcome: \"recompute_applied\",\n  })\n  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: true, recomputeApplied: false }), {\n    reload: true,\n    outcome: \"proposal_staged\",\n  })\n  // A batch can both heal a recompute and stage a sibling successor proposal;\n  // the proposal is the outcome that still needs the user, so it labels the run.\n  assert.deepEqual(routineSyncReloadOutcome({ proposalStaged: true, recomputeApplied: true }), {\n    reload: true,\n    outcome: \"proposal_staged\",\n  })\n  // A response from a deploy that predates the field must not reload.\n  assert.deepEqual(routineSyncReloadOutcome({}), { reload: false, outcome: \"unchanged\" })\n})",
+    "sha256": "4783845be5300531c9142c279e1ac407155569ad7c83c0be6d9e4601a48fa85d"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "successor proposals are available from the overview but never auto-open on entry",
+    "line": 428,
+    "start": 14244,
+    "end": 15008,
+    "text": "test(\"successor proposals are available from the overview but never auto-open on entry\", () => {\n  const routine = payload([item()])\n  const view: PersonalPlanRoutineView = {\n    status: \"active\",\n    personalPlanId: \"plan-1\",\n    planRevision: 2,\n    sourceRevision: 3,\n    activeVersion: { id: routine.versionId, payload: routine },\n    pendingProposal: {\n      id: \"proposal-1\",\n      candidateVersionId: routine.versionId,\n      sourceRevision: 3,\n      delta: { schemaVersion: 1, direct: [], consequential: [], unchangedItemCount: 1 },\n      candidate: routine,\n    },\n  }\n\n  assert.equal(initialRoutineProposalSheetOpen(view), false)\n  assert.equal(\n    initialRoutineProposalSheetOpen({ ...view, activeVersion: null, status: \"proposal\" }),\n    false,\n  )\n})",
+    "sha256": "3214a5bf751f54f7aefc462c5bfee3b138c85bd7548bd4b866a198edee7243ea"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "proposal sheet body separates initial confirmation from successor review callbacks",
+    "line": 452,
+    "start": 15010,
+    "end": 16722,
+    "text": "test(\"proposal sheet body separates initial confirmation from successor review callbacks\", () => {\n  const events: string[] = []\n  const delta: RoutineProposalSheetDeltaEntry[] = [\n    {\n      changeKey: \"direct-1\",\n      label: \"Shampoo ersetzt\",\n      description: \"Von Sanftes Shampoo zu Mildes Ersatzshampoo.\",\n    },\n  ]\n  const initialHtml = renderToStaticMarkup(\n    <RoutineProposalSheetBody\n      variant=\"initial\"\n      directChanges={delta}\n      consequentialChanges={[]}\n      unchangedItemCount={3}\n      onAccept={() => events.push(\"accept\")}\n      onBackToEditor={() => events.push(\"edit\")}\n    />,\n  )\n\n  assert.match(initialHtml, /Routine bestätigen/)\n  assert.doesNotMatch(initialHtml, /Ablehnen/)\n\n  const tree = RoutineProposalSheetBody({\n    variant: \"successor\",\n    directChanges: delta,\n    consequentialChanges: [\n      {\n        changeKey: \"consequence-1\",\n        label: \"Öl angepasst\",\n        description: \"Doppelte Glättung entfällt.\",\n      },\n    ],\n    unchangedItemCount: 2,\n    retrying: true,\n    onAccept: () => events.push(\"accept\"),\n    onReject: () => events.push(\"reject\"),\n    onDismissForVisit: () => events.push(\"later\"),\n    onBackToEditor: () => events.push(\"edit\"),\n    onDiscardCandidate: () => events.push(\"discard\"),\n  })\n  const html = renderToStaticMarkup(tree)\n  assert.match(html, /Von dir geändert/)\n  assert.match(html, /Dadurch außerdem angepasst/)\n  assert.match(html, /2 Bausteine bleiben unverändert/)\n  assert.match(html, /Erneut versuchen/)\n\n  findByText(tree, \"Später\").props.onClick()\n  findByText(tree, \"Erneut versuchen\").props.onClick()\n  findByText(tree, \"Ablehnen\").props.onClick()\n  assert.deepEqual(events, [\"later\", \"accept\", \"reject\"])\n})",
+    "sha256": "035a9f79ca06c52b1cabed37570be345d230debe3b57878d95ed25ef50232d02"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "proposal acceptance reload distinguishes lost response, same pending, and supersession",
+    "line": 505,
+    "start": 16724,
+    "end": 17813,
+    "text": "test(\"proposal acceptance reload distinguishes lost response, same pending, and supersession\", () => {\n  const candidate = payload([item()])\n  const pendingView = {\n    status: \"proposal\" as const,\n    personalPlanId: \"plan-1\",\n    planRevision: 1,\n    sourceRevision: 1,\n    activeVersion: null,\n    pendingProposal: {\n      id: \"proposal-1\",\n      candidateVersionId: candidate.versionId,\n      sourceRevision: 1,\n      delta: { schemaVersion: 1 as const, direct: [], consequential: [], unchangedItemCount: 1 },\n      candidate,\n    },\n  }\n  const acceptedView = {\n    ...pendingView,\n    status: \"active\" as const,\n    activeVersion: { id: candidate.versionId, payload: candidate },\n    pendingProposal: null,\n  }\n  const successorView = {\n    ...acceptedView,\n    pendingProposal: { ...pendingView.pendingProposal, id: \"proposal-2\" },\n  }\n\n  assert.equal(classifyProposalReload(pendingView, \"proposal-1\"), \"same_pending\")\n  assert.equal(classifyProposalReload(acceptedView, \"proposal-1\"), \"resolved\")\n  assert.equal(classifyProposalReload(successorView, \"proposal-1\"), \"superseded\")\n})",
+    "sha256": "2ad01d47c35a20d264048738461276361e753b16d2318335e954f560b304b2e6"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "every Routine acceptance refreshes server-owned navigation and portfolio presentation",
+    "line": 537,
+    "start": 17815,
+    "end": 18243,
+    "text": "test(\"every Routine acceptance refreshes server-owned navigation and portfolio presentation\", () => {\n  let refreshes = 0\n  const refresh = () => refreshes++\n\n  refreshRouteAfterRoutineAcceptance({\n    action: \"accept\",\n    refresh,\n  })\n  refreshRouteAfterRoutineAcceptance({\n    action: \"reject\",\n    refresh,\n  })\n  refreshRouteAfterRoutineAcceptance({\n    action: \"accept\",\n    refresh,\n  })\n\n  assert.equal(refreshes, 2)\n})",
+    "sha256": "dae93fc9d8100780041098299660dfa5c137af4309776aa1c3fcacfa3ab8e45d"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "proposal sheet blocks duplicate requests only while a request is running",
+    "line": 557,
+    "start": 18245,
+    "end": 18723,
+    "text": "test(\"proposal sheet blocks duplicate requests only while a request is running\", () => {\n  const tree = RoutineProposalSheetBody({\n    variant: \"initial\",\n    directChanges: [],\n    consequentialChanges: [],\n    unchangedItemCount: 1,\n    submitting: true,\n    retrying: true,\n    onAccept: () => undefined,\n  })\n\n  const submit = findAll(\n    tree,\n    (element) => textContent(element) === \"Wird gespeichert …\" && element.props.disabled === true,\n  )[0]\n  assert.ok(submit)\n})",
+    "sha256": "63d689da2f3d894f64f126d26d988f1908619b64beb23642276fb7ba29c025db"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "proposal deltas render frozen consumer labels instead of internal item keys",
+    "line": 575,
+    "start": 18725,
+    "end": 20640,
+    "text": "test(\"proposal deltas render frozen consumer labels instead of internal item keys\", () => {\n  const activeItem = item({\n    itemKey: \"item:shampoo:everyday\",\n    purposeKey: \"shampoo_everyday\",\n    product: {\n      kind: \"owned\",\n      capturedProductId: \"captured-shampoo\",\n      productId: \"product-shampoo\",\n      displayName: \"Sanftes Shampoo\",\n    },\n  })\n  const active = {\n    ...payload([activeItem]),\n    intent: {\n      schemaVersion: 1 as const,\n      categories: [\n        {\n          category: \"shampoo\" as const,\n          inclusion: \"included\" as const,\n          inclusionSource: \"stage3\" as const,\n          assignments: [],\n        },\n      ],\n    },\n  }\n  const candidateItem = item({\n    ...activeItem,\n    state: { ...activeItem.state, inclusion: \"excluded\" },\n  })\n  const candidate = {\n    ...payload([candidateItem]),\n    intent: {\n      schemaVersion: 1 as const,\n      categories: active.intent.categories.map((category) => ({\n        ...category,\n        inclusion: \"excluded\" as const,\n      })),\n    },\n  }\n\n  assert.deepEqual(\n    routineProposalDeltaEntries(\n      [\n        { kind: \"changed\", itemKey: \"category:shampoo\" },\n        { kind: \"changed\", itemKey: \"item:shampoo:everyday\" },\n      ],\n      active,\n      candidate,\n    ),\n    [\n      {\n        changeKey: \"category:shampoo:0\",\n        label: \"Shampoo\",\n        description: \"Kategorie nicht mehr verwenden\",\n      },\n      {\n        changeKey: \"item:shampoo:everyday:1\",\n        label: \"Regelmäßige Reinigung\",\n        description: \"Sanftes Shampoo · nicht mehr in Verwendung\",\n      },\n    ],\n  )\n  assert.deepEqual(\n    routineProposalDeltaEntries(\n      [{ kind: \"added\", itemKey: \"item:shampoo:everyday\" }],\n      null,\n      active,\n    ),\n    [\n      {\n        changeKey: \"item:shampoo:everyday:0\",\n        label: \"Regelmäßige Reinigung\",\n        description: \"Sanftes Shampoo · hinzugefügt\",\n      },\n    ],\n  )\n})",
+    "sha256": "6ee658a97354402e9020982aabe7124e20272fa5dfcb8ba51708a34ccc9a01a3"
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "title": "product detail keeps fit frozen while commerce and explicit actions stay caller-owned",
+    "line": 653,
+    "start": 20642,
+    "end": 22997,
+    "text": "test(\"product detail keeps fit frozen while commerce and explicit actions stay caller-owned\", () => {\n  const events: string[] = []\n  const planned = item({\n    state: {\n      systemAssessment: \"basis\",\n      inclusion: \"included\",\n      availability: \"planned\",\n      fitDecision: \"standard\",\n    },\n    product: {\n      kind: \"planned\",\n      plannedPurchaseId: \"planned-shampoo\",\n      productId: \"product-shampoo\",\n      displayName: \"Sanftes Shampoo\",\n    },\n    executable: false,\n  })\n  const tree = RoutineProductDetail({\n    item: planned,\n    commerce: {\n      availabilityLabel: \"Lieferbar\",\n      affiliateDisclosure: \"Affiliate-Link: Chaarlie kann eine Provision erhalten.\",\n      freshnessLabel: \"Preis vor 3 Stunden aktualisiert\",\n      priceLabel: \"12,95 EUR\",\n      productUrl: \"https://example.test/shampoo\",\n    },\n    fitStatusLabel: \"Guter Fit aus deiner Produktauswahl\",\n    frozenFitSummary: \"Diese Einschätzung stammt aus deiner bestätigten Produktauswahl.\",\n    onOpenProduct: () => events.push(\"open\"),\n  })\n  const html = renderToStaticMarkup(tree)\n  assert.match(html, /Guter Fit aus deiner Produktauswahl/)\n  assert.match(html, /Preis vor 3 Stunden aktualisiert/)\n  assert.match(html, /Affiliate-Link/)\n  // A selected planned product is already a full routine member: no purchase\n  // confirmation step or button, for planned or owned items alike.\n  assert.doesNotMatch(html, /Ich habe es schon gekauft/)\n\n  // With no purchase-confirmation button left as a sibling, the wrapping\n  // action row now shares the same text content as the single \"Zum Produkt\"\n  // button, so match the clickable element itself rather than the outer row.\n  const [openProductButton] = findAll(\n    tree,\n    (element) =>\n      typeof element.props.onClick === \"function\" && textContent(element) === \"Zum Produkt\",\n  )\n  assert.ok(openProductButton)\n  openProductButton.props.onClick()\n  assert.deepEqual(events, [\"open\"])\n\n  const ownedHtml = renderToStaticMarkup(\n    <RoutineProductDetail\n      item={item()}\n      commerce={{ availabilityLabel: \"In deiner Routine\", freshnessLabel: \"Gerade geladen\" }}\n      fitStatusLabel=\"Aktiv\"\n      frozenFitSummary=\"Bestätigte Auswahl.\"\n      onOpenProduct={() => undefined}\n    />,\n  )\n  assert.doesNotMatch(ownedHtml, /Ich habe es schon gekauft/)\n  assert.doesNotMatch(ownedHtml, /nicht übergeben/)\n})",
+    "sha256": "719c8e451a4110b9d8d491c3f431195b45be9189596cb300c026a56c571f73e4"
+  },
+  {
+    "file": "tests/personal-plan-stage4-attention-ui.test.tsx",
+    "title": "renders an accessible, layout-independent dot only for a pending Routine proposal",
+    "line": 8,
+    "start": 240,
+    "end": 687,
+    "text": "test(\"renders an accessible, layout-independent dot only for a pending Routine proposal\", () => {\n  const pending = renderToStaticMarkup(<RoutineAttentionIndicator hasPendingProposal />)\n  const clear = renderToStaticMarkup(<RoutineAttentionIndicator hasPendingProposal={false} />)\n\n  assert.match(pending, /Routine hat Änderungen zur Prüfung/)\n  assert.match(pending, /bg-red-500/)\n  assert.match(pending, /absolute/)\n  assert.equal(clear, \"\")\n})",
+    "sha256": "dfc036fee641ab8bca13ccbe0d4e48b34c08baa92edbe98a8309a6426b463e7e"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation",
+    "line": 57,
+    "start": 1593,
+    "end": 2396,
+    "text": "test(\"loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation\", async () => {\n  const calls: Array<[string, string]> = []\n  const query: any = {\n    select: () => query,\n    eq: (column: string, value: string) => {\n      calls.push([column, value])\n      return query\n    },\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot: v3Snapshot() }, error: null }),\n  }\n  const result = await loadOwnerPortfolioPresentation(\n    {\n      from: () => query,\n    },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n\n  assert.equal(result?.schemaVersion, 3)\n  assert.equal(result?.retainedOwnedProducts[0]?.displayName, \"Altes Shampoo\")\n  assert.deepEqual(calls, [\n    [\"id\", ids.portfolio],\n    [\"user_id\", ids.user],\n    [\"personal_plan_id\", ids.plan],\n  ])\n})",
+    "sha256": "a020e632201fa829ca79352cc40a5c44e786e44e76fd2ca73cb99318bf73ea46"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+    "line": 85,
+    "start": 2398,
+    "end": 2984,
+    "text": "test(\"uses v3-only labels for a replacement and an informed override, preserving legacy wording\", () => {\n  const v3 = routinePresentationLabels({\n    schemaVersion: 3,\n    plannedPurchaseDecisionKeys: [\"decision-replace\"],\n    retainedOwnedProducts: [],\n  })\n  assert.equal(v3.plannedLabelFor([\"decision-replace\"]), \"Noch kaufen\")\n  assert.equal(v3.fitLabelFor(\"informed_override\"), \"Mit Einschränkung\")\n\n  const legacy = routinePresentationLabels(null)\n  assert.equal(legacy.plannedLabelFor([\"decision-replace\"]), null)\n  assert.equal(legacy.fitLabelFor(\"informed_override\"), null)\n})",
+    "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+    "line": 99,
+    "start": 2986,
+    "end": 4273,
+    "text": "test(\"presents v4 replacement metadata while leaving retained inventory display-only\", async () => {\n  const snapshot = {\n    ...v3Snapshot(),\n    schemaVersion: 4 as const,\n    inventoryDispositions: [],\n    retainedInventoryProducts: [\n      {\n        kind: \"catalog_product\" as const,\n        capturedProductId: \"inventory-captured-1\",\n        userProductId: \"inventory-user-product-1\",\n        productId: \"inventory-product-1\",\n        displayName: \"Nicht verwendetes Trockenshampoo\",\n        category: \"dry_shampoo\" as const,\n        role: null,\n        sourceDispositionKey: \"inventory:dry-shampoo:1\",\n        planStatus: \"not_used\" as const,\n        reason: \"category_not_in_final_plan\" as const,\n      },\n    ],\n  }\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n\n  assert.equal(presentation?.schemaVersion, 4)\n  assert.deepEqual(presentation?.retainedInventoryProducts, snapshot.retainedInventoryProducts)\n  assert.equal(\n    routinePresentationLabels(presentation).plannedLabelFor([\"decision-replace\"]),\n    \"Noch kaufen\",\n  )\n})",
+    "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "fails closed when a stored portfolio snapshot is not strict",
+    "line": 140,
+    "start": 4275,
+    "end": 4697,
+    "text": "test(\"fails closed when a stored portfolio snapshot is not strict\", async () => {\n  const query: any = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({\n      data: { id: ids.portfolio, snapshot: { ...v3Snapshot(), unexpected: true } },\n      error: null,\n    }),\n  }\n  await assert.rejects(\n    loadOwnerPortfolioPresentation({ from: () => query }, ids.user, ids.plan, ids.portfolio),\n  )\n})",
+    "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+    "line": 154,
+    "start": 4699,
+    "end": 5718,
+    "text": "test(\"marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product\", async () => {\n  const snapshot = v3Snapshot()\n  snapshot.retainedOwnedProducts = []\n  snapshot.plannedPurchases[0].sourceDecisionKey = \"decision-pending-replace\"\n  snapshot.categoryResolutions = [\n    {\n      decisionKey: \"decision-pending-replace\",\n      category: \"shampoo\",\n      role: \"shampoo_everyday\",\n      verdict: \"unknown\",\n      choiceState: \"planned_purchase\",\n      capturedProductId: \"captured-pending\",\n      executable: false,\n      gapPreserved: true,\n    },\n  ]\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n  const labels = routinePresentationLabels(presentation)\n  assert.equal(labels.plannedLabelFor([\"decision-pending-replace\"]), \"Noch kaufen\")\n})",
+    "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+    "line": 185,
+    "start": 5720,
+    "end": 6678,
+    "text": "test(\"marks a v3 planned purchase without an owned source as Noch kaufen\", async () => {\n  const snapshot = v3Snapshot()\n  snapshot.retainedOwnedProducts = []\n  snapshot.categoryResolutions = [\n    {\n      decisionKey: \"decision-replace\",\n      category: \"shampoo\",\n      role: \"shampoo_everyday\",\n      verdict: \"ideal\",\n      choiceState: \"planned_purchase\",\n      capturedProductId: null,\n      executable: false,\n      gapPreserved: true,\n    },\n  ]\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n\n  assert.deepEqual(presentation?.plannedPurchaseDecisionKeys, [\"decision-replace\"])\n  assert.equal(\n    routinePresentationLabels(presentation).plannedLabelFor([\"decision-replace\"]),\n    \"Noch kaufen\",\n  )\n})",
+    "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+    "line": 220,
+    "start": 6680,
+    "end": 8233,
+    "text": "test(\"carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one\", async () => {\n  const snapshot = v3Snapshot()\n  snapshot.uncoveredRoles = [\n    {\n      category: \"shampoo\",\n      role: \"shampoo_dandruff\",\n      reason: \"unassigned\",\n      linkedDecisionKey: \"decision-refinement-required\",\n      deferralReason: \"refinement_required\",\n    },\n    {\n      category: \"oil\",\n      role: \"pre_wash_fibre_treatment\",\n      reason: \"inactive\",\n      linkedDecisionKey: \"decision-no-product\",\n      deferralReason: \"no_product\",\n    },\n    {\n      category: \"mask\",\n      role: \"intensive_conditioning_mask\",\n      reason: \"inactive\",\n      linkedDecisionKey: \"decision-preview-unavailable\",\n      deferralReason: \"preview_unavailable\",\n    },\n    // A plain planned-purchase gap: no server deferral reason at all.\n    {\n      category: \"conditioner\",\n      role: \"conditioner_rinse_out\",\n      reason: \"planned_purchase_not_acquired\",\n      linkedDecisionKey: \"decision-replace\",\n    },\n  ]\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n\n  assert.deepEqual(presentation?.deferredRoleReasons, {\n    \"decision-refinement-required\": \"refinement_required\",\n    \"decision-no-product\": \"no_product\",\n    \"decision-preview-unavailable\": \"preview_unavailable\",\n  })\n})",
+    "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "presents one retained owned product when the same product filled multiple replaced roles",
+    "line": 272,
+    "start": 8235,
+    "end": 9209,
+    "text": "test(\"presents one retained owned product when the same product filled multiple replaced roles\", async () => {\n  const snapshot = v3Snapshot()\n  snapshot.retainedOwnedProducts!.push({\n    ...snapshot.retainedOwnedProducts![0],\n    role: \"shampoo_dandruff\",\n    sourceDecisionKey: \"decision-replace-second-role\",\n  })\n  snapshot.plannedPurchases.push({\n    ...snapshot.plannedPurchases[0],\n    plannedPurchaseId: \"planned-2\",\n    sourceDecisionKey: \"decision-replace-second-role\",\n  })\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n\n  assert.equal(presentation?.retainedOwnedProducts.length, 1)\n  assert.deepEqual(presentation?.plannedPurchaseDecisionKeys, [\n    \"decision-replace\",\n    \"decision-replace-second-role\",\n  ])\n})",
+    "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "line": 304,
+    "start": 9211,
+    "end": 10873,
+    "text": "test(\"profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays\", async () => {\n  const calls: Array<[string, string]> = []\n  const client = {\n    from(table: string) {\n      const query: any = {\n        select: () => query,\n        eq: (column: string, value: string) => {\n          calls.push([column, value])\n          return query\n        },\n        maybeSingle: async () => ({\n          data:\n            table === \"personal_plans\"\n              ? {\n                  id: ids.plan,\n                  revision: 1,\n                  source_revision: 1,\n                  active_routine_version_id: \"routine-1\",\n                  pending_routine_proposal_id: null,\n                }\n              : table === \"personal_plan_routine_versions\"\n                ? { id: \"routine-1\", payload: {}, source_portfolio_version_id: ids.portfolio }\n                : { id: ids.portfolio, snapshot: v3Snapshot() },\n          error: null,\n        }),\n      }\n      return query\n    },\n  }\n  const response = await createPortfolioPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await response.json()\n\n  assert.equal(response.status, 200)\n  assert.equal(response.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(body.presentation.plannedPurchaseDecisionKeys, [\"decision-replace\"])\n  assert.deepEqual(\n    body.presentation.retainedOwnedProducts.map(\n      (product: { displayName: string }) => product.displayName,\n    ),\n    [\"Altes Shampoo\"],\n  )\n  assert.ok(calls.some(([column, value]) => column === \"user_id\" && value === ids.user))\n})",
+    "sha256": "86a0a378d306167a7e3b660b60668ea61a2523be190cf0d09932c992dab5223b"
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "title": "profile presentation API rejects unauthenticated reads",
+    "line": 351,
+    "start": 10875,
+    "end": 11181,
+    "text": "test(\"profile presentation API rejects unauthenticated reads\", async () => {\n  const response = await createPortfolioPresentationRouteHandlers({\n    getUserId: async () => null,\n    client: () => {\n      throw new Error(\"must not construct client\")\n    },\n  }).GET()\n  assert.equal(response.status, 401)\n})",
+    "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "routine card visuals map every shaped card kind to a state action",
+    "line": 46,
+    "start": 1203,
+    "end": 2533,
+    "text": "test(\"routine card visuals map every shaped card kind to a state action\", () => {\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"verified_matches\" })).action, \"chevron\")\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"verified_swap\" })).action, \"swap\")\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"verified_swap\" })).actionLabel, \"Tausch\")\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"verified_unnecessary\" })).action, \"trash\")\n  assert.equal(\n    getRoutineCardVisual(createCard({ kind: \"verified_unnecessary\" })).actionLabel,\n    \"Entfernen?\",\n  )\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"verified_more_freq\" })).action, \"more\")\n  assert.equal(\n    getRoutineCardVisual(createCard({ kind: \"verified_more_freq\" })).actionLabel,\n    \"Häufiger\",\n  )\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"pending\" })).action, \"chevron\")\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"pending\" })).dotClassName, null)\n  assert.equal(getRoutineCardVisual(createCard({ kind: \"suggestion\" })).action, \"chat\")\n  // Legacy text-only rows carry no Chaarlie signal: no dot, plain chevron.\n  const legacy = getRoutineCardVisual(createCard({ kind: \"verified_swap\", isLegacyTextOnly: true }))\n  assert.equal(legacy.action, \"chevron\")\n  assert.equal(legacy.dotClassName, null)\n})",
+    "sha256": "1da9748eb6d87d9f74aab71184ef4d2a42b430f6f913ef9148c8ef698748a0f1"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "routine card status descriptions stay German per kind",
+    "line": 69,
+    "start": 2535,
+    "end": 2788,
+    "text": "test(\"routine card status descriptions stay German per kind\", () => {\n  assert.match(routineCardStatusDescription(createCard({ kind: \"pending\" })), /prüfen/i)\n  assert.match(routineCardStatusDescription(createCard({ kind: \"suggestion\" })), /Routine/)\n})",
+    "sha256": "6997eeda86cd25e52e1dc949be7b5b1303b9807f9da370cc2ae993ff14b2719b"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "frequency model exposes stable slider stops, target band, and compact Chaarlie marker",
+    "line": 74,
+    "start": 2790,
+    "end": 3635,
+    "text": "test(\"frequency model exposes stable slider stops, target band, and compact Chaarlie marker\", () => {\n  const model = buildFrequencyControlModel(\n    createCard({\n      currentFrequency: \"weekly_1x\",\n      frequencyTarget: {\n        minFrequency: \"weekly_1x\",\n        maxFrequency: \"weekly_3_4x\",\n        preferredFrequency: \"weekly_2x\",\n        delta: \"below\",\n      },\n    }),\n  )\n\n  assert.equal(model.value, \"weekly_1x\")\n  assert.equal(model.preferredLabel, \"2×/Woche\")\n  assert.equal(model.deltaLabel, \"Unter Chaarlies Zielbereich\")\n  assert.equal(model.markerLabel, \"C\")\n  assert.ok(model.stops.length >= 8)\n  assert.ok(model.band)\n  assert.ok(model.preferred)\n  assertNear(model.band.leftPercent, 42.857142857142854)\n  assertNear(model.band.widthPercent, 28.571428571428573)\n  assertNear(model.preferred.leftPercent, 57.14285714285714)\n})",
+    "sha256": "5e0ead3d5d6c582a9caf1a6d9e4abd91c6a04fd7d55bfa2084208b98e363160b"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "frequency model falls back to the preferred target when the user has no current value",
+    "line": 99,
+    "start": 3637,
+    "end": 4215,
+    "text": "test(\"frequency model falls back to the preferred target when the user has no current value\", () => {\n  const model = buildFrequencyControlModel(\n    createCard({\n      currentFrequency: null,\n      frequencyTarget: {\n        minFrequency: \"biweekly_1x\",\n        maxFrequency: \"weekly_1x\",\n        preferredFrequency: \"weekly_1x\",\n        delta: \"missing\",\n      },\n    }),\n  )\n\n  assert.equal(model.value, \"weekly_1x\")\n  assert.equal(model.currentLabel, \"Nicht gesetzt\")\n  assert.equal(model.preferredLabel, \"1×/Woche\")\n  assert.equal(model.deltaLabel, \"Noch nicht gesetzt\")\n})",
+    "sha256": "0731da250332c330d6ef2e3287292f73f27b50ad26692cbf598cf9b113c71ffd"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "routine product drawer receives loaded profile context",
+    "line": 118,
+    "start": 4217,
+    "end": 4480,
+    "text": "test(\"routine product drawer receives loaded profile context\", () => {\n  const source = read(\"src/components/routine/routine-page-client.tsx\")\n\n  assert.match(source, /hairProfile=\\{routine\\.hairProfile\\}/)\n  assert.doesNotMatch(source, /hairProfile=\\{null\\}/)\n})",
+    "sha256": "8b59f663155d4d5f5d87ff24643d10ef32ad47700e286af97e6dc40b89de22bc"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled",
+    "line": 145,
+    "start": 5950,
+    "end": 6279,
+    "text": "test(\"Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled\", () => {\n  const source = read(\"src/components/routine/gemerkt-section.tsx\")\n\n  assert.match(source, /if \\(!merklisteEnabled\\) return/)\n  assert.match(source, /fetch\\(\"\\/api\\/scan\\/wishlist\", \\{ cache: \"no-store\" \\}\\)/)\n})",
+    "sha256": "94a651296c4528b11c6b39a210a94295869d037a7940fb30761cc9e24c93f3be"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "Gemerkt section: the section anchor matches the scanner bookmark's deep-link target",
+    "line": 152,
+    "start": 6281,
+    "end": 6624,
+    "text": "test(\"Gemerkt section: the section anchor matches the scanner bookmark's deep-link target\", () => {\n  const source = read(\"src/components/routine/gemerkt-section.tsx\")\n  const scanFlowSource = read(\"src/components/scan/scan-flow.tsx\")\n\n  assert.match(source, /id=\"gemerkt\"/)\n  assert.match(scanFlowSource, /navigate\\(\"\\/routine#gemerkt\"\\)/)\n})",
+    "sha256": "daae94bf002dee0bf5465deb7f43c71e0ed61479ba719844e9628745a352374c"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section",
+    "line": 160,
+    "start": 6626,
+    "end": 7693,
+    "text": "test(\"Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section\", () => {\n  const source = read(\"src/components/routine/gemerkt-section.tsx\")\n\n  // The hand-off opens ScanSaveSheet; the actual write only happens once the user picks a\n  // destination INSIDE that (already-existing, already-tested) sheet.\n  assert.match(source, /<ScanSaveSheet/)\n  assert.match(source, /onSavedStateChange=\\{handleGraduated\\}/)\n  // This file's own fetch calls to /api/scan/save are DELETE only (a plain scan_wishlist\n  // removal, never touching user_products — see removeScanWishlistProduct). The move\n  // endpoint's destructive-if-misused POST half is never called directly from here; the\n  // only POST anywhere in this component is the unrelated, pre-existing suggestion-dismiss\n  // call, which this regex does not match.\n  assert.doesNotMatch(source, /fetch\\(\"\\/api\\/scan\\/save\",\\s*\\{\\s*method: \"POST\"/)\n  assert.match(source, /fetch\\(\"\\/api\\/scan\\/save\",\\s*\\{\\s*method: \"DELETE\"/)\n  assert.match(source, /kind: \"merkliste\"/)\n})",
+    "sha256": "f9ed23fbe2ac4ad6587738af04f9bd7aa7b0032ced85e2d12e5aa428fa44deed"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)",
+    "line": 177,
+    "start": 7695,
+    "end": 8488,
+    "text": "test(\"Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)\", () => {\n  const source = read(\"src/components/routine/gemerkt-section.tsx\")\n\n  assert.match(\n    source,\n    /if \\(completion\\.savedState\\.state === \"routine\"\\) \\{\\s*onGraduated\\?\\.\\(\\{/,\n  )\n  // PR5 review fix (Z3): the product's identity travels with the callback — without it the\n  // caller could only refresh a list the graduation does not change, which is exactly how\n  // the product came to vanish from „Gemerkt\" with nothing to show for it.\n  assert.match(source, /productId: completion\\.productId/)\n  assert.match(source, /name: graduated\\?\\.name/)\n  // A plain removal is still not a graduation.\n  assert.doesNotMatch(source, /savedState\\.state !== \"routine\"/)\n})",
+    "sha256": "0ce45716bba30dca40df5e05ba5ca61063014700a8516ae495381933a8da0f30"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)",
+    "line": 201,
+    "start": 9027,
+    "end": 10784,
+    "text": "test(\"PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)\", () => {\n  const source = read(\"src/components/routine/personal-plan/personal-plan-routine-client.tsx\")\n  const handler = source.slice(\n    source.indexOf(\"const handleGraduated\"),\n    source.indexOf(\"const openEditor\"),\n  )\n\n  // 1. the existing entry-sync endpoint, never a new write of its own.\n  assert.match(handler, /fetch\\(\"\\/api\\/personal-plan\\/routine\\/sync\", \\{ method: \"POST\" \\}\\)/)\n  assert.doesNotMatch(handler, /\\/api\\/personal-plan\\/routine\\/proposals/)\n  assert.doesNotMatch(handler, /\\/api\\/scan\\/save/)\n  // The successor machinery is off when `enabled` is false — the sync is not attempted.\n  assert.match(handler, /if \\(enabled\\) \\{/)\n  // 2. a staged proposal opens the EXISTING sheet on it.\n  assert.match(handler, /if \\(next\\.pendingProposal\\) \\{\\s*setProposalOpen\\(true\\)/)\n  // 3. the three states the user can actually be in.\n  assert.match(handler, /status: \"pending\"/)\n  assert.match(handler, /status: \"proposal\"/)\n  assert.match(handler, /status: \"unchanged\"/)\n\n  // The in-progress state is announced, and the terminal \"not in your routine yet\" state\n  // hands into the existing editor rather than leaving the user with a vanished product.\n  const banner = source.slice(\n    source.indexOf(\"{graduation ? (\"),\n    source.indexOf(\"onGraduated={handleGraduated}\"),\n  )\n  assert.match(banner, /aria-live=\"polite\"/)\n  assert.match(banner, /wird übernommen …/)\n  assert.match(banner, /In deiner Routine steht es noch nicht\\./)\n  assert.match(banner, /graduation\\.status === \"unchanged\" && canEdit/)\n  assert.match(banner, /onClick=\\{openEditor\\}/)\n  assert.match(banner, /Routine anpassen/)\n})",
+    "sha256": "4ccfb0828313d34dfca11b0cc186d4c00317d31e147b737cbeeda99623fba397"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)",
+    "line": 235,
+    "start": 10786,
+    "end": 11248,
+    "text": "test(\"RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)\", () => {\n  const source = read(\"src/components/routine/routine-page-client.tsx\")\n\n  assert.match(source, /merklisteEnabled = false/)\n  assert.match(source, /<GemerktSection/)\n  assert.match(source, /merklisteEnabled=\\{merklisteEnabled\\}/)\n  assert.match(source, /onGraduated=\\{\\(\\) => void refreshRoutine\\(\\)\\}/)\n})",
+    "sha256": "bd56994f2bbbb98f4d4d709adc64a039d0b59dfe32d3c1fdc4ac2788efde776e"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)",
+    "line": 244,
+    "start": 11250,
+    "end": 12165,
+    "text": "test(\"PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)\", () => {\n  const clientSource = read(\"src/components/routine/personal-plan/personal-plan-routine-client.tsx\")\n  const pageSource = read(\"src/components/routine/personal-plan/routine-page.tsx\")\n\n  assert.match(clientSource, /merklisteEnabled = false/)\n  assert.match(clientSource, /merklisteEnabled=\\{merklisteEnabled\\}/)\n  assert.match(clientSource, /onGraduated=\\{handleGraduated\\}/)\n  // T17 added the keepsake `readOnly` prop to the same element; the two original props\n  // are still wired straight through, which is what this test exists to pin.\n  assert.match(pageSource, /<GemerktSection\\s+merklisteEnabled=\\{merklisteEnabled\\}/)\n  assert.match(pageSource, /onGraduated=\\{onGraduated\\}/)\n  assert.match(pageSource, /readOnly=\\{merklisteReadOnly\\}/)\n})",
+    "sha256": "8625f25cfce12d6adcc842beeff505ad188b7317b76d3fbba0a985c0209152cf"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)",
+    "line": 258,
+    "start": 12167,
+    "end": 12601,
+    "text": "test(\"RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)\", () => {\n  const source = read(\"src/app/routine/page.tsx\")\n\n  assert.match(\n    source,\n    /<RoutinePageClient merklisteEnabled=\\{isFreemiumScannerFirstEnabled\\(\\)\\} \\/>/,\n  )\n  assert.match(source, /<PersonalPlanRoutineClient/)\n  assert.match(source, /merklisteEnabled=\\{isFreemiumScannerFirstEnabled\\(\\)\\}/)\n})",
+    "sha256": "fc1ff78982fcba873c8e46a72543e4e4080ae690d3513fb16c38a26768f77c12"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "routine trigger seeds are sent from session storage with the route conversation id",
+    "line": 269,
+    "start": 12603,
+    "end": 13537,
+    "text": "test(\"routine trigger seeds are sent from session storage with the route conversation id\", () => {\n  const source = read(\"src/components/chat/chat-container.tsx\")\n  const hookSource = read(\"src/hooks/use-chat.ts\")\n\n  assert.match(source, /currentConversationId \\?\\? initialConversationId/)\n  assert.match(\n    source,\n    /readRoutineTriggerSeed\\(routineSeedConversationId, window\\.sessionStorage\\)/,\n  )\n  assert.match(source, /readRoutineTriggerSeed\\(initialConversationId, window\\.sessionStorage\\)/)\n  assert.match(source, /sendMessage\\(seedMessage, \\{ conversationId \\}\\)/)\n  assert.match(source, /await loadConversation\\(conversationId\\)/)\n  assert.match(source, /clearRoutineTriggerSeed\\(conversationId, window\\.sessionStorage\\)/)\n  assert.match(hookSource, /setCurrentConversationId\\(targetConversationId\\)/)\n  assert.doesNotMatch(\n    source,\n    /readRoutineTriggerSeed\\(currentConversationId, window\\.localStorage\\)/,\n  )\n})",
+    "sha256": "aa654ea86cb0912c7d1d5b648065af0e367e394291ba8d6bf6b8380d2a609dbe"
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "title": "chat product drawer hydrates routine membership before rendering the action",
+    "line": 289,
+    "start": 13539,
+    "end": 13965,
+    "text": "test(\"chat product drawer hydrates routine membership before rendering the action\", () => {\n  const source = read(\"src/components/chat/chat-container.tsx\")\n\n  assert.match(source, /fetch\\(\\\"\\/api\\/routine\\\"\\)/)\n  assert.match(source, /alreadyInRoutine: routineProductMembership\\.has\\(drawerProduct\\.id\\)/)\n  assert.match(\n    source,\n    /existingUsageId: routineProductMembership\\.get\\(drawerProduct\\.id\\)\\?\\.usageId/,\n  )\n})",
+    "sha256": "1c88c264902b9917d4798c853020ac9211bf9eae0fba96b2f85fdb23ad23ac14"
+  }
+]

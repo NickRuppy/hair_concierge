@@ -1,0 +1,295 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "predecessor": {
+    "manifest": "/tmp/test-audit-routine-presentation75-manifest.json",
+    "sha256": "7e439850608d3d281fca335f20b27ec5826f2315e164ff1cbddc14fe004c8cb8",
+    "requiredPhase": "cut",
+    "requiredCohortDeclarations": 69
+  },
+  "counts": {
+    "before": 69,
+    "after": 68,
+    "targetFileBefore": 9,
+    "targetFileAfter": 8,
+    "cutDeclarations": 1,
+    "changedRetainedCallbacks": 3,
+    "removedObsoleteAssertions": 4
+  },
+  "files": [
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-planned-label-retirement-snapshots/before/tests/personal-plan-portfolio-presentation.test.ts",
+          "sha256": "79bb2e6629cf6e168f0112fa3f2e95bf887b897b118f3fad2b625a172128ea1a",
+          "callbacks": [
+            {
+              "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+              "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664"
+            },
+            {
+              "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+              "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e"
+            },
+            {
+              "title": "fails closed when a stored portfolio snapshot is not strict",
+              "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+            },
+            {
+              "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+              "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+            },
+            {
+              "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+              "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93"
+            },
+            {
+              "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+              "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+            },
+            {
+              "title": "presents one retained owned product when the same product filled multiple replaced roles",
+              "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+            },
+            {
+              "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+              "sha256": "6ff8001683c06313eb2c7221e2670f69d5cccf1a7e07a7267d683b9833184432"
+            },
+            {
+              "title": "profile presentation API rejects unauthenticated reads",
+              "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+            }
+          ]
+        },
+        "after": {
+          "path": "/tmp/test-audit-routine-planned-label-retirement-snapshots/after/tests/personal-plan-portfolio-presentation.test.ts",
+          "sha256": "266b1e8ca8c8fc96aed8dadad605b8b212f6b38f5042c908c28aeb317894430d",
+          "callbacks": [
+            {
+              "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+              "sha256": "d4bd8364da3c3328d0eda0638f56ded5baa4dad6299b52afea34bfe46c30d3f7"
+            },
+            {
+              "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+              "sha256": "bf14587c902a8d5400bef3ced3fe3bca18875f42359ee998c2a38b2f2ee29a94"
+            },
+            {
+              "title": "fails closed when a stored portfolio snapshot is not strict",
+              "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+            },
+            {
+              "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+              "sha256": "b8f1c7548c92ef88b446dce43d8751b6d6d319cfa5f0b9905ff468fadcc4a306"
+            },
+            {
+              "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+              "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+            },
+            {
+              "title": "presents one retained owned product when the same product filled multiple replaced roles",
+              "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+            },
+            {
+              "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+              "sha256": "6ff8001683c06313eb2c7221e2670f69d5cccf1a7e07a7267d683b9833184432"
+            },
+            {
+              "title": "profile presentation API rejects unauthenticated reads",
+              "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-planned-label-retirement-snapshots/before/src/lib/personal-plan/routine/portfolio-presentation.ts",
+          "sha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+          "callbacks": []
+        },
+        "after": {
+          "path": "/tmp/test-audit-routine-planned-label-retirement-snapshots/after/src/lib/personal-plan/routine/portfolio-presentation.ts",
+          "sha256": "2cb625b1bc8232d48395bcb205e14cd7fa7302549c2a7f5fe19f141a1b8954d6",
+          "callbacks": []
+        }
+      }
+    }
+  ],
+  "cohort": [
+    {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "expectedSha256": "6ee506e42ef46f736cb8fae4b4ea08e982ee151233fc0a31a17ff72574ac3427"
+    },
+    {
+      "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+      "expectedSha256": "8f070f75736da631a96d824e4b19b3609e63ecb0afc88d1b98d75a5c8f398841"
+    },
+    {
+      "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+      "expectedSha256": "0d89862dfbc3d1c8f77c79468093c032312da02ff74ce9d7cc3f139be3e8fda3"
+    },
+    {
+      "file": "tests/personal-plan-stage4-attention-ui.test.tsx",
+      "expectedSha256": "67c05c7b4e544a9bf1111ce3634bd8300b292998725d86a24224b74a4477237b"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "expectedSha256": "79bb2e6629cf6e168f0112fa3f2e95bf887b897b118f3fad2b625a172128ea1a"
+    },
+    {
+      "file": "tests/routine-page-ui.test.tsx",
+      "expectedSha256": "8571aea5696afd319fae1ea05c2b0fe8b3b42039d9e346256d379c6efa70439c"
+    }
+  ],
+  "guards": [
+    {
+      "file": "src/app/routine/page.tsx",
+      "sha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de"
+    },
+    {
+      "file": "src/app/api/personal-plan/portfolio-presentation/route.ts",
+      "sha256": "52e406819640937f7612b1d623f22087cee6888d86d97588fea9e17acbec7146"
+    },
+    {
+      "file": "src/components/ui/retry-refresh-button.tsx",
+      "sha256": "320223f8f5ef3c7d5fe65f60c2a66faf59688631a5584c07aa688c28743c21f9"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "sha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/repository.ts",
+      "sha256": "5573df42d2948ac531c040766336627b60621743519baf8c4291f36640facb25"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/components/routine/personal-plan/index.ts",
+      "sha256": "cee4c2ca79d7519cbb4d3ff18ea0c844701bb36951e49645e80c05b74d4baba2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/personal-plan-routine-client.tsx",
+      "sha256": "35b2b982260a289dbb8068e66809cf1ca7744e635f763cb1397ebd029618a94d"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-attention-indicator.tsx",
+      "sha256": "573d37574e855ed23c248052ec9ad1321548e31cb86dd91bcecade94171641ab"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-editor.tsx",
+      "sha256": "a47f1d6b99984e0d832bd7cd1d3fdd103860cb003ea4561b6de38714f1348fc8"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-page.tsx",
+      "sha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-plan-updated-toast.tsx",
+      "sha256": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-product-detail.tsx",
+      "sha256": "f433e3c5794dc5f00c52642cddb5f0c35cf0d7b413db81127ba227d34f878ed0"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-proposal-sheet.tsx",
+      "sha256": "992331ddccc3cef4630b817fbaf3eb4be3a18ed4475ea579719e758bb63fdbfd"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+      "sha256": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-section.tsx",
+      "sha256": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-status.tsx",
+      "sha256": "f66adab8c09d2cc0001d90894537ab8428f062f74e2b459773802aef4aed34bb"
+    },
+    {
+      "file": "src/components/routine/routine-card-model.ts",
+      "sha256": "b38ae094871496ccd794d89b7613c55c1f9ee90465864477c18394be0a61b14d"
+    },
+    {
+      "file": "src/components/routine/gemerkt-section.tsx",
+      "sha256": "44a4b16054c8d199286944d3b86490306e0fbfa890bb740b3b4ff2e99fe066e6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/acquisition.ts",
+      "sha256": "341fbc1d085ebb038143cf9ff4d5a477ab27ffcf4c6507fb7b7dcf1da0dad056"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/planned-items/[itemKey]/acquire/route.ts",
+      "sha256": "3f49ece54f7b0412f3b093da1a52a07c06391d8e569713749b75913eaee73143"
+    },
+    {
+      "file": "tests/personal-plan-stage3-portfolio.test.ts",
+      "sha256": "de866d3d6e4d444636c837bf08a204c4c090bb36173bbce87645d040b8ed05d2"
+    },
+    {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "packages/product-intake-core/package.json",
+      "sha256": "75eda71a0f651afbcceac419049055fc9f7025c991762a119737a66846388798"
+    },
+    {
+      "file": "packages/product-intake-core/src/index.ts",
+      "sha256": "ffe738956118e52c1b83ce5d6c963c154caca420e4950896a9c021f4aee8d122"
+    },
+    {
+      "file": "apps/product-intake-review/package.json",
+      "sha256": "91c61d53213e982d1921ae14dcbac138f7fbdce56242e37ec839c03c14433e24"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ],
+  "donor": {
+    "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+    "text": "test(\"marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product\", async () => {\n  const snapshot = v3Snapshot()\n  snapshot.retainedOwnedProducts = []\n  snapshot.plannedPurchases[0].sourceDecisionKey = \"decision-pending-replace\"\n  snapshot.categoryResolutions = [\n    {\n      decisionKey: \"decision-pending-replace\",\n      category: \"shampoo\",\n      role: \"shampoo_everyday\",\n      verdict: \"unknown\",\n      choiceState: \"planned_purchase\",\n      capturedProductId: \"captured-pending\",\n      executable: false,\n      gapPreserved: true,\n    },\n  ]\n  const query = {\n    select: () => query,\n    eq: () => query,\n    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),\n  }\n  const presentation = await loadOwnerPortfolioPresentation(\n    { from: () => query },\n    ids.user,\n    ids.plan,\n    ids.portfolio,\n  )\n  const labels = routinePresentationLabels(presentation)\n  assert.equal(labels.plannedLabelFor([\"decision-pending-replace\"]), \"Noch kaufen\")\n})",
+    "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+  },
+  "permittedAssertionRemovals": [
+    {
+      "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+      "remove": [
+        "  assert.equal(v3.plannedLabelFor([\"decision-replace\"]), \"Noch kaufen\")\n",
+        "  assert.equal(legacy.plannedLabelFor([\"decision-replace\"]), null)\n"
+      ]
+    },
+    {
+      "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+      "remove": [
+        "  assert.equal(\n    routinePresentationLabels(presentation).plannedLabelFor([\"decision-replace\"]),\n    \"Noch kaufen\",\n  )\n"
+      ]
+    },
+    {
+      "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+      "remove": [
+        "  assert.equal(\n    routinePresentationLabels(presentation).plannedLabelFor([\"decision-replace\"]),\n    \"Noch kaufen\",\n  )\n"
+      ]
+    }
+  ],
+  "sourceChange": {
+    "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "remove": "    plannedLabelFor(sourceDecisionKeys: readonly string[]) {\n      return hasReplacementPresentation &&\n        sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))\n        ? \"Noch kaufen\"\n        : null\n    },\n"
+  },
+  "sourcePolicy": "Delete only uncalled plannedLabelFor method. Preserve exported routinePresentationLabels/fitLabelFor, portfolio reader, JSON fields, strict schemas, acquire route/service byte-for-byte."
+}

@@ -1,0 +1,214 @@
+{
+  "localRuntimeFiles": [
+    "scripts/product-identity/apply-normalization.ts",
+    "scripts/product-identity/correct-canonical-identities.ts",
+    "scripts/product-identity/validate-normalization.ts",
+    "src/lib/product-identity/brand-resolution.ts",
+    "src/lib/product-identity/display-title.ts",
+    "src/lib/product-identity/index.ts",
+    "src/lib/product-identity/normalize.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "tests/product-identity-correction.test.ts",
+    "tests/product-identity-normalize.test.ts",
+    "tests/product-identity-resolution.test.ts",
+    "tests/product-identity-schema.test.ts",
+    "tests/product-identity-title.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/product-identity-normalize.test.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "spec": "../src/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/product-identity-resolution.test.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "spec": "../src/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/product-identity-title.test.ts",
+      "to": "src/lib/product-identity/display-title.ts",
+      "spec": "../src/lib/product-identity/display-title",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/product-identity-correction.test.ts",
+      "to": "scripts/product-identity/correct-canonical-identities.ts",
+      "spec": "../scripts/product-identity/correct-canonical-identities",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/brand-resolution.ts",
+      "spec": "./brand-resolution",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/correct-canonical-identities.ts",
+      "to": "scripts/product-identity/apply-normalization.ts",
+      "spec": "./apply-normalization",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/correct-canonical-identities.ts",
+      "to": "scripts/product-identity/validate-normalization.ts",
+      "spec": "./validate-normalization",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/brand-resolution.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/apply-normalization.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "../../src/lib/product-identity/normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/apply-normalization.ts",
+      "to": "scripts/product-identity/validate-normalization.ts",
+      "spec": "./validate-normalization",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/validate-normalization.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "spec": "../../src/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-identity/validate-normalization.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "../../src/lib/vocabulary/frequencies",
+      "typeOnly": false
+    }
+  ],
+  "externals": [
+    "@supabase/supabase-js",
+    "dotenv"
+  ],
+  "nonliteralImports": [],
+  "pinOrigins": {
+    "tests/server-only-register.cjs": "preserved original/prior pin",
+    "src/lib/product-identity/index.ts": "preserved original/prior pin",
+    "src/lib/product-identity/display-title.ts": "preserved original/prior pin",
+    "scripts/product-identity/correct-canonical-identities.ts": "preserved original/prior pin",
+    "src/lib/product-identity/brand-resolution.ts": "preserved original/prior pin",
+    "src/lib/product-identity/normalize.ts": "preserved original/prior pin",
+    "scripts/product-identity/apply-normalization.ts": "preserved original/prior pin",
+    "scripts/product-identity/validate-normalization.ts": "preserved original/prior pin",
+    "src/lib/vocabulary/frequencies.ts": "preserved original/prior pin"
+  },
+  "selectedPackages": [
+    "tsx",
+    "esbuild",
+    "get-tsconfig",
+    "resolve-pkg-maps",
+    "@esbuild/darwin-arm64",
+    "typescript",
+    "@supabase/supabase-js",
+    "@supabase/auth-js",
+    "@supabase/functions-js",
+    "@supabase/postgrest-js",
+    "@supabase/realtime-js",
+    "@supabase/storage-js",
+    "dotenv",
+    "tslib",
+    "ws",
+    "@supabase/phoenix",
+    "iceberg-js"
+  ],
+  "newDependencyPins": [
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/cli-options.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/env-options.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/main.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/main.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/modules/index.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/modules/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/modules/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/buffer-util.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/constants.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/event-target.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/extension.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/limiter.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/permessage-deflate.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/receiver.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/sender.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/stream.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/subprotocol.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/validation.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/websocket-server.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/lib/websocket.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/favicon.ico",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix-orange.png",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.cjs.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.cjs.js.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.min.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.mjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.mjs.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/phoenix.png",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/ajax.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/ajax.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/channel.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/channel.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/constants.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/constants.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/index.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/index.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/longpoll.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/longpoll.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/presence.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/presence.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/push.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/push.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/serializer.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/serializer.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/socket.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/socket.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/timer.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/timer.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/types.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/types.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/utils.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/priv/static/types/utils.d.ts.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.cjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.cjs.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.d.cts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.d.ts",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.mjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/dist/index.mjs.map",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/phoenix/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/iceberg-js/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/config.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/tslib.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/tslib.es6.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tslib/tslib.es6.mjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/wrapper.mjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/ws/browser.js"
+  ],
+  "limits": "All original49 exact; selected local literal runtime import graph guarded. Original five test files phase-aware; other44 remain fixed. Added local/dependency hashes are first-time guards; overlap pins are preserved. Selected17 package distributions/entrypoints only; no whole vendor tree or type-only/external dynamic execution claim. Correction imported SDK/CLI libraries are pinned but never imported by preparation. Optional native ws acceleration/fsevents, dormant CLI data/env files and exhaustive external type trees excluded."
+}

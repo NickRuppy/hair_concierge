@@ -1,0 +1,22 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "baselineAndEachPhase": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/scan-unknown-flow-ui.test.tsx",
+    "tests/scan-research-intake-form-ui.test.tsx"
+  ],
+  "gates": [
+    "Stop all writers/runners before transfer",
+    "Before26 and transfer26 clean",
+    "All14 exact intended owner faults actual red/restore/clean on current transfer",
+    "Only then remove four donors; cut22 clean",
+    "Independent preservation review and repository/campaign verification main-owned"
+  ],
+  "runtime": "NOT RUN"
+}

@@ -1,0 +1,34 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 90,
+    "transfer": 90,
+    "cut": 84
+  },
+  "pinsSHA": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG",
+    "completionSHA": "46897612a2b296c6443c040c16886b8f8c20d0d9864d981f97b880949bcf33ba",
+    "verified": 7,
+    "logFiles": 21,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/scan-resolve-event-log.test.ts",
+    "tests/scan-resolve-events-migration.test.ts",
+    "tests/scan-resolve-auto-save.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-resolve-event-log.test.ts": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+    "tests/scan-resolve-events-migration.test.ts": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+    "tests/scan-resolve-auto-save.test.ts": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+    "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals"
+}

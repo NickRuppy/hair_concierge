@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/tmp/test-audit-product-previews-complete-ledger.md",
+    "sha256": "7b0b410f1ba57327239a96160bb8fa1f372a0cc910d8533dda8a959a68448a80",
+    "disposition": "Full17 per-declaration retention ledger; exact current test SHA; bounded owner/dependency limits retained."
+  },
+  {
+    "path": "/tmp/test-audit-engine-ledger.md",
+    "sha256": "5cd22d6eaf13270fe72fb31a1e75591ec71aa00a2a680697e1715577476f0cda",
+    "disposition": "Aggregate442/39 summary and selected shampoo overlap; no complete25-site ledger recovered."
+  },
+  {
+    "path": "/tmp/test-audit-barrel-orphan-layer-ledger.md",
+    "sha256": "36a48146e7b6d127324104f03a2dc0f7531cb161570506114d38d7dfd55eb8a8",
+    "disposition": "Import-only Stage3 barrel retirement evidence; not full12-site semantic review."
+  },
+  {
+    "path": "/tmp/test-audit-ledger-navigation-unmentioned.json",
+    "sha256": "9fc1e9b16afab58efa15c701e57794f52c70351b30c1810ad978d3c241be8bc9",
+    "disposition": "Mechanical inventory only; absent mention is not unread proof."
+  }
+]

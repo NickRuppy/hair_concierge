@@ -1,0 +1,67 @@
+{
+  "slot": "A33",
+  "productId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+  "name": "NIVEA 2in1 Express Shampoo & Spülung, 400 ml (dm: Shampoo & Conditioner Express 2in1)",
+  "brand": "Nivea (Beiersdorf)",
+  "packSize": "400 ml",
+  "gtins": [
+    "4006000193991"
+  ],
+  "sources": [
+    {
+      "url": "https://www.nivea.de/produkte/2in1-express-shampoo-and-spuelung-400ml-40060001939910001.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4006000193991 (schema.org gtin); '400 ML'",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Aloe Barbadensis Leaf Juice Powder, Guar Hydroxypropyltrimonium Chloride, Dicaprylyl Ether, Glyceryl Oleate, Glycerin, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Parfum",
+      "claimsVerbatim": "Das 2in1 Express Shampoo & Spülung mit der einzigartigen Kombination aus Glanz-Serum und natürlichen Aloe Vera-Extrakt verleiht deinem Haar intensive Pflege in kürzester Zeit. | Pflegt in Expresszeit | Stärkt die Haarstruktur für verbesserte Widerstandsfähigkeit | Verbessert die Kämmbarkeit | Reinigt sanft die Kopfhaut | Sorgt für natürlichen Glanz | Mit natürlichem Aloe Vera Extrakt | Hautverträglichkeit dermatologisch bestätigt | 0% Silikone - maximale Wirksamkeit | Vegane Formel (keine Inhaltsstoffe tierischen Ursprungs) | Nicht enthalten: Silikonfrei, Mikroplastikfreie Formel gemäß UNEP-Definition, Ohne Inhaltsstoffe tierischen Ursprungs | Das regenerierende NIVEA 2in1 Express Shampoo & Spülung reinigt mild und pflegt das Haar intensiv in kürzester Zeit. Die 2in1-Formel vereint hochwirksames Glanz-Serum und natürlichen Aloe Vera-Extrakt für eine verbesserte Kämmbarkeit und Geschmeidigkeit. Das pflegende Shampoo reinigt sanft die Kopfhaut, schützt vor Haarbruch und stärkt die Haarstruktur für mehr Widerstandsfähigkeit, ohne zu beschweren. Aus Liebe zu Haar und Umwelt ist die Formel: ohne Silikone, ohne Mikroplastikpartikel (gemäß UNEP-Definition), zu 99% biologisch abbaubar (gemäß OECD oder gleichwertigen Standards) und mit veganer Formel (ohne Inhaltsstoffe tierischen Ursprungs). Die Hautverträglichkeit des Shampoos ist dermatologisch bestätigt und es eignet sich für alle Haartypen. (text truncated at this point in capture) | Attribut: Alle Haartypen, Silikonfrei",
+      "directionsVerbatim": "1 Auftragen: Shampoo im nassen Haar verteilen und aufschäumen. 2 Ausspülen: Danach gründlich mit warmen Wasser ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4006000193991 (dm-Artikelnummer 1620922; 'Shampoo & Conditioner Express 2in1, 400 ml'; Anschrift Beiersdorf AG; lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Aloe Barbadensis Leaf Juice Powder, Guar Hydroxypropyltrimonium Chloride, Dicaprylyl Ether, Glyceryl Oleate, Glycerin, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Parfum",
+      "claimsVerbatim": "2in1 Shampoo & Spülung | Mit natürlichem Aloe Vera Extrakt angereichert | Sorgt für geschmeidiges & glänzendes Haar | Stärkt die Haarstruktur & schützt vor Haarbruch | Frei von tierischen Inhaltsstoffen | Das Express Pflege 2in1 Shampoo von NIVEA vereint Reinigung und Pflege in einem Schritt und spart dadurch wertvolle Zeit im Alltag. Durch die Kombination aus natürlichem Aloe Vera Extrakt und einem Glanz-Serum wird das Haar intensiv gepflegt und erhält eine geschmeidige Struktur. Die milde Formel reinigt die Kopfhaut sanft, stärkt das Haar und schützt es vor Haarbruch. Nach der Anwendung lässt sich das Haar leichter kämmen und überzeugt durch einen natürlichen Glanz. Für alle Haartypen geeignet und ideal bei wenig Zeit. | Haartyp: alle Haartypen",
+      "directionsVerbatim": "Shampoo im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmen Wasser ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Decyl Glucoside",
+    "Coco-Glucoside",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Aloe Barbadensis Leaf Juice Powder",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Dicaprylyl Ether",
+    "Glyceryl Oleate",
+    "Glycerin",
+    "Glycol Distearate",
+    "Hydrogenated Castor Oil",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Parfum"
+  ],
+  "canonicalReason": "Beiersdorf's German NIVEA page (exact 400 ml, GTIN 4006000193991 in schema.org) and dm.de (same GTIN, article 1620922) publish the identical 18-item list; identical to the v1.3 capture of 2026-08-10. Manufacturer page wins and is corroborated. Rossmann also lists this GTIN (not opened; not needed).",
+  "inciFingerprintSha256": "da8236c75707925b9697352fca702d873b6d0f1b1b186fdc2381434cc9dbb5a9",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Search results mention a different EAN 4005900910066 for 'NIVEA 2in1 Express Shampoo & Spülung 400 ml' at an office supplier (older/other pack); the German NIVEA page and dm both use 4006000193991, the catalog/v1.3 GTIN. Not treated as a conflict, but the older GTIN suggests an earlier pack version exists in the wild.",
+    "Claim-INCI check: 'Aloe Vera Extrakt' -> Aloe Barbadensis Leaf Juice Powder present; '0% Silikone' consistent; 'Glanz-Serum' names no ingredient (marketing). 'Vegan' consistent (no animal-derived item visible). No conflict.",
+    "Manufacturer page truncated mid-sentence in the capture only (page body continues past 'eignet sich für alle Haartypen'); the INCI itself comes from the structured 'Liste der inhaltsstoffe' block and is complete.",
+    "No pack photo inspected."
+  ]
+}

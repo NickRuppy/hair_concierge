@@ -1,0 +1,13 @@
+import type { Goal, HairTexture } from "@/lib/vocabulary"
+import { GOALS, GOAL_LABELS } from "@/lib/vocabulary/concerns-goals"
+import { getOrderedGoals, getGoalLabel } from "@/lib/vocabulary/onboarding-goals"
+
+export { getOrderedGoals, getGoalLabel } from "@/lib/vocabulary/onboarding-goals"
+
+export function getAvailableGoals(hairTexture: HairTexture | null): Goal[] {
+  return hairTexture ? getOrderedGoals(hairTexture) : [...GOALS]
+}
+
+export function getAvailableGoalLabel(goal: Goal, hairTexture: HairTexture | null): string {
+  return hairTexture ? getGoalLabel(goal, hairTexture) : GOAL_LABELS[goal]
+}

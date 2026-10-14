@@ -3,7 +3,6 @@ import test from "node:test"
 
 import {
   buildBrandResolutionCatalog,
-  detectBrandAliasConflicts,
   resolveBrandFromText,
   type ProductIdentityBrand,
 } from "../src/lib/product-identity"
@@ -43,6 +42,8 @@ test("resolveBrandFromText returns an exact brand match without over-matching in
   const nonMatch = resolveBrandFromText("SK18 Leave-in Molecular Repair Hair Oil", brands)
   assert.equal(nonMatch.match, "none")
   assert.equal(nonMatch.brand, null)
+  assert.equal(nonMatch.confidence, "none")
+  assert.equal(nonMatch.reason, "unresolved")
   assert.equal(nonMatch.unresolvedRawText, "SK18 Leave-in Molecular Repair Hair Oil")
 })
 
@@ -93,21 +94,6 @@ test("resolveBrandFromText resolves Phase 0 aliases before canonical brand names
   assert.equal(fructisAlias.brand?.id, "brand-garnier")
   assert.equal(fructisAlias.productLine?.id, "line-fructis")
   assert.equal(fructisAlias.reason, "brand_line_alias_exact")
-})
-
-test("unknown brand returns unresolved raw text with no confidence", () => {
-  const catalog = buildBrandResolutionCatalog({
-    brands: [{ id: "brand-garnier", canonical_name: "Garnier", normalized_name: "garnier" }],
-    productLines: [],
-    brandAliases: [],
-  })
-
-  const resolution = resolveBrandFromText("Unbekannte Pflegecreme", catalog)
-
-  assert.equal(resolution.match, "none")
-  assert.equal(resolution.confidence, "none")
-  assert.equal(resolution.reason, "unresolved")
-  assert.equal(resolution.unresolvedRawText, "Unbekannte Pflegecreme")
 })
 
 test("conflicting aliases are reported and excluded from usable alias resolution", () => {
@@ -240,23 +226,6 @@ test("line-specific aliases with missing product lines are excluded", () => {
   const resolution = resolveBrandFromText("Elvital Dream Length Shampoo", catalog)
   assert.equal(resolution.match, "none")
   assert.equal(resolution.reason, "unresolved")
-})
-
-test("detectBrandAliasConflicts reports duplicate normalized aliases with conflicting targets", () => {
-  const conflicts = detectBrandAliasConflicts([
-    { key: "first", name: "Curlsmith", aliases: ["Curl Smith"] },
-    { key: "second", name: "Curl Smith" },
-  ])
-
-  assert.deepEqual(conflicts, [
-    {
-      normalizedAlias: "curl smith",
-      targets: [
-        { brandKey: "first", label: "Curl Smith" },
-        { brandKey: "second", label: "Curl Smith" },
-      ],
-    },
-  ])
 })
 
 test("resolver handles corrected Phase A catalog aliases", () => {

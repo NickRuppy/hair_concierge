@@ -246,7 +246,7 @@ The persisted V2 Personal Plan envelope validates `texture`, `thickness`, `densi
 
 `chemicalTreatments` always contains at least one value. A non-natural treatment means the array contains at least one of `colored`, `lightened`, `permed`, or `chemically_straightened`; mere non-emptiness never counts because `natural` is itself a valid required answer.
 
-Nullable product facts remain legitimate. Missing strict product role, thickness suitability, weight for a leave-on role, or critical protocol facts produce `noch in Prüfung` for that product without changing the computed category need.
+Nullable product facts remain legitimate. Missing strict product role, thickness suitability, weight for a leave-on role, or critical protocol facts produce `Nicht geprüft` for that product without changing the computed category need.
 
 ## Multiple role presentation and product assignment
 
@@ -320,15 +320,15 @@ Store this one-to-one specification in the canonical `product_oil_specs` table. 
 
 Repository history previously used and conditionally dropped an empty table with this name. The implementation migration therefore begins with a live-schema preflight: if `product_oil_specs` exists, inspect its columns and preserve/export every row before adapting or replacing the schema; if it does not exist, create it normally. Never drop or overwrite a populated historical table merely because the current migration chain expects it to be absent.
 
-Every supported role also requires a verified `(product_id, role_key)` record in the shared `product_application_protocols` authority. That record owns stage, hair state, placement, rinse versus leave-in behavior, phases, amount guidance, and contact time. Do not duplicate exact directions inside the Oil specification. A role listed as supported without its critical verified protocol remains `noch in Prüfung` for executable use.
+Every supported role also requires a verified `(product_id, role_key)` record in the shared `product_application_protocols` authority. That record owns stage, hair state, placement, rinse versus leave-in behavior, phases, amount guidance, and contact time. Do not duplicate exact directions inside the Oil specification. A role listed as supported without its critical verified protocol remains `Nicht geprüft` for executable use.
 
 ### Field semantics
 
 - `null` means the fact has not been verified. For arrays, a non-null empty array means the product was reviewed and verified to support none of those values. Never interpret absent data as a verified negative.
-- `supportedRoles` is the authoritative product eligibility for pre-wash, damp smoothing/pre-style, and dry finish. Formula name or ingredients never infer a role. `null` produces `noch in Prüfung`; a verified array excluding the assigned role produces `wechseln empfohlen` for that role.
+- `supportedRoles` is the authoritative product eligibility for pre-wash, damp smoothing/pre-style, and dry finish. Formula name or ingredients never infer a role. `null` produces `Nicht geprüft`; a verified array excluding the assigned role produces `Passt nicht` for that role.
 - `formulaFamily` describes the formula as a pure Oil, Oil blend, or Oil/serum system. It supports the Stage-2 product comparison and protocol explanation but never establishes suitability by itself.
-- `weight` is the canonical formula-feel axis. It contributes to damp and dry leave-on fit, amount, and explanation. The pre-wash evaluator ignores it because that product is shampooed out. Missing weight is `noch in Prüfung` for a leave-on role but does not block a verified pre-wash role.
-- shared nullable `suitableThicknesses` remains the strict product-suitability gate for every role. `null` means not verified; a non-empty verified array containing the user's thickness passes; a non-empty verified array excluding it is a mismatch. Empty arrays are invalid for active recommendable products and must not act as either unknown or wildcard. `weight` refines a fitting leave-on product and must not double-count the same thickness evidence as a second hard rejection.
+- `weight` is the canonical formula-feel axis. It contributes to damp and dry leave-on fit, amount, and explanation. The pre-wash evaluator ignores it because that product is shampooed out. Missing weight is `Nicht geprüft` for a leave-on role but does not block a verified pre-wash role.
+- Shared nullable `suitableThicknesses` is evaluated by distance under the [canonical fit-verdict model](../../fit-verdict-model.md) (§3–§4); missing required facts remain unknown, and leave-on weight is a separate degree axis.
 - `functionalBenefits` contains only the three confirmed independently useful product jobs not already represented by role, formula family, weight, or Heat protection. `null` means unverified; `[]` means reviewed with no supported listed benefits.
 - `providesHeatProtection` is a tri-state storage fact around a binary finished-product capability: `true` verified yes, `false` verified no, `null` unverified. Do not store maximum temperature or Heat-activation fields, infer the value from formula/ingredients, or create a fourth Oil role.
 - `ingredientFlags` use the existing constrained `OilIngredientFlag` enum only for verified explanation and shared exclusion checks. They never establish a role, weight, functional benefit, or Heat protection by themselves.
@@ -357,7 +357,7 @@ Benefit priority follows the shared three-level category convention:
 2. current problem without the matching goal = priority `2`;
 3. goal without the current problem = priority `1`.
 
-This priority ranks matching products only after role inclusion and category ownership are settled. A higher count of secondary benefits never compensates for the wrong role, a failed `suitableThicknesses` gate, unsuitable leave-on weight, or missing Heat protection where Heat protection is required. Prefer the candidate that covers the highest-priority need while preserving core fit; use lower-priority benefits as tie-breakers.
+This priority ranks matching products only after role inclusion and category ownership are settled. A higher count of secondary benefits never compensates for the wrong role, a thickness/weight distance totaling two or more steps, unsuitable leave-on weight, or missing Heat protection where Heat protection is required. Prefer the candidate that covers the highest-priority need while preserving core fit; use lower-priority benefits as tie-breakers.
 
 Catalog interpretation:
 
@@ -377,12 +377,7 @@ Deliberately merge or reject the following candidates:
 
 ## Layered product fit
 
-Evaluate an Oil separately for each assigned role and use the shared user-facing verdicts:
-
-1. unresolved identity, pending review, or an unverified required role/thickness/protocol fact -> `noch in Prüfung`;
-2. verified unsupported assigned role, failed shared `suitableThicknesses` gate, safety conflict, or confirmed persistent severe load mismatch -> `wechseln empfohlen`;
-3. core gates pass but leave-on weight or the highest-priority functional need is only adjacent -> `passt mit Einschränkung`;
-4. role, thickness, role-specific weight, protocol, and highest-priority functional need align -> `passt sehr gut`.
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): `ideal` = **Passt**, `supportive` = **Passt bedingt**, `mismatch` = **Passt nicht**, and `unknown` = **Nicht geprüft**. Thickness is a degree axis, never a hard gate; sum all axis distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive recommendation with its evaluator reason when no ideal candidate exists in either Basis or optional tiers.
 
 Missing Heat protection only prevents the product from covering a required Heat-protection occurrence. It does not make the Oil unsuitable for a separate pre-wash, damp-care, or dry-finish role.
 
@@ -416,16 +411,16 @@ Dosage rules:
 
 - evaluate product fit at the lowest effective recommended dose and the correct lengths/ends placement, not at the user's potentially excessive current dose;
 - when selecting a new recommendation, prefer the profile's ideal weight whenever a valid candidate exists rather than intentionally recommending a heavier compromise;
-- an owned adjacent or high-risk weight remains initially usable when role and `suitableThicknesses` pass. Give it `passt mit Einschränkung` plus a precise minimal-dose and lengths/ends-only adjustment instead of demanding an immediate replacement;
-- recommend a switch when the product fails `suitableThicknesses`, when the user confirms that overload persists at the correct minimal dose, or when the amount must become so small that the product no longer performs its assigned job;
-- verified finished-product directions and role-specific fine-hair suitability may override the generic weight heuristic, but the product then remains at most `passt mit Einschränkung` until user response confirms it does not overload the hair;
-- when a fundamentally fitting product currently feels heavy, first reduce amount and keep it away from the roots. Once the user confirms good performance without overload, the living-plan verdict may be upgraded; if overload persists, change it to `wechseln empfohlen`.
+- keep precise minimal-dose and lengths/ends-only guidance separate from the evaluator verdict; one total step is supportive and two or more steps are mismatch (canonical model §4);
+- use the canonical mismatch actions when the evaluator reports mismatch; persistent overload at the correct minimal dose warrants reassessment;
+- verified finished-product directions inform dosage and placement; they do not override the canonical evaluator verdict;
+- when a fundamentally fitting product currently feels heavy, first reduce amount and keep it away from the roots; reassess persistent overload without inventing a presentation-only verdict.
 
 The pre-wash role ignores leave-on weight because the product is shampooed out. Its amount and contact time still follow the verified product protocol.
 
 ## Role-specific application
 
-Product-specific verified directions always override the category fallback. A product without enough verified directions for its assigned role remains `noch in Prüfung`; do not invent precise amounts or contact times merely to complete the recipe.
+Product-specific verified directions always override the category fallback. A product without enough verified directions for its assigned role remains `Nicht geprüft`; do not invent precise amounts or contact times merely to complete the recipe.
 
 ### `pre_wash_fibre_treatment`
 
@@ -469,14 +464,14 @@ Product-specific verified directions override the fallback. Any separate use bet
 
 Reuse the shared owned, pending, shopping, acquired, and informed-override lifecycle without an Oil-specific state machine. Apply it separately to every included Oil role.
 
-- `passt sehr gut`: keep and assign the owned product to the role;
-- `passt mit Einschränkung`: explain the exact limitation, propose the amount/application adjustment or fitting alternative, and require confirmation before changing the living plan;
-- `wechseln empfohlen`: provide one exact verified alternative for the uncovered role. The user may keep the owned Oil as a confirmed non-blocking override; the plan continues to show the limitation and retains the alternative on the shopping list;
-- `noch in Prüfung`: keep the pending product visible but exclude it from executable recipes until identity, role support, fit, and critical protocol facts are reviewed. Supply one exact verified alternative for any uncovered `basis` role rather than fabricating instructions for the pending product.
+- `Passt`: keep and assign the owned product to the role;
+- `Passt bedingt`: explain the exact limitation, propose the amount/application adjustment or fitting alternative, and require confirmation before changing the living plan;
+- `Passt nicht`: provide one exact verified alternative for the uncovered role. The user may keep the owned Oil as a confirmed non-blocking override; the plan continues to show the limitation and retains the alternative on the shopping list;
+- `Nicht geprüft`: keep the pending product visible but exclude it from executable recipes until identity, role support, fit, and critical protocol facts are reviewed. Supply one exact verified alternative for any uncovered `basis` role rather than fabricating instructions for the pending product.
 
 Clicking a purchase link never changes the living-plan assignment. Keep the recommendation in the shopping lifecycle and ask whether the product was acquired; replace the current assignment only after the user confirms it. A confirmed acquired product is evaluated again before assignment.
 
-If one product covers several roles, reconcile each role independently. A product may therefore remain assigned for one role while receiving `wechseln empfohlen` or `noch in Prüfung` for another. Optional-role recommendations enter the shopping list and executable plan only after the user actively adds and confirms them.
+If one product covers several roles, reconcile each role independently. A product may therefore remain assigned for one role while receiving `Passt nicht` or `Nicht geprüft` for another. Optional-role recommendations enter the shopping list and executable plan only after the user actively adds and confirms them.
 
 ## Safety, response, and claim boundaries
 
@@ -517,9 +512,9 @@ The live catalog currently stores `natuerliches-oel`, `styling-oel`, and `trocke
 
 The complete Personal Plan may remain released only while the curated catalog provides at least one verified `ideal` or `supportive` candidate plus its complete critical protocol for every supported Oil role and supported thickness/load target in the launch fixture matrix. Common budget and strong-exclusion paths must either retain a verified candidate or deliberately produce the explicit no-safe-match state; they may not fall through to an unverified recommendation.
 
-Oil is part of the complete promised plan, not an independently enabled module. Do not add an Oil-specific feature flag, category allowlist, or silent omission state. Long-tail owned Oils may remain `noch in Prüfung`, but every computed Basis role must still have one verified exact alternative before global launch. Treat this as a pre-activation data gate rather than adding a second speculative runtime recommendation engine or silently weakening the fit rules.
+Oil is part of the complete promised plan, not an independently enabled module. Do not add an Oil-specific feature flag, category allowlist, or silent omission state. Long-tail owned Oils may remain `Nicht geprüft`, but every computed Basis role must still have one verified exact alternative before global launch. Treat this as a pre-activation data gate rather than adding a second speculative runtime recommendation engine or silently weakening the fit rules.
 
-Instrument the shared Personal Plan selection boundary with privacy-safe aggregate facts for category, role, final tier, product verdict, and unresolved-reason code. Do not include user identity, free text, or exact owned-product identity in the aggregate event. Launch fixtures require zero unresolved Oil Basis roles. After activation, alert on any non-zero unresolved-Basis rate or unexpected increase in `noch in Prüfung`; if the complete-plan promise is no longer met, revert and redeploy the complete Personal Plan release rather than hiding Oil independently.
+Instrument the shared Personal Plan selection boundary with privacy-safe aggregate facts for category, role, final tier, product verdict, and unresolved-reason code. Do not include user identity, free text, or exact owned-product identity in the aggregate event. Launch fixtures require zero unresolved Oil Basis roles. After activation, alert on any non-zero unresolved-Basis rate or unexpected increase in `Nicht geprüft`; if the complete-plan promise is no longer met, revert and redeploy the complete Personal Plan release rather than hiding Oil independently.
 
 - research `natuerliches-oel` as `pure_oil` or `oil_blend`; retain pre-wash only when verified directions support it;
 - research `styling-oel` as `oil_blend` or `oil_serum` and verify damp use, dry finish, or both;
@@ -644,9 +639,9 @@ Use one parameterized rule-table matrix that exercises every Oil role-rule row a
 2. `oil-fine-healthy-frizz`: healthy/manageable fine hair with frizz only -> damp smoothing `basis`, dry finish `optional`, no automatic pre-wash role;
 3. `oil-treated-dry-rough`: coarse, materially treated, dry and rough -> pre-wash `basis`, damp and dry support `optional`;
 4. `oil-definition-only`: wavy/curly shape-definition goal or lost shape without an Oil job -> all Oil roles `not_needed`, Styling ownership retained;
-5. `oil-fine-owned-rich-trial`: fitting owned rich leave-on Oil for fine hair -> `supportive` with minimal-dose adjustment, not an immediate forced replacement;
-6. `oil-fine-rich-persists`: overload persists at the correct minimal dose -> `mismatch` and exact lighter alternative;
-7. `oil-thickness-exclusion`: failed `suitableThicknesses` -> `mismatch` regardless of benefits or ownership;
+5. `oil-fine-owned-rich`: rich leave-on Oil against a light target -> two weight steps and `mismatch`; dosage guidance does not override the verdict (canonical model §3–§4);
+6. `oil-fine-rich-persists`: the two-step rich/light mismatch remains at the correct minimal dose; persistent overload warrants reassessment and an exact lighter alternative;
+7. `oil-thickness-distance`: one step -> `supportive`; two steps or two combined one-step misses -> `mismatch`, regardless of benefits or ownership;
 8. `oil-pending-basis`: pending owned product remains visible and excluded from recipes; one verified alternative covers the unresolved Basis role;
 9. `oil-scalp-use-only`: scalp-use answer remains inventory context and produces no Oil recipe;
 10. `oil-one-product-multiple-roles`: one verified product covers pre-wash plus dry finish and is assigned to both occurrences;

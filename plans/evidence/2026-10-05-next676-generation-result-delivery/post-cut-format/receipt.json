@@ -1,0 +1,50 @@
+{
+  "files": [
+    {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "beforeSHA256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e",
+      "afterSHA256": "a8f341e0c28c503ad884069713aef40bf2c6e8c7c4c72679897f9d12787e610b",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "beforeSHA256": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d",
+      "afterSHA256": "09d7939d65ef7ec777792c8760e9d235ca5fb7c07cda7ac7e5dd5aca27bd6097",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-result-artifact-email.test.ts",
+      "beforeSHA256": "ca7db0e5935bba466656696c93b7eae0aead567ccfc0677a6a4e95f3f49e3aeb",
+      "afterSHA256": "d1570200c24724c1e06bb3d60e3337ee0da4c3f545384cfcc1d8fce0681ecdec",
+      "changed": true
+    },
+    {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "beforeSHA256": "83e2747a442e04b2cb78ad30a006f271364a3518c67206920c5263a6d79672d2",
+      "afterSHA256": "ced6baccc7d5eb1fcb5c19e5df667f19897b1334a0d0478f3b0e9519b74fa032",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan/input.test.ts",
+      "beforeSHA256": "d7f2214accabf836566675c1078907bcdba2c781dd8518995a8aec09688215d6",
+      "afterSHA256": "6341cc17a078e8e90466dfa4a1a50991f7ad81cb86791abac4eb40d8329be56a",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan/needs.test.ts",
+      "beforeSHA256": "9c52c4068dc0a33ff4c1186cba3135f109ab571d83c20fccd450547311d823af",
+      "afterSHA256": "7e041aa6ba5ab07fc274990f99702af333f2129699f59f095dca524795c4c6cf",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan/types.test.ts",
+      "beforeSHA256": "ef6d45e06ed534b919578ed4913e6fcf828d790df1a6bae523fa31eb1b2fd3a9",
+      "afterSHA256": "5613242b344ed687433e826bbba51eac59deaeffc2e1a444cfdb67d2ccfd9127",
+      "changed": true
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

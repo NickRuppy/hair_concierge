@@ -7,7 +7,7 @@ import {
   HAIR_LENGTHS,
   HAIR_DENSITIES,
   PROFILE_CONCERNS,
-  GOALS,
+  ENGINE_GOALS,
   DESIRED_VOLUME_LEVELS,
   STYLING_TOOLS,
   HEAT_STYLING_LEVELS,
@@ -40,7 +40,6 @@ import {
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
   PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   PRODUCT_PEELING_TYPES,
@@ -74,7 +73,7 @@ export const hairProfileFullSchema = z.object({
   styling_tools: z.array(z.enum(STYLING_TOOLS)).nullable().default(null),
   desired_volume: z.enum(DESIRED_VOLUME_LEVELS).nullable().default(null),
   routine_preference: z.enum(ROUTINE_PREFERENCES).nullable().default(null),
-  goals: z.array(z.enum(GOALS)).default([]),
+  goals: z.array(z.enum(ENGINE_GOALS)).default([]),
   towel_material: z.enum(TOWEL_MATERIALS).nullable().default(null),
   towel_technique: z.enum(TOWEL_TECHNIQUES).nullable().default(null),
   drying_method: z.enum(DRYING_METHODS).nullable().default(null),
@@ -104,7 +103,6 @@ const conditionerSpecsSchema = z.object({
 
 const bondbuilderSpecsSchema = z
   .object({
-    bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
     application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
     bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
     treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
@@ -125,9 +123,13 @@ const bondbuilderSpecsSchema = z
   })
   .strict()
   .superRefine((specs, ctx) => {
-    const newKeys = ["technology_family", "claim_trust_level", "trust_basis", "research_profile"] as const
+    const newKeys = [
+      "technology_family",
+      "claim_trust_level",
+      "trust_basis",
+      "research_profile",
+    ] as const
     const legacyKeys = [
-      "bond_repair_intensity",
       "application_mode",
       "bond_repair_axis",
       "treatment_mode",
@@ -167,7 +169,7 @@ const bondbuilderSpecsSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["research_profile"],
-        message: validation.error.issues.map(issue => issue.message).join("; "),
+        message: validation.error.issues.map((issue) => issue.message).join("; "),
       })
       return
     }
@@ -229,6 +231,20 @@ export const chatFeedbackSchema = z.object({
   score: z.union([z.literal(-1), z.literal(1)]),
 })
 
+/**
+ * A recommended product must keep a market segment (DB CHECK
+ * products_recommended_requires_market_segment). Checked before any write so an admin update
+ * that would clear it never commits its spec changes first. `requested` undefined = unchanged.
+ */
+export function recommendedProductLosesMarketSegment(input: {
+  recommended: boolean | null
+  current: string | null
+  requested: string | null | undefined
+}): boolean {
+  const next = input.requested === undefined ? input.current : input.requested
+  return input.recommended === true && next == null
+}
+
 export const productSchema = z
   .object({
     name: z.string().min(1, "Name ist erforderlich."),
@@ -252,6 +268,9 @@ export const productSchema = z
     suitable_concerns: z.array(z.string()).default([]),
     is_active: z.boolean().default(true),
     lifecycle_status: z.enum(["active", "discontinued"]).default("active"),
+    // Validated against the enum whenever it is sent. A recommended product needs one (DB CHECK
+    // products_recommended_requires_market_segment, since the 2026-10-09 backfill).
+    market_segment: z.enum(["drugstore", "professional"]).nullable().optional(),
     sort_order: z.number().int().default(0),
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),
     leave_in_specs: leaveInSpecsSchema.nullable().optional(),

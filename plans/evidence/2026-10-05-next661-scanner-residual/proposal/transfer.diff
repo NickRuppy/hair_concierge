@@ -1,0 +1,87 @@
+--- before/tests/scan-masked-alternative.test.ts
++++ transfer/tests/scan-masked-alternative.test.ts
+@@ -86,6 +86,10 @@
+   assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)
+   assert.equal(masked.coverage, inCatalogVerdict.coverage)
+   assert.equal(masked.dimensions, inCatalogVerdict.dimensions)
++  assert.deepEqual(masked.alternatives[0].comparison, {
++    rows: [{ rowId: "shampoo.scalp_route", label: "Kopfhaut-Fokus", state: "match" }],
++    summaryScore: 1,
++  })
+   for (const entry of masked.alternatives as ScanMaskedAlternative[]) {
+     assert.deepEqual(Object.keys(entry).sort(), ["comparison", "verdict", "verdictLabel"])
+   }
+--- before/tests/scan-pending-submission.test.ts
++++ transfer/tests/scan-pending-submission.test.ts
+@@ -59,7 +59,10 @@
+ test("findOpenScanSubmission: queries every GTIN spelling of the same number", async () => {
+   const { client, filters } = stubClient({ data: null, error: null })
+ 
+-  await findOpenScanSubmission(client as never, "user-1", "0022796976116")
++  assert.equal(
++    await findOpenScanSubmission(client as never, "user-1", "0022796976116"),
++    null,
++  )
+ 
+   assert.deepEqual(filters.get("scanned_identifier_value"), [
+     "0022796976116",
+--- before/tests/scan-profile-context.test.ts
++++ transfer/tests/scan-profile-context.test.ts
+@@ -79,6 +79,7 @@
+   const context = await loadScanEvaluationContext(stubClient(source) as never, "owner")
+   assert.equal(context?.snapshotSource, "initial")
+   assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)
++  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)
+ })
+ 
+ test("loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial", async () => {
+--- before/tests/scan-resolve-anti-leak.test.ts
++++ transfer/tests/scan-resolve-anti-leak.test.ts
+@@ -311,6 +311,33 @@
+         )
+       }
+     })
++
++    assert.equal(body.alternatives.length, 2)
++    const keysSeen = new Set<string>()
++    everyKey(body.alternatives, keysSeen)
++    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {
++      assert.equal(
++        keysSeen.has(forbidden),
++        false,
++        `masked alternatives carried forbidden key "${forbidden}"`,
++      )
++    }
++    assert.deepEqual([...keysSeen].sort(), [
++      "comparison",
++      "label",
++      "rowId",
++      "rows",
++      "state",
++      "summaryScore",
++      "verdict",
++      "verdictLabel",
++    ])
++    const labels = (
++      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>
++    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))
++    assert.deepEqual(labels.sort(), ["Kopfhaut-Fokus", "Reinigungsstärke"].sort())
++    assert.equal(body.alternatives[1].verdict, "supportive")
++    assert.equal(body.alternatives[1].verdictLabel, "Passt eingeschränkt")
+   })
+ })
+ 
+--- before/tests/scan-trigger-session-marker.test.ts
++++ transfer/tests/scan-trigger-session-marker.test.ts
+@@ -45,8 +45,9 @@
+ 
+ test("recordScanSession: the count keeps climbing across further 30-minute gaps", () => {
+   const storage = createMemoryScanTriggerStorage()
+-  recordScanSession(storage, 1_000)
+-  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)
++  assert.equal(recordScanSession(storage, 1_000), 1)
++  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), "fresh session must persist the session record")
++  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)
+   assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)
+ })
+ 

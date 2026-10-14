@@ -1,0 +1,544 @@
+{
+  "blindId": "T414",
+  "inciFingerprintSha256": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+  "identity": {
+    "brand": "Syoss (Henkel)",
+    "productName": "Syoss Intense Fullness Kräftigendes Shampoo (Rossmann: Shampoo Intense Fullness), 440 ml",
+    "market": "DE",
+    "packSize": "440 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "normalization": [
+      "Aqua (Water, Eau) one entry; normalized positions = packet positions.",
+      "E3 cut: Parfum at 10; prominent = 2-9.",
+      "Identity confidence moderate; no conflict visible -> no cap."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T414.json (fingerprint 0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T414.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T414.json#positioningSources[1] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de": "moderate",
+    "rossmann.de": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional; verdict repair_supported)",
+      "final": "volume",
+      "evidence": "name 'Intense Fullness'",
+      "reason": "dominant claim"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (3) and no prominent reinforcing strong anionic -> moderate. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "refatter PEG-7 Glyceryl Cocoate (5)"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T414.json (fingerprint 0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "C2 not met: early silicone Dimethicone (8), cationic guar (13) and pearlizing Glycol Distearate (16) present, plus Amodimethicone (12), Hydrolyzed Keratin (6) and refatter PEG-7 Glyceryl Cocoate (5), but no R11 humectant (no Glycerin/Panthenol etc.). R11: missing humectant is the counter-signal -> moderate, high as neighbor. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 5,
+        "role": "weak refatter, E4"
+      },
+      {
+        "ingredient": "Hydrolyzed Keratin",
+        "position": 6,
+        "role": "protein film"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 8,
+        "role": "early silicone"
+      },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 12,
+        "role": "amino-silicone"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 15,
+        "role": "waxy lipid (late)"
+      },
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 16,
+        "role": "pearlizer"
+      }
+    ],
+    "counterSignal": [
+      "three C2 elements plus amodimethicone and protein"
+    ],
+    "neighboringAlternative": "high",
+    "sources": [
+      "formula/T414.json (fingerprint 0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "moderate: silicone (incl. amodimethicone)/guar system with light protein and refatter in an ordinary C1 base: noticeable but bounded residue. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "high",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Early Dimethicone (8), Amodimethicone (12), guar (13), keratin (6), PEG-7 Glyceryl Cocoate (5); late HCO (15) and apricot oil (21)."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Amodimethicone + dimethicone via guar are persistent; protein and refatter light; lipids late."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/CAPB chassis."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "silicone": [
+        [
+          "Dimethicone",
+          8
+        ],
+        [
+          "Amodimethicone",
+          12
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          13
+        ]
+      ],
+      "protein_film": [
+        [
+          "Hydrolyzed Keratin",
+          6
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "PEG-7 Glyceryl Cocoate",
+          5
+        ]
+      ],
+      "payload_lipid": [
+        [
+          "Hydrogenated Castor Oil",
+          15
+        ],
+        [
+          "Prunus Armeniaca (Apricot) Kernel Oil",
+          21
+        ]
+      ],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Propylene Glycol",
+          26
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Glycol Distearate",
+        16,
+        "pearlizer"
+      ],
+      [
+        "PEG-40 Hydrogenated Castor Oil",
+        14,
+        "solubilizer"
+      ],
+      [
+        "PEG-120 Methyl Glucose Dioleate",
+        18,
+        "PEG thickener"
+      ],
+      [
+        "Laureth-4",
+        17,
+        "thickener"
+      ],
+      [
+        "Laureth-23",
+        20,
+        "solubilizer"
+      ],
+      [
+        "Trideceth-10",
+        22,
+        "solubilizer"
+      ],
+      [
+        "Niacinamide",
+        7,
+        "vitamin"
+      ]
+    ],
+    "whyThisBand": "moderate: silicone (incl. amodimethicone)/guar system with light protein and refatter in an ordinary C1 base: noticeable but bounded residue.",
+    "whyNotNeighborBand": "W1 not applicable: its set is present but a prominent protein film (Hydrolyzed Keratin 6) reinforces it (condition c), so the full method decides. Not high: no W-RICH (lipids after Parfum), reset moderate, protein/refatter light. Not low: several converging families (W2).",
+    "counterEvidence": [
+      "amodimethicone persistence; protein reinforcement"
+    ],
+    "confidenceLimitingFactor": "Silicone levels unknown; could move to high.",
+    "formulaFacts": [
+      {
+        "ingredient": "Dimethicone",
+        "position": 8,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 12,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Hydrolyzed Keratin",
+        "position": 6,
+        "family": "protein_film"
+      },
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 5,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 15,
+        "family": "payload_lipid"
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 21,
+        "family": "payload_lipid"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 26,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "amodimethicone persistence; protein reinforcement"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "moderate",
+      "captureDate": "not stated in packet",
+      "normalization": "Aqua (Water, Eau) one entry; normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T414.json (fingerprint 0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "volume",
+    "confidence": "moderate",
+    "rationale": "'Intense Fullness' in the exact name (high) and the 'Niacinamide-Volumen-Komplex' (manufacturer): fullness/body is the dominant job. Formula compatible with counter-signal: weightPotential moderate (silicones incl. amodimethicone).",
+    "formulaFacts": [
+      {
+        "ingredient": "Niacinamide",
+        "position": 7
+      },
+      {
+        "ingredient": "Hydrolyzed Keratin",
+        "position": 6
+      }
+    ],
+    "counterSignal": [
+      "weightPotential moderate (Dimethicone 8, Amodimethicone 12, guar 13)",
+      "'Kräftigend'/'stärkt von innen' strengthening wording"
+    ],
+    "neighboringAlternative": "general",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "moderate",
+    "rationale": "'Kräftigend'/'stärkt das Haar von innen' is strengthening for fullness, not damage repair positioning; no distinct second role.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "strengthening is part of the fullness claim"
+    ],
+    "neighboringAlternative": [
+      "repair"
+    ],
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "repairRoutes": [
+        "Hydrolyzed Keratin 6",
+        "Dimethicone 8",
+        "Amodimethicone 12",
+        "Guar 13"
+      ],
+      "moistureRoutes": [],
+      "sharedRoutes": [
+        "Guar 13"
+      ],
+      "limitation": "chosen focus is volume; repair verdict recorded as trade-off"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "weightPotential moderate (Dimethicone 8, Amodimethicone 12, guar 13)",
+      "'Kräftigend'/'stärkt von innen' strengthening wording"
+    ],
+    "neighboringAlternative": "general",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "volume/fullness (name)",
+        "formulaCompatible": true,
+        "compatibleRoute": "no rich lipid architecture; light protein",
+        "decisionReason": "7.2 dominant claim, formula compatible with trade-off"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "Kräftigendes Shampoo"
+        ],
+        "independentRoutes": [
+          "Hydrolyzed Keratin 6"
+        ],
+        "whyDistinctFromPrimary": "strengthening is part of the fullness claim",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No trigger.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "No scalp claims.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T414.json (fingerprint 0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor high -> not_suited (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor high -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1 with manufacturer source."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (weightPotential neighbor high -> not_suited)",
+      "review_thickness_boundary:normal (weightPotential neighbor high -> acceptable)"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Silicone levels unknown; could move to high.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "W1 condition (c) fails due to prominent keratin",
+      "alternative": "W1 applies -> moderate (same band)"
+    },
+    {
+      "reading": "conditioning moderate (R11)",
+      "alternative": "high"
+    },
+    {
+      "reading": "volume compatible at W moderate",
+      "alternative": "general (if W moderate is judged incompatible with a fullness job)"
+    }
+  ]
+}

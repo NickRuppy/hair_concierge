@@ -222,8 +222,11 @@ test("Stripe webhook completes a paid reactivation without browser return and no
 
 test("Stripe duplicate webhook safely repeats completion of the same bound reservation", async () => {
   const f = fixture()
-  await handleCheckoutSessionCompleted(f.session, f.deps)
-  await handleCheckoutSessionCompleted(f.session, f.deps)
+  const first = await handleCheckoutSessionCompleted(f.session, f.deps)
+  const second = await handleCheckoutSessionCompleted(f.session, f.deps)
+  assert.equal(first.userId, userId)
+  assert.equal(second.userId, userId)
+  assert.equal(second.canSetInitialPassword, false)
   assert.equal(f.reservation.status, "completed")
   assert.equal(f.billing.length, 1)
   assert.equal(f.users.length, 1)
@@ -283,18 +286,6 @@ test("webhook before provider binding remains retryable and never creates anothe
   f.reservation.provider_reference = f.session.id
   f.reservation.status = "provider_created"
   assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)
-})
-
-test("duplicate completed webhook retains account and never grants initial-password capability", async () => {
-  const f = fixture()
-  const first = await ensureCheckoutAccount(f.session, f.deps)
-  f.reservation.status = "completed"
-  const second = await ensureCheckoutAccount(f.session, f.deps)
-  assert.equal(first.userId, userId)
-  assert.equal(second.userId, userId)
-  assert.equal(second.canSetInitialPassword, false)
-  assert.equal(f.billing.length, 1)
-  assert.equal(f.users.length, 1)
 })
 
 for (const reason of [
@@ -418,6 +409,7 @@ test("concurrent login email change cannot be overwritten by a stale activation"
 test("competing subscription insert is adopted only for the same immutable account", async () => {
   for (const owner of [userId, "other-owner"]) {
     const f = fixture()
+    const originalProfile = { ...f.profiles[0] }
     f.raceBilling(() =>
       f.billing.push({
         provider: "stripe",
@@ -427,29 +419,15 @@ test("competing subscription insert is adopted only for the same immutable accou
     )
     if (owner === userId)
       assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)
-    else
+    else {
       await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {
         code: "checkout_ownership_conflict",
       })
+      assert.deepEqual(f.profiles[0], originalProfile)
+      assert.deepEqual(f.writes, [])
+    }
     assert.equal(f.billing.length, 1)
     assert.equal(f.billing[0].user_id, owner)
     assert.equal(f.users.length, 1)
   }
-})
-
-test("late conflicting billing owner cannot grant access through the profile mirror", async () => {
-  const f = fixture()
-  const originalProfile = { ...f.profiles[0] }
-  f.raceBilling(() =>
-    f.billing.push({
-      provider: "stripe",
-      provider_subscription_id: "sub_reactivation",
-      user_id: "other-owner",
-    }),
-  )
-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {
-    code: "checkout_ownership_conflict",
-  })
-  assert.deepEqual(f.profiles[0], originalProfile)
-  assert.deepEqual(f.writes, [])
 })

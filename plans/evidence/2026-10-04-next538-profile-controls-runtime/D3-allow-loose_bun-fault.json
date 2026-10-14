@@ -1,0 +1,18 @@
+{
+  "log": "/tmp/profile-care-run-cMESmz/D3-allow-loose_bun-fault.tap",
+  "code": 1,
+  "signal": null,
+  "boundedFailure": null,
+  "spawnError": null,
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^night protection options include length tip accessory and remove tight hairstyles$",
+    "tests/onboarding-care-vocabulary.test.ts"
+  ]
+}

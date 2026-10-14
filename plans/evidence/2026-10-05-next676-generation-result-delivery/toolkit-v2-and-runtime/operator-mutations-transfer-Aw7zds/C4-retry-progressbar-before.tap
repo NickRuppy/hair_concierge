@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: timeout and transient states lead with a retry state instead of a live check
+ok 1 - timeout and transient states lead with a retry state instead of a live check
+  ---
+  duration_ms: 10.19025
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 337.694834

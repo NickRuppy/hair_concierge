@@ -1,0 +1,781 @@
+[
+  {
+    "id": "recovery-forward-link",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Forward CTA /plan-start exact href regex fails; retry remains present.",
+    "source": "src/app/routine/page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+      "name": "Routine unavailable recovery offers an explicit reload action"
+    },
+    "originalHash": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/recovery-forward-link-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/recovery-forward-link-fault.tap"
+    },
+    "restoredHash": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/recovery-forward-link-after.tap"
+    },
+    "keeperAssertionLines": [
+      186,
+      187,
+      189,
+      194,
+      197
+    ],
+    "assertionStacks": [
+      189
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "portfolio-scope-id",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "source": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "name": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays"
+    },
+    "originalHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-id-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-id-fault.tap"
+    },
+    "restoredHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-id-after.tap"
+    },
+    "keeperAssertionLines": [
+      341,
+      342,
+      343,
+      348,
+      349,
+      350,
+      356
+    ],
+    "assertionStacks": [
+      343
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "portfolio-scope-user_id",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "source": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "name": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays"
+    },
+    "originalHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-user_id-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-user_id-fault.tap"
+    },
+    "restoredHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-user_id-after.tap"
+    },
+    "keeperAssertionLines": [
+      341,
+      342,
+      343,
+      348,
+      349,
+      350,
+      356
+    ],
+    "assertionStacks": [
+      343
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "portfolio-scope-personal_plan_id",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "source": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "name": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays"
+    },
+    "originalHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-personal_plan_id-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-personal_plan_id-fault.tap"
+    },
+    "restoredHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-scope-personal_plan_id-after.tap"
+    },
+    "keeperAssertionLines": [
+      341,
+      342,
+      343,
+      348,
+      349,
+      350,
+      356
+    ],
+    "assertionStacks": [
+      343
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "portfolio-schema-delivery",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "body.presentation.schemaVersion 2 != 3; status and retained-name outputs preserved.",
+    "source": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "name": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays"
+    },
+    "originalHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-schema-delivery-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-schema-delivery-fault.tap"
+    },
+    "restoredHash": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/portfolio-schema-delivery-after.tap"
+    },
+    "keeperAssertionLines": [
+      341,
+      342,
+      343,
+      348,
+      349,
+      350,
+      356
+    ],
+    "assertionStacks": [
+      342
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "products-negative",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred withoutFlag negative rejects leaked Mach deinen Plan genauer.; no callback/effect execution is claimed.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast is absent without the signal"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/products-negative-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/products-negative-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/products-negative-after.tap"
+    },
+    "keeperAssertionLines": [
+      1195,
+      1196,
+      1197,
+      1198,
+      1201
+    ],
+    "assertionStacks": [
+      1195
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "habits-negative",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred withoutFlag negative rejects leaked Noch ein Schritt: deine Gewohnheiten.; no callback/effect execution is claimed.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast is absent without the signal"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-negative-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-negative-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-negative-after.tap"
+    },
+    "keeperAssertionLines": [
+      1195,
+      1196,
+      1197,
+      1198,
+      1201
+    ],
+    "assertionStacks": [
+      1196
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "dismiss-negative",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred withoutFlag negative rejects leaked Hinweis schließen; no callback/effect execution is claimed.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast is absent without the signal"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/dismiss-negative-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/dismiss-negative-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/dismiss-negative-after.tap"
+    },
+    "keeperAssertionLines": [
+      1195,
+      1196,
+      1197,
+      1198,
+      1201
+    ],
+    "assertionStacks": [
+      1197
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "progress-negative",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred withoutFlag negative rejects leaked 3 von 4; no callback/effect execution is claimed.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast is absent without the signal"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/progress-negative-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/progress-negative-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/progress-negative-after.tap"
+    },
+    "keeperAssertionLines": [
+      1195,
+      1196,
+      1197,
+      1198,
+      1201
+    ],
+    "assertionStacks": [
+      1198
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "toast-status",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred role=status regex fails; no blocking Basis gap or banner status role is present in this exact keeper.",
+    "source": "src/components/routine/personal-plan/routine-plan-updated-toast.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit"
+    },
+    "originalHash": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-status-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-status-fault.tap"
+    },
+    "restoredHash": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-status-after.tap"
+    },
+    "keeperAssertionLines": [
+      1219,
+      1220,
+      1221,
+      1225,
+      1226,
+      1227,
+      1231,
+      1234
+    ],
+    "assertionStacks": [
+      1220
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "toast-above-basis",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Both slots move after Basis, preserving toast-before-banner original assertion. Transferred toast-before-Basis assertion now fails.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-above-basis-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-above-basis-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/toast-above-basis-after.tap"
+    },
+    "keeperAssertionLines": [
+      1219,
+      1220,
+      1221,
+      1225,
+      1226,
+      1227,
+      1231,
+      1234
+    ],
+    "assertionStacks": [
+      1221
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "habits-above-basis",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Toast remains above Basis and banner; only transferred habits-before-Basis assertion fails.",
+    "source": "src/components/routine/personal-plan/routine-page.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit"
+    },
+    "originalHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-above-basis-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-above-basis-fault.tap"
+    },
+    "restoredHash": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-above-basis-after.tap"
+    },
+    "keeperAssertionLines": [
+      1219,
+      1220,
+      1221,
+      1225,
+      1226,
+      1227,
+      1231,
+      1234
+    ],
+    "assertionStacks": [
+      1227
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "habits-progress",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred >3 von 4< regex fails as4of4; original title and ordering remain.",
+    "source": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit"
+    },
+    "originalHash": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-progress-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-progress-fault.tap"
+    },
+    "restoredHash": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-progress-after.tap"
+    },
+    "keeperAssertionLines": [
+      1219,
+      1220,
+      1221,
+      1225,
+      1226,
+      1227,
+      1231,
+      1234
+    ],
+    "assertionStacks": [
+      1225
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "habits-duration",
+    "lane": "routine",
+    "phase": "new",
+    "intended": "Transferred Weiter · 3 Min regex fails; title/order unchanged.",
+    "source": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "name": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit"
+    },
+    "originalHash": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-duration-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-duration-fault.tap"
+    },
+    "restoredHash": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next504-routine-mutations-controls/habits-duration-after.tap"
+    },
+    "keeperAssertionLines": [
+      1219,
+      1220,
+      1221,
+      1225,
+      1226,
+      1227,
+      1231,
+      1234
+    ],
+    "assertionStacks": [
+      1226
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

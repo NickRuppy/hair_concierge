@@ -1,0 +1,14 @@
+[
+  {
+    "file": "post-index-independent/test-audit-dormant-rollout-independent-preservation.md",
+    "sha256": "7a1b7628df73ff1c1641c5a8569a545daa7a5ae48fd0c5aad56cc85385aa5e0a"
+  },
+  {
+    "file": "post-index-independent/test-audit-dormant-rollout-independent-receipt.json",
+    "sha256": "d2fdb04045f035b761d7057cdd554615b95466b8c5dc23c6a970511c3445b188"
+  },
+  {
+    "file": "post-index-independent/test-audit-dormant-rollout-independent-static.json",
+    "sha256": "8694643e8e303df64aa0782e751e70a32da3584cbf32ed9dade78b720d81df6b"
+  }
+]

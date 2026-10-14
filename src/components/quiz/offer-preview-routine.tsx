@@ -1,4 +1,4 @@
-import { ArrowDown, Check, LockKeyhole } from "lucide-react"
+import { LockKeyhole } from "lucide-react"
 
 import type { OfferPreviewCategory, QuizOfferPreview } from "@/lib/quiz/offer-preview-types"
 
@@ -12,64 +12,14 @@ export const OFFER_PREVIEW_CATEGORY_TITLES: Record<OfferPreviewCategory, string>
   bondbuilder: "Bondbuilder",
 }
 
-export function OfferPreviewRoutine({
-  preview,
-  routineOnly = false,
-}: {
-  preview: QuizOfferPreview
-  routineOnly?: boolean
-}) {
+export function OfferPreviewRoutine({ preview }: { preview: QuizOfferPreview }) {
   const foundationProducts = preview.products.filter((product) => !product.suggested)
   const lockedProduct = preview.products.find((product) => product.suggested)
 
   return (
-    <section className={routineOnly ? "pt-4" : "border-t border-border py-9"}>
-      {!routineOnly ? (
-        <div data-offer-section="personalized_analysis">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            Das wissen wir schon aus deinem Quiz
-          </p>
-          <h2 className="mt-2 font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-            Deine Pflegebasis wird konkret.
-          </h2>
-          <p className="mt-3 text-[14px] leading-[1.65] text-muted-foreground">{preview.summary}</p>
-
-          <div className="mt-6 overflow-hidden rounded-[18px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)]/55">
-            {preview.signals.map((signal) => (
-              <div
-                key={signal.label}
-                className="flex gap-3 border-b border-[var(--brand-plum-light)] px-4 py-3.5 last:border-b-0"
-              >
-                <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-white text-[var(--brand-plum)]">
-                  <Check className="size-3.5" aria-hidden="true" />
-                </span>
-                <span>
-                  <strong className="block text-[13px] text-[var(--brand-plum-darkest)]">
-                    {signal.label}
-                  </strong>
-                  <span className="mt-0.5 block text-[12px] leading-relaxed text-muted-foreground">
-                    {signal.conclusion}
-                  </span>
-                </span>
-              </div>
-            ))}
-            <div className="flex items-center justify-center gap-2 border-t border-[var(--brand-plum-light)] bg-white/70 px-4 py-3 font-mono text-[9px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
-              <ArrowDown className="size-3.5" aria-hidden="true" />
-              Daraus ergibt sich deine Mini-Routine
-            </div>
-          </div>
-        </div>
-      ) : null}
-
+    <section className="pt-4">
       <div data-offer-section="mini_routine">
-        {!routineOnly ? (
-          <p className="mt-5 text-[12px] leading-relaxed text-muted-foreground">
-            Mit konkreten Beispielen aus unserer Produktdatenbank. Das sind noch nicht deine finalen
-            Produktempfehlungen.
-          </p>
-        ) : null}
-
-        <div className={routineOnly ? "space-y-3" : "mt-4 space-y-3"}>
+        <div className="space-y-3">
           {foundationProducts.map((product) => (
             <article
               key={product.key}

@@ -1,0 +1,41 @@
+'use strict'
+// Main only. --check is read-only; transfer/cut are deliberate repository mutations.
+const fs=require('node:fs'),path=require('node:path')
+const g=require('/tmp/test-audit-billing-trial210-tools-ybzravna/operator-guard.cjs')
+const PIN_SHA='d3d69c9f8268ba893e5d34e0469631e3cc6159a5b8af42194933126034ec2ed4'
+const mode=(process.argv[2]||'check').replace(/^--/,'')
+if(!['check','transfer','cut'].includes(mode)||process.argv.length>3)g.fail('Use --check | transfer | cut')
+const context=g.load(PIN_SHA)
+for(const control of context.controls)g.fault(context,control)
+const initial=context.current()
+if(mode==='check'){
+  console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,untouchedCallbacks:context.untouched,parsedPhaseFiles:93,sourceControlsParsed:context.controls.length,readsetGuards:context.pins.readset.length,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+}
+const from=mode==='transfer'?'before':'transfer'
+if(initial.phase!==from)g.fail('Expected '+from+', got '+initial.phase)
+const dir=fs.mkdtempSync(g.BASE+'-apply-'+mode+'-'),unlock=g.lock(),written=[]
+const outputs=Object.keys(context.snapshots).map(file=>({file,original:initial.bytes[file],target:context.snapshots[file][mode].bytes}))
+try{
+  for(const output of outputs){const p=path.join(dir,'originals',output.file);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,output.original,{flag:'wx'})}
+  fs.writeFileSync(path.join(dir,'intent.json'),JSON.stringify({mode,from,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,files:outputs.map(o=>({file:o.file,before:g.sha(o.original),after:g.sha(o.target)})),sourceGuards:context.pins.readset},null,2)+'\n',{flag:'wx'})
+  // ALL93 outputs parsed/reconstructed and all31 originals snapshotted before first write.
+  const fresh=context.current()
+  if(fresh.phase!==from)g.fail('Phase changed before first write')
+  for(const o of outputs)if(!o.original.equals(fresh.bytes[o.file]))g.fail('Full cohort prewrite CAS')
+  for(const output of outputs){
+    if(output.original.equals(output.target))continue
+    context.guards()
+    g.atomicCAS(output.file,output.original,output.target);written.push(output)
+  }
+  const final=context.current()
+  if(final.phase!==mode)g.fail('Postwrite phase mismatch')
+  fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify({mode,from,phase:final.phase,counts:context.counts,changed:written.map(o=>o.file),allTestHashes:Object.fromEntries(outputs.map(o=>[o.file,g.sha(o.target)])),sourceWrites:0,testsRun:0,originals:path.join(dir,'originals')},null,2)+'\n',{flag:'wx'})
+  console.log(JSON.stringify({mode,receiptDir:dir,changed:written.length,counts:context.counts},null,2))
+}catch(error){
+  const rollback=[]
+  for(const output of [...written].reverse()){
+    try{g.atomicCAS(output.file,output.target,output.original);rollback.push({file:output.file,restored:g.sha(fs.readFileSync(path.join(g.ROOT,output.file)))===g.sha(output.original)})}
+    catch(recoveryError){rollback.push({file:output.file,restored:false,error:String(recoveryError),note:'Concurrent bytes preserved; original backup retained'})}
+  }
+  fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback},null,2)+'\n',{flag:'wx'});throw error
+}finally{unlock()}

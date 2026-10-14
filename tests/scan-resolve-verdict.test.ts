@@ -1,4 +1,6 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import type { Stage3CategoryProductFacts } from "../src/lib/personal-plan/products/authority/contracts"
@@ -307,6 +309,7 @@ function scanInput(
   return {
     productFacts: null,
     recommendationCandidates: [],
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
@@ -343,28 +346,9 @@ test("a not_needed category answers with the need verdict instead of a fit verdi
   assert.equal("verdict" in payload, false)
   assert.equal("criteria" in payload, false)
   assert.equal("alternatives" in payload, false)
-})
 
-test("not_needed reasons render as German copy and unmapped reason ids stay hidden", () => {
-  const payload = buildScanVerdict(
-    scanInput({ category: "mask", decision: notNeededMaskDecision(), coverage: COVERAGE_FACTS }),
-  )
-
-  assert.equal(payload.kind, "not_needed")
-  if (payload.kind !== "not_needed") return
   assert.deepEqual(payload.reasons, ["Deine Längen zeigen aktuell keinen erhöhten Pflegebedarf."])
   assert.ok(payload.reasons.every((reason) => !reason.includes("mask.")))
-})
-
-test("not_needed names what already covers the job from the snapshot coverage facts", () => {
-  const payload = buildScanVerdict(
-    scanInput({ category: "mask", decision: notNeededMaskDecision(), coverage: COVERAGE_FACTS }),
-  )
-
-  assert.equal(payload.kind, "not_needed")
-  if (payload.kind !== "not_needed") return
-  // Only the owned/shared fact that names the scanned category, and never the scanned
-  // category itself as its own cover.
   assert.deepEqual(payload.coveredBy, [{ label: "Conditioner", detail: "Repair-Pflege" }])
 })
 
@@ -376,6 +360,8 @@ test("not_needed without any covering fact leaves the coverage list empty", () =
   assert.equal(payload.kind, "not_needed")
   if (payload.kind !== "not_needed") return
   assert.deepEqual(payload.coveredBy, [])
+
+  assert.deepEqual(payload.dimensions, [])
 })
 
 test("not_needed dimensions show the product without inventing a target", () => {
@@ -398,16 +384,6 @@ test("not_needed dimensions show the product without inventing a target", () => 
   assert.ok(payload.dimensions.every((dimension) => dimension.stops.length > 0))
   const weight = payload.dimensions.find((dimension) => dimension.dimensionId === "mask.weight")
   assert.deepEqual(weight?.productStopIds, ["rich"])
-})
-
-test("not_needed without a scanned product carries no dimensions", () => {
-  const payload = buildScanVerdict(
-    scanInput({ category: "mask", decision: notNeededMaskDecision() }),
-  )
-
-  assert.equal(payload.kind, "not_needed")
-  if (payload.kind !== "not_needed") return
-  assert.deepEqual(payload.dimensions, [])
 })
 
 /* ---------------------------------------------------------------- deferred */
@@ -461,73 +437,6 @@ test("deferred mode keeps the product-only dimensions of the need branch", () =>
 })
 
 /* ------------------------------------------------------------ single role */
-
-test("a single-role category reports the verdict, dimensions, and target subtitle", () => {
-  const payload = buildScanVerdict(
-    scanInput({
-      category: "conditioner",
-      decision: conditionerDecision(),
-      productFacts: factsFor("conditioner", "conditioner_rinse_out", "scanned-conditioner"),
-    }),
-  )
-
-  assert.equal(payload.kind, "in_catalog")
-  if (payload.kind !== "in_catalog") return
-  assert.equal(payload.verdict, "ideal")
-  assert.equal(payload.verdictLabel, "Passt")
-  assert.equal(payload.verdictTitle, "Passt zu deinem Haar")
-  assert.equal(payload.status, "ok")
-  assert.equal(payload.evaluatedRole, "conditioner_rinse_out")
-  assert.equal(payload.evaluatedRoleLabel, "Pflege nach der Wäsche")
-  assert.deepEqual(payload.coverage, { matches: 4, total: 4 })
-  assert.equal(payload.subtitle, "4 von 4 Zielbereichen getroffen")
-  assert.ok(payload.criteria.length > 0)
-  assert.deepEqual(
-    payload.dimensions.map((dimension) => dimension.dimensionId),
-    [
-      "conditioner.weight",
-      "conditioner.care_direction",
-      "conditioner.repair_support",
-      "conditioner.suitable_thicknesses",
-    ],
-  )
-  const weight = payload.dimensions.find(
-    (dimension) => dimension.dimensionId === "conditioner.weight",
-  )
-  assert.deepEqual(weight?.targetStopIds, ["light"])
-  assert.deepEqual(weight?.productStopIds, ["light"])
-  assert.equal(weight?.state, "in_target")
-  assert.deepEqual(payload.fitNarrative, {
-    productCriteria: "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
-    fit: "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
-  })
-})
-
-test("a product outside the target renders the missed dimension as outside_target", () => {
-  const payload = buildScanVerdict(
-    scanInput({
-      category: "conditioner",
-      decision: conditionerDecision(),
-      productFacts: factsFor("conditioner", "conditioner_rinse_out", "scanned-conditioner", {
-        weight: "rich",
-        balanceDirection: "protein",
-        careDirection: "protein",
-      }),
-    }),
-  )
-
-  assert.equal(payload.kind, "in_catalog")
-  if (payload.kind !== "in_catalog") return
-  assert.equal(payload.verdict, "mismatch")
-  assert.equal(payload.verdictLabel, "Passt nicht")
-  assert.equal(payload.verdictTitle, "Passt nicht zu deinem Haar")
-  assert.equal(payload.status, "danger")
-  const weight = payload.dimensions.find(
-    (dimension) => dimension.dimensionId === "conditioner.weight",
-  )
-  assert.equal(weight?.state, "outside_target")
-  assert.deepEqual(weight?.productStopIds, ["rich"])
-})
 
 /* -------------------------------------------------------------- multi role */
 
@@ -638,6 +547,34 @@ test("a fitting product still offers alternatives (ruling R12)", () => {
   assert.ok(
     payload.alternatives.every((alternative) => alternative.productId !== "scanned-conditioner"),
   )
+
+  assert.equal(payload.verdictLabel, "Passt")
+  assert.equal(payload.verdictTitle, "Passt")
+  assert.equal(payload.status, "ok")
+  assert.equal(payload.evaluatedRole, "conditioner_rinse_out")
+  assert.equal(payload.evaluatedRoleLabel, "Pflege nach der Wäsche")
+  assert.deepEqual(payload.coverage, { matches: 4, total: 4 })
+  assert.equal(payload.subtitle, "4 von 4 Zielbereichen getroffen")
+  assert.ok(payload.criteria.length > 0, "the fitting scanned product retains its criteria")
+  assert.deepEqual(
+    payload.dimensions.map((dimension) => dimension.dimensionId),
+    [
+      "conditioner.weight",
+      "conditioner.care_direction",
+      "conditioner.repair_support",
+      "conditioner.suitable_thicknesses",
+    ],
+  )
+  const weight = payload.dimensions.find(
+    (dimension) => dimension.dimensionId === "conditioner.weight",
+  )
+  assert.deepEqual(weight?.targetStopIds, ["light"])
+  assert.deepEqual(weight?.productStopIds, ["light"])
+  assert.equal(weight?.state, "in_target")
+  assert.deepEqual(payload.fitNarrative, {
+    productCriteria: "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
+    fit: "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
+  })
 })
 
 test("a mismatching product offers at most three alternatives", () => {
@@ -676,6 +613,15 @@ test("a mismatching product offers at most three alternatives", () => {
   assert.equal(payload.alternatives[0]?.priceLabel, "9,00 €")
   assert.equal(payload.alternatives[0]?.netContentLabel, "200 ml")
   assert.equal(payload.alternatives[0]?.imageUrl, "https://example.com/alt-1.jpg")
+
+  assert.equal(payload.verdictLabel, "Passt nicht")
+  assert.equal(payload.verdictTitle, "Passt nicht")
+  assert.equal(payload.status, "danger")
+  const weight = payload.dimensions.find(
+    (dimension) => dimension.dimensionId === "conditioner.weight",
+  )
+  assert.equal(weight?.state, "outside_target")
+  assert.deepEqual(weight?.productStopIds, ["rich"])
 })
 
 test("a supportive product still offers alternatives", () => {
@@ -696,9 +642,14 @@ test("a supportive product still offers alternatives", () => {
   assert.equal(payload.kind, "in_catalog")
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "supportive")
-  assert.equal(payload.verdictLabel, "Passt mit Einschränkung")
-  assert.equal(payload.verdictTitle, "Passt mit Einschränkung zu deinem Haar")
+  assert.equal(payload.verdictLabel, "Passt bedingt")
+  assert.equal(payload.verdictTitle, "Passt bedingt")
   assert.equal(payload.status, "pending")
+  assert.equal(
+    payload.dimensions.find((row) => row.dimensionId === "conditioner.weight")?.state,
+    "supportive",
+  )
+  assert.deepEqual(payload.reasonLines, ["Für dein Haar eher schwer"])
   assert.ok(payload.alternatives.length > 0)
   assert.ok(payload.alternatives.length <= 3)
 })
@@ -741,10 +692,92 @@ test("a needed category with no evaluable role stays honestly unclear", () => {
   assert.equal(payload.kind, "in_catalog")
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "unknown")
-  assert.equal(payload.verdictLabel, "Unklar")
-  assert.equal(payload.verdictTitle, "Da sind wir noch nicht sicher")
+  assert.equal(payload.verdictLabel, "Nicht geprüft")
+  assert.equal(payload.verdictTitle, "Nicht geprüft")
   assert.equal(payload.status, "neutral")
   assert.equal(payload.evaluatedRole, null)
   assert.equal(payload.evaluatedRoleLabel, null)
   assert.deepEqual(payload.alternatives, [])
+})
+
+test("scanner target counts read criterion passes including repair above target (fit-verdict spec §7a.3, ruled 2026-10-12)", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "conditioner",
+      decision: conditionerDecision(),
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "scanned", {
+        repairSupportLevel: "high",
+      }),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(
+    payload.dimensions.find((row) => row.dimensionId === "conditioner.repair_support")?.state,
+    "in_target",
+  )
+  assert.deepEqual(payload.coverage, { matches: 4, total: 4 })
+  assert.equal(payload.subtitle, "4 von 4 Zielbereichen getroffen")
+})
+
+/* ------------------------------------------------- heat activation (S3, Q3) */
+
+function neqiActivated(): Stage3CategoryProductFacts {
+  const facts = factsFor("leave_in", "pre_heat_application", "neqi-diamond-glass-ultimate", {
+    providesHeatProtection: true,
+  })
+  if (facts.category !== "leave_in") throw new Error("fixture")
+  facts.spec.applicationStages = ["towel_dry", "pre_heat"]
+  facts.spec.heatActivation = { route: "airflow_shaping" }
+  return facts
+}
+
+function postWashOnlyDecision(): PlanCategoryDecision {
+  const decision = leaveInDecision()
+  decision.roles = ["post_wash_leave_in"]
+  if (decision.target?.category === "leave_in") decision.target.roles = ["post_wash_leave_in"]
+  return decision
+}
+
+test("Neqi scan for a no-heat profile shows the activation reason", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: postWashOnlyDecision(),
+      heatRoutes: [],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "post_wash_leave_in")
+  assert.equal(payload.verdict, "mismatch")
+  assert.match(
+    JSON.stringify(payload),
+    /Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht\./,
+  )
+})
+
+test("Neqi scan for a blow-dry profile evaluates the pre-heat role", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: leaveInDecision(),
+      heatRoutes: ["airflow_shaping"],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "pre_heat_application")
+  assert.notEqual(payload.verdict, "mismatch")
+  const straightenerOnly = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: leaveInDecision(),
+      heatRoutes: ["direct_contact_heat"],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(straightenerOnly.kind === "in_catalog" && straightenerOnly.verdict, "mismatch")
 })

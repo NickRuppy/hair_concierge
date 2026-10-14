@@ -1,0 +1,9 @@
+{
+  "authority": "Main bounded identity disposition. Historical raw packed-refs hash remains preserved; no exact whole-file historical diff is claimed without original bytes. Original HEAD, branch, absent loose target ref, real checkout and all other identity records remain exact. A strict sorted unique UTF8 packed-ref parser retains the known Git header and exact already-pinned task branch record; unrelated refs may change. Reject target movement, target peeling, malformed/duplicate/unsorted refs, header/encoding drift. No source/test/dependency repin or repository writes.",
+  "historicalRawSHA256": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+  "observedRawSHA256": "eade1aecea291867a0e50b00ed9e37de9b308fefe5b25668008a61e3a6069b2d",
+  "targetRef": "refs/heads/codex/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "relevantSHA256": "557ae083e10cb3cef98ece07555969daf56d6b8fe7fc8aa22594e6e9e6744348",
+  "policySHA256": "b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd"
+}

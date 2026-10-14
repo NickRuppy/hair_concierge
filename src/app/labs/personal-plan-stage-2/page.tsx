@@ -11,8 +11,10 @@ const SCENARIOS = new Set<Stage2PreviewScenario>([
   "complete",
   "complete-error",
   "module-products",
+  "module-tools",
   "module-habits",
   "module-direct-accept",
+  "bondbuilder",
 ])
 
 export default async function PersonalPlanStage2LabPage({

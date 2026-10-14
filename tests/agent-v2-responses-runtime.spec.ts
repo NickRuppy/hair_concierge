@@ -3728,12 +3728,47 @@ test("AgentV2 runtime injects profile-grounded answer quality guidance", async (
   const content = String(qualityItem?.content ?? "")
   assert.match(content, /2-3 materially relevant profile facts/)
   assert.match(content, /wash rhythm/)
+  assert.match(content, /drying method/)
+  assert.match(content, /usage cadence/)
+  assert.match(content, /Avoid stacking many bold subheaders/)
   assert.match(content, /Do not invent a user preference/)
   assert.match(content, /calm answer shape/)
   assert.match(content, /reread the complete visible answer/i)
   assert.match(content, /closing sentence/i)
   assert.match(content, /already answered/i)
   assert.match(content, /stop cleanly/i)
+})
+
+test("AgentV2 runtime injects the saved-budget policy only when the budget flag is on", async () => {
+  const previous = process.env.SHOPPING_BUDGET_ENABLED
+  const guidanceFor = async (enabled: boolean) => {
+    if (enabled) process.env.SHOPPING_BUDGET_ENABLED = "true"
+    else delete process.env.SHOPPING_BUDGET_ENABLED
+    const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+    await runAgentV2ResponsesTurn({
+      client,
+      message: "Welches Shampoo passt zu mir?",
+      recentMessages: [],
+      userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+      tools: fakeAgentV2Tools(),
+    })
+    return getInputItems(client.requests[0])
+      .map(asRecord)
+      .map((item) => String(item?.content ?? ""))
+      .join("\n")
+  }
+
+  try {
+    const on = await guidanceFor(true)
+    assert.match(on, /Saved shopping budget policy/)
+    assert.match(on, /over_budget true only as a clearly labelled alternative/)
+    assert.match(on, /Without a saved budget, never claim/)
+    assert.match(on, /Budget · Ändern/)
+    assert.doesNotMatch(await guidanceFor(false), /Saved shopping budget policy/)
+  } finally {
+    if (previous === undefined) delete process.env.SHOPPING_BUDGET_ENABLED
+    else process.env.SHOPPING_BUDGET_ENABLED = previous
+  }
 })
 
 test("AgentV2 runtime trace reflects resolved policy overrides", async () => {
@@ -6220,20 +6255,6 @@ test("AgentV2 runtime drops invalid session memory without using repair turn", a
   assert.equal(result.trace.session_memory_writes.length, 0)
   assert.equal(result.trace.dropped_session_memory_writes.length, 1)
   assert.equal(result.trace.repair_attempts.length, 0)
-})
-
-test("AgentV2 runtime stores local trace even when Langfuse is unavailable", async () => {
-  const result = await runAgentV2ResponsesTurn({
-    client: fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")]),
-    message: "Brauche ich eine Maske?",
-    recentMessages: [],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    tools: fakeAgentV2Tools(),
-    langfuseMode: "disabled",
-  })
-
-  assert.equal(result.trace.engine, "agent_v2")
-  assert.equal(result.trace.langfuse.enabled, false)
 })
 
 test("AgentV2 runtime observes executable tool calls without hidden context", async () => {

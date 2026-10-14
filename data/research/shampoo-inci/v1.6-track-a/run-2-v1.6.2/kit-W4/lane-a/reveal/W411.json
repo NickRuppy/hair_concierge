@@ -1,0 +1,28 @@
+{
+  "blindId": "W411",
+  "productName": "schauma Shampoo Repair & Pflege",
+  "brand": "schauma",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de (Henkel; schauma.de redirects here)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Repair & Pflege Shampoo | Für strapaziertes & trockenes Haar | Die Formel mit Kokosextrakt repariert intensiv geschädigtes und trockenes Haar. Das Ergebnis? Das Haar ist sichtbar regeneriert und fühlt sich geschmeidig an. Mit Pro-Vitamin B5 für eine tiefenwirksame Pflege des Haares von innen. | Repair & Pflege: Repariere und regeneriere selbst stark geschädigtes Haar mit unseren besonders pflegenden Formeln. Für 100 % geschmeidigeres Haar. Mit Kokosextrakt und pflegendem Pro-Vitamin B5.",
+      "directionsVerbatim": "Auf das nasse Haar auftragen und sanft einmassieren. Kurz einwirken lassen. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Repair-Shampoo mit Kokos-Extrakt | Intensiv pflegende Formel | Ideal für geschädigtes und trockenes Haar | Glättet und repariert die Haarstruktur | Das Shampoo Repair & Pflege von schauma ist die perfekte Wahl für geschädigtes und trockenes Haar. Angereichert mit Kokos-Extrakt und Pro-Vitamin B5, glättet und pflegt es die Haarstruktur intensiv bis in die Spitzen. Die Formel kann dabei helfen, das Haar zu reparieren und Haarbruch zu reduzieren. Dank der veganen Zusammensetzung wird das Haar sichtbar regeneriert, fühlt sich geschmeidig an und erhält seine Kraft zurück. | Produkteigenschaften: Ohne Alkohol, ohne Aluminiumsalze (ACH), ohne Ammoniak",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "SCHAUMA Shampoo Repair & Pflege – Hair Repair Shampoo für geschädigtes & trockenes Haar | Das SCHAUMA Shampoo Repair & Pflege mit Kokos-Extrakt glättet und pflegt die Haarstruktur und bietet eine intensive Pflege bis in die Spitzen – für sichtbar regeneriertes, geschmeidiges & und gesund aussehendes Haar. Die Formel ist vegan und damit frei von Inhaltsstoffen tierischen Ursprungs. Dank Sofort-Pflege-Effekt erhalten die Haare schon ab der ersten Anwendung ein gepflegteres Aussehen und Gefühl. Mit dem Power Inhaltsstoff Pro-Vitamin B5 pflegt und stärkt das SCHAUMA Shampoo das Haar, spendet Feuchtigkeit, glättet die Strähnen, reduziert Haarbruch und repariert geschädigtes Haar. | Shampoo mit Kokos-Extrakt | pflegende Formel für geschädigtes & trockenes Haar | repariert die Haarstruktur und repariert intensiv | mit Sofort-Pflege-Effekt",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+not ok 1 - Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+  ---
+  duration_ms: 127.279917
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:2:6952'
+  failureType: 'testCodeFailure'
+  error: |-
+    slot-02-isana-professional-leave-in-conditioner-hyaluron-panthenol (batch gold-set, slot 2) must carry no adjudication
+    
+    25 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 25
+  operator: 'strictEqual'
+  stack: |-
+    <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:205:14)
+    async withLabEnvironment (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:20:5)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 289.458125

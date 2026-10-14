@@ -1,0 +1,10 @@
+{
+  "operator-guard.cjs": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a",
+  "prepare-tools.py": "560630cf66b7c1aee30a8a085a361f5e6839334fefae971eebedb76f6e07a923",
+  "operator-run-controls.cjs": "f2e4c3a30b129a38f9bb45d68be7c62d4c4b17e6d0cf0fb6be3638ec013889b7",
+  "operator-proof.cjs": "c49ee44a3bdf85b8a71a6087189bccdd224340c44086a850488abdda78abd2fd",
+  "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+  "prepare-pins.cjs": "1adab74af3954a84a0cbe6e4eea0e8d43db68df4dac4342bcf30632a5ce15416",
+  "operator-edit.cjs": "16e0205ce808a2e83cb353262d15c4ba9e7efa9cba149f420e1b0726b3548224",
+  "proof-attestation.cjs": "648eb62fcc1ade4a4bcd69ca71ba92f5b9898108a50913f27e144f1773ff7bd3"
+}

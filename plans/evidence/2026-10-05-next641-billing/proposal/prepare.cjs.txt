@@ -1,0 +1,68 @@
+// Static preparation only. Imports TypeScript's parser, never a test or owner.
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const OUT = '/tmp/test-audit-billing-operational125';
+const ts = require(path.join(ROOT, 'node_modules/typescript'));
+const sha = x => crypto.createHash('sha256').update(x).digest('hex');
+const scope = JSON.parse(fs.readFileSync('/tmp/test-audit-accounting617-three-residual-lanes.json', 'utf8')).groups[0].files;
+const out = (p, x) => { fs.mkdirSync(path.dirname(path.join(OUT,p)), {recursive:true}); fs.writeFileSync(path.join(OUT,p), x); };
+function parse(file, text) {
+ const ast=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ if(ast.parseDiagnostics.length) throw new Error('Parse failed '+file);
+ const sites=[];
+ for(const stmt of ast.statements) {
+  if(!ts.isExpressionStatement(stmt)||!ts.isCallExpression(stmt.expression)) continue;
+  const call=stmt.expression;
+  if(call.expression.getText(ast)!=='test'||!ts.isStringLiteralLike(call.arguments[0])) continue;
+  const start=stmt.getStart(ast), end=stmt.end;
+  const assertions=[];
+  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(ast).startsWith('assert.')) assertions.push(n.getText(ast));ts.forEachChild(n,walk)}
+  walk(stmt);
+  sites.push({file,title:call.arguments[0].text,line:ast.getLineAndCharacterOfPosition(start).line+1,start,end,body:text.slice(start,end),sha256:sha(text.slice(start,end)),assertions});
+ }
+ return sites;
+}
+const files=scope.map(f=>{
+ const before=fs.readFileSync(path.join(ROOT,f.file),'utf8');
+ if(sha(before)!==f.sha256) throw new Error('Original navigation drift '+f.file);
+ const sites=parse(f.file,before);
+ if(sites.length!==f.sites)throw new Error('count drift '+f.file);
+ return {...f,before,sites};
+});
+const definitions=[
+ ['C1','tests/billing-subscriptions-access-grace.test.ts','hasCurrentBillingAccess: active row with period end 2 days past has no access','tests/admin-user-billing-summary.test.ts','active entitlement just beyond the 24h expiry grace reports expired'],
+ ['C2','tests/billing-subscriptions-access-grace.test.ts','hasCurrentBillingAccess: active row 12 hours past is within the grace window','tests/admin-user-billing-summary.test.ts','active entitlement within the 24h expiry grace still reports active'],
+ ['C3','tests/billing-subscriptions-access-grace.test.ts','hasCurrentBillingAccess: active row with period end in the future has access','tests/admin-user-billing-summary.test.ts','plain active subscription reports active'],
+ ['C4','tests/billing-subscriptions-access-grace.test.ts','hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior','tests/admin-user-billing-summary.test.ts','legacy active subscription without period end reports active'],
+ ['D1','tests/admin-user-billing-summary.test.ts','active entitlement with lapsed period end reports expired','tests/admin-user-billing-summary.test.ts','active entitlement just beyond the 24h expiry grace reports expired'],
+ ['D2','tests/payment-monitor-route.test.ts','payment monitor flushes completed integrity findings before returning success','tests/payment-monitor-route.test.ts','payment monitor uses uncapped incident counters when requiring Sentry receipts'],
+];
+const all=files.flatMap(f=>f.sites);
+const exact=(file,title)=>{const a=all.filter(s=>s.file===file&&s.title===title);if(a.length!==1)throw new Error('not unique '+title);return a[0]};
+const candidates=definitions.map(([id,df,dt,kf,kt])=>({id,classification:id[0],donor:exact(df,dt),keeperBefore:exact(kf,kt),keeperAfter:exact(kf,kt),transfer:'None: complete original observable assertion subset already exists; inputs and owner calls unchanged.',sourceCleanup:null}));
+const removed=new Set(candidates.map(c=>c.donor.file+'\0'+c.donor.title));
+const keepers=new Set(candidates.map(c=>c.keeperBefore.file+'\0'+c.keeperBefore.title));
+const phases=[];
+for(const f of files) {
+ let cut=f.before;
+ for(const donor of candidates.filter(c=>c.donor.file===f.file).map(c=>c.donor).sort((a,b)=>b.start-a.start)) {
+  if(cut.slice(donor.start,donor.end)!==donor.body)throw new Error('anchor drift');
+  let end=donor.end;if(cut.slice(end,end+2)==='\n\n')end+=2;
+  cut=cut.slice(0,donor.start)+cut.slice(end);
+ }
+ const after=parse(f.file,cut);
+ for(const s of after) if(s.sha256!==exact(f.file,s.title).sha256)throw new Error('Survivor changed');
+ for(const phase of ['before','transfer','cut']) {
+  const value=phase==='cut'?cut:f.before;
+  out(phase+'/'+f.file,value);
+  phases.push({phase,file:f.file,sha256:sha(value),sites:parse(f.file,value).length});
+ }
+}
+out('sites.json',JSON.stringify(all,null,2)+'\n');
+out('candidate-bodies.json',JSON.stringify(candidates,null,2)+'\n');
+out('phase-files.json',JSON.stringify(phases,null,2)+'\n');
+out('survivors.json',JSON.stringify(all.filter(s=>!removed.has(s.file+'\0'+s.title)).map(s=>({file:s.file,title:s.title,sha256:s.sha256,keeper:keepers.has(s.file+'\0'+s.title)})),null,2)+'\n');
+out('static-receipt.json',JSON.stringify({counts:{before:all.length,transfer:all.length,cut:all.length-removed.size},files:files.length,phasesParsed:phases.length,unchangedSurvivingCallbacks:all.length-removed.size,distinctKeepers:keepers.size,unrelatedCallbacks:all.length-removed.size-keepers.size,ownerImports:0,runtimeTests:0,repositoryWrites:0,childrenStarted:0},null,2)+'\n');
+console.log(JSON.stringify({sites:all.length,candidates:candidates.length,phaseFiles:phases.length}));

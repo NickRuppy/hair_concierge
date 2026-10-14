@@ -1,0 +1,9 @@
+# Dormant rollout focused acceptance
+
+Six obsolete registrations removed and three owner files simplified. Production factory resolves the released rollout to literal all; obsolete injected internal/off paths are absent from supported default reachability. Current local main bf6c74c74fc6f2e5d15171e4852ae5e8f28220f7 corroborates the default binding; deployment state was not checked. Live enrollment revocation/expiry/provenance, source completeness, cohort/cutoff and entitlement authority remain guarded. Root reviewed original owners, complete diff and independent preservation report.
+
+Full native103→97 pass. All14 actual-source faults before and all14 after fail at intended ERR_ASSERTION/operator/decoded message/FIRST keeper frames, restore only owned mutant bytes exactly, and return clean. P11–P14 are trapped dependency-read assertion sensitivity probes, not DB or uncaught diagnostic proof. Final read-only four-receipt verifier PASS with zero writes/children/owner imports/network.
+
+Used kit dormant-rollout-packed-policy-h3ba9sqi pins1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6. Before cohort32e89a2c36cde73c351921357dbc0c89b90f10b17d4808564d8f6def8eb3d272; before controlsf048bb7e29026d6cba39074071da5b00ef330068cd4f70c562459d229f682610; cut cohortd6ac36f3bf6574397606431f3f0065932a67b4a81d82bfdfdca478d73ab5507c; cut controls2c12d4f1225a587a4ef0ab9079db6e80823d15262819a1d0ce34430aa7d0f0c5. All archived commands/TAP/statuses and exact phase snapshots retain preformat bytes.
+
+405 indexed files/14,158,838 bytes; indexb744299f00c14d9815ec2cf6e35dccd2e22e8fa5d1743e3143a996c1652937a0. This receipt is post-index. Shared packed-ref policy guards exact target/header and syntactic unrelated records; original raw hashes remain historical. It does not prove a complete historical shared-file diff. No source/dependency blind repin or production operation. Combined coverage pending.

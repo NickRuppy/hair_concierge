@@ -1,0 +1,7 @@
+# Discovery operational163: five duplicate callbacks removed
+
+Applied608→613 campaign removals. Full24-file native163→163→158 passes with zero failures/skips. Exact assertion union transfers into existing loading, cockpit benefit/mutation, refined-routine and actual admin-page keepers; no new render/input/click/owner invocation. All153 unrelated callbacks and held search-sheet footer F remain exact. No production source cleanup.
+
+Five actual isolated owner faults each produce selected1 ERR_ASSERTION at the intended first keeper frame, with exact operator/message: loading h1 deep-equality difference, recommendation header, optimistic complexity fold before save settlement, owned undefined legacy property, and six-category unanswered summary. All15 actual TAP/command logs and restore receipts revalidated; source restored byte-exact. Root read allfive complete fault TAPs. Existing caught call-sheet lookup warning is present in clean runs; qualifying failure is the summary assertion.
+
+Proposal, independent preservation, full phases, guarded tools, original source backups, native argv/results are278 indexed artifacts (5,583,498 bytes; indexSHA95736c1ac6839a71e7b6629c0cb8be7538595ec40c45f1bad2390acd070edfcd). Final transfer receipt c2938eeb335245a33bf62cf7f35833ade20644f908327d420894dd5e2ac62cb4. Current combined613 LOC19,075: application/tooling9,176; tests/support9,899. Formatting/whole-tree coverage/CI pending final coherent batch; no publication or production/provider writes. Shared-config identity policy/provenance is archived in next608-moderator.

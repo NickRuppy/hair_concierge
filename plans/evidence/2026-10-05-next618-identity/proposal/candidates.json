@@ -1,0 +1,145 @@
+[
+  {
+    "id": "C1",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/product-identity-resolution.test.ts",
+    "donor": {
+      "name": "unknown brand returns unresolved raw text with no confidence",
+      "line": 97,
+      "start": 3396,
+      "end": 3951,
+      "body": "test(\"unknown brand returns unresolved raw text with no confidence\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [{ id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" }],\n    productLines: [],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Unbekannte Pflegecreme\", catalog)\n\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.confidence, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n  assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")\n})",
+      "sha256": "355895870d4f6ac90c06f210033ba697942ac160d4e7f8f8d3198acf8f4c06dd",
+      "assertions": [
+        {
+          "line": 106,
+          "text": "assert.equal(resolution.match, \"none\")"
+        },
+        {
+          "line": 107,
+          "text": "assert.equal(resolution.confidence, \"none\")"
+        },
+        {
+          "line": 108,
+          "text": "assert.equal(resolution.reason, \"unresolved\")"
+        },
+        {
+          "line": 109,
+          "text": "assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")"
+        }
+      ]
+    },
+    "keeperBefore": {
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+      "line": 35,
+      "start": 969,
+      "end": 1606,
+      "body": "test(\"resolveBrandFromText returns an exact brand match without over-matching inside words\", () => {\n  const resolution = resolveBrandFromText(\"K 18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.key, \"k18\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"brand_alias_exact\")\n\n  const nonMatch = resolveBrandFromText(\"SK18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(nonMatch.match, \"none\")\n  assert.equal(nonMatch.brand, null)\n  assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")\n})",
+      "sha256": "fd8ab458d84aecc6dfdfe0788a74ccf594a36c30c4ad027596376aaa46bbf718",
+      "assertions": [
+        {
+          "line": 37,
+          "text": "assert.equal(resolution.match, \"brand\")"
+        },
+        {
+          "line": 38,
+          "text": "assert.equal(resolution.brand?.key, \"k18\")"
+        },
+        {
+          "line": 39,
+          "text": "assert.equal(resolution.productLine, null)"
+        },
+        {
+          "line": 40,
+          "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+        },
+        {
+          "line": 43,
+          "text": "assert.equal(nonMatch.match, \"none\")"
+        },
+        {
+          "line": 44,
+          "text": "assert.equal(nonMatch.brand, null)"
+        },
+        {
+          "line": 45,
+          "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+      "line": 35,
+      "start": 969,
+      "end": 1696,
+      "body": "test(\"resolveBrandFromText returns an exact brand match without over-matching inside words\", () => {\n  const resolution = resolveBrandFromText(\"K 18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.key, \"k18\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"brand_alias_exact\")\n\n  const nonMatch = resolveBrandFromText(\"SK18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(nonMatch.match, \"none\")\n  assert.equal(nonMatch.brand, null)\n  assert.equal(nonMatch.confidence, \"none\")\n  assert.equal(nonMatch.reason, \"unresolved\")\n  assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")\n})",
+      "sha256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf",
+      "assertions": [
+        {
+          "line": 37,
+          "text": "assert.equal(resolution.match, \"brand\")"
+        },
+        {
+          "line": 38,
+          "text": "assert.equal(resolution.brand?.key, \"k18\")"
+        },
+        {
+          "line": 39,
+          "text": "assert.equal(resolution.productLine, null)"
+        },
+        {
+          "line": 40,
+          "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+        },
+        {
+          "line": 43,
+          "text": "assert.equal(nonMatch.match, \"none\")"
+        },
+        {
+          "line": 44,
+          "text": "assert.equal(nonMatch.brand, null)"
+        },
+        {
+          "line": 45,
+          "text": "assert.equal(nonMatch.confidence, \"none\")"
+        },
+        {
+          "line": 46,
+          "text": "assert.equal(nonMatch.reason, \"unresolved\")"
+        },
+        {
+          "line": 47,
+          "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+        }
+      ]
+    },
+    "transferStatements": [
+      "assert.equal(nonMatch.confidence, \"none\")",
+      "assert.equal(nonMatch.reason, \"unresolved\")"
+    ],
+    "union": [
+      {
+        "old": "resolution.match === \"none\"",
+        "remaining": "nonMatch.match === \"none\" (existing)"
+      },
+      {
+        "old": "resolution.confidence === \"none\"",
+        "remaining": "nonMatch.confidence === \"none\" (transfer)"
+      },
+      {
+        "old": "resolution.reason === \"unresolved\"",
+        "remaining": "nonMatch.reason === \"unresolved\" (transfer)"
+      },
+      {
+        "old": "unresolvedRawText === original literal \"Unbekannte Pflegecreme\"",
+        "remaining": "unresolvedRawText === original literal \"SK18 Leave-in Molecular Repair Hair Oil\" (existing)",
+        "qualification": "Raw bytes differ. Preservation is the same unmodified-input contract at the only none(rawText) return, not literal identity of fixture text. No new SUT call/input. Main must accept this branch/readset equivalence explicitly."
+      }
+    ],
+    "inputDifferences": "Donor receives prebuilt one-Garnier/no-alias catalog and unrelated German text; keeper receives two-brand legacy array converted by actual toCatalog and token-boundary nonmatch. Both actual bestPrefixMatch passes return null. none receives only the original raw text; no catalog, aliases, normalization, category, transport or state is consulted there. Empty catalog-alias handling and prebuilt-catalog unresolved paths remain in conflict/missing-line keepers; matcher token-boundary behavior stays in keeper.",
+    "sourceCleanup": "NONE; all owners/operators remain live",
+    "history": "Both callbacks introduced in b4fb21f4, unchanged except prior unrelated detectBrandAliasConflicts donor removal; no documented separate phrase-specific contract.",
+    "risk": "Neither HTTP/storage/provider nor database proof. Conditional equivalence does not preserve arbitrary future string-specific matching changes; current independent contracts and normalization branches remain.",
+    "unlocked": "One repeated raw no-match invocation plus its catalog setup; zero source/export/support deletion."
+  }
+]

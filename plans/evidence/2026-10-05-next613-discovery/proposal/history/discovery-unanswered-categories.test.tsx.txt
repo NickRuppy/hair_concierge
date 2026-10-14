@@ -1,0 +1,4 @@
+960c064b96a91ad3818114bf3b3a1f571ba26400 2026-09-29 feat(beratung): Produktphase — Einkaufslisten-Sektion + iOS-Vergleichstabellen (Cockpit) (#624)
+3a774a20c40778b6373bf0ebcbc69ccb4b2b9ccd 2026-09-28 feat(beratung): Cockpit als 6-Phasen-Call-Runsheet (Consult-Runsheet Slice 1) (#619)
+58bd94e17c5bef86e1c52226699a7ac7391cdea4 2026-09-25 feat(beratung): cockpit „Quiz-Antworten" + „Hauptproblem"-Rezept (batch 7c) (#610)
+224c0d4752d129ddf7a1e1a66a2308381186d239 2026-09-24 feat(beratung): cockpit depth — product list, research start, step reasoning, property rows (#607)

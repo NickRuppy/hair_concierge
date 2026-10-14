@@ -32,7 +32,7 @@ export function getRoutineStatus(item: RoutineItem): RoutineStatus {
   }
   if (item.state.availability === "pending_review") {
     return {
-      label: "Noch in Prüfung",
+      label: "Nicht geprüft",
       tone: "bg-[var(--status-neutral-bg)] text-[var(--status-neutral-text)]",
     }
   }

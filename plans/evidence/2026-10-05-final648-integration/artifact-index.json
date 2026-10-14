@@ -1,0 +1,218 @@
+[
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/coverage-summary.json",
+    "archived": "native-c8/coverage-summary.json",
+    "sha256": "870ae178b40e778b94abca5b7fa2e6342f28c23429dec3714a94b39afdcc6fcc",
+    "bytes": 670480
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/result.json",
+    "archived": "native-c8/result.json",
+    "sha256": "0eda19be32c784920f386038e889d52a8804dc8a2e97221e40a44a0a48643386",
+    "bytes": 58
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/run.log",
+    "archived": "native-c8/run.log",
+    "sha256": "808c5d1d84bfdfd09eee96d0c2c281177349acf7823bb065574148f295adc5d3",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/lcov.info",
+    "archived": "native-c8/lcov.info",
+    "sha256": "2cacf8ba667fda6642de1c4cdba7e9493633322bf3f41cf8a48b3f10b8c12796",
+    "bytes": 6789161
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/tests.tap",
+    "archived": "native-c8/tests.tap",
+    "sha256": "fb3f2290777cc112df15ce3ec9ce466d6a89df350939fe52a93238fc922d8482",
+    "bytes": 2607555
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/files.json",
+    "archived": "native-c8/files.json",
+    "sha256": "9a948e96541a9efc5071dd497a00abafd0f18b21aa87309c597666d986e9e648",
+    "bytes": 52925
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/command.json",
+    "archived": "native-c8/command.json",
+    "sha256": "2a4b3d2f34afe2589be811de1a6c4a4a1d01dee1780caa53369b061c6688c665",
+    "bytes": 56253
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-proof/coverage-final.json",
+    "archived": "native-c8/coverage-final.json",
+    "sha256": "6dab1a09b1433da7fcc1af06c52e7b449ee46f5a2fdc15454b5635926629a0fb",
+    "bytes": 55583574
+  },
+  {
+    "original": "/tmp/test-audit-final648-ci/command.json",
+    "archived": "ci/command.json",
+    "sha256": "a52551802ce0db1e899dcf828d4898fb12a1b35983b17f15427f170226bf6983",
+    "bytes": 136
+  },
+  {
+    "original": "/tmp/test-audit-final648-ci/result.json",
+    "archived": "ci/result.json",
+    "sha256": "aa71e18e3b2146f9ef309afa63bc93736baeb13e5716387731b00f086e6cc42d",
+    "bytes": 53
+  },
+  {
+    "original": "/tmp/test-audit-final648-ci/run.log",
+    "archived": "ci/run.log",
+    "sha256": "6f9bbbcdbc2240ce8362a4775e61146780216b10b368a6c003e7cdc21ae24a6f",
+    "bytes": 12586
+  },
+  {
+    "original": "/tmp/test-audit-final648-integration-receipt.json",
+    "archived": "integration/test-audit-final648-integration-receipt.json",
+    "sha256": "ade0d15560a2b37433d570e13cd896e782c3a6d3611be00ae9262bc06df9be1f",
+    "bytes": 1138
+  },
+  {
+    "original": "/tmp/test-audit-final648-tree.py",
+    "archived": "integration/test-audit-final648-tree.py.txt",
+    "sha256": "2b0ac2128c1ab483d158e6066567a31279f4a4bb67e706e239c875fa4ed69152",
+    "bytes": 4186
+  },
+  {
+    "original": "/tmp/test-audit-final648-tested-tree.json",
+    "archived": "integration/test-audit-final648-tested-tree.json",
+    "sha256": "64bd3c5b836f582690ee7660bddbeab37ce0837e5b2e0a78dbde3fe35ac826ce",
+    "bytes": 2533129
+  },
+  {
+    "original": "/tmp/test-audit-final648-tree-verification.json",
+    "archived": "integration/test-audit-final648-tree-verification.json",
+    "sha256": "5518717531c015cb62db2b4ac20edda2f8c075c80d27611aa32fc9c4d8e242cd",
+    "bytes": 151
+  },
+  {
+    "original": "/tmp/test-audit-final648-compare.cjs",
+    "archived": "integration/test-audit-final648-compare.cjs.txt",
+    "sha256": "b9a7d6d606bb45ec02ef4cbfbee95b807beb096a0e2b874c74b2ed156fd4f995",
+    "bytes": 3663
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final648-comparison.json",
+    "archived": "integration/test-audit-retirement-final648-comparison.json",
+    "sha256": "6278f613df2e1c63c9f983d86fc940bbab77387915795f6571fc00a70e2d5193",
+    "bytes": 98440
+  },
+  {
+    "original": "/tmp/test-audit-next648-current-inventory.json",
+    "archived": "integration/test-audit-next648-current-inventory.json",
+    "sha256": "31f5393915bdfb39cf0bcf9fcd7b133be76976f835babbf044b509ea9e8966fe",
+    "bytes": 2482175
+  },
+  {
+    "original": "/tmp/test-audit-next648-current-loc.json",
+    "archived": "integration/test-audit-next648-current-loc.json",
+    "sha256": "a30321971c9972674c8b3f612bcf3571636edccd0396e6d463b73eeb332d0c72",
+    "bytes": 361
+  },
+  {
+    "original": "/tmp/test-audit-next648-format.cjs",
+    "archived": "integration/test-audit-next648-format.cjs.txt",
+    "sha256": "6007374e3a8f927d0afcab977edae6f1bd95449e87742d5e330198bcea3c61a8",
+    "bytes": 2350
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-files.json",
+    "archived": "integration/test-audit-next648-format-files.json",
+    "sha256": "817ceefd5d187144695c09c9b667fca67c17904494581adbd229c4b03ac89677",
+    "bytes": 607
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "integration/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/src/lib/personal-plan/release.ts",
+    "archived": "integration/originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "bytes": 2571
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "integration/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/admin-user-billing-summary.test.ts",
+    "archived": "integration/originals/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "c8c7e0b03e300f1aada3ffb9bd3cf4ee7a598ac4d87bce7b02ecfaffccf6d23a",
+    "bytes": 9030
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "integration/originals/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "312b51252842994dca7e9588f58ab03852ab99de537966374a862c5b8184b06d",
+    "bytes": 4155
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "integration/originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+    "bytes": 10181
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "integration/originals/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5",
+    "bytes": 8164
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/payment-monitor-route.test.ts",
+    "archived": "integration/originals/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "28bcd568bf5119c64c2d105f7c872f1bd54e300c43144e0b8f64d40d81d67771",
+    "bytes": 20830
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "integration/originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+    "bytes": 5820
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "integration/originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+    "bytes": 35233
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "integration/originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+    "bytes": 1905
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "integration/originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+    "bytes": 6087
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "integration/originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+    "bytes": 12925
+  },
+  {
+    "original": "/tmp/test-audit-next648-format-proof-KJmXQl/receipt.json",
+    "archived": "integration/receipt.json",
+    "sha256": "d319dfecb5388b1eedfeada65bb2b17a552adc0d7e5f2482bbe3956c003a2cbf",
+    "bytes": 3829
+  },
+  {
+    "original": "/tmp/test-audit-final648-raw-flags-delta.json",
+    "archived": "integration/test-audit-final648-raw-flags-delta.json",
+    "sha256": "7567f1f29128dac070be4d653a4154a0f73164bd2dfda53da5158834c294c217",
+    "bytes": 2280
+  }
+]

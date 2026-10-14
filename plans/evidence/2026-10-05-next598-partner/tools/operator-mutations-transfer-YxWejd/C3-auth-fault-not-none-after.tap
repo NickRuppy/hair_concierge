@@ -1,0 +1,16 @@
+TAP version 13
+# Partner journey lookup failed: { name: 'AuthRetryableFetchError', message: 'down' }
+# Subtest: a real auth failure on the default getUser path is unavailable, not none
+ok 1 - a real auth failure on the default getUser path is unavailable, not none
+  ---
+  duration_ms: 1.237041
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 231.290417

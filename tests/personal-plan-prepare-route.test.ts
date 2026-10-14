@@ -53,6 +53,7 @@ function request(value: unknown = body) {
 function dependencies(overrides: Partial<PersonalPlanPrepareRouteDeps> = {}) {
   const order: string[] = []
   const rateCalls: Array<{ identifier: string; prefix: string }> = []
+  const rateConfigs: Array<{ prefix: string; limit: number; windowMs: number }> = []
   const preparations: PersonalPlanPrepareArtifactInput[] = []
   const warnings: string[] = []
   const deps: PersonalPlanPrepareRouteDeps = {
@@ -60,6 +61,7 @@ function dependencies(overrides: Partial<PersonalPlanPrepareRouteDeps> = {}) {
     checkRateLimit: async (identifier, config) => {
       order.push(`rate:${config.prefix}`)
       rateCalls.push({ identifier, prefix: config.prefix })
+      rateConfigs.push({ ...config })
       return { allowed: true }
     },
     retryAfterSeconds: () => 7,
@@ -81,23 +83,8 @@ function dependencies(overrides: Partial<PersonalPlanPrepareRouteDeps> = {}) {
     warnRateLimited: (scope) => warnings.push(scope),
     ...overrides,
   }
-  return { deps, order, rateCalls, preparations, warnings }
+  return { deps, order, rateCalls, rateConfigs, preparations, warnings }
 }
-
-test("prepare protection has dedicated short-window journey and IP budgets", () => {
-  assert.deepEqual(PERSONAL_PLAN_PREPARE_JOURNEY_RATE_LIMIT, {
-    prefix: "personal-plan-prepare-journey",
-    limit: 10,
-    windowMs: 10_000,
-  })
-  assert.deepEqual(PERSONAL_PLAN_PREPARE_IP_RATE_LIMIT, {
-    prefix: "personal-plan-prepare-ip",
-    limit: 100,
-    windowMs: 10_000,
-  })
-  assert.notEqual(PERSONAL_PLAN_PREPARE_JOURNEY_RATE_LIMIT.prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
-  assert.notEqual(PERSONAL_PLAN_PREPARE_IP_RATE_LIMIT.prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
-})
 
 test("prepare preserves disabled and unavailable context boundaries", async () => {
   const disabled = dependencies({ enabled: () => false })
@@ -155,6 +142,12 @@ test("prepare applies the IP ceiling before journey resolution and persists the 
   ])
   assert.equal(fixture.preparations[0].preparationId, body.preparationId)
   assert.match(fixture.preparations[0].claimTokenHash, /^[0-9a-f]{64}$/)
+  assert.deepEqual(fixture.rateConfigs, [
+    { prefix: "personal-plan-prepare-ip", limit: 100, windowMs: 10_000 },
+    { prefix: "personal-plan-prepare-journey", limit: 10, windowMs: 10_000 },
+  ])
+  assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
+  assert.notEqual(fixture.rateConfigs[1].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
 })
 
 test("prepare skips the journey bucket when no verified identity resolves", async () => {

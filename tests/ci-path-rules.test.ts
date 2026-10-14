@@ -80,12 +80,6 @@ test("workflow and dependency changes mark security scan relevant", () => {
   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)
 })
 
-test("CI scope no longer exposes a local database gate", () => {
-  const scope = classifyCiScope(["supabase/migrations/20260810000000_example.sql"])
-  assert.equal(Object.hasOwn(scope, "personal_plan_db"), false)
-  assert.equal(scope.personal_plan_journey, true)
-})
-
 test("integrated Personal Plan runtime paths run the persisted journey", () => {
   for (const path of [
     "src/lib/personal-plan/journey-access-loader.ts",
@@ -116,6 +110,7 @@ test("integrated Personal Plan runtime paths run the persisted journey", () => {
 test("Personal Plan journey scope remains targeted to runtime and presentation changes", () => {
   const migration = classifyCiScope(["supabase/migrations/20260810000000_example.sql"])
   assert.equal(migration.personal_plan_journey, true)
+  assert.equal(Object.hasOwn(migration, "personal_plan_db"), false)
 
   const persistence = classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"])
   assert.equal(persistence.personal_plan_journey, true)

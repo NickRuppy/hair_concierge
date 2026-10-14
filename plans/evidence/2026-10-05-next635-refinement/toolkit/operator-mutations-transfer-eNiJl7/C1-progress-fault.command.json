@@ -1,0 +1,16 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+    "tests/personal-plan-refinement-status-route.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "mode": "static-only",
+  "snapshots": 48,
+  "mutants": 6,
+  "readset": 111,
+  "sites": 99,
+  "conditionalC": 3,
+  "originalPhaseCurrent": true,
+  "repositoryWrites": 0,
+  "testImports": 0,
+  "ownerImports": 0,
+  "children": 0,
+  "network": 0,
+  "limitations": "Semantic judgments are documented separately; this receipt proves reconstruction and byte guards only."
+}

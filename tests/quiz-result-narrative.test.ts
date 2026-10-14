@@ -33,9 +33,10 @@ test("surface-led results expose scope labels, bucketed positions, concise goal 
   assert.equal(narrative.needs.title, "Was dein Haar jetzt braucht")
   assert.equal(narrative.needs.mainLeverTitle, "Mehr Schutz für Oberfläche und Längen aufbauen")
   assert.match(narrative.needs.mainLeverWhy, /unruhig/i)
-  assert.match(narrative.needs.mainLeverProducts, /Conditioner/i)
-  assert.match(narrative.needs.mainLeverProducts, /zusätzlich/i)
-  assert.match(narrative.needs.mainLeverProducts, /Leave-in/i)
+  assert.equal(
+    narrative.needs.mainLeverProducts,
+    "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
+  )
   assert.deepEqual(narrative.needs.products, [
     { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
     { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
@@ -277,26 +278,6 @@ test("dauerwelle alone does not hard-route to the bondbuilder stability lever", 
   assert.doesNotMatch(narrative.needs.mainLeverProducts, /Bondbuilder/i)
 })
 
-test("surface branch explains the main lever with multiple fitting categories", () => {
-  const narrative = buildQuizResultNarrative({
-    structure: "wavy",
-    thickness: "normal",
-    fingertest: "rau",
-    pulltest: "stretches_bounces",
-    concerns: ["frizz"],
-    goals: ["less_frizz", "shine"],
-  })
-
-  assert.equal(
-    narrative.needs.mainLeverProducts,
-    "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
-  )
-  assert.deepEqual(narrative.needs.products, [
-    { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
-    { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
-  ])
-})
-
 test("scalp branch explains the main lever with product-specific follow-through", () => {
   const narrative = buildQuizResultNarrative({
     structure: "straight",
@@ -419,7 +400,7 @@ test("hero headline maps snapping pull test to moisture-led result", () => {
   assert.equal(narrative.heroHeadline, "Mehr Feuchtigkeit kann deine Längen gezielt unterstützen.")
 })
 
-test("hero headline has a balanced fallback", () => {
+test("hero headline reflects the surface-support result", () => {
   const narrative = buildQuizResultNarrative({
     structure: "curly",
     thickness: "normal",

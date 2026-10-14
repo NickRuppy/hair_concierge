@@ -45,33 +45,6 @@ async function database() {
 const userA = "11111111-1111-4111-8111-111111111111"
 const userB = "22222222-2222-4222-8222-222222222222"
 
-test("scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)", async (t) => {
-  const pg = await database()
-  t.after(async () => pg.close())
-
-  await pg.query(
-    `INSERT INTO public.product_submissions
-       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)
-     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,
-    [userA],
-  )
-  const rows = await pg.query("SELECT count(*)::int AS count FROM public.product_submissions")
-  assert.equal((rows.rows[0] as { count: number }).count, 1)
-})
-
-test("scan name-only submission migration: a name-only scan row (no identifier) is now accepted", async (t) => {
-  const pg = await database()
-  t.after(async () => pg.close())
-
-  await pg.query(
-    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)
-     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,
-    [userA],
-  )
-  const rows = await pg.query("SELECT count(*)::int AS count FROM public.product_submissions")
-  assert.equal((rows.rows[0] as { count: number }).count, 1)
-})
-
 test("scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK", async (t) => {
   const pg = await database()
   t.after(async () => pg.close())

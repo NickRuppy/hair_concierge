@@ -1,7 +1,7 @@
 import type { QuizAnswers } from "./types"
 import { HAIR_LENGTHS } from "@/lib/vocabulary"
-import { GOALS } from "@/lib/vocabulary/concerns-goals"
-import { PROFILE_CONCERNS, type Goal, type ProfileConcern } from "@/lib/vocabulary"
+import { GOALS, ENGINE_GOALS } from "@/lib/vocabulary/concerns-goals"
+import { PROFILE_CONCERNS, type Goal, type EngineGoal, type ProfileConcern } from "@/lib/vocabulary"
 import { DIAGNOSTIC_CONCERNS, DIAGNOSTIC_GOALS } from "./diagnostic-input"
 
 export const QUIZ_STRUCTURE_VALUES = ["straight", "wavy", "curly", "coily"] as const
@@ -151,29 +151,6 @@ export function toggleTreatmentSelection(current: string[], value: string): stri
   return sortTreatments([...set]) ?? []
 }
 
-export function toggleConcernSelection(
-  current: string[],
-  value: string,
-): NonNullable<QuizAnswers["concerns"]> {
-  if (value === "none") {
-    return []
-  }
-
-  if (!QUIZ_ANSWER_CONCERN_VALUES.includes(value as (typeof QUIZ_ANSWER_CONCERN_VALUES)[number])) {
-    return sortConcerns(current) ?? []
-  }
-
-  const set = new Set(current)
-
-  if (set.has(value)) {
-    set.delete(value)
-  } else {
-    set.add(value)
-  }
-
-  return sortConcerns([...set]) ?? []
-}
-
 export function normalizeStoredQuizAnswers(
   raw: StoredQuizAnswers | Record<string, unknown> | null | undefined,
 ): QuizAnswers {
@@ -287,6 +264,9 @@ export const CONCERN_TO_PROFILE_CONCERN_MAP: Partial<Record<string, ProfileConce
   frizz_flyaways: "frizz",
   tangling: "tangling",
   hair_loss_or_thinning: "hair_loss",
+  low_shine: "low_shine",
+  lost_shape: "lost_shape",
+  low_volume_or_weighed_down: "low_volume_or_weighed_down",
 }
 
 export const GOAL_TO_PROFILE_GOAL_MAP: Partial<Record<string, Goal>> = {
@@ -335,13 +315,13 @@ export function resolveVolumeBalanceGoal(input: {
 /**
  * Compatibility boundary for established profile, routine and Customer.io
  * consumers. New quiz-only families deliberately do not become onboarding
- * options; unavailable historical equivalents are omitted rather than guessed.
+ * options; the engine vocabulary retains neutral volume and all stated concerns.
  */
 export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
   concerns: ProfileConcern[]
-  goals: Goal[]
+  goals: EngineGoal[]
 } {
-  const projectedGoals = new Set<Goal>()
+  const projectedGoals = new Set<EngineGoal>()
   for (const value of answers.goals ?? []) {
     if (value === "volume_balance") {
       const resolved = resolveVolumeBalanceGoal({
@@ -349,7 +329,7 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
         density: answers.density,
         structure: answers.structure,
       })
-      if (resolved) projectedGoals.add(resolved)
+      projectedGoals.add(resolved ?? "volume_balance")
       continue
     }
     const mapped = GOAL_TO_PROFILE_GOAL_MAP[value]
@@ -368,13 +348,14 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
   }
   return {
     concerns: PROFILE_CONCERNS.filter((value) => projectedConcerns.has(value)),
-    goals: GOALS.filter((value) => projectedGoals.has(value)),
+    goals: ENGINE_GOALS.filter((value) => projectedGoals.has(value)),
   }
 }
 
 /**
- * Supplies established narrative, routine and email builders with their
- * original vocabulary while retaining every factual answer unchanged.
+ * Keeps quiz-result and offer-preview copy on its historical vocabulary.
+ * Engine/column readers use the wider `projectQuizAnswersToLegacyVocabulary` above;
+ * this display-only projection does not write facts or profile columns.
  */
 export function projectQuizAnswersForLegacyConsumers(answers: QuizAnswers): QuizAnswers {
   const normalized = canonicalizeQuizAnswers(answers)
@@ -382,8 +363,11 @@ export function projectQuizAnswersForLegacyConsumers(answers: QuizAnswers): Quiz
 
   return {
     ...normalized,
-    concerns: legacyVocabulary.concerns,
-    goals: legacyVocabulary.goals,
+    concerns: legacyVocabulary.concerns.filter(
+      (value) =>
+        value !== "low_shine" && value !== "lost_shape" && value !== "low_volume_or_weighed_down",
+    ),
+    goals: legacyVocabulary.goals.filter((value) => value !== "volume_balance"),
   }
 }
 

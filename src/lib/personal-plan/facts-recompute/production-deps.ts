@@ -2,6 +2,7 @@ import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { loadUserFacts } from "@/lib/user-facts/read"
 
 import { syncPlanWithFacts } from "./sync-plan-with-facts"
@@ -134,6 +135,7 @@ export function createProductionFactsRecomputeDeps(admin: SupabaseClient): Facts
       }
       return normalizeRebaseResult(data as Record<string, unknown>)
     },
+    toolsEnabled: (userId) => isPersonalPlanToolsEnabledForUser(userId, admin),
     newId: () => crypto.randomUUID(),
     now: () => new Date(),
   }

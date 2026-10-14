@@ -1,0 +1,183 @@
+{
+  "blindId": "T301",
+  "inciFingerprintSha256": "fa74c91cc5f8d70b1c235670a06cded2f6b2285e95b63f24459c262283747419",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "No split synonym entries; normalized positions = packet positions. E3: no Parfum declared -> first listed preservative Benzyl Alcohol (8); prominent = 1-7.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "rawInciCount": 19
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) is the defining ether-type anionic, buffered by Cocamidopropyl Betaine (3) and Coco-Betaine (7), no reinforcing strong anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Little refatting (only PEG-7 Glyceryl Cocoate 6) and no conditioning polymer, so the net feel leans to the cleansing side; does not move the C1 convention."
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Cleansing-led architecture: no cationic polymer, no silicone, no payload lipid; only a weak refatter (PEG-7 Glyceryl Cocoate 6), a late pearlizer (Glycol Distearate 12) and late Glycerin (18).",
+      "neighboringAlternative": "none",
+      "counterSignal": "PEG-7 Glyceryl Cocoate and Glycol Distearate give some softness; not a meaningful conditioning system."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Only deposition clue is one weak refatter (PEG-7 Glyceryl Cocoate 6) facing an effective C1 chassis; tea tree oil is a fragrance/essential oil (excluded).",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "single weak_refatter; no cationic, silicone or payload lipid"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "weak refatter is not retained through rinsing"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + two betaines, effective ordinary chassis"
+        }
+      },
+      "whyThisBand": "Deposition is absent apart from a weak refatter; nothing supports noticeable residue.",
+      "whyNotNeighborBand": "moderate would need at least one plausibly persistent depositing system; there is none (single family, W2 not triggered).",
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "PEG-7 Glyceryl Cocoate",
+            6
+          ]
+        ],
+        "excluded": [
+          [
+            "Melaleuca Alternifolia Leaf Oil",
+            4,
+            "essential oil (6.4)"
+          ],
+          [
+            "Glycol Distearate",
+            12,
+            "pearlizer (6.4)"
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            18
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ],
+          [
+            "Coco-Betaine",
+            7
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            11
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole; tea tree oil does not upgrade (Section 11).",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Formula alone is nonspecific. Formula is compatible with clarifying (F6: cleansing moderate, conditioning not high, weight not high) if oily/reset positioning appears; prominent tea tree oil hints at a scalp/purifying role, which needs claims."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Default; triggers need claims (cleansing is moderate, so alternating is impossible)."
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "Positioning hidden. Formula half (CSA): passes via prominent PEG-7 Glyceryl Cocoate (6, E4 humectant/refatting); no prominent E4 comfort route, so an S-SENSITIVE gate would fail; prominent tea tree essential oil (4) is a counter-signal."
+    }
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "rationale": "No humectant cluster or deposition cluster; formula supports no repair/moisture direction."
+  },
+  "formulaGateFacts": {
+    "csa": "pass (PEG-7 Glyceryl Cocoate 6)",
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "pass (cleansing moderate, W low, C low)"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type (C1)"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Melaleuca Alternifolia Leaf Oil",
+      "position": 4,
+      "role": "essential oil (tea tree); excluded from deposition (6.4); prominent essential-oil exposure"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 6,
+      "role": "weak_refatter; E4 humectant/refatting route (prominent)"
+    },
+    {
+      "ingredient": "Coco-Betaine",
+      "position": 7,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Benzyl Alcohol",
+      "position": 8,
+      "role": "preservative; E3 cut-off"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 11,
+      "role": "nonionic glucoside, not prominent (after preservative)"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 12,
+      "role": "pearlizer, not prominent; excluded from weight"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 18,
+      "role": "humectant, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

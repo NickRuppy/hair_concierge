@@ -62,8 +62,6 @@ export type StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent = {
   elementType?: "expressCheckout"
   paymentMethods?: Record<string, { available?: boolean } | undefined>
 }
-export type StripePaymentElementAvailablePaymentMethodsChangeEvent =
-  StripeExpressCheckoutElementAvailablePaymentMethodsChangeEvent
 const APPLE_PAY_INITIAL_RESPONSE_TIMEOUT_MS = 5_000
 const APPLE_PAY_CHECKOUT_LOADING_TIMEOUT_MS = 10_000
 const PAYMENT_ELEMENT_READY_TIMEOUT_MS = 10_000
@@ -239,12 +237,6 @@ export type StripeOfferElementsState = {
   totalLabel: string
 }
 
-export function hasApplePayMethod(
-  event: Pick<StripeExpressCheckoutElementReadyEvent, "availablePaymentMethods"> | null | undefined,
-) {
-  return event?.availablePaymentMethods?.applePay === true
-}
-
 export function getApplePayAvailability(
   event: Pick<StripeExpressCheckoutElementReadyEvent, "availablePaymentMethods"> | null | undefined,
 ): ApplePayAvailability {
@@ -341,17 +333,6 @@ export function normalizeWalletDebugMethods(
       typeof availability === "boolean" ? availability : availability?.available === true,
     ]),
   )
-}
-
-export function reconcilePaymentElementApplePayAvailability(
-  current: ApplePayAvailability,
-  event: Pick<StripePaymentElementAvailablePaymentMethodsChangeEvent, "paymentMethods">,
-): ApplePayAvailability {
-  if (current !== "pending" || event.paymentMethods?.applePay?.available !== true) {
-    return current
-  }
-
-  return "available"
 }
 
 function StripeOfferElementsCheckoutBody({

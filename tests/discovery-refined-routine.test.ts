@@ -211,25 +211,7 @@ test("ideal steps attach the matching role preview and leave a role without one 
   assert.equal(steps[2]!.preview?.kind, "recommendation")
 })
 
-test("binding is positional per category: three oil roles, two owned products, one open step", () => {
-  const steps = oilSteps()
-  const reduction = reduceIntakeItemsToSteps(steps, [
-    item({ id: "item-a", productId: "product-a", createdAt: "2026-09-20T09:00:00.000Z" }),
-    item({ id: "item-b", productId: "product-b", createdAt: "2026-09-20T11:00:00.000Z" }),
-  ])
-
-  assert.deepEqual(
-    reduction.bindings.map((binding) => [binding.step.role, binding.item?.id ?? null]),
-    [
-      ["pre_wash_fibre_treatment", "item-a"],
-      ["leave_on_fibre_conditioning", "item-b"],
-      ["dry_finish", null],
-    ],
-  )
-  assert.deepEqual(reduction.unassignedIntakeProducts, [])
-})
-
-test("binding order is (resolved product first, source rank, created_at, id) and independent of input order", () => {
+test("binding source rank is independent of input order", () => {
   const steps = oilSteps()
   const items = [
     item({
@@ -323,15 +305,6 @@ test('„benutze ich nicht" is an explicit answer, not an unassigned product', (
   assert.deepEqual(reduction.declinedCategories, ["mask", "oil"])
 })
 
-test("zero intake leaves every ideal step open", () => {
-  const steps = oilSteps()
-  const reduction = reduceIntakeItemsToSteps(steps, [])
-  assert.equal(reduction.bindings.length, 3)
-  assert.ok(reduction.bindings.every((binding) => binding.item === null))
-  assert.deepEqual(reduction.unassignedIntakeProducts, [])
-  assert.deepEqual(reduction.declinedCategories, [])
-})
-
 function swapRow(id: string): ScanCatalogPresentationRow {
   return {
     id,
@@ -379,6 +352,8 @@ test("composed outcomes: kept, swapped, undecided for an owned product, ideal fo
     ],
     swapProducts: [swapRow("swap-1")],
   })
+
+  assert.deepEqual(routine.unassignedIntakeProducts, [])
 
   assert.deepEqual(
     routine.steps.map((step) => [step.step.role, step.outcome, step.item?.id ?? null]),
@@ -454,6 +429,12 @@ test("a decision key no ideal step carries is ignored rather than inventing a st
   })
 
   assert.equal(routine.steps.length, 3)
+  assert.deepEqual(
+    routine.steps.map((step) => step.item),
+    [null, null, null],
+  )
+  assert.deepEqual(routine.unassignedIntakeProducts, [])
+  assert.deepEqual(routine.declinedCategories, [])
   assert.ok(routine.steps.every((step) => step.outcome === "ideal"))
 })
 
@@ -767,21 +748,6 @@ test("a product line that changes what the paper prints moves sourceHash", () =>
     })
   assert.equal(swapped("Linie").steps[0]!.swapProductLabel, "Marke Linie Swap Öl")
   assert.notEqual(swapped(null).sourceHash, swapped("Linie").sourceHash)
-})
-
-test("without any product line every label is exactly the brand + name label", () => {
-  const oil = decision({ category: "oil", roles: OIL_ROLES })
-  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
-    recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1"),
-  ])
-  const routine = composeDiscoveryRefinedRoutine({
-    steps,
-    items: [],
-    decisions: [],
-    swapProducts: [],
-    recommendationProducts: [{ ...swapRow("ideal-1"), brand: "Marke A" }],
-  })
-  assert.equal(routine.steps[0]!.recommendationLabel, "Marke A Ideal pre_wash_fibre_treatment")
 })
 
 // --- verdict-layer fix wave (P1): prices never move the fingerprint --------------------------

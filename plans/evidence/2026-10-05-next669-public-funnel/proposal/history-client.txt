@@ -1,0 +1,37 @@
+commit cf72e68ea1cbf28de0af0356feecba081a2e7166
+Author:     NickRuppy <149665130+NickRuppy@users.noreply.github.com>
+AuthorDate: Tue Sep 15 16:03:53 2026 +0200
+Commit:     GitHub <noreply@github.com>
+CommitDate: Tue Sep 15 16:03:53 2026 +0200
+
+    fix(analytics): track scanner quiz display and align funnel cohorts (#565)
+    
+    The scanner entry redirects from `/lp/scan` to `/quiz`, so requiring a
+    landing-page pageview excluded valid checkouts from the main dashboard.
+    The quiz now emits `scanner_quiz_viewed` only when the scanner variant
+    is displayed, and the funnel, offer and acquisition charts share that
+    quiz cohort with clearly labelled historical fallback.
+    
+    The event retains signed journey identity and original campaign fields.
+    Bounded context retries recover from temporary failures and incomplete
+    metadata; identity-aware response ordering prevents an earlier GET or
+    identity-only milestone from losing campaign attribution. Meta and trial
+    lifecycle definitions stay unchanged.
+    
+    Validation: 94 shared/focused analytics tests, TypeScript and configured
+    source lint pass; four isolated Chromium checks verify entry, prefetch,
+    resume and the PostHog payload, including recovery after an HTTP-200
+    incomplete context response. SELECT-only fixtures and live PostHog query
+    checks validate the repaired counts. Whole-tree correctness/structural
+    review and the response-order regression fix were reviewed separately.
+    No migrations.
+    
+    Historical missing events are not reconstructed. Trial lifecycle charts
+    await real attributed telemetry. One accidental QA session created
+    during local test setup was identified and marked internal; no lead or
+    conversion was created, and browser writes/vendor traffic are now
+    intercepted.
+
+ src/lib/funnel/client.ts    | 202 ++++++++++++++++++++++++++++++++++++++------
+ tests/funnel-client.test.ts | 166 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 340 insertions(+), 28 deletions(-)

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: a fully auto-accepted draft leaves both modules open and assumptions active
+not ok 1 - a fully auto-accepted draft leaves both modules open and assumptions active
+  ---
+  duration_ms: 2.028125
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/refinement/module-status.test.ts:2:1852'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/refinement/module-status.test.ts:56:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 220.24

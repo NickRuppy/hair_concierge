@@ -2,7 +2,6 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  classifyPayPalPaymentFeedback,
   classifyStripePaymentFeedback,
   paymentFeedback,
   type PaymentFeedbackKind,
@@ -129,15 +128,4 @@ test("Stripe confirmation phase keeps temporary provider failures truthful", () 
     }).truth,
     "failed",
   )
-})
-
-test("PayPal statuses retain duplicate-payment protection and cancellation is neutral", () => {
-  const activeAccess = classifyPayPalPaymentFeedback({ status: "checkout_access_already_exists" })
-  assert.ok(activeAccess)
-  assert.equal(activeAccess.kind, "access_already_active")
-  const pending = classifyPayPalPaymentFeedback({ status: "pending" })
-  assert.ok(pending)
-  assert.equal(pending.kind, "payment_status_pending")
-  assert.equal(pending.retryable, false)
-  assert.equal(classifyPayPalPaymentFeedback({ status: "cancelled" }), null)
 })

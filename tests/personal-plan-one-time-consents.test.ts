@@ -5,22 +5,12 @@ import test from "node:test"
 import {
   consentTextSha256,
   createPersonalPlanOneTimeCheckoutConsent,
-  findPersonalPlanOneTimeConsentByLeadSession,
-  findPersonalPlanOneTimeConsentByPayPalReference,
-  findPersonalPlanOneTimeConsentByStripeCheckoutSessionId,
   recordPersonalPlanOneTimeDeliveryEvidence,
 } from "../src/lib/billing/personal-plan-one-time-consents"
 import {
   PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_COPY_VERSION,
   PERSONAL_PLAN_ONE_TIME_PURCHASE_CONTEXT_TEXT,
 } from "../src/lib/billing/personal-plan-one-time-consent-copy"
-
-const consent = {
-  id: "consent-1",
-  stripe_checkout_session_id: "cs_123",
-  paypal_order_id: "order-123",
-  paypal_capture_id: "capture-123",
-}
 
 test("purchase-context creation stores the exact neutral snapshot and its stable hash", async () => {
   const state: { inserted: Record<string, unknown> | null } = { inserted: null }
@@ -97,86 +87,6 @@ test("delivery evidence updates only supplied lifecycle fields", async () => {
   assert.deepEqual(patch, { generation_started_at: "2026-07-31T10:01:00.000Z" })
 })
 
-test("provider activation can find immutable consent by bound Stripe or PayPal reference", async () => {
-  const lookups: Array<[string, string]> = []
-  const supabase = consentLookupSupabase(consent, lookups)
-
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByStripeCheckoutSessionId(supabase as never, "cs_123"),
-    consent,
-  )
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByPayPalReference(supabase as never, {
-      orderId: "order-123",
-    }),
-    consent,
-  )
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByPayPalReference(supabase as never, {
-      captureId: "capture-123",
-    }),
-    consent,
-  )
-  assert.deepEqual(lookups, [
-    ["stripe_checkout_session_id", "cs_123"],
-    ["paypal_order_id", "order-123"],
-    ["paypal_capture_id", "capture-123"],
-  ])
-})
-
-test("provider consent lookups return null for a missing row and surface database errors", async () => {
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByStripeCheckoutSessionId(
-      consentLookupSupabase(null) as never,
-      "cs_missing",
-    ),
-    null,
-  )
-  const databaseError = { message: "database unavailable" }
-  await assert.rejects(
-    () =>
-      findPersonalPlanOneTimeConsentByPayPalReference(
-        consentLookupSupabase(null, undefined, databaseError) as never,
-        { orderId: "order_error" },
-      ),
-    (error) => error === databaseError,
-  )
-})
-
-test("checkout retries can find an existing immutable consent by lead and session", async () => {
-  const lookups: Array<[string, string]> = []
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByLeadSession(
-      consentLookupSupabase(consent, lookups) as never,
-      { leadId: "lead-1", funnelSessionId: "session-1" },
-    ),
-    consent,
-  )
-  assert.deepEqual(lookups, [
-    ["lead_id", "lead-1"],
-    ["funnel_session_id", "session-1"],
-  ])
-})
-
-test("lead-session consent lookup returns null when missing and surfaces database errors", async () => {
-  assert.equal(
-    await findPersonalPlanOneTimeConsentByLeadSession(consentLookupSupabase(null) as never, {
-      leadId: "lead-missing",
-      funnelSessionId: "session-missing",
-    }),
-    null,
-  )
-  const databaseError = { message: "lead-session lookup failed" }
-  await assert.rejects(
-    () =>
-      findPersonalPlanOneTimeConsentByLeadSession(
-        consentLookupSupabase(null, undefined, databaseError) as never,
-        { leadId: "lead-error", funnelSessionId: "session-error" },
-      ),
-    (error) => error === databaseError,
-  )
-})
-
 test("migration makes accepted evidence immutable and requires confirmation before delivery", () => {
   const migration = readFileSync(
     new URL(
@@ -238,27 +148,3 @@ test("follow-up migration permits expired Stripe recovery and generation after c
   assert.match(migration, /confirmation_status IN \('sent', 'delivered'\)/)
   assert.match(migration, /personal_plan_one_time_generation_requires_confirmation_sent/)
 })
-
-function consentLookupSupabase(
-  row: typeof consent | null,
-  lookups?: Array<[string, string]>,
-  error: unknown = null,
-) {
-  return {
-    from(table: string) {
-      assert.equal(table, "personal_plan_one_time_checkout_consents")
-      return {
-        select() {
-          return this
-        },
-        eq(column: string, value: string) {
-          lookups?.push([column, value])
-          return this
-        },
-        async maybeSingle() {
-          return { data: row, error }
-        },
-      }
-    },
-  }
-}

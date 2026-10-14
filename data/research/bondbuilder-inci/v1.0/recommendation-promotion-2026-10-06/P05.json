@@ -1,0 +1,1937 @@
+{
+  "researchKey": "P05",
+  "productId": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
+  "profile": {
+    "fit": {
+      "fine": {
+        "value": null,
+        "rationale": "P05: no captured fine-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: no captured fine-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag."
+      },
+      "coarse": {
+        "value": null,
+        "rationale": "P05: no captured coarse-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: no captured coarse-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag."
+      },
+      "normal": {
+        "value": null,
+        "rationale": "P05: no captured normal-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: no captured normal-diameter suitability value; manufacturer all-hair/damage language, curl pattern or ingredient texture cannot supply a diameter fit flag."
+      }
+    },
+    "holds": {
+      "fit": [
+        {
+          "code": "diameter_fit_unknown",
+          "field": "fit",
+          "reason": "Fine, normal and coarse suitability are independently unknown; no all-diameter default.",
+          "source_ids": []
+        }
+      ],
+      "boundary": [],
+      "identity": [],
+      "protocol": [],
+      "claim_trust": []
+    },
+    "method": {
+      "method_id": "bondbuilder-inci",
+      "output_sha256": "665fcceafeaa8c6719c90e88fce38511ef8fffff5dc040f044d8e26bc3291ee5",
+      "prompt_sha256": "3019d9d4aa97167af1821f21609beaa414ea58e5f653b1dc3cc4e666191b2ec7",
+      "run_reference": "replay-2026-10-03-v0.5-r3",
+      "method_version": "bondbuilder-inci-v0.5",
+      "runbook_sha256": "5e54370eb907afbbbdce08115e497716fd2fe15c1b6d0bbff1f2e0e97194c0ff",
+      "standard_sha256": "9fbbf63c2201732229741d2aa534a685ba999dd801f4ae5fbfe1ca4768b2b816",
+      "artifact_reference": "data/research/bondbuilder-inci/v1.0/recommendation-promotion-2026-10-06/P05.json",
+      "blind_guide_sha256": "4840b6d60efb00db856aa0de4f16cdb140ebcace7da561b5b6d567d2b1acdd41",
+      "reference_registry_sha256": "db2bc09840296fb54f79928d4a6832ac402a6b18761fcdf9fe48e02ae1570924"
+    },
+    "review": {
+      "checked_date": "2026-10-06",
+      "reviewed_date": "2026-10-06",
+      "profile_sha256": "665fcceafeaa8c6719c90e88fce38511ef8fffff5dc040f044d8e26bc3291ee5",
+      "decision_references": [
+        "recommendation-promotion-2026-10-06:reviewed-protocol-overlay"
+      ]
+    },
+    "formula": {
+      "status": "complete",
+      "markers": [
+        {
+          "family": "acid_calcium_management",
+          "literal": "citric acid",
+          "source_ids": [
+            "R09"
+          ]
+        },
+        {
+          "family": "acid_calcium_management",
+          "literal": "sodium citrate",
+          "source_ids": [
+            "R09"
+          ]
+        }
+      ],
+      "raw_inci": "AQUA / WATER, CETEARYL ALCOHOL, GLYCERIN, BEHENTRIMONIUM CHLORIDE, STEARYL ALCOHOL, CITRIC ACID, CETYL ESTERS, SODIUM CITRATE, ISOPROPYL ALCOHOL, PARFUM / FRAGRANCE, PHENOXYETHANOL, POLYQUATERNIUM-10, POLYSORBATE 20, HYDROXYPROPYL GUAR, LIMONENE, LINALOOL",
+      "conflicts": [
+        {
+          "reason": "Owner selected the exact Douglas DE 190 ml sixteen-ingredient source-version on 2026-09-30; displaced manufacturer list retained without merging.",
+          "raw_inci": "AQUA / WATER • BEHENTRIMONIUM CHLORIDE • CETEARYL ALCOHOL • SODIUM CITRATE • CITRIC ACID • POLYQUATERNIUM-37 • OCTYLDODECANOL • POTATO STARCH MODIFIED • ISOPROPYL ALCOHOL • POLYSORBATE 20 • PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE • PARFUM / FRAGRANCE • PANTHENOL • STEARAMIDOPROPYL DIMETHYLAMINE • CAPRYLYL GLYCOL • SALICYLIC ACID • PPG-1 TRIDECETH-6 • GLYCERYL STEARATE • LIMONENE • SORBITAN OLEATE • LINALOOL • CITRONELLOL (F.I.L. Y70018233/1).",
+          "resolved": true,
+          "source_ids": [
+            "R02"
+          ]
+        }
+      ],
+      "raw_sha256": "1b7dde77c6067231ce009b330c2474d7f677edd08688471092589e94fd390c0b",
+      "source_ids": [
+        "R09"
+      ],
+      "normalized_sha256": "4a18ed3c6c724f3a79124871d2be9a576e5037ece1a8e90ad6cb5dbdf86c66cf",
+      "candidate_families": [
+        "acid_calcium_management"
+      ],
+      "normalization_version": "bondbuilder-inci-normalization-v1",
+      "normalized_ingredients": [
+        "aqua / water",
+        "cetearyl alcohol",
+        "glycerin",
+        "behentrimonium chloride",
+        "stearyl alcohol",
+        "citric acid",
+        "cetyl esters",
+        "sodium citrate",
+        "isopropyl alcohol",
+        "parfum / fragrance",
+        "phenoxyethanol",
+        "polyquaternium-10",
+        "polysorbate 20",
+        "hydroxypropyl guar",
+        "limonene",
+        "linalool"
+      ],
+      "candidate_to_final_trace": [
+        "Stage A candidates: acid_calcium_management.",
+        "Citric Acid/Sodium Citrate and targeted Acidic Bonding treatment identity are consistent with the category for the exact owner-selected 16-ingredient version.",
+        "Final boundary: in_scope; family: acid_calcium_management; tier/basis: medium/owner_calibration."
+      ]
+    },
+    "sources": [
+      {
+        "id": "E01",
+        "url": "https://onlinelibrary.wiley.com/doi/10.1111/ics.13039",
+        "type": "peer_reviewed_primary",
+        "scope": "technology",
+        "access": "abstract",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "Authors L’Oréal Research & Innovation; declared no conflict in article.",
+        "limitations": [
+          "citric-acid technology",
+          "publisher abstract and affiliations; full methods not audited",
+          "Exact dose/formulation/full protocol unavailable in inspected abstract; no retail effect-size transfer."
+        ],
+        "observation": "Zhang et al. 2025 tested chemically treated hair using thermal, tensile/fatigue, diffraction and elemental methods. Abstract reports reinforcement and calcium reduction; multiple mechanisms are proposed. No named pilot bottle is demonstrated by this abstract.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Authors L’Oréal Research & Innovation; declared no conflict in article."
+      },
+      {
+        "id": "E02",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9542698/",
+        "type": "peer_reviewed_primary",
+        "scope": "technology",
+        "access": "abstract",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "Durham authors plus Ashland coauthor; supplier involvement disclosed.",
+        "limitations": [
+          "gluconamide/gluconate model chemistry",
+          "indexed primary abstract/introduction; direct PMC browser check and ACS 403 blocked full audit",
+          "Not an exact OGX/Aveda trial or direct retail molecular efficacy demonstration."
+        ],
+        "observation": "Chambers et al. 2022 characterize crystals, salts and aggregation/gelation. They explicitly describe the full hair-strengthening mechanism as unknown.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Durham authors plus Ashland coauthor; supplier involvement disclosed."
+      },
+      {
+        "id": "E03",
+        "url": "https://cris.unibo.it/handle/11585/796978",
+        "type": "peer_reviewed_primary",
+        "scope": "technology",
+        "access": "abstract",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University authors; funding/COI unavailable in inspected abstract.",
+        "limitations": [
+          "maleate/shikimic model and commercial-agent study, not current No.3PLUS",
+          "author-repository abstract inspected; full manuscript not audited",
+          "Dimethyl maleate model is not Bis-Aminopropyl Diglycol Dimaleate. Exact commercial identities/protocol applicability need full-text audit; not a blanket demonstration of no benefit."
+        ],
+        "observation": "Di Foggia et al. 2021 use IR/Raman and SEM on bleached hair. Abstract reports surface benefits and structural changes, but no cortex disulfide-content increase or direct sulfa-Michael crosslinking evidence; cuticle effect cannot be excluded.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University authors; funding/COI unavailable in inspected abstract."
+      },
+      {
+        "id": "E04",
+        "url": "https://www.sciencedirect.com/science/article/pii/S0141813016319493",
+        "type": "peer_reviewed_primary",
+        "scope": "technology",
+        "access": "abstract",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University of Minho; funding/COI not independently audited here.",
+        "limitations": [
+          "generic keratin-peptide binding",
+          "indexed publisher/PubMed abstract inspected; direct publisher 403",
+          "No exact sh-Oligopeptide-78 mask, damaged-fibre efficacy or reconstructed polypeptide backbone tested by this abstract."
+        ],
+        "observation": "Cruz et al. 2017 screened 1,235 keratin-derived decapeptides on glass arrays against extracted human-hair keratin. Binding differed with peptide composition.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University of Minho; funding/COI not independently audited here."
+      },
+      {
+        "id": "P01:E05",
+        "url": "https://ciencia.ucp.pt/ws/portalfiles/portal/108144292/108144176.pdf",
+        "type": "peer_reviewed_primary",
+        "scope": "predecessor",
+        "access": "full_text",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests.",
+        "limitations": [
+          "K18 mask and OLAPLEX No.0, ex-vivo",
+          "full institutional PDF; methods/results/funding inspected; no numerical chart inference",
+          "Small ex-vivo study; no vehicle/active-isolation comparator; nonstandard dosage/handling. Does not test No.3PLUS. Authors' bond/core interpretations are not independent proof of native molecular reconstruction."
+        ],
+        "observation": "Martins et al. 2024 list K18's 21-ingredient formula and four-ingredient OLAPLEX No.0. Twice-bleached purchased Caucasian tresses: 10% product/hair mass, one-minute massage, four-minute reaction, brushing, 48-hour conditioning; three tresses per condition, mechanical testing on 25 fibres. Reported tensile improvement is clearly significant for No.0; K18's reported increase is not clearly significant in the inspected text. Multiple surface/structural measurements are reported.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests."
+      },
+      {
+        "id": "P02:E05",
+        "url": "https://ciencia.ucp.pt/ws/portalfiles/portal/108144292/108144176.pdf",
+        "type": "peer_reviewed_primary",
+        "scope": "product",
+        "access": "full_text",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests.",
+        "limitations": [
+          "K18 mask and OLAPLEX No.0, ex-vivo",
+          "full institutional PDF; methods/results/funding inspected; no numerical chart inference",
+          "Small ex-vivo study; no vehicle/active-isolation comparator; nonstandard dosage/handling. Does not test No.3PLUS. Authors' bond/core interpretations are not independent proof of native molecular reconstruction."
+        ],
+        "observation": "Martins et al. 2024 list K18's 21-ingredient formula and four-ingredient OLAPLEX No.0. Twice-bleached purchased Caucasian tresses: 10% product/hair mass, one-minute massage, four-minute reaction, brushing, 48-hour conditioning; three tresses per condition, mechanical testing on 25 fibres. Reported tensile improvement is clearly significant for No.0; K18's reported increase is not clearly significant in the inspected text. Multiple surface/structural measurements are reported.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests."
+      },
+      {
+        "id": "E06",
+        "url": "https://www.ashland.com/file_source/Ashland/Documents/Poster%20FiberHance%20bm%2001312020.pdf",
+        "type": "supplier_primary_technical_poster",
+        "scope": "technology",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "supplier",
+        "affiliation": "Ashland supplier-owned material; not independent retail testing.",
+        "limitations": [
+          "supplier paired-marker technology, not OGX/Aveda bottles",
+          "indexed primary poster text; direct PDF timeout, graphs not inspected",
+          "Indexed text is partial; no numerical graph interpretation. Retail supplier identity, concentration and protocol equivalence not known. Claimed mechanism remains proposed; obtain full poster before treating an inaccessible result as pivotal."
+        ],
+        "observation": "Poster describes cyclic tensile-fatigue testing with automated fibre loading (n=50), dimension measurement, bleached/untreated comparisons and formulation tests. A described spectroscopic experiment uses 1% active in water at pH4 for 30 minutes then rinse.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Ashland supplier-owned material; not independent retail testing."
+      },
+      {
+        "id": "E07",
+        "url": "https://patents.google.com/patent/US11491092B2/en",
+        "type": "inventor_patent",
+        "scope": "technology",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "patent",
+        "affiliation": "Inventor/patent-holder evidence, not independent validation.",
+        "limitations": [
+          "bis(2-ethylhexyl) maleate technology examples",
+          "description/examples inspected",
+          "Different companions from retail concentrate; qualitative observations/images, not inspected quantitative structural/tensile evidence. Patent claim ranges and grant are not proof of retail repair efficacy."
+        ],
+        "observation": "Examples compare maleate/conditioning formulations with untreated or bleach controls. Post-bleach example uses water, bis(2-ethylhexyl) maleate and behentrimonium chloride, with qualitative shine/softness/combability/frizz outcomes. Other examples include salon chemical mixtures.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Inventor/patent-holder evidence, not independent validation."
+      },
+      {
+        "id": "R01",
+        "url": "https://www.loreal-paris.de/elvital/bond-repair/rescue-pre-shampoo",
+        "type": "local manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Plus INCI, directions, 22% complex wording; isolated-product test methods not exposed.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R02",
+        "url": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+        "type": "local manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Full manufacturer INCI and formula code; conflict with R09 retained.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R03",
+        "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+        "type": "UK manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Full INCI, overnight directions, five-wash system/comparator footnote.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R04",
+        "url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+        "type": "local manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "150ml local INCI ILN53057, dry pre-shampoo protocol and curly-hair/no-conditioner test comparator.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R05",
+        "url": "https://olaplex.com/products/olaplex-n-3plus-complete-repair-treatment-100ml",
+        "type": "global manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Full global current formula and claims; differs from local captured variant. No detailed current test report inspected.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R06",
+        "url": "https://www.k18hair.com/products/leave-in-molecular-repair-hair-mask-50-ml",
+        "type": "global manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Full current global formula, directions and attributed clinical/molecular claims; no detailed report inspected.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R07",
+        "url": "https://epres.com/products/bond-repair-treatment",
+        "type": "global manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Four-ingredient concentrate, kit/use directions, attributed disulfide/continued-action claims; no quantitative test methods.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R08",
+        "url": "https://www.dm.de/p/d/1679220/l-oreal-paris-elvital-pre-shampoo-bond-repair-anti-haarschaeden",
+        "type": "DE retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "200ml INCI agrees with Plus after typography cleanup; GTIN3600524074517 retailer lead, not pack-verified. Old 12% copy retained as conflict.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R09",
+        "url": "https://www.douglas.de/de/p/5011495045",
+        "type": "DE retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Full materially different Redken INCI, directions; not merged with manufacturer.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R10",
+        "url": "https://en.zalando.de/kerastase-concentre-decalcifiant-ultra-reparateur-system-0-keh31h01a-s11.html",
+        "type": "DE retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "45ml treatment-style INCI, not a 250ml verification.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R11",
+        "url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+        "type": "DE brand/distributor",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "distributor",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "21-ingredient mask list, barcode lead858511001128, local instructions. Distributor identity not silently called manufacturer authority.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R12",
+        "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+        "type": "DE brand/distributor",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "distributor",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Local current-listed INCI differs from global formula; directions are three-minute wet pre-shampoo.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R13",
+        "url": "https://epres-hair.de/modal.aspx?WPParams=50C9D4C6C5D2E6BDA5A98395A992",
+        "type": "DE brand/distributor",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "distributor",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "2x15ml refill concentrate; four ingredients corroborate global concentrate by spelling; no precise water volume.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R14",
+        "url": "https://lyko.com/de/ogx/ogx-bond-repair-sealing-serum-50-ml",
+        "type": "DE-language retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Listing inspected; exact supplied market/formula not resolved. Price not used for research.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "R15",
+        "url": "https://www.kerastase.de/produktlinien/produktlinien/premiere/concentre-decalcifiant-ultra-reparateur/3474637196684.html",
+        "type": "DE manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "exact source-listed product/market only",
+          "web text inspected"
+        ],
+        "observation": "Initial page retrieval succeeded; subsequent timeout. Travel-selected URL and reported layering/system footnotes retained; exact 250ml formula unresolved.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N01",
+        "url": "https://www.basler-beauty.de/marken/kerastase/kerastase-premiere-concentre-decalcifiant-ultra-reparateur-250-ml.html",
+        "type": "DE_exact_product_retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "Kérastase target 250ml; local retailer source version",
+          "full ingredient and application text inspected",
+          "Source-listed version, not physical pack; broad 99% restoration copy is not an inspected isolated-product experiment."
+        ],
+        "observation": "Exact 250ml target, complete 21-ingredient treatment list, FIL N70030006/1; wet lengths, massage, 5min, do not rinse, layer Première Bain shampoo, rinse then conditioner/mask.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N02",
+        "url": "https://www.klier-hair-world.de/premiere-concentre-decalcifiant-ultra-reparateur-250-ml/111820",
+        "type": "DE_exact_product_retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "Kérastase 250ml corroboration",
+          "full ingredient and protocol text inspected by source researcher",
+          "Retailer corroboration is not a clinical test or supplied-pack verification."
+        ],
+        "observation": "Same treatment-style complete list and no-rinse-before-Première-shampoo layering sequence.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N03",
+        "url": "https://www.boozt.com/de/de/ogx/bond-repair-sealing-serum-50-ml_32962840/231199512",
+        "type": "DE_exact_product_retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "OGX50ml DE storefront, EAN3574661818474 as source-listed lead",
+          "researcher full listing; root indexed full ingredient text; root direct open failed",
+          "Keep raw transcription issues. No pristine physical DE label or catalog binding. Storefront/EAN lead is not proof of broad local availability."
+        ],
+        "observation": "German listing supplies complete ordered formula with the paired markers, importer and same overnight leave-in directions. Raw list has translated tokens, split Caprylic, Capric Triglyceride and 1, 2-Hexanediol.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N04",
+        "url": "https://www.med24.no/haarpleie/styling-produkter/haarolje-og-serum/ogx-bond-repair-sealing-serum-50-ml",
+        "type": "same_identifier_EU_retailer_corroboration",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": null,
+        "limitations": [
+          "OGX50ml EAN3574661818474, Norway; not a DE pack",
+          "researcher full listing and ingredient text",
+          "A dated identifier bridge, not worldwide formula equality. Raw lists remain separate."
+        ],
+        "observation": "Same source-listed EAN and ingredient order; clean Caprylic/Capric Triglyceride, translated 1, 2-heksandiol. Corroborates the DE punctuation/translation repair without replacing its raw list.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N05",
+        "url": "https://epres.com/products/bond-repair-concentrate-refill-pack",
+        "type": "manufacturer_protocol",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "epres intended spray bottle/refill system",
+          "full official description, FAQs and ingredient text inspected",
+          "Use supplied bottle/fill instruction; not an inferred universal custom-bottle ratio or a retail efficacy test. Exact local kit/pack binding remains separate."
+        ],
+        "observation": "One vial into intended epres spray bottle, fill water and shake; each vial creates150ml finished treatment. Do not double concentrate. Dry unwashed hair, fully saturate, at least10min, cleanse/style as usual, 1–2times weekly; after mixing use within2months.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "P01:N06",
+        "url": "https://ciencia.ucp.pt/ws/portalfiles/portal/108144292/108144176.pdf",
+        "type": "peer_reviewed_primary_endpoint_amendment",
+        "scope": "predecessor",
+        "access": "full_text",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University authors; ERDF/POCI, Amyris Bio Products Portugal and university support; declared no competing interests.",
+        "limitations": [
+          "Martins2024 K18listed21ingredient mask and OLAPLEXNo0, notNo3/No3PLUS",
+          "full PDF audited by evidence researcher; root document inspected",
+          "No vehicle/conditioner control, small heavily bleached Caucasian-tress sample, nonstandard dosing; no personal/head-to-head efficacy ranking, native molecular reconstruction proof or No3PLUS transfer."
+        ],
+        "observation": "Single4min ex-vivo treatment, three bleached tresses per condition, 10% product/hair mass. Both products show surface/appearance changes. Only No0 tensile-strength increase is explicitly described as significant; K18 increase lacks that statement. No0 extensibility trend and several thermal endpoints are not statistically confirmed. K18 spectral changes are largely attributed to excipients, not established protein reconstruction.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University authors; ERDF/POCI, Amyris Bio Products Portugal and university support; declared no competing interests."
+      },
+      {
+        "id": "P02:N06",
+        "url": "https://ciencia.ucp.pt/ws/portalfiles/portal/108144292/108144176.pdf",
+        "type": "peer_reviewed_primary_endpoint_amendment",
+        "scope": "product",
+        "access": "full_text",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "University authors; ERDF/POCI, Amyris Bio Products Portugal and university support; declared no competing interests.",
+        "limitations": [
+          "Martins2024 K18listed21ingredient mask and OLAPLEXNo0, notNo3/No3PLUS",
+          "full PDF audited by evidence researcher; root document inspected",
+          "No vehicle/conditioner control, small heavily bleached Caucasian-tress sample, nonstandard dosing; no personal/head-to-head efficacy ranking, native molecular reconstruction proof or No3PLUS transfer."
+        ],
+        "observation": "Single4min ex-vivo treatment, three bleached tresses per condition, 10% product/hair mass. Both products show surface/appearance changes. Only No0 tensile-strength increase is explicitly described as significant; K18 increase lacks that statement. No0 extensibility trend and several thermal endpoints are not statistically confirmed. K18 spectral changes are largely attributed to excipients, not established protein reconstruction.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "University authors; ERDF/POCI, Amyris Bio Products Portugal and university support; declared no competing interests."
+      },
+      {
+        "id": "N07",
+        "url": "https://onlinelibrary.wiley.com/doi/10.1111/ics.13039",
+        "type": "peer_reviewed_primary_abstract_amendment",
+        "scope": "technology",
+        "access": "abstract",
+        "author": null,
+        "authority": "peer_reviewed",
+        "affiliation": "L’Oréal Research & Innovation authors; declared no conflict.",
+        "limitations": [
+          "citric-acid technology, not any named retail treatment",
+          "publisher abstract inspected; full text inaccessible",
+          "Dose,pH,vehicle,full treatment protocol,n and full statistical details not inspected. Do not transfer abstract percentages to bottles or treat unknown study conditions as a known match."
+        ],
+        "observation": "Zhang2025 reports improved mechanical/thermal properties and reduced calcium after citric-acid treatment of chemically treated fibers; endpoints include tensile modulus, fatigue cycles, DSC, XRD and calcium analyses. Dependence on pre-existing chemical damage is explicit.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "L’Oréal Research & Innovation authors; declared no conflict."
+      },
+      {
+        "id": "N08",
+        "url": "https://linktr.ee/abbeyyung",
+        "type": "creator_own_source",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "creator",
+        "affiliation": null,
+        "limitations": [
+          "AbbeyYung promotional context",
+          "own page inspected",
+          "Promotional relationship visible; compensation not established by code alone. No audited first-person efficacy verdict or repeated-use claim on this page."
+        ],
+        "observation": "Own page lists an epres discount code and links to own channels.",
+        "checked_date": "2026-09-30",
+        "commercial_context": null
+      },
+      {
+        "id": "N09",
+        "url": "https://www.youtube.com/watch?v=QM8glR1ClyA",
+        "type": "creator_original_video_lead",
+        "scope": "practice",
+        "access": "uninspected",
+        "author": null,
+        "authority": "creator",
+        "affiliation": null,
+        "limitations": [
+          "Abbey bond-repair routine includes epres/K18",
+          "indexed description only; original video/transcript inaccessible; normal browser retry unavailable",
+          "No first-person product benefit, limitation, duration or verdict extracted. Secondary summaries are not substituted."
+        ],
+        "observation": "Creator/title/routine inclusion leads identified.",
+        "checked_date": "2026-09-30",
+        "commercial_context": null
+      },
+      {
+        "id": "N10",
+        "url": "https://olaplex.de/pages/hair-care-ambassadors",
+        "type": "brand_relationship_disclosure",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "TomHannemann/@_the.beautiful.people and DejanGarz/@dejangarz",
+          "official text inspected",
+          "Brand relationship, not exact-product testing or repeated use. No readable original first-person pilot take found in bounded follow-up."
+        ],
+        "observation": "Both named as ambassadors.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "N11",
+        "url": "https://olaplex.de/pages/dejangarz",
+        "type": "brand_hosted_creator_endorsement",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "creator",
+        "affiliation": null,
+        "limitations": [
+          "No3PLUS in Dejan's favourites",
+          "official text inspected",
+          "Endorsement/selection, not independent test, first-person result or repeated-use proof. Generic legacy copy is not evidence for current product."
+        ],
+        "observation": "Brand-hosted favourites include current No3PLUS; DEJAN-15 promotion present.",
+        "checked_date": "2026-09-30",
+        "commercial_context": null
+      },
+      {
+        "id": "N12",
+        "url": "https://whimsysoul.com/epres-bond-repair-review/",
+        "type": "original_first_person_longer_use_review",
+        "scope": "practice",
+        "access": "full_text",
+        "author": "Kara",
+        "authority": "creator",
+        "affiliation": "Lifestyle/beauty reviewer, not verified hair scientist; affiliate links explicitly disclosed.",
+        "limitations": [
+          "Kara's epres starter-kit hair experience; article dated2026-04-12",
+          "original article text inspected",
+          "Uncontrolled self-report, concurrent routine changes; predominantly sensory results. No molecular/structural efficacy inference or grade from this source alone. Ignore article's unsupported mechanism/origin/nail generalizations."
+        ],
+        "observation": "Reports months of weekly use on coloured hair, increased softness and easier home application. Notes potential weight if extended wear/not thoroughly washed. Reports treatment experience using other shampoos too; full product-line use also disclosed.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Lifestyle/beauty reviewer, not verified hair scientist; affiliate links explicitly disclosed."
+      },
+      {
+        "id": "F01",
+        "url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
+          "product description, directions and INCI inspected 2026-10-01",
+          "No quantitative dose found. Manufacturer suitability is not an independent weightlessness finding."
+        ],
+        "observation": "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
+        "checked_date": "2026-10-01",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "F02",
+        "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "UK 50 ml serum: qualitative dose, distribution, bedtime placement and frequency",
+          "product description, directions and INCI inspected 2026-10-01",
+          "UK guidance; supplied DE pack remains unverified. No diameter-specific guidance found."
+        ],
+        "observation": "UK 50 ml serum: qualitative dose, distribution, bedtime placement and frequency",
+        "checked_date": "2026-10-01",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "A-REDKEN-AU",
+        "url": "https://www.redken.com.au/products/haircare/acidic-bonding-concentrate/acidic-bonding-concentrate-intensive-treatment",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "AU product directions, not DE pack",
+          "product directions inspected 2026-10-01",
+          "Cross-market complement; no concentration equality or binding DE cadence."
+        ],
+        "observation": "AU manufacturer recommends 2–3 uses weekly. Ingredient order corroborates selected 16-ingredient formula but roots/wet/lather prose differs from selected Douglas directions.",
+        "checked_date": "2026-10-01",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "A-PREMIERE-DE",
+        "url": "https://www.kerastase.de/produktlinien/produktlinien/premiere/concentre-decalcifiant-ultra-reparateur/KER_00277.html",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "DE manufacturer complement with format/formula applicability limits",
+          "FAQ and directions inspected 2026-10-01",
+          "Displayed formula block was mismatched; quantitative dose remains complementary pending exact pack binding."
+        ],
+        "observation": "FAQ gives 15–25 ml by hair length and shampoo layering after five minutes; current page names travel format. Manufacturer damp/towel-dried variants differ from selected local wet-lengths wording.",
+        "checked_date": "2026-10-01",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "A-PREMIERE-US",
+        "url": "https://www.kerastase-usa.com/collections/premiere/concentre-decalcifiant-repairing-pre-shampoo.html",
+        "type": "brand_professional",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "professional",
+        "affiliation": "Kérastase brand education manager",
+        "limitations": [
+          "Commercially affiliated US professional usage advice",
+          "named brand education manager advice inspected 2026-09-30",
+          "Not independent efficacy testing or a binding DE pack schedule."
+        ],
+        "observation": "A named US Kérastase education manager recommends weekly use. Commercially affiliated professional advice, not independent efficacy testing.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Kérastase brand education manager"
+      },
+      {
+        "id": "A-JUUT",
+        "url": "https://juut.com/blog/damaged-hair-repair/",
+        "type": "commercial_professional",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "professional",
+        "affiliation": "JUUT / Aveda",
+        "limitations": [
+          "Aveda product practice",
+          "named stylist experiences inspected 2026-09-30",
+          "Commercially connected to Aveda; sensory/manageability accounts do not establish measured structural repair."
+        ],
+        "observation": "JUUT reports styling / care experiences, including after two weeks. Aveda affiliation and sensory endpoints remain explicit; no measured structural repair is inferred.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "JUUT / Aveda"
+      },
+      {
+        "id": "A-REDKEN-CREATOR",
+        "url": "https://www.youtube.com/watch?v=bkEPoi_Fxvs",
+        "type": "creator_original_video_lead",
+        "scope": "practice",
+        "access": "uninspected",
+        "author": null,
+        "authority": "creator",
+        "affiliation": null,
+        "limitations": [
+          "Redken treatment listing only",
+          "product listing inspected; detailed verdict uninspected",
+          "No positive long-term or efficacy conclusion may be extracted."
+        ],
+        "observation": "Abbey's own video listing names the treatment; no detailed product verdict was inspected.",
+        "checked_date": "2026-09-30",
+        "commercial_context": null
+      },
+      {
+        "id": "A-ELVITAL-EDITORIAL",
+        "url": "https://www.loreal-paris.de/tipps-und-trends/haarpflege/protein-behandlung-fuer-haare",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "Ambiguous Rescue editorial guidance",
+          "editorial applicability inspected 2026-09-30",
+          "Older/ambiguous version; unrelated protein-frequency assertions do not become Bondbuilder rules."
+        ],
+        "observation": "Editorial twice-weekly initially then weekly advice includes conflicting dry-hair 5–10-minute directions; not selected for current Plus.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "A-ELVITAL-WEEKLY",
+        "url": "https://www.loreal-paris.de/tipps-und-trends/haarpflege/hitzegeschaedigtes-haar-reparieren",
+        "type": "manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": null,
+        "limitations": [
+          "Ambiguous Rescue weekly advice",
+          "editorial applicability inspected 2026-09-30",
+          "Exact product-version applicability is unresolved; do not impose weekly use."
+        ],
+        "observation": "Editorial weekly advice is retained as a source variant, not selected for exact current Plus.",
+        "checked_date": "2026-09-30",
+        "commercial_context": "Commercially affiliated source; not independent retail efficacy evidence."
+      },
+      {
+        "id": "S01",
+        "url": "https://eu.curlsmith.com/products/bond-curl-rehab-salve",
+        "type": "local_manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "Curlsmith EU",
+        "limitations": [
+          "Actual pack not supplied; manufacturer warns that formula lists can change.",
+          "Product title salve does not itself establish an applied cream texture.",
+          "Original scope: current EU Bond Curl Rehab Salve product page, 237 ml option",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: local_manufacturer."
+        ],
+        "observation": "Full English INCI transcribed into V01. Specific targeted pre-shampoo treatment claiming reinforcement of three bond types; no disclosed product concentration, pH or independent molecular endpoint. Wet hair without washing first. Apply generously root to tip, coat evenly and detangle. Low porosity: 15 minutes every 4-5 washes; medium: 20 minutes every 3-4 washes; high: 30 minutes every 2-3 washes. Rinse, shampoo and condition.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S02",
+        "url": "https://de.curlsmith.com/products/bond-curl-rehab-salve?variant=39480276746389",
+        "type": "local_manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "Curlsmith DE",
+        "limitations": [
+          "Translated ingredient spelling is not proof of batch equality; no supplied pack.",
+          "Original scope: DE 237 ml listing and translated formula/directions",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: local_manufacturer."
+        ],
+        "observation": "DE current ingredient sequence corroborates EU English sequence, including the gluconamide/gluconate pair and citric acid. DE instructions corroborate the three porosity/time/wash-interval branches and rinse before shampoo and conditioner.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S03",
+        "url": "https://www.dm.de/p/d/1688653/balea-professional-haarkur-keratin-repair",
+        "type": "brand_owner_retailer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "retailer",
+        "affiliation": "dm / Balea",
+        "limitations": [
+          "Listed GTIN is not a scanned pack; marketing name does not identify a distinct molecular ingredient.",
+          "Original scope: DE Haarkur Keratin Repair 300 ml, article 1688653, listed GTIN 4070765002003",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: brand_owner_retailer."
+        ],
+        "observation": "Complete INCI transcribed into V02. Claims concern keratin/peptides and a Pro-Strength label for damaged hair. Spread gently through damp lengths and ends 1-2 times weekly, leave 2-3 minutes and rinse thoroughly. No explicit shampoo/conditioner ordering or physical texture in the inspected text.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S04",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/pro-keratin-filler",
+        "type": "local_manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "Garnier DE / L'Oréal",
+        "limitations": [
+          "Rich formula is a description, not enough to certify cream texture.",
+          "No actual pack.",
+          "Original scope: DE Pro-Keratin Filler Deep Repair Intensive Haarkur 200 ml, formula 1261267 / Z70029743/2",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: local_manufacturer."
+        ],
+        "observation": "Complete INCI transcribed into V03. Maker describes Pro-Keratin plus marula oil, conditioning, filling and strengthening hair; no specific calcium-management or citric-acid repair claim in this text. Before OR after shampoo on damp hair, massage through lengths/ends, leave 5 minutes, optional towel/shower-cap warmth, rinse thoroughly with lukewarm water. Cadence and numerical dose unstated.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S05",
+        "url": "https://www.lorealprofessionnel.de/alle-produkte/haarpflege/absolut-repair-molecular-serum",
+        "type": "local_manufacturer",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "L'Oréal Professionnel DE",
+        "limitations": [
+          "Size and scanned pack unresolved; source-version identity, not exact bottle certification.",
+          "Concentration label is a branded complex claim, not ingredient dose.",
+          "No study protocol, comparator or data inspected.",
+          "Original scope: DE Absolut Repair Molecular Rinse-Off Serum current product-page version; size/GTIN unstated in inspected text",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: local_manufacturer."
+        ],
+        "observation": "Current DE serum INCI captured. Maker claims a 2% peptide-bonder complex and five amino acids, molecular repair and serum-like texture; this does not establish sh-Oligopeptide-78 or an acid/calcium role. In place of a rinse-out mask, preferably after matching shampoo: detangle wet hair, divide in two, apply 2–3 pumps per section. Lengths/ends normally; root-to-tip for very damaged hair. Work through 1–2 minutes, no separate dwell, rinse thoroughly. Optional Metal DX mask; matching leave-in recommended. Two-years-damage headline is a shampoo+serum+leave-in instrumental system claim; another claim concerns 15 serum applications. Neither establishes one-use superiority.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S06",
+        "url": "https://eu.curlsmith.com/blogs/product-guides/bond-curl-rehab-salve",
+        "type": "manufacturer_editorial",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": "Sharley Butcher",
+        "authority": "manufacturer",
+        "affiliation": "Curlsmith / Sharley Butcher",
+        "limitations": [
+          "Not an inspected peer-reviewed study.",
+          "Select current local product directions, retaining this differing editorial separately.",
+          "Original scope: manufacturer editorial and historical study disclosure",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: manufacturer_editorial."
+        ],
+        "observation": "Mentions third-party data and an independent user study of 120 volunteers in January 2021; full study, comparator and formula equivalence unavailable. Editorial says minimum 15 minutes, 30 for medium/high porosity, differing from current product-page medium 20 minutes. It recommends the same conditional wash intervals and matching shampoo/conditioner.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S07",
+        "url": "https://cms.chempoint.com/ChemPoint/media/ChemPointSiteMedia/PDF%20Docs/3-Minute-Hair-Strengthening-Rinse-off-Conditioner-Mask.PDF",
+        "type": "supplier_document",
+        "scope": "technology",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "supplier",
+        "affiliation": "Ashland, hosted by distributor ChemPoint",
+        "limitations": [
+          "This is not Curlsmith's formulation, supplier verification or product dose.",
+          "Stability testing is not an efficacy trial.",
+          "Original scope: supplier demonstration formula Z351-25B, dated 2017-11-27",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: supplier_document."
+        ],
+        "observation": "Names FiberHance BM solution as Hydroxypropylgluconamide (and) Hydroxypropylammonium Gluconate in a supplier example mask.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S08",
+        "url": "https://investor.ashland.com/news-releases/news-release-details/ashland-honored-henkel-two-personal-care-supplier-awards",
+        "type": "supplier_statement",
+        "scope": "technology",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "supplier",
+        "affiliation": "Ashland",
+        "limitations": [
+          "Commercial technology statement and award, not independent efficacy or proof of native-disulfide restoration.",
+          "No transfer of supplier magnitudes or dose into a current Curlsmith result.",
+          "Original scope: supplier press release 2024-02-22, technology scope",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: supplier_statement."
+        ],
+        "observation": "Describes glucose-derived FiberHance reinforcement through ionic/hydrogen interactions inside keratin and a Henkel supplier award.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S09",
+        "url": "https://genamarie.co/2021/01/curlsmith-bond-curl-vs-olaplex-no-3-compared-giveaway/",
+        "type": "original_creator_statement",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": "Gena Marie",
+        "authority": "creator",
+        "affiliation": "Gena Marie",
+        "limitations": [
+          "Historical formula/market not bound to current EU version.",
+          "Article inspected; linked video not independently watched.",
+          "Not an Abbey Yung endorsement.",
+          "Original scope: original written sponsored creator comparison, 2021-01-03",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: original_creator_statement."
+        ],
+        "observation": "Author reports tighter curl definition and shrinkage plus shine after Bond Curl, using a routine comparison against OLAPLEX No.3. Sponsored post disclosed; practical single-person cosmetic observations do not measure molecular repair.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "sponsored post; affiliate links"
+      },
+      {
+        "id": "S10",
+        "url": "https://www.reddit.com/r/curlyhair/comments/1eebo4c/curlsmith_bond_curl_rehab_salve_hair_reacts/",
+        "type": "user_anecdotes",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "other",
+        "affiliation": "Reddit users",
+        "limitations": [
+          "Formula/market, routine and hair diameter not verified; do not derive a hard protein-overload or fit rule.",
+          "Original scope: original anecdotal discussion, historical unspecified pack",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: user_anecdotes."
+        ],
+        "observation": "Original poster reports dry feel and difficult detangling after Bond Curl; another user reports no similar problem. Experiences and self-attribution to protein are not controlled causal evidence.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "commercial interests unknown; do not infer independence"
+      },
+      {
+        "id": "S11",
+        "url": "https://www.reddit.com/r/curlyhair/comments/1dkemma/curlsmith_bond_curl_rehab_salve/",
+        "type": "user_anecdotes",
+        "scope": "practice",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "other",
+        "affiliation": "Reddit users",
+        "limitations": [
+          "Multi-product routine cannot isolate Curlsmith; pack/market/version unverified.",
+          "Original scope: historical anecdote with alternating treatment system",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: user_anecdotes."
+        ],
+        "observation": "A commenter reports improved feel/curls while alternating Curlsmith and OLAPLEX; explicitly not complete erasure of bleach damage.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "commercial interests unknown"
+      },
+      {
+        "id": "S12",
+        "url": "https://de.lorealpartnershop.com/on/demandware.static/-/Library-Sites-SharedLibrary-DE-AT/default/v77cf51bd2dcb790074b8ff32d44d6e0dc571be3a/ZIP_Download_Files/Digital_Toolkit/LP_Digital%20Toolkit/20230829_LP_Servicemen%C3%BC_ARM_A5_Druck.pdf?version=1,712,225,397,201",
+        "type": "manufacturer_professional_document",
+        "scope": "system",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "L'Oréal Professionnel DE",
+        "limitations": [
+          "Different test scopes retained, not combined as serum-alone results.",
+          "No original methods, full data or current formula equivalence inspected.",
+          "Original scope: historical professional service leaflet",
+          "Original access: relevant_full_text_inspected; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: manufacturer_professional_document."
+        ],
+        "observation": "Salon damage claim belongs to pre-treatment plus five shampoos; home-care statement is a two-week consumer test of shampoo+rinse-off serum+leave-in.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "publisher sells the described product or ingredient"
+      },
+      {
+        "id": "S13",
+        "url": "https://www.lorealprofessionnel.de/alle-produkte/haarpflege/absolut-repair-molecular-serum",
+        "type": "manufacturer_application_amendment",
+        "scope": "product",
+        "access": "inspected_excerpt",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "L'Oréal Professionnel DE",
+        "limitations": [
+          "No mask dose, dwell or mask-rinse instructions supplied here; do not invent them.",
+          "Optional mask and recommended leave-in are not mandatory purchases or molecular-effect dependencies.",
+          "The original capture also contains prior assessment wording, which was disregarded as producer evidence and reported as preparation contamination; original bytes remain frozen.",
+          "Original scope: same current DE serum page version as S05; application paragraphs after rinse",
+          "Original access: relevant_full_text_inspected_by_root; typed as inspected_excerpt because the capture describes relevant sections, not an audited whole document. Original authority: maker application amendment."
+        ],
+        "observation": "After working the serum through for 1-2 minutes, no separate dwell is required and the serum is rinsed thoroughly. Producer's pro tip places the optional intensive-care Metal DX mask after this treatment; matching Absolut Repair Molecular leave-in is recommended afterward for best results.",
+        "checked_date": "2026-10-02",
+        "commercial_context": "maker sells the product"
+      },
+      {
+        "id": "C03-P05-1",
+        "url": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+        "type": "producer_direction_complement_de",
+        "scope": "product",
+        "access": "full_text",
+        "author": null,
+        "authority": "manufacturer",
+        "affiliation": "Redken Germany",
+        "limitations": [
+          "Protocol source only; no formula version selected or replaced.",
+          "190 ml pack size is not exposed in inspected page text.",
+          "No specific hair region, distribution method, quantity, texture or cadence is given in the inspected instructions.",
+          "Source market: DE. Bound to producer-source-complement-2026-10-03/C03-P05-1; application directions only."
+        ],
+        "observation": "Producer positions Acidic Bonding Concentrate Intensive Treatment as a pretreatment before the line's shampoo and conditioner. Apply to damp hair; retain for 5–10 minutes and rinse. Continue with Redken Acidic Bonding Concentrate Shampoo and Conditioner.",
+        "checked_date": "2026-10-03",
+        "commercial_context": "Brand or brand-distributor application guidance; commercial source, not independent efficacy evidence."
+      }
+    ],
+    "version": "bondbuilder-research-profile-v1",
+    "evidence": {
+      "detail": "The exact Douglas 190 ml target is owner-selected; displaced R02 manufacturer formula is retained resolved and not merged. Citric-acid abstract findings remain technology-level. AU cadence is a cross-market complement; an inaccessible creator listing provides no verdict.",
+      "summary": "Citric Acid/Sodium Citrate and targeted Acidic Bonding treatment identity are consistent with the category for the exact owner-selected 16-ingredient version.",
+      "cautions": [
+        "No native-bond restoration, product superiority or active dose is established by the family label.",
+        "Resolved formula selection is not resolution of missing application detail.",
+        "No isolated selected-product effect size or concentration is established."
+      ],
+      "practical": {
+        "limitations": [
+          "No inspected original applicable practice verdict supports a benefit claim. Missing or inaccessible opinions are neutral."
+        ],
+        "counter_source_ids": [],
+        "supporting_source_ids": []
+      },
+      "scientific": {
+        "limitations": [
+          "Evidence scope and access are retained; manufacturer system claims and practice are not independent product efficacy trials.",
+          "Resolved formula selection is not resolution of missing application detail.",
+          "No isolated selected-product effect size or concentration is established."
+        ],
+        "counter_source_ids": [],
+        "supporting_source_ids": [
+          "N07"
+        ]
+      },
+      "applicability": [
+        {
+          "scope": "technology",
+          "bridge": "Zhang2025 reports improved mechanical/thermal properties and reduced calcium after citric-acid treatment of chemically treated fibers; endpoints include tensile modulus, fatigue cycles, DSC, XRD and calcium analyses. Dependence on pre-existing chemical damage is explicit.",
+          "source_ids": [
+            "N07"
+          ],
+          "limitations": [
+            "citric-acid technology, not any named retail treatment",
+            "publisher abstract inspected; full text inaccessible",
+            "Dose,pH,vehicle,full treatment protocol,n and full statistical details not inspected. Do not transfer abstract percentages to bottles or treat unknown study conditions as a known match."
+          ]
+        },
+        {
+          "scope": "product",
+          "bridge": "Full materially different Redken INCI, directions; not merged with manufacturer.",
+          "source_ids": [
+            "R09"
+          ],
+          "limitations": [
+            "exact source-listed product/market only",
+            "web text inspected"
+          ]
+        },
+        {
+          "scope": "product",
+          "bridge": "AU manufacturer recommends 2–3 uses weekly. Ingredient order corroborates selected 16-ingredient formula but roots/wet/lather prose differs from selected Douglas directions.",
+          "source_ids": [
+            "A-REDKEN-AU"
+          ],
+          "limitations": [
+            "AU product directions, not DE pack",
+            "product directions inspected 2026-10-01",
+            "Cross-market complement; no concentration equality or binding DE cadence."
+          ]
+        },
+        {
+          "scope": "product",
+          "bridge": "Full manufacturer INCI and formula code; conflict with R09 retained.",
+          "source_ids": [
+            "R02"
+          ],
+          "limitations": [
+            "exact source-listed product/market only",
+            "web text inspected"
+          ]
+        }
+      ],
+      "supported_outcome": "Acid-family reinforcement plausibility with limited exact-product evidence for selected Douglas formula.",
+      "manufacturer_positioning": [
+        "R09: Full materially different Redken INCI, directions; not merged with manufacturer.",
+        "A-REDKEN-AU: AU manufacturer recommends 2–3 uses weekly. Ingredient order corroborates selected 16-ingredient formula but roots/wet/lather prose differs from selected Douglas directions."
+      ]
+    },
+    "identity": {
+      "gtin": null,
+      "size": "190 ml",
+      "brand": "Redken",
+      "market": "DE",
+      "status": "resolved",
+      "product_id": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
+      "product_name": "Redken Acidic Bonding Concentrate Intensive Treatment",
+      "research_key": "P05",
+      "source_version": "2026-09-30:R09"
+    },
+    "assessment": {
+      "reasoning": {
+        "trust_basis": {
+          "rationale": "Exact frozen identity/source-version and selected formula-source URL match the owner binding. Preserve its existing tier; the owner-provided raw/list digest binding must also pass downstream mechanical verification. Owner policy is not scientific certainty.",
+          "confidence": "high",
+          "source_ids": [
+            "R09"
+          ],
+          "assumptions": [],
+          "limitations": []
+        },
+        "intended_role": {
+          "rationale": "Producer application amendment establishes treatment_role.",
+          "confidence": "moderate",
+          "source_ids": [
+            "C03-P05-1"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+            "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+          ]
+        },
+        "fit_assessment": {
+          "rationale": "No source-supported diameter-specific suitability values are present. Damage, curl pattern, porosity and format do not establish diameter fit.",
+          "confidence": "low",
+          "source_ids": [],
+          "assumptions": [],
+          "limitations": [
+            "All three diameter values remain null; this is not a finding of unsuitability."
+          ]
+        },
+        "product_format": {
+          "rationale": "P05: the frozen applicable producer observations do not establish applied_format. No value was inferred from INCI, product title alone, another product or standard examples.",
+          "confidence": "low",
+          "source_ids": [],
+          "assumptions": [],
+          "limitations": []
+        },
+        "treatment_mode": {
+          "rationale": "Producer application amendment establishes rinse.",
+          "confidence": "moderate",
+          "source_ids": [
+            "C03-P05-1"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+            "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+          ]
+        },
+        "boundary_status": {
+          "rationale": "Citric Acid/Sodium Citrate and targeted Acidic Bonding treatment identity are consistent with the category for the exact owner-selected 16-ingredient version.",
+          "confidence": "moderate",
+          "source_ids": [
+            "R09",
+            "A-REDKEN-AU"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Resolved formula selection is not resolution of missing application detail.",
+            "No isolated selected-product effect size or concentration is established."
+          ]
+        },
+        "application_mode": {
+          "rationale": "Producer application amendment establishes placement.",
+          "confidence": "moderate",
+          "source_ids": [
+            "C03-P05-1"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+            "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+          ]
+        },
+        "evidence_profile": {
+          "rationale": "The exact Douglas 190 ml target is owner-selected; displaced R02 manufacturer formula is retained resolved and not merged. Citric-acid abstract findings remain technology-level. AU cadence is a cross-market complement; an inaccessible creator listing provides no verdict.",
+          "confidence": "moderate",
+          "source_ids": [
+            "N07",
+            "R09",
+            "A-REDKEN-AU",
+            "R02"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Duplicate captures of one study are not independent trials."
+          ]
+        },
+        "application_facts": {
+          "rationale": "Producer application amendment supplies direction sources; 7 application fact wrappers remain unknown.",
+          "confidence": "moderate",
+          "source_ids": [
+            "R09",
+            "C03-P05-1"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Remaining application unknowns are retained; no fact was inferred."
+          ]
+        },
+        "claim_trust_level": {
+          "rationale": "Exact frozen identity/source-version and selected formula-source URL match the owner binding. Preserve its existing tier; the owner-provided raw/list digest binding must also pass downstream mechanical verification. Owner policy is not scientific certainty.",
+          "confidence": "high",
+          "source_ids": [
+            "R09"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Policy provenance is separately named in policy_reference; source IDs are inspected source records, not fabricated policy sources."
+          ]
+        },
+        "supported_outcome": {
+          "rationale": "Acid-family reinforcement plausibility with limited exact-product evidence for selected Douglas formula.",
+          "confidence": "moderate",
+          "source_ids": [
+            "N07",
+            "R09",
+            "A-REDKEN-AU"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Resolved formula selection is not resolution of missing application detail.",
+            "No isolated selected-product effect size or concentration is established."
+          ]
+        },
+        "technology_family": {
+          "rationale": "Citric Acid/Sodium Citrate and targeted Acidic Bonding treatment identity are consistent with the category for the exact owner-selected 16-ingredient version.",
+          "confidence": "moderate",
+          "source_ids": [
+            "R09"
+          ],
+          "assumptions": [],
+          "limitations": [
+            "Marker presence does not establish concentration, supplier, delivery or molecular effect."
+          ]
+        }
+      },
+      "trust_basis": "owner_calibration",
+      "boundary_status": "in_scope",
+      "limiting_factors": [
+        "Resolved formula selection is not resolution of missing application detail.",
+        "No isolated selected-product effect size or concentration is established."
+      ],
+      "policy_reference": "owner-review-2026-09-30:P05",
+      "claim_trust_level": "medium",
+      "technology_family": "acid_calcium_management",
+      "classification_confidence": "moderate"
+    },
+    "application": {
+      "rinse": {
+        "value": {
+          "treatment_mode": "rinse_out",
+          "standalone_treatment_rinse": true
+        },
+        "rationale": "Producer specifies treatment rinsing before continuing with shampoo.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "amount": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish amount. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish amount. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "timing": {
+        "value": {
+          "kind": "range_seconds",
+          "purpose": "contact",
+          "maximum_seconds": 600,
+          "minimum_seconds": 300
+        },
+        "rationale": "Retain for five to ten minutes, then rinse.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "cadence": {
+        "value": null,
+        "rationale": "No exact DE cadence is reproduced. AU 2–3 uses weekly remains a cross-market complement, not a binding DE schedule.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "No exact DE cadence is reproduced. AU 2–3 uses weekly remains a cross-market complement, not a binding DE schedule."
+      },
+      "dilution": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish dilution. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish dilution. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "partners": {
+        "value": [
+          {
+            "name": "Redken Acidic Bonding Concentrate Shampoo",
+            "source_ids": [
+              "C03-P05-1"
+            ],
+            "requirement": "recommended",
+            "exclusivity_established": false
+          },
+          {
+            "name": "Redken Acidic Bonding Concentrate Conditioner",
+            "source_ids": [
+              "C03-P05-1"
+            ],
+            "requirement": "recommended",
+            "exclusivity_established": false
+          }
+        ],
+        "rationale": "Producer names the line's shampoo and conditioner.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page.",
+          "No exclusive dependency or molecular efficacy conclusion inferred."
+        ],
+        "unknown_reason": null
+      },
+      "sequence": {
+        "value": [
+          {
+            "note": "Apply the Intensive Treatment to damp hair.",
+            "action": "apply_treatment",
+            "timing": null,
+            "optional": false,
+            "source_ids": [
+              "C03-P05-1"
+            ]
+          },
+          {
+            "note": "Retain for the stated interval.",
+            "action": "wait",
+            "timing": {
+              "kind": "range_seconds",
+              "purpose": "contact",
+              "maximum_seconds": 600,
+              "minimum_seconds": 300
+            },
+            "optional": false,
+            "source_ids": [
+              "C03-P05-1"
+            ]
+          },
+          {
+            "note": "Rinse the treatment before shampoo.",
+            "action": "rinse",
+            "timing": null,
+            "optional": false,
+            "source_ids": [
+              "C03-P05-1"
+            ]
+          },
+          {
+            "note": "Continue with the producer-named shampoo.",
+            "action": "shampoo",
+            "timing": null,
+            "optional": false,
+            "source_ids": [
+              "C03-P05-1"
+            ]
+          },
+          {
+            "note": "Then use the producer-named conditioner.",
+            "action": "apply_conditioner",
+            "timing": null,
+            "optional": false,
+            "source_ids": [
+              "C03-P05-1"
+            ]
+          }
+        ],
+        "rationale": "Damp-hair treatment precedes a five-to-ten-minute interval, rinse, shampoo and conditioner.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "placement": {
+        "value": "pre_shampoo",
+        "rationale": "Producer describes a pretreatment before shampoo and conditioner.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "hair_state": {
+        "value": "damp",
+        "rationale": "Producer directs application to damp hair.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "conditioner": {
+        "value": {
+          "after": "recommended",
+          "before": "not_stated",
+          "guidance_reference": null,
+          "minimum_wait_seconds": null
+        },
+        "rationale": "After treatment rinsing and shampoo, continue with conditioner.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "longer_wear": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish longer_wear. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish longer_wear. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "distribution": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish distribution. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish distribution. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "source_market": "DE",
+      "applied_format": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish applied_format. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish applied_format. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "treatment_role": {
+        "value": "pre_shampoo_treatment",
+        "rationale": "The named Intensive Treatment has an explicit specialized pre-shampoo pretreatment role.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page."
+        ],
+        "unknown_reason": null
+      },
+      "source_variants": [
+        {
+          "market": "DE",
+          "selected": true,
+          "source_ids": [
+            "R09"
+          ],
+          "differences": "Selected 190 ml sixteen-ingredient retailer formula; the displaced manufacturer formula is not merged."
+        },
+        {
+          "market": "DE",
+          "selected": false,
+          "source_ids": [
+            "R02"
+          ],
+          "differences": "Different manufacturer INCI retained as resolved displaced history under the exact owner selection."
+        },
+        {
+          "market": "AU",
+          "selected": false,
+          "source_ids": [
+            "A-REDKEN-AU"
+          ],
+          "differences": "Two to three uses weekly; roots/wet/lather wording differs from selected Douglas directions. No concentration equality or binding DE cadence."
+        },
+        {
+          "market": "DE",
+          "selected": true,
+          "source_ids": [
+            "C03-P05-1"
+          ],
+          "differences": "Same named DE Intensive Treatment protocol selected as a bounded producer complement. Neither its formula block nor an unverified 190 ml pack replaces the selected R09 identity."
+        }
+      ],
+      "state_modifiers": {
+        "value": null,
+        "rationale": "P05: the frozen applicable producer observations do not establish state_modifiers. No value was inferred from INCI, product title alone, another product or standard examples.",
+        "confidence": "low",
+        "source_ids": [],
+        "limitations": [],
+        "unknown_reason": "P05: the frozen applicable producer observations do not establish state_modifiers. No value was inferred from INCI, product title alone, another product or standard examples."
+      },
+      "application_area": {
+        "value": "hair",
+        "rationale": "Producer says to apply to hair without a narrower anatomical area.",
+        "confidence": "moderate",
+        "source_ids": [
+          "C03-P05-1"
+        ],
+        "limitations": [
+          "Protocol-only complement to R09; manufacturer formula is not selected or merged.",
+          "190 ml size and exact selected formula-version instructions are not independently bound by this page.",
+          "Hair is the broad schema value; no scalp, root or ends restriction inferred."
+        ],
+        "unknown_reason": null
+      },
+      "applicability_note": "DE manufacturer protocol complements the selected retailer source: specialized pre-shampoo treatment, damp hair, 5–10 minutes then rinse and shampoo/conditioner. Exact formula/pack equality is not asserted.",
+      "direction_source_ids": [
+        "R09",
+        "C03-P05-1"
+      ],
+      "market_applicability": "exact_market"
+    },
+    "explanations_de": {
+      "deeper": "Gezielte Säure-Behandlung der ausgewählten Douglas-Version mit 190 ml. Die abweichende Herstellerliste bleibt getrennt; die mittlere Einstufung gilt nur für die genau gebundene Quellenversion. Die Quellen unterscheiden Herstellerangaben, technische Forschung und praktische Erfahrungen. Eine Einstufung ist keine Messung der Wirksamkeit. Fehlende Anwendungs- und Haarstärkenangaben bleiben ausdrücklich unbekannt; es wird kein persönlicher Anwendungsplan daraus abgeleitet.",
+      "concise": "Gezielte Säure-Behandlung der ausgewählten Douglas-Version mit 190 ml. Die abweichende Herstellerliste bleibt getrennt; die mittlere Einstufung gilt nur für die genau gebundene Quellenversion."
+    },
+    "technology_reference": {
+      "status": "matched",
+      "limitation": "Exact frozen explanatory reference only. formula_sha256 is its ordered-normalized formula digest (serialization clarification), not raw_sha256. Shared chemistry does not transfer tier, efficacy, supplier, dose, protocol, fit or catalogue identity.",
+      "product_id": null,
+      "source_ids": [
+        "R01"
+      ],
+      "research_key": "P04",
+      "formula_sha256": "e5e9b5e7c3d8882f12622bda11a67ace0ef1aeb37b9660bf881231966815ae00",
+      "shared_markers": [
+        "citric acid"
+      ],
+      "source_version": "2026-09-30:R01"
+    }
+  },
+  "spec": {
+    "application_mode": "pre_shampoo",
+    "treatment_mode": "rinse_out",
+    "usage_protocol": "verified_product_protocol"
+  },
+  "protocolV1": {
+    "schemaVersion": 1,
+    "guidanceKey": "v2-exact-bondbuilder_verified_product-9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
+    "protocolVersion": 2,
+    "locale": "de",
+    "scope": {
+      "kind": "product",
+      "category": "bondbuilder",
+      "productId": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f"
+    },
+    "role": "bond_repair",
+    "applicationFamily": "pre_shampoo_single_treatment",
+    "compatibleDayTypes": [
+      "bond_repair_day"
+    ],
+    "exactGuidanceRequired": true,
+    "sequence": {
+      "anchor": "pre_wash",
+      "before": [],
+      "after": [],
+      "conflictsWith": []
+    },
+    "requirements": {
+      "requiredCatalogFacts": [],
+      "requiredProtocolFacts": [],
+      "requiredProfileFacts": []
+    },
+    "protocolFacts": {
+      "applicationArea": "all_hair",
+      "rinse": "rinse_out",
+      "contactTimeSeconds": null,
+      "contactTime": {
+        "kind": "range_seconds",
+        "minimumSeconds": 300,
+        "maximumSeconds": 600
+      },
+      "applicationState": "damp_hair",
+      "treatmentRinse": "rinse_out",
+      "conditionerSequence": {
+        "before": "not_stated",
+        "after": "recommended",
+        "minimumWaitSeconds": null
+      },
+      "shampooAfterTreatment": "rinse_then_shampoo",
+      "conditionerRelationship": "not_applicable",
+      "reapplication": "none",
+      "amount": null,
+      "workflowId": "bondbuilder_verified_product",
+      "cautions": []
+    },
+    "steps": [
+      {
+        "stepKey": "apply",
+        "action": "apply_product",
+        "copyTemplateDe": "Auf das feuchte Haar geben und im Haar verteilen."
+      },
+      {
+        "stepKey": "wait",
+        "action": "wait",
+        "copyTemplateDe": "5 Minuten bis 10 Minuten einwirken lassen."
+      },
+      {
+        "stepKey": "rinse-treatment",
+        "action": "rinse",
+        "copyTemplateDe": "Die Behandlung gründlich ausspülen."
+      },
+      {
+        "stepKey": "shampoo-after",
+        "action": "section",
+        "copyTemplateDe": "Anschließend wie gewohnt mit Shampoo waschen und pflegen."
+      },
+      {
+        "stepKey": "conditioner-after",
+        "action": "section",
+        "copyTemplateDe": "Danach mit Conditioner fortfahren und ihn wie gewohnt ausspülen."
+      }
+    ],
+    "evidence": [
+      {
+        "sourceUrl": "https://www.douglas.de/de/p/5011495045",
+        "sourceType": "retailer",
+        "checkedAt": "2026-09-30"
+      },
+      {
+        "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+        "sourceType": "manufacturer",
+        "checkedAt": "2026-10-03"
+      }
+    ]
+  },
+  "protocolV2": {
+    "schemaVersion": 2,
+    "contractKind": "product_pointer",
+    "scope": {
+      "kind": "product",
+      "category": "bondbuilder",
+      "productId": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f"
+    },
+    "sourceRole": "specialized_bond_treatment",
+    "role": "bond_repair",
+    "applicationFamily": "pre_shampoo_single_treatment",
+    "facts": {
+      "applicationState": "damp_hair",
+      "applicationArea": "root_to_tip_hair",
+      "rinse": "rinse_out",
+      "contactTime": {
+        "kind": "range_seconds",
+        "minimumSeconds": 300,
+        "maximumSeconds": 600
+      },
+      "amount": null,
+      "heat": null,
+      "conditionerSequence": {
+        "before": "not_stated",
+        "after": "recommended",
+        "minimumWaitSeconds": null
+      },
+      "shampooAfterTreatment": "rinse_then_shampoo",
+      "conditionerPolicy": "not_applicable"
+    },
+    "workflowId": "bondbuilder_verified_product",
+    "requiredCompanionProductId": null,
+    "runtimeBlockerCode": null,
+    "exactSteps": [
+      {
+        "stepKey": "apply",
+        "action": "apply_product",
+        "copyDe": "Auf das feuchte Haar geben und im Haar verteilen."
+      },
+      {
+        "stepKey": "wait",
+        "action": "wait",
+        "copyDe": "5 Minuten bis 10 Minuten einwirken lassen."
+      },
+      {
+        "stepKey": "rinse-treatment",
+        "action": "rinse",
+        "copyDe": "Die Behandlung gründlich ausspülen."
+      },
+      {
+        "stepKey": "shampoo-after",
+        "action": "section",
+        "copyDe": "Anschließend wie gewohnt mit Shampoo waschen und pflegen."
+      },
+      {
+        "stepKey": "conditioner-after",
+        "action": "section",
+        "copyDe": "Danach mit Conditioner fortfahren und ihn wie gewohnt ausspülen."
+      }
+    ],
+    "cautionCodes": [],
+    "evidence": [
+      {
+        "sourceUrl": "https://www.douglas.de/de/p/5011495045",
+        "sourceType": "retailer",
+        "checkedAt": "2026-09-30"
+      },
+      {
+        "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+        "sourceType": "manufacturer",
+        "checkedAt": "2026-10-03"
+      }
+    ]
+  },
+  "cadence": null,
+  "eligibleThicknesses": [
+    "fine",
+    "normal",
+    "coarse"
+  ],
+  "source": {
+    "source_url": "https://www.douglas.de/de/p/5011495045",
+    "source_text": "Full materially different Redken INCI, directions; not merged with manufacturer."
+  },
+  "removedProtocolHolds": [
+    "application.applied_format",
+    "application.state_modifiers",
+    "application.distribution",
+    "application.longer_wear",
+    "application.amount",
+    "application.dilution",
+    "application.cadence"
+  ]
+}

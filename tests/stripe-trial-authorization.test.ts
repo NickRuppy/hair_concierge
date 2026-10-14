@@ -3,7 +3,7 @@ import test from "node:test"
 import type Stripe from "stripe"
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 import {
-  retrieveVerifiedStripeTrialAuthorization,
+  retrieveStripeTrialAuthorizationEvidence,
   type StripeTrialAuthorizationClient,
   verifyStripeTrialAuthorization,
 } from "../src/lib/stripe/trial-authorization"
@@ -170,22 +170,6 @@ function retrievalClient(values = fixtures()) {
   }
 }
 
-test("verifies a server-retrieved seven-day card trial and records later invoice proof obligations", () => {
-  assert.deepEqual(verify(), {
-    enrollmentId: ENROLLMENT_ID,
-    providerAgreementId: SUBSCRIPTION_ID,
-    authorizationSucceededAt: "2026-09-13T12:00:00.000Z",
-    trialEndAt: "2026-09-20T12:00:00.000Z",
-    customerId: CUSTOMER_ID,
-    paymentMethodId: PAYMENT_METHOD_ID,
-    cardFingerprint: "fp_server_only",
-    unverifiedFutureInvoiceObligations: [
-      "verify_first_paid_invoice_amount",
-      "verify_renewal_invoice_amount",
-    ],
-  })
-})
-
 test("requires Stripe's exact seven-day provider interval and the current time to remain inside it", () => {
   assert.equal(verify({ subscription: { trial_end: TRIAL_END - 1 } }), null)
   assert.equal(verify({ subscription: { trial_start: TRIAL_START + 1 } }), null)
@@ -222,13 +206,14 @@ test("rejects untrusted completion, binding, identity, price, or saved-card mism
 test("accepts Stripe's paid status for a completed zero-total checkout with a verified trial", async () => {
   const values = fixtures({ session: { payment_status: "paid" } })
   const { client } = retrievalClient(values)
-  const proof = await retrieveVerifiedStripeTrialAuthorization(
+  const evidence = await retrieveStripeTrialAuthorizationEvidence(
     client,
     values.session.id,
     { enrollmentId: ENROLLMENT_ID, offer: OFFER },
     NOW,
     false,
   )
+  const proof = evidence?.authorization
   assert.equal(proof?.enrollmentId, ENROLLMENT_ID)
   assert.equal(proof?.trialEndAt, "2026-09-20T12:00:00.000Z")
   assert.deepEqual(proof?.unverifiedFutureInvoiceObligations, [
@@ -386,14 +371,29 @@ test("requires immutable provider terms while allowing an already-attached Price
 
 test("retrieves provider authorities itself before returning verified trial facts", async () => {
   const { client, calls } = retrievalClient()
-  const authorization = await retrieveVerifiedStripeTrialAuthorization(
+  const evidence = await retrieveStripeTrialAuthorizationEvidence(
     client,
     "cs_trial",
     { enrollmentId: ENROLLMENT_ID, offer: OFFER },
     NOW,
     false,
   )
-  assert.equal(authorization?.providerAgreementId, SUBSCRIPTION_ID)
+  assert.deepEqual(evidence?.authorization, {
+    enrollmentId: ENROLLMENT_ID,
+    providerAgreementId: SUBSCRIPTION_ID,
+    authorizationSucceededAt: "2026-09-13T12:00:00.000Z",
+    trialEndAt: "2026-09-20T12:00:00.000Z",
+    customerId: CUSTOMER_ID,
+    paymentMethodId: PAYMENT_METHOD_ID,
+    cardFingerprint: "fp_server_only",
+    unverifiedFutureInvoiceObligations: [
+      "verify_first_paid_invoice_amount",
+      "verify_renewal_invoice_amount",
+    ],
+  })
+  assert.equal(evidence?.authorization.providerAgreementId, SUBSCRIPTION_ID)
+  assert.equal(evidence?.session.id, "cs_trial")
+  assert.equal(evidence?.subscription.id, SUBSCRIPTION_ID)
   assert.deepEqual(
     calls.map(({ resource, id }) => [resource, id]),
     [
@@ -407,7 +407,7 @@ test("retrieves provider authorities itself before returning verified trial fact
   assert.deepEqual(calls.find(({ resource }) => resource === "coupon")?.expand, ["applies_to"])
 })
 
-test("retrieval adapter fails closed for cross-customer and unresolved setup authorities", async () => {
+test("provider evidence retrieval fails closed for cross-customer and unresolved setup authorities", async () => {
   for (const values of [
     fixtures({ session: { customer: "cus_other" } }),
     fixtures({
@@ -423,7 +423,7 @@ test("retrieval adapter fails closed for cross-customer and unresolved setup aut
   ]) {
     const { client } = retrievalClient(values)
     assert.equal(
-      await retrieveVerifiedStripeTrialAuthorization(
+      await retrieveStripeTrialAuthorizationEvidence(
         client,
         "cs_trial",
         { enrollmentId: ENROLLMENT_ID, offer: OFFER },
@@ -443,7 +443,7 @@ test("a provider outage remains retryable instead of becoming an authorization d
   }) as typeof client.checkout.sessions.retrieve
   await assert.rejects(
     () =>
-      retrieveVerifiedStripeTrialAuthorization(
+      retrieveStripeTrialAuthorizationEvidence(
         client,
         "cs_trial",
         { enrollmentId: ENROLLMENT_ID, offer: OFFER },

@@ -1,0 +1,34 @@
+--- before/tests/scan-unknown-flow-ui.test.tsx
++++ transfer/tests/scan-unknown-flow-ui.test.tsx
+@@ -278,6 +278,14 @@
+ test("ScanUnknownFlow: the bridge line sits under the headline, above the subline", () => {
+   const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
+   const markup = renderToStaticMarkup(tree.value)
++  assert.match(markup, /Danke dir – das ist neu für uns!/)
++  assert.match(markup, /Wir nehmen es auf\. Dein Ergebnis kommt in den Chat\./)
++  assert.match(markup, /Wobei benutzt du es\?/)
++  const inputs = findAll(tree.value, (element) => element.type === "input")
++  assert.deepEqual(inputs, [])
++  assert.doesNotMatch(markup, /Marke/)
++  assert.doesNotMatch(markup, /Produktname/)
++  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)
+   assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\./)
+ 
+   const headline = markup.indexOf("Danke dir")
+--- before/tests/scan-research-intake-form-ui.test.tsx
++++ transfer/tests/scan-research-intake-form-ui.test.tsx
+@@ -136,6 +136,14 @@
+ test("ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)", () => {
+   const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
+   const markup = renderToStaticMarkup(tree.value)
++  assert.match(markup, /Marke/)
++  assert.match(markup, /Produktname/)
++  assert.match(markup, /Was ist es\?/)
++  assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\./)
++  assert.match(markup, /Zurück/)
++  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.
++  assert.doesNotMatch(markup, /\bdm\b/)
++  assert.doesNotMatch(markup, /role="alert"/)
+   assert.match(markup, /autofocus/)
+   const marke = findAll(tree.value, (element) => element.props["aria-label"] === "Marke")[0]
+   assert.ok(marke)

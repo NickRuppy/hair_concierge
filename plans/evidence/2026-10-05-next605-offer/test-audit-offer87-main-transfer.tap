@@ -1,0 +1,350 @@
+TAP version 13
+# Subtest: hasUsedFreeReveal: false when no row exists for the user
+ok 1 - hasUsedFreeReveal: false when no row exists for the user
+  ---
+  duration_ms: 0.611292
+  ...
+# Subtest: hasUsedFreeReveal: true once a reveal has been consumed
+ok 2 - hasUsedFreeReveal: true once a reveal has been consumed
+  ---
+  duration_ms: 0.113667
+  ...
+# Subtest: hasUsedFreeReveal: does not leak across users
+ok 3 - hasUsedFreeReveal: does not leak across users
+  ---
+  duration_ms: 0.121375
+  ...
+# Subtest: consumeFreeReveal: first consume for a user returns consumed
+ok 4 - consumeFreeReveal: first consume for a user returns consumed
+  ---
+  duration_ms: 0.294792
+  ...
+# Subtest: consumeFreeReveal: second consume for the same user returns already_used
+ok 5 - consumeFreeReveal: second consume for the same user returns already_used
+  ---
+  duration_ms: 0.097875
+  ...
+# Subtest: consumeFreeReveal: relies on the insert's own PK conflict, never reads first
+ok 6 - consumeFreeReveal: relies on the insert's own PK conflict, never reads first
+  ---
+  duration_ms: 0.059
+  ...
+# Subtest: consumeFreeReveal: different users each get their own one-time credit
+ok 7 - consumeFreeReveal: different users each get their own one-time credit
+  ---
+  duration_ms: 0.052125
+  ...
+# Subtest: hasUsedFreeReveal: throws on an unexpected lookup error
+ok 8 - hasUsedFreeReveal: throws on an unexpected lookup error
+  ---
+  duration_ms: 0.218333
+  ...
+# Subtest: loadFreeRevealRecord: null when no row exists for the user
+ok 9 - loadFreeRevealRecord: null when no row exists for the user
+  ---
+  duration_ms: 0.190666
+  ...
+# Subtest: loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed
+ok 10 - loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed
+  ---
+  duration_ms: 0.298042
+  ...
+# Subtest: loadFreeRevealRecord: does not leak across users
+ok 11 - loadFreeRevealRecord: does not leak across users
+  ---
+  duration_ms: 0.078625
+  ...
+# Subtest: loadFreeRevealRecord: throws on an unexpected lookup error
+ok 12 - loadFreeRevealRecord: throws on an unexpected lookup error
+  ---
+  duration_ms: 0.08425
+  ...
+# Subtest: consumeFreeReveal: throws on an unexpected insert error
+ok 13 - consumeFreeReveal: throws on an unexpected insert error
+  ---
+  duration_ms: 0.109833
+  ...
+# Subtest: offer provider keeps internal views separate from the dedicated Meta path
+ok 14 - offer provider keeps internal views separate from the dedicated Meta path
+  ---
+  duration_ms: 1.410959
+  ...
+# Subtest: Meta offer view is claimed once per browser funnel and variant
+ok 15 - Meta offer view is claimed once per browser funnel and variant
+  ---
+  duration_ms: 0.217875
+  ...
+# Subtest: Meta offer view fails closed when local storage is unavailable
+ok 16 - Meta offer view fails closed when local storage is unavailable
+  ---
+  duration_ms: 0.09375
+  ...
+# Subtest: Meta offer view derives one UUID-shaped id from stable identity
+ok 17 - Meta offer view derives one UUID-shaped id from stable identity
+  ---
+  duration_ms: 11.966625
+  ...
+# Subtest: event-id derivation failure leaves the browser claim available for retry
+ok 18 - event-id derivation failure leaves the browser claim available for retry
+  ---
+  duration_ms: 0.197959
+  ...
+# Subtest: Meta offer view sends Pixel and endpoint with the identical id
+ok 19 - Meta offer view sends Pixel and endpoint with the identical id
+  ---
+  duration_ms: 14.233292
+  ...
+# Subtest: non-completion entries never claim or send the primary Meta offer view
+ok 20 - non-completion entries never claim or send the primary Meta offer view
+  ---
+  duration_ms: 0.202958
+  ...
+# Subtest: a transport failure never rejects the offer render path
+ok 21 - a transport failure never rejects the offer render path
+  ---
+  duration_ms: 2.544917
+  ...
+# Subtest: a Pixel failure does not suppress the matching server request
+ok 22 - a Pixel failure does not suppress the matching server request
+  ---
+  duration_ms: 2.658417
+  ...
+# Subtest: Meta offer endpoint validates, limits, and passes only request-bound delivery data
+ok 23 - Meta offer endpoint validates, limits, and passes only request-bound delivery data
+  ---
+  duration_ms: 8.63325
+  ...
+# Subtest: Meta offer endpoint is a benign no-op while its flag is off
+ok 24 - Meta offer endpoint is a benign no-op while its flag is off
+  ---
+  duration_ms: 0.448792
+  ...
+# Subtest: Meta offer endpoint rejects forged context, unknown keys, and malformed IDs
+ok 25 - Meta offer endpoint rejects forged context, unknown keys, and malformed IDs
+  ---
+  duration_ms: 1.641791
+  ...
+# Subtest: Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery
+ok 26 - Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery
+  ---
+  duration_ms: 2.922208
+  ...
+# Subtest: Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client
+ok 27 - Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client
+  ---
+  duration_ms: 2.735083
+  ...
+# Subtest: Meta offer endpoint rejects missing server-owned lead evidence
+ok 28 - Meta offer endpoint rejects missing server-owned lead evidence
+  ---
+  duration_ms: 2.069459
+  ...
+# Subtest: Meta offer delivery requires recent quiz evidence and constructs the canonical event
+ok 29 - Meta offer delivery requires recent quiz evidence and constructs the canonical event
+  ---
+  duration_ms: 2.136167
+  ...
+# Subtest: Meta offer endpoint bounds streamed bodies before rate limiting
+ok 30 - Meta offer endpoint bounds streamed bodies before rate limiting
+  ---
+  duration_ms: 0.663958
+  ...
+# Subtest: Meta offer endpoint isolates delivery failures from its validated request contract
+ok 31 - Meta offer endpoint isolates delivery failures from its validated request contract
+  ---
+  duration_ms: 1.016125
+  ...
+# Subtest: Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan
+ok 32 - Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan
+  ---
+  duration_ms: 2.57925
+  ...
+# Subtest: offer CAPI uses the eligible lead's server-resolved package behind its existing flag
+ok 33 - offer CAPI uses the eligible lead's server-resolved package behind its existing flag
+  ---
+  duration_ms: 0.57225
+  ...
+# Subtest: the no-access organic result resolves its media experiment before recording the offer view
+ok 34 - the no-access organic result resolves its media experiment before recording the offer view
+  ---
+  duration_ms: 1.484
+  ...
+# Subtest: organic media allocation is deterministic and accepts exactly its two arms
+ok 35 - organic media allocation is deterministic and accepts exactly its two arms
+  ---
+  duration_ms: 0.160209
+  ...
+# Subtest: organic media flag is enabled only by exact true
+ok 36 - organic media flag is enabled only by exact true
+  ---
+  duration_ms: 0.128
+  ...
+# Subtest: enabled organic media assignment persists from the current video control before the offer is viewed
+ok 37 - enabled organic media assignment persists from the current video control before the offer is viewed
+  ---
+  duration_ms: 0.642875
+  ...
+# Subtest: a deterministic control allocation does not rewrite the existing control row
+ok 38 - a deterministic control allocation does not rewrite the existing control row
+  ---
+  duration_ms: 0.073833
+  ...
+# Subtest: organic media resolver never reassigns a viewed or checkout-started video control
+ok 39 - organic media resolver never reassigns a viewed or checkout-started video control
+  ---
+  duration_ms: 0.076458
+  ...
+# Subtest: disabled rollout leaves an unviewed video control untouched
+ok 40 - disabled rollout leaves an unviewed video control untouched
+  ---
+  duration_ms: 0.102166
+  ...
+# Subtest: organic media resolver uses concurrent persisted winners and fails closed on persistence errors
+ok 41 - organic media resolver uses concurrent persisted winners and fails closed on persistence errors
+  ---
+  duration_ms: 0.150417
+  ...
+# Subtest: disabled rollout resets only unviewed image treatment and preserves viewed or checkout assignments
+ok 42 - disabled rollout resets only unviewed image treatment and preserves viewed or checkout assignments
+  ---
+  duration_ms: 0.289583
+  ...
+# Subtest: ineligible organic sessions force video without a mutation
+ok 43 - ineligible organic sessions force video without a mutation
+  ---
+  duration_ms: 0.326583
+  ...
+# Subtest: stored retired legacy arms remain attribution authority and are never enrolled
+ok 44 - stored retired legacy arms remain attribution authority and are never enrolled
+  ---
+  duration_ms: 0.06525
+  ...
+# Subtest: personal-plan pricing allocation is deterministic and has exclusive pricing modes
+ok 45 - personal-plan pricing allocation is deterministic and has exclusive pricing modes
+  ---
+  duration_ms: 0.55775
+  ...
+# Subtest: retired one-time arm is never assigned to a new Personal Plan session
+ok 46 - retired one-time arm is never assigned to a new Personal Plan session
+  ---
+  duration_ms: 0.06375
+  ...
+# Subtest: personal-plan pricing experiment flag is enabled only by exact true
+ok 47 - personal-plan pricing experiment flag is enabled only by exact true
+  ---
+  duration_ms: 0.120292
+  ...
+# Subtest: personal-plan launch pricing flag defaults off and enables only for exact true
+ok 48 - personal-plan launch pricing flag defaults off and enables only for exact true
+  ---
+  duration_ms: 0.054958
+  ...
+# Subtest: QA token helper defaults to a five-minute TTL when the option is omitted
+ok 49 - QA token helper defaults to a five-minute TTL when the option is omitted
+  ---
+  duration_ms: 219.789292
+  ...
+# Subtest: personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions
+ok 50 - personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions
+  ---
+  duration_ms: 0.38675
+  ...
+# Subtest: personal-plan resolver persists an enabled unviewed assignment against the base identity
+ok 51 - personal-plan resolver persists an enabled unviewed assignment against the base identity
+  ---
+  duration_ms: 0.302
+  ...
+# Subtest: persisted retired one-time arms resolve to the subscription presentation
+ok 52 - persisted retired one-time arms resolve to the subscription presentation
+  ---
+  duration_ms: 0.089208
+  ...
+# Subtest: a persisted retired arm is left intact for historic reporting
+ok 53 - a persisted retired arm is left intact for historic reporting
+  ---
+  duration_ms: 0.22575
+  ...
+# Subtest: a persisted retired arm does not attempt a reset or database read
+ok 54 - a persisted retired arm does not attempt a reset or database read
+  ---
+  duration_ms: 0.288333
+  ...
+# Subtest: assignment races use the persisted winner while assignment failures stay on the base
+ok 55 - assignment races use the persisted winner while assignment failures stay on the base
+  ---
+  duration_ms: 0.21725
+  ...
+# Subtest: QA token validation binds the atomic assignment to one lead/session/package
+ok 56 - QA token validation binds the atomic assignment to one lead/session/package
+  ---
+  duration_ms: 0.771792
+  ...
+# Subtest: one-time checkout authorization uses only the canonical stored session
+ok 57 - one-time checkout authorization uses only the canonical stored session
+  ---
+  duration_ms: 0.33475
+  ...
+# Subtest: one-time checkout authorization distinguishes lookup failure from expected denial
+ok 58 - one-time checkout authorization distinguishes lookup failure from expected denial
+  ---
+  duration_ms: 0.104791
+  ...
+# Subtest: Anwendung has no journey header — Bottom-Nav carries orientation, the day view keeps a quiet in-page Back (Task 2.7 + fix round 1 I-2)
+ok 59 - Anwendung has no journey header — Bottom-Nav carries orientation, the day view keeps a quiet in-page Back (Task 2.7 + fix round 1 I-2)
+  ---
+  duration_ms: 12.882
+  ...
+# Subtest: non-ready Anwendung surfaces never claim a successful view transition
+ok 60 - non-ready Anwendung surfaces never claim a successful view transition
+  ---
+  duration_ms: 0.409959
+  ...
+# Subtest: malformed Anwendung day segments fall back without throwing during render
+ok 61 - malformed Anwendung day segments fall back without throwing during render
+  ---
+  duration_ms: 1.243292
+  ...
+# Subtest: Bedarfsplan keeps its Journey header outside a bounded depth surface
+ok 62 - Bedarfsplan keeps its Journey header outside a bounded depth surface
+  ---
+  duration_ms: 10.198917
+  ...
+# Subtest: Feinschliff keeps its Journey header outside the ordered-question depth surface
+ok 63 - Feinschliff keeps its Journey header outside the ordered-question depth surface
+  ---
+  duration_ms: 7.152167
+  ...
+# Subtest: stage navigation intent is destination-bound, single-use, and time-bounded
+ok 64 - stage navigation intent is destination-bound, single-use, and time-bounded
+  ---
+  duration_ms: 0.23825
+  ...
+# Subtest: manual scroll restoration ownership is nested, idempotent, and cleanup-safe
+ok 65 - manual scroll restoration ownership is nested, idempotent, and cleanup-safe
+  ---
+  duration_ms: 0.091042
+  ...
+# Subtest: stage navigation intent fails closed when storage is unavailable
+ok 66 - stage navigation intent fails closed when storage is unavailable
+  ---
+  duration_ms: 0.25025
+  ...
+# Subtest: successful Stage 3 handoff marks Routine before invoking client route replacement
+ok 67 - successful Stage 3 handoff marks Routine before invoking client route replacement
+  ---
+  duration_ms: 0.480875
+  ...
+# Subtest: automatic Stage 3 bootstrap keeps the direct products-prep bridge visible
+ok 68 - automatic Stage 3 bootstrap keeps the direct products-prep bridge visible
+  ---
+  duration_ms: 1.236958
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1837.66275

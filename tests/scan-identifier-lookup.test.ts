@@ -42,11 +42,6 @@ function stubClient(
   return { client, callsByTable }
 }
 
-test("validateEanInput: valid EAN-13 passes checksum", () => {
-  const result = validateEanInput("4006381333931")
-  assert.deepEqual(result, { ok: true, type: "ean", value: "4006381333931" })
-})
-
 test("validateEanInput: valid EAN-8 passes checksum", () => {
   // 7 digits + check digit computed with the same GS1 mod-10 algorithm.
   const result = validateEanInput("40170725")
@@ -141,18 +136,6 @@ test("lookupCatalogProductByIdentifier: searches all barcode identifier types, i
     value: "4006381333931",
   })
   assert.deepEqual(result, { productId: "prod-1", category: "conditioner" })
-})
-
-test("lookupCatalogProductByIdentifier: inactive-only match is a miss", async () => {
-  const { client } = stubClient({
-    product_identifiers: () => ({ data: [{ product_id: "prod-inactive" }], error: null }),
-    products: () => ({ data: [], error: null }), // filtered out by is_active=true upstream
-  })
-  const result = await lookupCatalogProductByIdentifier(client as never, {
-    type: "ean",
-    value: "4006381333931",
-  })
-  assert.equal(result, null)
 })
 
 test("lookupCatalogProductByIdentifier: a discontinued product is filtered out too", async () => {

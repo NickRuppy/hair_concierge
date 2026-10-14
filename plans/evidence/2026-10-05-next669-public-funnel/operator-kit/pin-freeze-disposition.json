@@ -1,0 +1,9 @@
+{
+  "presealPinsSHA256": "8e4f811c6504c16d7986bdc4be8935724137495736702be33256ccc2e5d814cd",
+  "finalPinsSHA256": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+  "protectedPinsUnchanged": true,
+  "allowedChanges": "Own toolkit code/artifact hashes only; static-integrity extraction now compares exact function body, not adjacent wrapper comment. Added original-vs-amended control diff, template delta and freeze-script hashes. All source/test/readset/runtime/dependency/identity/proposal pins unchanged.",
+  "nativeRuns": 0,
+  "repositoryWrites": 0,
+  "children": 0
+}

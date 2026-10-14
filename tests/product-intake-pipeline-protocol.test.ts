@@ -1,11 +1,17 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import {
   requiredProtocolRoles,
   validateProductIntakeApprovalPayload,
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
+import { buildExpansionProtocolRow } from "../src/lib/product-intake/expansion-apply-templates"
 import { deriveRequiredProtocolRoles } from "../src/lib/product-intake/expansion-manifest"
+import {
+  buildHeatActivatedProtocolRow,
+  NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
+} from "../src/lib/product-intake/catalog-enrichment/heat-activated-protocols"
 import {
   runProtocolStage,
   type ProtocolResearchDraft,
@@ -132,7 +138,32 @@ function accepted(
   assert.equal(result.status, "templated", JSON.stringify(result.blockers))
   assert.deepEqual(result.blockers, [])
   const category_specs = { ...categorySpecs, product_application_protocols: result.rows }
-  const payload = {
+  const validation = validateProductIntakeApprovalPayload(approvalPayload(category, category_specs))
+  assert.deepEqual(
+    validation.missingFields.filter((field) => field.includes("product_application_protocols")),
+    [],
+  )
+  assert.equal(validation.ok, true, JSON.stringify(validation.missingFields))
+  return result.rows as Array<{
+    role: string
+    contact_time_seconds: number | null
+    source_label: string
+    source_url: string
+    source_text: string | null
+    guidance_payload: {
+      guidanceKey: string
+      scope: { productId: string }
+      applicationFamily: string
+      compatibleDayTypes: string[]
+      protocolFacts: Record<string, unknown>
+      steps: Array<{ action: string; copyTemplateDe: string }>
+      evidence: unknown[]
+    }
+  }>
+}
+
+function approvalPayload(category: string, category_specs: Record<string, unknown>) {
+  return {
     final: {
       product: {
         canonical_brand: "Fixture",
@@ -169,28 +200,6 @@ function accepted(
       },
     },
   }
-  const validation = validateProductIntakeApprovalPayload(payload)
-  assert.deepEqual(
-    validation.missingFields.filter((field) => field.includes("product_application_protocols")),
-    [],
-  )
-  assert.equal(validation.ok, true, JSON.stringify(validation.missingFields))
-  return result.rows as Array<{
-    role: string
-    contact_time_seconds: number | null
-    source_label: string
-    source_url: string
-    source_text: string | null
-    guidance_payload: {
-      guidanceKey: string
-      scope: { productId: string }
-      applicationFamily: string
-      compatibleDayTypes: string[]
-      protocolFacts: Record<string, unknown>
-      steps: Array<{ action: string; copyTemplateDe: string }>
-      evidence: unknown[]
-    }
-  }>
 }
 
 test("P2 conditioner stamps normative guidance despite model-written prose", () => {
@@ -631,4 +640,140 @@ test("mask research contract uses complete German wait steps accepted by stampin
   assert.match(copySlot, /3 Minuten einwirken lassen\./)
   assert.match(copySlot, /2–3 Minuten einwirken lassen\./)
   assert.match(copySlot, /Bis zu 10 Minuten einwirken lassen\./)
+})
+
+// ---------------------------------------------------------------------------------------------
+// Leave-In v1.2 heat activation (S3 review R1): an activated product never gets a shared
+// template; it needs its reviewed manufacturer workflow, and approval enforces the pairing.
+
+const NEQI = "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+const neqiProjection = JSON.parse(
+  readFileSync(
+    new URL(
+      "../plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+) as { productionProjection: { category_specs: Record<string, unknown> } }
+
+function activatedNeqiSpecs(): Record<string, unknown> {
+  return structuredClone(neqiProjection.productionProjection.category_specs)
+}
+
+const heatDraft: ProtocolResearchDraft = { evidence, heat_usable_on_dry_hair: false }
+
+test("an activated leave-in without a reviewed workflow row is refused, never shared-templated", () => {
+  const specs = activatedNeqiSpecs()
+  assert.equal(
+    (specs.product_leave_in_specs as { heat_activation_required: boolean })
+      .heat_activation_required,
+    true,
+  )
+  const result = runProtocolStage({
+    categoryKey: "leave_in",
+    categorySpecs: specs,
+    draft: heatDraft,
+    sources,
+  })
+  assert.equal(result.status, "blocked")
+  assert.deepEqual(result.rows, [])
+  assert.ok(!result.templateIds.includes("TPL-LEAVEIN-HEAT"))
+  assert.ok(
+    result.blockers.some((blocker) =>
+      blocker.startsWith("protocol_heat_activated_requires_reviewed_workflow"),
+    ),
+    JSON.stringify(result.blockers),
+  )
+})
+
+test("an activated leave-in with its reviewed workflow row gets the manufacturer workflow and approves", () => {
+  const specs = activatedNeqiSpecs()
+  const result = runProtocolStage({
+    categoryKey: "leave_in",
+    categorySpecs: specs,
+    draft: heatDraft,
+    sources,
+    productId: NEQI,
+  })
+  assert.deepEqual(result.templateIds, ["heat_activated_verified_product"])
+  const reviewed = buildHeatActivatedProtocolRow(
+    NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
+  )
+  const { product_id: _productId, guidance_payload_v2: _v2, ...intakeRow } = reviewed
+  assert.deepEqual(result.rows, [{ ...intakeRow, cadence: null }])
+  accepted("leave_in", specs, result)
+})
+
+test("approval rejects an activated leave-in carrying a shared heat template, and the reverse", () => {
+  const generic = buildExpansionProtocolRow("TPL-LEAVEIN-HEAT", {
+    productId: NEQI,
+    evidence,
+    usableOnDryHair: false,
+  })
+  const genericRow = {
+    ...generic,
+    source_label: "Hersteller",
+    source_url: evidence[0].sourceUrl,
+    source_text: evidence[0].sourceText,
+  }
+  const activated = validateProductIntakeApprovalPayload(
+    approvalPayload("leave_in", {
+      ...activatedNeqiSpecs(),
+      product_application_protocols: [genericRow],
+    }),
+  )
+  assert.equal(activated.ok, false)
+  assert.ok(
+    activated.missingFields.includes(
+      "final.category_specs.product_application_protocols.guidance_payload.protocolFacts.workflowId",
+    ),
+    JSON.stringify(activated.missingFields),
+  )
+  // The v1.1-style non-activated row of the same product, with the activated workflow
+  // row smuggled into its heat slot.
+  const plainSpecs = activatedNeqiSpecs()
+  Object.assign(plainSpecs.product_leave_in_specs as Record<string, unknown>, {
+    heat_activation_required: false,
+    heat_activation_route: null,
+    plan_roles: ["post_wash_leave_in", "pre_heat_application"],
+  })
+  const plainRows = runProtocolStage({
+    categoryKey: "leave_in",
+    categorySpecs: plainSpecs,
+    draft: heatDraft,
+    sources,
+    productId: NEQI,
+  })
+  assert.ok(plainRows.templateIds.includes("TPL-LEAVEIN-HEAT"))
+  const workflowRow = runProtocolStage({
+    categoryKey: "leave_in",
+    categorySpecs: activatedNeqiSpecs(),
+    draft: heatDraft,
+    sources,
+    productId: NEQI,
+  }).rows[0]
+  const plain = validateProductIntakeApprovalPayload(
+    approvalPayload("leave_in", {
+      ...plainSpecs,
+      product_application_protocols: [
+        ...plainRows.rows.filter((row) => (row as { role: string }).role !== "pre_heat_protection"),
+        workflowRow,
+      ],
+    }),
+  )
+  // Control: the plain product with its own shared rows approves.
+  assert.equal(
+    validateProductIntakeApprovalPayload(
+      approvalPayload("leave_in", { ...plainSpecs, product_application_protocols: plainRows.rows }),
+    ).ok,
+    true,
+  )
+  assert.equal(plain.ok, false)
+  assert.ok(
+    plain.missingFields.includes(
+      "final.category_specs.product_application_protocols.guidance_payload.protocolFacts.workflowId",
+    ),
+    JSON.stringify(plain.missingFields),
+  )
 })

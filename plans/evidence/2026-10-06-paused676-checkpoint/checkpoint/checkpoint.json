@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-06",
+  "pauseRequested": true,
+  "goalToolReturnsNoActiveGoal": true,
+  "native": {
+    "tests": 11329,
+    "pass": 11287,
+    "fail": 27,
+    "skip": 15,
+    "cancelled": 0,
+    "newFailures": [
+      "extractJsonAnswer stays bounded on large malformed output"
+    ],
+    "baselineFailures": [
+      "selectProducts applies leave-in heat tool overrides to the runtime",
+      "selectProducts applies leave-in texture and density overrides with profile notices",
+      "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+      "selectProducts applies oil density overrides to density-weight caution",
+      "selectProducts applies oil thickness overrides to hard-gated oil selection",
+      "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+      "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+      "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+      "selectProducts carries unsupported ingredient caveats for live oil requests",
+      "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+      "selectProducts includes owned verified non-recommended products for assessment",
+      "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+      "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+      "selectProducts marks exact leave-in heat temperatures unsupported",
+      "selectProducts narrows product-detail assessment grounding to target product ids",
+      "selectProducts passes explicit dry-shampoo bridge context into category engine",
+      "selectProducts preserves resolved assessment target when engine returns no products",
+      "selectProducts preserves supplied effective care context in runtime and care balance output",
+      "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+      "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+      "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+      "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+      "selectProducts tool passes request-aware mask runtime into category engine",
+      "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+      "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+      "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests"
+    ]
+  },
+  "ci": {
+    "exit": 0,
+    "elapsedSeconds": 1042.012417875
+  },
+  "coverage": {
+    "lines": {
+      "baseline": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "current": {
+        "total": 437294,
+        "covered": 306711,
+        "skipped": 0,
+        "pct": 70.13
+      },
+      "actualDeltaPercentagePoints": 0.34832269298243546,
+      "conservativeUpperBoundDenominator": {
+        "total": 446688,
+        "covered": 306711
+      },
+      "conservativeLowerBoundDeltaPercentagePoints": -1.1267115537406482,
+      "additionalDenominatorBound": 0
+    },
+    "statements": {
+      "baseline": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "current": {
+        "total": 437294,
+        "covered": 306711,
+        "skipped": 0,
+        "pct": 70.13
+      },
+      "actualDeltaPercentagePoints": 0.34832269298243546,
+      "conservativeUpperBoundDenominator": {
+        "total": 446688,
+        "covered": 306711
+      },
+      "conservativeLowerBoundDeltaPercentagePoints": -1.1267115537406482,
+      "additionalDenominatorBound": 0
+    },
+    "functions": {
+      "baseline": {
+        "total": 25474,
+        "covered": 21163,
+        "skipped": 0,
+        "pct": 83.07
+      },
+      "current": {
+        "total": 24930,
+        "covered": 20763,
+        "skipped": 0,
+        "pct": 83.28
+      },
+      "actualDeltaPercentagePoints": 0.20833587243623697,
+      "conservativeUpperBoundDenominator": {
+        "total": 25477,
+        "covered": 20763
+      },
+      "conservativeLowerBoundDeltaPercentagePoints": -1.5798261407563814,
+      "additionalDenominatorBound": 0
+    },
+    "branches": {
+      "baseline": {
+        "total": 85644,
+        "covered": 69840,
+        "skipped": 0,
+        "pct": 81.54
+      },
+      "current": {
+        "total": 84506,
+        "covered": 68936,
+        "skipped": 0,
+        "pct": 81.57
+      },
+      "actualDeltaPercentagePoints": 0.028404329583054277,
+      "conservativeUpperBoundDenominator": {
+        "total": 85732,
+        "covered": 68936
+      },
+      "conservativeLowerBoundDeltaPercentagePoints": -1.1381528999909705,
+      "additionalDenominatorBound": 2
+    }
+  },
+  "actualGlobalWithin2pp": true,
+  "conservativeLowerBoundWithin2pp": true,
+  "sameCoverageSourceSetAs666": true,
+  "baselineSummaryUnavailableInTMP": true,
+  "coverageMethod": "Original global totals from accepted666 comparison; unchanged source-set666 summary. Upper-bound denominator adds all positive per-path666-to676 increases to accepted original-normalized666 total. This proves a conservative lower bound; it is not an exact rerun of missing original-path baseline.",
+  "freeze": {
+    "total": 10280,
+    "rawVerificationPassed": false,
+    "drift": {
+      "/Users/nick/AI_work/hair_conscierge/.git/config": {
+        "before": "0d5e0df4bd960b77f153d98a1ad4966ad4d8ffd73246d244cdcf981fa3542061",
+        "after": "641432715e4fe1afea30542345a7839b11378d236c10664aa44b0896388c52f2"
+      },
+      "/Users/nick/AI_work/hair_conscierge/.git/packed-refs": {
+        "before": "5487212027cf44fb9ea8b74ef9b1b452a443ccd0f734a111f2190e8cf8a9c298",
+        "after": "c1802e39a97495943d374ec69f1bfe764266ef433722b701a260400451ba0dc6"
+      }
+    },
+    "allOtherSourceTestToolingAndSelectedDependencyBytesMatch": true
+  },
+  "isolatedRecheck": {
+    "command": [
+      "node",
+      "--enable-source-maps",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/price-audit-llm.test.ts"
+    ],
+    "exit": 0,
+    "tests": 9,
+    "pass": 9,
+    "hostileInputTestDurationMs": 15.866083,
+    "note": "Full coverage run failed its unchanged one-second wall-clock assertion at1323.931333ms. Isolated recheck passed unchanged; full run remains recorded with27 failures."
+  },
+  "limitations": [
+    "Raw per-file declines need separate attribution; no blanket preservation claim.",
+    "Latest whole run is not baseline-failure-only green.",
+    "Full original baseline summary no longer present in TMP; exact original per-path recomparison unavailable.",
+    "20% target unfinished; no pending proposal applied.",
+    "No fresh-main reconciliation or counterpart whole-branch review; no push authorized."
+  ]
+}

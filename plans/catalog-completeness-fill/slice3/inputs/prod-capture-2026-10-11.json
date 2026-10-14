@@ -1,0 +1,484 @@
+{
+ "captured_at": "2026-10-11T14:08:01.30101+00:00",
+ "source": "production read-only SELECT (project pqdkhefxsxkyeqelqegq). Slice 1 NOT applied at capture time; S3's prestate is this capture + Slice 1's writes for the two products (slice1-writes-for-s3-products.json).",
+ "products": [
+  {
+   "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "name": "Neqi Diamond Glass Ultimate Styling Spray",
+   "brand": "Neqi",
+   "origin": "user_submitted",
+   "category": "Leave-in",
+   "is_active": true,
+   "category_key": "leave_in",
+   "lifecycle_status": "active",
+   "suitable_thicknesses": [
+    "coarse",
+    "normal"
+   ],
+   "is_chaarlie_recommended": false
+  },
+  {
+   "id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+   "brand": "Pantene",
+   "origin": "curated",
+   "category": "Leave-in",
+   "is_active": true,
+   "category_key": "leave_in",
+   "lifecycle_status": "active",
+   "suitable_thicknesses": [
+    "normal"
+   ],
+   "is_chaarlie_recommended": true
+  }
+ ],
+ "product_leave_in_specs": [
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "format": "spray",
+   "weight": "medium",
+   "roles": [
+    "replacement_conditioner",
+    "styling_prep"
+   ],
+   "plan_roles": [
+    "post_wash_leave_in",
+    "pre_heat_application"
+   ],
+   "category_key": "leave_in",
+   "care_benefits": [
+    "anti_frizz"
+   ],
+   "care_direction": "balanced",
+   "ingredient_flags": [
+    "silicones",
+    "humectants"
+   ],
+   "application_stage": [
+    "towel_dry",
+    "pre_heat"
+   ],
+   "functional_benefits": [
+    "smooth_anti_frizz",
+    "heat_protect"
+   ],
+   "repair_support_level": "low",
+   "heat_protection_max_c": null,
+   "conditioner_relationship": "replacement_capable",
+   "heat_activation_required": false,
+   "provides_heat_protection": true
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "format": "lotion",
+   "weight": "medium",
+   "roles": [
+    "extension_conditioner"
+   ],
+   "plan_roles": [
+    "post_wash_leave_in",
+    "pre_heat_application"
+   ],
+   "category_key": "leave_in",
+   "care_benefits": [
+    "moisture",
+    "anti_frizz",
+    "shine"
+   ],
+   "care_direction": "moisture",
+   "ingredient_flags": [
+    "silicones"
+   ],
+   "application_stage": [
+    "towel_dry"
+   ],
+   "functional_benefits": [
+    "curl_shape_support",
+    "heat_protect",
+    "moisture_softness",
+    "repair_support",
+    "shine_support",
+    "smooth_anti_frizz"
+   ],
+   "repair_support_level": "medium",
+   "heat_protection_max_c": null,
+   "conditioner_relationship": "booster_only",
+   "heat_activation_required": false,
+   "provides_heat_protection": false
+  }
+ ],
+ "product_leave_in_fit_specs": [
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "weight": "medium",
+   "care_benefits": [
+    "heat_protect",
+    "detangle_smooth"
+   ],
+   "conditioner_relationship": "replacement_capable"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "weight": "medium",
+   "care_benefits": [
+    "detangle_smooth"
+   ],
+   "conditioner_relationship": "booster_only"
+  }
+ ],
+ "product_leave_in_eligibility": [
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "coarse",
+   "need_bucket": "heat_protect",
+   "styling_context": "heat_style"
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "coarse",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "air_dry"
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "coarse",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "non_heat_style"
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "normal",
+   "need_bucket": "heat_protect",
+   "styling_context": "heat_style"
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "normal",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "air_dry"
+  },
+  {
+   "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+   "thickness": "normal",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "non_heat_style"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "thickness": "normal",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "air_dry"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "thickness": "normal",
+   "need_bucket": "moisture_anti_frizz",
+   "styling_context": "non_heat_style"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "thickness": "normal",
+   "need_bucket": "shine_protect",
+   "styling_context": "air_dry"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "thickness": "normal",
+   "need_bucket": "shine_protect",
+   "styling_context": "non_heat_style"
+  }
+ ],
+ "protocol_digests": [
+  {
+   "id": "5003179e-d828-4a26-b25c-7e20646329e0",
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "role": "post_wash_leave_in",
+   "application_family": "between_wash_dry_care",
+   "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+   "md5_v1": "be4a192c19252aaa7e91ae29b08729fc",
+   "md5_v2": "3fa308eb0ffd84177c81e6c8a711f48d"
+  },
+  {
+   "id": "6b50c77e-c658-40f7-818b-1a64547e41ba",
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "role": "post_wash_leave_in",
+   "application_family": "post_wash_damp_conditioning",
+   "source_url": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+   "md5_v1": "61189bc7de37fc544619c4e183f5e2fc",
+   "md5_v2": "43b15fa4fa3202a832f6c4460e637380"
+  },
+  {
+   "id": "b99799b7-1d23-47e0-9338-66923a690ae1",
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "role": "pre_heat_protection",
+   "application_family": "pre_heat_damp",
+   "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+   "md5_v1": "444e00d2f86a2284fd577bf816f31141",
+   "md5_v2": "77e61fe9a1cb5a95984568460408155e",
+   "row_columns": {
+    "cadence": null,
+    "instruction_modifiers": [],
+    "application_stage": "damp_leave_on",
+    "application_state": "damp",
+    "placement": "all_hair",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "not_stated"
+   }
+  }
+ ],
+ "legacy_post_wash_protocol_rows": [
+  {
+   "id": "5003179e-d828-4a26-b25c-7e20646329e0",
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "category": "leave_in",
+   "role": "post_wash_leave_in",
+   "application_stage": "dry_hair",
+   "application_state": "dry",
+   "placement": "lengths_ends",
+   "rinse_action": "do_not_rinse",
+   "reapplication": "not_stated",
+   "contact_time_seconds": null,
+   "source_label": "Händler",
+   "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+   "source_text": "Auf handtuchtrockenem Haar oder trocken zwischen Haarwäschen anwenden.",
+   "guidance_payload": {
+    "role": "leave_in",
+    "scope": {
+     "kind": "product",
+     "category": "leave_in",
+     "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+    },
+    "steps": [
+     {
+      "action": "apply_product",
+      "stepKey": "dry-care",
+      "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
+     }
+    ],
+    "locale": "de",
+    "evidence": [
+     {
+      "checkedAt": "2026-08-14",
+      "sourceUrl": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+      "sourceType": "retailer"
+     }
+    ],
+    "sequence": {
+     "after": [],
+     "anchor": "dry_finish",
+     "before": [],
+     "conflictsWith": []
+    },
+    "guidanceKey": "leave-in-use-case-2026-08-14-e781ca9e-886d-40a1-bfe1-48177cfbf381-between_wash_dry_care",
+    "requirements": {
+     "requiredCatalogFacts": [],
+     "requiredProfileFacts": [],
+     "requiredProtocolFacts": []
+    },
+    "protocolFacts": {
+     "rinse": "leave_in",
+     "amount": null,
+     "cautions": [],
+     "reapplication": "none",
+     "applicationArea": "lengths_ends",
+     "contactTimeSeconds": null,
+     "conditionerRelationship": "not_applicable"
+    },
+    "schemaVersion": 1,
+    "protocolVersion": 1,
+    "applicationFamily": "between_wash_dry_care",
+    "compatibleDayTypes": [
+     "refresh_day",
+     "between_wash_care_day"
+    ],
+    "exactGuidanceRequired": true
+   },
+   "guidance_payload_v2": {
+    "role": "leave_in",
+    "facts": {
+     "heat": null,
+     "rinse": "leave_in",
+     "amount": null,
+     "contactTime": null,
+     "applicationArea": "hair_lengths_ends",
+     "applicationState": "dry_hair",
+     "conditionerPolicy": "not_applicable"
+    },
+    "scope": {
+     "kind": "product",
+     "category": "leave_in",
+     "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+    },
+    "evidence": [
+     {
+      "checkedAt": "2026-08-14",
+      "sourceUrl": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+      "sourceType": "retailer"
+     }
+    ],
+    "exactSteps": [],
+    "sourceRole": "post_wash_leave_in",
+    "workflowId": null,
+    "cautionCodes": [],
+    "contractKind": "product_pointer",
+    "schemaVersion": 2,
+    "applicationFamily": "between_wash_dry_care",
+    "runtimeBlockerCode": null,
+    "requiredCompanionProductId": null
+   },
+   "cadence": null,
+   "instruction_modifiers": []
+  },
+  {
+   "id": "6b50c77e-c658-40f7-818b-1a64547e41ba",
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "category": "leave_in",
+   "role": "post_wash_leave_in",
+   "application_stage": "damp_leave_on",
+   "application_state": null,
+   "placement": "all_hair",
+   "rinse_action": "leave_in",
+   "reapplication": "not_stated",
+   "contact_time_seconds": null,
+   "source_label": "Dunnes Produktseite",
+   "source_url": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+   "source_text": "Apply 1-2 pumps on clean towel-dried hair; use dry between washes for frizz or curl definition.",
+   "guidance_payload": {
+    "role": "leave_in",
+    "scope": {
+     "kind": "product",
+     "category": "leave_in",
+     "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+    },
+    "steps": [
+     {
+      "action": "apply_product",
+      "stepKey": "apply-pantene-heat-glow",
+      "copyTemplateDe": "1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben."
+     },
+     {
+      "action": "section",
+      "stepKey": "distribute-pantene-heat-glow",
+      "copyTemplateDe": "Gleichmäßig verteilen und nicht ausspülen."
+     }
+    ],
+    "locale": "de",
+    "evidence": [
+     {
+      "checkedAt": "2026-08-11",
+      "sourceUrl": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+      "sourceType": "retailer"
+     }
+    ],
+    "sequence": {
+     "after": [
+      "post_cleanse_rinse_off"
+     ],
+     "anchor": "damp_leave_on",
+     "before": [],
+     "conflictsWith": []
+    },
+    "guidanceKey": "product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-post-wash",
+    "requirements": {
+     "requiredCatalogFacts": [
+      "leave_in.plan_roles"
+     ],
+     "requiredProfileFacts": [],
+     "requiredProtocolFacts": []
+    },
+    "protocolFacts": {
+     "rinse": "leave_in",
+     "amount": {
+      "kind": "qualitative",
+      "copyDe": "1–2 Pumpstöße verwenden."
+     },
+     "cautions": [],
+     "reapplication": "none",
+     "applicationArea": "all_hair",
+     "contactTimeSeconds": null,
+     "conditionerRelationship": "not_applicable"
+    },
+    "schemaVersion": 1,
+    "protocolVersion": 1,
+    "applicationFamily": "post_wash_damp_conditioning",
+    "compatibleDayTypes": [
+     "wash_day",
+     "styling_day",
+     "between_wash_care_day"
+    ],
+    "exactGuidanceRequired": true
+   },
+   "guidance_payload_v2": {
+    "role": "leave_in",
+    "facts": {
+     "heat": null,
+     "rinse": "leave_in",
+     "amount": null,
+     "contactTime": null,
+     "applicationArea": "hair_lengths_ends",
+     "applicationState": "damp_hair",
+     "conditionerPolicy": "not_applicable"
+    },
+    "scope": {
+     "kind": "product",
+     "category": "leave_in",
+     "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+    },
+    "evidence": [
+     {
+      "checkedAt": "2026-08-11",
+      "sourceUrl": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+      "sourceType": "retailer"
+     }
+    ],
+    "exactSteps": [],
+    "sourceRole": "post_wash_leave_in",
+    "workflowId": null,
+    "cautionCodes": [],
+    "contractKind": "product_pointer",
+    "schemaVersion": 2,
+    "applicationFamily": "post_wash_damp_conditioning",
+    "runtimeBlockerCode": null,
+    "requiredCompanionProductId": null
+   },
+   "cadence": null,
+   "instruction_modifiers": []
+  }
+ ],
+ "personal_plan_catalog_fact_evidence": [
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "fact_key": "leave_in.authority_facts",
+   "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+   "batch_id": "S5-15-leave-in-exact-02",
+   "source_type": "retailer"
+  }
+ ],
+ "reference_inventory": {
+  "42a2fe20-bd7e-49a3-a880-8ae89015a5c9": {
+   "owners": 0,
+   "drafts_by_status": {},
+   "routine_versions": 0,
+   "portfolio_versions": 0,
+   "active_routines": 0
+  },
+  "e781ca9e-886d-40a1-bfe1-48177cfbf381": {
+   "owners": 0,
+   "drafts_by_status": {
+    "completed": 10
+   },
+   "routine_versions": 11,
+   "portfolio_versions": 10,
+   "active_routines": 7,
+   "active_routines_post_wash_slot": 7,
+   "active_routines_pre_heat_slot": 0
+  },
+  "intake_queue_leave_in_v1_1_artifacts": {
+   "note": "submissions whose research artifacts carry leave-in-inci-v1.1 and are not finished",
+   "researching_job_blocked": 1,
+   "researching_job_failed": 1,
+   "ready_for_review": 0
+  }
+ }
+}

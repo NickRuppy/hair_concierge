@@ -1,0 +1,123 @@
+{
+  "slot": "A42",
+  "productId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+  "name": "SANTE Glossy Shine Shampoo Birke + 3-fach Protein Komplex",
+  "brand": "Sante",
+  "packSize": "250 ml",
+  "gtins": [
+    "4055297220262"
+  ],
+  "sources": [
+    {
+      "url": "https://www.sante.de/glossy-shine-shampoo-birke-3-fach-protein-komplex/4060702",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE shop page (LOGOCOS Naturkosmetik); variant sku 4060702, Größe 250 ml; schema.org gtin13",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4055297220262 (gtin13 in markup; image file B0CWS1VT1C_4055297220262_SANTE_Glossy Shine Shampoo 250ml_MAIN.jpg). Same ALS list also on the 500 ml (4061401, gtin13 4055297221344) and 950 ml (4061901, gtin13 4055297220927) variant pages.",
+      "inciVerbatim": "Aqua (Water), Ammonium Lauryl Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Hydrolyzed Corn Protein, Glycerin, Hydrolyzed Wheat Protein, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Soy Protein, Citric Acid, Alcohol, Benzoic Acid, Arginine, Betula Alba Leaf Extract*, Leuconostoc/Radish Root Ferment Filtrate, Aloe Barbadensis Leaf Juice Powder*, Levulinic Acid, Sodium Levulinate, Sodium Benzoate, Parfum (Fragrance)**, Vanillin**",
+      "claimsVerbatim": "Glossy Shine Shampoo Birke +3-fach Protein Komplex | Das SANTE Glossy Shine Shampoo mit der hochwirksamen Pflegeformel für glanzloses Haar, mit Bio-Birkenblattextrakt & 3-fach Protein Komplex, glättet die Oberflächenstruktur des Haares für mehr Glanz & Geschmeidigkeit bis in die Spitzen. | Perfekte Lösung für glanzloses und stumpfes Haar | Stärkt, pflegt und glättet die Haarstruktur | Mit Bio-Birkenblattextrakt und 3-Fach Protein Komplex | Für sehr gute Kämmbarkeit und perfekten Glanz | Enthält keine Silikone für ein natürliches Haargefühl | Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar von der Wurzel bis in die Spitzen. Der hydratisierende Pflege-Komplex füllt & baut das Haar auf, für eine natürlich kraftvolle Haarstruktur. Die Verträglichkeit ist dermatologisch getestet. | Label: Vegan, Vegetarisch | Größe: 250 ml",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend die SANTE 1 Min Wonder Maske und/oder Conditioner verwenden."
+    },
+    {
+      "url": "https://www.mueller.de/p/sante-glossy-shine-shampoo-IPN2994063/",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Müller PDP (browser tab); found by GTIN search q=4055297220262 (1 hit); Hersteller Logocos; 250 ml; 3,95 EUR",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4055297220262 (GTIN not printed in PDP text)",
+      "inciVerbatim": "Ingredients: Aqua (Water), Ammonium Lauryl Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Hydrolyzed Corn Protein, Glycerin, Hydrolyzed Wheat Protein, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Soy Protein, Citric Acid, Alcohol, Benzoic Acid, Arginine, Betula Alba Leaf Extract*, Leuconostoc/Radish Root Ferment Filtrate, Aloe Barbadensis Leaf Juice Powder*, Levulinic Acid, Sodium Levulinate, Sodium Benzoate, Parfum (Fragrance)**, Vanillin** *certified organically grown **from natural essential oils 98% natural origin of total",
+      "claimsVerbatim": "Produkteigenschaft: schützend|stärkend | Zertifizierung: Natrue | Eigenschaften: vegan",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend die Sante 1 Min Wonder Maske und/oder Conditioner verwenden."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1334046/sante-naturally-shampoo-glossy-shine",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift Logocos Naturkosmetik",
+      "sourceKind": "retailer",
+      "gtinShown": "4055297220262 (page 'GTIN:' line; dm-Artikelnummer 1334046; title 'Shampoo Glossy Shine, 250 ml'; Lieferbar; 3,95 EUR)",
+      "inciVerbatim": "Ingredients: Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**, Vanillin** *aus kontrolliert biologischem Anbau/certified organically grown **aus natürlichen ätherischen Ölen/ from natural essential oils",
+      "claimsVerbatim": "Haarshampoo | Mit Bio-Birkenblattextrakt und 3-Fach Protein Komplex | Für glanzloses und stumpfes Haar geeignet | Stärkt, pflegt und glättet die Haarstruktur | Das Shampoo Glossy Shine von SANTE NATURKOSMETIK ist die ideale Pflege für glanzloses und stumpfes Haar. Die Haarpflege enthält Bio-Birkenblattextrakt und 3-Fach Protein Komplex. Es stärkt, pflegt und glättet die Haarstruktur und verleiht gute Kämmbarkeit und einen perfekten Glanz. Da das Shampoo keine Silikone enthält hinterlässt es ein natürliches Haargefühl. | Produkteigenschaften: vegan, vegetarisch",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend die Sante 1 Min Wonder Maske und/oder Conditioner verwenden."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-sante-shampoo/p/4055297220262",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab); Rossmann Artikelnummer 154634; 250 ml; 3,99 EUR; title 'Santé Glossy Shine Shampoo'",
+      "sourceKind": "retailer",
+      "gtinShown": "4055297220262 (URL path)",
+      "inciVerbatim": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)** *aus kontrolliert biologischem Anbau **aus natürlichen ätherischen Ölen",
+      "claimsVerbatim": "Hochwirksame Pflegeformel für glanzloses Haar, mit Bio-Birkenblattextrakt & 3-Fach Protein Komplex, glättet die Oberflächenstruktur des Haares für 3x mehr Glanz & Geschmeidigkeit bis in die Spitzen. | perfekte Lösung für glanzloses und stumpfes Haar | stärkt, pflegt und glättet die Haarstruktur | mit Bio-Birkenblattextrakt und 3-Fach Protein Komplex | für sehr gute Kämmbarkeit und perfekten Glanz | enthält keine Silikone für ein natürliches Haargefühl | vegan",
+      "directionsVerbatim": "not read"
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842326554.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "codecheck record (support only; EAN search hit for 4055297220262)",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4055297220262",
+      "inciVerbatim": "Ingredients: Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.sante.de/glossy-shine-shampoo-birke-3-fach-protein-komplex/4060702-M + dm.de 1334046 (prior v1.3 captures)",
+      "retrievedAt": "2026-08-10 (data/research/shampoo-inci/v1.3/products/sante-glossy-shine/formula-source.json)",
+      "sourceType": "prior evidence: sante.de and dm agreed on the old SCS list on 2026-08-10",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4055297220262 (file-level)",
+      "inciVerbatim": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**, Vanillin**",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "formula_conflict_reformulation",
+      "summary": "Two different complete lists for GTIN 4055297220262 / 250 ml. NEW (manufacturer sante.de, all three sizes, and Müller GTIN-search hit): Ammonium Lauryl Sulfate-based, 21 items, no Sodium Coco-Sulfate/Lauryl Glucoside/Coco-Glucoside/Maris Sal/Aloe juice/Glyceryl Oleate/Betaine/Tocopherol/Lecithin etc., adds Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Sodium Benzoate. OLD (dm.de, Rossmann.de, codecheck; and sante.de itself on 2026-08-10): Sodium Coco-Sulfate-based, 30 items. Different ingredient sets, not an ordering difference. dm additionally ends '...Parfum (Fragrance)**, Vanillin**' while Rossmann ends at '...Parfum (Fragrance)**' (no Vanillin).",
+      "listNew_manufacturer_and_mueller": "Aqua (Water), Ammonium Lauryl Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Hydrolyzed Corn Protein, Glycerin, Hydrolyzed Wheat Protein, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Soy Protein, Citric Acid, Alcohol, Benzoic Acid, Arginine, Betula Alba Leaf Extract*, Leuconostoc/Radish Root Ferment Filtrate, Aloe Barbadensis Leaf Juice Powder*, Levulinic Acid, Sodium Levulinate, Sodium Benzoate, Parfum (Fragrance)**, Vanillin**",
+      "listOld_dm": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**, Vanillin**",
+      "listOld_rossmann": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**"
+    },
+    {
+      "type": "sequence_hypothesis",
+      "summary": "sante.de changed between the 2026-08-10 capture (old list) and 2026-10-10 (new list); Müller already carries the new list; dm, Rossmann and codecheck lag. Looks like a real reformulation rolling through the trade, but no pack photo was read to confirm which version is on current shelves."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water)",
+    "Ammonium Lauryl Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Hydrolyzed Corn Protein",
+    "Glycerin",
+    "Hydrolyzed Wheat Protein",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Hydrolyzed Soy Protein",
+    "Citric Acid",
+    "Alcohol",
+    "Benzoic Acid",
+    "Arginine",
+    "Betula Alba Leaf Extract*",
+    "Leuconostoc/Radish Root Ferment Filtrate",
+    "Aloe Barbadensis Leaf Juice Powder*",
+    "Levulinic Acid",
+    "Sodium Levulinate",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)**",
+    "Vanillin**"
+  ],
+  "canonicalReason": "PROVISIONAL: NEW list chosen because the manufacturer DE page (first-authority source, GTIN-anchored via gtin13 for the exact 250 ml variant and consistent across 250/500/950 ml pages) and a second GTIN-anchored retailer (Müller) agree, and the manufacturer page demonstrably changed after the 2026-08-10 capture. Two other GTIN-anchored retailers (dm, Rossmann) still show the old list, so the status is frozen_with_conflict, not frozen. Pack check would settle it.",
+  "inciFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "NEEDS NICK: this is a likely REFORMULATION of a live, recommended product (old SCS/lauryl-glucoside/coco-glucoside system -> ammonium lauryl sulfate system). The v1.3/v1.4 pins and any classification built on the old list may no longer describe the product on shelf. Ideally confirm with a fresh pack back.",
+    "Claim-INCI check on NEW list: 'Bio-Birkenblattextrakt' = Betula Alba Leaf Extract* (ok); '3-Fach Protein Komplex' = Hydrolyzed Corn/Wheat/Soy Protein (ok); 'Enthält keine Silikone' consistent; 'vegan' consistent. Müller's '98% natural origin' is not in the other sources.",
+    "Hydrolyzed Wheat Protein/Soy: allergen-relevant but not a conflict.",
+    "Prior v1.4 fingerprint (comma-joined) 6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd refers to the OLD list.",
+    "Rossmann's old list lacks the trailing Vanillin that dm's old list has; recorded verbatim, not merged."
+  ]
+}

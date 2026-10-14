@@ -1,0 +1,28 @@
+{
+  "manifest": "/tmp/test-audit-moderator-fieldtest183/manifest.json",
+  "manifestSha256": "736ce42f2cc6dcb915680facd3c0e0b52bb2c22a4fe5616a4abfe53425089288",
+  "status": "READONLY_STATIC_HANDOFF_CONDITIONAL_C1",
+  "repoWrites": 0,
+  "testsRun": 0,
+  "sourceFaultsRun": 0,
+  "phaseCounts": {
+    "before": 183,
+    "transfer": 183,
+    "cut": 182,
+    "unrelatedExact": 181,
+    "R": 169,
+    "F": 13,
+    "C": 1,
+    "D": 0
+  },
+  "snapshotFiles": 81,
+  "hashes": {
+    "layer-plan.md": "bddf32836a31ecc3404d7d8a6547481e5f7ad986425d31396d9e39425dbdca2f",
+    "complete-ledger.md": "1188e120dd8a445ae453d5d004d9a05108d73bdcdaea4f4137d457a3064f3d29",
+    "candidates.json": "1de59e9e3ece80720592bc207a38420a0773f166f9cd077aaa390e0fd5e0635f",
+    "controls.json": "9477608cfb7e7e8298e42b5cf35b947215e0078468cdd6acf75f6b4f7393ae9f",
+    "static-check.json": "db59f3fe5c7f23535f1aedf67b18bcc75ed35b6ba95341f6d420ef2527855742",
+    "complete.diff": "c6c20c5c834a3b45653d6810a23f5cd2f5fb0df4c1bc99d670a59d1aea872653",
+    "read-scope.json": "e241b937a2c7952d05e51fa59ecc5e1e3dcc33b633b8c6758e1a4d94faf281ef"
+  }
+}

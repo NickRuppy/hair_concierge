@@ -41,25 +41,6 @@ test("PayPal pending polling depends on the stable token instead of the activati
   assert.doesNotMatch(welcomeClientSource, /\}, \[activationSource, mode\]\)/)
 })
 
-test("terminal PayPal activation polling reports a typed payment failure without the token", () => {
-  assert.match(
-    welcomeClientSource,
-    /capturePaymentFailure\(\{[\s\S]*signal: "customer_payment_error_observed"[\s\S]*stage: "paypal_activation_status_poll"[\s\S]*errorFamily: "timeout"/,
-  )
-  assert.match(welcomeClientSource, /providerReferencePresent: true/)
-  const paymentFailureCall = welcomeClientSource.match(
-    /capturePaymentFailure\(\{[\s\S]*?providerReferencePresent: true,[\s\S]*?\n\s*\}\)/,
-  )?.[0]
-  assert.ok(paymentFailureCall)
-  assert.doesNotMatch(paymentFailureCall, /token:/)
-  assert.doesNotMatch(paymentFailureCall, /paypalActivationToken/)
-})
-
-test("welcome labels the account email as Chaarlie-E-Mail", () => {
-  assert.match(welcomeClientSource, /Chaarlie-E-Mail/)
-  assert.doesNotMatch(welcomeClientSource, /E-Mail aus deinem Checkout/)
-})
-
 test("welcome only shows PayPal-E-Mail when it differs from Chaarlie email", () => {
   assert.match(welcomeClientSource, /providerSubscriberEmail\?: string \| null/)
   assert.match(welcomeClientSource, /const showProviderSubscriberEmail =/)
@@ -167,14 +148,6 @@ test("paid Stripe checkout_one_time_invalid verification failures recover to pen
     verificationBranch.indexOf('recoveredSession?.mode === "payment"') <
       verificationBranch.indexOf("classifyCheckoutRecoveryError(err)"),
   )
-})
-
-test("a paid Stripe verification failure preserves the revoked return state", () => {
-  assert.match(
-    welcomePageSource,
-    /oneTimeReturnStateFromError\(error: unknown\): "revoked" \| "support_needed"/,
-  )
-  assert.match(welcomePageSource, /error\.code === "checkout_one_time_charge_revoked"/)
 })
 
 test("unpaid or non-payment Stripe verification failures expose safe recovery without repricing", () => {

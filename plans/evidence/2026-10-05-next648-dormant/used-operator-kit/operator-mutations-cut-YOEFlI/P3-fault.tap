@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: the released Personal Plan rollout is all and ignores obsolete cohort flags
+not ok 1 - the released Personal Plan rollout is all and ignores obsolete cohort flags
+  ---
+  duration_ms: 1.384375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage3-release.test.ts:2:2059'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'internal' !== 'all'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'all'
+  actual: 'internal'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage3-release.test.ts:40:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 225.867583

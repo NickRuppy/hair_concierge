@@ -1,0 +1,44 @@
+--- a/tests/one-time-recovery-command.test.ts
++++ b/tests/one-time-recovery-command.test.ts
+@@ -346,6 +346,14 @@
+     "activateStripe:stripe_checkout_session",
+     "readReceipt",
+   ])
++
++  const output = JSON.stringify(receipt)
++
++  for (const value of Object.values(sensitive)) {
++    assert.equal(output.includes(value), false, `leaked ${value}`)
++  }
++  assert.equal(output.includes("29.99"), true)
++  assert.equal(output.includes("EUR"), true)
+ })
+ 
+ test("delegates PayPal token verification to provider seam without activating on dry-run", async () => {
+@@ -466,26 +474,6 @@
+       }),
+     /cannot include PayPal/,
+   )
+-})
+-
+-test("redacts provider, user, lead, consent, token, session, and email values from output", async () => {
+-  const { deps } = fakeDeps()
+-  const receipt = await runOneTimeRecoveryCommand(
+-    parseOneTimeRecoveryArgs([
+-      "--provider=stripe",
+-      `--stripe-session=${sensitive.stripeSession}`,
+-      "--apply",
+-      `--confirm-session=${sensitive.stripeSession}`,
+-    ]),
+-    deps,
+-  )
+-  const output = JSON.stringify(receipt)
+-
+-  for (const value of Object.values(sensitive)) {
+-    assert.equal(output.includes(value), false, `leaked ${value}`)
+-  }
+-  assert.equal(output.includes("29.99"), true)
+-  assert.equal(output.includes("EUR"), true)
+ })
+ 
+ type ReceiptQuery = {

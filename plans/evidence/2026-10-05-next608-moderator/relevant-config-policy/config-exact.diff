@@ -1,0 +1,11 @@
+--- before
++++ current
+@@ -1353,7 +1353,7 @@
+ 	merge = refs/heads/codex/central-profile-pr2
+ [branch "codex/central-profile-pr3"]
+ 	remote = origin
+-	merge = refs/heads/main
++	merge = refs/heads/codex/central-profile-pr3
+ [branch "codex/shampoo-v16"]
+ 	remote = origin
+ 	merge = refs/heads/main

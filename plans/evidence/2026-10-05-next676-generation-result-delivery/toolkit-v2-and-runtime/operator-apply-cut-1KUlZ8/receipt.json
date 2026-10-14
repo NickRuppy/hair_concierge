@@ -1,0 +1,59 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 157,
+    "transfer": 157,
+    "cut": 150
+  },
+  "pinsSHA": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-generation157-tools-v2-orjded8b/operator-mutations-transfer-Aw7zds",
+    "completionSHA": "4448a101890df97c99851ec7e299fe09c0f56203c1c486fd94048e4a62e99ce5",
+    "verified": 18,
+    "logFiles": 54,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/personal-plan-prepare-route.test.ts",
+    "tests/personal-plan-ready-server-first.test.tsx",
+    "tests/personal-plan-result-artifact-email.test.ts",
+    "tests/quiz-result-artifact-route.test.ts",
+    "tests/personal-plan/input.test.ts",
+    "tests/personal-plan/needs.test.ts",
+    "tests/personal-plan/types.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/personal-plan-email-precheck.test.ts": "dd5d72f1d9307e60237ecb1534a0b12ad3edc393a5044b65563956a39884037e",
+    "tests/personal-plan-preparation-client.test.ts": "2a0baf0c0ab469da52d20c9a5b71272fd3126466c1abdb4f217ed347445dc2ab",
+    "tests/personal-plan-prepare-idempotency-migration.test.ts": "a06512a49e79d98c56305529cde103d5f28de52e27b74a17c6890a3d0c9133f7",
+    "tests/personal-plan-prepare-route.test.ts": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e",
+    "tests/personal-plan-prepared-plan.test.ts": "d169b5836d3744ee636fa0bb02b98e71dcbf93f2834b1d74b26e2a4b4c4ebad2",
+    "tests/personal-plan-production-client.test.ts": "a76fa0ac115076c1bceb29455b131b70d7c444028788fe097ab0a556880e9d11",
+    "tests/personal-plan-ready-server-first.test.tsx": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d",
+    "tests/personal-plan-ready-transition.test.ts": "379a372b9c98fb7b6350332b12f0ba1f4ea7a96b4e3ab99a90988cdf9c9ec3df",
+    "tests/personal-plan-result-artifact-email.test.ts": "ca7db0e5935bba466656696c93b7eae0aead567ccfc0677a6a4e95f3f49e3aeb",
+    "tests/personal-plan-result-artifact-route.test.ts": "f9cd9040a004d9716ef112f827e54b1314f7b49b186936d58624b34f4b507d1b",
+    "tests/personal-plan-result-return-migration.test.ts": "93c7a6ed0f5e827ec930a5b7c959fa04f28225d536b764497a05174b92b44a72",
+    "tests/personal-plan-result-return-reset.test.ts": "9d152d796a1510474c214339224b4f64ebdcea328a69b1e6cd7bb1f23d139780",
+    "tests/personal-plan-result-return.test.ts": "92a7adace8d6f279faa164ca03107ee4cb79b42d8cb46004239e55f5b01ac9ed",
+    "tests/personal-plan-result-reveal.test.ts": "f557697054fd90dba7d3aba22ff70845616717c38fbb49fda7c3b517dce1eb7e",
+    "tests/personal-plan-return-artifact-repair-postgres.test.ts": "773e16e3130b7a1d64fca0f0bfc096815ac4694bb46e7c8d3f3123c163a0ea35",
+    "tests/personal-plan-return-artifact-repair.test.ts": "88588a67df14f2c0dd6cc2d28be4d97a31196a3cb665e2f324bd24855cf2471f",
+    "tests/quiz-result-artifact-email.test.ts": "715dead62a208b08843e150e2d6873b26ac82371f0fdef3a1c3664c2a924c6ab",
+    "tests/quiz-result-artifact-route.test.ts": "83e2747a442e04b2cb78ad30a006f271364a3518c67206920c5263a6d79672d2",
+    "tests/quiz-result-artifact-trigger.test.ts": "2a4be3d570acbbe88ca902d21bcf6463b3860178f3705fa160a480e001906ed4",
+    "tests/personal-plan-api-stage1.test.ts": "4aef3f35e04889d6ae1a415a972192ae5fc1d0c40da683ca1eca118a3ac93995",
+    "tests/personal-plan-stage1-source.test.ts": "9b0976ded838caafd51b0a29a79e8cb6a1cd56f05720c72195673110742d516e",
+    "tests/personal-plan/input.test.ts": "d7f2214accabf836566675c1078907bcdba2c781dd8518995a8aec09688215d6",
+    "tests/personal-plan/needs.test.ts": "9c52c4068dc0a33ff4c1186cba3135f109ab571d83c20fccd450547311d823af",
+    "tests/personal-plan/portfolio.test.ts": "d9954b10ffe2da2e88cbc8047a9b5c090003b062c06e529b31453c27ab446731",
+    "tests/personal-plan/reasons.test.ts": "548e5e1c2ba3be9ada1da2f7b003d8eb7435465dc62fa29ffb2258bd6f0d310d",
+    "tests/personal-plan/types.test.ts": "ef6d45e06ed534b919578ed4913e6fcf828d790df1a6bae523fa31eb1b2fd3a9",
+    "tests/personal-plan/persistence/stage1-service.test.ts": "bd87dc699bd68081a0d76a3447b200978c63a6b932ea25cab9fcd240221864ef"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-generation157-tools-v2-orjded8b/operator-apply-cut-1KUlZ8/originals"
+}

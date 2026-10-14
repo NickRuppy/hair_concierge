@@ -1,0 +1,86 @@
+[
+  {
+    "id": "C1-copy",
+    "replacement": "Der Testzugang wurde pausiert. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "operator": "match",
+    "assertionText": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+    "expectedMessageContains": "Testzeitraum ist beendet oder der Zugang wurde geschlossen",
+    "reason": "Keeps original heading/team and all original negative assertions true; only transferred default-paragraph positive fails.",
+    "owner": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "ownerSha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "anchor": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "anchorCount": 1,
+    "mutatedSha256": "49a2f0737ee39d4fe80d302b644e81aed2be21d4443cd6597677bd6d7937aad9",
+    "testFile": "tests/personal-plan-field-test-ui.test.tsx",
+    "testName": "lost field-test authorization renders a dedicated non-commercial end state",
+    "testNamePattern": "^lost field-test authorization renders a dedicated non-commercial end state$",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "expectedFirstTestFrame": {
+      "transfer": {
+        "file": "tests/personal-plan-field-test-ui.test.tsx",
+        "line": 93
+      },
+      "cut": {
+        "file": "tests/personal-plan-field-test-ui.test.tsx",
+        "line": 92
+      }
+    },
+    "requiredSelectedTests": 1,
+    "requiredFailures": 1,
+    "requiredSkipped": 0,
+    "requiredCancelled": 0,
+    "requiredTodo": 0,
+    "status": "unrun_static_recipe_only",
+    "requires": [
+      "Exact current phase and all owner pins before any mutation",
+      "Serialize source faults under common checkout lock",
+      "Backup owner bytes before first child",
+      "Run only the exact keeper with no accidental zero-test/filter success",
+      "Require ERR_ASSERTION, operator, message and first intended assertion frame; setup/import errors are not caught proof",
+      "Restore source byte-for-byte, recheck hash, then exact keeper must pass",
+      "Main alone runs before/transfer/fault/restored/cut proof; cuts gated on current transfer receipts"
+    ]
+  },
+  {
+    "id": "C1-payment",
+    "replacement": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest. Abo",
+    "operator": "doesNotMatch",
+    "assertionText": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+    "expectedMessageContains": "Abo|Zahlung|Stripe|PayPal|Preis",
+    "reason": "Retains original paragraph and original keeper negative (which omits Abo); only transferred payment-free negative fails.",
+    "owner": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "ownerSha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "anchor": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "anchorCount": 1,
+    "mutatedSha256": "9f0712e23e200e9bc78bf147d73e5f3fc4569ffab4b8f3f07b40dbeb80b1a909",
+    "testFile": "tests/personal-plan-field-test-ui.test.tsx",
+    "testName": "lost field-test authorization renders a dedicated non-commercial end state",
+    "testNamePattern": "^lost field-test authorization renders a dedicated non-commercial end state$",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "expectedFirstTestFrame": {
+      "transfer": {
+        "file": "tests/personal-plan-field-test-ui.test.tsx",
+        "line": 94
+      },
+      "cut": {
+        "file": "tests/personal-plan-field-test-ui.test.tsx",
+        "line": 93
+      }
+    },
+    "requiredSelectedTests": 1,
+    "requiredFailures": 1,
+    "requiredSkipped": 0,
+    "requiredCancelled": 0,
+    "requiredTodo": 0,
+    "status": "unrun_static_recipe_only",
+    "requires": [
+      "Exact current phase and all owner pins before any mutation",
+      "Serialize source faults under common checkout lock",
+      "Backup owner bytes before first child",
+      "Run only the exact keeper with no accidental zero-test/filter success",
+      "Require ERR_ASSERTION, operator, message and first intended assertion frame; setup/import errors are not caught proof",
+      "Restore source byte-for-byte, recheck hash, then exact keeper must pass",
+      "Main alone runs before/transfer/fault/restored/cut proof; cuts gated on current transfer receipts"
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+ok 1 - the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+  ---
+  duration_ms: 670.822375
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 960.466292

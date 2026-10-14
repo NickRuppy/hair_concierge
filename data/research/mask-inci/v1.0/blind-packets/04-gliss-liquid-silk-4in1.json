@@ -1,0 +1,19 @@
+{
+  "productId": "04-gliss-liquid-silk-4in1",
+  "identity": {
+    "brand": "Schwarzkopf Gliss",
+    "productName": "Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+    "packSize": "400 ml",
+    "gtinEan": "4015100813913",
+    "market": "DE (dm.de + Rossmann.de)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BEHENTRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, ISOPROPYL MYRISTATE, BEHENAMIDOPROPYL DIMETHYLAMINE, HYDROXYPROPYLGLUCONAMIDE, HYDROXYPROPYLAMMONIUM GLUCONATE, GLYCOSPHINGOLIPIDS, HYDROLYZED SILK, SERICIN, PARFUM, AMODIMETHICONE, BUTYROSPERMUM PARKII BUTTER, LACTIC ACID, ISOPROPYL ALCOHOL, PRUNUS ARMENIACA KERNEL OIL, BUTYLENE GLYCOL, SODIUM BENZOATE, CETEARETH-20, TRIDECETH-10, PHENOXYETHANOL, BENZYL ALCOHOL, ALPHA-ISOMETHYL IONONE, LIMONENE, POTASSIUM SORBATE, METHYLPARABEN, PROPYLPARABEN",
+  "directions": {
+    "text": "Nach dem Waschen sanft auf das nasse Haar auftragen und 2 bis 3 Minuten einwirken lassen, gründlich ausspülen. 2-3 Mal pro Woche anwenden. Kann zusätzlich als Pre-Shampoo-Behandlung, als Spülung nach dem Shampoonieren, oder als Leave-in verwendet werden (4-in-1).",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2-3 (mask mode)",
+    "source": "Aggregated from schwarzkopf.de and retailer copy (bipa.at, drogeriedepot.de) - schwarzkopf.de direct fetch rendered the page shell/claims but not the Anwendung body text, so this is search-aggregated, not a single verbatim page fetch.",
+    "confidence": "moderate-high - consistent across multiple independent retailer copy blocks"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

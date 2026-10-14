@@ -1,0 +1,52 @@
+[
+  {
+    "name": "command.json",
+    "bytes": 59437,
+    "sha256": "ec0701f5fea2ddb261af777f66ecd742ec57ca39073e34cb46bd4472a47ec9fc"
+  },
+  {
+    "name": "coverage-final.json",
+    "bytes": 58242854,
+    "sha256": "7b12de95ff0cc6ada8ddf82335671d42c3469a7fa83d821e276b63f341f8600f"
+  },
+  {
+    "name": "coverage-summary.json",
+    "bytes": 693213,
+    "sha256": "f77f6f80570a004b84a8ebdc6c632d783f27883371a639c9ce6732c21fa7b9ef"
+  },
+  {
+    "name": "files.json",
+    "bytes": 55967,
+    "sha256": "c2a10c3a9f600675cc7b3851a4be37bb79854b6818ea3cfeed91ef411f2e1dce"
+  },
+  {
+    "name": "freeze.json",
+    "bytes": 441154,
+    "sha256": "fe535ae73c5562f4d8e3521aadf4e54fd87a3be9ac0ca1dc8014451b0f694046"
+  },
+  {
+    "name": "lcov.info",
+    "bytes": 7101479,
+    "sha256": "7a6d426ac16bccb8afecc472eb7fd025ce2c26d052a58b0050886df6c51459d8"
+  },
+  {
+    "name": "result.json",
+    "bytes": 58,
+    "sha256": "ce5e96d9eaf53042d369f963b2ffda6a1a22dad4e80e51412ce4542a470f6f57"
+  },
+  {
+    "name": "run.log",
+    "bytes": 319,
+    "sha256": "cae53927eb5cdb3bf22c90c66fadd603b7c6887accd0663cef44636f97bc0fb6"
+  },
+  {
+    "name": "tests.tap",
+    "bytes": 2873785,
+    "sha256": "3e84d1cea241544330c5e64d2c18146b7b0d3d0ee74f7c32c9ec94ac943713e8"
+  },
+  {
+    "name": "verification.json",
+    "bytes": 71,
+    "sha256": "0d37d6603aec90a9b8f2b51dbb7947daf8c576df862bac707873fc1ae3ca5376"
+  }
+]

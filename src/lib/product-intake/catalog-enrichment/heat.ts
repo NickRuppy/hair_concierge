@@ -615,6 +615,7 @@ export async function preflightHeat(options: {
         is_active: true,
         lifecycle_status: "active",
         is_chaarlie_recommended: record(manifest.catalog_state).is_chaarlie_recommended,
+        ...(product.market_segment ? { market_segment: product.market_segment } : {}),
       },
       image_asset: {
         storage_bucket: "product-images",

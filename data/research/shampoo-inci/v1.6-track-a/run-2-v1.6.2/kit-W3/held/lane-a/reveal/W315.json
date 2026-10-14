@@ -1,0 +1,28 @@
+{
+  "blindId": "W315",
+  "productName": "Schwarzkopf GLISS Shampoo Total Repair, 250 ml",
+  "brand": "Schwarzkopf GLISS (Henkel)",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Geschmeidigkeit und Glanz – Das GLISS Total Repair Shampoo reinigt, pflegt und schützt das Haar und macht es geschmeidig und glänzend | Flüssiges Keratin & Blütennektar – Dank flüssigem Keratin und Blütennektar schützt das Repair Shampoo trockenes, geschädigtes Haar und macht es geschmeidig und glänzend | Total Repair – Das Shampoo für geschädigtes und trockenes Haar sorgt für eine Tiefenreparatur der Haare, reduziert Haarbruch¹ und stärkt die Haarfaser (1 Im Vergleich zu unbehandeltem Haar) | Geeignet für: Trockenes, geschädigtes Haar | Formel: Mit flüssigem Keratin und Blütennektar. Macht das Haar geschmeidig und glänzend.",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen & gut ausspülen. Regelmäßig zur Haarpflege für trockenes Haar anwenden und für optimale Ergebnisse anschließend die Total Repair Spülung verwenden"
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für trockenes, geschädigtes Haar | Sorgt für geschmeidiges und glänzendes Haar | Intensive Reinigung | Das Shampoo Total Repair von Schwarzkopf GLISS ist ideal für trockenes und geschädigtes Haar geeignet. Das Shampoo kombiniert flüssiges Keratin und Blütennektar, um die Haarfaser zu schützen. Zudem reinigt und pflegt es das Haar und sorgt für ein geschmeidiges Haargefühl. | Wirkung: Pflege, Glanz, Anti-Spliss",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "sourceType": "retailer_dm_at (Austrian; Henkel Central Eastern Europe GmbH, Wien) - regional conflict, not used",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "(not captured)",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    }
+  ]
+}

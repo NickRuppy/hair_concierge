@@ -1,0 +1,716 @@
+[
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "no subscription row summarizes as none",
+    "sha256": "735d0e93aaf06a84d7a0a616d9c22731cb38c6463fd863629d3dd00d8f65c48c",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active trial reports trial status with the trial end date",
+    "sha256": "8dee558089fa4dee34817d189c5642433602912c8fe646f00eec6cf8dc4e6253",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial canceled before its end reports trial_canceled and keeps the end date",
+    "sha256": "d6618e066f8191cfbdb32fa8962f042511b2f23f20b45cb1eec8dd242b663c34",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "converted trial reports active with paid-through as period end",
+    "sha256": "121ed2dc5176c64a9cda0a78e27b650a049491a4b3b471b322aeef868def12fb",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "converted trial with pending cancellation reports canceled_at_period_end",
+    "sha256": "3cff860972d418271fb2177a3e2941ab4467058bf03814d95fc941d04259118c",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial in renewal grace reports past_due",
+    "sha256": "5ac4973f8e24ac04be5916a2dfb8abcb32f3659815e88be1c3c2ab42b334eaab",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial that ran out without payment and was canceled reports expired",
+    "sha256": "d64423bb3ca3f7d4f5c58defac883e1239f18524c8c232c48f3edf3fcde8f4c2",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "plain active subscription reports active",
+    "sha256": "8ca602f5fef8dab1eaf5d02c1bf58e309d3fb3a8f58c354a2c0f93e3b9527ff2",
+    "keeper": true
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "legacy active subscription without period end reports active",
+    "sha256": "c87a1642eb13d3528d156017ed9dcf282ba996ff23f89c1804afdf61346ee4fa",
+    "keeper": true
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "past_due entitlement reports past_due",
+    "sha256": "e6586294f0a58eef859a5fc9943db7f7a0983d9cb79084019cb067e19df2b3b8",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "canceled subscription with remaining access reports canceled_at_period_end",
+    "sha256": "1da07ad66f77415da9a65c7cb5649885241616cc4bef67d14e00dbaec1ecf804",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "canceled subscription past its period end reports expired",
+    "sha256": "ecf5445fa6c6889c65838ccb37ee0d0f59a46708e5effb2fd1f25a498d1cd32b",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active entitlement within the 24h expiry grace still reports active",
+    "sha256": "e4157422ed89b274f6379fded3044d177040dbabc724b5bf3d4ad4887c2908f1",
+    "keeper": true
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active entitlement just beyond the 24h expiry grace reports expired",
+    "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+    "keeper": true
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "past_due beyond the expiry grace reports expired instead of pending payment",
+    "sha256": "8e53734b10803c5040eeb816d638573ea7b8d5f7ac65b09ed1c97456d023bdf0",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "reserved trial admission reports trial_pending, not an active trial",
+    "sha256": "0773c0d6c26b7e872a88c8336a0aae04e29ebc976730d916a9c70bbb92320962",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick prefers an active subscription over a later-ending canceled row",
+    "sha256": "3e9039740f4529a0c1f32cd1fc85521781b31ada90588f9fab3d048d29fb4087",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick prefers any access-holding row over lapsed rows",
+    "sha256": "9053fc04dec5f617b708f27d85cacc99e6e0429999bb4da228801858df585d91",
+    "keeper": false
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick falls back to the most recently updated lapsed row",
+    "sha256": "35b57b4464261d8d16e1da2c3ce23f52aaf8a7738769b0057aae96bfc275e6a3",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window",
+    "sha256": "85ee59e0289c7c9977ad8c513a89986da24c0a511e832752cbbc94295f125b48",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: past_due row exactly at the grace boundary has access",
+    "sha256": "22af85bba13c90d37118d8334c115054ca3bd6bde09d96c38f8dc25f143f1e46",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: past_due row just past the grace boundary has no access",
+    "sha256": "0dc106bd0d122f447c60a4b1bda9fbbbb4e178b928fd76bb0bdd6777086035eb",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row with cancel_at_period_end until a future period end has access",
+    "sha256": "84d33cb5c26ac79d91402c0f8d5442e0d03a7cc1e4256b36b9c45fe7d0eb7c0b",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row past its period end has no access (existing behavior preserved)",
+    "sha256": "afe941ad7e1c86f42130bbbac83569a0e38dc6a849efedf2cc6f2b3fa13de144",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row without cancel_at_period_end has no access regardless of period end",
+    "sha256": "86c12def2c980ee5fdcfad0be9b68011c69869301ce2784837f8cf00e75cd824",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access",
+    "sha256": "d0acce79a3106199431de569da852ca67fc711b8e3c0c05f104a9090d7dda9e5",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile 12 hours past period end is within grace",
+    "sha256": "4df81a0e9a1a16dab18d617effae02bb23461ad9eac1aad3f8736946d2984caa",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile with null period end keeps existing (grants access) behavior",
+    "sha256": "61cf1d7479029a77c9f487c9710c1f60c2a928226cc7b42a51160d8762106cbf",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: canceled profile past period end has no access (existing behavior preserved)",
+    "sha256": "d2d6750f3a41d718f4564112b5fe3fd673344f2ea3d2d204938296e507f2c52c",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: canceled profile before a future period end has access",
+    "sha256": "d3789d3f73a094e6b8b69e694fd841b10f5203b59f6a02d9693b0e4a03e7f2c1",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile declares a 60 second maximum duration",
+    "sha256": "ac494742581471d8c5fe184649406224a06bffedd343646d28dedfb14e197104",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile reports bounded browser recovery cleanup without changing payment health",
+    "sha256": "20206a5d80d936f59814ee3377f749f577108858fcece8d5369124366c7a3c05",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "browser recovery cleanup calls both purges once with the 500-row bound and isolates errors",
+    "sha256": "2de401efcc33a1a997e5f9574ff26f34081dae26a92bfd5b51f617a77c5d5ebe",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile keeps retry disabled by default and still runs integrity first",
+    "sha256": "ba43a3a173e7414c40723ff8b7d6dd0d6a1c7bcdb1e269cb19d8f28c8a5b8afe",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile runs one-time fulfillment retry only behind its dedicated flag",
+    "sha256": "e980205eff6c829fa254904be1152ee34e9d1f420d75ebacd3906954ae32cb44",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile runs paid-access monitor after one-time fulfillment retry",
+    "sha256": "df69acc9b1e756251b0639819d8486f6521e0c4b1feaf22411901a620d9da15b",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile does not start unattended branches before one-time fulfillment finishes",
+    "sha256": "5aea47b066022d3fe78dc3a52a3747914b26b7502ea4ffb92ee542f9b073d427",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "default one-time fulfillment dispatchers pass quiz linking to both provider processors",
+    "sha256": "4e28664afb1b740fb9d046e3360828eb7c340ba2b25a40eec6fd5b0c34763ceb",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile drains all destinations with a limit of ten when enabled",
+    "sha256": "e35f9082140448b89de5f4c2fb47d5d4a8649853d528eab6f751cd7dd663a400",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates and sanitizes one analytics destination rejection",
+    "sha256": "6623e82341675dd889bfb65e92a385450af867437025a8233c1b85077b6dc0ef",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile authenticates before entitlement, integrity, analytics, and one-time retry work",
+    "sha256": "f837ab7641d4b930a3867e4470c1892ead196fa78e70cab8fbfdf8d56622b99d",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates entitlement failure from integrity, analytics, and one-time retry",
+    "sha256": "cf2d3c70922c49db01d9d0f22200f4352e1b2e7a1f76cee1c8f414c3b3090525",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it",
+    "sha256": "936ee08a6b0f723245737e6ff87fa5e34e6eb508d698961c3d2345c84dd1ec73",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates one-time fulfillment failure from other branches",
+    "sha256": "3d8bc49e2316faf75201725db67fb929568ad9c6ff77cabba909a0156032d5ac",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates integrity failure and marks the daily check-in error",
+    "sha256": "754e768e3851858d54a6b7395dd58293974ab0db8d811490ff073cb6af6ee352",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "OpenAI cleanup reports deletion and isolates database failures",
+    "sha256": "2a93aefb68f1647eaf2af72649a4342c075025e288bca7f0a8a5aa7ff38d6ea7",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "title": "Vercel cannot query or claim Slack deliveries even when explicitly requested",
+    "sha256": "d8badb538e9dd459e33d01acece17caf0360f8976da273379f37e855dfe61168",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "settlement grace skips recent provider success without local lookup",
+    "sha256": "906b662a5379cf0c858656f096bf0c152a379d219c251a2493376498e8303a1d",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "subscription provider success requires billing success and active entitlement",
+    "sha256": "e3e4c7124c076745c8bffe7ac55142aa144ac239f254574fd1fc08fbe7e72cd0",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "duplicate provider representations produce one finding per subscription invariant",
+    "sha256": "493349e301822b033498fe0430cc7477ab5b2ba7a01baeb50eec44c29e41162c",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "local funnel classification promotes historical provider findings to internal tests",
+    "sha256": "83319bd9f082304f855e41e1216ee530cedc953cf28927328886bf63dbe681d5",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "one-time provider success depends only on its paid purchase record",
+    "sha256": "c46b0825884833dbe4f642469b141da724f5b144ba1959c56295fed8dc661590",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "provider failure conflicts only with same-commerce billing success, not retained access",
+    "sha256": "c121784db7b03e6cd8ed96cfef46c824baa7f9c87ac72541b7dc0af05b982180",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "provider lookup errors become monitor failures, not payment findings",
+    "sha256": "999e834437f34a22d7609402fe0f36570cdd9c147d41ba340f483938a64cd6ee",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "incomplete pagination and cap overflow are monitor failures and only the hard cap is checked",
+    "sha256": "083713d52b9cedb887d1a9d00c640308305b9f1e2748d05b15223fc9c70d0df7",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "deadline exhaustion stops remaining checks and reports monitor failure",
+    "sha256": "70934b05494d594ce61beca5cb2cc1299cafc28f53d99fe4f0073072252d4d46",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "candidate checks are bounded to concurrency four by default",
+    "sha256": "b4c000b75e1bb182b5f04f93014804fd0fbe29fb60a88b3b4cc8f94b9c5bf553",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "reporter throws are contained and do not abort the scan",
+    "sha256": "6bac6c4346ccc3df016809a7a15e09b42a1c173b0a04400233b50848a8068bbd",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "result and reporter payloads expose only aggregates and bounded opaque descriptors",
+    "sha256": "1919c20821945a31a02b797239b73543eb9c7b0fdc5e273ca50187a6ef1b3852",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor reserves response time around its 40 second work deadline",
+    "sha256": "483f354ceca4ed44d95b28788dee98755824a471b0a3c84bf4a91fe93a912492",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "paid-access finding live tag follows the finding provider only",
+    "sha256": "1de14b09a248bcfbeab606e4001b601c2484603355a12fb81f0aa6b8f42a9390",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor uses fixed-size constant-time auth comparison input",
+    "sha256": "4438eda7aa412db62c9e34fa713cdd234ac89d1d0cb51182f3ed3254e3345871",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor rejects auth failures before rate limit, work, or check-in",
+    "sha256": "e1e99fb55d46a4d71544bb92d1a29af2319364ffbd57f139f7a6eb99c1ced828",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor rate limits before payment work or Sentry check-in",
+    "sha256": "231ca642b45a7cc7c7c48a1524b0086a414248df1cca90ba72ddc93537c2f6f1",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor runs with a 40 second deadline and returns aggregate-only counters",
+    "sha256": "306a741788e7323f827460eff89f1520c2d4401d28ae423c1c4943d88b578941",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "production monitor mode requires start and finish check-in receipts plus a flushed transport",
+    "sha256": "9f45721e907810d32287076be9e17ee1d79438b5267a58ab0043226b58e743d3",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor contains runner and Sentry failures without exposing errors",
+    "sha256": "34b6f11a0e2c7208d343cdf2126964b38da5a44d070d75265380b05864d0a41f",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor returns safe failure categories and flushes telemetry before responding",
+    "sha256": "d64ffdc2f9de5fa430b32d926bd4d6a71218da6724fed8315f9790686a7ab9ab",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed when an emitted incident has no Sentry receipt",
+    "sha256": "56639072cb24e8e0d621eef8b1c7c73eeaf9c3d1b1bc1644abac69f6996c17ab",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor uses uncapped incident counters when requiring Sentry receipts",
+    "sha256": "3386c69f68c413ab9dceb3fd16070f7df0b889d16d971c4a257d40ff8043836c",
+    "keeper": true
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor runs paid-access branch with aggregate-only output",
+    "sha256": "1e7548b5d3c933959a2b6f77f2a190a5bd166a2490136506d6e1fc1e11e339eb",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor branch emits paid-access findings when runner returns no receipt",
+    "sha256": "beb210bff811bbd163206052ae79adf37b3ba00fa4b6f722448690b62e9da2df",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed on partial paid-access receipts without duplicate reporting",
+    "sha256": "851b7580d35281c3d0677c497fbc87ec47b32e66c8309e4f20b4f7824edf033c",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed when paid-access finding has no Sentry receipt",
+    "sha256": "1a5af41d6211751ac93b5e91c6640dcf4595f121b1d7a38d331006f99d3d115a",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor preserves a canonical paid-access conflict category",
+    "sha256": "c50e6eb68696be97d0e945df63ce4f2e53d7d2cd623638a8df612e48e484071a",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor omits unexpected runtime failure categories from its response",
+    "sha256": "7d916d5f1449e98e5762324ff7b87b20376732d3e4ffd009f8f60d7f9939aa1d",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "local trigger encloses the server monitor deadline",
+    "sha256": "71d1e116aac2a76892b73c480ae3515d7f3acd5b1c4193290d2cdce04ca4c88c",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "runs the HTTPS monitor with a Keychain secret that never enters argv or logs",
+    "sha256": "87f205684b5bd37e827fe827bf2e92e0b04b085daa699cc7cc7b1f27c63afaf5",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "rejects non-HTTPS endpoints before Keychain access",
+    "sha256": "630d85b69b807de44667fca7024bab8d0a57d614e5c14faea55ca6e52ed414e6",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "rejects every HTTPS host, path, query, or fragment except the production monitor route",
+    "sha256": "3d6024fb9b5e917f6cbc730a200387c0d3dd241ec13bdc3bf5a938915b9a38e5",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "returns a nonzero, secret-free result for Keychain, network, and HTTP failures",
+    "sha256": "b59d463cfd4d1ad6b5db5bdd052217990e89b191890ba93cdfbfbeeb214c4fd1",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "logs only privacy-safe monitor failure categories from the authenticated endpoint",
+    "sha256": "dd1afe434c5084f696fb256e9a170bf4642228254aa36c39034b98bc09586670",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "logs paid-access monitor failures with stable dedupe",
+    "sha256": "8c0938d525c0cd705aa84aefc8b3f992df32afd84f5af69e34115b3e9d6b51eb",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "requires the endpoint argument and does not place a Keychain value in process arguments",
+    "sha256": "55011a4efa465fd6f6eda5e2654a51ca42d7120f2ddcf9be49e9ded954df5630",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification dry-run is PII-safe and does not write",
+    "sha256": "89666706a21c72ed5a650152793d96f7797835b4f8c95f72e050e4bb91a5040e",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification apply requires every production gate",
+    "sha256": "f6472b94d316e8677aa1fa0f9828206a9b2c357b070566c250e7274e241063c6",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification applies a metadata-only optimistic update",
+    "sha256": "8a284ef7a7da35df1a24472d922a78e77fec64f2de1ba7a42b31bf87f7a11f96",
+    "keeper": false
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification refuses ambiguous, post-cutover, or non-PayPal rows",
+    "sha256": "01e387101dc458761dc613bd0a190ba9c0fec7db3b861fe0ffebf04f1e841098",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "trusted match validates owner and freezes original submitted time and verification reference",
+    "sha256": "cc0208af7f704115e030c1dadaffa535441b97dd665fa332bad2127750a1bf32",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "late processing of timely unpaid trial cancellation preserves original declaration time and queues provider work once",
+    "sha256": "1c2dbd3cd1c7cd0f637bfb355c1454cc51b5d876492b5d3bc101639c5b47ee6f",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "charge winning before apply never creates unpaid cancellation; paid and withdrawal require external completion/refund evidence",
+    "sha256": "f4983b218baa5b4e1d12c21743ca20d9df0b44c2099f7abba24c05deb9b0ccc1",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "withdrawal and extraordinary declarations never enter ordinary-trial cancellation queue or resolve from email state",
+    "sha256": "b60e3af4e5d16420c5715f32110fe4e857217906a32bf2d0f93f965df7e10b70",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "a successful in-flight charge after accepted cancellation prevents resolution until refund evidence exists",
+    "sha256": "7abfa1c462031f95a74a4ad2b328f9452cb2427e044c29e6f7a89d1f72bc9071",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "null/queued-mail evidence cannot resolve, and direct status updates still require match/completion records",
+    "sha256": "2eecf6d8f1a9f6964415e034d55250a89ae6d8c13647b2148782045c979378c5",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "operator commands validate exact scope and require a complete evidence file; they never dispatch providers",
+    "sha256": "c3e5b5a3bd8eeaceade1c8bc7a8424fb73d5b5fcc7d0aa3d80cc5b971768660c",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "no-cookie public request returns only its own durable receipt after both limits pass",
+    "sha256": "22c9cf977ae212ec75329d77cdcaba00d27f25ad684a3e190fd477ded95025d9",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "database failure cannot report a received declaration or reveal internal account data",
+    "sha256": "0c746caf32038d87fe56c4096295856472895485a6e34509ddd34e2c889cc9c4",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "rate limits and unavailable rate storage stop persistence; address budget is shared across kinds",
+    "sha256": "3f0f6560c6c8ccd9e77962931c1dedd96450be39aeec739879e68dbf8f571fdb",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "rejects cross-site requests, oversized bodies and account-authority fields before persistence",
+    "sha256": "3997ce9da55bd83c9bf610bd4bd76cee8db46eb3d222b5bb1bd0258dfd9518a2",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "public legal pages and exact submission API bypass auth, including during auth outages",
+    "sha256": "73b0bfbfc5b2dd52ab3fc41d14c7b2109ad6d179a99092ae86d14c8f2c46c7aa",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "accepts a cancellation without authentication and normalizes only surrounding whitespace/email",
+    "sha256": "b3e3906e1e515d338981481b9065d0ec90f25b912d188fdf668b4bcf620005e2",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "keeps withdrawal separate; rejects cancellation timing/reason and unknown account-authority fields",
+    "sha256": "ad5a42f39b0cf90445c37f2d8c4519d3d3ce5286a3fae486c904488200c9abea",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "bounds untrusted text, requires usable contact/contract, and rejects control characters",
+    "sha256": "db9084a3fc11d67367a25e119bae4deb462ce7cf67caea64b7b7e9a032f622ea",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "durably saves unmatched declaration and receipt atomically; identical replay keeps original timestamp",
+    "sha256": "44acbb5abd53072832484f236c8516f15a77b5de73ee704070e821dc94f9ae3c",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "receipt enqueue failure rolls back acceptance; retry can then succeed",
+    "sha256": "3f852cdd994e3f13eebe6b2b31aa31439d82fac44c10daa65dc391eded0fa043",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "unprivileged roles cannot read or submit; service can submit but cannot rewrite immutable snapshots",
+    "sha256": "66eb52f812f3a60672dc72dace1eeb4268581678a97362106475a9a8a89523c3",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "withdrawal and extraordinary declarations keep their distinct text without asserting refund/effective date",
+    "sha256": "c3044c57e413441b61639f0c24da83daf88e8da0109449da32021d76d53dc0b3",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "operator review queue stays pending after receipt delivery and exposes details only to service-role exact reads",
+    "sha256": "797f22bfcee70f8ad7329718412f2018ee77d73f509c99e082e1337ca9047251",
+    "keeper": false
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "read-only operator CLI rejects mutation arguments without calling the database",
+    "sha256": "90fc477e31a453b838904b57e5ec0881063451e74b4607ae3a9234febccd8fdb",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the durable declaration starts locally queued and only a later matching provider confirmation can mark it sent",
+    "sha256": "22f42e6d5c30919c4afa589a32b48ba596e7896009141683a7128c86c1fa1531",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a Customer.io acknowledgement records queued, never sent, and uses the declared recipient",
+    "sha256": "ae4ffd550eaeef2e108e37bd2641f4d4f2c1b8a7a059ab2771f0ac8065d4b595",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "missing receipt-template configuration fails closed before a declaration is claimed",
+    "sha256": "66b12319286afae12e8350ac5483e2f5c07cea821e85669e973b4d6bd15e6f32",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "missing Customer.io credentials fail closed before a declaration is claimed",
+    "sha256": "cfad0177ad79a3dca71e70ddf84d3e7838d3b39eb6a5745ae951bf6b93a27cc8",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "ambiguous Customer.io outcomes are parked for support and are never blindly retried",
+    "sha256": "8687fb14d56e7b3c6f19c6d48e94c7263c6ab2ade08cc1de708c8b4852e6f9b8",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "Customer.io HTTP failures are parked without retaining provider text because acceptance is unconfirmed",
+    "sha256": "756cd11fe1ca8f1d9dd7ca0bfaee336071bf306814ece28afb174fbc26737ec3",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a malformed claim aborts the whole invocation before any receipt can be sent",
+    "sha256": "da1e51ead53ef27d68ac3072fd816797bd520b3eb31ff6d097f60aa089fad219",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a settlement failure after a queue acknowledgement aborts without a second settlement",
+    "sha256": "a0f7ac0e877d35ae68c362845d5dad85c1ccd24db35502c544cc8dc2619c343e",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the worker uses one bounded active claim and a lease longer than its route budget",
+    "sha256": "9027aa3196e7ccc03fdbb442332fbe3a05a4914efe6a1eb8f8e1856b97eb0932",
+    "keeper": false
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the cron route requires its secret and exposes aggregates only",
+    "sha256": "58aec6c482c7bde1e477f568059ec234c736fddffd0047191f8342b78e07dc56",
+    "keeper": false
+  }
+]

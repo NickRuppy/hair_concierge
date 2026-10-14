@@ -1,0 +1,16 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^recordScanSession: the count keeps climbing across further 30-minute gaps$",
+    "tests/scan-trigger-session-marker.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

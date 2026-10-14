@@ -1,0 +1,23 @@
+import pathlib,json,hashlib,subprocess
+root=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');p='/tmp/test-audit-discovery-consult-pdf61';snap=pathlib.Path(p+'-snapshots')
+def h(s):return hashlib.sha256(s).hexdigest()
+m=json.loads(pathlib.Path(p+'-manifest.json').read_text());cs=json.loads(pathlib.Path(p+'-candidates.json').read_text());c=cs[0];ds=json.loads(pathlib.Path(p+'-declarations.json').read_text());controls=json.loads(pathlib.Path(p+'-controls.json').read_text())
+checks={'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()==m['expectedHead'],'one_C1':len(cs)==1 and c['id']=='C1'}
+ph={z:{f['file']:(snap/z/pathlib.Path(f['file']).name).read_text() for f in m['files']} for z in ['before','transfer','cut']}
+checks['18_snapshot_hashes']=all(h(ph[z][f['file']].encode())==f[z]['sha256'] for f in m['files'] for z in ph)
+checks['6_live_files_equal_before']=all((root/f).read_text()==s for f,s in ph['before'].items())
+checks['all_declaration_records_match_before']=all(h(d['body'].encode())==d['bodyHash'] and h(d['full'].encode())==d['fullHash'] and ph['before'][d['file']].count(d['full'])==1 for d in ds)
+f=c['file']; donor=c['donor']['full'];keeper=c['keeper']['full'];after=c['keeperAfter'];block=c['transferredBlock'];prefix='  const markup = await renderPdf()'
+checks['complete_donor_oracle_block']=c['donor']['body']== 'async () => {\n'+prefix+block+'\n}'
+checks['keeper_exact_insertion']=after==keeper.replace(prefix,prefix+block,1)
+checks['22_assertions_verbatim']=block.count('assert.')==22
+checks['before_pending_insertion']=after.index(block)<after.index('const pending = renderToStaticMarkup(')
+x=dict(ph['before']);x[f]=x[f].replace(keeper,after,1);checks['exact_transfer_reconstruction']=x==ph['transfer'];x[f]=x[f].replace(donor+'\n\n','',1);checks['exact_cut_reconstruction']=x==ph['cut']
+untouched=[d for d in ds if d['full'] not in [donor,keeper]]
+checks['59_other_declarations_unchanged']=len(untouched)==59 and all(ph[z][d['file']].count(d['full'])==1 for d in untouched for z in ph)
+checks['single_control_unique_pinned']=len(controls)==1 and all((root/v['owner']).read_text().count(v['find'])==1 and h((root/v['owner']).read_bytes())==v['ownerSha256'] for v in controls)
+checks['declared_inventory_61_61_60']=[sum(f[z]['declarations'] for f in m['files']) for z in ph]==[61,61,60]
+counts=[sum(f[z]['assertions'] for f in m['files']) for z in ph];checks['declared_assertion_union']=counts[0]==counts[2] and counts[1]==counts[0]+22
+readfiles=['tests/discovery-pdf-page.test.tsx','tests/server-only-register.cjs','src/app/admin/beratung/[enrollmentId]/pdf/page.tsx','src/components/discovery/print/discovery-routine-document.tsx','src/lib/discovery/cadence-label.ts','src/lib/discovery/refined-routine.ts','src/lib/discovery/cockpit.ts','src/lib/discovery/product-label.ts','src/lib/personal-plan/routine/canonicalize.ts','src/components/discovery/cockpit/discovery-call-cockpit.tsx','node_modules/react-dom/server.node.js','node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js','package.json','.github/workflows/ci.yml']
+out={'scope':'C1 candidate preservation only; independent byte/static inspection, no runner/compiler/mutations. Hashes do not enlarge human read scope.','root':str(root),'head':m['expectedHead'],'checks':checks,'all_checks_pass':all(checks.values()),'verdict':'CONDITIONAL PASS pending native and intended fault proof','assertion_inventory':counts,'artifact_hashes':{str(a):h(a.read_bytes()) for a in pathlib.Path('/tmp').glob('test-audit-discovery-consult-pdf61-*') if a.is_file() and a.suffix in ['.json','.md','.diff']},'manifest':m,'readset_hashes':{f:h((root/f).read_bytes()) for f in readfiles},'donor_sha256':c['donor']['fullHash'],'keeper_before_sha256':c['keeper']['fullHash'],'keeper_after_sha256':c['keeperAfterHash'],'controls':controls}
+pathlib.Path('/tmp/test-audit-discovery61-independent-static.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(checks,indent=2))

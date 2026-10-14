@@ -8,10 +8,6 @@ import {
 } from "../src/lib/supabase/middleware"
 import { resolveAuthenticatedAppNavigationAccess } from "../src/lib/personal-plan/navigation-access"
 import { classifyRoute, type RouteEnvironment } from "../src/lib/auth/route-classification"
-import {
-  firesErsterPasstNicht,
-  scanTriggerSheetContext,
-} from "../src/lib/scan/triggers/trigger-rules"
 
 /**
  * T19 named journey test: the funnel cutover + de-stealth story, both flag states, told as
@@ -23,7 +19,7 @@ import {
  * This suite instead stitches together the PURE decision points a new user's browser and
  * the server actually consult along the way, each already unit-tested in isolation
  * elsewhere (`tests/free-registration-contract.test.ts`, `freemium-admission-middleware.test.ts`,
- * `freemium-lapsed-user-matrix.test.ts`, scan-trigger-rules coverage) — proving here that
+ * `freemium-lapsed-user-matrix.test.ts`) — proving here that
  * they compose into the SAME journey end to end, in both flag states, using the real
  * exported functions with no re-implementation.
  *
@@ -31,8 +27,7 @@ import {
  *  1. Quiz completion -> destination resolver (T18's switch).
  *  2. Middleware admission for the resolved destination + `/scan` (T2).
  *  3. Five-tab nav resolution for a signed-in user with no paid access (T3).
- *  4. A scan gate firing the shared PremiumSheet contract ("gates -> sheet reachable", T9/T10).
- *  5. Legacy offer routes (`/pricing`, `/lp/<slug>/angebot`, `/result/<leadId>/reveal`) stay
+ *  4. Legacy offer routes (`/pricing`, `/lp/<slug>/angebot`, `/result/<leadId>/reveal`) stay
  *     routable in both states — `classifyRoute` never reads the flag at all, so this is
  *     verified by construction and pinned here as an explicit regression guard.
  */
@@ -61,7 +56,7 @@ async function withFreemiumFlag<T>(enabled: boolean, run: () => Promise<T>): Pro
   }
 }
 
-test("flag ON — new user: quiz completion routes into the free-registration destination, /scan is admitted, five-tab free nav renders, and a scan gate opens the shared sheet contract", async () => {
+test("flag ON — new user: quiz completion routes into the free-registration destination, /scan is admitted, five-tab free nav renders, and legacy offer routes remain public", async () => {
   // 1. Quiz completion (T18's switch).
   const destination = resolveQuizCompletionDestination({
     leadId: NEW_LEAD_ID,
@@ -98,14 +93,7 @@ test("flag ON — new user: quiz completion routes into the free-registration de
     )
   }
 
-  // 4. Gates -> sheet reachable: the free user's first mismatch verdict fires the
-  // "erster_passt_nicht" trigger, which resolves to a concrete, openable PremiumSheetContext.
-  const fires = firesErsterPasstNicht({ isMismatchVerdict: true, freeRevealAvailable: true })
-  assert.equal(fires, true)
-  const sheetContext = scanTriggerSheetContext("erster_passt_nicht")
-  assert.deepEqual(sheetContext, { feature: "empfehlungen", source: "trigger:erster-passt-nicht" })
-
-  // 5. Legacy offer routes stay routable — unaffected by construction (classifyRoute takes
+  // 4. Legacy offer routes stay routable — unaffected by construction (classifyRoute takes
   // no flag), pinned explicitly as part of this journey.
   for (const pathname of ["/pricing", "/lp/haarplan/angebot", `/result/${NEW_LEAD_ID}/reveal`]) {
     assert.equal(classifyRoute(pathname, ROUTE_ENVIRONMENT), "public", pathname)

@@ -1,0 +1,1133 @@
+[
+  {
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "line": 130,
+    "title": "actual Chromium exercises OpenAI browser consent, navigation and checkout attribution",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "8f4c2e24dadd5de8cd5e07be721e229b18d4dbc7dcc1cb3325c44c91b1bb61e6",
+    "assertions": []
+  },
+  {
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "line": 137,
+    "title": "allowed landing initializes once, measures once with opt-out, and captures a safe source before checkout",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "452ac103022c84745f5f4bac5a6384ed185155348e7fc3eed81b4aab75bd81a7",
+    "assertions": [
+      {
+        "line": 148,
+        "text": "assert.equal(commands.filter((c) => c[0] === \"init\").length, 1)"
+      },
+      {
+        "line": 149,
+        "text": "assert.equal(events.length, 1)"
+      },
+      {
+        "line": 150,
+        "text": "assert.deepEqual(events[0], [\n            \"measure\",\n            \"page_viewed\",\n            { type: \"contents\" },\n            { opt_out: true },\n          ])"
+      },
+      {
+        "line": 156,
+        "text": "assert.equal(commands[0][0], \"consent\")"
+      },
+      {
+        "line": 157,
+        "text": "assert.equal(commands[0][1], false)"
+      },
+      {
+        "line": 159,
+        "text": "assert.ok(posts.length >= 1)"
+      },
+      {
+        "line": 160,
+        "text": "assert.ok(posts.every((o) => o.body?.sourceUrl === \"https://chaarlie.de/\"))"
+      },
+      {
+        "line": 161,
+        "text": "assert.ok(\n            posts.every(\n              (o) =>\n                !Object.hasOwn(o.body!, \"marketing\") && !Object.hasOwn(o.body!, \"funnelSessionId\"),\n            ),\n          )"
+      },
+      {
+        "line": 167,
+        "text": "assert.ok(\n            f.observations.findIndex((o) => o.url.endsWith(\"/api/funnel/session\")) <\n              f.observations.findIndex((o) => o.body?.action === \"context\"),\n          )"
+      },
+      {
+        "line": 177,
+        "text": "assert.equal(\n            f.observations.filter((o) => o.body?.action === \"context\").at(-1)?.body?.sourceUrl,\n            \"https://chaarlie.de/result\",\n          )"
+      },
+      {
+        "line": 181,
+        "text": "assert.equal(((await f.page.evaluate(\"window.__sdkEvents\")) as unknown[]).length, 1)"
+      },
+      {
+        "line": 189,
+        "text": "assert.equal(((await f.page.evaluate(\"window.__sdkEvents\")) as unknown[]).length, 1)"
+      },
+      {
+        "line": 190,
+        "text": "assert.deepEqual(f.unexpected, [])"
+      },
+      {
+        "line": 191,
+        "text": "assert.deepEqual(f.errors, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "line": 197,
+    "title": "denied landing and initially private route never load the SDK or measure",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "0a13dd4713f20ff0bd5335c7bf84469f765669970aa32161258f36f5021fb168",
+    "assertions": [
+      {
+        "line": 209,
+        "text": "assert.equal(\n              f.observations.some((o) => o.url === SDK_URL),\n              false,\n            )"
+      },
+      {
+        "line": 213,
+        "text": "assert.equal(await f.page.evaluate(\"window.__sdkEvents?.length ?? 0\"), 0)"
+      },
+      {
+        "line": 215,
+        "text": "assert.equal(\n                f.observations.some((o) => o.body?.action === \"context\"),\n                false,\n              )"
+      },
+      {
+        "line": 221,
+        "text": "assert.equal(f.state().marketing, false)"
+      },
+      {
+        "line": 222,
+        "text": "assert.ok(\n                f.observations.some(\n                  (o) => o.body?.action === \"choice\" && o.body.marketing === false,\n                ),\n              )"
+      },
+      {
+        "line": 228,
+        "text": "assert.deepEqual(f.unexpected, [])"
+      },
+      {
+        "line": 229,
+        "text": "assert.deepEqual(f.errors, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "line": 236,
+    "title": "real saved-consent event during delayed SDK load prevents late init or events",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "b86c4ea4ad84ce7da4a7fd4ae88a5a3be5fa93c2bfa99ad6bcc3f31525f8705b",
+    "assertions": [
+      {
+        "line": 253,
+        "text": "assert.equal(f.state().marketing, false)"
+      },
+      {
+        "line": 254,
+        "text": "assert.equal(\n            await f.page.evaluate(\n              'JSON.parse(localStorage.getItem(\"chaarlie_cookie_consent_v1\")).marketing',\n            ),\n            false,\n          )"
+      },
+      {
+        "line": 261,
+        "text": "assert.equal(\n            commands.some((c) => c[0] === \"init\"),\n            false,\n          )"
+      },
+      {
+        "line": 265,
+        "text": "assert.equal(await f.page.evaluate(\"window.__sdkEvents.length\"), 0)"
+      },
+      {
+        "line": 266,
+        "text": "assert.deepEqual(f.unexpected, [])"
+      },
+      {
+        "line": 267,
+        "text": "assert.deepEqual(f.errors, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 65,
+    "title": "fails closed when context GET fails",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "fe9b85304f24a0ed9b5860a5fdf337d7fe2639a42831523ae5828d84a103d945",
+    "assertions": [
+      {
+        "line": 76,
+        "text": "assert.equal(b.scripts.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 79,
+    "title": "does not load before consent and sends a denial without source URL",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "e7b12f53891879f5b5c7ea0a49bb6e0edfe3faabdac6f70565de000ccbf8567f",
+    "assertions": [
+      {
+        "line": 92,
+        "text": "assert.equal(b.scripts.length, 0)"
+      },
+      {
+        "line": 94,
+        "text": "assert.equal(body.marketing, false)"
+      },
+      {
+        "line": 95,
+        "text": "assert.equal(\"sourceUrl\" in body, false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 98,
+    "title": "explicit choice can regrant while a background refresh cannot",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "c8a6e6f6746483d282c5c93183cb9954234b901d9a6714e971f9e2d2954f9dab",
+    "assertions": [
+      {
+        "line": 115,
+        "text": "assert.equal(post, 0)"
+      },
+      {
+        "line": 119,
+        "text": "assert.equal(post, 1)"
+      },
+      {
+        "line": 120,
+        "text": "assert.equal(b.scripts.length, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 123,
+    "title": "late GET cannot resurrect the Pixel after a denial",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "574b44c77c1fa9aff20e93012ee4bfe3f608ee482793afeec70d8d60fbeb998d",
+    "assertions": [
+      {
+        "line": 137,
+        "text": "assert.equal(b.scripts.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 140,
+    "title": "SDK completion after denial never initializes or measures",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "e028cf3c9abbd9099353cd616dd8732281370d999b9473b04e2efa630a3c78bb",
+    "assertions": [
+      {
+        "line": 152,
+        "text": "assert.equal(b.scripts.length, 1)"
+      },
+      {
+        "line": 158,
+        "text": "assert.equal(\n    commands.some((entry: unknown[]) => entry[0] === \"init\"),\n    false,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 164,
+    "title": "initializes once and does not Pixel-measure private routes",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "1e4e6ab2a12ca82f3a5994d50e81e7adab921880744c24f7407c13c253458530",
+    "assertions": [
+      {
+        "line": 181,
+        "text": "assert.equal(commands.filter((entry: unknown[]) => entry[0] === \"init\").length, 1)"
+      },
+      {
+        "line": 187,
+        "text": "assert.equal(commands.filter((entry: unknown[]) => entry[0] === \"measure\").length, 1)"
+      },
+      {
+        "line": 194,
+        "text": "assert.equal(commands.filter((entry: unknown[]) => entry[0] === \"measure\").length, 2)"
+      },
+      {
+        "line": 195,
+        "text": "assert.equal(commands.filter((entry: unknown[]) => entry[0] === \"init\").length, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 198,
+    "title": "checkout context capture stays bounded when context fetch hangs",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "d1e078acf02d8e46b6f0fcd0792ec77ecbf8fc50890b0a66217975341a94ce43",
+    "assertions": [
+      {
+        "line": 206,
+        "text": "assert.ok(Date.now() - started < 1_100)"
+      },
+      {
+        "line": 207,
+        "text": "assert.equal(b.scripts.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 210,
+    "title": "cross-tab refusal revokes an already initialized Pixel",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "7b089db8f152d31fb1add448f632c57119998c6ca6778dc922fc7bb5e2744d31",
+    "assertions": [
+      {
+        "line": 228,
+        "text": "assert.equal(commands.at(-1)[0], \"consent\")"
+      },
+      {
+        "line": 229,
+        "text": "assert.equal(commands.at(-1)[1], false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-browser.test.ts",
+    "line": 232,
+    "title": "private-route denial persists without leaking its URL",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "4696044311852f1b68434f27b9995688d8a019bf4e5c2c4bd13cbba1f5ae99f8",
+    "assertions": [
+      {
+        "line": 246,
+        "text": "assert.equal(body.marketing, false)"
+      },
+      {
+        "line": 247,
+        "text": "assert.equal(body.sourceUrl, undefined)"
+      },
+      {
+        "line": 248,
+        "text": "assert.equal(b.scripts.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 47,
+    "title": "disabled sending never reads consent context or calls the network",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "89c672283adbb324c429567432c5ff193a343736e6abcc1172d3bfa1193bf80e",
+    "assertions": [
+      {
+        "line": 48,
+        "text": "assert.deepEqual(\n    await sendOpenAIConversion(\n      event,\n      dependencies({\n        env: {},\n        resolveContext: async () => {\n          throw new Error(\"must not resolve\")\n        },\n        fetch: async () => {\n          throw new Error(\"must not send\")\n        },\n      }),\n    ),\n    { outcome: \"skipped\", reason: \"disabled\" },\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 65,
+    "title": "missing or mismatched pixel/key configuration never calls the network",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "c0ddfb6b5d43e3fa236db8b2222774e3b59f3f355ee8f6f6f7196c617c5cf781",
+    "assertions": [
+      {
+        "line": 71,
+        "text": "assert.deepEqual(\n      await sendOpenAIConversion(\n        event,\n        dependencies({\n          env,\n          fetch: async () => {\n            assert.fail(\"must not send\")\n          },\n        }),\n      ),\n      { outcome: \"skipped\", reason: \"not_configured\" },\n    )"
+      },
+      {
+        "line": 77,
+        "text": "assert.fail(\"must not send\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 86,
+    "title": "denied context prevents transmission even when release configuration is enabled",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "018e54785fd2d6e728648ed7834be2f4116c09238ac95b160acf7cf5c6c6a869",
+    "assertions": [
+      {
+        "line": 87,
+        "text": "assert.deepEqual(\n    await sendOpenAIConversion(\n      event,\n      dependencies({\n        resolveContext: async () => null,\n        fetch: async () => {\n          assert.fail(\"must not send\")\n        },\n      }),\n    ),\n    { outcome: \"skipped\", reason: \"consent_denied\" },\n  )"
+      },
+      {
+        "line": 93,
+        "text": "assert.fail(\"must not send\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 101,
+    "title": "successful request uses CAPI schema and stable ID without private query or profile fields",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "b4ef929578c87081dad7cf019399fc3517a220ab3db4dce261c446d233c45459",
+    "assertions": [
+      {
+        "line": 108,
+        "text": "assert.equal(String(url), \"https://bzr.openai.com/v1/events?pid=fixture-pixel\")"
+      },
+      {
+        "line": 109,
+        "text": "assert.equal(init?.method, \"POST\")"
+      },
+      {
+        "line": 110,
+        "text": "assert.equal(init?.redirect, \"error\")"
+      },
+      {
+        "line": 111,
+        "text": "assert.equal(\n          new Headers(init?.headers).get(\"Authorization\"),\n          \"Bearer placeholder-for-unit-tests\",\n        )"
+      },
+      {
+        "line": 115,
+        "text": "assert.deepEqual(JSON.parse(String(init?.body)), {\n          validate_only: false,\n          events: [\n            {\n              id: \"stripe:purchase_completed:fixture-payment\",\n              type: \"order_created\",\n              timestamp_ms: Date.parse(\"2026-09-15T11:59:00Z\"),\n              source_url: \"https://chaarlie.de/welcome\",\n              action_source: \"web\",\n              oppref: \"opaque%2Bvalue\",\n              opt_out: true,\n              data: { type: \"contents\", amount: 999, currency: \"EUR\" },\n            },\n          ],\n        })"
+      },
+      {
+        "line": 134,
+        "text": "assert.equal(calls, 1)"
+      },
+      {
+        "line": 135,
+        "text": "assert.deepEqual(result, { outcome: \"accepted\", status: 202 })"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 138,
+    "title": "retries keep the identical conversion ID",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "36af504ee071e9d0d59d0ffad746b07942d10ec33550082c025841e42e5df4c7",
+    "assertions": [
+      {
+        "line": 148,
+        "text": "assert.equal(bodies.length, 2)"
+      },
+      {
+        "line": 149,
+        "text": "assert.equal(bodies[0], bodies[1])"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 152,
+    "title": "renewals and malformed events do not produce HTTP requests",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "a74b8896747b4ab9d99b53b1a5d4f6020ded030e4288a448d95708c4236f3edd",
+    "assertions": [
+      {
+        "line": 158,
+        "text": "assert.deepEqual(\n      await sendOpenAIConversion(\n        candidate,\n        dependencies({\n          fetch: async () => {\n            assert.fail(\"must not send\")\n          },\n        }),\n      ),\n      { outcome: \"skipped\", reason: \"invalid_event\" },\n    )"
+      },
+      {
+        "line": 163,
+        "text": "assert.fail(\"must not send\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 172,
+    "title": "HTTP errors classify retryability without exposing response text",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "d93c86ce2aff94648d10c3c5ad9704f4d585c65841b110400eddf24b096acb8e",
+    "assertions": [
+      {
+        "line": 187,
+        "text": "assert.deepEqual(result, { outcome: \"failed\", reason: \"http_error\", status, retryable })"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 191,
+    "title": "throwing context and network calls are contained and sanitized",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "ffecf931c2d1a556bf2caa3abe003612199299d2b9c10db4298534695569a2a6",
+    "assertions": [
+      {
+        "line": 204,
+        "text": "assert.deepEqual(await sendOpenAIConversion(event, dependencies(overrides)), {\n      outcome: \"failed\",\n      reason: \"context_or_transport_error\",\n      retryable: true,\n    })"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 212,
+    "title": "slow consent resolution times out and cannot send after returning",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "29db2e695fb5c90b532d8e547da20cda6513b06c370dd613447a9c5b01e61eb4",
+    "assertions": [
+      {
+        "line": 232,
+        "text": "assert.deepEqual(result, { outcome: \"failed\", reason: \"timeout\", retryable: true })"
+      },
+      {
+        "line": 235,
+        "text": "assert.equal(calls, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-capi.test.ts",
+    "line": 238,
+    "title": "unresponsive HTTP transport is bounded even if a test double ignores abort",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "606863c89d48b7f01da4bfe424ddc054f8d4d32b2b9fc7191f0210808a9cb92d",
+    "assertions": [
+      {
+        "line": 239,
+        "text": "assert.deepEqual(\n    await sendOpenAIConversion(\n      event,\n      dependencies({\n        timeoutMs: 10,\n        fetch: async () => new Promise<Response>(() => {}),\n      }),\n    ),\n    { outcome: \"failed\", reason: \"timeout\", retryable: true },\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-consent-cookie.test.ts",
+    "line": 11,
+    "title": "signed consent identity rejects tampering, expiry, future issue and a different purpose",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "ad5cf277605852c9e91057e662fc627974afb230a66d121da2a180afb1bc9b2e",
+    "assertions": [
+      {
+        "line": 13,
+        "text": "assert.deepEqual(decodeOpenAIConsentCookie(value, secret, 1001), identity)"
+      },
+      {
+        "line": 14,
+        "text": "assert.equal(decodeOpenAIConsentCookie(value + \"x\", secret, 1001), null)"
+      },
+      {
+        "line": 15,
+        "text": "assert.equal(decodeOpenAIConsentCookie(value, secret, 1000 + OPENAI_CONSENT_MAX_AGE_MS), null)"
+      },
+      {
+        "line": 16,
+        "text": "assert.equal(decodeOpenAIConsentCookie(value, secret, 999), null)"
+      },
+      {
+        "line": 17,
+        "text": "assert.equal(decodeOpenAIConsentCookie(value, \"different\", 1001), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-consent-cookie.test.ts",
+    "line": 20,
+    "title": "same signing key cannot authenticate a token without the OpenAI purpose",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "cec1a87db3a3a0d2f6ec1856ca83219eba28c016ca379b0357a77f9e1535ea25",
+    "assertions": [
+      {
+        "line": 23,
+        "text": "assert.equal(decodeOpenAIConsentCookie(`${encoded}.${signed}`, secret, 1001), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "line": 44,
+    "title": "grant/revoke/regrant cannot revive history; stale grant conflicts and stale denial wins; refs cleared",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "5fff7cc053ffad200161fc48add9908b6b1d830550ca0b47e41f6f9454ba0193",
+    "assertions": [
+      {
+        "line": 46,
+        "text": "assert.equal((await action(db, \"get\")).revision, 0)"
+      },
+      {
+        "line": 48,
+        "text": "assert.equal((await action(db, \"choice\", 0, true, first)).revision, 1)"
+      },
+      {
+        "line": 49,
+        "text": "assert.equal((await action(db, \"choice\", 0, true, first)).revision, 1)"
+      },
+      {
+        "line": 55,
+        "text": "assert.ok(read.rows[0].value)"
+      },
+      {
+        "line": 56,
+        "text": "assert.equal(\n    (await action(db, \"context\", 1, null, crypto.randomUUID(), C, V, \"later-click\")).marketing,\n    true,\n  )"
+      },
+      {
+        "line": 62,
+        "text": "assert.equal(ref, \"raw%2Btoken\")"
+      },
+      {
+        "line": 63,
+        "text": "assert.equal((await action(db, \"choice\", 0, false)).revision, 2)"
+      },
+      {
+        "line": 64,
+        "text": "assert.equal((await action(db, \"choice\", 0, true, first)).conflict, true)"
+      },
+      {
+        "line": 65,
+        "text": "assert.equal(\n    (await db.query<{ oppref: null }>(\"SELECT oppref FROM private.openai_ads_contexts\")).rows[0]\n      .oppref,\n    null,\n  )"
+      },
+      {
+        "line": 70,
+        "text": "assert.equal((await action(db, \"choice\", 2, true)).revision, 3)"
+      },
+      {
+        "line": 72,
+        "text": "assert.equal(read.rows[0].value, null)"
+      },
+      {
+        "line": 73,
+        "text": "assert.equal((await action(db, \"choice\", 0, false)).marketing, false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "line": 75,
+    "title": "wrong signed visitor and competing consent identity cannot steal exact session attribution",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "90bebafff5cdd1ff06dbf5f941cdbe41eb3582939805a49fbe4b2c11a2dbf797",
+    "assertions": [
+      {
+        "line": 77,
+        "text": "assert.equal((await action(db, \"choice\", 0, true, crypto.randomUUID(), C, C)).conflict, true)"
+      },
+      {
+        "line": 78,
+        "text": "assert.equal((await db.query(\"SELECT * FROM private.openai_ads_contexts\")).rows.length, 0)"
+      },
+      {
+        "line": 79,
+        "text": "assert.equal((await action(db, \"context\", 1)).conflict, false)"
+      },
+      {
+        "line": 80,
+        "text": "assert.equal((await action(db, \"choice\", 0, true, crypto.randomUUID(), V)).conflict, true)"
+      },
+      {
+        "line": 81,
+        "text": "assert.equal(\n    (await db.query<{ consent_id: string }>(\"SELECT consent_id FROM private.openai_ads_contexts\"))\n      .rows[0].consent_id,\n    C,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "line": 87,
+    "title": "public roles cannot read or execute; service role allowed; expiry denies and cleanup removes",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "a19dda1cbeaca53cdb5b896e634951966af88aafebc2c1f75d95596699aabb75",
+    "assertions": [
+      {
+        "line": 91,
+        "text": "assert.rejects(db.query(\"SELECT * FROM private.openai_ads_consents\"), /permission denied/)"
+      },
+      {
+        "line": 92,
+        "text": "assert.rejects(db.query(\"SELECT cleanup_openai_ads_context()\"), /permission denied/)"
+      },
+      {
+        "line": 96,
+        "text": "assert.equal((await action(db, \"choice\", 0, true)).marketing, true)"
+      },
+      {
+        "line": 101,
+        "text": "assert.equal((await action(db, \"get\")).marketing, false)"
+      },
+      {
+        "line": 102,
+        "text": "assert.equal((await action(db, \"choice\", 1, true)).conflict, true)"
+      },
+      {
+        "line": 103,
+        "text": "assert.equal(\n    (\n      await db.query<{ value: unknown }>(\n        \"SELECT read_openai_ads_event_context($1,clock_timestamp()) value\",\n        [S],\n      )\n    ).rows[0].value,\n    null,\n  )"
+      },
+      {
+        "line": 112,
+        "text": "assert.equal(\n    (await db.query<{ count: number }>(\"SELECT cleanup_openai_ads_context() count\")).rows[0].count,\n    1,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "line": 118,
+    "title": "canonical noncommercial classification suppresses context even when purchase payload omits markers",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "47bcbb8bc53fd089fbfe5010138daa404f8a13f05a048a9a20303b951ed5078c",
+    "assertions": [
+      {
+        "line": 129,
+        "text": "assert.ok(await read())"
+      },
+      {
+        "line": 140,
+        "text": "assert.equal(await read(), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-route.test.ts",
+    "line": 61,
+    "title": "route initializes signed identity, never grants without existing cookie, and disables without DB access",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "9eb2ffadc95971dc5910d1b8c5cf2ec874b6f39ad2759b10cc3707231761dba0",
+    "assertions": [
+      {
+        "line": 67,
+        "text": "assert.equal(get.status, 200)"
+      },
+      {
+        "line": 68,
+        "text": "assert.match(get.headers.get(\"set-cookie\") ?? \"\", /HttpOnly; SameSite=Lax/)"
+      },
+      {
+        "line": 69,
+        "text": "assert.equal(get.headers.get(\"cache-control\"), \"no-store\")"
+      },
+      {
+        "line": 71,
+        "text": "assert.equal(post.status, 409)"
+      },
+      {
+        "line": 72,
+        "text": "assert.equal(\n    calls.every((c) => c.args.p_action === \"get\"),\n    true,\n  )"
+      },
+      {
+        "line": 83,
+        "text": "assert.deepEqual(await disabled.json(), { revision: 0, marketing: false, expiresAt: null })"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-route.test.ts",
+    "line": 85,
+    "title": "route rejects cross-origin, invalid fields, content type and unbounded body before database",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "dca0e7d1b760fb77232a7389a8f146085c022d7bc4cbaeefbaf5506d4a7b0d22",
+    "assertions": [
+      {
+        "line": 95,
+        "text": "assert.equal((await handleOpenAIContextRequest(req, dependencies)).status, status)"
+      },
+      {
+        "line": 96,
+        "text": "assert.equal(calls.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-route.test.ts",
+    "line": 98,
+    "title": "route propagates conflict state and denial never reads or forwards reference cookies",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "d06d88f6a938fef234eb986547eabfa5f842be73c6707f266181c9651a4b3439",
+    "assertions": [
+      {
+        "line": 104,
+        "text": "assert.equal(response.status, 200)"
+      },
+      {
+        "line": 105,
+        "text": "assert.equal(calls[1].args.p_oppref, null)"
+      },
+      {
+        "line": 106,
+        "text": "assert.equal(calls[1].args.p_session_id, null)"
+      },
+      {
+        "line": 122,
+        "text": "assert.equal(conflict.status, 409)"
+      },
+      {
+        "line": 123,
+        "text": "assert.equal((await conflict.json()).revision, 2)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-route.test.ts",
+    "line": 125,
+    "title": "raw references remain byte-identical, ambiguous cookies are dropped, source excludes query and private paths",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "6164a9d8b3575251d85e9b1d40dd65a503c790b2d231a30f4a954fd8bacafa88",
+    "assertions": [
+      {
+        "line": 126,
+        "text": "assert.equal(\n    rawOpenAICookie(\"__oppref=abc%2B%2520+123; unrelated=secret\", \"__oppref\"),\n    \"abc%2B%2520+123\",\n  )"
+      },
+      {
+        "line": 130,
+        "text": "assert.equal(rawOpenAICookie(\"__oppref=a; __oppref=b\", \"__oppref\"), undefined)"
+      },
+      {
+        "line": 131,
+        "text": "assert.equal(rawOpenAICookie(\"__oppref=\" + \"x\".repeat(2049), \"__oppref\"), undefined)"
+      },
+      {
+        "line": 132,
+        "text": "assert.equal(\n    sanitizeOpenAISourceUrl(\"https://chaarlie.de/result?email=secret#private\"),\n    \"https://chaarlie.de/result\",\n  )"
+      },
+      {
+        "line": 136,
+        "text": "assert.equal(sanitizeOpenAISourceUrl(\"https://chaarlie.de/admin\"), null)"
+      },
+      {
+        "line": 137,
+        "text": "assert.equal(\n    sanitizeOpenAISourceUrl(\"https://chaarlie.de/lp/test\"),\n    \"https://chaarlie.de/lp/test\",\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-context-route.test.ts",
+    "line": 142,
+    "title": "resolver has no latest-user fallback and transient DB errors remain retryable",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "ec10ca79134c3ef3b2b1fb198fcfeda78f42f8efed147ea8b6b6fdcfc32f0210",
+    "assertions": [
+      {
+        "line": 154,
+        "text": "assert.equal(await resolveOpenAIContext(supabase, event), null)"
+      },
+      {
+        "line": 155,
+        "text": "assert.equal(calls, 0)"
+      },
+      {
+        "line": 156,
+        "text": "assert.rejects(\n    resolveOpenAIContext(supabase, { ...event, payload: { funnel_session_id: id } }),\n    /^Error: OpenAI consent context unavailable$/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 36,
+    "title": "maps a first paid EUR conversion into the documented OpenAI order event",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "1f258167fa0275e03a99b4b37e80d3131c43568682d720431932b0c552f229b1",
+    "assertions": [
+      {
+        "line": 37,
+        "text": "assert.deepEqual(buildOpenAIConversionEvent(event(), context, NOW), {\n    id: \"stripe:purchase_completed:cs_123\",\n    type: \"order_created\",\n    timestamp_ms: Date.parse(\"2026-09-15T11:00:00.000Z\"),\n    source_url: \"https://chaarlie.de/welcome\",\n    action_source: \"web\",\n    opt_out: true,\n    oppref: \"a%2Fb%3Dkeep-raw\",\n    user: { obref: \"browser-reference\" },\n    data: { type: \"contents\", amount: 999, currency: \"EUR\" },\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 50,
+    "title": "keeps an explicit JPY minor-unit amount without assuming two decimal places",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "1fdbe4f8f2cd60c229f940cacfd0c5bc1a0b8efbd37e797361167e36fc70b03d",
+    "assertions": [
+      {
+        "line": 61,
+        "text": "assert.deepEqual(converted?.data, { type: \"contents\", amount: 1200, currency: \"JPY\" })"
+      },
+      {
+        "line": 62,
+        "text": "assert.equal(converted?.opt_out, false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 65,
+    "title": "maps only a verified zero-value trial activation",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "62dbb5594aed34dc018b73d2d36cbb22eec920f29245b04bab1118e338bdd8a9",
+    "assertions": [
+      {
+        "line": 78,
+        "text": "assert.deepEqual(buildOpenAIConversionEvent(trial, context, NOW), {\n    id: \"stripe:trial_started:enrollment-123\",\n    type: \"trial_started\",\n    timestamp_ms: Date.parse(\"2026-09-15T11:30:00.000Z\"),\n    source_url: \"https://chaarlie.de/welcome\",\n    action_source: \"web\",\n    opt_out: true,\n    oppref: \"a%2Fb%3Dkeep-raw\",\n    user: { obref: \"browser-reference\" },\n    data: { type: \"plan_enrollment\" },\n  })"
+      },
+      {
+        "line": 95,
+        "text": "assert.equal(buildOpenAIConversionEvent(event({ ...trial, payload }), context, NOW), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 99,
+    "title": "rejects unsupported, internal, test, renewal, and zero-value paid conversions",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "7e36888a206951b49bd4e40b02b2f27e25de042a0445b0ef724f1fd40d2182c7",
+    "assertions": [
+      {
+        "line": 127,
+        "text": "assert.equal(buildOpenAIConversionEvent(candidate, context, NOW), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 131,
+    "title": "accepts only safe canonical source URLs and never copies contact fields",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "040bbfdfef112eda7a09abe5842e718c58cd04460da837fe8c363f5d7f0aa7a8",
+    "assertions": [
+      {
+        "line": 148,
+        "text": "assert.equal(converted?.source_url, \"https://chaarlie.de/lp/haarplan\")"
+      },
+      {
+        "line": 149,
+        "text": "assert.deepEqual(Object.keys(converted ?? {}).sort(), [\n    \"action_source\",\n    \"data\",\n    \"id\",\n    \"oppref\",\n    \"opt_out\",\n    \"source_url\",\n    \"timestamp_ms\",\n    \"type\",\n    \"user\",\n  ])"
+      },
+      {
+        "line": 166,
+        "text": "assert.equal(buildOpenAIConversionEvent(withContacts, { ...context, sourceUrl }, NOW), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 170,
+    "title": "rejects timestamps outside the documented seven-day and ten-minute window",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "3b52948e9154a651b4b4edcc8a14952e4c026f69deac00337fd1e519259784bb",
+    "assertions": [
+      {
+        "line": 172,
+        "text": "assert.equal(buildOpenAIConversionEvent(event({ occurred_at }), context, NOW), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "line": 176,
+    "title": "does not guess monetary units for non-two-decimal or malformed stored amounts",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "3246cb1419d7c2319ccc4962c7c2c6b8473e1c10e6653bb7fd1f1e7a8f5f781d",
+    "assertions": [
+      {
+        "line": 183,
+        "text": "assert.equal(buildOpenAIConversionEvent(event({ payload }), context, NOW), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 70,
+    "title": "real PostgreSQL consent races, privileges, expiry and optional billing delivery",
+    "nested": false,
+    "censusIncluded": true,
+    "callbackSha256": "9ac5d6d53fe459c430e8251169bf6f4ebb2a4a21729cb8c5ea75cbcbdbb0f7f0",
+    "assertions": [
+      {
+        "line": 75,
+        "text": "assert.ok([\"postgres:\", \"postgresql:\"].includes(url.protocol))"
+      },
+      {
+        "line": 76,
+        "text": "assert.equal(url.hostname, \"127.0.0.1\")"
+      },
+      {
+        "line": 77,
+        "text": "assert.equal(url.port, \"32768\")"
+      },
+      {
+        "line": 78,
+        "text": "assert.equal(url.username, \"postgres\")"
+      },
+      {
+        "line": 79,
+        "text": "assert.equal(url.pathname, \"/postgres\")"
+      },
+      {
+        "line": 95,
+        "text": "assert.fail(\"Second PostgreSQL session did not reach the expected lock wait\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 113,
+    "title": "grant and withdrawal interleave across locked sessions in both orders",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "5a7a407de934c9246ad10436e98a4610d3b3445edcce5fb9c9cda43faba41e48",
+    "assertions": [
+      {
+        "line": 131,
+        "text": "assert.equal(JSON.parse(await second).conflict, true)"
+      },
+      {
+        "line": 132,
+        "text": "assert.equal(\n          await sql(`SELECT marketing FROM private.openai_ads_consents WHERE id='${C}'`),\n          \"f\",\n        )"
+      },
+      {
+        "line": 151,
+        "text": "assert.equal(JSON.parse(await second).marketing, false)"
+      },
+      {
+        "line": 152,
+        "text": "assert.equal(\n          await sql(\n            `SELECT revision||':'||marketing FROM private.openai_ads_consents WHERE id='${C}'`,\n          ),\n          \"5:false\",\n        )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 160,
+    "title": "concurrent different identities cannot steal a session association",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "09d37a09724f88e289a0b7e129445f363c2395df57d4e6f16397a923d92dbee6",
+    "assertions": [
+      {
+        "line": 176,
+        "text": "assert.equal(JSON.parse(await second).conflict, true)"
+      },
+      {
+        "line": 177,
+        "text": "assert.equal(\n        await sql(`SELECT consent_id FROM private.openai_ads_contexts WHERE session_id='${S}'`),\n        one,\n      )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 182,
+    "title": "public roles denied, service role allowed, and expiry removes context",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "e2ea2d09fd1ccf21aa995a8db05e8fb868e0c59c4b32c691d571cb6585c43534",
+    "assertions": [
+      {
+        "line": 186,
+        "text": "assert.rejects(\n            sql(`SET ROLE ${role}; SELECT * FROM private.openai_ads_consents;`),\n            /permission denied/,\n          )"
+      },
+      {
+        "line": 190,
+        "text": "assert.rejects(\n            sql(`SET ROLE ${role}; SELECT cleanup_openai_ads_context();`),\n            /permission denied/,\n          )"
+      },
+      {
+        "line": 194,
+        "text": "assert.rejects(\n            sql(\n              `SET ROLE ${role}; SELECT read_openai_ads_event_context('${S}',clock_timestamp());`,\n            ),\n            /permission denied/,\n          )"
+      },
+      {
+        "line": 201,
+        "text": "assert.equal(\n          JSON.parse(await sql(`SET ROLE service_role; ${choice(crypto.randomUUID(), 0, true)}`))\n            .marketing,\n          true,\n        )"
+      },
+      {
+        "line": 209,
+        "text": "assert.equal(\n          await sql(`SELECT read_openai_ads_event_context('${S}',clock_timestamp()) IS NULL;`),\n          \"t\",\n        )"
+      },
+      {
+        "line": 213,
+        "text": "assert.ok(\n          Number(await sql(`SET ROLE service_role; SELECT cleanup_openai_ads_context();`)) >= 4,\n        )"
+      },
+      {
+        "line": 216,
+        "text": "assert.equal(await sql(\"SELECT count(*) FROM private.openai_ads_contexts;\"), \"0\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 219,
+    "title": "only fresh eligible billing events enqueue; duplicate, renewal, exclusions and history do not",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "d766736408ee0b1a032a36448945d254bbf0461a0e65ef3bd59653336529d2f7",
+    "assertions": [
+      {
+        "line": 227,
+        "text": "assert.equal(\n          await sql(\n            `SELECT string_agg(o.event_key,',' ORDER BY o.event_key) FROM billing_analytics_deliveries d JOIN billing_analytics_outbox o ON o.id=d.outbox_id WHERE d.destination='openai';`,\n          ),\n          \"first-paid,new-trial\",\n        )"
+      },
+      {
+        "line": 236,
+        "text": "assert.equal(\n          await sql(\"SELECT count(*) FROM billing_analytics_deliveries WHERE status='skipped';\"),\n          \"2\",\n        )"
+      },
+      {
+        "line": 243,
+        "text": "assert.equal(await sql(\"SELECT count(*) FROM billing_analytics_deliveries;\"), \"2\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 246,
+    "title": "canonical test sessions block unmarked purchases and late classifications suppress queued context",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "5486ac75428a5ac98b94f497e1739598d181b1f9851e7c3fbc884b4570864722",
+    "assertions": [
+      {
+        "line": 267,
+        "text": "assert.equal(count, index === 3 ? \"1\" : \"0\")"
+      },
+      {
+        "line": 271,
+        "text": "assert.equal(absent, index === 3 ? \"f\" : \"t\")"
+      },
+      {
+        "line": 274,
+        "text": "assert.equal(\n          await sql(\n            \"SELECT provolatile FROM pg_proc WHERE oid='private.is_openai_ads_billing_event(public.billing_analytics_outbox)'::regprocedure\",\n          ),\n          \"s\",\n        )"
+      },
+      {
+        "line": 281,
+        "text": "assert.equal(\n          await sql(\n            `SET ROLE service_role; SELECT read_openai_ads_event_context('${commercial}',clock_timestamp()) IS NULL;`,\n          ),\n          \"t\",\n        )"
+      },
+      {
+        "line": 288,
+        "text": "assert.equal(\n          await sql(\n            \"SELECT count(*) FROM billing_analytics_deliveries d JOIN billing_analytics_outbox e ON e.id=d.outbox_id WHERE e.event_key='canonical-3'\",\n          ),\n          \"1\",\n        )"
+      }
+    ]
+  },
+  {
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "line": 299,
+    "title": "optional trigger failure does not roll back the canonical billing insert",
+    "nested": true,
+    "censusIncluded": false,
+    "callbackSha256": "673ed961448dd87ca1f3ea722484b17d1eb388ce4da525f9854e817a485f04c7",
+    "assertions": [
+      {
+        "line": 305,
+        "text": "assert.equal(\n          await sql(\n            \"SELECT count(*) FROM billing_analytics_outbox WHERE event_key='survives-optional-failure';\",\n          ),\n          \"1\",\n        )"
+      },
+      {
+        "line": 311,
+        "text": "assert.equal(await sql(\"SELECT count(*) FROM billing_analytics_deliveries;\"), \"2\")"
+      }
+    ]
+  }
+]

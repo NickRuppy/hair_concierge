@@ -1,0 +1,297 @@
+{
+  "blindId": "T414",
+  "inciFingerprintSha256": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "440 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 32,
+  "e3ProminenceMarker": "Parfum/Fragrance at 10",
+  "prominentThroughPosition": 9,
+  "surfactantArchitecture": "SLES (2) defining; CAPB (3) buffer; C1 -> moderate.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (3); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "PEG-7 Glyceryl Cocoate refatter and silicones are counter-signals only; no reinforcing anionic.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: C2 not met - early silicone Dimethicone (8), cationic Guar Hydroxypropyltrimonium Chloride (13) and pearlizing Glycol Distearate (16) are present, but no deliberate humectant from the closed C2 list (no Glycerin, Panthenol, Sodium Hyaluronate, Sodium PCA, Urea, Sorbitol or Betaine; R11). Further routes: Amodimethicone (12), Hydrolyzed Keratin (6), PEG-7 Glyceryl Cocoate (5).",
+      "counterSignal": "The other three C2 elements plus amodimethicone and protein are present; the missing humectant route is the counter-signal.",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "C2",
+        "R11"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: a silicone/amino-silicone/guar system plus a prominent protein and refatter gives plausible bounded residue; W-RICH not established (both lipids after Parfum 10); effective C1 reset. W1 does not apply (prominent protein film converges, condition c).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Dimethicone (8) + Amodimethicone (12) + guar (13) + keratin (6) + PEG-7 Glyceryl Cocoate (5); late Hydrogenated Castor Oil (15) and apricot oil (21)."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is substantive; protein hydrolysate and refatter are light; lipids late."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          [
+            "Dimethicone",
+            8
+          ],
+          [
+            "Amodimethicone",
+            12
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            13
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            15
+          ],
+          [
+            "Prunus Armeniaca (Apricot) Kernel Oil",
+            21
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "PEG-7 Glyceryl Cocoate",
+            5
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Keratin",
+            6
+          ]
+        ],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Propylene Glycol",
+            26
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          16,
+          "pearlizer, excluded"
+        ],
+        [
+          "PEG-40 Hydrogenated Castor Oil",
+          14,
+          "solubilizer, excluded"
+        ],
+        [
+          "PEG-120 Methyl Glucose Dioleate",
+          18,
+          "PEG thickener, excluded"
+        ],
+        [
+          "Laureth-4",
+          17,
+          "thickener"
+        ],
+        [
+          "Laureth-23",
+          20,
+          "thickener"
+        ],
+        [
+          "Niacinamide",
+          7,
+          "active, not deposition"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Five deposition families present; amodimethicone is substantive.",
+      "whyThisBand": "Moderate: a silicone/amino-silicone/guar system plus a prominent protein and refatter gives plausible bounded residue; W-RICH not established (both lipids after Parfum 10); effective C1 reset. W1 does not apply (prominent protein film converges, condition c).",
+      "whyNotNeighborBand": "Not high: no W-RICH and reset is effective; the extra families (soluble protein, light refatter, late lipids) are light. Not low: two silicones including amodimethicone with guar converge.",
+      "confidenceLimitingFactor": "Silicone loads unknown; amodimethicone plus several converging families keep high realistic.",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "W1 not applicable",
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. ",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is met.",
+      "csaFormulaHalf": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [
+      {
+        "ingredient": "Niacinamide",
+        "position": 7,
+        "prominent": true
+      }
+    ],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 5,
+        "prominent": true
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 15,
+        "prominent": false
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 21,
+        "prominent": false
+      }
+    ],
+    "coolingAgents": [],
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "csaFormulaHalf": true
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Aqua (Water, Eau)",
+      "position": 1,
+      "role": "solvent"
+    },
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 5,
+      "role": "weak refatter; E4 refatting route, prominent"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 6,
+      "role": "protein film"
+    },
+    {
+      "ingredient": "Niacinamide",
+      "position": 7,
+      "role": "E4 comfort route, prominent"
+    },
+    {
+      "ingredient": "Dimethicone",
+      "position": 8,
+      "role": "silicone, prominent"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 10,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 12,
+      "role": "amino-silicone"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 13,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 15,
+      "role": "payload lipid, late"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 16,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+      "position": 21,
+      "role": "payload lipid, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    {
+      "reading": "Formula classified as given (identity moderate)",
+      "alternative": "material identity doubt would make properties low"
+    }
+  ]
+}

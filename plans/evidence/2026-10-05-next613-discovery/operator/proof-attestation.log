@@ -1,0 +1,13 @@
+{
+  "status": "PASS_STATIC_SYNTHETIC_PARSER_ONLY",
+  "controls": 5,
+  "phases": 2,
+  "assertions": 134,
+  "children": 0,
+  "ownerImports": 0,
+  "repositoryWrites": 0,
+  "runtimeClaims": 0,
+  "note": "Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

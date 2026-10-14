@@ -121,7 +121,7 @@ function renderForm(props: {
   )
 }
 
-test("ScanResearchIntakeForm: renders the signed-off heading copy, Marke/Produktname fields, and the category helper", () => {
+test("ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)", () => {
   const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
   const markup = renderToStaticMarkup(tree.value)
   assert.match(markup, /Marke/)
@@ -131,11 +131,7 @@ test("ScanResearchIntakeForm: renders the signed-off heading copy, Marke/Produkt
   assert.match(markup, /Zurück/)
   // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.
   assert.doesNotMatch(markup, /\bdm\b/)
-})
-
-test("ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)", () => {
-  const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
-  const markup = renderToStaticMarkup(tree.value)
+  assert.doesNotMatch(markup, /role="alert"/)
   assert.match(markup, /autofocus/)
   const marke = findAll(tree.value, (element) => element.props["aria-label"] === "Marke")[0]
   assert.ok(marke)
@@ -301,9 +297,4 @@ test("ScanResearchIntakeForm: renders the standard error copy inside an alert ro
   assert.match(markup, /role="alert"/)
   assert.match(markup, /aria-live="polite"/)
   assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\./)
-})
-
-test("ScanResearchIntakeForm: no error renders no alert", () => {
-  const tree = renderForm({ error: null, onSubmit: () => undefined })
-  assert.doesNotMatch(renderToStaticMarkup(tree.value), /role="alert"/)
 })

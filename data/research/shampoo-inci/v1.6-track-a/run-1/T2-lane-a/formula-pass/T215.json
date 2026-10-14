@@ -1,0 +1,234 @@
+{
+  "blindId": "T215",
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 2,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "No split synonym entries; packet positions equal normalized positions.",
+  "prominenceCutoff": "Parfum at 13 -> positions 1-12 prominent (E3).",
+  "surfactantArchitecture": "Sodium Laureth Sulfate (2, defining); Cocamidopropyl Hydroxysultaine (3) and Coco-Glucoside (5) buffers; Laureth-2 (12) thickener.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2), sultaine (3), glucoside (5).",
+      "counterSignal": "None material.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: Guar Hydroxypropyltrimonium Chloride (10), with Hydrolyzed Wheat Protein (6) and Glycerin (9). C2 not met.",
+      "counterSignal": "Single polymer; low realistic.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 9
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one cationic guar and a water-soluble wheat protein against an effective C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (10), protein (6)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone/lipid; protein rinses."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            10
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Wheat Protein",
+            6
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Hydroxysultaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Glycerin",
+            9
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Laureth-2",
+          12,
+          "thickener"
+        ],
+        [
+          "Biotin",
+          7,
+          "vitamin, no deposition role"
+        ],
+        [
+          "Oryza Sativa Extract",
+          8,
+          "extract"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two families.",
+      "whyThisBand": "Single light polymer plus water-soluble protein.",
+      "whyNotNeighborBand": "Not moderate (W2): one cationic guar (10) and a hydrolyzed protein (6) are both light, low-persistence routes facing an effective SLES/sultaine/glucoside reset; no silicone, lipid or film former.",
+      "confidenceLimitingFactor": "Guar level unknown.",
+      "ruleNotes": [
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Light formula; biotin is not a route; nonspecific.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "basis": "One protein token plus guar and glycerin; not a coherent cluster."
+      },
+      "formulaCompatibleRoutes": [
+        "volume-compatible: low weight",
+        "repair (weak): Hydrolyzed Wheat Protein 6"
+      ],
+      "counterSignal": "Nonspecific.",
+      "neighboringAlternative": "volume"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. No trigger visible.",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: passes: prominent humectant Glycerin (9); no prominent comfort route.",
+      "counterSignal": "Fragrance.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Hydroxysultaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Hydrolyzed Wheat Protein",
+      "position": 6,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Biotin",
+      "position": 7,
+      "role": "vitamin"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 9,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 10,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 13,
+      "role": "E3 cutoff"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": []
+}

@@ -31,27 +31,6 @@ function alternative(overrides: Partial<ScanAlternative> = {}): ScanAlternative 
   }
 }
 
-test("maskAlternative: withholds identity, productId, image, price and net content", () => {
-  const masked = maskAlternative(alternative())
-  assert.deepEqual(Object.keys(masked).sort(), ["comparison", "verdict", "verdictLabel"])
-})
-
-test("maskAlternative: keeps the alternative's own verdict and verdict label", () => {
-  const masked = maskAlternative(
-    alternative({ verdict: "supportive", verdictLabel: "Passt eingeschränkt" }),
-  )
-  assert.equal(masked.verdict, "supportive")
-  assert.equal(masked.verdictLabel, "Passt eingeschränkt")
-})
-
-test("maskAlternative: derives comparison rows from the alternative's own criteria", () => {
-  const masked = maskAlternative(alternative())
-  assert.deepEqual(masked.comparison.rows, [
-    { rowId: "shampoo.scalp_route", label: "Kopfhaut-Fokus", state: "match" },
-  ])
-  assert.equal(masked.comparison.summaryScore, 1)
-})
-
 test("maskAlternative: an alternative with no carried criteria yields an empty comparison", () => {
   const masked = maskAlternative(alternative({ criteria: undefined }))
   assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })
@@ -86,6 +65,10 @@ test("maskScanVerdictPayload: masks every alternative, leaves every other field 
   assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)
   assert.equal(masked.coverage, inCatalogVerdict.coverage)
   assert.equal(masked.dimensions, inCatalogVerdict.dimensions)
+  assert.deepEqual(masked.alternatives[0].comparison, {
+    rows: [{ rowId: "shampoo.scalp_route", label: "Kopfhaut-Fokus", state: "match" }],
+    summaryScore: 1,
+  })
   for (const entry of masked.alternatives as ScanMaskedAlternative[]) {
     assert.deepEqual(Object.keys(entry).sort(), ["comparison", "verdict", "verdictLabel"])
   }
@@ -94,4 +77,13 @@ test("maskScanVerdictPayload: masks every alternative, leaves every other field 
 test("maskScanVerdictPayload: an empty alternatives list stays empty", () => {
   const masked = maskScanVerdictPayload({ ...inCatalogVerdict, alternatives: [] })
   assert.deepEqual(masked.alternatives, [])
+})
+
+test("masked alternatives carry evaluator reasons without identity (fit-verdict spec §1/§7b, ruled 2026-10-12)", () => {
+  const masked = maskAlternative(
+    alternative({ verdict: "supportive", reasonLines: ["Für dein Haar eher schwer"] }),
+  )
+  assert.deepEqual(masked.reasonLines, ["Für dein Haar eher schwer"])
+  assert.equal("productId" in masked, false)
+  assert.equal("displayName" in masked, false)
 })

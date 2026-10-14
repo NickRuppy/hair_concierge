@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+not ok 1 - maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+  ---
+  duration_ms: 1.990542
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-masked-alternative.test.ts:2:3520'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rows: [
+          {
+            label: 'Kopfhaut-Fokus',
+    +       rowId: 'Kopfhaut-Fokus',
+    -       rowId: 'shampoo.scalp_route',
+            state: 'match'
+          }
+        ],
+        summaryScore: 1
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    rows:
+      0:
+        rowId: 'shampoo.scalp_route'
+        label: 'Kopfhaut-Fokus'
+        state: 'match'
+    summaryScore: 1
+  actual:
+    rows:
+      0:
+        rowId: 'Kopfhaut-Fokus'
+        label: 'Kopfhaut-Fokus'
+        state: 'match'
+    summaryScore: 1
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-masked-alternative.test.ts:89:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 273.56775

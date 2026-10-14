@@ -1,0 +1,146 @@
+--- a/tests/discovery-cockpit-complexity-dom.test.tsx
++++ b/tests/discovery-cockpit-complexity-dom.test.tsx
+@@ -197,6 +197,7 @@
+ test("R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line", async () => {
+   const request = deferredFetch()
+   renderCockpit()
++  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+   fireEvent.click(option("Super essenziell"))
+ 
+   assert.deepEqual(request.calls, [
+@@ -208,6 +209,7 @@
+   ])
+   // Optimistic.
+   assert.equal(option("Super essenziell").getAttribute("aria-pressed"), "true")
++  assert.ok(document.getElementById("runsheet-complexity-folded"), "optional steps fold before the save settles")
+ 
+   await act(async () => {
+     request.settle(new Response(JSON.stringify({ code: "nope" }), { status: 500 }))
+@@ -273,13 +275,6 @@
+   assert.ok(within(oil).getByText("Schützt das Haar vor passender Hitze-Anwendung."))
+   // The old lowercase tag is replaced on these entries.
+   assert.ok(!oil.textContent?.includes("· optional"))
+-})
+-
+-// --- F1: the recommendation's comparison table -----------------------------------------
+-
+-test("F1: the recommendation shows „Empfohlenes Produkt | Ziel“ — two columns, no owned column", () => {
+-  renderCockpit()
+-  const mask = entryOf("Maske")
+   const table = mask.querySelector("[data-comparison]") as HTMLElement
+   assert.equal(table.getAttribute("data-comparison"), "compact")
+   const header = table.firstElementChild?.textContent ?? ""
+@@ -292,9 +287,14 @@
+       .querySelector("li")
+       ?.getAttribute("aria-label")
+       ?.includes("Empfohlenes Produkt: fettig, Ziel: fettig"),
++    "recommended comparison row names product and target",
+   )
+ })
++
++// --- F1: the recommendation's comparison table -----------------------------------------
+ 
++
++
+ test("F1: no rows, no table — nothing is invented", () => {
+   renderCockpit({ steps: addSteps(null) })
+   assert.equal(document.querySelector("[data-comparison]"), null)
+@@ -323,14 +323,8 @@
+   assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+ })
+ 
+-test("Iteration 3: choosing „Super essenziell“ folds at once — optimistic, before the save lands", () => {
+-  deferredFetch()
+-  renderCockpit()
+-  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+-  fireEvent.click(option("Super essenziell"))
+-  assert.ok(document.getElementById("runsheet-complexity-folded"))
+-})
+ 
++
+ test("Iteration 3: a step without her product shows no „Bisheriges Produkt“-panel, but keeps the unanswered honesty line", () => {
+   renderCockpit({
+     steps: [
+--- a/tests/discovery-products-loading.test.tsx
++++ b/tests/discovery-products-loading.test.tsx
+@@ -39,19 +39,18 @@
+   )
+ }
+ 
+-test("the loading screen reads exactly like the empty products screen", () => {
++
++
++test("the loading screen reuses the real screen's layout classes and has no controls", () => {
+   const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
+-  assert.deepEqual(textSequence(loading), textSequence(realEmptyScreen()))
++  const real = realEmptyScreen()
++  assert.deepEqual(textSequence(loading), textSequence(real))
+   assert.deepEqual(textSequence(loading).slice(0, 3), [
+     "Deine Produkte",
+     "Produkt suchen",
+     "Scannen",
+   ])
+-})
+-
+-test("the loading screen reuses the real screen's layout classes and has no controls", () => {
+-  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
+-  const realClasses = new Set(classes(realEmptyScreen()))
++  const realClasses = new Set(classes(real))
+   for (const layoutClass of [
+     "flex min-h-dvh flex-col bg-[#faf8f6]",
+     "flex-1 px-4 pb-8 pt-10",
+--- a/tests/discovery-refined-usage.test.ts
++++ b/tests/discovery-refined-usage.test.ts
+@@ -212,18 +212,16 @@
+   assert.equal(third?.step.decisionKey, stage3DecisionKey("oil", "pre_wash_fibre_treatment", null))
+   assert.equal(third?.outcome, "undecided")
+   assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === "i-oil-3"))
+-})
+-
+-test("F4: the legacy fixture's item objects carry no batch-5 keys at all", () => {
+-  const routine = composeLegacy()
+   for (const entry of routine.steps) {
+-    assert.ok(!entry.item || !("usageRole" in entry.item))
+-    assert.ok(!entry.item || !("productType" in entry.item))
+-    assert.ok(!("ownedUsageLabel" in entry))
++    assert.ok(!entry.item || !("usageRole" in entry.item), "legacy item omits usageRole")
++    assert.ok(!entry.item || !("productType" in entry.item), "legacy item omits productType")
++    assert.ok(!("ownedUsageLabel" in entry), "legacy entry omits ownedUsageLabel")
+   }
+-  for (const entry of routine.unassignedIntakeProducts) assert.ok(!("usageLabel" in entry))
++  for (const entry of routine.unassignedIntakeProducts) assert.ok(!("usageLabel" in entry), "legacy unassigned entry omits usageLabel")
+ })
+ 
++
++
+ test("F4: a non-null usage role moves the fingerprint (and the binding)", () => {
+   const withRole = LEGACY_ITEMS.map((item) =>
+     item.id === "i-oil-2" ? { ...item, usageRole: "dry_finish" as const } : item,
+--- a/tests/discovery-unanswered-categories.test.tsx
++++ b/tests/discovery-unanswered-categories.test.tsx
+@@ -279,21 +279,20 @@
+   assert.ok(oil.includes("Lücke in der Idealroutine"))
+   assert.ok(oil.includes(USES_NOTHING))
+   assert.ok(!oil.includes(UNANSWERED_STEP))
+-})
+-
+-test("the summary line names only the unanswered categories no step already names", async () => {
+-  const markup = await renderCockpit("submitted")
+   // Oil is a step that already says she uses nothing for it (consult-runsheet T4 c): the
+   // footer does not repeat it.
+-  assert.ok(!markup.includes("Öl — nicht benutzt. Keine Entscheidung nötig."))
++  assert.ok(!markup.includes("Öl — nicht benutzt. Keine Entscheidung nötig."), "summary omits explicit none already named by a step")
+   // Leave-in and mask are named at their steps; the line carries the six without a step.
+   assert.ok(
+     markup.includes(
+       "Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.",
+     ),
++    "summary names exactly the six unanswered categories without steps",
+   )
+ })
+ 
++
++
+ test("with every unanswered category on a step, the summary line disappears", async () => {
+   const markup = await renderCockpit("submitted", [
+     "conditioner",

@@ -1,0 +1,307 @@
+"use client"
+
+import { MOTION_MS } from "@/lib/motion"
+import { useState, useCallback, useEffect, useRef } from "react"
+import { useQuizStore } from "@/lib/quiz/store"
+import { QuizOptionCard } from "./quiz-option-card"
+import { QuizProgressBar } from "./quiz-progress-bar"
+import { ArrowLeft } from "lucide-react"
+import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+
+type Phase = "type" | "gate" | "condition"
+
+import type { IconName } from "@/components/ui/icon"
+import { useQuizBrowserBack, useQuizBrowserHistoryEntry } from "./quiz-browser-history"
+
+export const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] =
+  [
+    {
+      value: "fettig",
+      label: "Eher fettig",
+      description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
+      icon: "scalp-oily",
+    },
+    {
+      value: "ausgeglichen",
+      label: "Ausgeglichen",
+      description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
+      icon: "scalp-normal",
+    },
+    {
+      value: "trocken",
+      label: "Eher trocken",
+      description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
+      icon: "scalp-dry",
+    },
+  ]
+
+export const SCALP_CONDITIONS: {
+  value: string
+  label: string
+  description: string
+  icon: IconName
+}[] = [
+  {
+    value: "schuppen",
+    label: "Schuppen",
+    description: "Weiße oder gelbliche Flocken",
+    icon: "scalp-flaky",
+  },
+  {
+    value: "trockene_schuppen",
+    label: "Trockene Schuppen",
+    description: "Kleine, weiße, trockene Flocken — Kopfhaut spannt",
+    icon: "scalp-dry-flakes",
+  },
+  {
+    value: "gereizt",
+    label: "Gereizte Kopfhaut",
+    description: "Jucken, Rötungen oder Brennen",
+    icon: "scalp-irritated",
+  },
+]
+
+export function QuizScalpQuestion() {
+  const { answers, setAnswer, goNext, goBack } = useQuizStore()
+  const gateRef = useRef<HTMLDivElement | null>(null)
+  const conditionRef = useRef<HTMLDivElement | null>(null)
+
+  // Restore phase from existing answers when re-entering step 6
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (answers.has_scalp_issue === true && answers.scalp_condition) return "condition"
+    if (answers.scalp_type) return "gate"
+    return "type"
+  })
+  const [selectedType, setSelectedType] = useState(answers.scalp_type ?? "")
+  const [conditionAnswer, setConditionAnswer] = useState<"ja" | "nein" | "">(() => {
+    if (!answers.scalp_type) return ""
+    if (answers.has_scalp_issue === false) return "nein"
+    if (answers.has_scalp_issue === true) return "ja"
+    return ""
+  })
+  const [selectedCondition, setSelectedCondition] = useState(
+    answers.has_scalp_issue === true && answers.scalp_condition ? answers.scalp_condition : "",
+  )
+  const [advancing, setAdvancing] = useState(false)
+
+  // Track whether sections should animate (false on re-entry, true on user-driven transitions)
+  const [animateGate, setAnimateGate] = useState(false)
+  const [animateCondition, setAnimateCondition] = useState(false)
+  const pushBrowserHistoryEntry = useQuizBrowserHistoryEntry()
+
+  useEffect(() => {
+    if (phase !== "gate" || !animateGate) return
+    gateRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [animateGate, phase])
+
+  useEffect(() => {
+    if (phase !== "condition" || !animateCondition) return
+    conditionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [animateCondition, phase])
+
+  const handleTypeSelect = useCallback(
+    (value: string) => {
+      if (advancing) return
+      setSelectedType(value)
+      setAnswer("scalp_type", value)
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
+      setAdvancing(true)
+      setTimeout(() => {
+        pushBrowserHistoryEntry()
+        setAnimateGate(true)
+        setPhase("gate")
+        setAdvancing(false)
+      }, MOTION_MS.settle)
+    },
+    [advancing, pushBrowserHistoryEntry, setAnswer],
+  )
+
+  const handleGateAnswer = useCallback(
+    (answer: "ja" | "nein") => {
+      if (advancing) return
+      setConditionAnswer(answer)
+      if (answer === "nein") {
+        setAnswer("has_scalp_issue", false)
+        setAnswer("scalp_condition", undefined)
+        setAdvancing(true)
+        setTimeout(() => {
+          goNext()
+        }, MOTION_MS.settle)
+      } else {
+        setAnswer("has_scalp_issue", true)
+        setAnswer("scalp_condition", undefined)
+        setAdvancing(true)
+        setAnimateCondition(true)
+        pushBrowserHistoryEntry()
+        setPhase("condition")
+        setAdvancing(false)
+      }
+    },
+    [advancing, goNext, pushBrowserHistoryEntry, setAnswer],
+  )
+
+  const handleConditionSelect = useCallback(
+    (value: string) => {
+      if (advancing) return
+      setSelectedCondition(value)
+      setAnswer("has_scalp_issue", true)
+      setAnswer("scalp_condition", value)
+      setAdvancing(true)
+      setTimeout(() => {
+        goNext()
+      }, MOTION_MS.settle)
+    },
+    [setAnswer, goNext, advancing],
+  )
+
+  const handleBack = useCallback(() => {
+    if (phase === "condition") {
+      setSelectedCondition("")
+      setConditionAnswer("")
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
+      setAnimateCondition(false)
+      setPhase("gate")
+    } else if (phase === "gate") {
+      setSelectedType("")
+      setConditionAnswer("")
+      setAnswer("scalp_type", undefined)
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
+      setAnimateGate(false)
+      setPhase("type")
+    } else {
+      goBack()
+    }
+  }, [phase, goBack, setAnswer])
+  const requestBack = useQuizBrowserBack(handleBack)
+
+  const pastTypePhase = phase !== "type"
+  const questionNumber = getQuizQuestionNumber(6) ?? 8
+  return (
+    <div className="flex flex-col" key="scalp-question">
+      {/* Back button + progress */}
+      <div className="flex items-center gap-3 mb-4">
+        <button
+          onClick={requestBack}
+          aria-label="Zurück"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <div className="flex-1">
+          <QuizProgressBar current={questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
+        </div>
+        <span className="text-sm text-[var(--text-caption)] tabular-nums">
+          {questionNumber}/{QUIZ_TOTAL_QUESTIONS}
+        </span>
+      </div>
+
+      {/* Title + instruction — always visible */}
+      <h2 className="mb-2 font-header text-3xl leading-tight text-foreground outline-none focus:outline-none">
+        Wie fühlt sich deine Kopfhaut normalerweise an?
+      </h2>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+        Denk dabei an deine Kopfhaut und Ansätze – nicht an trockene Längen oder Spitzen.
+      </p>
+
+      {/* Type cards — always rendered, unselected collapse when past type phase */}
+      <div>
+        {SCALP_TYPES.map((opt, i) => {
+          const isCollapsed = pastTypePhase && selectedType !== opt.value
+          return (
+            <div
+              key={opt.value}
+              style={{
+                maxHeight: isCollapsed ? 0 : 500,
+                opacity: isCollapsed ? 0 : 1,
+                marginTop: isCollapsed ? 0 : i > 0 ? 12 : 0,
+                overflow: isCollapsed ? "hidden" : "visible",
+                transition: "max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease",
+              }}
+            >
+              <QuizOptionCard
+                icon={opt.icon}
+                label={opt.label}
+                description={opt.description}
+                active={selectedType === opt.value}
+                onClick={() => {
+                  if (!pastTypePhase) handleTypeSelect(opt.value)
+                }}
+                animationDelay={i * 60}
+              />
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Gate section — slides in below selected type card */}
+      <div
+        ref={gateRef}
+        className={phase === "type" ? "hidden" : animateGate ? "mt-5 animate-fade-in-up" : "mt-5"}
+      >
+        {animateGate && (
+          <p className="mb-2 text-sm font-medium text-[var(--brand-plum)]">
+            Noch eine Kopfhautfrage.
+          </p>
+        )}
+        <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
+          Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen?
+        </h2>
+
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleGateAnswer("nein")}
+            className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
+              conditionAnswer === "nein"
+                ? "bg-secondary text-secondary-foreground scale-[1.02]"
+                : "bg-muted text-foreground hover:bg-muted/80 border border-border"
+            }`}
+          >
+            Nein
+          </button>
+          <button
+            onClick={() => handleGateAnswer("ja")}
+            className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
+              conditionAnswer === "ja"
+                ? "bg-secondary text-secondary-foreground scale-[1.02]"
+                : "bg-muted text-foreground hover:bg-muted/80 border border-border"
+            }`}
+          >
+            Ja
+          </button>
+        </div>
+      </div>
+
+      {/* Condition cards — slides in below gate */}
+      <div
+        ref={conditionRef}
+        className={
+          phase !== "condition" ? "hidden" : animateCondition ? "mt-6 animate-fade-in-up" : "mt-6"
+        }
+      >
+        <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
+          Was ist aktuell dein Hauptproblem?
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+          Wähle die Beschwerde, die am besten zu dir passt.
+        </p>
+
+        <div className="space-y-3">
+          {SCALP_CONDITIONS.map((opt, i) => (
+            <QuizOptionCard
+              key={opt.value}
+              icon={opt.icon}
+              label={opt.label}
+              description={opt.description}
+              active={selectedCondition === opt.value}
+              onClick={() => handleConditionSelect(opt.value)}
+              animationDelay={i * 60}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

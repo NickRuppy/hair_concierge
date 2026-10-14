@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: renders the frame, the Beispiel band, the benefit line and exactly one CTA
+ok 1 - renders the frame, the Beispiel band, the benefit line and exactly one CTA
+  ---
+  duration_ms: 1.455625
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 697.879375

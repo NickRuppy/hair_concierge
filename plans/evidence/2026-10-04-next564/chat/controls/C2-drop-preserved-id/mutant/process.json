@@ -1,0 +1,32 @@
+{
+  "code": 1,
+  "signal": null,
+  "spawnError": null,
+  "timeout": false,
+  "stopReason": null,
+  "durationMs": 234,
+  "dir": "/tmp/test-audit-chat18-controls-q0Mukt/C2-drop-preserved-id/mutant",
+  "command": {
+    "executable": "/usr/local/bin/node",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^legacy fallback strips source payloads and their rendered markers$",
+      "tests/message-context.test.ts"
+    ],
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+    "timeoutMs": 45000,
+    "reporterFile": null,
+    "environmentOverrides": {
+      "FORCE_COLOR": "0",
+      "NO_COLOR": "1"
+    },
+    "environmentRemoved": [
+      "NODE_V8_COVERAGE"
+    ]
+  }
+}

@@ -1,0 +1,569 @@
+[
+  {
+    "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "supportAssertions": [],
+    "tables": []
+  },
+  {
+    "file": "tests/care-balance-frequency-targets.test.ts",
+    "supportAssertions": [
+      {
+        "line": 63,
+        "text": "assert.ok(row, `missing ${category} row`)"
+      },
+      {
+        "line": 76,
+        "text": "assert.ok(row.frequencyTarget, `${row.category} should expose a frequency target`)"
+      },
+      {
+        "line": 77,
+        "text": "assert.equal(row.frequencyTarget.minFrequency, expected.min)"
+      },
+      {
+        "line": 78,
+        "text": "assert.equal(row.frequencyTarget.maxFrequency, expected.max)"
+      },
+      {
+        "line": 79,
+        "text": "assert.equal(row.frequencyTarget.preferredFrequency, expected.preferred)"
+      },
+      {
+        "line": 80,
+        "text": "assert.equal(row.frequencyTarget.delta, expected.delta)"
+      }
+    ],
+    "tables": [
+      {
+        "name": "EMPTY_REQUEST_CONTEXT",
+        "line": 18,
+        "literal": "{\n  requestedCategory: null,\n  resetTriggerTerms: [],\n  resetTriggerSources: [],\n  resetFocusRequest: null,\n  colorSafeRequest: false,\n  scalpTreatmentIntent: false,\n  maskIntensityRequest: null,\n  leaveInHeatProtectionRequest: null,\n  leaveInSeparateHeatProtectantMentioned: false,\n  leaveInWeightRequest: null,\n  leaveInConditionerRelationshipRequest: null,\n  leaveInRequestedFormats: [],\n  oilPurpose: null,\n  oilNoRecommendationReason: null,\n}",
+        "kind": "object",
+        "size": 14
+      },
+      {
+        "name": "RESET_CONTEXT",
+        "line": 35,
+        "literal": "{\n  ...EMPTY_REQUEST_CONTEXT,\n  resetTriggerTerms: [\"buildup\"],\n  resetTriggerSources: [\"symptom\" as const],\n}",
+        "kind": "object",
+        "size": 3
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "refinedNeedSnapshot",
+        "line": 12,
+        "literal": "{\n  schemaVersion: 1,\n  decisions: [\n    {\n      category: \"conditioner\",\n      needTier: \"basis\",\n      roles: [\"conditioner_rinse_out\"],\n      frequency: {\n        kind: \"after_each_eligible_wash\",\n        roles: [\"conditioner_rinse_out\"],\n        dependsOn: \"wet_wash_total\",\n        placementState: \"known\",\n      },\n      reasons: [{ id: \"conditioner.need.v1\" }],\n    },\n    {\n      category: \"oil\",\n      needTier: \"optional\",\n      roles: [\"dry_finish\"],\n      frequency: {\n        kind: \"role_based_wash_linked\",\n        roleFrequencies: [\n          { role: \"dry_finish\", tier: \"optional\", cadence: \"finish_after_every_compatible_wash\" },\n        ],\n      },\n      reasons: [{ id: \"oil.finish.v1\" }],\n    },\n    {\n      category: \"heat_protectant\",\n      needTier: \"optional\",\n      roles: [\"pre_heat_protection\"],\n      frequency: {\n        kind: \"event_based\",\n        role: \"pre_heat_protection\",\n        eventRoutes: [\"direct_contact_heat\"],\n        occurrence: \"before_every_qualifying_event\",\n      },\n      reasons: [{ id: \"heat.event.v1\" }],\n    },\n    {\n      category: \"mask\",\n      needTier: \"not_needed\",\n      roles: [\"intensive_conditioning_mask\"],\n      frequency: null,\n      reasons: [{ id: \"mask.not-needed.v1\" }],\n    },\n  ],\n  renderedOrder: [\"conditioner\", \"oil\", \"heat_protectant\"],\n} as unknown as InitialNeedPlanSnapshot",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "bondPortfolio",
+        "line": 201,
+        "literal": "{\n    ...portfolio(),\n    categoryResolutions: [\n      {\n        decisionKey: \"decision:bondbuilder:specialized_bond_treatment:owned-bond\",\n        category: \"bondbuilder\",\n        role: \"specialized_bond_treatment\",\n        verdict: \"ideal\",\n        choiceState: \"owned_active\",\n        capturedProductId: \"captured-bond\",\n        executable: true,\n        gapPreserved: false,\n      },\n    ],\n    ownedProducts: [\n      {\n        capturedProductId: \"captured-bond\",\n        userProductId: \"user-product-bond\",\n        productId: \"product-bond\",\n        displayName: \"Bondbuilder\",\n        category: \"bondbuilder\",\n        role: \"specialized_bond_treatment\",\n        frequencyRange: null,\n        choiceState: \"owned_active\",\n        sourceDecisionKey: \"decision:bondbuilder:specialized_bond_treatment:owned-bond\",\n      },\n    ],\n    plannedPurchases: [],\n    pendingProducts: [],\n    uncoveredRoles: [],\n  } as unknown as ProposedProductPortfolio",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "snapshot",
+        "line": 232,
+        "literal": "{\n    ...refinedNeedSnapshot,\n    decisions: [\n      {\n        category: \"bondbuilder\",\n        needTier: \"optional\",\n        roles: [\"specialized_bond_treatment\"],\n        frequency: { kind: \"product_protocol_course\" },\n        reasons: [{ id: \"bond.protocol.v1\" }],\n      },\n    ],\n    renderedOrder: [\"bondbuilder\"],\n  } as unknown as InitialNeedPlanSnapshot",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "supplementalPortfolio",
+        "line": 375,
+        "literal": "{\n    ...portfolio(),\n    schemaVersion: 2,\n    categoryResolutions: [\n      {\n        decisionKey: \"decision:deep_cleansing_shampoo:residue_reset:gap\",\n        category: \"deep_cleansing_shampoo\",\n        role: \"residue_reset\",\n        verdict: \"unknown\",\n        choiceState: \"unassigned\",\n        capturedProductId: null,\n        executable: false,\n        gapPreserved: true,\n      },\n    ],\n    ownedProducts: [],\n    plannedPurchases: [],\n    pendingProducts: [],\n    uncoveredRoles: [\n      {\n        category: \"deep_cleansing_shampoo\",\n        role: \"residue_reset\",\n        reason: \"no_product_owned\",\n        linkedDecisionKey: \"decision:deep_cleansing_shampoo:residue_reset:gap\",\n      },\n    ],\n    productLoadResolution: {\n      schemaVersion: 1,\n      refinedNeedVersionId: \"refined-a\",\n      refinedInputHash: \"refined-input-a\",\n      capturedFrequencyFingerprint: \"a\".repeat(64),\n      authorityVersions: {\n        deep_cleansing_shampoo: CATEGORY_ROLE_POLICIES.deep_cleansing_shampoo.authorityVersion,\n      },\n      requirements: [\n        {\n          category: \"deep_cleansing_shampoo\",\n          requiredRoles: [\"residue_reset\"],\n          needSummary: \"Entfernt Ablagerungen bei hoher aktueller Produktlast.\",\n          authorityVersion: CATEGORY_ROLE_POLICIES.deep_cleansing_shampoo.authorityVersion,\n        },\n      ],\n      decisions: [\n        {\n          category: \"deep_cleansing_shampoo\",\n          resolution: \"resolved\",\n          needTier: \"basis\",\n          roles: [\"residue_reset\"],\n          target: { category: \"deep_cleansing_shampoo\", roles: [\"residue_reset\"] },\n          frequency: {\n            kind: \"every_nth_wash\",\n            roles: [\"residue_reset\"],\n            every: 3,\n            substitutesRegularShampoo: true,\n          },\n          reasons: [\n            {\n              id: \"deep_cleansing.inclusion.high_load\",\n              salience: \"primary\",\n              evidence: [],\n              values: { resetLoad: 4 },\n            },\n          ],\n          executionState: \"available\",\n          executionPauseReason: null,\n          deferredFacts: [],\n        },\n      ],\n    },\n  } as unknown as ProposedProductPortfolio",
+        "kind": "object",
+        "size": 8
+      },
+      {
+        "name": "v3Portfolio",
+        "line": 458,
+        "literal": "{\n    ...portfolio(),\n    schemaVersion: 3,\n    categoryResolutions: [\n      {\n        decisionKey: \"decision:oil:dry_finish:replacement-a\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        verdict: \"ideal\",\n        choiceState: \"planned_purchase\",\n        capturedProductId: null,\n        executable: false,\n        gapPreserved: true,\n      },\n      {\n        decisionKey: \"decision:oil:dry_finish:replacement-b\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        verdict: \"ideal\",\n        choiceState: \"planned_purchase\",\n        capturedProductId: null,\n        executable: false,\n        gapPreserved: true,\n      },\n    ],\n    ownedProducts: [],\n    plannedPurchases: [\n      {\n        plannedPurchaseId: \"planned:decision:oil:dry_finish:replacement-a\",\n        sourceDecisionKey: \"decision:oil:dry_finish:replacement-a\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        recommendationId: \"recommendation-a\",\n        productId: \"product-a\",\n        displayName: \"Öl A\",\n        reason: \"A\",\n        authorityRuleId: \"oil.v1\",\n      },\n      {\n        plannedPurchaseId: \"planned:decision:oil:dry_finish:replacement-b\",\n        sourceDecisionKey: \"decision:oil:dry_finish:replacement-b\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        recommendationId: \"recommendation-b\",\n        productId: \"product-b\",\n        displayName: \"Öl B\",\n        reason: \"B\",\n        authorityRuleId: \"oil.v1\",\n      },\n    ],\n    pendingProducts: [],\n    uncoveredRoles: [],\n    retainedOwnedProducts: [\n      {\n        capturedProductId: \"retained-a\",\n        userProductId: \"user-retained-a\",\n        productId: \"old-product-a\",\n        displayName: \"Altes Öl\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        sourceDecisionKey: \"decision:oil:dry_finish:replacement-a\",\n        planStatus: \"not_used\",\n      },\n    ],\n  }",
+        "kind": "object",
+        "size": 8
+      },
+      {
+        "name": "oilDecision",
+        "line": 710,
+        "literal": "{\n    category: \"oil\",\n    needTier: \"basis\",\n    roles: [\"pre_wash_fibre_treatment\", \"dry_finish\"],\n    target: {\n      category: \"oil\",\n      roles: [\"pre_wash_fibre_treatment\", \"dry_finish\"],\n      roleTargets: [\n        {\n          role: \"pre_wash_fibre_treatment\",\n          tier: \"basis\",\n          weight: null,\n          functionalBenefits: [],\n        },\n        {\n          role: \"dry_finish\",\n          tier: \"optional\",\n          weight: null,\n          functionalBenefits: [],\n        },\n      ],\n    },\n    frequency: {\n      kind: \"role_based_wash_linked\",\n      roleFrequencies: [\n        {\n          role: \"pre_wash_fibre_treatment\",\n          tier: \"basis\",\n          cadence: \"before_every_compatible_wash\",\n        },\n        { role: \"dry_finish\", tier: \"optional\", cadence: \"finish_after_every_compatible_wash\" },\n      ],\n    },\n    reasons: [{ id: \"oil.v1\" }],\n  }",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "testPortfolio",
+        "line": 746,
+        "literal": "{\n    ...portfolio(),\n    categoryResolutions: [\n      {\n        decisionKey: \"decision:oil:pre_wash_fibre_treatment:owned-oil-pre\",\n        category: \"oil\",\n        role: \"pre_wash_fibre_treatment\",\n        verdict: \"ideal\",\n        choiceState: \"owned_active\",\n        capturedProductId: \"captured-oil-pre\",\n        executable: true,\n        gapPreserved: false,\n      },\n      {\n        decisionKey: \"decision:oil:dry_finish:owned-oil-dry\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        verdict: \"ideal\",\n        choiceState: \"owned_active\",\n        capturedProductId: \"captured-oil-dry\",\n        executable: true,\n        gapPreserved: false,\n      },\n    ],\n    ownedProducts: [\n      {\n        capturedProductId: \"captured-oil-pre\",\n        userProductId: \"user-oil-pre\",\n        productId: \"product-oil-pre\",\n        displayName: \"Oil Pre-Wash\",\n        category: \"oil\",\n        role: \"pre_wash_fibre_treatment\",\n        frequencyRange: \"weekly_2x\",\n        choiceState: \"owned_active\",\n        sourceDecisionKey: \"decision:oil:pre_wash_fibre_treatment:owned-oil-pre\",\n      },\n      {\n        capturedProductId: \"captured-oil-dry\",\n        userProductId: \"user-oil-dry\",\n        productId: \"product-oil-dry\",\n        displayName: \"Oil Dry Finish\",\n        category: \"oil\",\n        role: \"dry_finish\",\n        frequencyRange: \"weekly_2x\",\n        choiceState: \"owned_active\",\n        sourceDecisionKey: \"decision:oil:dry_finish:owned-oil-dry\",\n      },\n    ],\n    plannedPurchases: [],\n    pendingProducts: [],\n    uncoveredRoles: [],\n  } as unknown as ProposedProductPortfolio",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "testSnapshot",
+        "line": 799,
+        "literal": "{\n    ...refinedNeedSnapshot,\n    decisions: [refinedNeedSnapshot.decisions[0]!, oilDecision as never],\n    renderedOrder: [\"conditioner\", \"oil\"],\n  } as unknown as InitialNeedPlanSnapshot",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "scalpDecision",
+        "line": 825,
+        "literal": "{\n    category: \"scalp_care\",\n    needTier: \"optional\",\n    roles: [\"scalp_comfort\"],\n    target: {\n      category: \"scalp_care\",\n      roles: [\"scalp_comfort\"],\n      roleTargets: [\n        {\n          role: \"scalp_comfort\",\n          coverage: \"primary\",\n        },\n      ],\n    },\n    frequency: {\n      kind: \"role_keyed_product_protocol\",\n      roleFrequencies: [\n        {\n          role: \"scalp_comfort\",\n          cadence: \"regular_according_to_product\",\n        },\n      ],\n    },\n    reasons: [{ id: \"scalp.v1\" }],\n  }",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "testPortfolio",
+        "line": 851,
+        "literal": "{\n    ...portfolio(),\n    categoryResolutions: [\n      {\n        decisionKey: \"decision:scalp_care:scalp_comfort:owned-scalp\",\n        category: \"scalp_care\",\n        role: \"scalp_comfort\",\n        verdict: \"ideal\",\n        choiceState: \"owned_active\",\n        capturedProductId: \"captured-scalp\",\n        executable: true,\n        gapPreserved: false,\n      },\n    ],\n    ownedProducts: [\n      {\n        capturedProductId: \"captured-scalp\",\n        userProductId: \"user-scalp\",\n        productId: \"product-scalp\",\n        displayName: \"Scalp Care\",\n        category: \"scalp_care\",\n        role: \"scalp_comfort\",\n        frequencyRange: \"weekly_2x\",\n        choiceState: \"owned_active\",\n        sourceDecisionKey: \"decision:scalp_care:scalp_comfort:owned-scalp\",\n      },\n    ],\n    plannedPurchases: [],\n    pendingProducts: [],\n    uncoveredRoles: [],\n  } as unknown as ProposedProductPortfolio",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "testSnapshot",
+        "line": 883,
+        "literal": "{\n    ...refinedNeedSnapshot,\n    decisions: [refinedNeedSnapshot.decisions[0]!, scalpDecision as never],\n    renderedOrder: [\"conditioner\", \"scalp_care\"],\n  } as unknown as InitialNeedPlanSnapshot",
+        "kind": "object",
+        "size": 3
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-routine-cadence.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "cases",
+        "line": 147,
+        "literal": "[\n    {\n      category: \"shampoo\",\n      recommended: { kind: \"wet_wash_total\", target: \"weekly_2x\" },\n      expected: \"2× pro Woche\",\n    },\n    {\n      category: \"conditioner\",\n      recommended: { kind: \"after_each_eligible_wash\" },\n      expected: \"Nach jeder Haarwäsche\",\n    },\n    {\n      category: \"heat_protectant\",\n      recommended: { kind: \"event_based\" },\n      expected: \"Vor jeder passenden Hitze-Anwendung\",\n    },\n    {\n      category: \"deep_cleansing_shampoo\",\n      recommended: { kind: \"every_nth_wash\", every: 3 },\n      expected: \"Bei jeder dritten Haarwäsche\",\n    },\n    {\n      category: \"dry_shampoo\",\n      recommended: { kind: \"unscheduled_as_needed\" },\n      expected: \"Bei Bedarf\",\n    },\n    {\n      category: \"mask\",\n      recommended: { kind: \"mask_regular_interval\", baseInterval: \"biweekly_1x\" },\n      expected: \"Etwa alle 2 Wochen\",\n    },\n    {\n      category: \"oil\",\n      recommended: {\n        kind: \"role_based_wash_linked\",\n        roleFrequencies: [\n          { role: \"pre_wash_fibre_treatment\", cadence: \"before_every_compatible_wash\" },\n        ],\n      },\n      role: \"pre_wash_fibre_treatment\",\n      expected: \"Vor jeder Haarwäsche\",\n    },\n  ]",
+        "kind": "array",
+        "size": 7
+      },
+      {
+        "name": "for-of",
+        "line": 196,
+        "iterable": "cases",
+        "fullSource": "for (const entry of cases) {\n    const resolved = resolveRoutineItemCadence(\n      base({\n        category: entry.category,\n        role: entry.role ?? \"dry_finish\",\n        recommended: entry.recommended,\n        authorityFacts: [\n          {\n            productId: \"bond-1\",\n            category: \"oil\",\n            role: entry.role ?? \"dry_finish\",\n            cadence: { kind: \"label_schedule\", copy_de: \"Must not win\" },\n          },\n        ],\n      }),\n    )\n    assert.equal(resolved?.copyDe, entry.expected)\n    assert.equal(resolved?.source, \"category\")\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 218,
+        "iterable": "[\n    \"label_course\",\n    \"label_schedule\",\n    \"frequency\",\n    \"weekly_range\",\n    \"wash_event\",\n  ]",
+        "fullSource": "for (const cadenceKind of [\n    \"label_course\",\n    \"label_schedule\",\n    \"frequency\",\n    \"weekly_range\",\n    \"wash_event\",\n  ]) {\n    assert.deepEqual(\n      resolveRoutineItemCadence(\n        base({\n          authorityFacts: [\n            {\n              productId: \"bond-1\",\n              category: \"bondbuilder\",\n              role: \"specialized_bond_treatment\",\n              cadence: { kind: cadenceKind, copy_de: `Bond ${cadenceKind}` },\n            },\n          ],\n        }),\n      ),\n      { copyDe: `Bond ${cadenceKind}`, source: \"exact_product_protocol\" },\n    )\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 242,
+        "iterable": "[\n    \"daily\",\n    \"daily_or_twice_daily_as_needed\",\n    \"weekly_range\",\n    \"as_needed\",\n    \"label_schedule\",\n  ]",
+        "fullSource": "for (const cadenceKind of [\n    \"daily\",\n    \"daily_or_twice_daily_as_needed\",\n    \"weekly_range\",\n    \"as_needed\",\n    \"label_schedule\",\n  ]) {\n    assert.deepEqual(\n      resolveRoutineItemCadence(\n        base({\n          category: \"scalp_care\",\n          role: \"scalp_comfort\",\n          productId: \"scalp-1\",\n          recommended: { kind: \"role_keyed_product_protocol\" },\n          authorityFacts: [\n            {\n              productId: \"scalp-1\",\n              category: \"scalp_care\",\n              role: \"scalp_comfort\",\n              cadence: { kind: cadenceKind, copy_de: `Scalp ${cadenceKind}` },\n            },\n          ],\n        }),\n      ),\n      { copyDe: `Scalp ${cadenceKind}`, source: \"exact_product_protocol\" },\n    )\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 272,
+        "iterable": "[\n    { kind: \"label_suitability\", copy_de: \"Geeignet\" },\n    { kind: \"label_daily_suitable\", copy_de: \"Täglich geeignet\" },\n    { kind: \"label_timing\", copy_de: \"Abends\" },\n    { kind: \"label_course\", copy_de: \"   \" },\n    { type: \"weekly_range\", source: \"manufacturer\", min_per_week: 7, max_per_week: 5 },\n    { type: \"daily\", source: \"unknown\", copy_de: \"Arbitrary prose\" },\n  ]",
+        "fullSource": "for (const cadence of [\n    { kind: \"label_suitability\", copy_de: \"Geeignet\" },\n    { kind: \"label_daily_suitable\", copy_de: \"Täglich geeignet\" },\n    { kind: \"label_timing\", copy_de: \"Abends\" },\n    { kind: \"label_course\", copy_de: \"   \" },\n    { type: \"weekly_range\", source: \"manufacturer\", min_per_week: 7, max_per_week: 5 },\n    { type: \"daily\", source: \"unknown\", copy_de: \"Arbitrary prose\" },\n  ]) {\n    const resolved = resolveRoutineItemCadence(\n      base({\n        authorityFacts: [\n          {\n            productId: \"bond-1\",\n            category: \"bondbuilder\",\n            role: \"specialized_bond_treatment\",\n            cadence,\n          },\n        ],\n      }),\n    )\n    assert.equal(resolved?.source, \"safe_generic_fallback\")\n    assert.equal(resolved?.copyDe, \"Nach Herstellerangabe\")\n  }"
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan/product-previews.test.ts",
+    "supportAssertions": [
+      {
+        "line": 34,
+        "text": "assert.equal(result.status, \"ready\")"
+      },
+      {
+        "line": 37,
+        "text": "assert.ok(decision?.target?.category === \"conditioner\")"
+      },
+      {
+        "line": 48,
+        "text": "assert.equal(preview.kind, \"recommendation\", `expected a recommendation, got ${preview.kind}`)"
+      },
+      {
+        "line": 53,
+        "text": "assert.equal(preview.kind, \"fallback\", `expected a fallback, got ${preview.kind}`)"
+      },
+      {
+        "line": 74,
+        "text": "assert.ok(presentation, \"decision must have presentation copy\")"
+      }
+    ],
+    "tables": [
+      {
+        "name": "candidate",
+        "line": 89,
+        "literal": "{\n    productId: \"conditioner-profile-fit\",\n    displayName: \"Conditioner Profil Fit\",\n    category: \"conditioner\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [\n      {\n        role: \"conditioner_rinse_out\",\n        status: \"verified_complete\",\n        fingerprint: \"protocol-conditioner\",\n      },\n    ],\n    presentationImageUrl: \"https://example.com/conditioner-profile-fit.webp\",\n    factFingerprint: \"facts-conditioner\",\n    spec: {\n      thickness: snapshot.profile.hair.thickness,\n      proteinMoistureBalance: target.careDirection,\n      weight: target.weight,\n      repairSupportLevel: target.repairSupportLevel,\n      balanceDirection: target.careDirection,\n      targetFit: \"matched\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "candidate",
+        "line": 153,
+        "literal": "{\n    productId: \"conditioner-no-image\",\n    displayName: \"Conditioner ohne Bild\",\n    category: \"conditioner\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [\n      {\n        role: \"conditioner_rinse_out\",\n        status: \"verified_complete\",\n        fingerprint: \"protocol-conditioner\",\n      },\n    ],\n    presentationImageUrl: null,\n    factFingerprint: \"facts-conditioner\",\n    spec: {\n      thickness: snapshot.profile.hair.thickness,\n      proteinMoistureBalance: target.careDirection,\n      weight: target.weight,\n      repairSupportLevel: target.repairSupportLevel,\n      balanceDirection: target.careDirection,\n      targetFit: \"matched\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "candidate",
+        "line": 204,
+        "literal": "{\n    productId: \"conditioner-unknown-currency\",\n    displayName: \"Conditioner ohne bekannte Währung\",\n    category: \"conditioner\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [\n      {\n        role: \"conditioner_rinse_out\",\n        status: \"verified_complete\",\n        fingerprint: \"protocol-conditioner\",\n      },\n    ],\n    presentationImageUrl: \"https://example.com/conditioner-unknown-currency.webp\",\n    factFingerprint: \"facts-conditioner-unknown-currency\",\n    priceEur: 9.9,\n    currency: null,\n    purchaseLinkStatus: \"available\",\n    spec: {\n      thickness: snapshot.profile.hair.thickness,\n      proteinMoistureBalance: target.careDirection,\n      weight: target.weight,\n      repairSupportLevel: target.repairSupportLevel,\n      balanceDirection: target.careDirection,\n      targetFit: \"matched\",\n    },\n  }",
+        "kind": "object",
+        "size": 15
+      },
+      {
+        "name": "target",
+        "line": 261,
+        "literal": "{\n    ...sourceDecision.target,\n    roles: [role],\n    scalpRoute: \"oily\" as const,\n    everydayConstraint: \"irritation_compatible\" as const,\n    requiresTargetedDandruffCapability: false,\n  }",
+        "kind": "object",
+        "size": 5
+      },
+      {
+        "name": "decision",
+        "line": 268,
+        "literal": "{ ...sourceDecision, roles: [role], target }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "weights",
+        "line": 324,
+        "literal": "[\"light\", \"medium\", \"rich\"] as const",
+        "kind": "array",
+        "size": 3
+      },
+      {
+        "name": "supportiveCandidate",
+        "line": 327,
+        "literal": "{\n    productId: \"supportive-conditioner\",\n    displayName: \"Conditioner mit abweichendem Gewicht\",\n    category: \"conditioner\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [\n      {\n        role: \"conditioner_rinse_out\",\n        status: \"verified_complete\",\n        fingerprint: \"protocol-conditioner-supportive\",\n      },\n    ],\n    presentationImageUrl: \"https://example.com/supportive-conditioner.webp\",\n    factFingerprint: \"facts-supportive-conditioner\",\n    spec: {\n      thickness: snapshot.profile.hair.thickness,\n      proteinMoistureBalance: target.careDirection,\n      weight: offByOneWeight,\n      repairSupportLevel: target.repairSupportLevel,\n      balanceDirection: target.careDirection,\n      targetFit: \"matched\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "candidate",
+        "line": 388,
+        "literal": "{\n    productId: \"oil-profile-fit\",\n    displayName: \"Haaröl Profil Fit\",\n    category: \"oil\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [result.snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-oil\" }],\n    presentationImageUrl: \"https://example.com/oil-profile-fit.webp\",\n    factFingerprint: \"facts-oil\",\n    spec: {\n      roleSupport: { [role]: true },\n      weight: roleTarget.weight,\n      targetThicknessEligible: true,\n      providesHeatProtection: false,\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "decision",
+        "line": 442,
+        "literal": "{\n    category: \"scalp_care\",\n    resolution: \"resolved\",\n    needTier: \"optional\",\n    roles: [role],\n    target: {\n      category: \"scalp_care\",\n      roles: [role],\n      roleTargets: [{ role, coverage: \"primary\" }],\n    },\n    frequency: null,\n    reasons: [],\n    executionState: \"available\",\n    executionPauseReason: null,\n    deferredFacts: [],\n  } satisfies PlanCategoryDecision",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "candidate",
+        "line": 458,
+        "literal": "{\n    productId: \"scalp-care-profile-fit\",\n    displayName: \"Kopfhautpflege Profil Fit\",\n    category: \"scalp_care\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-scalp-care\" }],\n    presentationImageUrl: \"https://example.com/scalp-care-profile-fit.webp\",\n    factFingerprint: \"facts-scalp-care\",\n    spec: {\n      primaryRole: role,\n      presentationFormat: \"serum\",\n      rinseMode: \"leave_in\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "decision",
+        "line": 515,
+        "literal": "{\n    category: \"mask\",\n    resolution: \"resolved\",\n    needTier: \"optional\",\n    roles: [role],\n    target: {\n      category: \"mask\",\n      roles: [role],\n      needStrength: \"standard\",\n      weight: \"light\",\n      careDirection: \"moisture\",\n      repairSupportLevel: \"medium\",\n      functionalNeeds: [],\n    },\n    frequency: null,\n    reasons: [],\n    executionState: \"available\",\n    executionPauseReason: null,\n    deferredFacts: [],\n  } satisfies PlanCategoryDecision",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "candidate",
+        "line": 535,
+        "literal": "{\n    productId: \"mask-profile-fit\",\n    displayName: \"Maske Profil Fit\",\n    category: \"mask\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [result.snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-mask\" }],\n    presentationImageUrl: \"https://example.com/mask-profile-fit.webp\",\n    factFingerprint: \"facts-mask\",\n    spec: {\n      weight: \"light\",\n      careDirection: \"moisture\",\n      repairSupportLevel: \"medium\",\n      functionalBenefits: [],\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "snapshot",
+        "line": 554,
+        "literal": "{\n    ...result.snapshot,\n    decisions: [decision],\n    renderedOrder: [\"mask\" as const],\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "decision",
+        "line": 608,
+        "literal": "{\n    category: \"mask\",\n    resolution: \"resolved\",\n    needTier: \"optional\",\n    roles: [role],\n    target: {\n      category: \"mask\",\n      roles: [role],\n      needStrength: \"standard\",\n      weight: \"light\",\n      careDirection: \"moisture\",\n      repairSupportLevel: \"medium\",\n      functionalNeeds: [],\n    },\n    frequency: null,\n    reasons: [],\n    executionState: \"available\",\n    executionPauseReason: null,\n    deferredFacts: [],\n  } satisfies PlanCategoryDecision",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "candidate",
+        "line": 628,
+        "literal": "{\n    productId: \"mask-supportive-fit\",\n    displayName: \"Maske mit begrenzter Gewichtsabweichung\",\n    category: \"mask\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [result.snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-mask-supportive\" }],\n    presentationImageUrl: \"https://example.com/mask-supportive.webp\",\n    factFingerprint: \"facts-mask-supportive\",\n    spec: {\n      weight: \"rich\",\n      careDirection: \"moisture\",\n      repairSupportLevel: \"medium\",\n      functionalBenefits: [],\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "decision",
+        "line": 684,
+        "literal": "{\n    category: \"bondbuilder\",\n    resolution: \"resolved\",\n    needTier: \"basis\",\n    roles: [role],\n    target: {\n      category: \"bondbuilder\",\n      roles: [role],\n      requiredFunction: \"support_stressed_hair_resilience\",\n      mechanismTarget: \"mechanism_neutral\",\n    },\n    frequency: null,\n    reasons: [],\n    executionState: \"available\",\n    executionPauseReason: null,\n    deferredFacts: [],\n  } satisfies PlanCategoryDecision",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "candidate",
+        "line": 701,
+        "literal": "{\n    productId: \"bondbuilder-profile-fit\",\n    displayName: \"Bondbuilder Profil Fit\",\n    category: \"bondbuilder\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [result.snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-bondbuilder\" }],\n    presentationImageUrl: \"https://example.com/bondbuilder-profile-fit.webp\",\n    factFingerprint: \"facts-bondbuilder\",\n    spec: {\n      applicationMode: \"pre_shampoo\",\n      treatmentMode: \"rinse_out\",\n      productFormat: \"treatment\",\n      usageProtocol: \"course\",\n      relationship: \"standalone\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "snapshot",
+        "line": 721,
+        "literal": "{\n    ...result.snapshot,\n    decisions: [decision],\n    renderedOrder: [\"bondbuilder\" as const],\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "decision",
+        "line": 777,
+        "literal": "{\n    category: \"bondbuilder\",\n    resolution: \"resolved\",\n    needTier: \"basis\",\n    roles: [role],\n    target: {\n      category: \"bondbuilder\",\n      roles: [role],\n      requiredFunction: \"support_stressed_hair_resilience\",\n      mechanismTarget: \"mechanism_neutral\",\n    },\n    frequency: null,\n    reasons: [],\n    executionState: \"available\",\n    executionPauseReason: null,\n    deferredFacts: [],\n  } satisfies PlanCategoryDecision",
+        "kind": "object",
+        "size": 10
+      },
+      {
+        "name": "tiedCandidates",
+        "line": 822,
+        "literal": "[\n    candidate(\"epres\", \"Epres Bond Repair Treatment\", \"https://example.com/epres.webp\"),\n    candidate(\n      \"38dace91-0fba-49ee-a93f-ac36e488fe4b\",\n      \"K18 Leave-In Molecular Repair Hair Mask\",\n      \"https://example.com/k18.webp\",\n    ),\n    candidate(\n      \"olaplex\",\n      \"OLAPLEX No.3PLUS Complete Repair Treatment\",\n      \"https://example.com/olaplex.webp\",\n    ),\n  ]",
+        "kind": "array",
+        "size": 3
+      },
+      {
+        "name": "previewInput",
+        "line": 835,
+        "literal": "{\n    personalPlanId: \"plan-1\",\n    sourceNeedVersionId: \"need-1\",\n    snapshot: {\n      ...result.snapshot,\n      decisions: [decision],\n      renderedOrder: [\"bondbuilder\" as const],\n    },\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "shampooDecision",
+        "line": 911,
+        "literal": "{\n    ...sourceShampooDecision,\n    roles: [role],\n    target: {\n      ...sourceShampooDecision.target,\n      roles: [role],\n      scalpRoute: \"balanced\" as const,\n      everydayConstraint: \"standard\" as const,\n      requiresTargetedDandruffCapability: false,\n    },\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "candidate",
+        "line": 922,
+        "literal": "{\n    productId: \"shampoo-profile-fit\",\n    displayName: \"Shampoo Profil Fit\",\n    category: \"shampoo\",\n    isActive: true,\n    lifecycleStatus: \"active\",\n    recommendable: true,\n    suitableThicknesses: [result.snapshot.profile.hair.thickness],\n    knownReaction: false,\n    protocols: [{ role, status: \"verified_complete\", fingerprint: \"protocol-shampoo\" }],\n    presentationImageUrl: \"https://example.com/shampoo-profile-fit.webp\",\n    factFingerprint: \"facts-shampoo\",\n    spec: {\n      thickness: result.snapshot.profile.hair.thickness,\n      shampooBucket: \"normal\",\n      scalpRoute: \"balanced\",\n      cleansingIntensity: \"regular\",\n      targetFit: \"matched\",\n    },\n  }",
+        "kind": "object",
+        "size": 12
+      },
+      {
+        "name": "decision",
+        "line": 978,
+        "literal": "{\n    ...sourceDecision,\n    roles: [\"shampoo_everyday\", \"shampoo_dandruff\"],\n    target: { ...sourceDecision.target, roles: [\"shampoo_everyday\", \"shampoo_dandruff\"] },\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "for-of",
+        "line": 1006,
+        "iterable": "response.previews",
+        "fullSource": "for (const preview of response.previews) {\n    assert.equal(asFallback(preview).fallback, \"post_refinement\")\n  }"
+      },
+      {
+        "name": "allRoles",
+        "line": 1026,
+        "literal": "[\n    \"pre_wash_fibre_treatment\",\n    \"leave_on_fibre_conditioning\",\n    \"dry_finish\",\n  ] as const",
+        "kind": "array",
+        "size": 3
+      },
+      {
+        "name": "decision",
+        "line": 1032,
+        "literal": "{\n    ...sourceDecision,\n    roles: [...allRoles],\n    target: {\n      ...sourceDecision.target,\n      roles: [...allRoles],\n      roleTargets: allRoles.map((role) => ({ ...sourceRoleTarget, role })),\n    },\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "decision",
+        "line": 1073,
+        "literal": "{\n    ...sourceDecision,\n    roles: [\"shampoo_everyday\", \"shampoo_dandruff\"],\n    target: { ...sourceDecision.target, roles: [\"shampoo_everyday\", \"shampoo_dandruff\"] },\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "requestedRoles",
+        "line": 1080,
+        "literal": "[]",
+        "kind": "array",
+        "size": 0
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "source",
+        "line": 11,
+        "literal": "{\n  label: \"Hersteller\",\n  url: \"https://example.com/product\",\n  text: \"Exact direction\",\n  sourceType: \"manufacturer\" as const,\n  checkedAt: \"2026-08-11\",\n}",
+        "kind": "object",
+        "size": 5
+      },
+      {
+        "name": "bundle",
+        "line": 56,
+        "literal": "{\n  schema_version: \"personal-plan-exact-catalog-bundle-v1\" as const,\n  batch_id: \"S5-99-bundle-contract\",\n  items: [\n    {\n      product_id: id,\n      product_name: \"Fixture Mask\",\n      expected_current_category: \"mask\",\n      target_category: \"mask\" as const,\n      facts: {\n        category: \"mask\" as const,\n        values: {\n          repair_support_level: \"medium\" as const,\n          functional_benefits: [\"shine\" as const, \"detangling_slip\" as const],\n        },\n        sources: [source],\n      },\n      protocols: [protocol()],\n    },\n  ],\n}",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "leaveInBundle",
+        "line": 146,
+        "literal": "{\n    ...bundle,\n    batch_id: \"S5-98-leave-in-variants\",\n    items: [\n      {\n        product_id: id,\n        product_name: \"Fixture Leave-in\",\n        expected_current_category: \"leave_in\",\n        target_category: \"leave_in\" as const,\n        facts: {\n          category: \"leave_in\" as const,\n          values: {\n            care_direction: \"moisture\" as const,\n            repair_support_level: \"low\" as const,\n            plan_roles: [\"post_wash_leave_in\" as const],\n            functional_benefits: [\"moisture_softness\" as const],\n          },\n          sources: [source],\n        },\n        protocols: [\n          leaveInProtocol(\"between_wash_dry_care\"),\n          leaveInProtocol(\"post_wash_damp_conditioning\"),\n        ],\n      },\n    ],\n  }",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "baseExisting",
+        "line": 301,
+        "literal": "{\n    product_id: id,\n    category: \"mask\",\n    role: \"intensive_conditioning_mask\",\n    cadence: exactProtocol.cadence,\n    source_label: exactProtocol.source.label,\n    source_url: exactProtocol.source.url,\n    source_text: exactProtocol.source.text,\n    guidance_payload: exactProtocol.guidance_payload,\n  }",
+        "kind": "object",
+        "size": 8
+      },
+      {
+        "name": "for-of",
+        "line": 323,
+        "iterable": "[\n    [\"cadence\", { frequency: \"monthly\" }],\n    [\"source_label\", \"Retailer\"],\n    [\"source_url\", \"https://example.com/other\"],\n    [\"source_text\", \"Different exact source text\"],\n    [\"guidance_payload\", { ...exactProtocol.guidance_payload, guidanceKey: \"changed\" }],\n  ] as const",
+        "fullSource": "for (const [field, value] of [\n    [\"cadence\", { frequency: \"monthly\" }],\n    [\"source_label\", \"Retailer\"],\n    [\"source_url\", \"https://example.com/other\"],\n    [\"source_text\", \"Different exact source text\"],\n    [\"guidance_payload\", { ...exactProtocol.guidance_payload, guidanceKey: \"changed\" }],\n  ] as const) {\n    const drifted = await preflightExactCatalogBundle(built, {\n      listProducts: readProducts,\n      async listProtocols() {\n        return [{ ...baseExisting, [field]: value }]\n      },\n    })\n    assert.deepEqual(\n      drifted.blockers,\n      [`protocol_conflict:${id}:intensive_conditioning_mask:post_shampoo_rinse_out_mask`],\n      field,\n    )\n  }"
+      },
+      {
+        "name": "legacyExisting",
+        "line": 361,
+        "literal": "{\n    product_id: id,\n    category: \"mask\",\n    role: \"intensive_conditioning_mask\",\n    cadence: exactProtocol.cadence,\n    source_label: exactProtocol.source.label,\n    source_url: exactProtocol.source.url,\n    source_text: legacySourceText,\n    guidance_payload: exactProtocol.guidance_payload,\n  }",
+        "kind": "object",
+        "size": 8
+      },
+      {
+        "name": "for-of",
+        "line": 483,
+        "iterable": "files",
+        "fullSource": "for (const file of files) {\n    const built = buildExactCatalogBundle(\n      JSON.parse(await readFile(`${directory}/${file}`, \"utf8\")),\n    )\n    for (const item of built.bundle.items) {\n      const product = expected.get(item.product_id)\n      assert.ok(product, `${file}: product is outside the frozen curated cohort`)\n      assert.equal(item.expected_current_category, product.expected_current_category, file)\n      assert.equal(item.target_category, product.target_category, file)\n      assert.equal(seen.has(item.product_id), false, `${file}: duplicate product across bundles`)\n      seen.add(item.product_id)\n    }\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 487,
+        "iterable": "built.bundle.items",
+        "fullSource": "for (const item of built.bundle.items) {\n      const product = expected.get(item.product_id)\n      assert.ok(product, `${file}: product is outside the frozen curated cohort`)\n      assert.equal(item.expected_current_category, product.expected_current_category, file)\n      assert.equal(item.target_category, product.target_category, file)\n      assert.equal(seen.has(item.product_id), false, `${file}: duplicate product across bundles`)\n      seen.add(item.product_id)\n    }"
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-stage3-contracts.test.ts",
+    "supportAssertions": [],
+    "tables": [
+      {
+        "name": "for-of",
+        "line": 89,
+        "iterable": "Object.values(CATEGORY_ROLE_POLICIES)",
+        "fullSource": "for (const policy of Object.values(CATEGORY_ROLE_POLICIES)) {\n    assert.equal(policy.authorityVersion.startsWith(\"stage3.fixture.\"), false)\n  }"
+      },
+      {
+        "name": "for-of",
+        "line": 95,
+        "iterable": "PLAN_PRODUCT_ROLES",
+        "fullSource": "for (const role of PLAN_PRODUCT_ROLES) {\n    const owners = Object.values(CATEGORY_ROLE_POLICIES)\n      .filter((policy) => policy.allowedRoles.some((allowedRole) => allowedRole === role))\n      .map((policy) => policy.category)\n\n    assert.equal(owners.length, 1, `${role} must have exactly one category owner`)\n  }"
+      },
+      {
+        "name": "valid",
+        "line": 105,
+        "literal": "{\n    capturedProductId: \"captured-1\",\n    userProductId: \"user-product-1\",\n    identity: {\n      kind: \"catalog_product\",\n      productId: \"product-1\",\n      displayName: \"Produkt\",\n      category: \"shampoo\",\n    },\n    frequencyRange: \"weekly_2x\",\n    ownership: \"owned\",\n    source: \"catalog_search\",\n  }",
+        "kind": "object",
+        "size": 6
+      },
+      {
+        "name": "decision",
+        "line": 179,
+        "literal": "{\n    decisionKey: \"decision:oil:dry_finish:oil-1\",\n    category: \"oil\",\n    role: \"dry_finish\",\n    capturedProductId: \"oil-1\",\n    verdict: \"ideal\",\n    choiceState: \"owned_active\",\n    criterionResults: [],\n    recommendation: null,\n    limitationAcknowledged: false,\n  }",
+        "kind": "object",
+        "size": 9
+      },
+      {
+        "name": "decision",
+        "line": 207,
+        "literal": "{\n    decisionKey: \"decision:oil:dry_finish:oil-1\",\n    category: \"oil\" as const,\n    role: \"dry_finish\" as const,\n    capturedProductId: \"oil-1\",\n    verdict: \"mismatch\" as const,\n    choiceState: \"planned_purchase\" as const,\n    criterionResults: [],\n    recommendation: {\n      recommendationId: \"replacement-1\",\n      productId: \"replacement-1\",\n      category: \"oil\" as const,\n      role: \"dry_finish\" as const,\n      displayName: \"Passendes Öl\",\n      reason: \"Passt besser\",\n      authorityRuleId: \"rule-1\",\n    },\n    limitationAcknowledged: false,\n    resolutionAction: \"select_replacement\" as const,\n    authorityEvidence: {\n      schemaVersion: 1 as const,\n      subjectKey: \"decision:oil:dry_finish:oil-1\",\n      refinedNeedVersionId: \"refined-1\",\n      refinedInputHash: \"refined-hash-1\",\n      authorityVersion: \"oil-v1\",\n      productFactFingerprint: \"facts-owned-oil\",\n      recommendationFactFingerprint: \"facts-replacement-1\",\n      coverageRuleIds: [\"oil.fit\"],\n    },\n  }",
+        "kind": "object",
+        "size": 11
+      },
+      {
+        "name": "commonDraft",
+        "line": 438,
+        "literal": "{\n    ...draft(),\n    orderedCategories: [\"oil\", \"bondbuilder\"],\n    products: [],\n    roleAssignments: [],\n  } satisfies Stage3ProductDraft",
+        "kind": "object",
+        "size": 4
+      },
+      {
+        "name": "oilGaps",
+        "line": 444,
+        "literal": "[\n    { category: \"oil\", role: \"dry_finish\", reason: \"no_product_owned\" },\n    { category: \"oil\", role: \"pre_wash_fibre_treatment\", reason: \"no_product_owned\" },\n    { category: \"oil\", role: \"leave_on_fibre_conditioning\", reason: \"no_product_owned\" },\n  ] as const",
+        "kind": "array",
+        "size": 3
+      },
+      {
+        "name": "bondbuilderGap",
+        "line": 449,
+        "literal": "{\n    category: \"bondbuilder\",\n    role: \"specialized_bond_treatment\",\n    reason: \"no_product_owned\",\n  } as const",
+        "kind": "object",
+        "size": 3
+      },
+      {
+        "name": "expected",
+        "line": 462,
+        "literal": "[\n    \"oil:pre_wash_fibre_treatment\",\n    \"oil:leave_on_fibre_conditioning\",\n    \"oil:dry_finish\",\n    \"bondbuilder:specialized_bond_treatment\",\n  ]",
+        "kind": "array",
+        "size": 4
+      },
+      {
+        "name": "pendingAuthority",
+        "line": 480,
+        "literal": "{\n    schemaVersion: 1,\n    stage2RefinedNeedVersionId: \"refined-v1\",\n    inventorySnapshotFingerprint: \"a\".repeat(64),\n    status: \"pending\" as const,\n    proposalFingerprint: \"b\".repeat(64),\n    proposedInputHash: \"proposed-input-hash\",\n    proposedOutputSnapshot: {\n      schemaVersion: 1,\n      snapshotKind: \"initial_need\",\n      computationVersion: \"stage3.product_load.v1\",\n      inputHash: \"proposed-input-hash\",\n      createdAt: now,\n      sourceQuiz: {\n        kind: \"personal_plan\",\n        version: 2,\n        answers: {},\n      },\n      profile: {},\n      assessments: {},\n      decisions: [],\n      coverage: [],\n      productPreviews: [],\n      renderedOrder: [],\n      deferredFacts: [],\n    },\n    materialDelta: [\n      {\n        kind: \"category_added\",\n        category: \"deep_cleansing_shampoo\",\n        before: null,\n        after: \"basis\",\n      },\n    ],\n    resolvedFingerprint: null,\n  }",
+        "kind": "object",
+        "size": 9
+      },
+      {
+        "name": "inventoryDisposition",
+        "line": 516,
+        "literal": "{\n    schemaVersion: 1,\n    dispositionKey: \"inventory:dry_shampoo:dry-shampoo-1\",\n    capturedProductId: \"dry-shampoo-1\",\n    category: \"dry_shampoo\",\n    planStatus: \"not_used\",\n    reason: \"category_not_in_final_plan\",\n    acknowledged: false,\n    authorityFingerprint: \"b\".repeat(64),\n  }",
+        "kind": "object",
+        "size": 8
+      },
+      {
+        "name": "gap",
+        "line": 620,
+        "literal": "{\n    ...draft(),\n    products: [],\n    roleAssignments: [],\n    uncoveredRoles: [\n      {\n        category: \"oil\" as const,\n        role: \"dry_finish\" as const,\n        reason: \"no_product_owned\" as const,\n      },\n    ],\n  }",
+        "kind": "object",
+        "size": 4
+      },
+      {
+        "name": "decision",
+        "line": 632,
+        "literal": "{\n    decisionKey: \"decision:oil:dry_finish:gap\",\n    category: \"oil\" as const,\n    role: \"dry_finish\" as const,\n    capturedProductId: null,\n    verdict: \"ideal\" as const,\n    choiceState: \"planned_purchase\" as const,\n    criterionResults: [],\n    recommendation: {\n      recommendationId: \"recommend:oil-1:dry_finish\",\n      productId: \"oil-1\",\n      category: \"oil\" as const,\n      role: \"dry_finish\" as const,\n      displayName: \"Empfohlenes Oil\",\n      reason: \"Passt zur Pflege.\",\n      authorityRuleId: \"oil.selection.core_fit\",\n    },\n    limitationAcknowledged: false,\n  }",
+        "kind": "object",
+        "size": 9
+      },
+      {
+        "name": "pendingProduct",
+        "line": 662,
+        "literal": "{\n    ...draft().products[0],\n    identity: {\n      kind: \"pending_submission\" as const,\n      submissionId: \"submission-oil-1\",\n      displayName: \"Noch geprüftes Öl\",\n      category: \"oil\" as const,\n      reviewStatus: \"pending_review\" as const,\n    },\n  }",
+        "kind": "object",
+        "size": 2
+      },
+      {
+        "name": "replacementDecision",
+        "line": 672,
+        "literal": "{\n    decisionKey: \"decision:oil:dry_finish:oil-1\",\n    category: \"oil\" as const,\n    role: \"dry_finish\" as const,\n    capturedProductId: \"oil-1\",\n    verdict: \"unknown\" as const,\n    choiceState: \"planned_purchase\" as const,\n    criterionResults: [],\n    recommendation: {\n      recommendationId: \"recommend:oil-replacement:dry_finish\",\n      productId: \"oil-replacement\",\n      category: \"oil\" as const,\n      role: \"dry_finish\" as const,\n      displayName: \"Passendes Öl\",\n      reason: \"Als Alternative einplanen.\",\n      authorityRuleId: \"oil.replacement\",\n    },\n    limitationAcknowledged: false,\n    resolutionAction: \"select_replacement\" as const,\n    authorityEvidence: {\n      schemaVersion: 1 as const,\n      subjectKey: \"decision:oil:dry_finish:oil-1\",\n      refinedNeedVersionId: \"refined-1\",\n      refinedInputHash: \"refined-hash-1\",\n      authorityVersion: \"oil-v1\",\n      productFactFingerprint: null,\n      recommendationFactFingerprint: \"facts-oil-replacement\",\n      coverageRuleIds: [\"oil.replacement\"],\n    },\n  }",
+        "kind": "object",
+        "size": 11
+      }
+    ]
+  }
+]

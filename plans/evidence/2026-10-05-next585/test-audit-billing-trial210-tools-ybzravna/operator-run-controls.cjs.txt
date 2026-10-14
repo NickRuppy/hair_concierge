@@ -1,0 +1,100 @@
+'use strict'
+// Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+const g=require('/tmp/test-audit-billing-trial210-tools-ybzravna/operator-guard.cjs')
+const PIN_SHA='d3d69c9f8268ba893e5d34e0469631e3cc6159a5b8af42194933126034ec2ed4'
+const mode=(process.argv[2]||'check').replace(/^--/,'')
+const selectedId=process.argv[3]
+if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+const context=g.load(PIN_SHA),controls=selectedId?context.controls.filter(c=>c.id===selectedId):context.controls
+if(!controls.length)g.fail('Unknown control ID')
+const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+if(mode==='check'){
+  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,allUniqueOwnersParsed:true,allControlsParsed:prepared.size===4,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+}
+if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+const phase=initial.phase,dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-'),unlock=g.lock(),receipts=[]
+let activeChild=null,interrupted=null
+function killOwnedGroup(signal){if(activeChild?.pid){try{process.kill(-activeChild.pid,signal)}catch(error){if(error.code!=='ESRCH')throw error}}}
+function stop(signal){interrupted=signal;killOwnedGroup('SIGKILL')}
+process.on('SIGINT',stop);process.on('SIGTERM',stop)
+function ensurePhase(overrides={}){if(interrupted)g.fail('Operator interrupted: '+interrupted);const state=context.current(overrides);if(state.phase!==phase)g.fail('Test phase changed');return state}
+function observedReadsets(){return Object.fromEntries(context.pins.readset.map(guard=>[guard.file,g.sha(fs.readFileSync(path.join(g.ROOT,guard.file)))]))}
+function record(){fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify(receipts,null,2)+'\n')}
+function parseTAP(text){const number=key=>{const match=[...text.matchAll(new RegExp('^# '+key+' (\\d+)$','gm'))];return match.length===1?Number(match[0][1]):null};return{tests:number('tests'),pass:number('pass'),fail:number('fail'),skipped:number('skipped'),cancelled:number('cancelled'),todo:number('todo')}}
+async function run(control,label){
+  const log=path.join(dir,control.id+'-'+label+'.tap'),fd=fs.openSync(log,'wx'),args=control.command.slice(1)
+  let timer,child,timedOut=false,result,spawnError
+  try{
+    if(interrupted)g.fail('Interrupted before child')
+    child=cp.spawn(process.execPath,args,{cwd:g.ROOT,stdio:['ignore',fd,fd],detached:true});activeChild=child
+    timer=setTimeout(()=>{timedOut=true;killOwnedGroup('SIGKILL')},45000)
+    result=await new Promise(resolve=>{child.once('error',error=>{spawnError=String(error);resolve({status:null,signal:null})});child.once('close',(status,signal)=>resolve({status,signal}))})
+  }finally{
+    clearTimeout(timer)
+    // Only the group created by this detached child is eligible for cleanup, including
+    // a descendant left after a failing resource-abort assertion. Never enumerate/kill peers.
+    killOwnedGroup('SIGKILL');activeChild=null;fs.closeSync(fd)
+  }
+  const text=fs.readFileSync(log,'utf8')
+  return{...result,...parseTAP(text),timedOut,spawnError:spawnError||null,log,text}
+}
+
+function named(control,run){return run.text.includes('# Subtest: '+control.test.name+'\n')}
+function clean(control,run){return run.status===0&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===1&&run.fail===0&&run.skipped===0&&run.cancelled===0&&run.todo===0&&named(control,run)}
+function intended(control,run){
+ const oracle=control.oracles[phase],stackToken=control.test.file+':'+oracle.startLine+':'
+ const stack=run.text.match(/\n\s+stack:\s*\|-?\n((?:\s{4,}[^\n]*\n?)*)/)
+ const frame=stack?.[1].split('\n').find(line=>/:\d+:\d+\)?\s*$/.test(line))||''
+ const operator=run.text.match(/^\s{2}operator:\s*['"]([^'"]+)['"]\s*$/m)?.[1]||''
+ const message=run.text.match(/\n  error: ([\s\S]*?)(?=\n  (?:code|name|expected|actual|operator|stack):)/)?.[1]||''
+ const diagnostics=control.errorMessageIncludes.every(token=>message.includes(token))
+ const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
+ return{accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&diagnostics&&frame.includes(stackToken),expected:oracle,expectedOperator:control.expectedOperator,operator,errorMessage:message,errorMessageMatches:diagnostics,firstAssertionFrame:frame,stackToken,named:named(control,run)}
+}
+
+function compact(run){const{text,...receipt}=run;return receipt}
+;(async()=>{
+ try{
+  // Snapshot ALL31 test originals and ALL unique mutant-owner originals before first child/write.
+  ensurePhase()
+  const originals=new Map(Object.entries(initial.bytes))
+  for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+  for(const[file,bytes]of originals){const dest=path.join(dir,'all-originals',file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,bytes,{flag:'wx'})}
+  fs.writeFileSync(path.join(dir,'intent.json'),JSON.stringify({phase,controls:controls.map(c=>c.id),originalHashes:Object.fromEntries([...originals].map(([f,b])=>[f,g.sha(b)])),pinsSHA:PIN_SHA},null,2)+'\n',{flag:'wx'})
+  ensurePhase()
+  for(const control of controls){
+    ensurePhase();const bytes=prepared.get(control.id),recordEntry={id:control.id,phase,source:control.file,test:control.test,intended:control.oracles[phase],expectedFailure:control.intendedAssertion,sourceBefore:g.sha(bytes.original),sourceFault:g.sha(bytes.mutated),readsetBefore:observedReadsets()}
+    receipts.push(recordEntry);record()
+    const backup=path.join(dir,control.id,'originals',control.file);fs.mkdirSync(path.dirname(backup),{recursive:true});fs.writeFileSync(backup,bytes.original,{flag:'wx'})
+    const before=await run(control,'before');recordEntry.before=compact(before);record()
+    if(!clean(control,before))g.fail('Clean-one baseline failed: '+control.id)
+    let faultRun,restored=false
+    try{
+      ensurePhase();g.atomicCAS(control.file,bytes.original,bytes.mutated)
+      ensurePhase({[control.file]:g.sha(bytes.mutated)})
+      recordEntry.actualSourceFault=g.sha(fs.readFileSync(path.join(g.ROOT,control.file)))
+      faultRun=await run(control,'fault');recordEntry.fault=compact(faultRun)
+      recordEntry.assertion=intended(control,faultRun)
+    }finally{
+      // A fault may assert, time out, fail import, or be interrupted. Only our exact
+      // mutated bytes may be rolled back; preserve concurrent bytes and backups otherwise.
+      const current=fs.readFileSync(path.join(g.ROOT,control.file))
+      if(current.equals(bytes.mutated)){g.atomicCAS(control.file,bytes.mutated,bytes.original);restored=true}
+      else if(current.equals(bytes.original))restored=true
+      recordEntry.sourceRestored=g.sha(fs.readFileSync(path.join(g.ROOT,control.file)))
+      recordEntry.byteExactRestored=restored&&recordEntry.sourceRestored===recordEntry.sourceBefore
+      record()
+    }
+    if(!recordEntry.byteExactRestored)g.fail('Owned restore refused; inspect backup: '+control.id)
+    ensurePhase()
+    const after=await run(control,'after');recordEntry.after=compact(after);recordEntry.cleanAfter=clean(control,after);recordEntry.readsetAfter=observedReadsets();ensurePhase();record()
+    if(!clean(control,after))g.fail('Clean-one after failed: '+control.id)
+    if(!recordEntry.assertion?.accepted)g.fail('Intended assertion not proved: '+control.id+'; timeout/import/harness failures rejected')
+    recordEntry.verified=true;record();console.log(control.id+' clean1 / intended red1 / exact restore / clean1')
+  }
+  ensurePhase();fs.writeFileSync(path.join(dir,'complete.json'),JSON.stringify({phase,verified:receipts.length,cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,sourceGuards:context.pins.readset},null,2)+'\n',{flag:'wx'})
+  console.log(JSON.stringify({receiptDir:dir,verified:receipts.length},null,2))
+ }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+})().catch(error=>{record();fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})

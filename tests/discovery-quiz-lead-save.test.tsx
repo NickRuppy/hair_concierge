@@ -99,6 +99,12 @@ function createHarness(
     useContext() {
       return contexts[contextCursor++]
     },
+    // Next 16.3+ `useRouter` memoizes its result (and reads `LayoutRouterContext` after the
+    // app router context, which this call-order list leaves undefined).
+    useMemo<T>(factory: () => T): T {
+      cursor += 1
+      return factory()
+    },
     useDebugValue() {},
     useEffect(effect: () => void | (() => void), deps?: unknown[]) {
       const index = cursor++

@@ -1,0 +1,84 @@
+'use strict';
+// Exact catalog scalar decoder followed by a bounded, complete Node TAP object projection parser.
+function diagnosticValue(text,key){
+ const lines=text.split('\n'),found=lines.map((v,i)=>v.startsWith('  '+key+':')?i:-1).filter(i=>i>=0);if(found.length!==1)return{ok:false}
+ const i=found[0],tail=lines[i].slice(('  '+key+':').length).trimStart()
+ function scalar(value){
+   const quote=value[0]
+   if(["'",'"','`'].includes(quote)){
+     let out='',i=1,closed=false
+     for(;i<value.length;i++){
+       const char=value[i];if(char===quote){closed=true;i++;break}
+       if(char!=='\\'){out+=char;continue}
+       const e=value[++i],simple={'n':'\n','r':'\r','t':'\t','b':'\b','f':'\f','v':'\v','0':'\0','\\':'\\',"'":"'",'"':'"','`':'`'}
+       if(Object.hasOwn(simple,e)){out+=simple[e];continue}
+       if(e==='x'||e==='u'){const n=e==='x'?2:4,hex=value.slice(i+1,i+1+n);if(hex.length!==n||!/^[a-fA-F0-9]+$/.test(hex))return{ok:false};out+=String.fromCharCode(parseInt(hex,16));i+=n;continue}
+       return{ok:false}
+     }
+     if(!closed)return{ok:false}
+     const suffix=value.slice(i)
+     if(!suffix)return{ok:true,value:out,truncated:false}
+     const truncated=suffix.match(/^\.\.\. ([1-9]\d*) more characters$/)
+     if(truncated&&out.length===10000)return{ok:true,value:out,truncated:true,remainingCharacters:Number(truncated[1])}
+     return{ok:false}
+   }
+   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
+   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
+   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
+   return{ok:false}
+ }
+ if(['|-','|','|+'].includes(tail)){const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}return{ok:true,value:body.join('\n')}}
+ if(tail)return scalar(tail)
+ const values=[];for(let k=i+1;k<lines.length&&lines[k].startsWith('    ');k++){const m=lines[k].match(/^    (\d+): (.*)$/);if(!m||Number(m[1])!==values.length)return{ok:false};const v=scalar(m[2]);if(!v.ok)return v;values.push(v.value)}
+ return values.length?{ok:true,value:values}:{ok:true,value:{},emptyObject:true}
+}
+
+function project(value,path=[],allowedUndefined=[]){
+ if(value===undefined){if(!allowedUndefined.some(p=>JSON.stringify(p)===JSON.stringify(path)))throw Error('Unapproved undefined path');return undefined}
+ if(value===null||typeof value==='boolean'||typeof value==='string'||typeof value==='number'){if(typeof value==='number'&&!Number.isFinite(value))throw Error('Nonfinite scalar');return{kind:typeof value==='object'?'null':typeof value,value}}
+ if(!value||typeof value!=='object')throw Error('Unsupported projected value');
+ const entries=[];for(const[key,v]of Object.entries(value)){const next=project(v,path.concat(key),allowedUndefined);if(next!==undefined)entries.push({key,value:next})}return{kind:'map',entries};
+}
+function decodeProjection(text,key){
+ const lines=text.split('\n'),hits=[];for(let i=0;i<lines.length;i++)if(lines[i].startsWith('  '+key+':'))hits.push(i);
+ if(hits.length!==1)return{ok:false,reason:'missing/duplicate top-level field'};
+ let nodes=0;
+ function parseAt(index,indent,depth){
+  if(++nodes>2000||depth>20)throw Error('Projection complexity bound');
+  const re=new RegExp('^ {'+indent+'}([A-Za-z_][A-Za-z_0-9]*|0|[1-9][0-9]*):(?: (.*))?$'),match=lines[index]?.match(re);if(!match)throw Error('Unknown key/indent/encoding');
+  const field=match[1],tail=match[2]??'';
+  if(tail){
+   let result;
+   if(tail==='~')result={ok:true,value:null};
+   else if(/^(?:true|false|-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?)$/.test(tail)||["'",'"','`'].includes(tail[0]))result=diagnosticValue('  value: '+tail,'value');
+   else throw Error('Unknown scalar encoding');
+   if(!result.ok||result.truncated||result.emptyObject||typeof result.value==='object'&&result.value!==null)throw Error('Partial/unknown scalar rejected');
+   if(lines[index+1]?.startsWith(' '.repeat(indent+1)))throw Error('Scalar has children');
+   return{key:field,value:project(result.value),next:index+1};
+  }
+  const entries=[],seen=new Set();let next=index+1;
+  while(next<lines.length&&lines[next].startsWith(' '.repeat(indent+1))){
+   const child=parseAt(next,indent+2,depth+1);if(seen.has(child.key))throw Error('Duplicate map key');seen.add(child.key);entries.push({key:child.key,value:child.value});next=child.next;
+  }
+  return{key:field,value:{kind:'map',entries},next};
+ }
+ try{const result=parseAt(hits[0],2,0);if(result.key!==key)throw Error('Wrong root');if(result.next<lines.length&&!/^  (?:[A-Za-z_][A-Za-z_0-9]*:|\.\.\.$)/.test(lines[result.next]))throw Error('Unknown or unconsumed diagnostic continuation');return{ok:true,value:result.value,nodes}}catch(e){return{ok:false,reason:String(e)}}
+}
+function sameProjection(a,b){
+ if(!a||!b||a.kind!==b.kind)return false;
+ if(a.kind!=='map')return typeof a.value===typeof b.value&&Object.is(a.value,b.value);
+ if(a.entries.length!==b.entries.length)return false;const wanted=new Map(b.entries.map(e=>[e.key,e.value]));return a.entries.every(e=>wanted.has(e.key)&&sameProjection(e.value,wanted.get(e.key)));
+}
+function valueProof(control,text){
+ const expected=decodeProjection(text,'expected');if(!expected.ok||!sameProjection(expected.value,control.expectedProjection))return{accepted:false,reason:'complete expected reporter projection mismatch',expected};
+ if(control.typedPolicy==='ssr-custom'){
+  const actual=diagnosticValue(text,'actual');const accepted=/^  actual: ['"`][^\n]*\n  operator: /m.test(text)&&actual.ok&&typeof actual.value==='string'&&actual.value.includes(control.actualStringWitness);
+  return{accepted,kind:'SSR custom-message plus typed printed full string/supported prefix witness',expected,actual,limits:'No complete HTML equality or unseen-tail claim; exact custom message/operator/FIRST and source hashes remain required.'};
+ }
+ const actual=decodeProjection(text,'actual');if(!actual.ok)return{accepted:false,reason:'actual reporter projection incomplete/unknown',actual,expected};
+ let binding=true;
+ if(control.id==='D1-required-thickness')binding=control.file==='src/lib/personal-plan-quiz/persistence.ts'&&control.mutatedSha256==='6d7ab0f87ebc589159841ce2985602e77a50bcebdf998e7d2a7ce2312fb2e1f7'&&control.sourceSha256==='9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335'&&control.expectedOperator==='deepStrictEqual'&&control.test.file==='tests/personal-plan/input.test.ts'&&control.test.name==='mask-missing-thickness: required Mask target input fails closed at the shared parser'&&control.oracles.transfer.startLine===87&&control.oracles.cut.startLine===77&&JSON.stringify(control.sourceProvedUndefinedPaths)===JSON.stringify([['envelope','answers','thickness']]);
+ else if(control.sourceProvedUndefinedPaths?.length)binding=false;
+ return{accepted:binding&&sameProjection(actual.value,control.actualProjection),kind:'complete reporter projection',actual,expected,sourceProvedUndefinedPaths:control.sourceProvedUndefinedPaths||[],limits:'Complete printed key/value projection; Node omits undefined and prints arrays/objects by entries. Source pins, not TAP alone, establish own undefined/container types. Unknown, missing, extra, duplicate or truncated encoding rejected.'};
+}
+module.exports={diagnosticValue,project,decodeProjection,sameProjection,valueProof};

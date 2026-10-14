@@ -237,26 +237,6 @@ export function verifyStripeTrialAuthorization(
   }
 }
 
-export async function retrieveVerifiedStripeTrialAuthorization(
-  stripe: StripeTrialAuthorizationClient,
-  sessionId: string,
-  expected: StripeTrialAuthorizationInput["expected"],
-  now: Date,
-  expectedLivemode: boolean,
-): Promise<VerifiedStripeTrialAuthorization | null> {
-  return (
-    (
-      await retrieveStripeTrialAuthorizationEvidence(
-        stripe,
-        sessionId,
-        expected,
-        now,
-        expectedLivemode,
-      )
-    )?.authorization ?? null
-  )
-}
-
 /** Keep the exact retrieved identity objects with the proof for account activation. */
 export async function retrieveStripeTrialAuthorizationEvidence(
   stripe: StripeTrialAuthorizationClient,

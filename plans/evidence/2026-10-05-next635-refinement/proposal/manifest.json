@@ -1,0 +1,245 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan/refinement/refinement-status.test.ts",
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts",
+    "tests/personal-plan-refinement-status-route.test.ts"
+  ],
+  "counts": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  },
+  "classification": {
+    "R": 30,
+    "F": 0,
+    "C": 5,
+    "D": 2
+  },
+  "readset": [
+    {
+      "file": "tests/personal-plan/refinement/module-status.test.ts",
+      "sha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7"
+    },
+    {
+      "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "sha256": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12"
+    },
+    {
+      "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+      "sha256": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a"
+    },
+    {
+      "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "sha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be"
+    },
+    {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "sha256": "fe82e2afc422d04e8eb673f89659c055cc139c72b79001f37f2bbc824269f1a5"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "sha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module-status.ts",
+      "sha256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "sha256": "40602c54408d6698ae801265981ece7b021f35212fba6a8eeb7f6c19e6f80a9e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "sha256": "eb62f74386d63437e718550e19fdf2b8471728a93f64a967090f2c0fb6712891"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "sha256": "b4cbcd8a8efd7460042761436d04f1ce9bcb78fb5156599938f017c78b2be4de"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "sha256": "cb345e2890e715e51055fea93f7f5867dfc46cb0f2e13be5ad7db0ff2b830ff0"
+    },
+    {
+      "file": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "sha256": "3609a4a566f8650e8b9f7b4f4c4576eef549901ad08e846a97403a6772eb1cf3"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/question-path.ts",
+      "sha256": "cea18c0b65de59d4b2e2c1b502c81d4c2f1886e564235041334932b2e8be56c1"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "sha256": "e894e1b2a8a898f31157665af548cc145b897f58eebe2664b0fd1d6efd6f458c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/types.ts",
+      "sha256": "9d19d1249ac0ee2f43fbcaa8ff03417df5afd143f3fb6e9da26be0618db24f04"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/heat-events.ts",
+      "sha256": "310d834790d9b61a1e5de03be6371ee3e92ab927a902bf3b8afb2f3f567f5e7c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+      "sha256": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e"
+    },
+    {
+      "file": "src/lib/personal-plan/lifecycle/repository.ts",
+      "sha256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/load-view.ts",
+      "sha256": "1ec86bbde0f102aedfdf39213cb32234f7dec5ae7d8f110da5db5ec7165d08b7"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "sha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547"
+    },
+    {
+      "file": "src/app/api/personal-plan/refinement-status/route.ts",
+      "sha256": "f1a2ee9138c2c2d866419d90c57358b8b28d5e4fa4e35a4589e1c7a01980b45e"
+    },
+    {
+      "file": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "sha256": "0a0410de7b32d02ee2da0b68f4e04df952042864e3b42396d0509bc3d52f7c44"
+    },
+    {
+      "file": "supabase/migrations/20260825120000_personal_plan_refinement_answer_provenance.sql",
+      "sha256": "922319339aea355cb76ffb7c4e42fa1fad9bab2565b225dd0eed826545858904"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "sha256": "9da3baa346175deb49f5c9b9759e281d9accb068fbcf455ce1ea82d27fda9cbc"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "sha256": "9aa1af4895e7ebc9976879f42c8160a8800e1f084e38a8cb923261a156d11aa6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/repository.ts",
+      "sha256": "5573df42d2948ac531c040766336627b60621743519baf8c4291f36640facb25"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/proposal-service.ts",
+      "sha256": "43658fe27408dda21f813f2bc0b452f371e41863e86194243dca45ac8b3ef302"
+    },
+    {
+      "file": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "sha256": "4505a95912e96178aa412db827656bf7f74c857228c165eea55558a46a0b8afb"
+    },
+    {
+      "file": "src/app/routine/page.tsx",
+      "sha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de"
+    },
+    {
+      "file": "src/app/plan-start/page.tsx",
+      "sha256": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af"
+    },
+    {
+      "file": "src/app/profile/page.tsx",
+      "sha256": "c1c8140e4e6510e26b12a502245ea0ec296600cd8585a2380194ffd8b5676426"
+    },
+    {
+      "file": "plans/feinschliff-einstieg.md",
+      "sha256": "3c5c37839708334379c84ca453ea2ba2ec85be9cdd73a843f08ef15384e9b186"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "scripts/ci/run-personal-plan-nested.mjs",
+      "sha256": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366"
+    },
+    {
+      "file": "node_modules/zod/package.json",
+      "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e"
+    },
+    {
+      "file": "node_modules/zod/v4/core/parse.js",
+      "sha256": "2578b8d1341c3882a6c089f9ec57ce1c1a16b8b2b477721d4d89ba3d3ee50c9c"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.js",
+      "sha256": "eb4af7946a092aff8678b9251728ea58dab40154920cd65ec4a2ca1d4df68393"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "sha256": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    }
+  ],
+  "phaseHashes": {
+    "before": {
+      "tests/personal-plan/refinement/module-status.test.ts": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+      "tests/personal-plan/refinement/refinement-status.test.ts": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+      "tests/personal-plan-refinement-answer-provenance-migration.test.ts": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+      "tests/personal-plan-refinement-presentation-route.test.ts": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+      "tests/personal-plan-refinement-status-route.test.ts": "fe82e2afc422d04e8eb673f89659c055cc139c72b79001f37f2bbc824269f1a5"
+    },
+    "transfer": {
+      "tests/personal-plan/refinement/module-status.test.ts": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+      "tests/personal-plan/refinement/refinement-status.test.ts": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+      "tests/personal-plan-refinement-answer-provenance-migration.test.ts": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+      "tests/personal-plan-refinement-presentation-route.test.ts": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+      "tests/personal-plan-refinement-status-route.test.ts": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+    },
+    "cut": {
+      "tests/personal-plan/refinement/module-status.test.ts": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f",
+      "tests/personal-plan/refinement/refinement-status.test.ts": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0",
+      "tests/personal-plan-refinement-answer-provenance-migration.test.ts": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+      "tests/personal-plan-refinement-presentation-route.test.ts": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b",
+      "tests/personal-plan-refinement-status-route.test.ts": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+    }
+  },
+  "survivorsUnchanged": 28,
+  "unrelatedExcludingAllDonorsAndKeepers": 23,
+  "keepers": 7,
+  "changedKeepers": 2,
+  "heldF": [],
+  "sourceChanges": 0,
+  "controls": 13,
+  "sourceControlsExecuted": 0,
+  "repositoryWrites": 0
+}

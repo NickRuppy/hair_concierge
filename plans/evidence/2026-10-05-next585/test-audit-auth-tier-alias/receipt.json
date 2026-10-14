@@ -1,0 +1,45 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "status": "STATIC PROPOSAL ONLY; no test or application execution",
+  "counts": {
+    "before": 14,
+    "after": 14,
+    "R": 14,
+    "F": 0,
+    "C": 0,
+    "D": 0,
+    "quota": 0
+  },
+  "readset": {
+    "src/lib/auth/authenticated-app-route-access.ts": "9c860f0184e6f4e5282b518273161ff8f2b74dbab605fbaed2dfd7e67179bd35",
+    "tests/authenticated-app-route-access.test.ts": "13b41aef3c55af81ef4c4ca6dabed6ee1af6dce6aad50b51e4c866da55039c0a",
+    "src/lib/entitlements/index.ts": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087",
+    "src/lib/entitlements/entitlements.ts": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59",
+    "src/lib/entitlements/access.ts": "57b8489a23e69849cfeaa1f4a82df9ba7845c8a52cbcd96cea8c19e6a4657083",
+    "src/lib/entitlements/flag.ts": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214",
+    "src/lib/quiz/completion.ts": "7915034821dac7078888f084451ac86984007a736cbce379673585ba6a169b33",
+    "src/lib/supabase/middleware.ts": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+    "src/app/scan/page.tsx": "75e9c236984262b4322dd1f5ec568541f80720d1938756beb6d04541c457cc5d",
+    "src/app/tracker/layout.tsx": "9b87ac82cf1c7249d4526d62b4a48ab21f71a63a16838b9a58f9a4bd277679e2",
+    "src/app/profile/layout.tsx": "cca5f05943c8e758b0dbc883a319e101fe72913a466adb57da89c9ad1a5f2278",
+    "src/lib/gated-preview/gate.ts": "26cbca953a542d67d0043b9c9bc87673829cf5e6784831681fd1f6b2c8d54d86",
+    "tests/freemium-lapsed-user-matrix.test.ts": "77181670065148f6519dfa135bdb9b90522d10a27b7bf741d5d4126deedd1300",
+    "tests/gated-example-pages.test.tsx": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e",
+    "tests/server-only-register.cjs": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "tsconfig.json": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+  },
+  "phases": {
+    "before": {
+      "src/lib/auth/authenticated-app-route-access.ts": "9c860f0184e6f4e5282b518273161ff8f2b74dbab605fbaed2dfd7e67179bd35",
+      "tests/authenticated-app-route-access.test.ts": "13b41aef3c55af81ef4c4ca6dabed6ee1af6dce6aad50b51e4c866da55039c0a"
+    },
+    "after": {
+      "src/lib/auth/authenticated-app-route-access.ts": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a",
+      "tests/authenticated-app-route-access.test.ts": "10f91e28687137bc9664aeb9161040986590a63b29e15e6394546708e597ea37"
+    }
+  }
+}

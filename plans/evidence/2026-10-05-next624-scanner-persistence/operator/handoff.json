@@ -1,0 +1,29 @@
+{
+  "directory": "/tmp/test-audit-scanner46-tools-xrqyw5u6",
+  "pinsSHA256": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "status": "MAIN_INSPECTION_READY_STATIC_ONLY",
+  "files": {
+    "README.md": "1a7402969262197f7b83c73f568c58dabc86002b0be30589696dd42c1122a3e0",
+    "controls-check.log": "6df55d52a41c95728c0226dd32a2d7f5cd012a0987ba54711686201bae5386f4",
+    "editor-check.log": "92e1352181d5e53befe3516938f22a7f2dece99dfe0eea4fa9828e63d66d6bf0",
+    "operator-candidates.json": "f421f2add2aa9f89e594ad961ecfc221dfd4c26b76e520fc0a63cf1ea1208c38",
+    "operator-controls-normalized.json": "d9322fa6498a1ff5458ac2c8d7c30bde255ec0e7a96bda6294afd1262f459d95",
+    "operator-edit.cjs": "16e0205ce808a2e83cb353262d15c4ba9e7efa9cba149f420e1b0726b3548224",
+    "operator-evidence.json": "2a3c80a8264a0c70a2f912cd85490bc37d7a637e4f6a15dedf9b680f1a25a33d",
+    "operator-guard.cjs": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a",
+    "operator-pins.json": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+    "operator-proof.cjs": "c49ee44a3bdf85b8a71a6087189bccdd224340c44086a850488abdda78abd2fd",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-run-controls.cjs": "f2e4c3a30b129a38f9bb45d68be7c62d4c4b17e6d0cf0fb6be3638ec013889b7",
+    "operator-selected-closure.json": "2656c83dfe375c7b4e71db99e97d8e2b90b3df846d9240697f0319576844e9a7",
+    "preparation-receipt.json": "49a97e50891598da82e6f582b997851a70217abc26eaab0841100f00f3f9e1e9",
+    "prepare-pins.cjs": "1adab74af3954a84a0cbe6e4eea0e8d43db68df4dac4342bcf30632a5ce15416",
+    "prepare-tools.py": "560630cf66b7c1aee30a8a085a361f5e6839334fefae971eebedb76f6e07a923",
+    "proof-attestation.cjs": "648eb62fcc1ade4a4bcd69ca71ba92f5b9898108a50913f27e144f1773ff7bd3",
+    "proof-attestation.log": "e07ed4a1426954762b436b62d91b4fe1cbc380287e81813d85d24b9ed06e36a7",
+    "static-receipt.json": "624cc83c979879106f7046376b7655969f9e3906b4e0032175347cb722e1d095",
+    "template-delta.patch": "ff7ac27a4429d26c765d6bac7e0541f4764299dd69d420106f94ba98fbfbdec2",
+    "template-provenance.json": "628ea87ba9be41273af3040069de6547f270a513507329dca44d523641ac4d21",
+    "tool-code-hashes.json": "193be87629153243949cee4539a1a4f0e127b8845861381a6c7ef83c75cb7a90"
+  }
+}

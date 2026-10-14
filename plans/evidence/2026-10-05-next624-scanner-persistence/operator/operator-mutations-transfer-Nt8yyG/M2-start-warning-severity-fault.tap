@@ -1,0 +1,51 @@
+TAP version 13
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# Subtest: attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+not ok 1 - attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+  ---
+  duration_ms: 19.980292
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:2:36929'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+    +     level: 'error',
+    -     level: 'warning',
+          reason: 'attempt_log_write_failed',
+          route: 'resolve',
+          status: 200
+        }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      route: 'resolve'
+      status: 200
+      reason: 'attempt_log_write_failed'
+      level: 'warning'
+  actual:
+    0:
+      route: 'resolve'
+      status: 200
+      reason: 'attempt_log_write_failed'
+      level: 'error'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1099:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 860.058416

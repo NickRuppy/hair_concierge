@@ -210,12 +210,25 @@ test-screenshots*/
 !/data/research/shampoo-production-light-v1/calibration-v1/report.md
 !/data/research/conditioner-inci/
 !/data/research/conditioner-inci/**
+!/data/research/mask-inci/
+!/data/research/mask-inci/**
 /data/research/conditioner-inci/**/lab-review-state.json
 /data/research/conditioner-inci/**/rework-queue.json
 !/data/research/leave-in-inci/
 !/data/research/leave-in-inci/**
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
+!/data/research/shampoo-inci/
+/data/research/shampoo-inci/*
+!/data/research/shampoo-inci/v1.6/
+!/data/research/shampoo-inci/v1.6/**
+!/data/research/shampoo-inci/v1.6.1/
+!/data/research/shampoo-inci/v1.6.1/**
+!/data/research/shampoo-inci/v1.6-track-a/
+!/data/research/shampoo-inci/v1.6-track-a/**
+!/data/research/shampoo-inci/v1.6.2/
+!/data/research/shampoo-inci/v1.6.2/**
+/data/research/mask-inci/**/lab-review-state.json
 !/data/research/bondbuilder-inci/
 !/data/research/bondbuilder-inci/**
 /data/research/bondbuilder-inci/**/lab-review-state.json
@@ -360,3 +373,11 @@ test-screenshots*/
 /data/price-audit/*
 !/data/price-audit/probes/
 !/data/price-audit/probes/*.json
+!plans/mockups/ws4-2026-08-25/*.png
+!plans/mockups/ready-check-2026-08-25/*.png
+!plans/mockups/stage3-tools-clarity-2026-08-25/*.png
+# Only the wired-* review screenshots. The 29 approved source packshots in the
+# same directory are ~32 MB of generator output and stay untracked; the shipped
+# artefacts are the postprocessed webp in public/images/tools/.
+!plans/mockups/tool-images-review-2026-08-25/wired-*.png
+!plans/mockups/feinschliff-revisit-2026-08-26/*.png

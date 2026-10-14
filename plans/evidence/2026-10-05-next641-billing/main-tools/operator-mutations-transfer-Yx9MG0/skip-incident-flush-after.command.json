@@ -1,0 +1,16 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^payment monitor uses uncapped incident counters when requiring Sentry receipts$",
+    "tests/payment-monitor-route.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

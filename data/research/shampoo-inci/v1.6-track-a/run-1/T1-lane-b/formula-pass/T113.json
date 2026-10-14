@@ -1,0 +1,161 @@
+{
+  "blindId": "T113",
+  "inciFingerprintSha256": "0a9ba55eea029f16c1dd373bac11ec24870aff152e5c446b649cdcbe27a058f7",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 24,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "e3ProminencePoint": "Parfum/Fragrance at 24 (last): positions 1-23 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; earliest prominent surfactant is a mild anionic taurate (2) with prominent glucoside (3, 9) and amphoteric (4) co-surfactants -> low.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH rich architecture: prominent payload lipids (Argan Oil 7, Hydrogenated Castor Oil 12) converge with an amino-silicone (10) and cationic guar (11), plus keratin (6) and a pearlizer (15) -> high anchor. C2 itself is not met: no closed-list humectant (Hexylene Glycol does not count, R11).",
+      "counterSignal": "Missing C2 humectant element; argan and amodimethicone amounts unknown.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH with limited reset: prominent argan oil and waxy hydrogenated castor oil converge with amodimethicone, guar, keratin and a film-type starch, under a mild C6 chassis (resetCapacity weak) -> high.",
+      "counterSignal": "Rinse-off context and unknown concentrations; amodimethicone deposits selectively.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "high",
+          "rationale": "Five deposition families: payload lipids 7/12, amino-silicone 10, cationic guar 11, keratin 6, possible film starch 8."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone and hydrogenated castor oil are substantive; argan oil liquid."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild taurate/glucoside/betaine chassis."
+        }
+      },
+      "whyThisBand": "Rich architecture (W-RICH) plus limited reset; multiple converging systems.",
+      "whyNotNeighborBand": "Not moderate: W-RICH holds (prominent argan oil and waxy castor oil with silicone and cationic) and reset is weak, so the high anchor's rich route is satisfied and reset does not offset it.",
+      "limitingFactor": "Concentrations of argan oil/amodimethicone in a rinse-off; potato-starch role."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "note": "Keratin + amodimethicone + argan oil + guar = coherent substantive/damage-care cluster; no humectant cluster."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes via humectant/refatting list: Argania Spinosa Kernel Oil (7), Hydrogenated Castor Oil (12) (payload plant oil / hydrogenated lipid). No E4 comfort route."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE comfort route fails; S-DRY passes; S-OILY clause fails (low cleansing, high weight, high conditioning).",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic (taurate), earliest surfactant"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "nonionic glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 6,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Argania Spinosa Kernel Oil",
+      "position": 7,
+      "role": "payload_lipid, prominent"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "role": "modified starch (recognition gap)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 9,
+      "role": "glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 10,
+      "role": "amino-silicone, prominent"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 11,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 12,
+      "role": "payload_lipid, waxy"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 15,
+      "role": "pearlizing route (C2); excluded from weight"
+    },
+    {
+      "ingredient": "PEG-150 Distearate",
+      "position": 16,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hexylene Glycol",
+      "position": 17,
+      "role": "solvent, not a humectant route"
+    }
+  ],
+  "unresolvedMaterialIngredients": [
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "note": "Modified anionic starch; possible film route. Not band-moving here because W-RICH with weak reset already sets high."
+    }
+  ]
+}

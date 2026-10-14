@@ -1,0 +1,75 @@
+{
+  "status": "STATIC PASS; CONDITIONAL MAIN-ONLY TOOLING, RUNTIME UNRUN",
+  "directory": "/tmp/test-audit-scanner-intake26-tools-y8mclofg",
+  "pinsSHA256": "bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c",
+  "codeHashManifestSHA256": "9080288407c9a48bea728ffd93615dc5b29e44de56d79f1167078a4f9ff94f98",
+  "proposalManifestSHA256": "d7d58df419edf371041212beb2159cb7f6b6d0282b3ecbd439b6de027ebbfc0e",
+  "proposalReceiptSHA256": "81ba5cfa65ae2e88504ba16f63139cd1cfaad87c86bfdc5a5def4c9e0ec79110",
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22,
+    "snapshots": 6,
+    "donors": 4,
+    "keepers": 2,
+    "unrelatedCallbacks": 20,
+    "heldF": 1,
+    "actualOwnerControls": 14
+  },
+  "guards": {
+    "originalReadsetsPreserved": 25,
+    "fixedReadsets": 52,
+    "localRuntimeClosure": 36,
+    "priorDependencyPinsCopiedExactly": 2192,
+    "priorDependencyTreesCopiedExactly": 30
+  },
+  "metadataPolicy": {
+    "path": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/disposition.json",
+    "sha256": "04de875c4e62e53c69af322fcc215bf0c04f8098c0ebd3bc3ef46eba730f1ecf",
+    "priorPinsSha256": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432"
+  },
+  "templateProvenanceSHA256": "1ce742beb5669c1789766d178cbcbca0f29d267e425b98afb85fd2461bb9cd0c",
+  "templateDeltaSHA256": "bea7b5ec1fc68a89600054c5fabde8b787a21e0dc8ad535d63e00d3cdc0deafb",
+  "staticChecks": {
+    "editor-check.log": {
+      "exit": 0,
+      "sha256": "76549f8f602df937a735b54b51f16931d1695cedc0e468c1f1cc20b7a250e84d",
+      "attemptedWrites": 0,
+      "attemptedChildren": 0
+    },
+    "controls-check.log": {
+      "exit": 0,
+      "sha256": "7a39b42a3a8016352436108db486876f67a146d8b1374d7c5f55837f975c872b",
+      "attemptedWrites": 0,
+      "attemptedChildren": 0
+    },
+    "syntax-check.log": {
+      "exit": 0,
+      "sha256": "35b999da3df74fe4a7f0d1885b7bfd87345c2b57344ddf1eb2f83389c9841381",
+      "attemptedWrites": 0,
+      "attemptedChildren": 0
+    }
+  },
+  "preparation": {
+    "repositoryWrites": 0,
+    "rejectedWrites": 0,
+    "childrenStarted": 0,
+    "rejectedChildren": 0,
+    "proposalAuthoringHelpersRerun": false
+  },
+  "runtime": {
+    "tests": 0,
+    "sourceFaults": 0,
+    "ownerOrTestImports": 0,
+    "providerDatabaseOperations": 0
+  },
+  "pending": [
+    "independent preservation verdict",
+    "main code inspection and acceptance",
+    "main26 baseline and transfer native proof",
+    "all14 current transfer intended actual faults and restore-clean",
+    "receipt-gated cut22 and native proof",
+    "campaign/CI final gates"
+  ],
+  "limits": "Original25 readsets exact plus selected static literal runtime closure. Added guards are first-time hashes, never replacements for a changed old pin. Type-only transitive graphs and all external runtime closure are not exhaustively pinned/read. Prior2192 bounded dependency pins/30 trees copied exactly and verified. Hashing is not semantic audit credit."
+}

@@ -1,12 +1,19 @@
 import "server-only"
 
+import type { Stage3VisibleHairColor } from "@/lib/personal-plan/products/authority/selection-profile"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { parseDiscoveryPriceLabel } from "@/components/discovery/cockpit/swap-sort"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
+import type { Stage1ProductExamplePreviewBudget } from "@/lib/personal-plan/product-previews"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { createPresentationRowLoader } from "@/lib/scan/presentation-rows"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
 import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   loadDiscoveryApplication,
@@ -48,6 +55,7 @@ import {
   type DiscoveryRoutineSource,
   type DiscoveryStepDepth,
 } from "./load-ideal-routine"
+import type { DiscoveryEqualOption } from "./equal-options"
 import {
   loadDiscoveryRecommendationPropertyRows,
   loadParticipantScanVerdicts,
@@ -282,6 +290,9 @@ function projectCallDecision(row: DecisionRow): DiscoveryCallDecision {
 
 const loadSwapPresentationRows = createPresentationRowLoader("discovery_swap_lookup_failed")
 
+/** `products.market_segment`: the market bucket shown as Drogerie/Profi — not a quality grade. */
+export type DiscoveryMarketSegment = "drugstore" | "professional"
+
 /** How the catalog names a product: the parts of a brand + line + name label. */
 export type DiscoveryProductIdentity = {
   name: string
@@ -298,6 +309,8 @@ export type DiscoveryProductIdentity = {
    * price — the stored price always shows and the recurring audit keeps it honest.
    */
   priceCheckedAt?: string | null
+  /** `products.market_segment`; null/absent = unknown (e.g. an owned, non-recommended product). */
+  marketSegment?: DiscoveryMarketSegment | null
 }
 
 /**
@@ -314,7 +327,7 @@ export async function loadDiscoveryProductIdentities(
   const { data, error } = await client
     .from("products")
     .select(
-      "id, name, brand, image_url, price_checked_at, product_line:product_lines(canonical_name)",
+      "id, name, brand, image_url, price_checked_at, market_segment, product_line:product_lines(canonical_name)",
     )
     .in("id", productIds)
   if (error) throw new Error("discovery_product_identity_lookup_failed")
@@ -325,6 +338,7 @@ export async function loadDiscoveryProductIdentities(
     brand: string | null
     image_url?: string | null
     price_checked_at?: string | null
+    market_segment?: DiscoveryMarketSegment | null
     product_line: LineRelation | LineRelation[] | null
   }> | null) ?? []) {
     const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
@@ -334,6 +348,7 @@ export async function loadDiscoveryProductIdentities(
       productLine: relation?.canonical_name?.trim() || null,
       imageUrl: row.image_url?.trim() || null,
       priceCheckedAt: row.price_checked_at ?? null,
+      marketSegment: row.market_segment ?? null,
     })
   }
   return identities
@@ -441,6 +456,11 @@ export type DiscoveryCockpitModel = {
    * `loadDiscoveryRecommendationPropertyRows`). Display only, never hashed. Absent = no rows.
    */
   recommendationPropertyRows?: ReadonlyMap<string, DiscoveryPropertyRow[]>
+  /**
+   * The participant's saved shopping budget (flag on), for the „Kundenbudget" panel and the
+   * over-budget pills. Null/absent = none saved (or the flag is off). Display only, never hashed.
+   */
+  shoppingBudget?: ShoppingBudget | null
 }
 
 export type DiscoveryCockpitModelResult =
@@ -465,6 +485,48 @@ export type DiscoveryCockpitDependencies = {
   ) => Promise<DiscoveryResearchState>
   loadApplication: typeof loadDiscoveryApplication
   loadRecommendationRows: typeof loadDiscoveryRecommendationPropertyRows
+  /**
+   * The participant's saved budget (+ her stated concerns, for the exception priority), read
+   * once per composition. Flag-gated and fail-open: off, absent or unreadable = null = no
+   * budget, and every surface behaves exactly as before.
+   */
+  loadShoppingBudget: (
+    client: DiscoveryCockpitAdminClient,
+    userId: string,
+  ) => Promise<Stage1ProductExamplePreviewBudget | null>
+  /** Her user-answered visible root colour (care habits, `user` provenance); fail-open. */
+  loadVisibleHairColor: (
+    client: DiscoveryCockpitAdminClient,
+    userId: string,
+  ) => Promise<Stage3VisibleHairColor | null>
+}
+
+/**
+ * The saved budget as the participant's own previews read it (`loadShoppingContext`, the same
+ * narrow `hair_profiles` read the Stage-1 previews route uses). Never throws.
+ */
+export async function loadDiscoveryShoppingBudget(
+  client: DiscoveryCockpitAdminClient,
+  userId: string,
+  enabled: () => boolean = isShoppingBudgetEnabled,
+): Promise<Stage1ProductExamplePreviewBudget | null> {
+  try {
+    if (!enabled()) return null
+    const shopping =
+      await createSupabaseStage3ProductionPersistence(client).loadShoppingContext(userId)
+    return shopping.budget
+      ? {
+          budget: shopping.budget,
+          statedConcerns: {
+            currentConcerns: shopping.currentConcerns,
+            primaryConcern: shopping.primaryConcern,
+          },
+        }
+      : null
+  } catch (error) {
+    console.error("[discovery] shopping budget lookup failed:", error)
+    return null
+  }
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -478,6 +540,8 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadResearchState: (client, items) => loadDiscoveryResearchState(client, items),
   loadApplication: loadDiscoveryApplication,
   loadRecommendationRows: loadDiscoveryRecommendationPropertyRows,
+  loadShoppingBudget: (client, userId) => loadDiscoveryShoppingBudget(client, userId),
+  loadVisibleHairColor: (client, userId) => loadVisibleHairColor(client as never, userId),
 }
 
 /**
@@ -520,11 +584,31 @@ export async function loadDiscoveryCockpitModel(
     ? buildDiscoveryRoutineContext(capturedItems, heatStyling)
     : null
 
+  // Her saved budget, read once: the previews and the verdicts below follow it, the panel shows it.
+  let shopping: Stage1ProductExamplePreviewBudget | null = null
+  try {
+    shopping = await deps.loadShoppingBudget(admin, input.userId)
+  } catch (error) {
+    console.error("[discovery] shopping budget lookup failed:", error)
+  }
+  // Her user-answered root colour, read once (fail-open): previews, verdicts and recommendation
+  // rows grade exactly like her own scanner and plan.
+  let visibleHairColor: Stage3VisibleHairColor | null = null
+  try {
+    visibleHairColor = await deps.loadVisibleHairColor(admin, input.userId)
+  } catch (error) {
+    console.error("[discovery] visible hair colour lookup failed:", error)
+  }
+  const idealOptions = {
+    ...(routineOverride ? { routineOverride } : {}),
+    ...(shopping ? { budget: shopping } : {}),
+    ...(visibleHairColor ? { visibleHairColor } : {}),
+  }
   const ideal = await deps.loadIdealRoutine(
     admin,
     input.userId,
     input.intakeId,
-    routineOverride ? { routineOverride } : undefined,
+    Object.keys(idealOptions).length > 0 ? idealOptions : undefined,
   )
   if (ideal.status !== "ready") return { status: ideal.status }
 
@@ -546,7 +630,15 @@ export async function loadDiscoveryCockpitModel(
   // Nothing linked: the very rows as loaded, untouched.
   const items = links.size > 0 ? withDiscoveryResearchLinks(capturedItems, links) : capturedItems
   // Exactly one verdict pass per render, on the context the Idealplan already prepared.
-  const verdicts = await deps.loadVerdicts(admin, input.userId, items, ideal.context)
+  const verdicts = await deps.loadVerdicts(
+    admin,
+    input.userId,
+    items,
+    ideal.context,
+    undefined,
+    shopping?.budget ?? null,
+    ...(visibleHairColor ? [visibleHairColor] : []),
+  )
   const decisions = await deps.loadDecisions(input.intakeId, admin)
   const swapProductIds = new Set(discoverySwapProductIds(decisions))
   // Outcomes first (composition is pure): only an `ideal` step prints the Idealplan's
@@ -577,11 +669,16 @@ export async function loadDiscoveryCockpitModel(
   )
   let recommendationPropertyRows = new Map<string, DiscoveryPropertyRow[]>()
   try {
-    recommendationPropertyRows = await deps.loadRecommendationRows(
-      admin,
-      ideal.steps.filter((step) => recommendationRowKeys.has(step.decisionKey)),
-      ideal.context,
-    )
+    const rowSteps = ideal.steps.filter((step) => recommendationRowKeys.has(step.decisionKey))
+    recommendationPropertyRows = visibleHairColor
+      ? await deps.loadRecommendationRows(
+          admin,
+          rowSteps,
+          ideal.context,
+          undefined,
+          visibleHairColor,
+        )
+      : await deps.loadRecommendationRows(admin, rowSteps, ideal.context)
   } catch (error) {
     console.error("[discovery] recommendation rows unavailable:", error)
   }
@@ -614,6 +711,9 @@ export async function loadDiscoveryCockpitModel(
       ...printedIds,
       ...ideal.steps.flatMap((entry) =>
         entry.preview?.kind === "recommendation" ? [entry.preview.productId] : [],
+      ),
+      ...ideal.steps.flatMap((entry) =>
+        (entry.equalOptions ?? []).map((option) => option.productId),
       ),
       ...verdicts.flatMap((verdict) =>
         verdict.status === "verdict" && verdict.payload.kind === "in_catalog"
@@ -693,6 +793,7 @@ export async function loadDiscoveryCockpitModel(
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,
     recommendationPropertyRows,
+    shoppingBudget: shopping?.budget ?? null,
   }
 }
 
@@ -725,7 +826,20 @@ export type DiscoveryCockpitSwapOption = {
   priceLabel: string | null
   /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
   imageUrl: string | null
-  origin: "alternative" | "ideal_recommendation"
+  /** Drogerie/Profi (`products.market_segment`); null/absent = unknown. */
+  marketSegment?: DiscoveryMarketSegment | null
+  /** How it is applied, where equals need telling apart (E2); absent/null = not shown. */
+  applicationLabel?: string | null
+  /**
+   * `equal_alternative`: rated exactly as well as the Idealplan's pick, which a house
+   * default chose among equals (Bondbuilder tie, see `equal-options.ts`).
+   */
+  origin: "alternative" | "ideal_recommendation" | "equal_alternative"
+  /**
+   * With a capped budget saved: how many euros the package price lies above it (the pill
+   * „+19,90 € über Budget"). Present only when it is over; display only, never a verdict.
+   */
+  overBudgetEur?: number
   /**
    * Target-vs-product rows for a displayed alternative or (F1) the Idealplan's
    * recommendation; null when there are none.
@@ -759,6 +873,8 @@ export type DiscoveryCockpitStepView = {
   intakeItemId: string | null
   /** Her product's catalog product (the one a kept entry prints); null for an empty step. */
   ownedProductId: string | null
+  /** Her product's Drogerie/Profi segment; null/absent = unknown (or an empty step). */
+  ownedMarketSegment?: DiscoveryMarketSegment | null
   /**
    * Her product's usage role as composed (batch 9): the decision write re-checks it — with
    * `category` — under the intake lock, so a concurrent usage correction cannot slip past.
@@ -794,6 +910,8 @@ export type DiscoveryCockpitStepView = {
   /** The decided swap target, even when its catalog row could not be read. */
   swapProductId: string | null
   swapProductLabel: string | null
+  /** The decided swap target's segment, for when the current options no longer list it. */
+  swapMarketSegment?: DiscoveryMarketSegment | null
   /** The Idealplan's own recommendation for this step, for the „Neu:" slot. */
   idealRecommendation: DiscoveryCockpitSwapOption | null
   /** That recommendation as the PDF prints it (brand + line + name) — hashed, see routine. */
@@ -898,6 +1016,20 @@ function optionLabel(
   })
 }
 
+/**
+ * How far a package price lies above a CAPPED budget, in euros rounded to the cent; null when
+ * there is no capped budget, no readable price, or the price is within the limit. An uncapped
+ * budget (or none) never marks anything. Pure.
+ */
+export function discoveryOverBudgetEur(
+  budget: ShoppingBudget | null | undefined,
+  price: number | null,
+): number | null {
+  if (!budget || budget.kind !== "capped" || price === null || !Number.isFinite(price)) return null
+  const over = Math.round((price - budget.limitEur) * 100) / 100
+  return over > 0 ? over : null
+}
+
 function alternativeOption(
   alternative: {
     productId: string
@@ -909,7 +1041,10 @@ function alternativeOption(
   },
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
+  budget: ShoppingBudget | null = null,
 ): DiscoveryCockpitSwapOption {
+  // Alternatives carry only the catalog's price label; read it the way the price sort does.
+  const over = discoveryOverBudgetEur(budget, parseDiscoveryPriceLabel(alternative.priceLabel))
   return {
     productId: alternative.productId,
     name: alternative.displayName,
@@ -924,6 +1059,7 @@ function alternativeOption(
     // Already loaded: every alternative's id is in the identity batch (iteration 3).
     imageUrl: identities.get(alternative.productId)?.imageUrl ?? null,
     origin: "alternative",
+    ...(over !== null ? { overBudgetEur: over } : {}),
     propertyRows,
   }
 }
@@ -933,10 +1069,15 @@ function idealRecommendationOption(
   brandsByProductId: ReadonlyMap<string, string | null>,
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
+  budget: ShoppingBudget | null = null,
 ): DiscoveryCockpitSwapOption | null {
   const preview = step.preview
   if (!preview || preview.kind !== "recommendation") return null
   const brand = brandsByProductId.get(preview.productId) ?? null
+  const over = discoveryOverBudgetEur(
+    budget,
+    preview.commerce?.priceEur ?? parseDiscoveryPriceLabel(preview.commerce?.priceLabel),
+  )
   return {
     productId: preview.productId,
     name: preview.productName,
@@ -949,8 +1090,33 @@ function idealRecommendationOption(
     priceLabel: preview.commerce?.priceLabel ?? null,
     imageUrl: identities.get(preview.productId)?.imageUrl ?? null,
     origin: "ideal_recommendation",
+    ...(over !== null ? { overBudgetEur: over } : {}),
     // F1: the recommendation against her target — null when it could not be evaluated.
     propertyRows,
+  }
+}
+
+/** An equally ideal product next to the Idealplan's tie-default pick (T1). */
+function equalAlternativeOption(
+  option: DiscoveryEqualOption,
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+  budget: ShoppingBudget | null = null,
+): DiscoveryCockpitSwapOption {
+  const brand = identities.get(option.productId)?.brand ?? null
+  // Like every other option: above a saved budget it says so (#654).
+  const over = discoveryOverBudgetEur(budget, parseDiscoveryPriceLabel(option.priceLabel))
+  return {
+    productId: option.productId,
+    name: option.productName,
+    brand,
+    label: optionLabel(option.productId, { name: option.productName, brand }, identities),
+    verdictLabel: SCAN_VERDICT_COPY.ideal.label,
+    priceLabel: option.priceLabel,
+    imageUrl: identities.get(option.productId)?.imageUrl ?? option.imageUrl,
+    applicationLabel: option.applicationLabel,
+    origin: "equal_alternative",
+    ...(over !== null ? { overBudgetEur: over } : {}),
+    propertyRows: null,
   }
 }
 
@@ -998,6 +1164,7 @@ function intakeProductViews(model: DiscoveryCockpitModel): DiscoveryCockpitIntak
 }
 
 export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): DiscoveryCockpitView {
+  const budget = model.shoppingBudget ?? null
   const verdictsByItemId = new Map(model.verdicts.map((entry) => [entry.itemId, entry]))
   const brandsByProductId = new Map(
     model.recommendationProducts.map((row) => [row.id, row.brand] as const),
@@ -1025,29 +1192,50 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
         (entry) => [entry.productId, entry.rows] as const,
       ),
     )
-    const ideal = idealRecommendationOption(
+    const segmentOf = (productId: string) => identities.get(productId)?.marketSegment ?? null
+    const withSegment = (option: DiscoveryCockpitSwapOption): DiscoveryCockpitSwapOption => ({
+      ...option,
+      marketSegment: segmentOf(option.productId),
+    })
+    const idealOption = idealRecommendationOption(
       step,
       brandsByProductId,
       identities,
       model.recommendationPropertyRows?.get(step.decisionKey) ?? null,
+      budget,
     )
+    const ideal = idealOption ? withSegment(idealOption) : null
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never a product already in the
     // participant's bathroom for this step (any of her products in it, batch 9).
     const ownedInStep = new Set(
       stepEntries.flatMap((entry) => (entry.item?.productId ? [entry.item.productId] : [])),
     )
+    // E2: with equals on offer, the pick names its application too — the comparison is the point.
+    const idealWithApplication =
+      ideal && step.equalOptions && step.equalOptions.length > 0
+        ? { ...ideal, applicationLabel: step.idealApplicationLabel ?? null }
+        : ideal
     const swapOptions =
       alternatives.length > 0
         ? alternatives.map((alternative) =>
-            alternativeOption(
-              alternative,
-              identities,
-              alternativeRows.get(alternative.productId) ?? null,
+            withSegment(
+              alternativeOption(
+                alternative,
+                identities,
+                alternativeRows.get(alternative.productId) ?? null,
+                budget,
+              ),
             ),
           )
-        : ideal && !ownedInStep.has(ideal.productId)
-          ? [ideal]
+        : idealWithApplication
+          ? [
+              idealWithApplication,
+              // T1: a tie-default pick brings its equals — the call may choose any of them.
+              ...(step.equalOptions ?? []).map((option) =>
+                withSegment(equalAlternativeOption(option, identities, budget)),
+              ),
+            ].filter((option) => !ownedInStep.has(option.productId))
           : []
 
     return {
@@ -1064,6 +1252,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       ownedLabel: refined.ownedLabel,
       intakeItemId: item?.id ?? null,
       ownedProductId: item?.productId ?? null,
+      ownedMarketSegment: item?.productId ? segmentOf(item.productId) : null,
       ownedUsageRole: item?.usageRole ?? null,
       stepEntryCount: stepEntries.length,
       ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
@@ -1087,6 +1276,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       swapOptions,
       swapProductId: refined.swapProductId,
       swapProductLabel: refined.swapProductLabel,
+      swapMarketSegment: refined.swapProductId ? segmentOf(refined.swapProductId) : null,
       recommendationLabel: refined.recommendationLabel,
       idealRecommendation: ideal,
       ownedUsageLabel: refined.ownedUsageLabel ?? null,
@@ -1237,6 +1427,32 @@ export async function setDiscoveryCallDecision(
       intake_item_id: row.intake_item_id ?? null,
     }),
   }
+}
+
+export type DiscoveryCallDecisionsResetResult =
+  | { outcome: "reset"; deleted: number }
+  | { outcome: "not_found" | "finalized" }
+
+/**
+ * „Testlauf zurücksetzen" (cockpit call-ready A2): every decision of this intake deleted in
+ * ONE locked call to `discovery_admin_reset_call_decisions` (migration 20261009160000) — the
+ * same intake row lock as every decision write, so it serialises with them and with
+ * finalising; a finalised call is frozen. The call sheet is not touched.
+ */
+export async function resetDiscoveryCallDecisions(
+  intakeId: string,
+  client: DiscoveryCockpitAdminClient,
+): Promise<DiscoveryCallDecisionsResetResult> {
+  const { data, error } = await client.rpc("discovery_admin_reset_call_decisions", {
+    target_intake_id: intakeId,
+  })
+  if (error) throw error
+  const row = (data ?? {}) as { outcome?: string; deleted?: unknown }
+  if (row.outcome === "reset" && typeof row.deleted === "number") {
+    return { outcome: "reset", deleted: row.deleted }
+  }
+  if (row.outcome === "not_found" || row.outcome === "finalized") return { outcome: row.outcome }
+  throw new Error("discovery_call_decisions_reset_unexpected_outcome")
 }
 
 /**

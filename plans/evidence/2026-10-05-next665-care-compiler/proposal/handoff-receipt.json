@@ -1,0 +1,24 @@
+{
+  "status": "static handoff; conditional C1 only",
+  "manifestSHA256": "946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b",
+  "manifest": "/tmp/test-audit-residual-care102-ezeu563r/manifest.json",
+  "counts": {
+    "before": 102,
+    "transfer": 102,
+    "cut": 101,
+    "unrelatedExact": 100,
+    "controlDescriptors": 13
+  },
+  "assertions": "7 exact donor assertion texts appended to existing keeper; original3 retained",
+  "phaseReconstruction": "21 whole test files;100 unrelated callbacks exact;6 whole files unchanged;1 donor removed only in cut",
+  "readsetCurrentMatches": 83,
+  "initialSourceTestPinsMatch": 22,
+  "unrunSourceControlDescriptors": 13,
+  "repositoryWrites": 0,
+  "testsStarted": 0,
+  "sourceOwnersImported": 0,
+  "providerOrDatabaseActions": 0,
+  "compilerInvocations": 0,
+  "staticParserOnly": true,
+  "limits": "See read-scope.json; fresh85, recovered17; catalog assets structural/read-limit disclosure; no actual green/red or acceptance"
+}

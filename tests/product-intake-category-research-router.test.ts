@@ -58,7 +58,7 @@ function normalized(category: string) {
 
 for (const [category, id, methodology, adapter] of [
   ["conditioner", "conditioner-standard", "v1.6", "conditioner-production-adapter-v1"],
-  ["leave_in", "leave-in-standard", "v1.1", "leave-in-production-adapter-v1"],
+  ["leave_in", "leave-in-standard", "v1.2", "leave-in-production-adapter-v1"],
   ["bondbuilder", "bondbuilder-inci", "v0.5", "bondbuilder-production-adapter-v1"],
 ]) {
   test(`${category} records server-owned provenance even when its envelope needs research`, () => {
@@ -172,11 +172,11 @@ test("mixed-version rework is refused unless progress explicitly authorizes an u
   }
   assert.equal(
     researchEngineBindingMismatch(job, engine),
-    "engine_version_mismatch: v1.0/leave-in-production-adapter-v1 != v1.1/leave-in-production-adapter-v1",
+    "engine_version_mismatch: v1.0/leave-in-production-adapter-v1 != v1.2/leave-in-production-adapter-v1",
   )
   assert.equal(
     researchEngineBindingMismatch({ ...job, progress: { engine_upgrade: "true" } }, engine),
-    "engine_version_mismatch: v1.0/leave-in-production-adapter-v1 != v1.1/leave-in-production-adapter-v1",
+    "engine_version_mismatch: v1.0/leave-in-production-adapter-v1 != v1.2/leave-in-production-adapter-v1",
   )
   assert.equal(
     researchEngineBindingMismatch({ ...job, progress: { engine_upgrade: true } }, engine),
@@ -202,17 +202,17 @@ test("mixed-version rework is refused unless progress explicitly authorizes an u
   )
   assert.equal(
     researchEngineBindingMismatch({ ...job, engine_version: null }, engine),
-    "engine_version_mismatch: null != v1.1/leave-in-production-adapter-v1",
+    "engine_version_mismatch: null != v1.2/leave-in-production-adapter-v1",
   )
   assert.equal(
     researchEngineBindingMismatch(
       {
         ...job,
-        engine_version: "v1.1/leave-in-production-adapter-v0",
+        engine_version: "v1.2/leave-in-production-adapter-v0",
       },
       engine,
     ),
-    "engine_version_mismatch: v1.1/leave-in-production-adapter-v0 != v1.1/leave-in-production-adapter-v1",
+    "engine_version_mismatch: v1.2/leave-in-production-adapter-v0 != v1.2/leave-in-production-adapter-v1",
   )
 })
 
@@ -251,10 +251,10 @@ test("worker persists its first engine binding under the current lease and keeps
           data: {
             ...job,
             engine_key: "leave-in-standard",
-            engine_version: "v1.1/leave-in-production-adapter-v1",
+            engine_version: "v1.2/leave-in-production-adapter-v1",
             progress: {
               engine_upgrade: false,
-              engine_upgrade_receipt: { version: "v1.1/leave-in-production-adapter-v1" },
+              engine_upgrade_receipt: { version: "v1.2/leave-in-production-adapter-v1" },
             },
           },
           error: null,
@@ -270,14 +270,14 @@ test("worker persists its first engine binding under the current lease and keeps
       args: {
         target_job_id: "job-1",
         next_engine_key: "leave-in-standard",
-        next_engine_version: "v1.1/leave-in-production-adapter-v1",
+        next_engine_version: "v1.2/leave-in-production-adapter-v1",
         expected_locked_by: "worker-1",
         expected_locked_at: job.locked_at,
       },
     },
   ])
   assert.equal(result, job, "the worker lease aliases keep the bound state")
-  assert.equal(result.engine_version, "v1.1/leave-in-production-adapter-v1")
+  assert.equal(result.engine_version, "v1.2/leave-in-production-adapter-v1")
   assert.equal(result.progress.engine_upgrade, false)
   const failure = researchFailureUpdate({
     job: result,
@@ -309,7 +309,7 @@ test("worker refuses a locally mixed engine before running research and retains 
   }
   await assert.rejects(
     bindResearchJobEngine(client, job, "leave_in"),
-    /engine_version_mismatch: v1.0\/leave-in-production-adapter-v1 != v1.1\/leave-in-production-adapter-v1/,
+    /engine_version_mismatch: v1.0\/leave-in-production-adapter-v1 != v1.2\/leave-in-production-adapter-v1/,
   )
   assert.equal(calls, 0)
   await assert.rejects(
@@ -538,7 +538,7 @@ function conditionerEnvelope(): ConditionerResearchEnvelope {
 const leaveInEnvelope = JSON.parse(
   readFileSync(
     new URL(
-      "../data/research/leave-in-inci/v1.1/calibration-envelopes/slot-01.json",
+      "../data/research/leave-in-inci/v1.2/calibration-envelopes/slot-01.json",
       import.meta.url,
     ),
     "utf8",

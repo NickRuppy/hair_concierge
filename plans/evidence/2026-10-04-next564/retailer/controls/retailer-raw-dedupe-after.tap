@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string
+ok 1 - partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string
+  ---
+  duration_ms: 5.61825
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 671.981875

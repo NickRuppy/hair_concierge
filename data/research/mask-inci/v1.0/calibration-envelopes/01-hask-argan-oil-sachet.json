@@ -1,0 +1,288 @@
+{
+  "version": "mask-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "mask-classification-v1.0",
+    "modelVersion": "mask-inci-v1.0",
+    "policySha256": "d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0",
+    "lexiconSha256": "3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada"
+  },
+  "identity": {
+    "researchId": "mask-v1.0-01-hask-argan-oil-sachet",
+    "market": "DE/EU",
+    "exactProductName": "HASK Haarkur Argan Oil, Sachet, 50 ml",
+    "brand": "HASK",
+    "gtin": "071164333068",
+    "identityStatus": "provisional_identity_conflict",
+    "categoryBoundaryStatus": "eligible",
+    "exclusionReason": null,
+    "multiUse": false,
+    "uncoveredModes": [],
+    "confidence": "moderate",
+    "sourceIds": [
+      "hautschutzengel.de produkt/215446 (fallback tier), accessed 2026-09-04"
+    ]
+  },
+  "formula": {
+    "status": "verified_with_minor_difference",
+    "rawInci": "AQUA, CETEARYL ALCOHOL, LANOLIN, CETRIMONIUM CHLORIDE, QUATERNIUM-18, PARFUM, ARGANIA SPINOSA KERNEL OIL, HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE, ORYZA SATIVA EXTRACT, HYDROLYZED COLLAGEN, HYDROLYZED KERATIN, SILK AMINO ACIDS, HYDROLYZED SOY PROTEIN, SODIUM LAUROYL OAT AMINO ACIDS, JUGLANS NIGRA LEAF EXTRACT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, POPULUS TREMULOIDES BARK EXTRACT, CITRIC ACID, GLYCERIN, PANTHENOL, ISOPROPYL PALMITATE, SODIUM PCA, TETRASODIUM EDTA, DMDM HYDANTOIN, BUTYLENE GLYCOL, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, BENZYL ALCOHOL, POTASSIUM SORBATE, BENZYL BENZOATE, LIMONENE, CARAMEL, CI 19140",
+    "normalizedIngredients": [
+      "AQUA",
+      "CETEARYL ALCOHOL",
+      "LANOLIN",
+      "CETRIMONIUM CHLORIDE",
+      "QUATERNIUM-18",
+      "PARFUM",
+      "ARGANIA SPINOSA KERNEL OIL",
+      "HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE",
+      "ORYZA SATIVA EXTRACT",
+      "HYDROLYZED COLLAGEN",
+      "HYDROLYZED KERATIN",
+      "SILK AMINO ACIDS",
+      "HYDROLYZED SOY PROTEIN",
+      "SODIUM LAUROYL OAT AMINO ACIDS",
+      "JUGLANS NIGRA LEAF EXTRACT",
+      "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE",
+      "POPULUS TREMULOIDES BARK EXTRACT",
+      "CITRIC ACID",
+      "GLYCERIN",
+      "PANTHENOL",
+      "ISOPROPYL PALMITATE",
+      "SODIUM PCA",
+      "TETRASODIUM EDTA",
+      "DMDM HYDANTOIN",
+      "BUTYLENE GLYCOL",
+      "ETHYLHEXYLGLYCERIN",
+      "SODIUM BENZOATE",
+      "PHENOXYETHANOL",
+      "BENZYL ALCOHOL",
+      "POTASSIUM SORBATE",
+      "BENZYL BENZOATE",
+      "LIMONENE",
+      "CARAMEL",
+      "CI 19140"
+    ],
+    "formulaFingerprintSha256": "dff721bdfab13f3787504c66f69836544149bba23c2e483dd93ea1e9c1e59131",
+    "rawInciSha256": "dff721bdfab13f3787504c66f69836544149bba23c2e483dd93ea1e9c1e59131",
+    "sourceIds": [
+      "hautschutzengel.de produkt/215446 (fallback tier), accessed 2026-09-04"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Re-derived under v0.3 (E1, 2026-09-14). E1 withdraws R3's tail-edge exclusion: a species at tail_index − 1 counts normally and the boundary uncertainty is carried as a confidence cap, not as a value move. QUATERNIUM-18 @5 therefore carries S1 in full alongside CETRIMONIUM CHLORIDE @4, S2 is satisfied by CETEARYL ALCOHOL @2, and no material counter-signal fires — so the `high` bar (S1 mandatory plus at least one of S2/S3) is met. Confidence is capped at `moderate` because S1 is load-bearing on a boundary-position species: without QUATERNIUM-18 @5 the value would be `moderate`. This reverses the v0.2 value (`moderate`) and closes AP-01-TAILEDGEDROP in the direction the ruling ledger's 'five evidence-backed highs stand' line implied. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
+      "evidenceSignals": [
+        "CETRIMONIUM CHLORIDE (rank 4) — long-chain cationic quat above the tail (tail_index 6, PARFUM): first distinct S1 species",
+        "QUATERNIUM-18 (rank 5) — a second, structurally distinct dialkyl cationic quat, declared at tail_index − 1. Under E1 (2026-09-14) it COUNTS in full: relative order above the marker is Art. 19-reliable, only the invisible 1 % line is uncertain, and ~1 % of a co-conditioning quat is a functional dose. It is the species S1 hinges on, and the reason confidence is capped at `moderate`",
+        "S1 SATISFIED on those two distinct cationic species; S2 SATISFIED on CETEARYL ALCOHOL (rank 2), a long-chain fatty alcohol in the top three of the full list",
+        "LANOLIN (rank 3) — the only non-fatty-alcohol lipid above the tail; ARGANIA SPINOSA KERNEL OIL @7 and ISOPROPYL PALMITATE @21 are in the tail: S3 NOT satisfied (one lipid is not breadth)",
+        "PARFUM (rank 6) — tail marker, plausible under §3.1.1 on all three limbs (R2; third limb added E2 — the declared allergens BENZYL BENZOATE @31 and LIMONENE @32 sit below their own PARFUM, which is the consistent ordering)"
+      ],
+      "derivation": "§9.1 on the above-tail segment (ranks 1–5), under E1's boundary-position rule (no species is removed). S1 = SATISFIED: CETRIMONIUM CHLORIDE @4 and QUATERNIUM-18 @5, two distinct long-chain cationic species above tail_index 6. S2 = SATISFIED: CETEARYL ALCOHOL @2. S3 = NOT satisfied: LANOLIN @3 is the sole above-tail non-fatty-alcohol lipid. `high` = S1 (mandatory) + at least one of {S2, S3} + no material counter-signal → satisfied via S2. Load-bearing boundary check (E1): removing QUATERNIUM-18 @5 would drop S1 and therefore the value → the species IS load-bearing → confidence capped at `moderate` and `boundary_position_ingredient` emitted.",
+      "thresholdReasoning": [
+        "Clears `high`: §9.1's post-R3 bar is S1 mandatory plus S2 or S3, with no material counter-signal. S1 and S2 both fire and no counter-signal is material. D1's multiple-independent-signals requirement is met by two signals from two different families — cationic breadth (S1) and fatty-alcohol prominence (S2).",
+        "`moderate` does not apply, and this is the value that MOVED: it was v0.2's value only because R3's tail-edge exclusion struck QUATERNIUM-18 @5 before the count. E1 withdraws that strike, so the only thing the boundary position now costs is confidence.",
+        "`low` does not apply: `low` requires none of S1/S2/S3; two of the three fire.",
+        "Material counter-signals (§9.1 closed list) checked and NOT fired: (a) the tail marker is resolved and plausible on all three §3.1.1 limbs; (b) no §2.4.1 tier-2 conflict; (c) no fired signal rests on a lexicon family-10 rheology-only/emulsifier species — both S1 carriers are declared quats and CETEARYL ALCOHOL @2 is a fatty alcohol, not a Ceteareth/Glyceryl Stearate blend half.",
+        "Confidence is `moderate`, not `high`, under §9.1's E1-amended confidence rule: S1 would not fire without a tail_index − 1 species. Two further independent caps point the same way — the fallback-tier source and the provisional identity conflict — so no single fix would lift it."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable. That is precisely the uncertainty E1's confidence cap encodes on this record.",
+        "Source is hautschutzengel fallback tier; dm.de is JS-rendered and could not be fetched."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Re-derived under v0.2 (R4, R8). The value is unchanged but its evidence base is now different and stronger: R4 removes the cationic gate and rebuilds `high` on a heavy-lipid core plus a fatty-base completer, and R8's lexicon patch makes LANOLIN a named R4b heavy lipid instead of a reviewer judgment. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "LANOLIN (rank 3) — R4b heavy lipid above the marker (PARFUM @6): the required core. Lexicon family 3 now lists lanolin and its derivatives in the heavy band explicitly (R8, 2026-09-14), alongside petrolatum and the hydrogenated fats",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol within the top three ranks: the dense fatty-alcohol base completer (a)",
+        "no silicone above the tail, so completer (b), the occlusive silicone stack, is unavailable and unused",
+        "CETRIMONIUM CHLORIDE (4) + QUATERNIUM-18 (5) — recorded as formula facts and explicitly NOT used: under R4 cationic breadth is neither a weight signal nor a weight counter-signal"
+      ],
+      "derivation": "§9.2 `high` (R4): required core = at least one R4b heavy lipid above the marker — LANOLIN @3. Completer = (a) dense fatty-alcohol base, satisfied by CETEARYL ALCOHOL @2 within the top three ranks. No material unresolved counter-signal. Tail-edge check: the tail_index − 1 species is QUATERNIUM-18 @5, which is neither a lipid nor a fatty alcohol, so no term is affected.",
+      "thresholdReasoning": [
+        "Clears `high`: core plus completer (a), on a readable above-tail segment with a resolved and plausible marker.",
+        "`moderate` does not apply: `moderate` is everything else once the `high` anchor fails, and the anchor does not fail. Under v0.1 this value hung on a reviewer's R4b reading of lanolin; that hinge is now closed by the lexicon, and AP-01-LANOLIN is closed with it.",
+        "`low` does not apply: the leanness test (R4) requires all three of no R4b heavy lipid above the marker, a thin fatty base, and no occlusive silicone stack. The first two conjuncts fail outright — LANOLIN @3 is R4b, and CETEARYL ALCOHOL @2 sits in the top three, which the thin-base test explicitly excludes.",
+        "§9.2 conflict fallback not engaged: the claims are 'nährt und revitalisiert trockenes, strapaziertes Haar' — consistent with, not contradicting, a rich prior. `weight_high_conflict` does not fire."
+      ],
+      "limitations": [
+        "Weight drives a soft preference with a stated reason, never an exclusion; fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule).",
+        "An ingredient-informed matching prior at E2, never a prediction that the product will visibly flatten hair."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "The above-tail architecture is a pure cationic/fatty-alcohol/lipid conditioning base with no protein or peptide species in it at all; every protein token in this product sits in the tail and is therefore non-contributing. Under D6 that is the coherent non-protein direction. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "CETEARYL ALCOHOL (2), LANOLIN (3), CETRIMONIUM CHLORIDE (4), QUATERNIUM-18 (5) — the complete above-tail care architecture",
+        "HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE (8), HYDROLYZED COLLAGEN (10), HYDROLYZED KERATIN (11), HYDROLYZED SOY PROTEIN (13), SODIUM LAUROYL OAT AMINO ACIDS (14) — all in the tail, zero credit",
+        "SILK AMINO ACIDS (12) — free-amino-acid class, an explicit R5 non-qualifier even if it were above the tail",
+        "GLYCERIN (19), PANTHENOL (20), SODIUM PCA (22), BUTYLENE GLYCOL (25) — humectants, all in the tail"
+      ],
+      "derivation": "§9.3 material-R5 test: a qualifying R5 species above the tail is required before either leg (a) or (b) can be considered. There is none, so `protein` is unreachable. §9.3 `balanced` test requires the material R5 route as its first conjunct, so `balanced` is unreachable too. The residual value is `moisture`, which D6 defines as the category's honest default: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route.",
+      "thresholdReasoning": [
+        "Clears `moisture`: the above-tail set is a coherent conditioning/emollient architecture (fatty alcohol + heavy lipid + two cationics) and carries no protein-film route.",
+        "`protein` does not apply: it requires a material identifiable R5 route. Zero qualifying R5 species appear above the tail; Silk Amino Acids is additionally excluded as a free amino acid (R5 mask delta).",
+        "`balanced` does not apply: D6 reserves it for a substantive mixed protein-plus-moisture architecture and forbids it as a 'neither' bucket. The protein leg is absent, so the reserved value is not available.",
+        "Re-checked under v0.2 (R6). `balanced` reading (a) both-substantive is unavailable — no material R5 route above the tail, and no qualifying humectant cluster either (GLYCERIN @19, PANTHENOL @20 and SODIUM PCA @22 are all in the tail). `balanced` reading (b) neither-dominant fails at clause 2: there is no substantive R2 silicone system, no R3 cationic-polymer film and no R6a acid-gloss architecture above the tail — the credited segment is a bare R1 base plus LANOLIN @3. The value is unchanged and R6 does not reach it."
+      ],
+      "limitations": [
+        "INCI discloses no molecular weight, so even a credited hydrolysed protein could only support 'a protein film route is present'.",
+        "D4 protein-payload counter-signal is above-tail-gated and did not fire; the gap is closed by E12 (2026-10-05): the tail_protein_cluster flag now carries the doubt deterministically (confidence cap + review trigger)."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "No named bond chemistry anywhere in the list and no qualifying protein/peptide film route above the tail. Ordinary R1 conditioning and a heavy lipid are explicit non-upgraders. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "HYDROLYZED COLLAGEN (10), HYDROLYZED KERATIN (11), HYDROLYZED SOY PROTEIN (13) — in the tail",
+        "LANOLIN (3), CETRIMONIUM CHLORIDE (4), QUATERNIUM-18 (5) — ordinary R1/R4 conditioning, explicit non-upgraders"
+      ],
+      "derivation": "§9.4: `high` requires bond_route ≠ none — bond_route is `none`. `medium` requires the same material R5 route tested in §9.3 — absent. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning/lubrication only.",
+        "`medium` does not apply: it needs a distinct temporary protein/peptide/keratin fibre-film route above the tail; every protein species is in the tail and a tail-position protein is an explicit non-upgrader.",
+        "`high` does not apply: nothing but a named bond token above the tail reaches `high`, and none exists.",
+        "Mask delta applied: conditioning_level `high` alone is repair_support_level `low`; being a rich mask is not repair."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure' language is used or implied."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "general",
+        "secondary": []
+      },
+      "confidence": "moderate",
+      "rationale": "Every special-purpose route fails on its own test, the moisture guard fails on cluster size, the shine threshold fails for want of any optical-emphasis architecture above the tail, and the smoothing threshold fails its 'dry surface control is the clearest practical differentiator' conjunct. §9.5.2 step 8 is the honest fallback: a capable conventional rich mask with no differentiator clearing threshold. Secondary: With `general` as the forced headline — meaning no candidate cleared its differentiator threshold — no secondary can add distinct matching information without re-importing a route that was just rejected.",
+      "evidenceSignals": [
+        "LANOLIN (3) — substantial emollient route beyond baseline, but a softening/occlusive route rather than a dry-surface-control route",
+        "no silicone, cationic polymer, or film former above the tail (the siloxysilicate protein sits at rank 8, in the tail)",
+        "zero humectants above the tail",
+        "claims: 'entwirrt und zähmt widerspenstiges Haar' — detangling/taming positioning, corroboration only",
+        "no route above the tail beyond the single M1 observation"
+      ],
+      "derivation": "Step 1 baseline exclusion applied (rich R1+R4 base does not create a focus). Step 2 mechanism grouping: the entire above-tail set is one M1 observation. Step 3: `repair` blocked (no R5 above tail, no bond); `curl_support` blocked (no curl positioning and slip is baseline); `color_care` blocked (no candidate, no positioning); `lightness` blocked (weight_potential is `high`, not `low`). Step 4 `moisture` blocked (zero humectants above the tail). Step 5 `shine` blocked (§9.5.4 criterion 1 fails outright). Step 6 `smoothing` rejected (see below). Step 7 `detangling` rejected. Step 8 → `general`. Secondary: A secondary must represent a distinct user endpoint AND add useful matching information (§9.5.2 secondary rule). Every candidate here would reuse the same M1 lanolin/cationic film that failed to clear as primary.",
+      "thresholdReasoning": [
+        "Clears `general`: §9.5.2 step 8 — a capable conventional mask where no specific focus clears the differentiator threshold and the formula evidence is nonspecific.",
+        "`smoothing` (the closest competitor) does not apply: step 6 is a conjunction. The second conjunct is arguably met — Lanolin @3 is a substantial emollient route beyond baseline — but the first is not: dry surface control is not this formula's clearest practical differentiator, because the only route beyond the base is a softening occlusive, with no silicone, no substantive polymer, and no film former above the tail.",
+        "`detangling` does not apply: §9.5.2 step 7 permits it only when slip is itself distinctive. Two cationics above the tail is the category's own baseline-to-slightly-above band, and the 'entwirrt' claim can corroborate but never create (step 9).",
+        "`moisture` does not apply: the D5 guard needs ≥3 distinct humectants above the tail with ≥2 non-glycerin. The count above the tail is zero.",
+        "Re-checked under v0.2 (R5). The `moisture` headline was already blocked at §9.5.3 criterion 1 (zero humectant-class species above the tail), so criterion 2's new lipid-led disqualifier is not reached. For the record, limb (i) would not fire either: LANOLIN @3 is the sole R4b heavy lipid above the marker and the limb requires two.",
+        "Zero secondaries is the correct count: the vocabulary permits 0–2, and awarding `smoothing` or `detangling` as a secondary after rejecting both as primary would be double-counting the one M1 mechanism (§6 rule 1)."
+      ],
+      "limitations": [
+        "`general` here is a statement about what the evidence supports, not a judgment that the product is weak."
+      ]
+    },
+    "bondRoute": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "bond_route recorded `none` in reference-key-v1 (01-hask-argan-oil-sachet): no named bond chemistry above the sub-1 % tail.",
+      "evidenceSignals": [
+        "reference-key-v1 01-hask-argan-oil-sachet"
+      ],
+      "derivation": "Property set trace-level rule: `bond_route` is deterministic, by named INCI above the sub-1 % tail, and gates `repair_support_level: high`.",
+      "thresholdReasoning": [
+        "Recorded `none`.",
+        "Citric acid, 'Bond' naming and hydrolyzed protein alone never qualify."
+      ],
+      "limitations": [
+        "A named chemistry token is formula evidence (E2), never proof of bond repair."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "rationale": "Deterministically derived: weight_potential `high` maps to normal + coarse. Confidence tracks the parent field, whose `high` value hinges on the Lanolin R4b reading.",
+      "evidenceSignals": [
+        "derived from weight_potential = high"
+      ],
+      "derivation": "§9.6 table: low → {fine, normal}; moderate → {fine, normal, coarse}; high → {normal, coarse}. Parent value is `high`.",
+      "thresholdReasoning": [
+        "Clears {normal, coarse}: the §9.6 mapping is deterministic on the parent field, with no discretion.",
+        "{fine, normal, coarse} does not apply: that row requires weight_potential `moderate`, which was not reached.",
+        "If the Lanolin R4b reading were rejected, weight_potential would fall to `moderate` and this row would widen to include `fine` — the one downstream consequence of AP-01-LANOLIN."
+      ],
+      "limitations": [
+        "Research-level prior; no production projection is authorized (charter stop condition).",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "Echo field (R9): read, never re-judged. Re-derived under v0.3 because its driver moved: conditioning_level is now `high` (E1). §9.7 row 3 governs — `high` WITHOUT a qualifying specialist route — and row 3's output set is identical to row 2's, so the value does not move.",
+      "evidenceSignals": [
+        "conditioning_level = high (re-derived under E1, 2026-09-14; confidence capped at moderate)",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 3 (`conditioning_level: high` WITHOUT a qualifying specialist route → exactly healthy + moderately_damaged). Under v0.2 the same set came from row 2; rows 2 and 3 have identical outputs, so the driver's move does not propagate.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: §9.7 row 3, the `high`-without-specialist-route row.",
+        "{moderately_damaged, highly_damaged} does not apply: no qualifying specialist route on any of the four legs — leg (a) fails (repair_support_level is `low`, not ≥ medium; all five protein species sit in the tail and earn nothing under §3.1), leg (b) fails (bond_route `none`), leg (c) fails (no corroborated exceptional protection), leg (d) fails (no exact-product test). §9.7's never-qualifying list names generic oil, panthenol, ceramide and free amino acids explicitly — which is the whole of this product's tail payload.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Robustness note, now demonstrated rather than predicted: rows 2 and 3 of §9.7 produce the same output set, so this field was insensitive to the conditioning_level question in either direction — it read the same under v0.1's `high`, v0.2's `moderate`, and v0.3's `high`.",
+        "`specialist_damage_fit` does NOT fire: the specialist branch was not taken."
+      ],
+      "limitations": [
+        "Echo field under R9: approving conditioning_level and repair_support_level approves this projection.",
+        "Its confidence cannot exceed its driver's (§9.5E); conditioning_level is capped at `moderate` under E1, so this field is `moderate` too."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "confidence": "moderate",
+      "rationale": "weight_potential `high` combined with a coherent high-slip R1 route (two distinct cationics with a fatty alcohol at rank 2) selects the high-deposition row.",
+      "evidenceSignals": [
+        "weight_potential = high",
+        "CETRIMONIUM CHLORIDE (4) + QUATERNIUM-18 (5) + CETEARYL ALCOHOL (2) — coherent high-slip R1 route"
+      ],
+      "derivation": "§9.8 row 3: weight_potential `high` with a coherent high-slip R1/R3 route → wavy, curly, coily.",
+      "thresholdReasoning": [
+        "Clears {wavy, curly, coily}: both conjuncts of row 3 are met.",
+        "{straight, wavy, curly} does not apply: that row requires weight_potential `moderate`.",
+        "{straight, wavy} does not apply: that row requires weight_potential `low`."
+      ],
+      "limitations": [
+        "Retained by Nick's 2026-09-04 ruling for future user-profile matching; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "uncertainFields": [
+      "conditioning_level",
+      "care_direction"
+    ],
+    "assumptionNotes": [
+      "Re-derived under v0.3 (E1 boundary-position rule, replacing R3's tail-edge exclusion; E2 third plausibility limb checked and not fired; E4 checked against weight_potential and not engaging), not patched — §12 G7 and §15 both require re-derivation, and no v0.2 field approval or fingerprint carries forward.",
+      "Fields whose value moved under v0.3: conditioningLevel (moderate → high, E1; confidence held at moderate by the boundary cap). Fields whose evidence text was re-derived under a changed rule: conditioningLevel (E1), damageFit (echo of the moved driver — output set unchanged because §9.7 rows 2 and 3 are identical), tailMarker (E2 limb checked). weightPotential was re-checked under E4 and does NOT move: the `low` leanness test fails at its first conjunct on LANOLIN @3, an R4b heavy lipid above the marker, so `high` stands on the unchanged R4 anchor. Every other field carries its v0.2 value and text.",
+      "Review triggers under v0.3 — FIRED: none newly. NOT fired: `tail_marker_anomaly` (marker present), `tail_marker_unresolved` (marker plausible on all three §3.1.1 limbs, including E2's new one), `protein_payload_review` (the payload is tail-side, so §13.1's `protein_tail_only` note applies instead and it may not fire a trigger of its own), `bond_claim_review`, `low_confidence_field` (no field at `low` confidence — the boundary dependence caps at `moderate`, it does not step down), `weight_high_conflict`, `specialist_damage_fit`.",
+      "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+      "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors; R8 lanolin lexicon entry and the `hinweise` record; R2 plausibility prong; R9 echo markers). Under v0.2 conditioningLevel read `moderate` and AP-01-TAILEDGEDROP escalated the divergence from the ruling ledger; E1 closed it.",
+      "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+      "Reviewer policy applied to every record in this lane: §3.1's hard cut (strictly before tail_index) determines above-tail membership without exception. NOTE (E1, 2026-09-14): the lexicon §0.2 boundary-band caution — applied in v0.1 as a confidence modifier and in v0.2 as a value-moving strike — is now the standard's own rule again, and in the v0.1 direction: confidence modifier only.",
+      "Protocol metadata for traceability only, zero classification credit: contact time 'bis zu 10 Minuten', source aggregated dm.de/retailer copy, confidence moderate. Placement not stated; P5 owns it.",
+      "Identity state is provisional_identity_conflict (unresolved retail EAN). Per G5 this lowers the smallest affected scope: it caps confidence, it does not block the profile."
+    ]
+  }
+}

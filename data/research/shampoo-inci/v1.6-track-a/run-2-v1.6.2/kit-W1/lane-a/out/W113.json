@@ -1,0 +1,363 @@
+{
+  "blindId": "W113",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "OGX",
+    "productName": "OGX Strength & Length + Keratin Oil Shampoo",
+    "packSize": "385 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "0a9ba55eea029f16c1dd373bac11ec24870aff152e5c446b649cdcbe27a058f7",
+    "normalization": "'Aqua/Water/Eau' and 'Parfum/Fragrance' single entries; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "e3ProminenceCutoff": "Parfum/Fragrance @24, listed last (prominent = positions 1-23)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic) -> C6",
+      "earliestProminentCleansing": "Sodium Methyl Cocoyl Taurate @2 (mild anionic, taurate)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Decyl Glucoside @3 (nonionic glucoside)",
+        "Cocamidopropyl Betaine @4 (amphoteric)",
+        "Coco-Glucoside @9 (nonionic glucoside)"
+      ],
+      "notCleansing": [
+        "PEG-150 Distearate @16 (PEG thickener)",
+        "Coconut Acid @13 (free fatty acid; no C3 class)",
+        "Disodium Tetrapropenyl Succinate @14 (alkenyl succinate, no C3 class; function unresolved)"
+      ]
+    },
+    "conditioningRoutes": {
+      "payload_lipid": [
+        "Argania Spinosa Kernel Oil @7 (prominent, nonvolatile plant oil)",
+        "Hydrogenated Castor Oil @12 (prominent, waxy hydrogenated lipid)"
+      ],
+      "silicone": [
+        "Amodimethicone @10 (prominent)"
+      ],
+      "cationic_polymer": [
+        "Guar Hydroxypropyltrimonium Chloride @11 (prominent)"
+      ],
+      "protein_film": [
+        "Hydrolyzed Keratin @6"
+      ],
+      "pearlizingFattyRoute": [
+        "Glycol Distearate @15 (prominent)"
+      ],
+      "weak_refatter": [
+        "Coconut Acid @13 (free fatty acid)"
+      ],
+      "humectants": []
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum/Fragrance @24 (last); no declared allergens",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Hexylene Glycol @17 solvent"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum/Fragrance @24",
+      "wLine": "Sodium Benzoate @20",
+      "wLineClasses": [
+        "preservative_or_capped_active"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (longest ascending run 13-16, 4 entries)",
+      "codes": [],
+      "plausibility": "No candidate before @20; Sodium Benzoate @20: (i) taurate @2 before; (ii) entries 21-23 (preservatives) contain no cleansing surfactant, alkanolamide or pearlizing wax",
+      "payloadLipidMaterial": [
+        "Argania Spinosa Kernel Oil @7",
+        "Hydrogenated Castor Oil @12"
+      ],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [
+      "Argania Spinosa Kernel Oil @7 (nonvolatile plant oil, E4 humectant/refatting list)",
+      "Hydrogenated Castor Oil @12 (hydrogenated lipid, E4 humectant/refatting list)"
+    ],
+    "mildBase": "met: mild_base:Sodium Methyl Cocoyl Taurate @2, Decyl Glucoside @3, Cocamidopropyl Betaine @4, Coco-Glucoside @9 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "unresolvedMaterialIngredients": [
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @8 - weight role unresolved; could only add deposition (band already high)",
+    "Disodium Tetrapropenyl Succinate @14 - function unresolved; not a C3 cleansing surfactant for W-LINE"
+  ],
+  "claimEvidence": [
+    "Product name 'Strength & Length + Keratin Oil' (high): strengthening name words (English), corroborating repair.",
+    "Retailer copy only (low): 'Anti-Haarbruch Shampoo für strapaziertes Haar', 'stärkt das Haar effektiv', 'verhindert nachweislich Haarbruch und reduziert Spliss um bis zu 80%', 'Enthält Arganöl'; parts of the copy describe the conditioner.",
+    "No scalp claim unit; no frequency/reset wording; directions ordinary.",
+    "ID-3: 'Keratin' -> Hydrolyzed Keratin @6; 'Arganöl' -> Argania Spinosa Kernel Oil @7; 'LipiPro Shield' unmapped technology - note only."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate @2 with prominent glucoside (Decyl Glucoside @3) and amphoteric (Cocamidopropyl Betaine @4) co-surfactants (C3, C4, C6).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "counterSignal": "None material (C6 clear).",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: rich architecture (W-RICH, E3 reading) - prominent payload lipids Argania Spinosa Kernel Oil @7 and Hydrogenated Castor Oil @12 converge with prominent amodimethicone @10 and cationic guar @11, plus Glycol Distearate @15 and Hydrolyzed Keratin @6 (Section 5 high anchor). C2 itself is not met: no C2-list humectant (no Glycerin, Panthenol, Urea etc.) - recorded as the counter-signal, so moderate is the neighbor (C2 humectant element, N-ALT).",
+      "ruleIds": [
+        "Section 5",
+        "W-RICH",
+        "C2",
+        "E3",
+        "N-ALT"
+      ],
+      "counterSignal": "No C2 humectant element (C2 not met).",
+      "formulaPassValue": "high",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @11"
+        ],
+        "payload_lipid": [
+          "Argania Spinosa Kernel Oil @7 (material, W-line @20)",
+          "Hydrogenated Castor Oil @12 (material)"
+        ],
+        "weak_refatter": [
+          "Coconut Acid @13 (free fatty acid)"
+        ],
+        "silicone": [
+          "Amodimethicone @10"
+        ],
+        "protein_film": [
+          "Hydrolyzed Keratin @6"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Methyl Cocoyl Taurate @2",
+          "Decyl Glucoside @3",
+          "Cocamidopropyl Betaine @4",
+          "Coco-Glucoside @9"
+        ],
+        "humectantContext": [
+          "Hexylene Glycol @17 (solvent)"
+        ],
+        "excluded": [
+          "Glycol Distearate @15 (pearlizing wax, 6.4)",
+          "PEG-150 Distearate @16 (PEG thickener, 6.4)"
+        ],
+        "unresolved": [
+          "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @8 (anionic modified starch; role unresolved; could only add deposition, not reduce it)",
+          "Disodium Tetrapropenyl Succinate @14 (function unresolved)"
+        ]
+      },
+      "depositionLoad": "high - material plant oil and hydrogenated castor oil plus amino-silicone, guar and keratin (four deposition families)",
+      "persistence": "moderate-to-high - amodimethicone and the waxy hydrogenated lipid are substantive; plausibly cumulative",
+      "resetCapacity": "weak - mild taurate/glucoside/betaine chassis (C6 low)",
+      "counterevidence": "Every depositor sits mid-list after salt and keratin; actual oil and silicone shares are unknown and may be small.",
+      "whyThisBand": "W-RICH (material Argan oil @7 / Hydrogenated Castor Oil @12 converging with amodimethicone @10 and guar @11) with limited reset (resetCapacity weak) meets the rich route; the convergence route also holds (payload_lipid material + silicone + cationic_polymer + protein_film).",
+      "whyNotNeighborBand": "Not moderate: both high routes hold - W-RICH with weak reset, and at least two persistent families (amino-silicone, cationic guar, material lipids) converge with nothing in the mild chassis to offset them (W-RICH limited-reset clause, 6.6 high anchor).",
+      "confidenceLimitingFactor": "Shares of the oil/silicone are unknown (mid-list); two unresolved minor ingredients",
+      "rationale": "High: W-RICH + weak reset and multi-family convergence (material lipids per W-LINE @20) (6.6, W-RICH, W-LINE). Neighbor moderate.",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "All depositors mid-list; shares unknown.",
+      "formulaPassValue": "high",
+      "formulaPassConfidence": "moderate",
+      "wLineRecord": {
+        "cap": "e3Point Parfum/Fragrance @24",
+        "wLine": "Sodium Benzoate @20",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none (longest ascending run 13-16, 4 entries)",
+        "codes": [],
+        "plausibility": "No candidate before @20; Sodium Benzoate @20: (i) taurate @2 before; (ii) entries 21-23 (preservatives) contain no cleansing surfactant, alkanolamide or pearlizing wax",
+        "payloadLipidMaterial": [
+          "Argania Spinosa Kernel Oil @7",
+          "Hydrogenated Castor Oil @12"
+        ],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Hydrolyzed Keratin @6",
+          "Argania Spinosa Kernel Oil @7",
+          "Amodimethicone @10",
+          "Guar Hydroxypropyltrimonium Chloride @11",
+          "Hydrogenated Castor Oil @12"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride @11",
+          "Glycol Distearate @15"
+        ],
+        "limitation": "No humectant cluster"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Repair claims are retailer-graded (low); heavy-leaning deposition.",
+      "decisionTrace": "Primary: claim direction repair (retailer copy, low; name 'Strength & Length' corroborates); a low claim may act as candidate because the formula verdict is independently repair_supported (keratin + argan oil + amodimethicone + guar), which caps focus confidence at moderate (CL-SRC); decision repair.",
+      "rationale": "Repair: repair_supported formula with low-graded repair claims (CL-SRC cap moderate, F1).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "decisionTrace": "Empty default; 'Glanz' wording (low) is an outcome of the same oil/silicone route (F2).",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: default; no moderate/high frequency wording (U2), reset intent (U4), D1 or dandruff claim (U3) in the revealed sources.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 scalp claim unit.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general -> repair (low claim admitted as candidate by the repair_supported verdict; confidence capped moderate).",
+    "usageRole regular, scalpComfortTarget not_targeted confirmed (low -> high).",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposed",
+    "thicknessFit": {
+      "fine": "not_suited",
+      "normal": "acceptable",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=high (moderate, neighbor moderate) and C=high (moderate, neighbor moderate): fine not_suited, normal acceptable, coarse ideal; ordinary target, T6 not applicable; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "heavy",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential high -> heavy, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; retailer copy only -> moderate (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low, D1 False -> gentle. I3: neighbor none; normal expects regular; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "Weight high vs moderate: rests on resetCapacity weak for a mild C6 chassis (W-RICH limited reset) and on the oil/silicone being material by W-line; actual shares unknown - moderate recorded as neighbor.",
+    "Identity confidence moderate in the packet."
+  ]
+}

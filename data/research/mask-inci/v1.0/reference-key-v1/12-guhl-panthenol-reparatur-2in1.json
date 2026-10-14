@@ -1,0 +1,459 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.3",
+  "productId": "12-guhl-panthenol-reparatur-2in1",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Panthenol + Reparatur 2in1 Kur & Spülung",
+    "packSize": "200 ml",
+    "gtinEan": "4072600703403",
+    "market": "DE (dm.de + Rossmann.de + Müller, EAN cross-agreeing across all three)",
+    "formulaSource": "hautschutzengel.de produkt/363600 (fallback tier; dm.de and Rossmann.de both blocked), accessed 2026-09-04",
+    "rawInciSha256": "aadf968d6f6e06ee4644e6f543679d6e6572c617846508e145c9a6128067d38e",
+    "identityState": "verified_with_minor_source_difference",
+    "identityStateReason": "EAN cross-agrees across three independent retailers. The INCI rests on a single fallback-tier source; the directions are aggregated but the dual-mode structure is repeated consistently across dm.de, guhl.com and retailer copy."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "multiUse": {
+      "multi_use": true,
+      "multi_use_covered_mode": "post_shampoo_rinse_out_mask",
+      "multi_use_uncovered_modes": [
+        "conditioner (Als Spülung, ca. 30 Sekunden, für sofortige Regeneration)"
+      ],
+      "multi_use_directions_source_id": "aggregated dm.de + guhl.com official copy, 2026-09-04, cohort confidence: high (the dual-mode structure is verified consistently across all sources found)",
+      "scope_declaration": "This profile describes ONLY the 'Als Kur' rinse-out mask mode (2–3 minutes). The 30-second Spülung mode is uncovered and remains Conditioner-engine territory. Scope declaration, not a quality signal, not an input to any comparison field."
+    },
+    "rationale": "RESOLVED BY R1 (2026-09-14): the charter's named example was mistaken on the facts and has been corrected; this product is eligible, mode-scoped. The §2.2 five-step derivation below is unchanged and is now the charter's own worked case. || THE COHORT'S OPEN G0 QUESTION, RESOLVED AGAINST THE CHARTER'S ASSUMPTION. §2.2's five-step test run verbatim on the frozen directions. STEP 1 — authoritative directions located: 'Als Spülung (für sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen. Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen.' STEP 2 — test each stated mode against §2.1. Mode A 'Als Spülung': after cleansing YES ('ins gewaschene, nasse Haar'); stated contact time YES (ca. 30 Sekunden); rinse YES ('gut ausspülen'); but the mode is self-labelled a Spülung, i.e. a conditioner, and §2.1's category definition requires a rinse-out INTENSIVE TREATMENT (Haarkur/Maske). Mode A is a conditioner mode. Mode B 'Als Kur': after cleansing YES (identical wording); stated contact time YES (2–3 Minuten); rinse YES ('dann ausspülen'); self-labelled a Kur and explicitly purposed 'für Tiefenregeneration'. Mode B IS a qualifying rinse-out mask mode. STEP 3 — exactly one mode qualifies as a MASK mode → classify only that mode, record multi_use: true, name the uncovered mode. STEP 4 not reached (a mode does qualify). STEP 5 not reached: the directions are NOT ambiguous about which mode carries which dwell — the modes are separately named, separately purposed, and carry distinct stated contact times — so `multi_use_directions_ambiguity` does NOT fire. Charter F1 is what governs, and F1's own text says a multi-use product is eligible 'when authoritative directions state a distinct rinse-out mask mode with dwell'. These directions do exactly that.",
+    "evidenceSignals": [
+      "directions mode B verbatim: 'Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen'",
+      "directions mode A verbatim: 'Als Spülung (für sofortige Regeneration): … kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen'",
+      "the two modes are separately named ('Als Spülung' / 'Als Kur'), separately purposed ('sofortige Regeneration' / 'Tiefenregeneration'), and carry distinct contact times — they are separable, so §2.2 step 5 is not reached",
+      "charter F2 (binding): dwell is protocol metadata under P5 and is NEVER a boundary test, so the shortness of either mode cannot decide eligibility",
+      "charter F1: eligible when authoritative directions state a distinct rinse-out mask mode with dwell"
+    ],
+    "charterResolution": {
+      "ruling": "R1 (Nick, 2026-09-14) — CORRECT THE CHARTER. The directions test decides (charter F1); the 2–3-minute Kur mode is mask territory; classification is mode-scoped.",
+      "what_was_wrong": "The charter's exclusion rested on the factual premise that this product's only rinse-out mode is a short conditioner mode. The frozen directions falsify that premise: there are two rinse-out modes, and the second is a self-labelled Kur with a 2–3 minute stated dwell and a Tiefenregeneration purpose. v0.1's AP-12-CHARTERFLIP escalated exactly this, offering resolution (A) correct the example or (B) write a label-based 2in1 exclusion narrowing F1. Nick ruled (A). Standard v0.2 §2.1 and §2.2 are rewritten accordingly, and §2.2 now carries this product as the worked case rather than as the excluded example.",
+      "restated_principle": "No MODE is ever profiled twice. A multi-mode product may hold ONE profile per engine, each covering exactly one mode. This product's Conditioner-engine profile for the 30-second Spülung mode is untouched and not in conflict with the mask profile for its Kur mode.",
+      "status": "RESOLVED. The profile in this record is OFFICIAL, not provisional. The v0.1 withdrawal scenario ('if Nick rules (B), this record's entire profile is withdrawn') is void."
+    }
+  },
+  "tailMarker": {
+    "ingredient": "TETRASODIUM GLUTAMATE DIACETATE",
+    "rank": 7,
+    "index": 7,
+    "plausible": true,
+    "anomalyNote": "No §3.1 anomaly. One notable rule interaction: TETRASODIUM GLUTAMATE DIACETATE at rank 7 is a chelator, and §3.1's tail-class list includes 'trace chelators' but enumerates only Disodium EDTA, Tetrasodium EDTA, Trisodium Ethylenediamine Disuccinate, Etidronic Acid and Phytic Acid — this species is on none of them, and the lexicon §0.2 omits chelators from the marker definition entirely. Read as a closed enumeration, it is not a marker and tail_index stays at 12. Had it counted, the credited segment would shrink from eleven entries to six, S3 would fail, and conditioning_level would drop from high to moderate. See AP-12-CHELATOR.  ||  TAIL MARKER RE-CHECKED UNDER v0.2 (R8 tail-class union list + R2 plausibility). v0.1's AP-12-CHELATOR turned on whether TETRASODIUM GLUTAMATE DIACETATE @7 is tail-class; the standard's §3.1 list and lexicon §0.2/§10 now carry ONE reconciled union list and TETRASODIUM GLUTAMATE DIACETATE is explicitly ON it (R8, 2026-09-14). ETHYLHEXYLGLYCERIN @9 is likewise now marker-eligible, as a preservative booster declared alongside PHENOXYETHANOL @12. The earliest marker-eligible species is therefore TETRASODIUM GLUTAMATE DIACETATE @7, not PHENOXYETHANOL @12: tail_index moves from 12 to 7 and the credited segment shrinks from eleven entries to six. AP-12-CHELATOR is closed by rule, in the direction v0.1 flagged as the more honest one. PLAUSIBILITY ASSESSMENT (R2, §3.1.1): PLAUSIBLE - CETEARYL ALCOHOL @2, BEHENTRIMONIUM CHLORIDE @3 and CETYL ESTERS @5 outrank @7, and the product is a conventional O/W emulsion with AQUA @1. AVENA SATIVA KERNEL OIL @11, which carried S3 in v0.1, is now an ordinary tail member and carries nothing.  ||  RE-CHECKED UNDER v0.3 (E1, E2). E2's third plausibility limb does NOT fire: TETRASODIUM GLUTAMATE DIACETATE @7 is a chelator, its class is not ordered against any other tail class on this list in a contradictory way, and the list's fragrance entries (PARFUM @13, VANILLIN @14) sit BELOW the preservative block (ETHYLHEXYLGLYCERIN @9, PHENOXYETHANOL @12) in an ordinarily consistent arrangement; no declared allergen outranks its own PARFUM. The marker stays PLAUSIBLE at rank 7. E1: PANTHENOL @6 is the tail_index - 1 species and now counts normally everywhere (no strike). It carries no S1/S2/S3 signal and no §9.2 term, and it was already counted in full toward the §9.5.3 humectant cluster, so it is NOT load-bearing for any value and no `boundary_position_ingredient` flag fires."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 CETEARYL ALCOHOL",
+    "3 BEHENTRIMONIUM CHLORIDE",
+    "4 DIPROPYLENE GLYCOL",
+    "5 CETYL ESTERS",
+    "6 PANTHENOL (tail_index - 1)"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": {
+      "value": "moderate",
+      "note": "A short fourteen-entry list with one cationic, one fatty alcohol, a wax ester and one plant oil; the source note itself reads this as a light conditioner-style formula."
+    },
+    "conditioning_deposition_potential": {
+      "value": "moderate",
+      "note": "Behentrimonium Chloride @3 with Cetearyl Alcohol @2 — a single-cationic base."
+    },
+    "wet_slip_detangling_potential": {
+      "value": "moderate",
+      "note": "One permanent quat; no polymer, no second cationic. Wet evidence is not dry evidence."
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "note": "No silicone at any rank ('silikonfrei' claim confirmed by the list); no dry endpoint."
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "note": "CETYL ESTERS @5 (a wax ester, lexicon family 3 — explicitly NOT a fatty alcohol despite the name) is the only emollient above the RE-DERIVED tail (TETRASODIUM GLUTAMATE DIACETATE @7; R8). AVENA SATIVA KERNEL OIL @11 is now tail-side and carries nothing."
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "lower",
+      "note": "No silicone, no substantive polymer, no film former."
+    },
+    "shine_potential": {
+      "value": "lower",
+      "note": "No alignment-oriented route at any rank."
+    },
+    "humectant_support_potential": {
+      "value": "moderate",
+      "note": "DIPROPYLENE GLYCOL @4 and PANTHENOL @6 above the re-derived tail; two members is not a cluster. There is no glycerin in this formula."
+    },
+    "weight_deposition_potential": {
+      "value": "lower",
+      "note": "One wax ester and one light plant oil; no butter, no heavy triglyceride, no occlusive, no silicone."
+    },
+    "body_lightness_potential": {
+      "value": "likely_preserving",
+      "note": "Lean architecture, short list, no heavy lipid; no lightness positioning to corroborate."
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "note": "Manageability route only, despite 'Reparatur' in the product name and 'schützt vor Haarbruch' in the claims."
+    },
+    "repair_surface_film": {
+      "value": "none_visible",
+      "note": "No protein or peptide species at any rank. Glycine @10 is a free amino acid — an explicit non-qualifier."
+    },
+    "bond_specific_support": {
+      "value": "unknown",
+      "note": "No named bond token and no bond positioning ('Reparatur' is not bond positioning)."
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "note": "TETRASODIUM GLUTAMATE DIACETATE @7 is the tail marker under the R8-reconciled chelator list, and LACTIC ACID @8 is tail-side; both are pH/hard-water context and neither is a colour endpoint."
+    },
+    "fragrance_scalp_exposure": {
+      "value": "fragrance_declared",
+      "note": "Parfum @13 and Vanillin @14; no separately declared allergens."
+    }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 aadf968d…), above-tail ranks 1–6 on the RE-DERIVED marker (TETRASODIUM GLUTAMATE DIACETATE @7); category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "CHANGED under v0.2, by two independent routes that agree. R8 reconciles the tail-class chelator list across the standard and the lexicon, which makes TETRASODIUM GLUTAMATE DIACETATE @7 the marker and shrinks the credited segment from eleven entries to six — so S3 loses AVENA SATIVA KERNEL OIL @11 and fails. R3 independently makes S1 mandatory, and this formula has a single cationic species. Either route alone gives `moderate`; both do. v0.1 recorded this `high` as 'the count rule's most uncomfortable result' and declined to argue it away; v0.2 resolves it by rule. E2 ceiling: comparative structural intensity potential.",
+      "evidenceSignals": [
+        "BEHENTRIMONIUM CHLORIDE (rank 3) — the ONLY cationic species at any rank in the formula: S1 fails outright",
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three of the full list: S2 satisfied, and clear of the boundary band",
+        "CETYL ESTERS (rank 5) — a wax ester (lexicon family 3; family 2 states explicitly that Cetyl Esters is an ester, not a fatty alcohol, despite the name): one distinct non-fatty-alcohol lipid above the re-derived tail",
+        "AVENA SATIVA KERNEL OIL (rank 11) — now IN the tail under the re-derived marker; it carried S3 in v0.1 and now carries nothing (§3.1: tail species contribute nothing to conditioning_level). S3 fails",
+        "TETRASODIUM GLUTAMATE DIACETATE (rank 7) — tail marker under the R8-reconciled union list; plausible under §3.1.1 (R2)",
+        "ETHYLHEXYLGLYCERIN (rank 9) — also newly marker-eligible under R8 as a preservative booster declared alongside PHENOXYETHANOL @12, but it is not the earliest eligible species"
+      ],
+      "derivation": "§9.1 on the re-derived above-tail segment (ranks 1–6), with every tail_index − 1 species (PANTHENOL @6, a humectant carrying no structural signal) removed per R3. S1 = NOT satisfied (one cationic). S2 = satisfied (CETEARYL ALCOHOL @2). S3 = NOT satisfied (CETYL ESTERS @5 alone). One signal, and S1 absent.",
+      "thresholdReasoning": [
+        "Clears `moderate`: exactly one satisfied signal, which §9.1 assigns to `moderate`.",
+        "`high` does not apply, on two independent grounds: S1 is mandatory under R3 and fails, and S3 no longer fires at all on the re-derived segment. AP-12-HIGHFLOOR — the cohort's lightest formula scoring the top conditioning value — is closed.",
+        "`low` does not apply: `low` requires none of S1/S2/S3, and S2 is satisfied by CETEARYL ALCOHOL @2.",
+        "Material counter-signals checked and NOT fired: the marker is resolved and plausible; no §2.4.1 tier-2 conflict; no fired signal rests on a family-10 species.",
+        "AP-12-CHELATOR is closed by R8 in the direction v0.1 identified as the more honest one: the chelator list is now explicitly closed and reconciled between the two documents, and TETRASODIUM GLUTAMATE DIACETATE is on it.",
+        "Re-checked under v0.3 (E1, E4). `moderate` STANDS, unchanged. E1 withdraws R3's tail-edge exclusion, which changes nothing here: the tail_index − 1 species is PANTHENOL @6, a humectant that carries no S1/S2/S3 signal, so no signal was ever struck on this record and none is restored. S1 still fails on the formula itself — BEHENTRIMONIUM CHLORIDE @3 is the only cationic species at ANY rank, which is the S1-mandatory route the ruling ledger predicted for this product and the reason it does not follow #01 and #03 back to `high`. S2 holds (CETEARYL ALCOHOL @2); S3 fails (CETYL ESTERS @5 alone, with AVENA SATIVA KERNEL OIL @11 tail-side). One signal, S1 absent → `moderate`. E4 touches §9.2 only and has no conditioning_level consequence; note that the single-cationic fact now does work in two places — it fails S1 here and satisfies the third leanness conjunct there — which is consistent rather than double-counted, because the two fields read it in opposite directions."
+      ],
+      "counterSignals": [
+        "The credited segment is now six entries of a fourteen-entry list. That is a short evidence base — but it is short in the direction of caution, and the value it produces is the middle value.",
+        "Single fallback-tier source (hautschutzengel; dm.de and Rossmann.de both blocked).",
+        "'Panthenol + Reparatur' naming and 'schützt vor Haarbruch' against a formula with no protein and no bond chemistry — recorded in `hinweise`, moving nothing."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable."
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6 on the re-derived marker; an ingredient-informed matching prior.",
+      "rationale": "CHANGED under v0.3 (E4, 2026-09-14): `moderate` → `low`. E4 deletes the structural fatty-alcohol conjunct from the leanness test — the conjunct that refused this product `low` under both v0.1 (the cetearyl top-three cut) and v0.2 (the thin-fatty-base test, which kept the same rank cut inside it). The `low` anchor now reads three things, and this formula satisfies all three: no R4b heavy lipid above the marker, no occlusive silicone stack, a single cationic species. A fourteen-ingredient silicone-free 2in1 with one wax ester and one oat oil is a light product on any substantive reading, and the anchor can finally say so. AP-12-LOWSTILLUNREACHABLE is closed. UNCHANGED by E6 (2026-09-14): E6 touches the focus vocabulary, not this anchor, and confirms that E4's test applies uniformly rather than only to this record. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "CONJUNCT 1 — no R4b heavy lipid above the marker: SATISFIED. CETYL ESTERS @5 is a wax ester (lexicon family 3, and family 2 states explicitly that Cetyl Esters is an ester and not a fatty alcohol despite the name); AVENA SATIVA KERNEL OIL @11 is a light/mid plant oil and is tail-side under the re-derived marker in any case. No butter, no heavy triglyceride, no hydrogenated fat, no occlusive hydrocarbon at ANY rank — so the conjunct holds on the whole list, not merely on the credited segment",
+        "CONJUNCT 2 — no occlusive silicone stack above the tail: SATISFIED. No silicone at any rank; the 'silikonfrei' claim is confirmed by the list (the claim corroborates, it does not establish — the list does)",
+        "CONJUNCT 3 — a single cationic species: SATISFIED. BEHENTRIMONIUM CHLORIDE @3 is the ONLY long-chain cationic / protonatable-amidoamine species at any rank, so the count holds on the above-tail segment and on the full list alike",
+        "CETEARYL ALCOHOL (rank 2) — the species that blocked `low` under v0.1 and v0.2 and no longer does. E4 deletes the fatty-alcohol condition entirely: a single structurant fatty alcohol at rank 2 is near-universal in this category (lexicon family 2: 'presence therefore carries no signal at all'), so a leanness test that failed on it was failing on the category baseline",
+        "tail marker TETRASODIUM GLUTAMATE DIACETATE @7, resolved and plausible on all three §3.1.1 limbs — which is what makes the leanness test AVAILABLE at all (§9.2: `low` is unavailable on an unreadable segment)",
+        "boundary check (E1): the tail_index − 1 species is PANTHENOL @6, a humectant that carries no §9.2 term. Not load-bearing; no cap and no flag from this route"
+      ],
+      "derivation": "§9.2 `low` under E4's restated leanness test, all three conjuncts required and all three observed on a readable above-tail segment (ranks 1–6, marker @7, resolved and plausible): (1) no R4b heavy lipid above the marker — HOLDS; (2) no occlusive silicone stack above the tail — HOLDS; (3) a single cationic species — HOLDS (BEHENTRIMONIUM CHLORIDE @3). `high` fails at its required core for the same reason conjunct 1 holds. Residual is not reached: `low` is positively established.",
+      "thresholdReasoning": [
+        "Clears `low`: E4's three conjuncts, each positively observed rather than inferred from absence. §9.2's marker-quality precondition is met — the marker is resolved and plausible — so the leanness test is available on this record, which is the difference between this product and #11 Elvital, where the same test is blocked by an unresolved marker rather than by architecture.",
+        "`moderate` does not apply, and this is the value that MOVED. Under v0.1 `low` was refused on the cetearyl top-three conjunct; under v0.2 R4 replaced that conjunct with a thin-fatty-base test that retained the same top-three rank cut, so the refusal survived unchanged and the record escalated it as AP-12-LOWSTILLUNREACHABLE. E4 deletes the conjunct rather than rewriting it again.",
+        "`high` does not apply: no R4b heavy lipid at any rank, so the anchor has no required core. This is the same observation as conjunct 1, stated once at each end.",
+        "The E4 carve-out on cationic count is applied as §9.2 states it: a SINGLE cationic is one of three leanness observations here, never a richness signal. Cationic count remains outside the `high` anchor in both directions, so nothing in this record reads cationic breadth as weight.",
+        "§9.2 conflict fallback checked and NOT engaged in either direction: the product's positioning ('Panthenol + Reparatur', 'schützt vor Haarbruch', 'silikonfrei', 'dermatologisch bestätigt') makes no richness claim that a `low` value would contradict, and no lightness claim was used to reach `low` — the three conjuncts are formula facts. `weight_high_conflict` cannot fire on a `low` value.",
+        "Confidence `moderate`, not `high`: §9.2's confidence rule is retained unchanged by E4, and the single fallback-tier source (hautschutzengel; dm.de and Rossmann.de both blocked) is an independent material input gap (§4.1). The value is newly reachable, not newly certain."
+      ],
+      "counterSignals": [
+        "This was the cohort's first `weight_potential: low`, and under E6 it is no longer the only one: E6 rules that E4's leanness test applies UNIFORMLY, and the same three conjuncts are now positively observed on #07 Pantene, #08 Sante and #09 Balea — four `low` calls in twelve profiled records (changes-from-v0.md §6). §18 open question 2's successor asks whether that is the reachability E4 intended against the catalog's ten curated light masks, or whether the test now over-selects. The prevalence is a finding to report, never a threshold to re-tune (§15, and the product-truth-≠-distribution invariant).",
+        "The graded `weight_deposition_potential` direct property reads `lower`, which under v0.1 and v0.2 sat awkwardly against a profile value of `moderate`. Under v0.3 the graded reading and the anchor agree for the first time on this record.",
+        "The re-derived marker (R8, TETRASODIUM GLUTAMATE DIACETATE @7) removes AVENA SATIVA KERNEL OIL @11 from the credited segment, which makes the formula look leaner still — but it changes nothing here, because conjunct 1 holds on the full list and not merely above the marker.",
+        "Downstream consequence, RESOLVED under E6 (2026-09-14). As first written under v0.3 this line read that `low` unlocks §9.5.2 step 3's `lightness` route, tested before moisture, shine and smoothing, and that the focus value was therefore a strict function of this one. E6 deletes that route and removes the value from the vocabulary, so `weight_potential: low` now reaches `hair_thickness_fit` and `texture_fit` and nothing else. Approving this row no longer approves a headline: `primary_focus` is back to `general` on its own step-8 evidence, and AP-12-LIGHTNESSUNLOCKED is closed."
+      ],
+      "limitations": [
+        "Weight drives a soft preference with a stated reason, never an exclusion; fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule). `low` is a desired-finish and dosage prior, not a claim that the product is weak.",
+        "An ingredient-informed matching prior at E2, never a prediction about visible body or finish.",
+        "The `low` anchor is newly reachable as of 2026-09-14 and has no calibration behind it. It is first in line for the calibration set (§15)."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6 on the RE-DERIVED marker (TETRASODIUM GLUTAMATE DIACETATE @7; R8 reconciles the chelator tail classes); comparative care emphasis, never an assertion about a user's protein state (G6).",
+      "rationale": "No protein or peptide species exists at any rank; the single amino-acid token is an explicit non-qualifier. The credited direction is a fatty-alcohol/cationic/ester base with a humectant component — D6's coherent non-protein direction. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank",
+        "GLYCINE (rank 10) — free amino acid, explicit R5 non-qualifier under the mask delta",
+        "CETEARYL ALCOHOL (2), BEHENTRIMONIUM CHLORIDE (3), CETYL ESTERS (5), AVENA SATIVA KERNEL OIL (11) — the conditioning/emollient direction",
+        "DIPROPYLENE GLYCOL (4), PANTHENOL (6) — the humectant component; note there is no glycerin in this formula",
+        "LACTIC ACID (rank 8) — pH context. C3's amidoamine-neutraliser reading does NOT strictly apply, because Behentrimonium Chloride is a permanent quat rather than an amidoamine"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species at any rank), closing `protein` and `balanced`. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route.",
+        "`protein` does not apply: no protein exists. 'Reparatur' in the product name is E0, and §9.3's counter-signal rule directs repair/protein naming without a route to `moisture` with the claim recorded.",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Confidence `high`: resolved tail marker and an unambiguous route separation that survives any tail-marker reading, since the formula contains no protein at all.",
+        "Re-checked under v0.2 (R6, R8). Reading (a) is unavailable: no protein species at any rank. Reading (b) fails at clause 2 (no silicone, no cationic polymer, no acid-gloss architecture) and independently at clause 3 (DIPROPYLENE GLYCOL @4 and PANTHENOL @6 are two distinct R9 humectants above the re-derived tail, which is a partial humectant cluster and therefore a leg). `moisture` is unchanged. The re-derived marker (TETRASODIUM GLUTAMATE DIACETATE @7) does not disturb this: the formula contains no protein at any rank, so the route separation survives every marker reading, which is why this field keeps `high` confidence."
+      ],
+      "counterSignals": [
+        "'Panthenol + Reparatur' naming and 'schützt vor Haarbruch' against a formula with no protein and no bond chemistry — recorded, never decisive.",
+        "D4 does not fire."
+      ],
+      "limitations": [],
+      "balancedReading": null
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "No named bond chemistry, no protein species, and a free amino acid that is an explicit non-upgrader. Panthenol is named in §9.4's non-upgrader list. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "GLYCINE (10) — free amino acid, explicit non-upgrader",
+        "PANTHENOL (6) — explicit non-upgrader",
+        "claims: 'schützt vor Haarbruch', product name 'Reparatur' — E0"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; no material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists.",
+        "`high` does not apply: no named bond token exists.",
+        "Mask delta 3 applied: 'Reparatur' on the pack is not repair. Note the internal inconsistency this product creates: conditioning_level `high` alongside repair_support_level `low` is exactly what mask delta 1 prescribes, but here the `high` is itself questionable."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."
+      ]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–6 on the re-derived marker, run to step 8.",
+      "rationale": "CHANGED under v0.3 by E6 (2026-09-14): `lightness` → `general`. The v0.3 record as first written took `lightness` at §9.5.2 step 3, as a second-order consequence of E4's weight move, and escalated that as AP-12-LIGHTNESSUNLOCKED because E4's stated expectation named the weight field only. Nick ruled E6: `lightness` is removed from the mask focus vocabulary entirely — masks are not bought for lightness, and `weight_potential: low` owns that information — and step 3's `lightness` route is deleted with it. So the hierarchy runs on, and NO specific route clears: `repair` has no R5 species and no bond token at any rank; `curl_support` has a single cationic, no polymer and no curl positioning; `color_care` has neither candidate nor positioning; `moisture` fails §9.5.3 criterion 1 at two humectants against a required three; `shine` has no alignment-oriented route; `smoothing` has no silicone, no substantive polymer and only two light emollients; `detangling` is baseline slip on a single cationic. Step 8 `general` is then the honest fallback for exactly what this product is — a capable conventional Kur whose formula distinguishes no specific job. This is the value the record carried under v0.1 and v0.2, reached by the same route; the `lightness` excursion is closed. E2 ceiling: a comparative architectural reading, never a performance claim.",
+      "evidenceSignals": [
+        "no R5 protein/peptide/keratin species and no bond-chemistry token at any rank — `repair` has nothing to rest on, notwithstanding 'Reparatur' in the product name and 'schützt vor Haarbruch' on the pack (§9.5.2 step 3: generic repair naming cannot set `repair`)",
+        "humectants above the tail: DIPROPYLENE GLYCOL @4, PANTHENOL @6 — two, against the three §9.5.3 criterion 1 requires. GLYCINE @10 is a free amino acid, not counted (R9 does not enumerate it; lexicon family 5b allows at most a very weak contribution) and tail-side under the re-derived marker in any case",
+        "no silicone at any rank ('silikonfrei', confirmed by the list) and no cationic polymer — `smoothing` and `shine` have no architecture to extend beyond the ordinary mask base",
+        "BEHENTRIMONIUM CHLORIDE @3 — a single cationic; slip is category baseline (§9.5.2 step 1), so `detangling` is not distinctive here",
+        "CETYL ESTERS @5 and AVENA SATIVA KERNEL OIL @11 — a light emollient pair, not a substantial lipid route",
+        "weight_potential = low and body_lightness_potential = likely_preserving — both recorded, and under v0.3 neither reaches the focus field at all: E6 deleted the only route that read them (§9.5.2 step 3)"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 observation. Step 3 tests THREE routes under v0.3, not four — E6 deletes the `lightness` leg and removes the value from the vocabulary (§9.5): `repair` blocked (no R5 route of any kind, no bond token), `curl_support` blocked (single cationic, no polymer, no curl positioning), `color_care` blocked (no candidate, no positioning). Step 4 `moisture` blocked at §9.5.3 criterion 1 (two humectants against three). Step 5 `shine` blocked (no alignment-oriented R2/R3 route). Step 6 `smoothing` blocked (no silicone, no substantive polymer, two light emollients are not a material extension beyond the base). Step 7 `detangling` blocked (slip is baseline on a single cationic). Step 8 `general` is reached and taken.",
+      "thresholdReasoning": [
+        "Clears `general`: step 8's honest fallback — a capable conventional mask where no specific focus clears the differentiator threshold and the formula evidence is nonspecific. Every earlier step was tested and named above, which is what step 8 requires before it may be taken.",
+        "`lightness` does not apply, and this is the value that MOVED — twice, in opposite directions, within one revision. E4 made `weight_potential: low` reachable, which unlocked step 3's two-condition `lightness` route and displaced this record's `general` headline; the move was recorded and escalated rather than smoothed over (AP-12-LIGHTNESSUNLOCKED). E6 answers that escalation by removing the value from the vocabulary, so the route no longer exists to be cleared. The record returns to the value it held under v0.1 and v0.2, by the same step-8 path.",
+        "`moisture` does not apply, unchanged across all three revisions: §9.5.3 criterion 1 needs ≥ 3 distinct humectants above the tail with ≥ 2 non-glycerin; DIPROPYLENE GLYCOL @4 and PANTHENOL @6 give two. Counting GLYCINE would give three and — this formula containing no glycerin at all — would trivially satisfy the non-glycerin sub-condition; it is not counted. This is the near-miss AP-05-NOGLYCERIN predicted, and under v0.3 it is no longer moot: with step 3 clearing nothing, criterion 3 no longer blocks the headline, so the two-versus-three count is now the ONLY thing standing between this record and a `moisture` headline. Recorded as a live calibration item rather than a settled call.",
+        "`moisture` as a SECONDARY is also refused, for the same reason: §9.5.3 criterion 3 opens the secondary slot only where the cluster independently meets criterion 1, and it does not.",
+        "`repair` does not apply and the gap is worth naming: this is the cohort's clearest claim/formula mismatch on the repair axis — 'Panthenol + Reparatur' and 'schützt vor Haarbruch' against no protein species, no peptide and no bond token at any rank. §9.5.2 step 3 and §9.5.1's hard rule both forbid a claim creating the route; the mismatch is carried in `hinweise` and moves nothing.",
+        "`smoothing`, `shine` and `detangling` do not apply: no silicone, no substantive polymer, no alignment-oriented route, and slip is baseline in this category on a single cationic.",
+        "Confidence `moderate`: `general` is a fallback rather than a positively earned route, the moisture near-miss above is one counted species away from a different headline, and the single fallback-tier source (hautschutzengel; dm.de and Rossmann.de both blocked) caps this record throughout."
+      ],
+      "counterSignals": [
+        "This record is where E6 was ruled. It is the only cohort record that actually TOOK the `lightness` headline, for the roughly twelve hours between E4 and E6, and it is the case that made the objection concrete: a weight ruling had silently rewritten a focus headline, and the resulting headline named a deposition property the profile already reported in `weight_potential` and both echo fields. Nick's ruling removes the value rather than raising its threshold.",
+        "`weight_potential: low` and `body_lightness_potential: likely_preserving` are both still recorded on this record and both still correct. E6 changes only where they may be READ: they drive the weight row and its two echo annotations, and they no longer reach the focus field. Nothing was deleted from the profile to make `general` come out.",
+        "The 'silikonfrei' claim is confirmed by the list but creates nothing; 'dermatologisch bestätigt' is a tolerance-testing claim, medically adjacent, and is kept entirely out of the classification (G6).",
+        "The focus value is no longer a function of the weight value. Under the v0.3 text before E6 it was strictly so — hold weight at `moderate` and the focus returned to `general` — and the record said as much. After E6 the two are independent again, which is the state v0.1 and v0.2 were in."
+      ],
+      "limitations": [
+        "E2 ceiling: a comparative architectural reading of a lean conventional Kur, never a performance or finish claim.",
+        "`general` is an honest fallback, not a verdict that the product is undifferentiated in use. It records that the FORMULA distinguishes no specific job at the evidence bar this standard applies.",
+        "Mode-scoped (R1): this profile describes the 2–3-minute Kur mode only. The 30-second Spülung mode is Conditioner-engine territory and is not covered here."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus, over above-tail ranks 1–6 on the RE-DERIVED marker.",
+      "rationale": "No second endpoint is describable. `moisture` is refused as a secondary at §9.5.3 criterion 1 (two humectants against a required three), and everything else on this formula is the one M1 observation the primary rests on (§6 rule 1). Unchanged in value across v0.1, v0.2 and v0.3, through two different primaries.",
+      "evidenceSignals": [
+        "two humectants above the tail (DIPROPYLENE GLYCOL @4, PANTHENOL @6); one M1 observation covering everything else",
+        "no silicone, polymer, protein, bond token or heavy lipid at any rank to carry a second route"
+      ],
+      "derivation": "§9.5.3 criterion 1 fails for a moisture secondary; §6 rule 1 blocks a second bite at the single M1 observation.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct.",
+        "Re-checked under v0.3 after E6 moved the primary from `lightness` back to `general`: still zero, and now for the plainer reason. §9.5's vocabulary rule excludes `general` from secondary slots and there is no second route to put there — `moisture` fails criterion 1 at two humectants, and everything else on this formula is the one M1 observation (§6 rule 1). The v0.3-before-E6 reasoning (a richer route had won the primary, opening §9.5.3 criterion 3's secondary path, which the cluster then failed anyway) no longer applies: no richer route wins, because none exists."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "normal"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4). `coarse` drops out of the set.",
+      "evidenceSignals": [
+        "derived from weight_potential = low (E4, 2026-09-14)"
+      ],
+      "derivation": "§9.6 table row 1 (`low` → {fine, normal}).",
+      "thresholdReasoning": [
+        "Clears {fine, normal}: the `low` row.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`, which was the value under v0.1 and v0.2 while the structural fatty-alcohol conjunct blocked `low`.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`.",
+        "The wording rule governs the reading: this is a desired-finish and dosage prior. `coarse` dropping out does not mean coarse hair must avoid the product; it means the product is not the broad prior for it."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-level prior; no production projection is authorized.",
+        "Echo field under R9 (§9.5E): a deterministic projection of an already-reviewed field, displayed as a „→ ergibt:“ annotation on the weight_potential row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "Echo field (R9). conditioning_level `moderate` selects row 2 — the same output set row 3 produced under v0.1, so the conditioning re-derivation does not propagate here.",
+      "evidenceSignals": [
+        "conditioning_level = moderate (re-derived under R8 + R3)",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the `moderate` row.",
+        "{moderately_damaged, highly_damaged} does not apply: no specialist qualifier — no protein or peptide species at any rank, no bond chemistry, no corroborated protection, no exact-product test.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Robustness note retained: rows 2 and 3 of §9.7 produce the same output set, so this field was insensitive to the conditioning_level question in either direction. Only `concentration` in projectedOutputs carries the change downstream.",
+        "Re-checked under v0.3: unchanged, {healthy, moderately_damaged}. conditioning_level stays `moderate` under E1 (no signal was ever struck on this record) and no specialist route qualifies — no protein or peptide species at any rank, no bond chemistry, no corroborated protection, no exact-product test. E4 moves weight_potential, which this field does not read."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Echo field under R9: approving the driving fields approves this projection."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4). `curly` drops out of the set.",
+      "evidenceSignals": [
+        "weight_potential = low (E4, 2026-09-14)"
+      ],
+      "derivation": "§9.8 row 1 (low-weight architecture, `weight_potential: low` → {straight, wavy}); the row label was restated by E6 (2026-09-14) and its mapping is unchanged.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy}: the low-weight row.",
+        "{straight, wavy, curly} does not apply: it requires weight_potential `moderate`, the value under v0.1 and v0.2.",
+        "{wavy, curly, coily} does not apply: weight is not `high`, and there is no high-slip R1/R3 breadth on a single-cationic silicone-free formula.",
+        "Curl branding alone never determines the result, and there is none here in any case."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "focusCareVerdict": {
+    "value": "nonspecific",
+    "claimRole": "not_applicable",
+    "note": "RESTORED under v0.3 by E6 (2026-09-14): `not_applicable` → `nonspecific`. The v0.3 record as first written set `not_applicable` because the chosen focus (`lightness`) was a weight/deposition reading rather than a repair/moisture decision. E6 removes that focus, the headline returns to `general` at step 8, and the verdict returns to what the formula actually says on the repair/moisture axis — `nonspecific`: no protein of any kind, two humectants against a required three, generic light conditioning that is compatible with both directions and distinguishes neither. This is the verdict the record carried under v0.1 and v0.2 and it was never revised on evidence; it was suspended for one revision by a focus that took the field out of the repair/moisture axis. `claim_role` stays `not_applicable`: no claim was used anywhere, and §9.5.1's hard rule was applied throughout — 'Reparatur' and 'schützt vor Haarbruch' could not create a repair focus, and `nonspecific` resolves to `general`, never to `moisture` and never to `repair`."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "all nine profile fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "Unblinding changed no value. The shine threshold was never reached, no dual_supported tie existed, no bond claim was made, and no colour positioning existed. Re-checked twice under v0.3. First for the `lightness` primary E4 briefly produced, and then again after E6 removed that value from the vocabulary: the primary is `general`, reached at §9.5.2 step 8 after every earlier step is tested and blocked on formula facts alone, all of which are in the blind packet. No claim was used at any step — 'Reparatur' and 'schützt vor Haarbruch' could not create the repair route, and there is no positioning of any kind that unblinding could have added to move this field. The blind lane reaches `general` too. Note that the G0 determination is NOT a blind-to-final matter: §11 step 1 puts the directions facts needed for G0/§2.2 inside the blind packet precisely so eligibility is decided before identity is known — and it was."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "light",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": [],
+    "suitable_thicknesses": [
+      "fine",
+      "normal"
+    ]
+  },
+  "adjudicationPoints": [],
+  "uncertainFields": [
+    "conditioningLevel"
+  ],
+  "assumptionNotes": [
+    "Re-derived again under v0.3 after E6 (2026-09-14), which removes `lightness` from the mask focus vocabulary and deletes §9.5.2 step 3's `lightness` route. This record is the one E6 was ruled on: it is the only cohort record that took the `lightness` headline, and AP-12-LIGHTNESSUNLOCKED is the escalation E6 answers.",
+    "Fields whose value moved under E6: primaryFocus (lightness → general, via §9.5.2 step 8 — the value this record carried under v0.1 and v0.2, reached by the same path); focusCareVerdict.value (not_applicable → nonspecific, restored, the focus being a repair/moisture decision again); uncertainFields (primaryFocus removed — it was listed only because of the escalation E6 closes).",
+    "Fields NOT touched by E6, stated explicitly because the two halves of the ruling are easy to conflate: weightPotential stays `low` (E4, all three conjuncts positively observed — E6 confirms E4 applies uniformly and does not narrow it); hairThicknessFit stays {fine, normal}; textureFit stays {straight, wavy}; projectedOutputs weight stays `light` and suitable_thicknesses {fine, normal}; body_lightness_potential stays `likely_preserving` as a §7 direct property, now feeding no §9 field. Nothing was removed from the profile to produce `general`.",
+    "One live calibration item is un-mooted by E6 and is worth a reviewer's eyes: with step 3 clearing nothing, §9.5.3 criterion 3 no longer blocks the moisture headline, so the two-versus-three humectant count (DIPROPYLENE GLYCOL @4, PANTHENOL @6, with GLYCINE @10 not counted) is now the ONLY thing between this record and `moisture`. Under v0.2 that near-miss was doubly blocked; it is now singly blocked. Recorded, not acted on — the count is the rule and the rule is applied as written.",
+    "Review triggers after E6 — unchanged, FIRED: none. `weight_high_conflict` still cannot fire on a `low` value; `low_confidence_field` still does not fire (no field at `low` CONFIDENCE, as distinct from `weight_potential: low`, which is a value).",
+    "Blind-lane record re-checked for the reverted focus: the blind lane ran the same hierarchy on the same formula and would reach step 8 `general`, since the route it would have taken no longer exists in the vocabulary either lane uses. No entry in blindToFinalChanges moves.",
+    "— the E4-only pass, superseded in its focus half by E6 above, retained as provenance — Re-derived under v0.3 (E4 restated leanness test — which MOVES weight_potential on this record and, through §9.5.2 step 3, primary_focus with it; E1 boundary-position rule checked and not load-bearing; E2 third plausibility limb checked and not fired), not patched.",
+    "— SUPERSEDED BY E6, retained as provenance for the E4-only reading — Fields whose value moved under v0.3: weightPotential (moderate → low, i.e. medium → light, E4); primaryFocus (general → lightness, consequent on §9.5.2 step 3 — FLAGGED in AP-12-LIGHTNESSUNLOCKED, since E4's stated expectation names the weight effect only); hairThicknessFit (echo: {fine, normal, coarse} → {fine, normal}); textureFit (echo: {straight, wavy, curly} → {straight, wavy}); focusCareVerdict.value (nonspecific → not_applicable, consequent on the focus no longer being a repair/moisture decision); projectedOutputs weight and suitable_thicknesses.",
+    "Fields whose evidence text was re-derived without a value move: conditioningLevel (E1 checked — the tail_index − 1 species is PANTHENOL @6, which carries no S1/S2/S3 signal, so nothing was struck under v0.2 and nothing is restored under v0.3; S1 still fails on the formula's single cationic, which is the S1-mandatory route the ruling ledger predicted for this product), secondaryFocus, damageFit, tailMarker (E1 + E2 checks), blindToFinalChanges (re-checked for the new `lightness` primary — the blind lane reaches it too).",
+    "E1 produces NO `boundary_position_ingredient` flag on this record: PANTHENOL @6 sits at tail_index − 1 but is not load-bearing for any value. It carries no §9.1 signal and no §9.2 term, and it was already counted in full toward the §9.5.3 humectant cluster under the lane's v0.1 policy, so its treatment is unchanged in every direction.",
+    "The single-cationic fact (BEHENTRIMONIUM CHLORIDE @3, the only cationic species at any rank) now does work in two fields, in opposite directions: it fails S1 in §9.1 and satisfies the third leanness conjunct in §9.2. That is consistent rather than a double count — §6 rule 1 forbids reading ONE observation as TWO instances of richness, not reading one observation as evidence of leanness in the field that owns leanness.",
+    "Review triggers under v0.3 — FIRED: none. Specifically NOT fired: `weight_high_conflict` (cannot fire on a `low` value; and the pack makes no richness claim a `low` would contradict), `tail_marker_anomaly`, `tail_marker_unresolved` (the marker is plausible on all three §3.1.1 limbs, including E2's new one), `multi_use_directions_ambiguity` (the modes are separably named, purposed and timed, so §2.2 step 5 is not reached), `protein_payload_review`, `bond_claim_review`, `specialist_damage_fit`, `low_confidence_field` (no field at `low` CONFIDENCE — note the distinction from `weight_potential: low`, which is a value).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+    "THE v0.1 PROVISIONAL STATUS IS LIFTED. R1 corrects the charter's example and rules this product eligible, mode-scoped, on its 2–3-minute Kur mode. The profile is OFFICIAL, not provisional on a further ruling, and the withdrawal scenario the v0.1 record carried is void. The Conditioner-engine profile for the 30-second Spülung mode is untouched and not in conflict: the principle is that no MODE is profiled twice, not that no product holds two profiles.",
+    "Re-derived under v0.2 (R1 charter correction; R8 chelator reconciliation, which moved the tail marker from PHENOXYETHANOL @12 to TETRASODIUM GLUTAMATE DIACETATE @7; R3 S1-mandatory; R4 weight anchors; R5/R6 checked; R2 plausibility prong; R9 echo markers). conditioningLevel moved high → moderate under v0.2 by two independent routes that agree, and that value is unchanged under v0.3. weightPotential was `moderate` under v0.2 and the record escalated the refusal as AP-12-LOWSTILLUNREACHABLE; E4 closed it.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 2–3 minutes for the covered Kur mode; the 30-second Spülung mode's dwell belongs to the uncovered mode. Placement is not stated in either mode and therefore takes the P5 canonical placement by default (R8, §2.1). Under P5 the covered mask mode takes the conditioner slot (`replaces_conditioner`).",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the boundary-band caution is a confidence modifier only (and is now the standard's own rule under E1).",
+    "'dermatologisch bestätigt' is a tolerance-testing claim, is medically adjacent, and was kept entirely out of the classification (G6)."
+  ],
+  "derivedFrom": "reference-key-v1/12-guhl-panthenol-reparatur-2in1.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-derived under Standard v0.3 (E1–E4, then E6), not patched.",
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "true — covered mode: post_shampoo_rinse_out_mask; uncovered: conditioner (Als Spülung, ca. 30 Sekunden, für sofortige Regeneration)",
+        "note": "Scope declaration only (§2.2): this profile describes the rinse-out mask mode and nothing else. It is never a quality signal, never a penalty, and never an input to any comparison field. No MODE is profiled twice (R1)."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Panthenol + Reparatur' naming and 'schützt vor Haarbruch' vs repair_support_level `low`, bond_route `none`, and no protein species at any rank",
+        "note": "Repair naming with no protein and no bond chemistry anywhere in the formula. GLYCINE @10 is a free amino acid and an explicit R5 non-qualifier, and is now in the tail in any case under the re-derived marker. Recorded; moves nothing. 'dermatologisch bestätigt' is a tolerance-testing claim, is medically adjacent, and is kept entirely out of the classification (G6)."
+      }
+    ]
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-12-CHARTERFLIP": "CLOSED by R1, in the direction this record argued for (resolution A). The charter's example was mistaken on the facts; the directions test governs; the product is eligible, mode-scoped, and its profile is OFFICIAL, not provisional. The Conditioner-engine profile for the Spülung mode is untouched and not in conflict: no MODE is profiled twice.",
+    "AP-12-HIGHFLOOR": "CLOSED by R3 (and independently by R8's marker move). The cohort's lightest formula no longer scores the top conditioning value.",
+    "AP-12-CHELATOR": "CLOSED by R8. The chelator list is reconciled into one union list across the standard and the lexicon, TETRASODIUM GLUTAMATE DIACETATE is on it, and the marker moves to rank 7.",
+    "AP-12-LOWSTILLUNREACHABLE": "CLOSED by E4 (2026-09-14). Raised under v0.2: R4's thin-fatty-base test retained a top-three rank cut, so `low` was refused on CETEARYL ALCOHOL @2 exactly as v0.1 had refused it, and the unreachability was relocated rather than removed. Nick ruled the structural fatty-alcohol conjunct deleted outright. This product is the first `weight_potential: low` in the cohort. The successor question — whether the new test now selects `low` on roughly the catalog's ten curated light masks or on too many — is §18 open question 2's narrowed form and belongs to the calibration set.",
+    "AP-07-LOWUNREACHABLE-COHORT": "CLOSED for this record by E4. v0.1 named this product the cohort's clearest instance of an unreachable `low`; it is now the cohort's first reachable one. The cohort-wide half of the point is NOT closed by this record alone: E4's test plausibly reaches further records this pass's write scope does not cover — see changes-from-v0.md §5.",
+    "AP-12-LIGHTNESSUNLOCKED": "CLOSED by E6 (2026-09-14), and closed against the reading this record produced. Raised under v0.3 when E4's weight move unlocked §9.5.2 step 3's two-condition `lightness` route and displaced this record's `general` headline — a focus move E4's stated expectation did not mention. The point asked Nick whether `lightness` is the right headline for a lean conventional Kur, or whether the two-condition test was too thin to sit above moisture/shine/smoothing. He answered neither: masks are not bought for lightness, so the VALUE leaves the vocabulary and the route is deleted (§9.5, §9.5.2 step 3). `primary_focus` returns to `general` via step 8. The weight half of E4 stands untouched on this record — `weight_potential: low` is unchanged, and both echo fields with it. §18 open question 13, which this point created, is closed with it."
+  }
+}

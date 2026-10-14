@@ -1,0 +1,17 @@
+{
+  "reason": "actual648 c8 lost execution of still-live regular relation classifier after obsolete rollout removal",
+  "authoringGate": [
+    "ordinary fallback on regular missing-table error",
+    "wrong classifier throws rather than fallback",
+    "existing personal-plan missing relation test returns before regular lookup",
+    "real current enrollment boundary;no production seam"
+  ],
+  "reintroducedRegistration": 1,
+  "netRemovals": 647,
+  "newReplacementInputs": 1,
+  "ownerCallsPerNewCallback": 1,
+  "oldDeletedDonor": "an unapplied field-test relation is not an internal-owner signal",
+  "beforeSHA256": "ba567e1486dad026768072511dcb890f5c6bba2b787305fd68d35a4e0adf25b2",
+  "afterSHA256": "6db78313f6af24397dae0575c3e8e2a7ef257da57d8b54f4d9dfd7682d8d40b1",
+  "ownerSourceChanges": 0
+}

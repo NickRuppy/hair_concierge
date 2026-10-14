@@ -1,0 +1,47 @@
+[
+  {
+    "id": "C1",
+    "file": "tests/stripe-trial-authorization.test.ts",
+    "title": "retrieves provider authorities itself before returning verified trial facts",
+    "transferStartLine": 388,
+    "cutStartLine": 374,
+    "transferBodySha256": "bc9d40ddfc52d65e0a1f5aca9e7cbebfafe06f25c8461afa6a455b4cdf4a1f43",
+    "cutBodySha256": "bc9d40ddfc52d65e0a1f5aca9e7cbebfafe06f25c8461afa6a455b4cdf4a1f43"
+  },
+  {
+    "id": "C2",
+    "file": "tests/stripe-trial-account-activation.test.ts",
+    "title": "read-only Stripe return recovery exposes a released prior-use denial only after binding proof",
+    "transferStartLine": 493,
+    "cutStartLine": 466,
+    "transferBodySha256": "158c1f331cd0f55332c1dee046b4197e2dcc7dc08f289d794ff5a7dd9d5ffdce",
+    "cutBodySha256": "158c1f331cd0f55332c1dee046b4197e2dcc7dc08f289d794ff5a7dd9d5ffdce"
+  },
+  {
+    "id": "C3",
+    "file": "tests/stripe-trial-account-activation.test.ts",
+    "title": "read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation",
+    "transferStartLine": 522,
+    "cutStartLine": 495,
+    "transferBodySha256": "0ea9b9fd4c3a43f2ab2533cefe221cf53795ec1fe349309cb5454ada70b7ad96",
+    "cutBodySha256": "0ea9b9fd4c3a43f2ab2533cefe221cf53795ec1fe349309cb5454ada70b7ad96"
+  },
+  {
+    "id": "C4",
+    "file": "tests/stripe-trial-invoice.test.ts",
+    "title": "late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op",
+    "transferStartLine": 546,
+    "cutStartLine": 535,
+    "transferBodySha256": "2a984b4a8d105e666fca5f0cabf61d9efc4b4a8e925da793d6890686963a7b94",
+    "cutBodySha256": "2a984b4a8d105e666fca5f0cabf61d9efc4b4a8e925da793d6890686963a7b94"
+  },
+  {
+    "id": "C5",
+    "file": "tests/stripe-trial-invoice.test.ts",
+    "title": "missing initial binding is typed retryable and restored binding succeeds without payment",
+    "transferStartLine": 559,
+    "cutStartLine": 548,
+    "transferBodySha256": "71fdd1053072dd5859afbbe9734070e099f6b07d0865bab11c891d3622e447a8",
+    "cutBodySha256": "71fdd1053072dd5859afbbe9734070e099f6b07d0865bab11c891d3622e447a8"
+  }
+]

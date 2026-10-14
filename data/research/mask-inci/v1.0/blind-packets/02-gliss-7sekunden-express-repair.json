@@ -1,0 +1,19 @@
+{
+  "productId": "02-gliss-7sekunden-express-repair",
+  "identity": {
+    "brand": "Schwarzkopf Gliss Kur",
+    "productName": "7 Sekunden Express-Repair Kur, Ultimate Repair",
+    "packSize": "200 ml",
+    "gtinEan": "4015100813319",
+    "market": "DE"
+  },
+  "rawInci": "Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua (Water, Eau), Glycerin, Caprylic/Capric Triglyceride, Parfum (Fragrance), Cetrimonium Chloride, PEG-7 Glyceryl Cocoate, Hydroxypropylgluconamide, Hydroxypropylammonium Gluconate, Hydrolyzed Keratin, Lauryl Alcohol, Cetyl Alcohol, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Citric Acid, Geranyl Acetate, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol",
+  "directions": {
+    "text": "Nach dem Shampoonieren auf das handtuchtrockene/feuchte Haar auftragen, bis sich eine cremige Textur bildet, 7 Sekunden einwirken lassen, gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "7 seconds (the product's defining marketing claim - 'as effective as a 5-minute treatment in 7 seconds')",
+    "source": "Aggregated from schwarzkopf.de and multiple independent retailer copy blocks (all consistent on '7 Sekunden' as both product name and contact time) - schwarzkopf.de direct fetch did not render the Anwendung body text, so this is search-aggregated rather than a single verbatim page fetch, but the figure is the universal branded claim, not disputed anywhere found.",
+    "confidence": "high - the contact time is literally the product's name and is repeated identically across every independent source found"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

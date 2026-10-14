@@ -231,7 +231,7 @@ export type BondbuilderProductionProjection = {
       claim_trust_level: NonNullable<BondbuilderResearchProfile["assessment"]["claim_trust_level"]>
       trust_basis: NonNullable<BondbuilderResearchProfile["assessment"]["trust_basis"]>
       research_profile: BondbuilderResearchProfile
-      application_mode?: "pre_shampoo" | "post_wash_leave_in"
+      application_mode?: "pre_shampoo" | "post_wash_leave_in" | "bedtime_leave_in"
       treatment_mode?: "rinse_out" | "leave_in"
       product_format?: "cream_treatment" | "spray_treatment"
     }
@@ -296,6 +296,14 @@ export function projectBondbuilderForProduction(
     p.application.rinse.value?.treatment_mode === "leave_in"
   )
     specs.application_mode = "post_wash_leave_in"
+  if (
+    p.application.state_modifiers.value?.includes("at_bedtime") &&
+    p.application.timing.value?.kind === "overnight" &&
+    p.application.timing.value.purpose === "contact" &&
+    p.application.rinse.value?.treatment_mode === "leave_in" &&
+    !p.application.rinse.value.standalone_treatment_rinse
+  )
+    specs.application_mode = "bedtime_leave_in"
   if (p.application.rinse.value) specs.treatment_mode = p.application.rinse.value.treatment_mode
   if (p.application.applied_format.value === "cream") specs.product_format = "cream_treatment"
   if (p.application.applied_format.value === "liquid_spray")
@@ -394,7 +402,6 @@ export function projectBondbuilderForProduction(
       property_lane_ready: true,
       property_projection_ready: true,
       curated_research_candidate:
-        p.assessment.claim_trust_level !== "low" &&
         p.assessment.trust_basis !== "owner_default" &&
         p.assessment.classification_confidence !== "low" &&
         !p.holds.protocol.length &&

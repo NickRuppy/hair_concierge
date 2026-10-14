@@ -1,0 +1,145 @@
+{
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "fixture": {
+    "file": "tests/personal-plan/fixtures.ts",
+    "sha256": "39f439962a62f1f9f9d789d171f84cb2e951386d8b2a72c5a7a31549356d2890",
+    "declarationSHA256": "e03a24a6dd43d22410bd36fc653885c266bb84fe2c4d21d9d91798871cfdd75c",
+    "readDepth": "Whole literal fixture; no execution"
+  },
+  "parser": {
+    "file": "src/lib/personal-plan/input.ts",
+    "ranges": [
+      [
+        138,
+        151
+      ]
+    ],
+    "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f"
+  },
+  "schema": {
+    "file": "src/lib/personal-plan-quiz/persistence.ts",
+    "ranges": [
+      [
+        26,
+        111
+      ]
+    ],
+    "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+  },
+  "installedZod": [
+    {
+      "file": "node_modules/zod/index.cjs",
+      "sha256": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2",
+      "ranges": [
+        [
+          29,
+          35
+        ]
+      ],
+      "meaning": "require entry forwards to v4/classic/external",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/external.cjs",
+      "sha256": "88f600b7ec41204e625886c93864568e6dbda628c94db92bc928f8b2e163eec1",
+      "ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "meaning": "classic export wiring",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.cjs",
+      "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+      "ranges": [
+        [
+          186,
+          202
+        ]
+      ],
+      "meaning": "instance safeParse delegates to parse wrapper",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/parse.cjs",
+      "sha256": "0fb97825ed1c15a1f6a238df9506e23f2e720edeae4774aa46a60ce7b2a75319",
+      "ranges": [
+        [
+          26,
+          33
+        ]
+      ],
+      "meaning": "safeParse delegates core _safeParse",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    },
+    {
+      "file": "node_modules/zod/v4/core/parse.cjs",
+      "sha256": "78c3851f57bfeb5e0f4464d3dfe62781ba8292e89692e52b4fc00195d4b02251",
+      "ranges": [
+        [
+          59,
+          73
+        ]
+      ],
+      "meaning": "returns result.value on success",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    },
+    {
+      "file": "node_modules/zod/v4/core/schemas.cjs",
+      "sha256": "cd1cd83d15bb681ff414fd95de6145de88a91e0ef38df3d3f5deb594007a221c",
+      "ranges": [
+        [
+          745,
+          772
+        ],
+        [
+          830,
+          890
+        ],
+        [
+          910,
+          945
+        ],
+        [
+          1773,
+          1805
+        ]
+      ],
+      "meaning": "optional undefined preserved when key exists in input, normal and JIT object paths",
+      "readDepth": "Selected bounded source ranges only; complete byte pin does not claim full Zod audit"
+    }
+  ],
+  "reporter": {
+    "source": "embedded internal/test_runner/reporter/tap",
+    "sha256": "ec4c8ff12b8302e0dbe70c7dcd3d3fe79cb4bee1a29dc05f86aaed7b32df15c1",
+    "ranges": [
+      [
+        128,
+        174
+      ],
+      [
+        174,
+        194
+      ]
+    ],
+    "contract": "jsToYaml omits undefined, preserves scalar types and emits object/array Object.entries recursively. TAP projection alone does not distinguish own undefined from absence or empty object from empty array."
+  },
+  "onlyOmittedRuntimeProperty": [
+    [
+      "envelope",
+      "answers",
+      "thickness"
+    ]
+  ],
+  "additionalErrorMessageWitness": "thickness: undefined",
+  "predictedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   envelope: {\n+     answers: {\n+       adaptationConfidence: 'partly',\n+       blockers: [\n+         'product_fit'\n+       ],\n+       chemicalTreatments: [\n+         'colored'\n+       ],\n+       concernRecurrence: {\n+         concernId: 'dry_lengths',\n+         frequency: 'often'\n+       },\n+       currentConcerns: [\n+         'dry_lengths',\n+         'split_ends'\n+       ],\n+       density: 'medium',\n+       elasticResponse: 'stretches_stays',\n+       goals: [\n+         'moisture',\n+         'shine'\n+       ],\n+       hairLength: 'long',\n+       hairSurface: 'rough',\n+       meaningfulMoment: 'everyday',\n+       previousAttempts: 'some_steps_helped',\n+       resultReliability: 'sometimes',\n+       routineClarity: 'partial',\n+       routineStyle: 'simple_reliable',\n+       scalpConcerns: [],\n+       scalpOiliness: 'balanced',\n+       texture: 'wavy',\n+       thickness: undefined\n+     },\n+     kind: 'personal_plan',\n+     version: 3\n-   error: {\n-     code: 'invalid_quiz_envelope',\n-     quizVersion: 3\n    },\n+   ok: true\n-   ok: false\n  }\n",
+  "rootDisposition": "Root explicitly accepted complete exact printed projection with this source-proved omission, exact expected failure and bound actual-owner/FIRST keeper gates.",
+  "limits": "Source/format prediction only; no Zod/product import or native execution. Container and own-property semantics are source-backed, not claimed as fully observable in lossy TAP serialization."
+}

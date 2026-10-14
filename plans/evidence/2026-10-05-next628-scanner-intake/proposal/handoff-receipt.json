@@ -1,0 +1,26 @@
+{
+  "status": "STATIC COMPLETE; FOUR CONDITIONAL CONSOLIDATIONS; RUNTIME UNRUN",
+  "manifestSHA256": "d7d58df419edf371041212beb2159cb7f6b6d0282b3ecbd439b6de027ebbfc0e",
+  "proposalRoot": "/tmp/test-audit-scanner-intake26",
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22
+  },
+  "classifications": {
+    "R": 21,
+    "F": 1,
+    "C": 4,
+    "D": 0
+  },
+  "unrelatedCallbacksExact": 20,
+  "heldFExact": 1,
+  "controlsUnrun": 14,
+  "parserCheckSHA256": "a6b6d2e423b03df905c1a87b6c17e373b3dc18b093ad468d9fa1a77fef2b82f6",
+  "staticCheckSHA256": "6d2da1710ea7a5386dc7ea1dfa778ff1e0fc1c345e5735786583d272f183b8e3",
+  "repositoryWrites": 0,
+  "runtimeTests": 0,
+  "ownerOrTestImports": 0,
+  "actualMutations": 0,
+  "limits": "Exact26 semantic lane; overlap/CI/dependency slices as declared, no full other98/220 or vendor closure. Main owns runtime/fault/cut decisions."
+}

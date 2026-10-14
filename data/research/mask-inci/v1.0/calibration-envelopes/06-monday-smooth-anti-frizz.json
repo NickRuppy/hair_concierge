@@ -1,0 +1,287 @@
+{
+  "version": "mask-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "mask-classification-v1.0",
+    "modelVersion": "mask-inci-v1.0",
+    "policySha256": "d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0",
+    "lexiconSha256": "3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada"
+  },
+  "identity": {
+    "researchId": "mask-v1.0-06-monday-smooth-anti-frizz",
+    "market": "DE/EU",
+    "exactProductName": "Smooth Anti-Frizz Haarmaske",
+    "brand": "MONDAY Haircare",
+    "gtin": "4895248003991",
+    "identityStatus": "verified_with_minor_source_difference",
+    "categoryBoundaryStatus": "eligible",
+    "exclusionReason": null,
+    "multiUse": false,
+    "uncoveredModes": [],
+    "confidence": "moderate",
+    "sourceIds": [
+      "incibeauty.com/en/produit/4895248003991 (database fallback tier, below hautschutzengel/codecheck), accessed 2026-09-04"
+    ]
+  },
+  "formula": {
+    "status": "verified_with_minor_difference",
+    "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DIMETHICONE, DIMETHICONOL, ISOPROPYL MYRISTATE, BUTYROSPERMUM PARKII (SHEA) BUTTER, COCOS NUCIFERA (COCONUT) OIL, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, PHENOXYETHANOL, BEHENTRIMONIUM CHLORIDE, DIGLYCERIN, HYDROXYETHYLCELLULOSE, PARFUM (FRAGRANCE), PEG-100 STEARATE, GLYCERYL STEARATE, AMODIMETHICONE, CHLORPHENESIN, ISOPROPYL ALCOHOL, TRIDECETH-10, TEA-DODECYLBENZENESULFONATE, LAURETH-23, DISODIUM EDTA, TRIDECETH-3, BENZYL ALCOHOL, ETHYLHEXYLGLYCERIN, POLYSORBATE 60, DISODIUM PHOSPHATE, CITRIC ACID, ACETIC ACID, SODIUM PHOSPHATE, HEXYL CINNAMAL, LINALOOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+    "normalizedIngredients": [
+      "AQUA",
+      "GLYCERIN",
+      "CETEARYL ALCOHOL",
+      "DIMETHICONE",
+      "DIMETHICONOL",
+      "ISOPROPYL MYRISTATE",
+      "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+      "COCOS NUCIFERA (COCONUT) OIL",
+      "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "PHENOXYETHANOL",
+      "BEHENTRIMONIUM CHLORIDE",
+      "DIGLYCERIN",
+      "HYDROXYETHYLCELLULOSE",
+      "PARFUM (FRAGRANCE)",
+      "PEG-100 STEARATE",
+      "GLYCERYL STEARATE",
+      "AMODIMETHICONE",
+      "CHLORPHENESIN",
+      "ISOPROPYL ALCOHOL",
+      "TRIDECETH-10",
+      "TEA-DODECYLBENZENESULFONATE",
+      "LAURETH-23",
+      "DISODIUM EDTA",
+      "TRIDECETH-3",
+      "BENZYL ALCOHOL",
+      "ETHYLHEXYLGLYCERIN",
+      "POLYSORBATE 60",
+      "DISODIUM PHOSPHATE",
+      "CITRIC ACID",
+      "ACETIC ACID",
+      "SODIUM PHOSPHATE",
+      "HEXYL CINNAMAL",
+      "LINALOOL",
+      "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+    ],
+    "formulaFingerprintSha256": "1db41588c8f03b4a8af6078a830816c0f082e16727bca0de6f3a68ed4421fd17",
+    "rawInciSha256": "1db41588c8f03b4a8af6078a830816c0f082e16727bca0de6f3a68ed4421fd17",
+    "sourceIds": [
+      "incibeauty.com/en/produit/4895248003991 (database fallback tier, below hautschutzengel/codecheck), accessed 2026-09-04"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "CHANGED under v0.2 (R3). S1 is now mandatory for `high`, and this formula has no cationic surfactant above the tail at all: its only one, BEHENTRIMONIUM CHLORIDE, is declared at rank 12, one rank below the marker. S2 and S3 both fire, but R3 is explicit that S2 + S3 without S1 is `moderate`, because both read the fatty/emollient load that §9.2 owns — and here that load is said once, and loudly, in `weight_potential: high`. E2 ceiling: comparative structural intensity potential.",
+      "evidenceSignals": [
+        "no cationic surfactant above the tail: BEHENTRIMONIUM CHLORIDE @12 is the formula's only one and sits below PHENOXYETHANOL @11. S1 fails outright, before the tail-edge exclusion is even reached",
+        "CETEARYL ALCOHOL (rank 3) — long-chain fatty alcohol in the top three of the full list: S2 satisfied",
+        "ISOPROPYL MYRISTATE (6), BUTYROSPERMUM PARKII (SHEA) BUTTER (7), COCOS NUCIFERA (COCONUT) OIL (8), SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (9) — four distinct non-fatty-alcohol lipids above the tail and above tail_index − 1: S3 satisfied with room to spare",
+        "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (rank 10) — at tail_index − 1, excluded from carrying a signal (R3); S3 fires without it",
+        "PHENOXYETHANOL (rank 11) — tail marker, plausible under §3.1.1 (R2); PARFUM sits four ranks later at 15"
+      ],
+      "derivation": "§9.1 (R3). S1 = NOT satisfied (zero distinct cationic surfactants above the tail). S2 = satisfied. S3 = satisfied on four species, three of which survive the tail-edge exclusion. Two signals fire; S1 is not one of them → `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: R3 assigns `moderate` to everything else, explicitly including S2 + S3 without S1.",
+        "`high` does not apply: S1 is mandatory and this formula's credited segment contains no cationic conditioning agent whatsoever — the strongest possible failure of the signal that reads conditioning BREADTH. v0.1 recorded this as AP-06-NOCATIONIC, a mask scoring the top conditioning value with no cationic in its credited segment; R3 closes it.",
+        "`low` does not apply: S2 and S3 both hold.",
+        "Material counter-signals checked and NOT fired: the marker is resolved and plausible; no §2.4.1 tier-2 conflict; no fired signal rests on a family-10 species (PEG-100 STEARATE @16 and GLYCERYL STEARATE @17 are both in the tail and were never counted)."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable.",
+        "Source is a database fallback tier (incibeauty); a same-name hautschutzengel page was found to be the SHAMPOO and was discarded rather than used."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "CHANGED under v0.2 (R4). The cationic gate is removed and `weight_potential` now stands on lipid and fatty-base evidence alone — which is exactly the evidence this formula has most of. A heavy-lipid core sits above the marker and BOTH completers are independently satisfied. Under v0.1 the cohort's heaviest credited lipid block was refused `high` because the product carries one cationic; that was the defect R4 names. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "BUTYROSPERMUM PARKII (SHEA) BUTTER (rank 7) — R4b heavy lipid above the marker (PHENOXYETHANOL @11): the required core",
+        "COCOS NUCIFERA (COCONUT) OIL (rank 8) — a second R4b heavy triglyceride above the marker, also clear of tail_index − 1",
+        "CETEARYL ALCOHOL (rank 3) — cetearyl-class fatty alcohol within the top three ranks: completer (a), the dense fatty-alcohol base",
+        "DIMETHICONE (4) + DIMETHICONOL (5) — a dimethicone/dimethiconol pair above the tail: completer (b), the occlusive silicone stack, satisfied independently of (a)",
+        "cationic count deliberately NOT used in either direction (§9.2 counter-signal list, R4): it is neither a weight signal nor a weight counter-signal"
+      ],
+      "derivation": "§9.2 `high` (R4): required core = at least one R4b heavy lipid above the marker (shea @7, coconut @8 — two). Completer (a) dense fatty-alcohol base = CETEARYL ALCOHOL @3 within the top three. Completer (b) occlusive silicone stack = DIMETHICONE @4 + DIMETHICONOL @5. Either completer suffices; both hold. Tail-edge check: the tail_index − 1 species is PRUNUS AMYGDALUS DULCIS OIL @10, an R4a mid lipid that was not needed for any term.",
+      "thresholdReasoning": [
+        "Clears `high`: core plus both completers, on a readable above-tail segment with a resolved, plausible marker.",
+        "`moderate` does not apply: it is the residual once the `high` anchor fails, and the anchor does not fail. v0.1's `moderate` was produced by the cationic gate that R4 removes; nothing about the lipid evidence has changed.",
+        "`low` does not apply: the leanness test fails on all three conjuncts — two R4b heavy lipids above the marker, a cetearyl-class fatty alcohol at rank 3, and an occlusive silicone pair above the tail.",
+        "§9.2 conflict fallback checked and NOT engaged: no exact-product lightness positioning. The claims are 'hilft bei Spliss und Haarbruch', an 'ohne Silikone' claim (contradicted by the formula), and a jojoba frizz claim. None of these is a 'leichte Pflege' / 'ohne zu beschweren' / volume claim, so `weight_high_conflict` does not fire."
+      ],
+      "limitations": [
+        "Weight drives a soft preference with a stated reason, never an exclusion; fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule).",
+        "An ingredient-informed matching prior at E2, never a prediction that the product will visibly flatten hair."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "No protein or peptide species exists anywhere in this formula, so the protein leg is closed at the list level rather than by the tail rule. The credited direction is a silicone-plus-lipid emollient architecture with a single humectant — D6's coherent non-protein direction. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank in the full list",
+        "DIMETHICONE (4), DIMETHICONOL (5), ISOPROPYL MYRISTATE (6), BUTYROSPERMUM PARKII BUTTER (7), COCOS NUCIFERA OIL (8), SIMMONDSIA CHINENSIS SEED OIL (9), PRUNUS AMYGDALUS DULCIS OIL (10) — the material emollient/film direction",
+        "GLYCERIN (rank 2) — sole above-tail humectant"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species exists), closing both `protein` and `balanced`. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning/emollient architecture without a dominant protein-film route — D6's category default.",
+        "`protein` does not apply: there is no protein in the formula. This is the cleanest negative in the cohort — it does not depend on the tail rule at all.",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Re-checked under v0.2 (R6). Reading (a) is unavailable (no R5 species at any rank). Reading (b) has clause 2 satisfied — DIMETHICONE @4 and DIMETHICONOL @5 are a substantive R2 silicone system above the tail — but fails decisively at clause 3: the formula carries an R4 lipid stack with S3 satisfied four times over (ISOPROPYL MYRISTATE @6, SHEA BUTTER @7, COCONUT OIL @8, JOJOBA SEED OIL @9). Where a moisture leg is present as architecture, `moisture` governs, film lead or not. Value unchanged."
+      ],
+      "limitations": [
+        "Confidence held at moderate by the fallback source tier, not by evidential ambiguity."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "No named bond chemistry and no protein species at any rank. Generic silicone, oil and ordinary conditioning are all explicit non-upgraders. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "AMODIMETHICONE (rank 18) — amino silicone: an explicit family-6 non-qualifier AND in the tail",
+        "DIMETHICONE (4), DIMETHICONOL (5), the plant lipids — generic silicone and oil, explicit non-upgraders"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; no material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists.",
+        "`high` does not apply: no named bond token exists.",
+        "Mask delta applied: conditioning_level `high` alone is repair_support_level `low`. This product is the cleanest demonstration — the cohort's broadest above-tail lipid and silicone stack, and zero repair credit."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "smoothing",
+        "secondary": []
+      },
+      "confidence": "moderate",
+      "rationale": "Both conjuncts of the step-6 smoothing test are met and are met by the same evidence that no other cohort product has: a non-functional dimethicone/dimethiconol pair at ranks 4 and 5, which is a distinct silicone route materially beyond the ordinary mask base and is a dry-surface-control route rather than a softening one. Anti-frizz positioning corroborates a route earned blind. E2 ceiling: comparative smoothing potential, never weatherproof frizz control. Secondary: `shine` is the only plausible secondary and it fails its own threshold three times over; awarding it would be exactly the free add-on of the smoothing film that D2 forbids.",
+      "evidenceSignals": [
+        "DIMETHICONE (rank 4) + DIMETHICONOL (rank 5) — a distinct silicone route above the tail, the only one in the cohort at these ranks",
+        "AMODIMETHICONE (rank 18) — a third silicone, in the tail, contributing nothing",
+        "five distinct lipids at ranks 6–10 — a substantial emollient route, but grouped as one M1 observation",
+        "claims: 'Smooth Anti-Frizz', corroboration only",
+        "BUTYROSPERMUM PARKII BUTTER (7) + COCOS NUCIFERA OIL (8) — R4b heavy lipids above the tail, which criterion 1 excludes",
+        "the optical route is the same M1/M3 film already counted for the primary",
+        "GLYCERIN (2) — single humectant, blocking `moisture` as a criterion-3 secondary"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: the silicone pair is one M1/M3 observation and the lipid stack is another M1 observation — not seven candidates. Step 3: `repair` blocked (no protein, no bond); `curl_support` blocked (no credited cationic slip route above the tail); `color_care` blocked; `lightness` blocked (weight `moderate`, not `low`). Step 4 `moisture` blocked (one above-tail humectant against a required three). Step 5 `shine` blocked (see below). Step 6 `smoothing` CLEARS. Secondary: §9.5.4 criteria 1, 2 and 3 all fail for `shine`. §9.5.3 criterion 1 fails for `moisture`. §6 rule 2 blocks any second bite at the deposition film.",
+      "thresholdReasoning": [
+        "Clears `smoothing`: step 6's conjunction is met — dry surface control is genuinely this formula's clearest practical differentiator (a dimethicone/dimethiconol pair at ranks 4–5 in a category where most masks carry no above-tail silicone at all), and the architecture extends materially beyond the ordinary mask base via that distinct silicone route.",
+        "`shine` does not apply, and the reason matters: §9.5.4 criterion 1 requires the alignment-oriented route to come WITH a comparatively low lipid load and specifically no R4b heavy lipid above the tail. Shea butter @7 and coconut oil @8 are both R4b and both above the tail, so criterion 1 fails. Criterion 2 fails independently — the optical route here IS the smoothing film already counted, which §6 rule 2 and D2 forbid from earning its own slot. The product also makes no gloss claim, so criterion 3 would fail too. Three independent failures.",
+        "`moisture` does not apply: cluster size 1 against a required 3.",
+        "`general` does not apply: a differentiator cleared its threshold at step 6.",
+        "Re-checked under v0.2 (R5). The `moisture` headline was already blocked at §9.5.3 criterion 1 — GLYCERIN @2 is the only above-tail humectant-class species, and DIGLYCERIN @13 is in the tail. Criterion 2's limb (i) would also fire on shea @7 and coconut @8. The `smoothing` headline is unaffected: it rests on the dimethicone/dimethiconol film, an architecture materially beyond the ordinary mask base.",
+        "Zero secondaries is correct: no candidate adds a distinct endpoint without double-counting the primary's mechanism."
+      ],
+      "limitations": [
+        "Deposition route is not weatherproof frizz control; no humidity or use protocol exists for this product (§7.1 abstain rule respected by capping at E2)."
+      ]
+    },
+    "bondRoute": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "bond_route recorded `none` in reference-key-v1 (06-monday-smooth-anti-frizz): no named bond chemistry above the sub-1 % tail.",
+      "evidenceSignals": [
+        "reference-key-v1 06-monday-smooth-anti-frizz"
+      ],
+      "derivation": "Property set trace-level rule: `bond_route` is deterministic, by named INCI above the sub-1 % tail, and gates `repair_support_level: high`.",
+      "thresholdReasoning": [
+        "Recorded `none`.",
+        "Citric acid, 'Bond' naming and hydrolyzed protein alone never qualify."
+      ],
+      "limitations": [
+        "A named chemistry token is formula evidence (E2), never proof of bond repair."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "rationale": "Echo field (R9): re-derived because its driver moved from `moderate` to `high`. `fine` drops out of the set.",
+      "evidenceSignals": [
+        "derived from weight_potential = high (re-derived under R4)"
+      ],
+      "derivation": "§9.6 table row 3.",
+      "thresholdReasoning": [
+        "Clears {normal, coarse}: the `high` row.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`, which was v0.1's value under the removed cationic gate.",
+        "{fine, normal} does not apply: it requires weight_potential `low`."
+      ],
+      "limitations": [
+        "Echo field under R9: approving weight_potential approves this projection."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "conditioning_level `high` with no qualifying specialist route selects the general-high row.",
+      "evidenceSignals": [
+        "conditioning_level = high",
+        "repair_support_level = low",
+        "bond_route = none",
+        "generic silicone and oil are named as never-qualifying specialist routes"
+      ],
+      "derivation": "§9.7 row 3.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: high without a specialist route.",
+        "{moderately_damaged, highly_damaged} does not apply: §9.7's never-qualifying list names generic silicone and oil explicitly, which is the whole of this formula's payload.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`."
+      ],
+      "limitations": [
+        "Watch-list item 1: fully computable from fields 1 and 4.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "rationale": "Echo field (R9), re-derived: the driver moved to `high`, but the `high` row carries a second condition this record cannot satisfy, so the balanced row governs and the value does not move.",
+      "evidenceSignals": [
+        "weight_potential = high (re-derived under R4)",
+        "no coherent high-slip R1/R3 route on the record: zero cationic surfactants and zero cationic polymers above the tail"
+      ],
+      "derivation": "§9.8. The `high` row requires `weight_potential: high` WITH a coherent high-slip R1/R3 route. Per §9.8's echo-field caveat (R9), that second condition is READ from facts already recorded in §5/§7 and never re-judged at the echo step; where the fact is not on the record, the driving field's ordinary value governs. No such route is recorded, so the `moderate` row applies.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row, via §9.8's echo caveat.",
+        "{wavy, curly, coily} does not apply: weight is `high` but the required coherent high-slip R1/R3 route is absent — the only cationic is in the tail and there is no cationic polymer at any rank.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9."
+      ]
+    },
+    "uncertainFields": [
+      "weight_potential",
+      "conditioning_level"
+    ],
+    "assumptionNotes": [
+      "Re-derived under v0.2 (R3 S1-mandatory; R4 weight anchors; R6 readings checked; R5 checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
+      "Fields whose value moved: conditioningLevel (high → moderate, R3), weightPotential (moderate → high/rich, R4), hairThicknessFit (echo: `fine` drops, R9). textureFit was re-derived and does NOT move: the §9.8 `high` row's second condition (a coherent high-slip R1/R3 route) is absent from the record, so §9.8's echo caveat sends it back to the balanced row.",
+      "Review triggers under v0.2 — FIRED: none newly; `weight_high_conflict` was tested against the claims and does NOT fire, since none of them materially claims lightness. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review` (no protein at any rank), `bond_claim_review`, `specialist_damage_fit`.",
+      "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+      "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+      "Review triggers fired: none of the mask-specific set. Inherited Conditioner §12 trigger 'formula-source conflict' fired for the marketing-claim-versus-INCI silicone mismatch and the discarded wrong-product sibling page. NOT fired: `tail_marker_anomaly` (marker resolved), `bond_claim_review`, `protein_payload_review`, `weight_high_conflict` (no `high` value reached), `low_confidence_field`.",
+      "Protocol metadata for traceability only, zero classification credit: contact time 10 minutes, source aggregated Rossmann copy, confidence moderate. Placement stated as Längen und Spitzen, P5-compliant.",
+      "The hautschutzengel page for the same brand and near-identical name was the SHAMPOO and was excluded, not merged (§2.4)."
+    ]
+  }
+}

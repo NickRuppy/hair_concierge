@@ -212,16 +212,13 @@ test("batch 9: the legacy fixture's third oil joins the first oil step — its h
   assert.equal(third?.step.decisionKey, stage3DecisionKey("oil", "pre_wash_fibre_treatment", null))
   assert.equal(third?.outcome, "undecided")
   assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === "i-oil-3"))
-})
-
-test("F4: the legacy fixture's item objects carry no batch-5 keys at all", () => {
-  const routine = composeLegacy()
   for (const entry of routine.steps) {
-    assert.ok(!entry.item || !("usageRole" in entry.item))
-    assert.ok(!entry.item || !("productType" in entry.item))
-    assert.ok(!("ownedUsageLabel" in entry))
+    assert.ok(!entry.item || !("usageRole" in entry.item), "legacy item omits usageRole")
+    assert.ok(!entry.item || !("productType" in entry.item), "legacy item omits productType")
+    assert.ok(!("ownedUsageLabel" in entry), "legacy entry omits ownedUsageLabel")
   }
-  for (const entry of routine.unassignedIntakeProducts) assert.ok(!("usageLabel" in entry))
+  for (const entry of routine.unassignedIntakeProducts)
+    assert.ok(!("usageLabel" in entry), "legacy unassigned entry omits usageLabel")
 })
 
 test("F4: a non-null usage role moves the fingerprint (and the binding)", () => {

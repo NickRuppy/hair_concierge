@@ -1,0 +1,21 @@
+{
+  "mode": "apply",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "counts": {
+    "before": 14,
+    "after": 14,
+    "renamed": 5,
+    "untouched": 9,
+    "removed": 0
+  },
+  "readsetGuards": 18,
+  "parsedSnapshots": 4,
+  "sourceLinesRemoved": 11,
+  "status": "APPLIED",
+  "backup": "/tmp/test-audit-auth-tier-alias-backup-t15GyZ",
+  "after": {
+    "src/lib/auth/authenticated-app-route-access.ts": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a",
+    "tests/authenticated-app-route-access.test.ts": "10f91e28687137bc9664aeb9161040986590a63b29e15e6394546708e597ea37"
+  }
+}

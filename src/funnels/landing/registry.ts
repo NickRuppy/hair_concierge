@@ -7,7 +7,3 @@ export function renderLandingVariant(variant: string, props?: FunnelLandingVaria
   const component = (LANDING_VARIANTS as Record<string, FunnelLandingVariantComponent>)[variant]
   return component ? createElement(component, props) : null
 }
-
-export function hasLandingVariant(variant: string) {
-  return variant in LANDING_VARIANTS
-}

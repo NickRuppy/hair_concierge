@@ -1,0 +1,138 @@
+{
+  "productId": "11-elvital-glycolic-gloss",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions: on damp hair, 5 minutes, rinse thoroughly → G0 conjuncts clear (gloss/lamination rinse-out, F4). Directions explicitly place it from roots to ends ('von den Wurzeln bis in die Spitzen'), contradicting P5 → root/scalp review trigger; no scalp property created. (Directions' 'versiegeln' is source wording, not adopted.)",
+    "evidenceSignals": [
+      "damp hair",
+      "5 min",
+      "'gründlich ausspülen'",
+      "root placement → P5 deviation"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "HYDROXYCITRONELLAL",
+    "index": 12,
+    "status": "unresolved",
+    "note": "Colourants CI 17200 @7 / CI 19140 @8 are not marker-eligible. Recomputed marker = declared allergen HYDROXYCITRONELLAL @12, while PARFUM is listed last @30 behind its own allergens (Limonene @18, Linalool @19, Hexyl Cinnamal @28). §3.1.1 third limb (E2) fires; per the E2 application note a Parfum-last house convention makes the marker unresolved permanently."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Read on own merits. S1: Behentrimonium Chloride @4; the only other cationic, Cetrimonium Chloride @25, sits behind Phenoxyethanol @13 and allergens and cannot be credited → S1 fails, high unreachable. S2: Cetearyl Alcohol @2 → not low. → moderate (capped by unresolved marker).",
+      "evidenceSignals": [
+        "S2: Cetearyl @2",
+        "Behentrimonium Chloride @4"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "Cetrimonium Chloride @25 not creditable"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "High: Cocos Nucifera Oil @9 is the only candidate R4b and sits after the CI colourants @7–8 and among the electrolyte/thickener block, so on ordinal merits it cannot be read as an above-1 % heavy-lipid core (and may not be credited solely for outranking the unresolved marker). Low: unavailable on an unreadable segment, and conjunct 3 fails anyway (two cationics on the full list, E7). → moderate on its own merits.",
+      "evidenceSignals": [
+        "single silicone Amodimethicone @6",
+        "lipid-poor head"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "2 cationics on full list"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species. Balanced (b) fails clause 2 (E9): one silicone (Amodimethicone @6), no above-tail R3 (Hydroxypropyl Guar @11 is non-cationic; Polyquaternium-37 @17 is behind the preservative/allergen block) and no above-tail R6a (Glycolic Acid @29, second-to-last). → moisture (classified by the base it carries: Cetearyl @2, Behentrimonium Chloride @4). Confidence capped by the unresolved marker.",
+      "evidenceSignals": [
+        "base @2/@4",
+        "Amodimethicone @6"
+      ],
+      "counterSignals": [
+        "film-led, lipid-poor architecture (reading (b) blocked by E9)",
+        "tail_marker unresolved"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 and no bond token; glycolic acid and amino silicone are explicit non-qualifiers. Capped at moderate by the unresolved marker.",
+      "evidenceSignals": [
+        "bond_route none"
+      ],
+      "counterSignals": []
+    },
+    "primaryFocus": {
+      "value": "shine",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "§9.5.4: (1) alignment-oriented silicone Amodimethicone @6 high in the list with a comparatively low lipid load (no creditable R4b) — the gloss formula shape; (2) the product's architecture is this optical film on a structurally minimal single-cationic base, not a rich smoothing base; (3) exact-product positioning 'Glycolic Gloss … Haar-Laminierung' corroborates. Glycolic Acid @29 is supporting context only. Smoothing lost because the low-lipid optical shape plus gloss corroboration is the distinctive job. Temporary optical/surface emphasis potential only. focus_care_verdict: not_applicable.",
+      "evidenceSignals": [
+        "Amodimethicone @6",
+        "low lipid load",
+        "gloss positioning"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "criterion 2 judged on a single-silicone film"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Smoothing would reuse the same film (§6 rule 2); no humectant cluster.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved (Hydroxycitronellal @12 above Parfum @30 — E2 third limb, house convention)",
+        "note": "Implausible marker: neither qualifies nor disqualifies; affected fields capped at moderate; routes to review."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "tail_marker_unresolved",
+    "gloss_lamination_claim",
+    "root_scalp_application"
+  ]
+}

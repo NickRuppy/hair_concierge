@@ -1,0 +1,20 @@
+'use strict'
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const guard='/tmp/test-audit-telemetry44-guard.cjs'
+if(crypto.createHash('sha256').update(fs.readFileSync(guard)).digest('hex')!=='0e737ff13db63c5ec0e9ebb73e679a5f22295402e4fb72e55137e4329186d252')throw Error('Guard drift')
+const g=require(guard),mode=(process.argv[2]||'check').replace(/^--/,'')
+if(!['check','transfer','cut'].includes(mode)||process.argv.length>3)g.fail('check | transfer | cut')
+const ctx=g.load();for(const c of ctx.p.controls)g.fault(ctx,c);const initial=ctx.current()
+if(mode==='check'){console.log(JSON.stringify({phase:initial,counts:ctx.counts,parsedPhaseFiles:21,controls:3,untouchedCallbacks:41,repositoryWrites:0,childrenStarted:0}));process.exit(0)}
+const from=mode==='transfer'?'before':'transfer';if(initial!==from)g.fail('Wrong source phase')
+const unlock=g.lock(),dir=fs.mkdtempSync(g.BASE+'-edit-'+mode+'-'),written=[]
+const outputs=Object.entries(ctx.snapshots[from]).map(([file,s])=>({file,original:s.bytes,target:ctx.snapshots[mode][file].bytes}))
+try{
+ for(const o of outputs){const dest=path.join(dir,'originals',o.file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,o.original,{flag:'wx',mode:0o444})}
+ fs.writeFileSync(dir+'/intent.json',JSON.stringify({from,to:mode,plan:g.PLAN,planSHA:g.PLAN_SHA,files:outputs.map(o=>({file:o.file,before:g.sha(o.original),after:g.sha(o.target)}))},null,2),{flag:'wx'})
+ if(ctx.current()!==from)g.fail('Full prewrite CAS phase drift')
+ for(const o of outputs)if(!fs.readFileSync(g.ROOT+'/'+o.file).equals(o.original))g.fail('Full prewrite CAS bytes drift')
+ for(const o of outputs){if(o.original.equals(o.target))continue;g.identity(ctx.p);for(const[f,h]of Object.entries(ctx.p.guards))g.same(f,h);for(const[f,h]of Object.entries(ctx.p.dependencies))g.same(f,h);for(const expected of outputs){const bytes=written.includes(expected)?expected.target:expected.original;if(!fs.readFileSync(g.ROOT+'/'+expected.file).equals(bytes))g.fail('Full cohort inter-write CAS drift')}g.atomicCAS(g.ROOT+'/'+o.file,o.original,o.target);written.push(o)}
+ if(ctx.current()!==mode)g.fail('Postwrite phase invalid')
+ fs.writeFileSync(dir+'/receipt.json',JSON.stringify({phase:mode,counts:ctx.counts,changed:written.map(x=>x.file),sourceWrites:0,testsRun:0},null,2),{flag:'wx'});console.log(dir)
+}catch(error){const rollback=[];for(const o of written.reverse()){try{const f=g.ROOT+'/'+o.file,b=fs.readFileSync(f);if(b.equals(o.target))g.atomicCAS(f,o.target,o.original);else if(!b.equals(o.original))g.fail('Concurrent bytes preserved');rollback.push({file:o.file,restored:true})}catch(e){rollback.push({file:o.file,restored:false,error:String(e)})}}fs.writeFileSync(dir+'/failure.json',JSON.stringify({error:String(error),rollback},null,2),{flag:'wx'});throw error}finally{unlock()}

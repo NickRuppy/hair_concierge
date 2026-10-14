@@ -1,0 +1,35 @@
+{
+  "blindId": "W214",
+  "productName": "Pantene Pro-V Volumen Pur Shampoo",
+  "brand": "Pantene",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für eine sanfte Reinigung | Für voller aussehender Haare | Mit pflegenden Nährstoffen | Ohne Silikone, Mineralöle und Farbstoffe | Das Volumen Pur Shampoo von PANTENE PRO-V in der praktischen XXL Verpackung ist speziell für feines, plattes Haar entwickelt und schützt die Haarbindungen, während es das Haar stärkt. Mit seiner sanften Reinigung sorgt es für schwerelose Fülle und einen strahlenden Glanz. Dieses Shampoo hat eine stärkende Wirkung, die das Haar sichtbar aufpeppt und ihm ein volles Aussehen verleiht. Perfekt geeignet, um das Haar mit neuer Vitalität und Lebendigkeit zu beleben.",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für eine sanfte Reinigung | Für voller aussehender Haare | Mit pflegenden Nährstoffen | Ohne Silikone, Mineralöle und Farbstoffe | Das Volumen Pur Shampoo von PANTENE PRO-V ist speziell für feines, plattes Haar entwickelt und schützt die Haarbindungen, während es das Haar stärkt. ...",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Entdecke das Pantene Pro-V Volumen Pur Shampoo, das dein Haar gestärkter* und voller aussehen lässt. Die sanfte Formel mit PRO-V und der innovativen ACTIVE NUTRI-PLEX-Technologie reinigt dein Haar und versorgt es gleichzeitig mit wichtigen Nährstoffen. In Kombination mit der Pflegespülung stärkt das Shampoo feines, plattes Haar und verleiht ein volles Aussehen und einen gesunden Glanz. Getestet vom Schweizerischen Vitamininstitut. | *Gegen Stylingschäden vs. nur Shampoo | schützt deine Haarbindungen und stärkt feines, plattes Haar und verleiht schwerelose Fülle und Glanz | reinigt feines Haar sanft und stärkt es | bis zu 100 % gestärkteres*, voller aussehendes Haar | Shampoo ohne Silikone, Mineralöle und Farbstoffe reinigt sanft das Haar und versorgt es mit Nährstoffen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden."
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Pantene PRO-V Volumen Pur Shampoo reinigt das Haar sanft und verleiht ihm ein fülligeres Aussehen. Die Formel wurde speziell für feines und plattes Haar konzipiert. | Unterstützt ein voluminöses Erscheinungsbild bei feinem Haar | Reinigt das Haar von Unreinheiten | Formel mit Active Nutri-Plex Komplex | Für die tägliche Haarwäsche geeignet | Die leichte Rezeptur dieses Shampoos hilft, das Haar zu kräftigen, ohne es zu beschweren. Bei regelmäßiger Anwendung kann das Haar sichtbar an Fülle gewinnen und erhält ein gepflegtes Aussehen.",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    }
+  ]
+}

@@ -1,0 +1,790 @@
+{
+  "tests/partner-access-sql-execution.test.ts": [
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "partner invitation batches are atomic and normalize creator identity",
+      "line": 19,
+      "start": 784,
+      "end": 1717,
+      "body": "test(\"partner invitation batches are atomic and normalize creator identity\", async (t) => {\n  const pg = await migratedDatabase(t)\n\n  await assert.rejects(\n    pg.query(\n      `SELECT * FROM public.create_partner_access_invitations(\n        '[{\"name\":\"Lea\",\"email\":\"same@example.test\"},{\"name\":\"Mia\",\"email\":\"SAME@example.test\"}]'::jsonb\n      )`,\n    ),\n    /duplicate partner invitation email/,\n  )\n  assert.equal(\n    (\n      await pg.query<{ count: string }>(\n        \"SELECT count(*)::text AS count FROM public.partner_access_invitations\",\n      )\n    ).rows[0].count,\n    \"0\",\n  )\n\n  const created = await pg.query<{ display_name: string; normalized_email: string }>(\n    `SELECT * FROM public.create_partner_access_invitations(\n      '[{\"name\":\" Lea \",\"email\":\" LEA@Example.Test \"}]'::jsonb\n    )`,\n  )\n  assert.equal(created.rows[0].display_name, \"Lea\")\n  assert.equal(created.rows[0].normalized_email, \"lea@example.test\")\n})",
+      "sha256": "3c133ae16fc315e4028804c6bb793f2e8b5ac9d3acc774ebc379a78f98a5cbc3"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "claim reservation is exclusive, replayable, and recoverable after abandonment",
+      "line": 48,
+      "start": 1719,
+      "end": 2481,
+      "body": "test(\"claim reservation is exclusive, replayable, and recoverable after abandonment\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n\n  const first = await reserve(pg, invitationId, ids.attempt)\n  assert.equal(first.reused, false)\n  const replay = await reserve(pg, invitationId, ids.attempt)\n  assert.equal(replay.reused, true)\n  await assert.rejects(reserve(pg, invitationId, ids.otherAttempt), /claim in progress/)\n\n  await pg.query(\n    \"UPDATE public.partner_access_invitations SET claim_attempt_expires_at = pg_catalog.now() - interval '1 second' WHERE id = $1\",\n    [invitationId],\n  )\n  const recovered = await reserve(pg, invitationId, ids.otherAttempt)\n  assert.equal(recovered.reused, false)\n})",
+      "sha256": "0ae2ba19fac875186a0b857c58ef4f187014e7f82523a4cd162bf8c9f87eac19"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "an existing-account handoff can release its reservation immediately",
+      "line": 66,
+      "start": 2483,
+      "end": 3006,
+      "body": "test(\"an existing-account handoff can release its reservation immediately\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await reserve(pg, invitationId, ids.attempt)\n\n  const released = await pg.query<{ released: boolean }>(\n    \"SELECT * FROM public.release_partner_access_claim($1, 1, $2)\",\n    [invitationId, ids.attempt],\n  )\n  assert.equal(released.rows[0].released, true)\n  assert.equal((await reserve(pg, invitationId, ids.otherAttempt)).reused, false)\n})",
+      "sha256": "5aef2528a18e9c36b32589ef381b357cabf63358660f2b38946a77ed426ce2d8"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "email correction is throttled and invalidated by invitation rotation",
+      "line": 79,
+      "start": 3008,
+      "end": 3926,
+      "body": "test(\"email correction is throttled and invalidated by invitation rotation\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString()\n\n  await pg.query(\n    \"SELECT * FROM public.issue_partner_access_email_change($1, 1, 'new@example.test', $2, $3)\",\n    [invitationId, \"a\".repeat(64), expiresAt],\n  )\n  await assert.rejects(\n    pg.query(\n      \"SELECT * FROM public.issue_partner_access_email_change($1, 1, 'other@example.test', $2, $3)\",\n      [invitationId, \"b\".repeat(64), expiresAt],\n    ),\n    /too many partner email changes/,\n  )\n\n  await pg.query(\"SELECT * FROM public.rotate_partner_access_invitation($1)\", [invitationId])\n  await assert.rejects(\n    pg.query(\"SELECT * FROM public.consume_partner_access_email_change($1)\", [\"a\".repeat(64)]),\n    /partner email change unavailable/,\n  )\n})",
+      "sha256": "eb2ffc33f3df6aaac67fa0cda1b0edd7257bc2832efae3b5d8a38b31495cfbbc"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "claiming a partner invitation grants free access and restarts an existing account",
+      "line": 103,
+      "start": 3928,
+      "end": 6600,
+      "body": "test(\"claiming a partner invitation grants free access and restarts an existing account\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  const seeded = await seedUsedAccountState(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  const claim = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: claim.reused, fresh_start: claim.fresh_start },\n    { reused: false, fresh_start: true },\n  )\n\n  const invitation = await pg.query<{\n    fresh_start_stamped: boolean\n    grant_matches: boolean\n  }>(\n    `SELECT invitation.fresh_start_at IS NOT NULL AS fresh_start_stamped,\n            invitation.current_manual_access_grant_id = grant_row.id AS grant_matches\n       FROM public.partner_access_invitations AS invitation\n       JOIN public.manual_access_grants AS grant_row\n         ON grant_row.partner_access_invitation_id = invitation.id\n      WHERE invitation.id = $1`,\n    [invitationId],\n  )\n  assert.deepEqual(invitation.rows, [{ fresh_start_stamped: true, grant_matches: true }])\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n\n  const profile = await pg.query<{\n    onboarding_completed: boolean\n    onboarding_step: string\n    has_seen_completion_popup: boolean\n  }>(\n    \"SELECT onboarding_completed, onboarding_step, has_seen_completion_popup FROM public.profiles WHERE id = $1\",\n    [ids.creator],\n  )\n  assert.deepEqual(profile.rows[0], {\n    onboarding_completed: false,\n    onboarding_step: \"welcome\",\n    has_seen_completion_popup: false,\n  })\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"0\")\n\n  const plan = await readPlan(pg)\n  assert.deepEqual(plan, {\n    enrollment_purchase_source_id: invitationId,\n    current_initial_need_version_id: null,\n    current_refined_need_version_id: null,\n    active_routine_version_id: null,\n    pending_routine_proposal_id: null,\n    unrefined_direct_accept: false,\n    last_evaluated_source_fingerprint: null,\n    last_rejected_auto_fingerprint: null,\n    legacy_prefill_v1: null,\n    revision: \"5\",\n  })\n\n  assert.deepEqual(await readResetState(pg, seeded), {\n    refinementDraftStatus: \"stale\",\n    productDraftStatus: \"stale\",\n    proposalStatus: \"superseded\",\n    lifecycleMarks: \"0\",\n    personalPlanEnrollmentStatus: \"revoked\",\n    personalPlanEnrollmentRevoked: true,\n    regularQuizEnrollmentStatus: \"revoked\",\n    regularQuizEnrollmentRevoked: true,\n    testerGrantsRevoked: \"2\",\n    quizDraftStatus: \"expired\",\n    resultReturnRevoked: true,\n    ownedProducts: \"0\",\n    archivedProducts: \"1\",\n    nudgeDismissedUntilCleared: true,\n  })\n})",
+      "sha256": "b9007fce9f217f9642afa7edcd2140069a3f87f7456cab9825dd539dccf97220"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a paying account can claim partner access without a fresh start",
+      "line": 178,
+      "start": 6602,
+      "end": 8601,
+      "body": "test(\"a paying account can claim partner access without a fresh start\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  const seeded = await seedUsedAccountState(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  const claim = await completeClaim(pg, invitationId, false)\n  assert.deepEqual(\n    { reused: claim.reused, fresh_start: claim.fresh_start },\n    { reused: false, fresh_start: false },\n  )\n\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.equal(\n    (\n      await pg.query<{ stamped: boolean }>(\n        \"SELECT fresh_start_at IS NOT NULL AS stamped FROM public.partner_access_invitations WHERE id = $1\",\n        [invitationId],\n      )\n    ).rows[0].stamped,\n    false,\n  )\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n  const plan = await readPlan(pg)\n  assert.deepEqual(plan, {\n    enrollment_purchase_source_id: seeded.enrollmentSourceId,\n    current_initial_need_version_id: ids.needVersion,\n    current_refined_need_version_id: ids.needVersion,\n    active_routine_version_id: ids.routineVersion,\n    pending_routine_proposal_id: ids.proposal,\n    unrefined_direct_accept: true,\n    last_evaluated_source_fingerprint: \"fingerprint-evaluated\",\n    last_rejected_auto_fingerprint: \"fingerprint-rejected\",\n    legacy_prefill_v1: { prefill: true },\n    revision: \"4\",\n  })\n  assert.deepEqual(await readResetState(pg, seeded), {\n    refinementDraftStatus: \"in_progress\",\n    productDraftStatus: \"active\",\n    proposalStatus: \"pending\",\n    lifecycleMarks: \"1\",\n    personalPlanEnrollmentStatus: \"active\",\n    personalPlanEnrollmentRevoked: false,\n    regularQuizEnrollmentStatus: \"active\",\n    regularQuizEnrollmentRevoked: false,\n    testerGrantsRevoked: \"0\",\n    quizDraftStatus: \"active\",\n    resultReturnRevoked: false,\n    ownedProducts: \"1\",\n    archivedProducts: \"0\",\n    nudgeDismissedUntilCleared: false,\n  })\n})",
+      "sha256": "ab93b6f4f770055b9491845f1f326dc4d9754ce1ae7aa7d469f394aef20f7689"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "omitting p_fresh_start grants access, records no decision and performs no reset",
+      "line": 233,
+      "start": 8603,
+      "end": 10678,
+      "body": "test(\"omitting p_fresh_start grants access, records no decision and performs no reset\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  const seeded = await seedUsedAccountState(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  const claim = await pg.query<{ reused: boolean; fresh_start: boolean }>(\n    \"SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)\",\n    [invitationId, ids.attempt, ids.creator, ids.funnel],\n  )\n  assert.deepEqual(\n    { reused: claim.rows[0].reused, fresh_start: claim.rows[0].fresh_start },\n    { reused: false, fresh_start: false },\n  )\n\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {\n    fresh_start_stamped: false,\n    fresh_start_decided: false,\n  })\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n  const plan = await readPlan(pg)\n  assert.deepEqual(plan, {\n    enrollment_purchase_source_id: seeded.enrollmentSourceId,\n    current_initial_need_version_id: ids.needVersion,\n    current_refined_need_version_id: ids.needVersion,\n    active_routine_version_id: ids.routineVersion,\n    pending_routine_proposal_id: ids.proposal,\n    unrefined_direct_accept: true,\n    last_evaluated_source_fingerprint: \"fingerprint-evaluated\",\n    last_rejected_auto_fingerprint: \"fingerprint-rejected\",\n    legacy_prefill_v1: { prefill: true },\n    revision: \"4\",\n  })\n  assert.deepEqual(await readResetState(pg, seeded), {\n    refinementDraftStatus: \"in_progress\",\n    productDraftStatus: \"active\",\n    proposalStatus: \"pending\",\n    lifecycleMarks: \"1\",\n    personalPlanEnrollmentStatus: \"active\",\n    personalPlanEnrollmentRevoked: false,\n    regularQuizEnrollmentStatus: \"active\",\n    regularQuizEnrollmentRevoked: false,\n    testerGrantsRevoked: \"0\",\n    quizDraftStatus: \"active\",\n    resultReturnRevoked: false,\n    ownedProducts: \"1\",\n    archivedProducts: \"0\",\n    nudgeDismissedUntilCleared: false,\n  })\n})",
+      "sha256": "08e8893ee60cfe3d903678cb33b741ee6e18ea3553bbf1a4f3592b59f0316569"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a claim from the rollout window still restarts on the next decided claim",
+      "line": 286,
+      "start": 10680,
+      "end": 12260,
+      "body": "test(\"a claim from the rollout window still restarts on the next decided claim\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  await seedUsedAccountState(pg)\n\n  // Application code from before the migration calls the five-argument form: it\n  // binds the invitation and grants access, but decides no fresh start.\n  await reserve(pg, invitationId, ids.attempt)\n  await pg.query(\"SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)\", [\n    invitationId,\n    ids.attempt,\n    ids.creator,\n    ids.funnel,\n  ])\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {\n    fresh_start_stamped: false,\n    fresh_start_decided: false,\n  })\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n\n  // The deployed code opens the same link again and now carries the decision.\n  const decided = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: decided.reused, fresh_start: decided.fresh_start },\n    { reused: true, fresh_start: true },\n  )\n  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {\n    fresh_start_stamped: true,\n    fresh_start_decided: true,\n  })\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"0\")\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.equal(await readPlan(pg).then((plan) => plan.enrollment_purchase_source_id), invitationId)\n})",
+      "sha256": "2cdc6667e79eb36c02292022c53b4a5b793aadcf904b9b3504cab23e387df00d"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "an admin repair leaves the pending fresh start for the creator's next link open",
+      "line": 323,
+      "start": 12262,
+      "end": 13906,
+      "body": "test(\"an admin repair leaves the pending fresh start for the creator's next link open\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  await seedUsedAccountState(pg)\n\n  // Shape a legacy claimed row: bound to the account, no grant, no decision.\n  await reserve(pg, invitationId, ids.attempt)\n  await pg.query(\"SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)\", [\n    invitationId,\n    ids.attempt,\n    ids.creator,\n    ids.funnel,\n  ])\n  await pg.query(\n    \"UPDATE public.partner_access_invitations SET current_manual_access_grant_id = NULL WHERE id = $1\",\n    [invitationId],\n  )\n  await pg.query(\n    \"DELETE FROM public.manual_access_grants WHERE partner_access_invitation_id = $1\",\n    [invitationId],\n  )\n\n  const repaired = await pg.query<{ changed: boolean }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(repaired.rows[0].changed, true)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  // The repair restores access only — it must not consume the fresh-start decision.\n  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {\n    fresh_start_stamped: false,\n    fresh_start_decided: false,\n  })\n\n  const decided = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: decided.reused, fresh_start: decided.fresh_start },\n    { reused: true, fresh_start: true },\n  )\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"0\")\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n})",
+      "sha256": "5889b8236fbd3a21e34b827a852e7835d9b3f7747c71f4440702d254c1f27373"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a recorded no-reset decision survives a later fresh-start claim (P1)",
+      "line": 367,
+      "start": 13908,
+      "end": 15148,
+      "body": "test(\"a recorded no-reset decision survives a later fresh-start claim (P1)\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  const seeded = await seedUsedAccountState(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  const paying = await completeClaim(pg, invitationId, false)\n  assert.equal(paying.fresh_start, false)\n  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {\n    fresh_start_stamped: false,\n    fresh_start_decided: true,\n  })\n\n  // The paid entitlement lapses and a later link open would decide \"restart\" — but\n  // the decision for this invitation is already recorded, so nothing is reset.\n  const lapsed = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: lapsed.reused, fresh_start: lapsed.fresh_start },\n    { reused: true, fresh_start: false },\n  )\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  const plan = await readPlan(pg)\n  assert.equal(plan.enrollment_purchase_source_id, seeded.enrollmentSourceId)\n  assert.equal(plan.current_initial_need_version_id, ids.needVersion)\n})",
+      "sha256": "b6af5d920e4d5d5ac2bef2be4147d232b9dc23f378fd1f6193e31b3912d984fe"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a replayed claim completion neither re-grants nor restarts the account again",
+      "line": 395,
+      "start": 15150,
+      "end": 16070,
+      "body": "test(\"a replayed claim completion neither re-grants nor restarts the account again\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  await completeClaim(pg, invitationId)\n  const seeded = await seedUsedAccountState(pg)\n\n  const replay = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: replay.reused, fresh_start: replay.fresh_start },\n    { reused: true, fresh_start: false },\n  )\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n  const plan = await readPlan(pg)\n  assert.equal(plan.current_initial_need_version_id, ids.needVersion)\n  assert.equal(plan.enrollment_purchase_source_id, seeded.enrollmentSourceId)\n  assert.equal(plan.revision, \"4\")\n})",
+      "sha256": "42e156371646e973810360f9afd203c886e610324f348576ee636b8e0cfcbb38"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a legacy claimed invitation self-heals its grant and restart exactly once",
+      "line": 417,
+      "start": 16072,
+      "end": 17861,
+      "body": "test(\"a legacy claimed invitation self-heals its grant and restart exactly once\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n\n  // A claim from before this feature: bound to the account, no grant, no decision.\n  await reserve(pg, invitationId, ids.attempt)\n  await pg.query(\"SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)\", [\n    invitationId,\n    ids.attempt,\n    ids.creator,\n    ids.funnel,\n  ])\n  await pg.query(\n    \"UPDATE public.manual_access_grants SET revoked_at = pg_catalog.now() WHERE partner_access_invitation_id = $1\",\n    [invitationId],\n  )\n  await pg.query(\n    \"UPDATE public.partner_access_invitations SET current_manual_access_grant_id = NULL WHERE id = $1\",\n    [invitationId],\n  )\n  await seedUsedAccountState(pg)\n\n  const healed = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: healed.reused, fresh_start: healed.fresh_start },\n    { reused: true, fresh_start: true },\n  )\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"0\")\n\n  const seededAgain = await seedUsedAccountState(pg)\n  const second = await completeClaim(pg, invitationId)\n  assert.deepEqual(\n    { reused: second.reused, fresh_start: second.fresh_start },\n    { reused: true, fresh_start: false },\n  )\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  assert.equal(await scalarCount(pg, \"public.hair_profiles WHERE user_id = $1\", [ids.creator]), \"1\")\n  const plan = await readPlan(pg)\n  assert.equal(plan.current_initial_need_version_id, ids.needVersion)\n  assert.equal(plan.enrollment_purchase_source_id, seededAgain.enrollmentSourceId)\n})",
+      "sha256": "ed19aaefae0f0d501cfc79e3a9446042fb541f5a074e82f0917da58646a2758f"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a failing fresh start rolls the whole claim completion back",
+      "line": 461,
+      "start": 17863,
+      "end": 19388,
+      "body": "test(\"a failing fresh start rolls the whole claim completion back\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n  await seedUsedAccountState(pg)\n  await pg.exec(`\n    CREATE FUNCTION public.partner_access_test_block() RETURNS trigger\n    LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fresh start blocked'; END; $$;\n    CREATE TRIGGER partner_access_test_block_profiles\n      BEFORE UPDATE ON public.profiles\n      FOR EACH ROW EXECUTE FUNCTION public.partner_access_test_block();\n  `)\n\n  await reserve(pg, invitationId, ids.attempt)\n  await assert.rejects(completeClaim(pg, invitationId), /fresh start blocked/)\n\n  const invitation = await pg.query<{\n    claimed_user_id: string | null\n    claimed_at: string | null\n    fresh_start_at: string | null\n    current_manual_access_grant_id: string | null\n  }>(\n    \"SELECT claimed_user_id, claimed_at, fresh_start_at, current_manual_access_grant_id FROM public.partner_access_invitations WHERE id = $1\",\n    [invitationId],\n  )\n  assert.deepEqual(invitation.rows[0], {\n    claimed_user_id: null,\n    claimed_at: null,\n    fresh_start_at: null,\n    current_manual_access_grant_id: null,\n  })\n  assert.equal(\n    await scalarCount(pg, \"public.manual_access_grants WHERE partner_access_invitation_id = $1\", [\n      invitationId,\n    ]),\n    \"0\",\n  )\n  assert.equal(\n    await scalarCount(pg, \"public.funnel_sessions WHERE id = $1 AND user_id IS NOT NULL\", [\n      ids.funnel,\n    ]),\n    \"0\",\n  )\n})",
+      "sha256": "24db396c0de0028988896318c69b985a8e76fb774b3ed7d7828c2d3dc0f763dd"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "activation reuses the claim grant and revocation cycles keep one active grant",
+      "line": 506,
+      "start": 19390,
+      "end": 21187,
+      "body": "test(\"activation reuses the claim grant and revocation cycles keep one active grant\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  await completeClaim(pg, invitationId)\n  const claimGrantId = (\n    await pg.query<{ id: string }>(\n      \"SELECT id FROM public.manual_access_grants WHERE partner_access_invitation_id = $1\",\n      [invitationId],\n    )\n  ).rows[0].id\n\n  const savedLead = await pg.query<{ lead_id: string }>(\n    `SELECT * FROM public.save_partner_access_lead(\n      $1, $2, $3, 'lea@example.test', 'Lea', true, '{\"texture\":\"wavy\"}'::jsonb\n    )`,\n    [invitationId, ids.creator, ids.funnel],\n  )\n  const activated = await activate(pg, invitationId, savedLead.rows[0].lead_id)\n  assert.equal(activated.manual_access_grant_id, claimGrantId)\n  assert.equal(\n    await scalarCount(pg, \"public.manual_access_grants WHERE partner_access_invitation_id = $1\", [\n      invitationId,\n    ]),\n    \"1\",\n  )\n  const stamped = await pg.query<{ lead_id: string; activated: boolean }>(\n    \"SELECT lead_id, activated_at IS NOT NULL AS activated FROM public.partner_access_invitations WHERE id = $1\",\n    [invitationId],\n  )\n  assert.deepEqual(stamped.rows[0], { lead_id: savedLead.rows[0].lead_id, activated: true })\n\n  await pg.query(\"SELECT * FROM public.revoke_partner_access($1)\", [invitationId])\n  assert.equal(await activePartnerGrants(pg, invitationId), \"0\")\n  const reactivated = await pg.query<{ manual_access_grant_id: string }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.notEqual(reactivated.rows[0].manual_access_grant_id, claimGrantId)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n})",
+      "sha256": "bb5cc6fbcba3303e56a9e21fb78fe6de77509c69f0a6b369ba19293a97d346e7"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "a claimed but never activated invitation regains a grant on reactivation",
+      "line": 550,
+      "start": 21189,
+      "end": 22199,
+      "body": "test(\"a claimed but never activated invitation regains a grant on reactivation\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  await completeClaim(pg, invitationId)\n  const claimGrantId = (\n    await pg.query<{ id: string }>(\n      \"SELECT id FROM public.manual_access_grants WHERE partner_access_invitation_id = $1\",\n      [invitationId],\n    )\n  ).rows[0].id\n\n  await pg.query(\"SELECT * FROM public.revoke_partner_access($1)\", [invitationId])\n  assert.equal(await activePartnerGrants(pg, invitationId), \"0\")\n\n  const reactivated = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(reactivated.rows[0].changed, true)\n  assert.notEqual(reactivated.rows[0].manual_access_grant_id, claimGrantId)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n})",
+      "sha256": "fd21fc26f3075e8514c6bbf509b0e70a530d1e8ac7b97fc7a5ed9e269d0e0aca"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "reactivation repairs a legacy claimed row that was never revoked, exactly once",
+      "line": 576,
+      "start": 22201,
+      "end": 24200,
+      "body": "test(\"reactivation repairs a legacy claimed row that was never revoked, exactly once\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await seedAccount(pg)\n\n  await reserve(pg, invitationId, ids.attempt)\n  await completeClaim(pg, invitationId, false)\n  // Shape the row the way a pre-migration claim left it: claimed, never activated,\n  // never revoked, holding no grant. The admin badge reads \"Widerrufen\" for this and\n  // the only offered action is \"Reaktivieren\".\n  await pg.query(\n    `UPDATE public.partner_access_invitations\n        SET current_manual_access_grant_id = NULL, activated_at = NULL, fresh_start_at = NULL\n      WHERE id = $1`,\n    [invitationId],\n  )\n  await pg.query(\n    \"DELETE FROM public.manual_access_grants WHERE partner_access_invitation_id = $1\",\n    [invitationId],\n  )\n  assert.equal(await activePartnerGrants(pg, invitationId), \"0\")\n\n  const repaired = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(repaired.rows[0].changed, true)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n  const pinned = await pg.query<{\n    current_manual_access_grant_id: string\n    revoked_at: string | null\n  }>(\n    \"SELECT current_manual_access_grant_id, revoked_at FROM public.partner_access_invitations WHERE id = $1\",\n    [invitationId],\n  )\n  assert.equal(\n    pinned.rows[0].current_manual_access_grant_id,\n    repaired.rows[0].manual_access_grant_id,\n  )\n  assert.equal(pinned.rows[0].revoked_at, null)\n\n  const replay = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(replay.rows[0].changed, false)\n  assert.equal(replay.rows[0].manual_access_grant_id, repaired.rows[0].manual_access_grant_id)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n})",
+      "sha256": "bc2d3f48b45e0ac2f1f48e57b876d1a57014f462ead2e47c0dffbdaad302ce2b"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "activation is replay-safe, indefinite, revocable, and preserves independent paid access",
+      "line": 626,
+      "start": 24202,
+      "end": 27625,
+      "body": "test(\"activation is replay-safe, indefinite, revocable, and preserves independent paid access\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const invitationId = await createInvitation(pg)\n  await pg.query(\"INSERT INTO public.profiles (id, email) VALUES ($1, 'lea@example.test')\", [\n    ids.creator,\n  ])\n  await pg.query(\n    \"INSERT INTO public.funnel_sessions (id, package_key) VALUES ($1, 'default_organic')\",\n    [ids.funnel],\n  )\n  await assert.rejects(\n    pg.query(\"SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)\", [\n      invitationId,\n      ids.attempt,\n      ids.creator,\n      ids.funnel,\n    ]),\n    /partner invitation claim is not reserved/,\n  )\n  await reserve(pg, invitationId, ids.attempt)\n  const claim = await completeClaim(pg, invitationId)\n  assert.equal(claim.reused, false)\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n\n  const savedLead = await pg.query<{ lead_id: string; reused: boolean }>(\n    `SELECT * FROM public.save_partner_access_lead(\n      $1, $2, $3, 'lea@example.test', 'Lea', true, '{\"texture\":\"wavy\"}'::jsonb\n    )`,\n    [invitationId, ids.creator, ids.funnel],\n  )\n  assert.equal(savedLead.rows[0].reused, false)\n\n  const first = await activate(pg, invitationId, savedLead.rows[0].lead_id)\n  assert.equal(first.reused, false)\n  const replay = await activate(pg, invitationId, savedLead.rows[0].lead_id)\n  assert.deepEqual(replay, { ...first, reused: true })\n  assert.equal(await activePartnerGrants(pg, invitationId), \"1\")\n\n  const grant = await pg.query<{\n    reason: string\n    email: string | null\n    expires_at: string | null\n    revoked_at: string | null\n  }>(\n    \"SELECT reason, email, expires_at, revoked_at FROM public.manual_access_grants WHERE id = $1\",\n    [first.manual_access_grant_id],\n  )\n  assert.deepEqual(grant.rows[0], {\n    reason: \"partner\",\n    email: null,\n    expires_at: null,\n    revoked_at: null,\n  })\n\n  await pg.query(\n    \"INSERT INTO public.manual_access_grants (user_id, reason, expires_at) VALUES ($1, 'friend', NULL)\",\n    [ids.creator],\n  )\n  const revoked = await pg.query<{ changed: boolean }>(\n    \"SELECT * FROM public.revoke_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(revoked.rows[0].changed, true)\n  const accessAfterRevoke = await pg.query<{ reason: string; revoked: boolean }>(\n    \"SELECT reason, revoked_at IS NOT NULL AS revoked FROM public.manual_access_grants WHERE user_id = $1 ORDER BY reason\",\n    [ids.creator],\n  )\n  assert.deepEqual(accessAfterRevoke.rows, [\n    { reason: \"friend\", revoked: false },\n    { reason: \"partner\", revoked: true },\n  ])\n\n  const reactivated = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(\n    \"SELECT * FROM public.reactivate_partner_access($1)\",\n    [invitationId],\n  )\n  assert.equal(reactivated.rows[0].changed, true)\n  assert.notEqual(reactivated.rows[0].manual_access_grant_id, first.manual_access_grant_id)\n  const reactivatedGrant = await pg.query<{ email: string | null }>(\n    \"SELECT email FROM public.manual_access_grants WHERE id = $1\",\n    [reactivated.rows[0].manual_access_grant_id],\n  )\n  assert.equal(reactivatedGrant.rows[0].email, null)\n  const partnerHistory = await pg.query<{ count: string }>(\n    \"SELECT count(*)::text AS count FROM public.manual_access_grants WHERE partner_access_invitation_id = $1\",\n    [invitationId],\n  )\n  assert.equal(partnerHistory.rows[0].count, \"2\")\n})",
+      "sha256": "48d5e08cb09f878d6bb2bdab839b01e05644dd06a197f0d9e0a37086da23dc95"
+    },
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "name": "the fresh start helper stays out of reach of anon and authenticated callers",
+      "line": 716,
+      "start": 27627,
+      "end": 28956,
+      "body": "test(\"the fresh start helper stays out of reach of anon and authenticated callers\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const acl = await pg.query<{ role_name: string; has_execute: boolean }>(\n    `SELECT role_name,\n            pg_catalog.has_function_privilege(\n              role_name,\n              'private.partner_access_fresh_start(uuid, uuid)',\n              'EXECUTE'\n            ) AS has_execute\n       FROM (VALUES ('anon'), ('authenticated'), ('service_role')) AS roles(role_name)`,\n  )\n  assert.deepEqual(acl.rows, [\n    { role_name: \"anon\", has_execute: false },\n    { role_name: \"authenticated\", has_execute: false },\n    { role_name: \"service_role\", has_execute: true },\n  ])\n\n  const claimAcl = await pg.query<{ role_name: string; has_execute: boolean }>(\n    `SELECT role_name,\n            pg_catalog.has_function_privilege(\n              role_name,\n              'public.complete_partner_access_claim(uuid, integer, uuid, uuid, uuid, boolean)',\n              'EXECUTE'\n            ) AS has_execute\n       FROM (VALUES ('anon'), ('authenticated'), ('service_role')) AS roles(role_name)`,\n  )\n  assert.deepEqual(claimAcl.rows, [\n    { role_name: \"anon\", has_execute: false },\n    { role_name: \"authenticated\", has_execute: false },\n    { role_name: \"service_role\", has_execute: true },\n  ])\n})",
+      "sha256": "d93062d9cc701848d78f2d50bd1600afd3f0c4f47b79c54e50fd9ec1e71f9b41"
+    }
+  ],
+  "tests/partner-access-journey.test.ts": [
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a signed-out visitor gets an ordinary journey with zero lookups",
+      "line": 80,
+      "start": 2532,
+      "end": 2911,
+      "body": "test(\"a signed-out visitor gets an ordinary journey with zero lookups\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => null,\n      loadInvitation: async () => {\n        throw new Error(\"must not look up an invitation without a signed-in user\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "f88a83eeb97f55d029f7608f90212bcdfca3e1f3ec5d9c4c1bd8d6a9de00ee47"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a signed-in user with no claimed invitation gets an ordinary journey",
+      "line": 92,
+      "start": 2913,
+      "end": 3176,
+      "body": "test(\"a signed-in user with no claimed invitation gets an ordinary journey\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => null,\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "c06d09ccf9dbeb6dffd4460e95896b62fdfc23272eeec40aab4f256faf3d97ec"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a claimed, unrevoked invitation authorizes the partner journey from the user alone",
+      "line": 101,
+      "start": 3178,
+      "end": 3611,
+      "body": "test(\"a claimed, unrevoked invitation authorizes the partner journey from the user alone\", async () => {\n  const resolution = await resolvePartnerJourney(dependencies())\n  assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })\n})",
+      "sha256": "773aea78b779b286d0238c8287e4b22f6fa7fb892db13f374c3b12be85d89669"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a revoked invitation makes the account an ordinary user again, never blocked",
+      "line": 113,
+      "start": 3613,
+      "end": 4482,
+      "body": "test(\"a revoked invitation makes the account an ordinary user again, never blocked\", async () => {\n  // Exercises the real `defaultLoadInvitation` query against a fake admin\n  // client that actually filters on `revoked_at`: the row belongs to this\n  // user (claimed_user_id matches) but is revoked, so the `.is(\"revoked_at\",\n  // null)` predicate must exclude it. If that filter is ever dropped from\n  // the source, this fake still returns the row and the test fails.\n  const revokedRow: FakeInvitationDbRow = {\n    ...invitationRow,\n    claimed_user_id: \"creator-user\",\n    revoked_at: \"2026-01-01T00:00:00.000Z\",\n  }\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: (userId) =>\n        defaultLoadInvitation(userId, fakeInvitationsAdminClient([revokedRow])),\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "e432b2daf58b3b848db307491896c551407d099abaad51ff3fa98489da7ac9b9"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "another user's claimed invitation never authorizes this user",
+      "line": 133,
+      "start": 4484,
+      "end": 5431,
+      "body": "test(\"another user's claimed invitation never authorizes this user\", async () => {\n  // Exercises the real `defaultLoadInvitation` query against a fake admin\n  // client that actually filters on `claimed_user_id`: the only row in the\n  // table is unrevoked but claimed by a different user, so the\n  // `.eq(\"claimed_user_id\", userId)` predicate must exclude it. If that\n  // filter is ever dropped from the source, this fake still returns the\n  // row and the test fails.\n  const otherUsersRow: FakeInvitationDbRow = {\n    ...invitationRow,\n    claimed_user_id: \"other-user-actual-owner\",\n    revoked_at: null,\n  }\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"this-user\", app_metadata: partnerMetadata }),\n      loadInvitation: (userId) =>\n        defaultLoadInvitation(userId, fakeInvitationsAdminClient([otherUsersRow])),\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "266ad6f4f336fe77fdadc7654b5623a2f6631ba4a4e815e07d8c25f5224b343c"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a read error is unavailable, not none or a thrown exception",
+      "line": 155,
+      "start": 5433,
+      "end": 5747,
+      "body": "test(\"a read error is unavailable, not none or a thrown exception\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+      "sha256": "f79aab5fa2fc1002cc0764cfe057a45bac68c706aa510f69da081ba8c054d9a4"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "an auth-service error on getUser() is unavailable, not none",
+      "line": 166,
+      "start": 5749,
+      "end": 6178,
+      "body": "test(\"an auth-service error on getUser() is unavailable, not none\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => {\n        throw new Error(\"auth service blip\")\n      },\n      loadInvitation: async () => {\n        throw new Error(\"must not look up an invitation when getUser() failed\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+      "sha256": "9e8105db0a5168b540e45c3e92ef6c5e51279f6aa9a0a555441f08332749ae12"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "no auth session is an ordinary signed-out visit, not an outage",
+      "line": 204,
+      "start": 6948,
+      "end": 7363,
+      "body": "test(\"no auth session is an ordinary signed-out visit, not an outage\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () => defaultGetUser(fakeAuthClient({ user: null, error: authSessionMissingError() })),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation without a signed-in user\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "429d704a7f356bd2641cdcfa410cbad3d7f4a451cf0c55cc4558b196d000473f"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a real auth failure on the default getUser path is unavailable, not none",
+      "line": 214,
+      "start": 7365,
+      "end": 7844,
+      "body": "test(\"a real auth failure on the default getUser path is unavailable, not none\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({ user: null, error: { name: \"AuthRetryableFetchError\", message: \"down\" } }),\n      ),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation when getUser() failed\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+      "sha256": "84728842234aa4dc16bc8798e9c23d9be4ba4712f2754b1d9dd7ca8df2f60d73"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "the default getUser path carries app_metadata through to the hint check",
+      "line": 227,
+      "start": 7846,
+      "end": 8272,
+      "body": "test(\"the default getUser path carries app_metadata through to the hint check\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({\n          user: { id: \"creator-user\", app_metadata: partnerMetadata },\n          error: null,\n        }),\n      ),\n    loadInvitation: async () => invitationRow,\n  })\n  assert.equal(resolution.kind, \"authorized\")\n})",
+      "sha256": "d3586051bb65b526586de054268f29ebe3ae553d22ffc412038d19f06e881f6a"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a signed-in user without the claim stamp never reads the invitation table",
+      "line": 241,
+      "start": 8274,
+      "end": 8733,
+      "body": "test(\"a signed-in user without the claim stamp never reads the invitation table\", async () => {\n  let lookups = 0\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"ordinary-user\", app_metadata: { provider: \"email\" } }),\n      loadInvitation: async () => {\n        lookups += 1\n        return invitationRow\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n  assert.equal(lookups, 0)\n})",
+      "sha256": "0c8f269a1abe98e695071248668b95379e59895587e70d3654e6eb2c5056c4c7"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "only a stamped account can be made unavailable by an invitation read error",
+      "line": 256,
+      "start": 8735,
+      "end": 9352,
+      "body": "test(\"only a stamped account can be made unavailable by an invitation read error\", async () => {\n  const unstamped = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"ordinary-user\", app_metadata: {} }),\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(unstamped, { kind: \"none\" })\n\n  const stamped = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(stamped, { kind: \"unavailable\" })\n})",
+      "sha256": "567813de4e47889ad5e98dfb5bb2020eb01879b82ccc5024f46afd61b6fab3ec"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "an invitation row without a funnel session stays an ordinary journey",
+      "line": 277,
+      "start": 9354,
+      "end": 9879,
+      "body": "test(\"an invitation row without a funnel session stays an ordinary journey\", async () => {\n  const sessionlessRow: FakeInvitationDbRow = {\n    ...invitationRow,\n    funnel_session_id: null as unknown as string,\n    claimed_user_id: \"creator-user\",\n    revoked_at: null,\n  }\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: (userId) =>\n        defaultLoadInvitation(userId, fakeInvitationsAdminClient([sessionlessRow])),\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "bb76323341145ad9f2cc5cc8de861bb90fa8e3975d08cfa95d7aa1354e212f45"
+    }
+  ],
+  "tests/partner-access-claim-route.test.ts": [
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "new creator claim creates and signs into the exact named account without an email roundtrip",
+      "line": 74,
+      "start": 2718,
+      "end": 3753,
+      "body": "test(\"new creator claim creates and signs into the exact named account without an email roundtrip\", async () => {\n  const { calls, deps } = dependencies()\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"createUser\", \"createFunnel\", \"complete\", \"signIn\"],\n  )\n  const createInput = calls.find(([name]) => name === \"createUser\")?.[1] as Record<string, unknown>\n  assert.equal(createInput.email, \"lea@example.test\")\n  assert.equal(createInput.name, \"Lea\")\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.equal(response.headers.get(\"set-cookie\")?.includes(\"hidden-random-password\"), false)\n  assert.equal(response.cookies.get(\"chaarlie_funnel_session\")?.value, \"signed-funnel-cookie\")\n})",
+      "sha256": "2525162d1959078a1f99d00273585d2ba7a31a1bc6db80c33f5e2f74b7263612"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "an existing unrelated account requires normal mailbox proof once",
+      "line": 99,
+      "start": 3755,
+      "end": 4329,
+      "body": "test(\"an existing unrelated account requires normal mailbox proof once\", async () => {\n  const { calls, deps } = dependencies({\n    createUser: async () => {\n      throw Object.assign(new Error(\"already registered\"), { code: \"email_exists\", status: 422 })\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 202)\n  assert.deepEqual(await response.json(), { requiresEmail: true, email: \"lea@example.test\" })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"release\", \"magicLink\"],\n  )\n})",
+      "sha256": "7f8cc4db5a7d210b5499973a8cb36d0cddf683958bd191bdf297ba3c68d65b9f"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "an existing-account email can resume the claim in a different browser",
+      "line": 115,
+      "start": 4331,
+      "end": 5700,
+      "body": "test(\"an existing-account email can resume the claim in a different browser\", async () => {\n  const first = dependencies({\n    createUser: async () => {\n      throw Object.assign(new Error(\"already registered\"), { code: \"email_exists\", status: 422 })\n    },\n  })\n  await createPartnerAccessClaimHandler(first.deps)(request())\n  const magicLink = first.calls.find(([name]) => name === \"magicLink\")?.[1] as {\n    redirectTo: string\n  }\n  const next = new URL(magicLink.redirectTo).searchParams.get(\"next\")\n  const handoff = new URL(next ?? \"\", \"https://chaarlie.de\").hash.slice(\"#handoff=\".length)\n  assert.ok(handoff)\n\n  const second = dependencies({\n    decodeIntent: (value: string | null | undefined) =>\n      value === handoff\n        ? { invitationId: ids.invitation, tokenVersion: 1, issuedAt: 1, expiresAt: 9_999 }\n        : null,\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const crossDeviceRequest = new NextRequest(\"https://chaarlie.de/api/partner-access/claim\", {\n    method: \"POST\",\n    headers: { origin: \"https://chaarlie.de\", \"content-type\": \"application/json\" },\n    body: JSON.stringify({ handoff }),\n  })\n  const response = await createPartnerAccessClaimHandler(second.deps)(crossDeviceRequest)\n  assert.equal(response.status, 200)\n  assert.equal(response.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value, handoff)\n})",
+      "sha256": "60e265b8d0bce4938877d78ea8578f030c71889df529f8f7a85af4c063f792c1"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a failed account creation releases the claim reservation immediately",
+      "line": 146,
+      "start": 5702,
+      "end": 6116,
+      "body": "test(\"a failed account creation releases the claim reservation immediately\", async () => {\n  const { calls, deps } = dependencies({\n    createUser: async () => {\n      throw new Error(\"auth unavailable\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 503)\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"release\"],\n  )\n})",
+      "sha256": "d84fc089693e56edd137fc176e4fae8609e1f7da0515e60c638d8ba45b3fa8a7"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "an invalid claim-attempt cookie is replaced before the database reservation",
+      "line": 160,
+      "start": 6118,
+      "end": 6767,
+      "body": "test(\"an invalid claim-attempt cookie is replaced before the database reservation\", async () => {\n  const invalidCookieRequest = new NextRequest(\"https://chaarlie.de/api/partner-access/claim\", {\n    method: \"POST\",\n    headers: {\n      origin: \"https://chaarlie.de\",\n      cookie: `${PARTNER_ACCESS_INTENT_COOKIE}=signed-intent; chaarlie_partner_claim_attempt=not-a-uuid`,\n    },\n  })\n  const { calls, deps } = dependencies()\n  await createPartnerAccessClaimHandler(deps)(invalidCookieRequest)\n\n  const reservation = calls.find(([name]) => name === \"reserve\")?.[1] as {\n    attemptId: string\n  }\n  assert.equal(reservation.attemptId, ids.attempt)\n})",
+      "sha256": "3e4c8536a216713c5d81fbe6e2e680961382f550133299a07a43dc5ed6b6196e"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "authenticated continuation completes only the invitation email account",
+      "line": 177,
+      "start": 6769,
+      "end": 7846,
+      "body": "test(\"authenticated continuation completes only the invitation email account\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"ensureUserMetadata\", \"createFunnel\", \"complete\"],\n  )\n  // Default mock has no current paid access, so a lapsed/never-paying account gets a fresh start.\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n\n  const mismatch = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"other@example.test\" }),\n  })\n  const rejected = await createPartnerAccessClaimHandler(mismatch.deps)(request())\n  assert.equal(rejected.status, 403)\n  assert.deepEqual(mismatch.calls, [])\n})",
+      "sha256": "f9cec9c125c3749cccf505ebb276238cf5db765f5802b86b3618b8a542f54415"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a currently paying account claims without a fresh start",
+      "line": 206,
+      "start": 7848,
+      "end": 8463,
+      "body": "test(\"a currently paying account claims without a fresh start\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n    hasCurrentPaidAppAccess: async () => true,\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    false,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: false,\n  })\n})",
+      "sha256": "c1115add79d23d04ab0b1a7874e5cb3dda5d7e1378721ce2ddbd4ecbae717dd2"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a lapsed account claims with a fresh start",
+      "line": 224,
+      "start": 8465,
+      "end": 9066,
+      "body": "test(\"a lapsed account claims with a fresh start\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n    hasCurrentPaidAppAccess: async () => false,\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n})",
+      "sha256": "bb961aadcafe2ddbdf69e11dcdcd96e5d74687bf682ee444445f7876a6c2ebd3"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a new account always claims with a fresh start, without consulting billing",
+      "line": 242,
+      "start": 9068,
+      "end": 9569,
+      "body": "test(\"a new account always claims with a fresh start, without consulting billing\", async () => {\n  const { calls, deps } = dependencies({\n    hasCurrentPaidAppAccess: async () => {\n      throw new Error(\"must not be called for a just-created account\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n})",
+      "sha256": "c982b02333d1359b363e98e44db39932d5e6b73c201ce860cdef698984b369c5"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a paid-access lookup failure fails closed instead of assuming a fresh start",
+      "line": 256,
+      "start": 9571,
+      "end": 10183,
+      "body": "test(\"a paid-access lookup failure fails closed instead of assuming a fresh start\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n    hasCurrentPaidAppAccess: async () => {\n      throw new Error(\"billing lookup unavailable\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 503)\n  assert.deepEqual(await response.json(), { error: \"Dein Zugang ist gerade nicht verfügbar.\" })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"release\"],\n  )\n})",
+      "sha256": "ea3e67f5c42a6eeb293963feb3881fd6d79b7f4596569027af011a29bed217d2"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a failed claim completion removes only the new unbound funnel and releases the reservation",
+      "line": 272,
+      "start": 10185,
+      "end": 10954,
+      "body": "test(\"a failed claim completion removes only the new unbound funnel and releases the reservation\", async () => {\n  const { calls, deps } = dependencies({\n    complete: async (input: unknown) => {\n      calls.push([\"complete\", input])\n      throw new Error(\"database unavailable\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 503)\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"createUser\", \"createFunnel\", \"complete\", \"deleteFunnel\", \"deleteUser\", \"release\"],\n  )\n  assert.deepEqual(calls.find(([name]) => name === \"deleteFunnel\")?.[1], {\n    funnelSessionId: ids.funnel,\n  })\n  assert.deepEqual(calls.find(([name]) => name === \"deleteUser\")?.[1], { userId: ids.user })\n})",
+      "sha256": "ad76f3d891faf4dd92813843d952d0b0f7de49a742f891aed8ca47c17e8c7b68"
+    }
+  ],
+  "tests/partner-access-quiz-context.test.ts": [
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "name": "creator quiz context returns only the server-authorized invitation identity, resolved from the user alone",
+      "line": 12,
+      "start": 354,
+      "end": 1032,
+      "body": "test(\"creator quiz context returns only the server-authorized invitation identity, resolved from the user alone\", async () => {\n  const handler = createPartnerQuizContextGetHandler({\n    resolvePartnerJourney: async () => ({\n      kind: \"authorized\",\n      invitationId: \"10000000-0000-4000-8000-000000000001\",\n      userId: \"creator-user\",\n      name: \"Lea Sommer\",\n      email: \"lea@example.test\",\n      funnelSessionId: \"30000000-0000-4000-8000-000000000003\",\n    }),\n  })\n\n  const response = await handler()\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    status: \"creator\",\n    name: \"Lea Sommer\",\n    email: \"lea@example.test\",\n  })\n})",
+      "sha256": "11ee00248c93d5375e0d607f3fe0d9a3ba2750093b139a7fd072129bd48ab50d"
+    },
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "name": "creator quiz context distinguishes ordinary and temporarily unavailable journeys",
+      "line": 33,
+      "start": 1034,
+      "end": 1459,
+      "body": "test(\"creator quiz context distinguishes ordinary and temporarily unavailable journeys\", async () => {\n  for (const [kind, expected] of [\n    [\"none\", { status: \"regular\" }],\n    [\"unavailable\", { status: \"unavailable\" }],\n  ] as const) {\n    const handler = createPartnerQuizContextGetHandler({\n      resolvePartnerJourney: async () => ({ kind }),\n    })\n    assert.deepEqual(await (await handler()).json(), expected)\n  }\n})",
+      "sha256": "d3ba8c6d9d899d1d6ba00d94a0ac86d84ab271febe9345d428bed75deabd2ff8"
+    },
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "name": "creator quiz context reports unavailable when the journey lookup throws",
+      "line": 45,
+      "start": 1461,
+      "end": 1789,
+      "body": "test(\"creator quiz context reports unavailable when the journey lookup throws\", async () => {\n  const handler = createPartnerQuizContextGetHandler({\n    resolvePartnerJourney: async () => {\n      throw new Error(\"database unavailable\")\n    },\n  })\n  assert.deepEqual(await (await handler()).json(), { status: \"unavailable\" })\n})",
+      "sha256": "4f4674a83a81a2e660b4c7e6e81d29c5f220e3d081812a5d381f292f21043276"
+    },
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "name": "creator quiz context parser and metadata hint fail closed",
+      "line": 54,
+      "start": 1791,
+      "end": 2853,
+      "body": "test(\"creator quiz context parser and metadata hint fail closed\", () => {\n  assert.equal(\n    hasPartnerAccessQuizHint({\n      app_metadata: { partner_access_invitation_id: \"10000000-0000-4000-8000-000000000001\" },\n    }),\n    true,\n  )\n  assert.equal(hasPartnerAccessQuizHint({ app_metadata: {} }), false)\n  assert.equal(isPartnerQuizEntrySearch(\"?partner=1\"), true)\n  assert.equal(isPartnerQuizEntrySearch(\"?partner=0\"), false)\n  assert.equal(isPartnerQuizEntrySearch(\"?partner=1&email=other@example.test\"), true)\n  assert.deepEqual(\n    parsePartnerQuizContextPayload({\n      status: \"creator\",\n      name: \" Lea Sommer \",\n      email: \" LEA@Example.Test \",\n    }),\n    { status: \"creator\", name: \"Lea Sommer\", email: \"lea@example.test\" },\n  )\n  assert.deepEqual(parsePartnerQuizContextPayload({ status: \"creator\", name: \"\", email: \"bad\" }), {\n    status: \"unavailable\",\n  })\n  assert.deepEqual(parsePartnerQuizContextPayload({ status: \"regular\" }), { status: \"regular\" })\n  assert.deepEqual(parsePartnerQuizContextPayload(null), { status: \"unavailable\" })\n})",
+      "sha256": "675269069cde9744ac8973c641c1fde658d48de121c7b5b2b5bbcd328df6a1a6"
+    },
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "name": "only a stable creator hint triggers context lookup",
+      "line": 80,
+      "start": 2855,
+      "end": 3657,
+      "body": "test(\"only a stable creator hint triggers context lookup\", () => {\n  assert.equal(\n    getPartnerQuizContextLookupKey({\n      authLoading: true,\n      hasMetadataHint: false,\n      search: \"\",\n      userId: null,\n    }),\n    \"checking\",\n  )\n  assert.equal(\n    getPartnerQuizContextLookupKey({\n      authLoading: true,\n      hasMetadataHint: false,\n      search: \"?partner=1\",\n      userId: null,\n    }),\n    \"marker\",\n  )\n  assert.equal(\n    getPartnerQuizContextLookupKey({\n      authLoading: false,\n      hasMetadataHint: true,\n      search: \"\",\n      userId: \"creator-user\",\n    }),\n    \"user:creator-user\",\n  )\n  assert.equal(\n    getPartnerQuizContextLookupKey({\n      authLoading: false,\n      hasMetadataHint: false,\n      search: \"\",\n      userId: \"regular-user\",\n    }),\n    \"regular\",\n  )\n})",
+      "sha256": "6cc5b0505bea75d95a0304830c4edf60ebfdf988ef6d3fdbbee0557ef328d7bd"
+    }
+  ],
+  "tests/partner-access-service.test.ts": [
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "name": "partner invitation creation sends one normalized atomic batch and projects personal links",
+      "line": 15,
+      "start": 404,
+      "end": 1897,
+      "body": "test(\"partner invitation creation sends one normalized atomic batch and projects personal links\", async () => {\n  const calls: Array<{ name: string; args: Record<string, unknown> }> = []\n  const created = await createPartnerInvitations(\n    [\n      { name: \" Lea \", email: \" LEA@Example.Test \" },\n      { name: \"Mia\", email: \"mia@example.test\" },\n    ],\n    {\n      secret,\n      siteUrl,\n      createdByUserId: \"20000000-0000-4000-8000-000000000002\",\n      rpc: async (name, args) => {\n        calls.push({ name, args })\n        return {\n          data: [\n            {\n              invitation_id: invitationId,\n              display_name: \"Lea\",\n              normalized_email: \"lea@example.test\",\n              token_version: 1,\n            },\n            {\n              invitation_id: \"30000000-0000-4000-8000-000000000003\",\n              display_name: \"Mia\",\n              normalized_email: \"mia@example.test\",\n              token_version: 1,\n            },\n          ],\n          error: null,\n        }\n      },\n    },\n  )\n\n  assert.equal(calls.length, 1)\n  assert.equal(calls[0].name, \"create_partner_access_invitations\")\n  assert.deepEqual(calls[0].args.p_invitations, [\n    { name: \"Lea\", email: \"lea@example.test\" },\n    { name: \"Mia\", email: \"mia@example.test\" },\n  ])\n  assert.equal(created[0].url.startsWith(`${siteUrl}/partner/einladung#code=`), true)\n  assert.equal(created[0].message.includes(\"Lea\"), true)\n  assert.equal(created[0].message.includes(created[0].url), true)\n})",
+      "sha256": "0b43bec27c9d8f0b0cb42e1df749922d04c38e13292b2afbf95d25b9f525888d"
+    },
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "name": "partner invitation resolution is read-only and fails closed on version or revocation",
+      "line": 60,
+      "start": 1899,
+      "end": 3397,
+      "body": "test(\"partner invitation resolution is read-only and fails closed on version or revocation\", async () => {\n  let loads = 0\n  const credential = (\n    await createPartnerInvitations([{ name: \"Lea\", email: \"lea@example.test\" }], {\n      secret,\n      siteUrl,\n      rpc: async () => ({\n        data: [\n          {\n            invitation_id: invitationId,\n            display_name: \"Lea\",\n            normalized_email: \"lea@example.test\",\n            token_version: 2,\n          },\n        ],\n        error: null,\n      }),\n    })\n  )[0].credential\n\n  const loadInvitation = async () => {\n    loads += 1\n    return {\n      id: invitationId,\n      display_name: \"Lea\",\n      normalized_email: \"lea@example.test\",\n      token_version: 2,\n      claimed_user_id: null,\n      activated_at: null,\n      revoked_at: null,\n      current_manual_access_grant_id: null,\n    }\n  }\n  assert.deepEqual(await resolvePartnerInvitation(credential, { secret, loadInvitation }), {\n    invitationId,\n    name: \"Lea\",\n    email: \"lea@example.test\",\n    state: \"pending\",\n  })\n  assert.equal(loads, 1)\n  assert.equal(\n    await resolvePartnerInvitation(credential, {\n      secret,\n      loadInvitation: async () => ({ ...(await loadInvitation()), token_version: 3 }),\n    }),\n    null,\n  )\n  assert.equal(\n    await resolvePartnerInvitation(credential, {\n      secret,\n      loadInvitation: async () => ({\n        ...(await loadInvitation()),\n        revoked_at: new Date().toISOString(),\n      }),\n    }),\n    null,\n  )\n})",
+      "sha256": "3efa4e89aa7dacd4b6ce89458ae7d86937c555e78af053f8c9a68825b751a078"
+    },
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "name": "partner invitation status is derived from current revocation and grant state",
+      "line": 119,
+      "start": 3399,
+      "end": 4573,
+      "body": "test(\"partner invitation status is derived from current revocation and grant state\", () => {\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: null,\n      revokedAt: null,\n      activatedAt: null,\n      grantActive: false,\n    }),\n    \"invited\",\n  )\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: \"before\",\n      revokedAt: null,\n      activatedAt: \"now\",\n      grantActive: true,\n    }),\n    \"active\",\n  )\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: \"earlier\",\n      revokedAt: \"now\",\n      activatedAt: \"before\",\n      grantActive: false,\n    }),\n    \"revoked\",\n  )\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: \"earlier\",\n      revokedAt: null,\n      activatedAt: \"before\",\n      grantActive: false,\n    }),\n    \"revoked\",\n  )\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: \"now\",\n      revokedAt: null,\n      activatedAt: null,\n      grantActive: false,\n    }),\n    \"revoked\",\n  )\n  assert.equal(\n    derivePartnerInvitationStatus({\n      claimedAt: \"now\",\n      revokedAt: null,\n      activatedAt: null,\n      grantActive: true,\n    }),\n    \"claimed\",\n  )\n})",
+      "sha256": "e67d035ba66b612e3e43a6d2aa45a8faa637607edad2a51d0fbfc1cec8c30a24"
+    },
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "name": "admin list projects reproducible links without returning raw credentials",
+      "line": 176,
+      "start": 4575,
+      "end": 5293,
+      "body": "test(\"admin list projects reproducible links without returning raw credentials\", async () => {\n  const rows = await listPartnerInvitations({\n    secret,\n    siteUrl,\n    load: async () => [\n      {\n        id: invitationId,\n        display_name: \"Lea\",\n        normalized_email: \"lea@example.test\",\n        token_version: 3,\n        claimed_at: null,\n        activated_at: null,\n        revoked_at: null,\n        grant_active: false,\n      },\n    ],\n  })\n  assert.equal(rows[0]?.status, \"invited\")\n  assert.match(rows[0]?.url ?? \"\", /^https:\\/\\/chaarlie\\.de\\/partner\\/einladung#code=/)\n  assert.match(rows[0]?.message ?? \"\", /^Hi Lea, dein Zugang ist bereit:/)\n  assert.equal(\"credential\" in (rows[0] ?? {}), false)\n})",
+      "sha256": "76571874afdc30501f7f90d0c6a17ea7e463ee2b756cc1fe8d476beb785892bf"
+    },
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "name": "admin list distinguishes a claimed account from an untouched invitation",
+      "line": 199,
+      "start": 5295,
+      "end": 5816,
+      "body": "test(\"admin list distinguishes a claimed account from an untouched invitation\", async () => {\n  const rows = await listPartnerInvitations({\n    secret,\n    siteUrl,\n    load: async () => [\n      {\n        id: invitationId,\n        display_name: \"Lea\",\n        normalized_email: \"lea@example.test\",\n        token_version: 3,\n        claimed_at: \"2026-09-01T12:00:00.000Z\",\n        activated_at: null,\n        revoked_at: null,\n        grant_active: true,\n      },\n    ],\n  })\n\n  assert.equal(rows[0]?.status, \"claimed\")\n})",
+      "sha256": "4b4e220373b10cd74f13050b48838a8b7469d322a98f52af3b2a53f807ebdfc1"
+    }
+  ],
+  "tests/partner-access-ui.test.tsx": [
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "creator invitation keeps the approved concise identity and account-creation copy",
+      "line": 9,
+      "start": 344,
+      "end": 1048,
+      "body": "test(\"creator invitation keeps the approved concise identity and account-creation copy\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard\n      email=\"lea@example.test\"\n      mode=\"ready\"\n      name=\"Lea\"\n      onChangeEmail={() => {}}\n      onContinue={() => {}}\n    />,\n  )\n  assert.match(html, /Hi Lea, dein Zugang ist bereit\\./)\n  assert.match(html, /lea@example\\.test/)\n  assert.match(html, /Nicht deine E-Mail\\? Ändern/)\n  assert.match(html, /Los geht’s/)\n  assert.match(\n    html,\n    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,\n  )\n  assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)\n})",
+      "sha256": "172760f5336cf09d6b71ef0b2864ad475e7a2dce65de756a9030f37bf088586b"
+    },
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "creator invitation greets a full-name account by first name",
+      "line": 30,
+      "start": 1050,
+      "end": 1358,
+      "body": "test(\"creator invitation greets a full-name account by first name\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(html, /Hi Lea, dein Zugang ist bereit\\./)\n  assert.doesNotMatch(html, /Hi Lea Sommer/)\n})",
+      "sha256": "6a2a6c9d1da20bb27881afdf319409711b945a5543b62e66fcfc140bc90c74e9"
+    },
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "email correction stays inline and short",
+      "line": 38,
+      "start": 1360,
+      "end": 1809,
+      "body": "test(\"email correction stays inline and short\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard\n      email=\"lea@example.test\"\n      mode=\"change_email\"\n      name=\"Lea\"\n      onCancel={() => {}}\n      onSubmitEmail={() => {}}\n    />,\n  )\n  assert.match(html, /E-Mail ändern/)\n  assert.match(html, /Wir senden dir einen Bestätigungslink\\./)\n  assert.match(html, /Bestätigungslink senden/)\n  assert.match(html, /Abbrechen/)\n})",
+      "sha256": "7a71d1f814124a229154da2a011aa8b0be0c4975919c7cd4744bacc0f8f621b5"
+    },
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "the quiz draft is cleared only when the claim response signals a fresh start",
+      "line": 54,
+      "start": 1811,
+      "end": 2290,
+      "body": "test(\"the quiz draft is cleared only when the claim response signals a fresh start\", () => {\n  assert.equal(shouldClearQuizDraft({ destination: \"/quiz?partner=1\", freshStart: true }), true)\n  assert.equal(shouldClearQuizDraft({ destination: \"/quiz?partner=1\", freshStart: false }), false)\n  assert.equal(shouldClearQuizDraft({ destination: \"/quiz?partner=1\" }), false)\n  assert.equal(shouldClearQuizDraft(null), false)\n  assert.equal(shouldClearQuizDraft(\"freshStart\"), false)\n})",
+      "sha256": "32e9586ca48a7175132cc07d779d42cfdd5da2e3340338d636a21f1e9fbf1fe2"
+    },
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "the invitation client wires the draft-clearing predicate before navigating away",
+      "line": 62,
+      "start": 2292,
+      "end": 2962,
+      "body": "test(\"the invitation client wires the draft-clearing predicate before navigating away\", async () => {\n  const source = await readFile(\"src/app/partner/einladung/partner-invitation-client.tsx\", \"utf8\")\n  assert.match(source, /shouldClearQuizDraft\\(body\\)/)\n  assert.match(source, /clearQuizDraft\\(\\)/)\n  const guardIndex = source.indexOf(\"isDestination(body)\")\n  const clearIndex = source.indexOf(\"clearQuizDraft()\")\n  const assignIndex = source.indexOf(\"window.location.assign(body.destination)\")\n  assert.ok(\n    guardIndex > 0 && clearIndex > guardIndex && assignIndex > clearIndex,\n    \"draft must be cleared after the destination guard and before navigating\",\n  )\n})",
+      "sha256": "2a2cffa868c183b272f051ada1fabcdaae88d70fe76df24630a4b803f40d3605"
+    }
+  ],
+  "tests/partner-access-activation-route.test.ts": [
+    {
+      "file": "tests/partner-access-activation-route.test.ts",
+      "name": "partner activation requires exact authorization and sends ready email only once",
+      "line": 26,
+      "start": 786,
+      "end": 1824,
+      "body": "test(\"partner activation requires exact authorization and sends ready email only once\", async () => {\n  const calls: string[] = []\n  const response = await createPartnerActivateHandler({\n    getUserId: async () => ids.user,\n    authorize: async () => ({\n      invitationId: ids.invitation,\n      userId: ids.user,\n      funnelSessionId: ids.funnel,\n      leadId: ids.lead,\n    }),\n    activate: async () => ({ grantId: \"grant\", reused: false }),\n    resolveDestinationLeadId: async (_userId, partnerLeadId) => partnerLeadId,\n    sendReadyEmail: async () => {\n      calls.push(\"ready-email\")\n      return true\n    },\n  })(request())\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { destination: `/plan-bereit?lead=${ids.lead}` })\n  await new Promise((resolve) => setImmediate(resolve))\n  assert.deepEqual(calls, [\"ready-email\"])\n\n  const denied = await createPartnerActivateHandler({\n    getUserId: async () => ids.user,\n    authorize: async () => null,\n  })(request())\n  assert.equal(denied.status, 403)\n})",
+      "sha256": "1dedfbef3237d6cc68a6d21b1fcfc210199634fd43b590697c6f637e4bc12d29"
+    },
+    {
+      "file": "tests/partner-access-activation-route.test.ts",
+      "name": "partner activation requires no funnel cookie — authorization is resolved from the user and lead alone",
+      "line": 55,
+      "start": 1826,
+      "end": 2619,
+      "body": "test(\"partner activation requires no funnel cookie — authorization is resolved from the user and lead alone\", async () => {\n  const authorizeCalls: unknown[] = []\n  const response = await createPartnerActivateHandler({\n    getUserId: async () => ids.user,\n    authorize: async (input) => {\n      authorizeCalls.push(input)\n      return {\n        invitationId: ids.invitation,\n        userId: ids.user,\n        funnelSessionId: ids.funnel,\n        leadId: ids.lead,\n      }\n    },\n    activate: async () => ({ grantId: \"grant\", reused: true }),\n    resolveDestinationLeadId: async (_userId, partnerLeadId) => partnerLeadId,\n    sendReadyEmail: async () => true,\n  })(request())\n  assert.equal(response.status, 200)\n  assert.deepEqual(authorizeCalls, [{ userId: ids.user, leadId: ids.lead }])\n})",
+      "sha256": "e956d3f0e5b479728fbc0843c2760e10ea76092e831aed861d0d675ba36722eb"
+    },
+    {
+      "file": "tests/partner-access-activation-route.test.ts",
+      "name": "partner activation sends an existing paid creator to their canonical plan lead",
+      "line": 76,
+      "start": 2621,
+      "end": 3737,
+      "body": "test(\"partner activation sends an existing paid creator to their canonical plan lead\", async () => {\n  const response = await createPartnerActivateHandler({\n    getUserId: async () => ids.user,\n    authorize: async () => ({\n      invitationId: ids.invitation,\n      userId: ids.user,\n      funnelSessionId: ids.funnel,\n      leadId: ids.lead,\n    }),\n    activate: async () => ({ grantId: \"grant\", reused: false }),\n    sendReadyEmail: async () => true,\n    resolveDestinationLeadId: async (userId, partnerLeadId) => {\n      assert.equal(userId, ids.user)\n      assert.equal(partnerLeadId, ids.lead)\n      return ids.paidLead\n    },\n  })(request())\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    destination: `/plan-bereit?lead=${ids.paidLead}`,\n  })\n  assert.equal(\n    resolvePartnerActivationDestinationLead(\n      { accessState: \"active\", artifactLeadId: ids.paidLead },\n      ids.lead,\n    ),\n    ids.paidLead,\n  )\n  assert.equal(\n    resolvePartnerActivationDestinationLead(\n      { accessState: \"none\", artifactLeadId: null },\n      ids.lead,\n    ),\n    ids.lead,\n  )\n})",
+      "sha256": "beef23b9d34d244ed41eae96ca29a6cd655afb1c16076849bf49a699298d063d"
+    },
+    {
+      "file": "tests/partner-access-activation-route.test.ts",
+      "name": "partner activation rejects cross-origin requests before authorization",
+      "line": 114,
+      "start": 3739,
+      "end": 4089,
+      "body": "test(\"partner activation rejects cross-origin requests before authorization\", async () => {\n  let called = false\n  const response = await createPartnerActivateHandler({\n    authorize: async () => {\n      called = true\n      return null\n    },\n  })(request(\"https://example.test\"))\n  assert.equal(response.status, 403)\n  assert.equal(called, false)\n})",
+      "sha256": "0567aba06a246f3542982b8c64b580a2075942516809f6861627d2ae48d51c55"
+    }
+  ],
+  "tests/partner-access-journey.spec.ts": [
+    {
+      "file": "tests/partner-access-journey.spec.ts",
+      "name": "creator invitation stays personal and lets the recipient correct the email",
+      "line": 30,
+      "start": 833,
+      "end": 2069,
+      "body": "test(\"creator invitation stays personal and lets the recipient correct the email\", async ({\n  page,\n}) => {\n  await page.goto(\"/labs/partner-access\", { waitUntil: \"domcontentloaded\" })\n\n  await expect(page.getByRole(\"heading\", { name: \"Hi Lea, dein Zugang ist bereit.\" })).toBeVisible()\n  await expect(page.getByText(\"lea@studio-example.de\", { exact: true })).toBeVisible()\n  await expect(page.getByRole(\"button\", { name: \"Los geht’s\" })).toBeVisible()\n  await expect(\n    page.getByText(\n      \"Damit erstellst du dein Chaarlie Konto mit dieser E-Mail. Hast du schon eins, startest du damit neu.\",\n      { exact: true },\n    ),\n  ).toBeVisible()\n\n  await page.getByRole(\"button\", { name: \"Nicht deine E-Mail? Ändern\" }).click()\n  await expect(page.getByRole(\"heading\", { name: \"E-Mail ändern\" })).toBeVisible()\n  await expect(\n    page.getByText(\"Wir senden dir einen Bestätigungslink.\", { exact: true }),\n  ).toBeVisible()\n  await expect(page.getByLabel(\"E-Mail\", { exact: true })).toBeVisible()\n  await expect(page.getByRole(\"button\", { name: \"Bestätigungslink senden\" })).toBeVisible()\n\n  await page.getByRole(\"button\", { name: \"Abbrechen\" }).click()\n  await expect(page.getByRole(\"button\", { name: \"Los geht’s\" })).toBeVisible()\n})",
+      "sha256": "f70d0248f77fda60417c0543d959a91c2a74f12e375e9d7b27da78887e04e15c"
+    },
+    {
+      "file": "tests/partner-access-journey.spec.ts",
+      "name": "creator invite and activation card fit a narrow phone viewport",
+      "line": 57,
+      "start": 2071,
+      "end": 3032,
+      "body": "test(\"creator invite and activation card fit a narrow phone viewport\", async ({ page }) => {\n  await page.setViewportSize({ width: 390, height: 844 })\n\n  await page.goto(\"/labs/partner-access\", { waitUntil: \"domcontentloaded\" })\n  await expect(page.getByRole(\"button\", { name: \"Los geht’s\" })).toBeVisible()\n  expect(\n    await page.evaluate(\n      () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,\n    ),\n  ).toBe(true)\n\n  await page.goto(\"/labs/offer-page?scenario=partner\", { waitUntil: \"domcontentloaded\" })\n  await expect(page.getByRole(\"heading\", { name: \"Dein Zugang ist bereit.\" })).toBeVisible()\n  await expect(page.getByRole(\"button\", { name: \"Meinen Plan öffnen\" })).toHaveCount(3)\n  await expect(page.getByText(\"Für dich kostenlos\", { exact: true })).toHaveCount(0)\n  expect(\n    await page.evaluate(\n      () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,\n    ),\n  ).toBe(true)\n})",
+      "sha256": "c4c0424bcc095fbc1a152fb5eeb6578368fdf3e1d6a5d4490509ffb29ff886b5"
+    },
+    {
+      "file": "tests/partner-access-journey.spec.ts",
+      "name": "@ci verified creator skips duplicate identity and Back returns to the final question",
+      "line": 79,
+      "start": 3034,
+      "end": 4125,
+      "body": "test(\"@ci verified creator skips duplicate identity and Back returns to the final question\", async ({\n  page,\n}) => {\n  await seedFinalQuestionDraft(page)\n  await page.route(\"**/api/partner-access/quiz-context\", async (route) => {\n    await route.fulfill({\n      contentType: \"application/json\",\n      status: 200,\n      body: JSON.stringify({\n        status: \"creator\",\n        name: \"Lea Sommer\",\n        email: \"lea@example.test\",\n      }),\n    })\n  })\n\n  await page.goto(\"/quiz?partner=1\", { waitUntil: \"networkidle\" })\n  await expect(page.getByRole(\"heading\", { name: /Was wünschst du dir/ })).toBeVisible()\n  await page.getByRole(\"button\", { name: /Weiter$/ }).click()\n\n  await expect(\n    page.getByRole(\"heading\", { name: \"Dürfen wir dir Haarpflege-Tipps schicken?\" }),\n  ).toBeVisible()\n  await expect(page.getByPlaceholder(\"Dein Vorname\")).toHaveCount(0)\n  await expect(page.getByPlaceholder(\"name@beispiel.de\")).toHaveCount(0)\n\n  await page.getByRole(\"button\", { name: \"Zurück\" }).click()\n  await expect(page.getByRole(\"heading\", { name: /Was wünschst du dir/ })).toBeVisible()\n})",
+      "sha256": "22148851df8bc1179062149007f1997f3665daee6da997058b7d02ee39a5e808"
+    },
+    {
+      "file": "tests/partner-access-journey.spec.ts",
+      "name": "@ci ordinary quiz keeps its existing name and email sequence",
+      "line": 109,
+      "start": 4127,
+      "end": 4861,
+      "body": "test(\"@ci ordinary quiz keeps its existing name and email sequence\", async ({ page }) => {\n  await seedFinalQuestionDraft(page)\n  let creatorContextRequests = 0\n  await page.route(\"**/api/partner-access/quiz-context\", async (route) => {\n    creatorContextRequests += 1\n    await route.abort()\n  })\n\n  await page.goto(\"/quiz\", { waitUntil: \"networkidle\" })\n  await page.getByRole(\"button\", { name: /Weiter$/ }).click()\n\n  await expect(page.getByPlaceholder(\"Dein Vorname\")).toBeVisible()\n  await page.getByPlaceholder(\"Dein Vorname\").fill(\"Lea\")\n  await page.getByRole(\"button\", { name: \"Weiter zum Ergebnis\" }).click()\n  await expect(page.getByPlaceholder(\"name@beispiel.de\")).toBeVisible()\n  expect(creatorContextRequests).toBe(0)\n})",
+      "sha256": "1dba9a5a97d48a139b06c5e790a579feb6c995b73328f38de2997ef0b51919e7"
+    }
+  ],
+  "tests/partner-access-resolve-route.test.ts": [
+    {
+      "file": "tests/partner-access-resolve-route.test.ts",
+      "name": "resolve shows personal identity and stores only signed invitation context",
+      "line": 30,
+      "start": 983,
+      "end": 2000,
+      "body": "test(\"resolve shows personal identity and stores only signed invitation context\", async () => {\n  const credential = \"v1.sensitive.personal\"\n  const handler = createPartnerAccessResolveHandler({\n    resolveInvitation: async (value) => {\n      assert.equal(value, credential)\n      return { invitationId, name: \"Lea\", email: \"lea@example.test\", state: \"pending\" }\n    },\n    decodeCredential: () => ({ invitationId, tokenVersion: 3 }),\n    createIntent: () => \"signed-intent-without-credential\",\n    now: () => 1_000,\n  })\n  const response = await handler(request({ credential }))\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    name: \"Lea\",\n    email: \"lea@example.test\",\n    state: \"pending\",\n  })\n  assert.equal(\n    response.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value,\n    \"signed-intent-without-credential\",\n  )\n  assert.equal(response.headers.get(\"cache-control\"), \"private, no-store\")\n  assert.equal(response.headers.get(\"set-cookie\")?.includes(credential), false)\n})",
+      "sha256": "70388ce36496392dd01cde8f89d4eee7878d6185dd64de298a95ee7a00c1dbcf"
+    },
+    {
+      "file": "tests/partner-access-resolve-route.test.ts",
+      "name": "resolve rejects cross-origin, malformed, and unavailable credentials generically",
+      "line": 57,
+      "start": 2002,
+      "end": 2665,
+      "body": "test(\"resolve rejects cross-origin, malformed, and unavailable credentials generically\", async () => {\n  const handler = createPartnerAccessResolveHandler({\n    resolveInvitation: async () => null,\n    decodeCredential: () => null,\n    createIntent: () => \"unused\",\n    now: () => 1_000,\n  })\n  assert.equal((await handler(request({ credential: \"x\" }, \"https://evil.example\"))).status, 403)\n  assert.equal((await handler(request({ nope: \"x\" }))).status, 400)\n  const unavailable = await handler(request({ credential: \"x\" }))\n  assert.equal(unavailable.status, 410)\n  assert.deepEqual(await unavailable.json(), { error: \"Diese Einladung ist nicht verfügbar.\" })\n})",
+      "sha256": "8f885ffffcd5e858dbdd684c5230f8a8f2e93b2df230898757ba75f43c797065"
+    },
+    {
+      "file": "tests/partner-access-resolve-route.test.ts",
+      "name": "resolve resumes the personal screen from the signed HttpOnly intent cookie",
+      "line": 71,
+      "start": 2667,
+      "end": 3558,
+      "body": "test(\"resolve resumes the personal screen from the signed HttpOnly intent cookie\", async () => {\n  const handler = createPartnerAccessResolveHandler({\n    decodeIntent: () => ({\n      invitationId,\n      tokenVersion: 3,\n      issuedAt: 500,\n      expiresAt: 2_000,\n    }),\n    resolveByIntent: async (intent) => {\n      assert.equal(intent.invitationId, invitationId)\n      assert.equal(intent.tokenVersion, 3)\n      return { invitationId, name: \"Lea\", email: \"lea@example.test\", state: \"pending\" }\n    },\n    createIntent: () => \"renewed-signed-intent\",\n    now: () => 1_000,\n  })\n  const response = await handler(resumeRequest())\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    name: \"Lea\",\n    email: \"lea@example.test\",\n    state: \"pending\",\n  })\n  assert.equal(response.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value, \"renewed-signed-intent\")\n})",
+      "sha256": "509782aaac133282edcf105aa27cd1edf0d02b139ab3dba1d0c96b9bacad4351"
+    },
+    {
+      "file": "tests/partner-access-resolve-route.test.ts",
+      "name": "resolve rejects resume without a valid intent cookie",
+      "line": 98,
+      "start": 3560,
+      "end": 3924,
+      "body": "test(\"resolve rejects resume without a valid intent cookie\", async () => {\n  const handler = createPartnerAccessResolveHandler({\n    decodeIntent: () => null,\n    resolveByIntent: async () => {\n      throw new Error(\"must not load\")\n    },\n    createIntent: () => \"unused\",\n    now: () => 1_000,\n  })\n  assert.equal((await handler(resumeRequest())).status, 410)\n})",
+      "sha256": "0e37e2159c6ac2af89992f358f4a686f7c1586c7451ea9e7cd4d1ce989c38d4b"
+    }
+  ],
+  "tests/partner-access-schema.test.ts": [
+    {
+      "file": "tests/partner-access-schema.test.ts",
+      "name": "partner access migration creates private invitation and correction state",
+      "line": 14,
+      "start": 462,
+      "end": 1350,
+      "body": "test(\"partner access migration creates private invitation and correction state\", () => {\n  assert.match(migration, /CREATE TABLE public\\.partner_access_invitations/)\n  assert.match(migration, /normalized_email text NOT NULL/)\n  assert.match(migration, /token_version integer NOT NULL DEFAULT 1/)\n  assert.match(migration, /claim_attempt_id uuid/)\n  assert.match(migration, /claim_attempt_expires_at timestamptz/)\n  assert.match(migration, /CREATE TABLE public\\.partner_access_email_changes/)\n  assert.match(migration, /token_version integer NOT NULL CHECK \\(token_version > 0\\)/)\n  assert.match(migration, /token_hash text NOT NULL UNIQUE/)\n  assert.match(\n    migration,\n    /ALTER TABLE public\\.partner_access_invitations ENABLE ROW LEVEL SECURITY/,\n  )\n  assert.match(\n    migration,\n    /REVOKE ALL ON TABLE public\\.partner_access_invitations FROM PUBLIC, anon, authenticated/,\n  )\n})",
+      "sha256": "b709979b158fdae537275a236834596993c8e47b5b48a1fb00ac3e2360dc4613"
+    },
+    {
+      "file": "tests/partner-access-schema.test.ts",
+      "name": "partner access migration extends grants and preserves one active grant per invitation",
+      "line": 33,
+      "start": 1352,
+      "end": 2070,
+      "body": "test(\"partner access migration extends grants and preserves one active grant per invitation\", () => {\n  assert.match(migration, /DROP CONSTRAINT IF EXISTS manual_access_grants_reason_check/)\n  assert.match(migration, /reason IN \\('friend', 'tester', 'admin', 'support', 'partner'\\)/)\n  assert.match(migration, /partner_access_invitation_id uuid/)\n  assert.match(\n    migration,\n    /CREATE UNIQUE INDEX partner_access_one_active_grant_per_invitation[\\s\\S]*WHERE revoked_at IS NULL/,\n  )\n  assert.match(migration, /ADD COLUMN partner_access_invitation_id uuid/)\n  assert.match(migration, /partner_access_one_current_claimed_user/)\n  assert.match(migration, /test_kind = 'partner' AND field_test_campaign_id IS NULL/)\n})",
+      "sha256": "2ac27f88690ba7ea2db232b99fe6ef5c0e10b91a721ff79d69fdb1cb57dfebc1"
+    },
+    {
+      "file": "tests/partner-access-schema.test.ts",
+      "name": "partner mutation functions are service-only and explicit about privilege",
+      "line": 46,
+      "start": 2072,
+      "end": 2838,
+      "body": "test(\"partner mutation functions are service-only and explicit about privilege\", () => {\n  for (const functionName of [\n    \"create_partner_access_invitations\",\n    \"reserve_partner_access_claim\",\n    \"release_partner_access_claim\",\n    \"complete_partner_access_claim\",\n    \"activate_partner_access\",\n    \"revoke_partner_access\",\n    \"reactivate_partner_access\",\n    \"rotate_partner_access_invitation\",\n  ]) {\n    assert.match(migration, new RegExp(`CREATE OR REPLACE FUNCTION public\\\\.${functionName}\\\\(`))\n  }\n  assert.match(\n    migration,\n    /REVOKE ALL ON FUNCTION public\\.create_partner_access_invitations\\(jsonb, uuid\\) FROM PUBLIC, anon, authenticated/,\n  )\n  assert.match(migration, /GRANT EXECUTE ON FUNCTION public\\.create_partner_access_invitations/)\n})",
+      "sha256": "14952e16c3868a73870dd7752c532a6b52b3928da0fef2ea3ea42d82219195ff"
+    },
+    {
+      "file": "tests/partner-access-schema.test.ts",
+      "name": "partner routing is additive and cannot rename the established owner source",
+      "line": 66,
+      "start": 2840,
+      "end": 3281,
+      "body": "test(\"partner routing is additive and cannot rename the established owner source\", () => {\n  assert.doesNotMatch(migration, /RENAME TO personal_plan_get_own_routing_source_pre_partner/)\n  assert.match(\n    migration,\n    /CREATE OR REPLACE FUNCTION private\\.personal_plan_get_own_partner_routing_source\\(\\)/,\n  )\n  assert.match(\n    migration,\n    /CREATE OR REPLACE FUNCTION public\\.personal_plan_get_own_partner_routing_source\\(\\)/,\n  )\n})",
+      "sha256": "59fdf9ba4725a603382f59570f999d14e1b5867ea855722eafdba41f0285b41f"
+    }
+  ],
+  "tests/partner-access-email-change-routes.test.ts": [
+    {
+      "file": "tests/partner-access-email-change-routes.test.ts",
+      "name": "email correction validates the invitation and sends only the normalized new address",
+      "line": 41,
+      "start": 1395,
+      "end": 2095,
+      "body": "test(\"email correction validates the invitation and sends only the normalized new address\", async () => {\n  const issued: unknown[] = []\n  const response = await createPartnerEmailChangeHandler(\n    dependencies({\n      issue: async (input: unknown) => {\n        issued.push(input)\n        return { deliveryId: \"message\", queuedAt: new Date().toISOString() }\n      },\n    }),\n  )(request(\" NEW@Example.Test \"))\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { accepted: true })\n  assert.deepEqual(issued, [\n    {\n      invitationId,\n      tokenVersion: 1,\n      name: \"Lea Sommer\",\n      email: \"new@example.test\",\n      siteUrl: \"https://chaarlie.de\",\n    },\n  ])\n})",
+      "sha256": "cdc1fd65222bb1d596a3d7df3bdf5f833cbc464b6ff0f689cf2b7c98577247ac"
+    },
+    {
+      "file": "tests/partner-access-email-change-routes.test.ts",
+      "name": "email correction rejects cross-origin, stale, unchanged, and throttled requests",
+      "line": 65,
+      "start": 2097,
+      "end": 3088,
+      "body": "test(\"email correction rejects cross-origin, stale, unchanged, and throttled requests\", async () => {\n  const handler = createPartnerEmailChangeHandler(dependencies())\n  assert.equal((await handler(request(\"new@example.test\", \"https://evil.example\"))).status, 403)\n  assert.equal((await handler(request(\"lea@example.test\"))).status, 400)\n\n  const stale = createPartnerEmailChangeHandler(\n    dependencies({ loadInvitation: async () => ({ ...invitation, token_version: 2 }) }),\n  )\n  assert.equal((await stale(request(\"new@example.test\"))).status, 410)\n\n  const throttled = createPartnerEmailChangeHandler(\n    dependencies({\n      issue: async () => {\n        throw Object.assign(new Error(\"rate limited\"), { code: \"55P03\" })\n      },\n    }),\n  )\n  const throttledResponse = await throttled(request(\"new@example.test\"))\n  assert.equal(throttledResponse.status, 429)\n  assert.deepEqual(await throttledResponse.json(), {\n    error: \"Bitte warte kurz und versuche es dann noch einmal.\",\n  })\n})",
+      "sha256": "ae1625426d110721ead144ea84bdf342f816f6c70955d48d02414c6014b5cea1"
+    },
+    {
+      "file": "tests/partner-access-email-change-routes.test.ts",
+      "name": "email confirmation returns a fresh fragment credential and fails closed",
+      "line": 89,
+      "start": 3090,
+      "end": 4249,
+      "body": "test(\"email confirmation returns a fresh fragment credential and fails closed\", async () => {\n  const confirmRequest = () =>\n    new Request(\"https://chaarlie.de/api/partner-access/email-change/confirm\", {\n      method: \"POST\",\n      headers: { origin: \"https://chaarlie.de\", \"content-type\": \"application/json\" },\n      body: JSON.stringify({ token: \"mailbox-proof\" }),\n    })\n  const response = await createPartnerEmailChangeConfirmHandler({\n    consume: async () => ({\n      invitationId,\n      name: \"Lea Sommer\",\n      email: \"new@example.test\",\n      tokenVersion: 2,\n    }),\n    projectCredential: () => \"fresh-credential\",\n    secret: () => \"partner-access-signing-secret-that-is-long-enough\",\n  })(confirmRequest())\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    destination: \"/partner/einladung?bestaetigt=1#code=fresh-credential\",\n  })\n\n  const unavailable = createPartnerEmailChangeConfirmHandler({\n    consume: async () => {\n      throw new Error(\"expired\")\n    },\n    secret: () => \"partner-access-signing-secret-that-is-long-enough\",\n  })\n  assert.equal((await unavailable(confirmRequest())).status, 410)\n})",
+      "sha256": "f6f59aac80d731d507527a80170128e3bc05d10b4ee1f6a056f9d5b98c504d0e"
+    }
+  ],
+  "tests/partner-access-token.test.ts": [
+    {
+      "file": "tests/partner-access-token.test.ts",
+      "name": "partner invitation credentials are deterministic, versioned, and tamper evident",
+      "line": 12,
+      "start": 324,
+      "end": 978,
+      "body": "test(\"partner invitation credentials are deterministic, versioned, and tamper evident\", () => {\n  const first = projectPartnerInvitationCredential({ invitationId, tokenVersion: 4 }, secret)\n  const replay = projectPartnerInvitationCredential({ invitationId, tokenVersion: 4 }, secret)\n\n  assert.equal(first, replay)\n  assert.match(first, /^v1\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/)\n  assert.deepEqual(decodePartnerInvitationCredential(first, secret), {\n    invitationId,\n    tokenVersion: 4,\n  })\n  assert.equal(decodePartnerInvitationCredential(`${first}x`, secret), null)\n  assert.equal(decodePartnerInvitationCredential(first, `${secret}-wrong`), null)\n})",
+      "sha256": "33ea995351c32a280784892ec29f7640cbabbc2f3b7c644e17d555aa3ec7fbf2"
+    },
+    {
+      "file": "tests/partner-access-token.test.ts",
+      "name": "rotating the stored version invalidates the previous credential",
+      "line": 26,
+      "start": 980,
+      "end": 1462,
+      "body": "test(\"rotating the stored version invalidates the previous credential\", () => {\n  const previous = projectPartnerInvitationCredential({ invitationId, tokenVersion: 1 }, secret)\n  const current = projectPartnerInvitationCredential({ invitationId, tokenVersion: 2 }, secret)\n\n  assert.notEqual(previous, current)\n  assert.equal(decodePartnerInvitationCredential(previous, secret)?.tokenVersion, 1)\n  assert.equal(decodePartnerInvitationCredential(current, secret)?.tokenVersion, 2)\n})",
+      "sha256": "fd08b558b48712e1e916de35ba2c73c131c147cb68a083bbb267be5212910895"
+    },
+    {
+      "file": "tests/partner-access-token.test.ts",
+      "name": "credentials reject malformed identifiers, versions, and weak secrets",
+      "line": 35,
+      "start": 1464,
+      "end": 1940,
+      "body": "test(\"credentials reject malformed identifiers, versions, and weak secrets\", () => {\n  assert.throws(\n    () => projectPartnerInvitationCredential({ invitationId: \"nope\", tokenVersion: 1 }, secret),\n    /invitation/i,\n  )\n  assert.throws(\n    () => projectPartnerInvitationCredential({ invitationId, tokenVersion: 0 }, secret),\n    /version/i,\n  )\n  assert.throws(\n    () => projectPartnerInvitationCredential({ invitationId, tokenVersion: 1 }, \"short\"),\n    /secret/i,\n  )\n})",
+      "sha256": "d1d3936171d5b801e6337224583c1ee8875d011e85117e3c74199903e3422c21"
+    }
+  ],
+  "tests/partner-access-cli.test.ts": [
+    {
+      "file": "tests/partner-access-cli.test.ts",
+      "name": "partner access CLI is dry-run by default and parses a bounded batch",
+      "line": 6,
+      "start": 164,
+      "end": 792,
+      "body": "test(\"partner access CLI is dry-run by default and parses a bounded batch\", async () => {\n  assert.deepEqual(\n    await parsePartnerAccessCommand([\"create\", \"--name=Lea\", \"--email=lea@example.test\"]),\n    {\n      action: \"create\",\n      apply: false,\n      creators: [{ name: \"Lea\", email: \"lea@example.test\" }],\n    },\n  )\n  assert.deepEqual(\n    await parsePartnerAccessCommand([\"create\", \"--file=creators.json\"], async () =>\n      JSON.stringify([{ name: \"Mia\", email: \"mia@example.test\" }]),\n    ),\n    {\n      action: \"create\",\n      apply: false,\n      creators: [{ name: \"Mia\", email: \"mia@example.test\" }],\n    },\n  )\n})",
+      "sha256": "db4f2229761c1f9844ee25bae485d5c24cbfaf3da33b3bb0a7de8d3681b19754"
+    },
+    {
+      "file": "tests/partner-access-cli.test.ts",
+      "name": "partner access CLI mutations require all production confirmation gates",
+      "line": 27,
+      "start": 794,
+      "end": 1664,
+      "body": "test(\"partner access CLI mutations require all production confirmation gates\", () => {\n  const args = [\n    \"revoke\",\n    \"--invitation=10000000-0000-4000-8000-000000000001\",\n    \"--apply\",\n    \"--confirm-project=pqdkhefxsxkyeqelqegq\",\n  ]\n  const environment = {\n    NEXT_PUBLIC_SUPABASE_URL: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n    ALLOW_PARTNER_ACCESS_PRODUCTION_WRITE: \"1\",\n  }\n  assert.equal(canApplyPartnerAccess(args, environment), true)\n  assert.equal(\n    canApplyPartnerAccess(\n      args.filter((arg) => arg !== \"--apply\"),\n      environment,\n    ),\n    false,\n  )\n  assert.equal(\n    canApplyPartnerAccess(args, { ...environment, ALLOW_PARTNER_ACCESS_PRODUCTION_WRITE: \"0\" }),\n    false,\n  )\n  assert.equal(\n    canApplyPartnerAccess(args, {\n      ...environment,\n      NEXT_PUBLIC_SUPABASE_URL: \"https://wrong.supabase.co\",\n    }),\n    false,\n  )\n})",
+      "sha256": "1aaaa6b2a7e541822ac97e1a15499151ded1b18b8e489fbe48f5421f9e034cb8"
+    }
+  ],
+  "tests/admin-partner-access-page.test.tsx": [
+    {
+      "file": "tests/admin-partner-access-page.test.tsx",
+      "name": "partner admin page exposes the recurring single and batch workflow",
+      "line": 7,
+      "start": 201,
+      "end": 609,
+      "body": "test(\"partner admin page exposes the recurring single and batch workflow\", () => {\n  const html = renderToStaticMarkup(<PartnerAccessAdminPage />)\n  assert.match(html, /Partnerzugänge/)\n  assert.match(html, /Einzeln/)\n  assert.match(html, /Mehrere/)\n  assert.match(html, /Name/)\n  assert.match(html, /E-Mail/)\n  assert.match(html, /Zugang erstellen/)\n  assert.doesNotMatch(html, /lebenslang|Abo|Zahlung/i)\n})",
+      "sha256": "f730530838e3c01048fd36c43288e73406b8d4d68002de267801429efcda1373"
+    }
+  ],
+  "tests/partner-access-email.test.ts": [
+    {
+      "file": "tests/partner-access-email.test.ts",
+      "name": "partner transactional payloads contain only the recipient-facing link and first name",
+      "line": 9,
+      "start": 185,
+      "end": 1075,
+      "body": "test(\"partner transactional payloads contain only the recipient-facing link and first name\", () => {\n  assert.deepEqual(\n    buildPartnerInvitationEmail({\n      name: \"Lea\",\n      email: \"lea@example.test\",\n      url: \"https://chaarlie.de/partner/einladung#code=signed\",\n      transactionalMessageId: 101,\n    }),\n    {\n      to: \"lea@example.test\",\n      transactionalMessageId: 101,\n      messageData: {\n        first_name: \"Lea\",\n        invitation_url: \"https://chaarlie.de/partner/einladung#code=signed\",\n      },\n    },\n  )\n  assert.deepEqual(\n    buildPartnerAccountReadyEmail({\n      name: \"Lea\",\n      email: \"lea@example.test\",\n      loginUrl: \"https://chaarlie.de/auth\",\n      transactionalMessageId: 102,\n    }),\n    {\n      to: \"lea@example.test\",\n      transactionalMessageId: 102,\n      messageData: { first_name: \"Lea\", login_url: \"https://chaarlie.de/auth\" },\n    },\n  )\n})",
+      "sha256": "996f835edb16fb9c0fdaa3495aa828a5cb0709fb4cc291f6defe874af96691e8"
+    }
+  ],
+  "tests/partner-access-intent.test.ts": [
+    {
+      "file": "tests/partner-access-intent.test.ts",
+      "name": "partner intent contains only invitation context and expires",
+      "line": 13,
+      "start": 320,
+      "end": 1069,
+      "body": "test(\"partner intent contains only invitation context and expires\", () => {\n  const value = createPartnerAccessIntent(\n    {\n      invitationId: \"10000000-0000-4000-8000-000000000001\",\n      tokenVersion: 2,\n      issuedAt: now,\n      expiresAt: now + 60_000,\n    },\n    secret,\n  )\n  assert.deepEqual(decodePartnerAccessIntent(value, secret, now), {\n    invitationId: \"10000000-0000-4000-8000-000000000001\",\n    tokenVersion: 2,\n    issuedAt: now,\n    expiresAt: now + 60_000,\n  })\n  assert.equal(decodePartnerAccessIntent(value, secret, now + 60_000), null)\n  assert.equal(value.includes(\"lea@example.test\"), false)\n  assert.equal(partnerAccessIntentCookieOptions.httpOnly, true)\n  assert.equal(partnerAccessIntentCookieOptions.sameSite, \"lax\")\n})",
+      "sha256": "b1b36c8d39a1fa7b5072b3e135605b310190b0cc25e6b967a903695b327f5f9b"
+    }
+  ]
+}

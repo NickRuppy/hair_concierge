@@ -52,8 +52,11 @@ export const CANONICAL_SCALP_ROUTES = [
 ] as const
 export const CANONICAL_CLEANSING_INTENSITIES = ["gentle", "regular", "clarifying"] as const
 export const SCALP_TYPE_FOCUSES = ["oily", "balanced", "dry"] as const
-export const BOND_REPAIR_INTENSITIES = ["maintenance", "intensive"] as const
-export const BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
+export const BOND_APPLICATION_MODES = [
+  "pre_shampoo",
+  "post_wash_leave_in",
+  "bedtime_leave_in",
+] as const
 export const PEELING_TYPES = ["acid_serum", "physical_scrub"] as const
 export const LEAVE_IN_CARE_TARGETS = [
   "heat_protect",
@@ -121,7 +124,6 @@ export const canonicalWeightSchema = z.enum(CANONICAL_WEIGHTS)
 export const canonicalScalpRouteSchema = z.enum(CANONICAL_SCALP_ROUTES)
 export const canonicalCleansingIntensitySchema = z.enum(CANONICAL_CLEANSING_INTENSITIES)
 export const scalpTypeFocusSchema = z.enum(SCALP_TYPE_FOCUSES)
-export const bondRepairIntensitySchema = z.enum(BOND_REPAIR_INTENSITIES)
 export const bondApplicationModeSchema = z.enum(BOND_APPLICATION_MODES)
 export const peelingTypeSchema = z.enum(PEELING_TYPES)
 export const leaveInCareTargetSchema = z.enum(LEAVE_IN_CARE_TARGETS)

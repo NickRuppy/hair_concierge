@@ -1,0 +1,42 @@
+{
+  "templatePins": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+  "currentStackPolicy": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth",
+  "files": [
+    {
+      "file": "operator-guard.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-guard.cjs",
+      "templateSHA256": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a",
+      "preparedTemplateSHA256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-edit.cjs",
+      "templateSHA256": "6a77a8227068e44d776f7ae515ec2c92add0902604f8aab551244d920bc3ff80",
+      "preparedTemplateSHA256": "0ca42e8af35f250032165bb27d45f39d048f516b16bead23a39c8b8448f88e9d"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-run-controls.cjs",
+      "templateSHA256": "a30bf8e42c8a9ba79966633ef1eb94e0ccad5d41eb71eabe6ba8f0cfa186878b",
+      "preparedTemplateSHA256": "6721c5b17a75a21499aecd82d562f06f056e1d36235bbc15dfda72083beccb6f"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-proof.cjs",
+      "templateSHA256": "ccb2967f1b8ebb1cf11321f54239872cac7ff344470c56e0480c9269d54194c9",
+      "preparedTemplateSHA256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-readonly-preload.cjs",
+      "templateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+      "preparedTemplateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "template": "/tmp/test-audit-scanner46-tools-xrqyw5u6/proof-attestation.cjs",
+      "templateSHA256": "648eb62fcc1ade4a4bcd69ca71ba92f5b9898108a50913f27e144f1773ff7bd3",
+      "preparedTemplateSHA256": "eae028c2777df63303d075a61555925a579964a721a3dd63dd01d25da5fb41c5"
+    }
+  ]
+}

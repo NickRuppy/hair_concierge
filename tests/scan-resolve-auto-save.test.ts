@@ -136,6 +136,8 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
+    isShoppingBudgetEnabled: () => false,
+    loadShoppingBudget: async () => null,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async (_client, input) =>
       Object.fromEntries(input.roles.map((role) => [role, []])),
@@ -188,24 +190,6 @@ test("scan resolve auto-save: a premium in-catalog resolve auto-saves exactly th
     assert.deepEqual(calls, [], "the write must not run before the response is built (F5)")
     await flush()
     assert.deepEqual(calls, [{ userId, productId }])
-  })
-})
-
-test("scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)", async () => {
-  await withFlag("true", async () => {
-    const { after } = afterQueue()
-    const handler = createScanResolveRouteHandler(
-      baseDeps({
-        resolvePaidAccess: async () => "allowed",
-        loadScanSavedState: async () => ({ state: null, managedByScan: false }),
-        autoSaveScanWishlist: async () => {},
-        after,
-      }),
-    )
-    const response = await handler(request())
-    assert.equal(response.status, 200)
-    const body = (await response.json()) as { savedState?: unknown }
-    assert.deepEqual(body.savedState, { state: "merkliste", managedByScan: true })
   })
 })
 

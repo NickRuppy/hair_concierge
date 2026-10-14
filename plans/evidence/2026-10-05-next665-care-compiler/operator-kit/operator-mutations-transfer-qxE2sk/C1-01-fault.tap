@@ -1,0 +1,69 @@
+TAP version 13
+# Subtest: initial Routine compilation is deterministic and excludes volatile portfolio metadata
+not ok 1 - initial Routine compilation is deterministic and excludes volatile portfolio metadata
+  ---
+  duration_ms: 41.786125
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-routine-candidate-compiler.test.ts:2:4869'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          itemKeys: [
+    +       'item:oil:dry_finish:planned-a',
+    +       'item:heat_protectant:pre_heat_protection:captured-pending-a'
+    -       'item:conditioner:conditioner_rinse_out:captured-a'
+          ],
+    +     key: 'optional'
+    -     key: 'basis'
+        },
+        {
+          itemKeys: [
+    +       'item:conditioner:conditioner_rinse_out:captured-a'
+    -       'item:oil:dry_finish:planned-a',
+    -       'item:heat_protectant:pre_heat_protection:captured-pending-a'
+          ],
+    +     key: 'basis'
+    -     key: 'optional'
+        }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      key: 'basis'
+      itemKeys:
+        0: 'item:conditioner:conditioner_rinse_out:captured-a'
+    1:
+      key: 'optional'
+      itemKeys:
+        0: 'item:oil:dry_finish:planned-a'
+        1: 'item:heat_protectant:pre_heat_protection:captured-pending-a'
+  actual:
+    0:
+      key: 'optional'
+      itemKeys:
+        0: 'item:oil:dry_finish:planned-a'
+        1: 'item:heat_protectant:pre_heat_protection:captured-pending-a'
+    1:
+      key: 'basis'
+      itemKeys:
+        0: 'item:conditioner:conditioner_rinse_out:captured-a'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-routine-candidate-compiler.test.ts:201:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1907.595291

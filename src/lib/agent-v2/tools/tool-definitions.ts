@@ -36,7 +36,7 @@ import {
   CHEMICAL_TREATMENTS,
   CUTICLE_CONDITIONS,
   DRYING_METHODS,
-  GOALS,
+  ENGINE_GOALS,
   HAIR_DENSITIES,
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
@@ -479,7 +479,7 @@ function normalizeProfileOverrideValue(
 function normalizeProfileAugmentValue(field: ProfileArrayFactField, value: string): string {
   const allowedValuesByField = {
     concerns: PROFILE_CONCERNS,
-    goals: GOALS,
+    goals: ENGINE_GOALS,
     stylingTools: STYLING_TOOLS,
     chemicalTreatment: CHEMICAL_TREATMENTS,
     nightProtection: NIGHT_PROTECTIONS,

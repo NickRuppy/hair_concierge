@@ -490,12 +490,6 @@ function domainBoundaryAnswer(overrides: Record<string, unknown> = {}) {
   }
 }
 
-test("validator accepts known product ids", () => {
-  const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
-
-  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
-})
-
 test("validator diet softens hidden product interpretation metadata when answer is otherwise safe", () => {
   const answer = {
     ...baseAnswer,
@@ -2083,16 +2077,6 @@ test("validator does not require unavailable product lookup when intake is disab
   )
 })
 
-test("validator does not require lookup for broad product recommendations without a concrete product", () => {
-  const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
-
-  assert.equal(result.ok, true)
-  assert.equal(
-    result.errors.some((error) => error.validator_id === "product_lookup_required"),
-    false,
-  )
-})
-
 for (const status of [
   "ambiguous",
   "needs_variant_selection",
@@ -2117,22 +2101,6 @@ for (const status of [
     assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
   })
 }
-
-test("validator allows product recommendations after exact product lookup", () => {
-  const result = validateAgentV2FinalAnswer(baseAnswer, {
-    ...baseValidationContext,
-    toolCallHistory: [...baseValidationContext.toolCallHistory, lookupProductCandidateToolCall()],
-    productLookupResults: [
-      {
-        status: "found_exact",
-        category: "shampoo",
-        product: { id: "prod_1", name: "Test Shampoo" },
-      },
-    ],
-  })
-
-  assert.equal(result.ok, true)
-})
 
 test("validator blocks unverified-product caveat for trusted selected product", () => {
   const result = validateAgentV2FinalAnswer(
@@ -2336,6 +2304,7 @@ test("validator allows claims for exact lookup products when another lookup is u
     ],
   })
 
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
   assert.equal(
     result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
     false,
@@ -2552,95 +2521,6 @@ test("validator does not let unresolved baseline lookup block grounded alternati
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
   assert.equal(
     result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
-    false,
-  )
-})
-
-test("validator does not require duplicate lookup for grounded alternatives to active product", () => {
-  const prompt = "Was wären gute Alternativen dazu?"
-  const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      request_interpretation: requestInterpretation({
-        primary_intent: "product_recommendation",
-        product_request_kind: "specific_products",
-        care_category: "shampoo",
-        requested_product_count: 3,
-        count_policy: "exact",
-        evidence_quote: prompt,
-        specific_product_candidate: true,
-      }),
-      tool_grounding: {
-        ...baseAnswer.tool_grounding,
-        product_ids: ["alt_shampoo_1", "alt_shampoo_2", "alt_shampoo_3"],
-      },
-      payload: {
-        ...baseAnswer.payload,
-        user_facing_answer_de:
-          "Als Alternativen zu **Syoss Intense Volume Shampoo** passen **Balea Aqua Shampoo**, **Guhl Feuchtigkeits Aufbau Shampoo** und **Jean&Len Volumen Shampoo** gut zu deinem feinen, welligen Haar.",
-        recommendations: [
-          {
-            product_id: "alt_shampoo_1",
-            reason_de: "Leichte Alltagsoption.",
-            usage_de: null,
-            caveat_de: null,
-          },
-          {
-            product_id: "alt_shampoo_2",
-            reason_de: "Mehr Feuchtigkeit ohne schwere Pflege.",
-            usage_de: null,
-            caveat_de: null,
-          },
-          {
-            product_id: "alt_shampoo_3",
-            reason_de: "Volumenfreundliche Alternative.",
-            usage_de: null,
-            caveat_de: null,
-          },
-        ],
-      },
-    },
-    {
-      ...baseValidationContext,
-      latestUserMessage: prompt,
-      recentEvidenceText:
-        "Syoss Intense Volume Shampoo passt grundsätzlich gut zu dir, ist aber nicht der stärkste Hebel für Frizz.",
-      toolCallHistory: [
-        selectProductsToolCall({
-          reason: "User asks for alternatives to the active shampoo.",
-          user_request: "Gute Alternativen zu Syoss Intense Volume Shampoo",
-          product_request_kind: "specific_products",
-          requested_product_count: 3,
-          count_policy: "exact",
-          evidence_quote: prompt,
-        }),
-      ],
-      selectedProductProjections: [
-        {
-          valid_product_ids: ["alt_shampoo_1", "alt_shampoo_2", "alt_shampoo_3"],
-          products: [
-            { product_id: "alt_shampoo_1", name: "Balea Aqua Shampoo" },
-            { product_id: "alt_shampoo_2", name: "Guhl Feuchtigkeits Aufbau Shampoo" },
-            { product_id: "alt_shampoo_3", name: "Jean&Len Volumen Shampoo" },
-          ],
-        },
-      ],
-      productLookupResults: [
-        {
-          status: "found_exact",
-          category: "shampoo",
-          product: {
-            id: "syoss-volume",
-            name: "Syoss Intense Volume Shampoo",
-          },
-        },
-      ],
-    },
-  )
-
-  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
-  assert.equal(
-    result.errors.some((error) => error.validator_id === "product_lookup_required"),
     false,
   )
 })
@@ -3470,39 +3350,6 @@ test("AgentV2 validator does not treat direct recommendations as follow-up offer
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
 })
 
-test("AgentV2 validator allows informational next step without pending follow-up action", () => {
-  const answer = createValidGeneralAdviceAnswer({
-    request_interpretation: requestInterpretation({
-      primary_intent: "category_education",
-      product_request_kind: "category_education",
-      routine_intent: "none",
-      care_category: "mask",
-      requested_product_count: null,
-      count_policy: "none",
-      evidence_quote: "Maske",
-    }),
-    payload: {
-      user_facing_answer_de:
-        "Eine Maske kann sinnvoll sein. Danach kannst du zur Routine zurückgehen.",
-      category_or_topic: "mask",
-      key_points_de: ["Optionaler Zusatz."],
-      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
-    },
-    pending_followup_action: null,
-  })
-
-  const result = validateAgentV2FinalAnswer(answer, {
-    ...baseValidationContext,
-    selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
-    toolCallHistory: [],
-    knownHardRuleIds: [],
-  })
-
-  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
-})
-
 test("AgentV2 validator strips hidden pending action behind informational next step", () => {
   const answer = createValidGeneralAdviceAnswer({
     payload: {
@@ -4032,83 +3879,6 @@ test("AgentV2 validator schema blocks routine action fields on product follow-up
       category: "mask",
       routine_layer: "basics",
       routine_action: "add_step",
-      source: "assistant_offer",
-    },
-  })
-
-  const result = validateAgentV2FinalAnswer(answer, {
-    ...baseValidationContext,
-    selectedProductProjections: [],
-    latestUserMessage: "Maske",
-    recentEvidenceText: "Maske",
-    toolCallHistory: [],
-    knownHardRuleIds: [],
-  })
-
-  assert.equal(result.ok, false)
-  assert.ok(
-    result.errors.some((error) => error.validator_id === "terminal_schema"),
-    JSON.stringify(result.errors, null, 2),
-  )
-})
-
-test("AgentV2 validator schema blocks routine action fields on advisor follow-up actions", () => {
-  const answer = createValidGeneralAdviceAnswer({
-    request_interpretation: requestInterpretation({
-      primary_intent: "routine_explanation",
-      product_request_kind: "none",
-      routine_intent: "none",
-      care_category: "none",
-      requested_product_count: null,
-      count_policy: "none",
-      evidence_quote: "Routine und Feuchtigkeit",
-    }),
-    payload: {
-      user_facing_answer_de:
-        "Mehr Feuchtigkeit erreichst du vor allem über sanftere Reinigung und passende Pflegeabstände.\n\nAls Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
-      category_or_topic: "routine_hydration",
-      key_points_de: ["Mehr Feuchtigkeit braucht nicht automatisch einen neuen Routine-Schritt."],
-      next_step_offer_de:
-        "Als Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
-    },
-    pending_followup_action: {
-      kind: "advisor_response",
-      category: "none",
-      routine_layer: "basics",
-      routine_action: "create",
-      source: "assistant_offer",
-    },
-  })
-
-  const result = validateAgentV2FinalAnswer(answer, {
-    ...baseValidationContext,
-    selectedProductProjections: [],
-    latestUserMessage: "Wie bekomme ich mehr Feuchtigkeit in meine Routine?",
-    recentEvidenceText: "Routine und Feuchtigkeit",
-    toolCallHistory: [],
-    knownHardRuleIds: [],
-  })
-
-  assert.equal(result.ok, false)
-  assert.ok(
-    result.errors.some((error) => error.validator_id === "terminal_schema"),
-    JSON.stringify(result.errors, null, 2),
-  )
-})
-
-test("AgentV2 validator schema blocks routine mutation follow-up without routine action", () => {
-  const answer = createValidGeneralAdviceAnswer({
-    payload: {
-      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
-      category_or_topic: "mask",
-      key_points_de: ["Optionaler Zusatz."],
-      next_step_offer_de: "Ich kann danach deine Routine anpassen.",
-    },
-    pending_followup_action: {
-      kind: "routine_mutation",
-      category: "mask",
-      routine_layer: "basics",
-      routine_action: null,
       source: "assistant_offer",
     },
   })
@@ -5016,22 +4786,6 @@ test("validator blocks raw product property dump bullets", () => {
   assert.ok(result.errors.some((error) => error.validator_id === "product_answer_shape"))
 })
 
-test("validator accepts natural product fit sentences", () => {
-  const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      payload: {
-        ...baseAnswer.payload,
-        user_facing_answer_de:
-          "**Test Shampoo** passt gut, weil es leicht reinigt und dein feines Haar nicht unnötig beschwert.",
-      },
-    },
-    baseValidationContext,
-  )
-
-  assert.equal(result.ok, true)
-})
-
 test("validator requires product answers to surface available recommendation options", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -5713,64 +5467,6 @@ test("validator sanitizer refuses mixed or non-evidence failures", () => {
   assert.equal(sanitizeRepairableEvidenceQuote(result.sanitized_answer, result.errors), null)
 })
 
-test("validator requires user-facing prose to mention each recommended product", () => {
-  const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      tool_grounding: {
-        ...baseAnswer.tool_grounding,
-        product_ids: ["prod_1", "prod_2", "prod_3"],
-      },
-      payload: {
-        ...baseAnswer.payload,
-        user_facing_answer_de: "**Test Shampoo** passt gut zu deinem Profil.",
-        recommendations: [
-          {
-            product_id: "prod_1",
-            reason_de: "Passt als leichte Option.",
-            usage_de: null,
-            caveat_de: null,
-          },
-          {
-            product_id: "prod_2",
-            reason_de: "Passt als Alternative.",
-            usage_de: null,
-            caveat_de: null,
-          },
-          {
-            product_id: "prod_3",
-            reason_de: "Passt als dritte Option.",
-            usage_de: null,
-            caveat_de: null,
-          },
-        ],
-      },
-    },
-    {
-      ...baseValidationContext,
-      toolCallHistory: [
-        selectProductsToolCall({
-          requested_product_count: 2,
-          count_policy: "exact",
-        }),
-      ],
-      selectedProductProjections: [
-        {
-          valid_product_ids: ["prod_1", "prod_2", "prod_3"],
-          products: [
-            { product_id: "prod_1", name: "Test Shampoo" },
-            { product_id: "prod_2", name: "Second Shampoo" },
-            { product_id: "prod_3", name: "Third Shampoo" },
-          ],
-        },
-      ],
-    },
-  )
-
-  assert.equal(result.ok, false)
-  assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
-})
-
 test("validator blocks incomplete routine prose that omits visible steps", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -5896,7 +5592,13 @@ test("validator blocks incomplete product prose that omits a final recommendatio
   )
 
   assert.equal(result.ok, false)
-  assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
+  const missingProduct = result.errors.find(
+    (error) =>
+      error.validator_id === "visible_payload_not_rendered" &&
+      error.message.includes("Second Shampoo"),
+  )
+  assert.ok(missingProduct, JSON.stringify(result.errors, null, 2))
+  assert.deepEqual(missingProduct.path, ["payload", "user_facing_answer_de"])
 })
 
 test("validator blocks final product rendering when product names are unavailable", () => {
@@ -6009,7 +5711,13 @@ test("validator blocks incomplete routine product deep dive prose that omits the
   )
 
   assert.equal(result.ok, false)
-  assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
+  const missingProduct = result.errors.find(
+    (error) =>
+      error.validator_id === "visible_payload_not_rendered" &&
+      error.message.includes("Test Leave-in"),
+  )
+  assert.ok(missingProduct, JSON.stringify(result.errors, null, 2))
+  assert.deepEqual(missingProduct.path, ["payload", "user_facing_answer_de"])
 })
 
 test("validator requires blocked answers to render the actual blocker, not only a generic phrase", () => {
@@ -9834,10 +9542,35 @@ test("validator drops invalid session memory without blocking valid final answer
   )
 
   assert.equal(result.ok, true)
-  assert.equal(result.accepted_session_memory_writes.length, 1)
-  assert.equal(result.sanitized_answer?.session_memory_writes.length, 1)
+  const expectedAccepted = [
+    {
+      type: "preference",
+      text: "User prefers lightweight products in this session.",
+      evidence_quote: "Bitte leicht.",
+      confidence: 0.9,
+      ttl: "session",
+      affects_recommendations: true,
+      expires_at_turn: null,
+    },
+  ]
+  assert.deepEqual(result.accepted_session_memory_writes, expectedAccepted)
+  assert.deepEqual(result.sanitized_answer?.session_memory_writes, expectedAccepted)
   assert.equal(result.dropped_session_memory_writes.length, 1)
   assert.equal(result.dropped_session_memory_writes[0].validator_id, "session_memory_scope")
+  assert.deepEqual(result.dropped_session_memory_writes[0].path, [
+    "session_memory_writes",
+    1,
+    "evidence_quote",
+  ])
+  assert.deepEqual(result.dropped_session_memory_writes[0].write, {
+    type: "preference",
+    text: "User has a new hair texture.",
+    evidence_quote: "nicht gesagt",
+    confidence: 0.8,
+    ttl: "session",
+    affects_recommendations: true,
+    expires_at_turn: null,
+  })
 })
 
 test("pending intake lookup for another category does not block a grounded recommendation", () => {

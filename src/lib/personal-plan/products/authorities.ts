@@ -87,7 +87,7 @@ export const CATEGORY_ROLE_POLICIES = {
   },
   bondbuilder: {
     category: "bondbuilder",
-    authorityVersion: "personal-plan.bondbuilder.v2",
+    authorityVersion: "personal-plan.bondbuilder.v3",
     allowsMultiple: true,
     allowedRoles: ["specialized_bond_treatment"],
     roleMultiplicity: { specialized_bond_treatment: single },

@@ -1,0 +1,134 @@
+{
+  "validatedAt": "2026-10-09",
+  "validator": "applicationGuidanceProtocolSchema (V1) + productApplicationPointerV2Schema (V2) at main 404db24f",
+  "results": [
+    {
+      "product": "4f67cb6d",
+      "role": "conditioner_rinse_out",
+      "family": "standard_rinse_out_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "5f4f1300",
+      "role": "conditioner_rinse_out",
+      "family": "standard_rinse_out_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "62ff4f08",
+      "role": "conditioner_rinse_out",
+      "family": "standard_rinse_out_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "7fb31d10",
+      "role": "conditioner_rinse_out",
+      "family": "standard_rinse_out_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "88c230c5",
+      "role": "shampoo_everyday",
+      "family": "standard_rinse_out_cleanse",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "931892fb",
+      "role": "conditioner_rinse_out",
+      "family": "standard_rinse_out_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "b761256d",
+      "role": "shampoo_everyday",
+      "family": "standard_rinse_out_cleanse",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "f8a8fd56",
+      "role": "shampoo_everyday",
+      "family": "standard_rinse_out_cleanse",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "ba326dab",
+      "role": "post_wash_leave_in",
+      "family": "post_wash_damp_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "694c4568",
+      "role": "post_wash_leave_in",
+      "family": "post_wash_damp_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "694c4568",
+      "role": "pre_heat_protection",
+      "family": "pre_heat_damp",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "ea88a333",
+      "role": "post_wash_leave_in",
+      "family": "post_wash_damp_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "ea88a333",
+      "role": "pre_heat_protection",
+      "family": "either_state_protection",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "42a2fe20",
+      "role": "post_wash_leave_in",
+      "family": "post_wash_damp_conditioning",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "42a2fe20",
+      "role": "pre_heat_protection",
+      "family": "pre_heat_damp",
+      "v1": true,
+      "v2": true,
+      "err": []
+    },
+    {
+      "product": "e5cfad78",
+      "role": "intensive_conditioning_mask",
+      "family": "post_shampoo_rinse_out_mask",
+      "v1": true,
+      "v2": true,
+      "err": []
+    }
+  ]
+}

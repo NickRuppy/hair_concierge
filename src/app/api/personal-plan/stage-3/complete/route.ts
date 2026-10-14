@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import {
   createProductionStage3ProductsGateway,
+  Stage3AuthorityMutationError,
   Stage3ProductionUnavailableError,
 } from "@/lib/personal-plan/products/production-persistence-gateway"
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
@@ -177,7 +178,10 @@ export function createStage3CompleteRouteHandlers(deps: Stage3CompleteRouteDeps)
           headers: { "Cache-Control": "no-store", "Server-Timing": timing(phases) },
         })
       } catch (error) {
-        if (error instanceof Stage3AuthoritySnapshotError) {
+        if (
+          error instanceof Stage3AuthoritySnapshotError ||
+          (error instanceof Stage3AuthorityMutationError && error.code === "budget_required")
+        ) {
           console.info("personal_plan_stage3_api", {
             event: "conflict",
             code: error.code,

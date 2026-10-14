@@ -1,0 +1,36 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+
+import {
+  INITIAL_UNKNOWN_ROUTINE_CONTEXT,
+  STAGE1_CATEGORY_ORDER,
+} from "../../src/lib/personal-plan/types"
+
+test("Stage 1 keeps the approved stable category order", () => {
+  assert.deepEqual(STAGE1_CATEGORY_ORDER, [
+    "shampoo",
+    "conditioner",
+    "leave_in",
+    "heat_protectant",
+    "oil",
+    "mask",
+    "scalp_care",
+    "dry_shampoo",
+    "bondbuilder",
+    "deep_cleansing_shampoo",
+  ])
+})
+
+test("the initial routine context represents later facts as typed unknowns", () => {
+  assert.deepEqual(INITIAL_UNKNOWN_ROUTINE_CONTEXT, {
+    currentProductLoad: { state: "unknown", reason: "current_product_load" },
+    shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
+    heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+    mechanicalExposureSignals: [],
+    dryShampooBridgePreference: {
+      state: "unknown",
+      reason: "dry_shampoo_bridge_preference",
+    },
+    scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },
+  })
+})

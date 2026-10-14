@@ -1,0 +1,216 @@
+{
+ "blindId": "<blind id>",
+ "identity": {
+  "brand": "<string>",
+  "productName": "<string>",
+  "packSize": "<string>",
+  "market": "<string>",
+  "formulaFingerprintSha256": "<string>",
+  "normalization": "<string>",
+  "completeness": "<string>",
+  "e3ProminenceCutoff": "<string>"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "weightPotential": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "evidence": {
+    "cationic_polymer": [
+     "<string>"
+    ],
+    "payload_lipid": [
+     "<string>"
+    ],
+    "weak_refatter": [
+     "<string>"
+    ],
+    "silicone": [
+     "<string>"
+    ],
+    "protein_film": [
+     "<string>"
+    ],
+    "film_former": [
+     "<string>"
+    ],
+    "cationic_conditioner": [
+     "<string>"
+    ],
+    "reset": [
+     "<string>"
+    ],
+    "humectantContext": [
+     "<string>"
+    ],
+    "excluded": [
+     "<string>"
+    ],
+    "unresolved": [
+     "<string>"
+    ]
+   },
+   "depositionLoad": "<string>",
+   "persistence": "<string>",
+   "resetCapacity": "<string>",
+   "counterevidence": "<string>",
+   "whyThisBand": "<string>",
+   "whyNotNeighborBand": "<string>",
+   "confidenceLimitingFactor": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "focusPrimary": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "careDirection": {
+    "verdict": "<string>",
+    "moistureRoutes": [
+     "<string>"
+    ],
+    "repairRoutes": [
+     "<string>"
+    ],
+    "sharedConditioningRoutes": [
+     "<string>"
+    ],
+    "limitation": "<string>"
+   },
+   "claimRole": "<string>",
+   "counterSignal": "<string>",
+   "decisionTrace": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "focusSecondary": {
+   "value": [
+    "<string>"
+   ],
+   "confidence": "<string>",
+   "neighboringAlternative": [
+    "<string>"
+   ],
+   "decisionTrace": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "usageRole": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "triggerCode": "<string>",
+   "triggerEvidence": [
+    "<string>"
+   ],
+   "losingTriggers": [
+    "<string>"
+   ],
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "<string>",
+   "confidence": "<string>",
+   "neighboringAlternative": "<string>",
+   "rationale": "<string>",
+   "ruleIds": [
+    "<string>"
+   ]
+  }
+ },
+ "projection": {
+  "status": "<string>",
+  "thicknessFit": {
+   "fine": "<string>",
+   "normal": "<string>",
+   "coarse": "<string>"
+  },
+  "thicknessFitConfidence": {
+   "fine": "<string>",
+   "normal": "<string>",
+   "coarse": "<string>"
+  },
+  "thicknessRationale": "<string>",
+  "weight": "<string>",
+  "weightConfidence": "<string>",
+  "weightRationale": "<string>",
+  "scalpTargets": {
+   "primary": {
+    "target": "<string>",
+    "confidence": "<string>",
+    "rationale": "<string>"
+   },
+   "secondary": "<value|null>"
+  },
+  "researchCombinationTargets": [
+   "<string>"
+  ],
+  "cleansingIntensity": "<string>",
+  "cleansingIntensityConfidence": "<string>",
+  "cleansingIntensityRationale": "<string>",
+  "explicitResetPositioning": "<boolean>",
+  "deepCleanserListing": "<string>",
+  "deepCleanserListingConfidence": "<string>",
+  "deepCleanserRationale": "<string>",
+  "rows": [
+   {
+    "thickness": "<string>",
+    "shampoo_bucket": "<string>",
+    "scalp_route": "<string>",
+    "cleansing_intensity": "<string>",
+    "weight": "<string>",
+    "tier": "<string>"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "<string>"
+  ],
+  "reviewFlags": [
+   "<string>"
+  ],
+  "informationalNotes": [
+   "<string>"
+  ],
+  "catalogDependent": "<string>"
+ },
+ "selfCheck": "<string>",
+ "uncertainties": [
+  "<string>"
+ ]
+}

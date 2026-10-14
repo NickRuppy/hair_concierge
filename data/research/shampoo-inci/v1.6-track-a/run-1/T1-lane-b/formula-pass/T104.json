@@ -1,0 +1,171 @@
+{
+  "blindId": "T104",
+  "inciFingerprintSha256": "6aadaef99413633a8a0903229d33fda87aac541b8f86ad7a1d4123f0e19c921a",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 30,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3ProminencePoint": "Parfum/Fragrance at 30 (last): positions 1-29 prominent. 'Mel/Honey' (5) and 'Mel Extract/Honey Extract' (6) are distinct ingredients, not split synonyms; packet positions kept."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "C5: Sodium Lauryl Sulfate (2) defining; at least two prominent buffers (Cocamidopropyl Betaine 3, Coco-Betaine 14, Coco-Glucoside 15) and no reinforcing anionic -> moderate.",
+      "counterSignal": "Only the betaine (3) is early; the other two buffers are low in the list and count as prominent only because Parfum is declared last.",
+      "neighboringAlternative": "strong"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (cationic HP Guar 17) plus light routes (Glycerin 8, Glyceryl Oleate 9, Lecithin 12, Hydrogenated Palm Glycerides Citrate 16, pearlizer 10, honey) -> moderate. No silicone or payload lipid; C2 not met.",
+      "counterSignal": "The guar sits at 17 of 30; the other routes are light.",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Only a single light cationic polymer (17) and weak refatters; no silicone, lipid or protein; C5 moderate reset -> low.",
+      "counterSignal": "Two deposition families (cationic polymer + weak refatters).",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (17) plus weak refatters (9, 12, 16, 21); carbomer and glycol distearate excluded."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent silicone or lipid system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C5 SLS chassis with betaine/glucoside buffers."
+        }
+      },
+      "whyThisBand": "Light, low-persistence deposition against effective reset.",
+      "whyNotNeighborBand": "W2: the only families are one light cationic polymer listed late (17) and weak refatters plus humectants; no silicone, lipid or film former, so combined residue stays below noticeable.",
+      "limitingFactor": "Guar level unknown."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "note": "Humectant cluster (Honey 5, Glycerin 8) with conditioning support (guar 17, refatters). Honey is not on the closed C2/E4 lists."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes via the humectant/refatting list: Glycerin (8), Glyceryl Oleate (9) prominent. No E4 comfort route (unlisted_route_candidate:Mel/Honey for neither list)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE comfort route fails (none). S-DRY humectant route passes. S-OILY clause passes.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Lauryl Sulfate",
+      "position": 2,
+      "role": "defining anionic, alkyl sulfate type (C5)"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Mel/Honey",
+      "position": 5,
+      "role": "humectant-type context (not on closed lists)"
+    },
+    {
+      "ingredient": "Mel Extract/Honey Extract",
+      "position": 6,
+      "role": "extract, context"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 7,
+      "role": "anionic acrylate thickener, excluded (6.4)"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 8,
+      "role": "humectant (C2/E4)"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 9,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 10,
+      "role": "pearlizer, excluded from weight"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 12,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Coco-Betaine",
+      "position": 14,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 15,
+      "role": "buffer, nonionic glucoside"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 17,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Lauroyl/Myristoyl Methyl Glucamide",
+      "position": 19,
+      "role": "glucamide thickener (not a glucoside buffer)"
+    },
+    {
+      "ingredient": "Ascorbyl Palmitate",
+      "position": 21,
+      "role": "weak_refatter (antioxidant)"
+    },
+    {
+      "ingredient": "Parfum/Fragrance",
+      "position": 30,
+      "role": "E3 marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

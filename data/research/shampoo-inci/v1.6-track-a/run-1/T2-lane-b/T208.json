@@ -1,0 +1,607 @@
+{
+  "blindId": "T208",
+  "inciFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar (dm: 'Shampoo Phyto-Coffein Feines Haar, 250 ml')",
+    "brand": "Plantur 39 (Dr. Kurt Wolff)",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "identityNotes": []
+  },
+  "claimGrading": [
+    {
+      "claim": "Beugt menopausalem Haarausfall vor; Coffein aktiviert die Haarwurzel",
+      "source": "manufacturer_de / retailers",
+      "grade": "moderate / low",
+      "use": "out of scope (F5, S-HAIRLOSS)"
+    },
+    {
+      "claim": "für feines, brüchiges Haar (name)",
+      "source": "product name",
+      "grade": "high",
+      "use": "repair candidate (breakage); 'feines Haar' never a fit input (T2)"
+    },
+    {
+      "claim": "Bewusst leicht dosierte Pflegestoffe ... ohne zu beschweren – damit die Frisur ihr Volumen behält",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "volume-type wording; never lowers weight"
+    },
+    {
+      "claim": "Täglich anwenden; bei jeder Haarwäsche",
+      "source": "manufacturer_de directions",
+      "grade": "moderate",
+      "use": "U2 frequency wording"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by the prominent mild anionics Disodium Laureth Sulfosuccinate (5) and Sodium Lauroyl Glutamate (7); no reinforcing strong anionic. Laureth-2 (3) is a thickener, not a route.",
+      "counterSignal": "No amphoteric buffer; buffers are mild anionics only. Convention still applies.",
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "sourceIds": [
+        "formula:T208:10bad7dd846d"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 5
+        },
+        {
+          "ingredient": "Sodium Lauroyl Glutamate",
+          "position": 7
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (bounded): one cationic conditioning polymer Polyquaternium-7 (13) with Hydrolyzed Wheat Protein (17) and Panthenol (4). C2 not met (no silicone, lipid or pearlizing route).",
+      "counterSignal": "Polyquaternium-7 is a light conditioner listed after salts/acids; a cleansing-led low reading is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors"
+      ],
+      "sourceIds": [
+        "formula:T208:10bad7dd846d"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 4,
+          "role": "E4 comfort + humectant route"
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 17,
+          "role": "protein_film"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one light late polymer (Polyquaternium-7, 13) and a late hydrolyzed protein (17) against an effective buffered SLES chassis.",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 13,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 17,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 5,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Sodium Lauroyl Glutamate",
+          "position": 7,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "Polymer level unknown (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T208",
+          "inciFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+          "sourceTier": 2,
+          "completeness": "complete",
+          "identityConfidence": "moderate",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "No split entries; positions = packet order (normalized, one-based)."
+        },
+        "extractedEvidence": {
+          "cationic_polymer": [
+            {
+              "ingredient": "Polyquaternium-7",
+              "position": 13
+            }
+          ],
+          "protein_film": [
+            {
+              "ingredient": "Hydrolyzed Wheat Protein",
+              "position": 17
+            }
+          ],
+          "silicone": [],
+          "payload_lipid": [],
+          "weak_refatter": [],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Sodium Laureth Sulfate",
+              "position": 2
+            },
+            {
+              "ingredient": "Disodium Laureth Sulfosuccinate",
+              "position": 5
+            },
+            {
+              "ingredient": "Sodium Lauroyl Glutamate",
+              "position": 7
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "PEG-120 Methyl Glucose Dioleate",
+              "position": 10,
+              "reason": "PEG thickener (6.4)"
+            },
+            {
+              "ingredient": "Laureth-2",
+              "position": 3,
+              "reason": "low-ethoxylate thickener"
+            },
+            {
+              "ingredient": "Citrus Aurantium Peel Oil",
+              "position": 26,
+              "reason": "fragrance oil"
+            }
+          ],
+          "context_humectants": [
+            {
+              "ingredient": "Panthenol",
+              "position": 4
+            }
+          ]
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "light",
+            "rationale": "PQ-7 (13), hydrolyzed wheat protein (17)."
+          },
+          "persistence": {
+            "value": "low",
+            "rationale": "Light polymer and small hydrolyzed protein, weakly retained."
+          },
+          "resetCapacity": {
+            "value": "moderate",
+            "rationale": "C1 SLES buffered by sulfosuccinate and glutamate."
+          }
+        },
+        "w1Check": "W1 not cited.",
+        "counterevidence": "Polymer level unknown (neighbor moderate).",
+        "unresolvedFacts": [],
+        "proposedWeightPotential": "low",
+        "whyThisBand": "Two light, late routes with moderate reset: low anchor.",
+        "whyNotNeighborBand": "W2: two families present, but both sit after salt and acids (13, 17), PQ-7 is a light polymer and the protein is hydrolyzed; no silicone, lipid or film converges, and the SLES chassis offsets them.",
+        "confidence": "moderate",
+        "limitingFactor": "Polymer level unknown (neighbor moderate).",
+        "neighboringAlternative": "moderate",
+        "claimsAfterUnblind": "'ohne zu beschweren' / 'leicht dosierte Pflegestoffe' never lowers the band (6.5); it is consistent with the blind low call."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T208:10bad7dd846d"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "General: the dominant claim is hair loss (ignored, F5); the in-scope name claim 'brüchiges Haar' is a repair candidate, but the formula verdict is nonspecific (one light Polyquaternium-7, one hydrolyzed wheat protein and panthenol are not a coherent repair cluster; one protein token is not enough). The volume wording is a side statement about light dosing, not a dominant job.",
+      "counterSignal": "Name-level breakage wording (repair) and 'Volumen behält' wording (volume).",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 13
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 17
+        },
+        {
+          "ingredient": "Caffeine",
+          "position": 9
+        }
+      ],
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "F5"
+      ],
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "reveal:product_name"
+      ],
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Panthenol 4"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Wheat Protein 17"
+        ],
+        "sharedRoutes": [
+          "Polyquaternium-7 13"
+        ],
+        "limitation": "Single protein token and one light polymer."
+      },
+      "claimRole": "not_applicable"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "rationale": "Empty: no distinct secondary job with an independent route.",
+      "counterSignal": "Volume wording.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "8"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "neighboringAlternative": "regular",
+      "rationale": "Frequent: explicit U2 frequency wording from the manufacturer and a non-strong formula.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "explicit_frequent_non_strong"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive/dry claim ('Widerstandskraft von Kopfhaut' is not a lexicon state).",
+      "counterSignal": "CSA half met (Panthenol 4).",
+      "formulaFacts": [],
+      "ruleIds": [
+        "10",
+        "SC1"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole; Zinc PCA is not a recognized active under Section 11.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "nonspecific",
+      "moistureRoutes": [
+        "Panthenol 4"
+      ],
+      "repairRoutes": [
+        "Hydrolyzed Wheat Protein 17"
+      ],
+      "sharedRoutes": [
+        "Polyquaternium-7 13"
+      ],
+      "limitation": "Single protein token and one light polymer."
+    },
+    "claimRole": "not_applicable",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "hair loss (ignored); breakage (name, high)",
+        "formulaCompatible": false,
+        "compatibleRoute": null,
+        "decisionReason": "Repair verdict nonspecific -> general (F1, 3.2)."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinct": "None.",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "explicit_frequent_non_strong",
+        "triggerEvidence": [
+          "'Täglich anwenden', 'Bei jeder Haarwäsche benutzen' (manufacturer_de, moderate)",
+          "cleansingStrength moderate (not strong)"
+        ],
+        "losingTriggers": [],
+        "rationale": "Frequent: explicit U2 frequency wording from the manufacturer and a non-strong formula."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T208",
+      "inciFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "moderate",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "No split entries; positions = packet order (normalized, one-based)."
+    },
+    "extractedEvidence": {
+      "cationic_polymer": [
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 13
+        }
+      ],
+      "protein_film": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 17
+        }
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 5
+        },
+        {
+          "ingredient": "Sodium Lauroyl Glutamate",
+          "position": 7
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "PEG-120 Methyl Glucose Dioleate",
+          "position": 10,
+          "reason": "PEG thickener (6.4)"
+        },
+        {
+          "ingredient": "Laureth-2",
+          "position": 3,
+          "reason": "low-ethoxylate thickener"
+        },
+        {
+          "ingredient": "Citrus Aurantium Peel Oil",
+          "position": 26,
+          "reason": "fragrance oil"
+        }
+      ],
+      "context_humectants": [
+        {
+          "ingredient": "Panthenol",
+          "position": 4
+        }
+      ]
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "PQ-7 (13), hydrolyzed wheat protein (17)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Light polymer and small hydrolyzed protein, weakly retained."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES buffered by sulfosuccinate and glutamate."
+      }
+    },
+    "w1Check": "W1 not cited.",
+    "counterevidence": "Polymer level unknown (neighbor moderate).",
+    "unresolvedFacts": [],
+    "proposedWeightPotential": "low",
+    "whyThisBand": "Two light, late routes with moderate reset: low anchor.",
+    "whyNotNeighborBand": "W2: two families present, but both sit after salt and acids (13, 17), PQ-7 is a light polymer and the protein is hydrolyzed; no silicone, lipid or film converges, and the SLES chassis offsets them.",
+    "confidence": "moderate",
+    "limitingFactor": "Polymer level unknown (neighbor moderate).",
+    "neighboringAlternative": "moderate",
+    "claimsAfterUnblind": "'ohne zu beschweren' / 'leicht dosierte Pflegestoffe' never lowers the band (6.5); it is consistent with the blind low call."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: neighbor weightPotential->moderate gives acceptable (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "confidence": "moderate",
+        "sOrdinaryWays": [
+          1,
+          2
+        ],
+        "rationale": "Ordinary: way 1 (no E2 claim unit; manufacturer source -> high) and way 2 (only scalp-adjacent positioning is hair loss -> moderate). Lowest = moderate.",
+        "ruleIds": [
+          "S-ORDINARY",
+          "13.8"
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or a manufacturer/pack claim, and no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [
+      "hair_loss_claim_not_evaluated"
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "frequent (moderate)",
+      "evidence": "manufacturer directions 'Täglich anwenden'",
+      "reason": "U2 + non-strong cleansing."
+    },
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general (moderate)",
+      "evidence": "hair-loss + breakage claims",
+      "reason": "F5; repair not formula-supported."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": [
+    "The daily-use direction serves the hair-loss regimen; U2 reads wording only, so frequent fires."
+  ]
+}

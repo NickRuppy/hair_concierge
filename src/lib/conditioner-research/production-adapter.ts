@@ -69,6 +69,21 @@ const uniqueArray = <T extends z.ZodType>(value: T, min = 1, max?: number) => {
   })
 }
 
+// Standard §9: fit arrays retain the vocabulary's order, without duplicates.
+const orderedFit = <T extends string>(values: readonly [T, ...T[]]) =>
+  uniqueArray(z.enum(values)).superRefine((items, context) => {
+    if (
+      items.some(
+        (item, index) => index > 0 && values.indexOf(item) <= values.indexOf(items[index - 1]),
+      )
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Fit values must follow the canonical vocabulary order",
+      })
+    }
+  })
+
 export const conditionerResearchEnvelopeSchema = z
   .object({
     version: z.literal(CONDITIONER_RESEARCH_ENVELOPE_VERSION),
@@ -113,9 +128,9 @@ export const conditionerResearchEnvelopeSchema = z
         repairSupportLevel: evidenceSchema(z.enum(["low", "medium", "high"])),
         primaryFocus: evidenceSchema(z.enum(focusValues)),
         secondaryFocus: evidenceSchema(uniqueArray(z.enum(secondaryFocusValues), 0, 2)),
-        hairThicknessFit: evidenceSchema(uniqueArray(z.enum(researchThicknesses))),
-        damageFit: evidenceSchema(uniqueArray(z.enum(damageFits))),
-        textureFit: evidenceSchema(uniqueArray(z.enum(textureFits))),
+        hairThicknessFit: evidenceSchema(orderedFit(researchThicknesses)),
+        damageFit: evidenceSchema(orderedFit(damageFits)),
+        textureFit: evidenceSchema(orderedFit(textureFits)),
         uncertainFields: uniqueArray(z.enum(profileFieldNames), 0),
         assumptionNotes: z.array(z.string().trim().min(1)),
       })
@@ -198,7 +213,12 @@ export type ConditionerProductionAdapterOutcome =
   | ConditionerProductionRoutedOut
 
 const weightMap = { low: "light", moderate: "medium", high: "rich" } as const
-const thicknessMap = { fine: "fine", medium: "normal", coarse: "coarse" } as const
+// §10.4, enforced by audit NR-2, ruled 2026-10-11.
+const thicknessByWeight = {
+  low: ["fine", "normal"],
+  moderate: ["fine", "normal", "coarse"],
+  high: ["normal", "coarse"],
+} as const satisfies Record<"low" | "moderate" | "high", readonly HairThickness[]>
 const balanceMap = {
   moisture: "snaps",
   balanced: "stretches_bounces",
@@ -287,8 +307,10 @@ const ingredientRules: Record<ConditionerIngredientFlag, Array<string | RegExp>>
   ],
   oils: [/\b(?:seed|kernel|fruit|flower|bran|germ) oil\b/i, /\bbutter\b/i, /\boil$/i],
   proteins: [
-    /\bhydrolyzed (?:keratin|collagen|wheat protein|rice protein|soy protein|oat protein)\b/i,
+    /\bhydroly[sz]ed (?:keratin|collagen|silk|casein|wheat protein|rice protein|soy protein|oat protein)\b/i,
     /\b(?:keratin|collagen|peptide|protein)\b/i,
+    /^sericin$/i,
+    /^sh-(?:oligopeptide|polypeptide)-\d+$/i,
   ],
   humectants: [
     "glycerin",
@@ -312,12 +334,29 @@ function matchesIngredientRule(ingredient: string, rule: string | RegExp): boole
   return rule.test(ingredient)
 }
 
+function normalizeIngredient(ingredient: string): string {
+  return ingredient.replace(/[*†]/g, "").replace(/\s+/g, " ").trim().toLowerCase()
+}
+
+// §5 R7 / §10.2: only named chemistry can support high repair. A lone
+// gluconate, acid, amino silicone or hydrolyzed protein is not a bond route.
+function hasNamedBondChemistry(ingredients: string[]): boolean {
+  const names = new Set(ingredients.map(normalizeIngredient))
+  return (
+    names.has("bis-aminopropyl diglycol dimaleate") ||
+    names.has("bis-aminopropyl dimaleate") ||
+    (names.has("hydroxypropylgluconamide") && names.has("hydroxypropylammonium gluconate"))
+  )
+}
+
 export function deriveConditionerIngredientFlags(
   normalizedIngredients: string[],
 ): ConditionerIngredientFlag[] {
   return CONDITIONER_INGREDIENT_FLAGS.filter((flag) =>
     normalizedIngredients.some((ingredient) =>
-      ingredientRules[flag].some((rule) => matchesIngredientRule(ingredient.trim(), rule)),
+      ingredientRules[flag].some((rule) =>
+        matchesIngredientRule(normalizeIngredient(ingredient), rule),
+      ),
     ),
   )
 }
@@ -399,11 +438,14 @@ export function projectConditionerForProduction(
   if (rawInciSha256 !== envelope.formula.rawInciSha256) {
     return needsResearch(["formula.rawInciSha256: must match the exact rawInci SHA-256"], envelope)
   }
-  const normalizedFromRaw = normalizeConditionerInciForFingerprint(envelope.formula.rawInci)
-  const normalizedFromIngredients = normalizeConditionerInciForFingerprint(
-    envelope.formula.normalizedIngredients.join(", "),
-  )
-  if (normalizedFromRaw !== normalizedFromIngredients) {
+  // Preserve token boundaries as well as the locked punctuation-blind fingerprint.
+  // A digit-comma-digit belongs to an INCI name (e.g. 1,2-Hexanediol).
+  const tokensFromRaw = envelope.formula.rawInci.split(/(?<!\d),|,(?!\d)/).map(normalizeIngredient)
+  const tokensFromIngredients = envelope.formula.normalizedIngredients.map(normalizeIngredient)
+  if (
+    tokensFromRaw.length !== tokensFromIngredients.length ||
+    tokensFromRaw.some((token, index) => token !== tokensFromIngredients[index])
+  ) {
     return needsResearch(
       ["formula.normalizedIngredients: must preserve the complete rawInci ingredient sequence"],
       envelope,
@@ -419,9 +461,43 @@ export function projectConditionerForProduction(
     )
   }
 
-  const suitableThicknesses = envelope.profile.hairThicknessFit.value.map(
-    (thickness) => thicknessMap[thickness],
-  )
+  const profile = envelope.profile
+  const ingredientFlags = deriveConditionerIngredientFlags(tokensFromRaw)
+  const hasProtein = ingredientFlags.includes("proteins")
+  const hasBondChemistry = hasNamedBondChemistry(tokensFromRaw)
+  const ruleFailures: string[] = []
+  if (profile.careDirection.value !== "moisture" && !hasProtein) {
+    ruleFailures.push(
+      "profile.careDirection: §10.2 protein/balanced requires an R5 protein/peptide/keratin species in the formula",
+    )
+  }
+  if (profile.repairSupportLevel.value === "medium" && !hasProtein) {
+    ruleFailures.push(
+      "profile.repairSupportLevel: §10.2 medium requires an R5 protein/peptide/keratin film route",
+    )
+  }
+  if (profile.repairSupportLevel.value === "high" && !hasBondChemistry) {
+    ruleFailures.push(
+      "profile.repairSupportLevel: §10.2 high requires named bond chemistry in the formula",
+    )
+  }
+  // The envelope has no structured §7/§8 protection or product-test fact. A
+  // specialist fit without the reviewed R5/R7 route must return to research.
+  const expectedDamage =
+    profile.conditioningLevel.value === "low"
+      ? ["healthy"]
+      : profile.conditioningLevel.value === "high" &&
+          (profile.repairSupportLevel.value !== "low" || hasBondChemistry)
+        ? ["moderately_damaged", "highly_damaged"]
+        : ["healthy", "moderately_damaged"]
+  if (JSON.stringify(profile.damageFit.value) !== JSON.stringify(expectedDamage)) {
+    ruleFailures.push(
+      `profile.damageFit: §10.4 requires exactly ${expectedDamage.join(", ")}; any additional specialist evidence must be reviewed`,
+    )
+  }
+  if (ruleFailures.length > 0) return needsResearch(ruleFailures, envelope)
+
+  const suitableThicknesses = [...thicknessByWeight[profile.weightPotential.value]]
   const targetBalance = balanceMap[envelope.profile.careDirection.value]
   const specs = suitableThicknesses.map((thickness) => ({
     thickness,
@@ -431,12 +507,12 @@ export function projectConditionerForProduction(
     weight: weightMap[envelope.profile.weightPotential.value],
     repair_level: envelope.profile.repairSupportLevel.value,
     balance_direction: envelope.profile.careDirection.value,
-    ingredient_flags: deriveConditionerIngredientFlags(envelope.formula.normalizedIngredients),
+    ingredient_flags: ingredientFlags,
   }
   const fieldRationales: Record<string, string> = {
-    "product.suitable_thicknesses": evidenceRationale(envelope.profile.hairThicknessFit),
+    "product.suitable_thicknesses": `§10.4 weight_potential ${profile.weightPotential.value} derives ${suitableThicknesses.join(", ")}. ${evidenceRationale(profile.weightPotential)}`,
     "category_specs.product_conditioner_specs": [
-      evidenceRationale(envelope.profile.hairThicknessFit),
+      `§10.4 thickness prior derived from weight_potential ${profile.weightPotential.value}: ${suitableThicknesses.join(", ")}.`,
       evidenceRationale(envelope.profile.careDirection),
       `Current compatibility mapping: ${envelope.profile.careDirection.value} -> ${targetBalance}.`,
     ].join(" "),
@@ -477,6 +553,16 @@ export function projectConditionerForProduction(
       ? `${field} is uncertain and affects a mapped production field; review the projection before approval.`
       : `${field} is uncertain in a retained research-only field; it does not change the current production projection.`,
   )
+  const expectedResearchThicknesses = suitableThicknesses.map((value) =>
+    value === "normal" ? "medium" : value,
+  )
+  if (
+    JSON.stringify(profile.hairThicknessFit.value) !== JSON.stringify(expectedResearchThicknesses)
+  ) {
+    warnings.push(
+      "hair_thickness_fit contradicted the §10.4 weight prior; production thicknesses were derived from weight_potential. Review the research annotation.",
+    )
+  }
   const productionProjection: ConditionerProductionProjection = {
     ...projectionWithoutHashes,
     research_input_sha256: stableSha256(envelope),

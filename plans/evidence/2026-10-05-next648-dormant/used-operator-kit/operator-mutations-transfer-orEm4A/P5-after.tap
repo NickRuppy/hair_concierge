@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: Stage 2 access keeps the app rollout gate and stops before later-stage authority reads
+ok 1 - Stage 2 access keeps the app rollout gate and stops before later-stage authority reads
+  ---
+  duration_ms: 1.120917
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 909.047708

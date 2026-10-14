@@ -1,0 +1,23 @@
+{
+  "result": "PASS static only",
+  "counts": [
+    76,
+    76,
+    76
+  ],
+  "testFiles": 10,
+  "snapshots": 30,
+  "unchangedCallbacks": 76,
+  "distinctCallbackHashes": 76,
+  "assertionSites": 288,
+  "supportByteChanges": 0,
+  "allNavigationFileHashesMatch": true,
+  "parseDiagnostics": 0,
+  "readsetPins": 54,
+  "childrenStarted": 0,
+  "ownerTestImports": 0,
+  "repositoryWrites": 0,
+  "runtimeTests": 0,
+  "parserVersion": "5.9.3",
+  "nodeVersion": "v22.12.0"
+}

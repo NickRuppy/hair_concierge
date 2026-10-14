@@ -1,0 +1,62 @@
+'use strict'
+// Static preparation only: read bytes / parse AST; writes are exclusively beneath DIR.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const DIR='/tmp/test-audit-stripe-trial128-tools-ptnotcxj',BASE=DIR+'/operator',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P='/tmp/test-audit-stripe-trial128-proposal-74Xu81'
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),json=p=>JSON.parse(fs.readFileSync(p,'utf8'))
+if(sha(fs.readFileSync(P+'/manifest.json'))!=='bf1a7c25fb6d176ddee7270fab6d03c27686cc778ad75a9d7678ee6403742129')throw Error('Final proposal changed')
+const m=json(P+'/manifest.json'),raw=json(P+'/control-oracles.json'),ts=require(ROOT+'/node_modules/typescript'),g=require(DIR+'/operator-guard.cjs')
+const diagnostic={
+ 'C1-fingerprint':['deepStrictEqual',['Expected values to be strictly deep-equal:','fp_server_only','incorrect']],
+ 'C1-clock':['deepStrictEqual',['Expected values to be strictly deep-equal:','2026-09-13T12:00:00.000Z','2026-09-20T12:00:00.000Z']],
+ 'C2-no-invoice':['deepStrictEqual',['Expected values to be strictly deep-equal:','invoice_now','true','false']],
+ 'C2-error-code':['strictEqual',['Expected values to be strictly equal:','trial_checkout_conflict','trial_unavailable']],
+ 'C2-release':['==',['denied trial must release its reserved claim']],
+ 'C3-cause':['match',['The input did not match the regular expression','provider timeout','lost provider cause']],
+ 'C4-phase':['deepStrictEqual',['Expected values to be strictly deep-equal:','stripe:purchase_completed:in_1','stripe:payment_completed:in_1']],
+ 'C4-outcome':['strictEqual',['Expected values to be strictly equal:','failed','succeeded']],
+ 'C5-no-intent':['strictEqual',['Expected values to be strictly equal:','true !== false']]
+}
+const controls=raw.map(c=>{
+ const source=fs.readFileSync(ROOT+'/'+c.file,'utf8');if(sha(source)!==c.sourceSha256||source.split(c.from).length!==2)throw Error('Source guard')
+ const sf=g.parse(ts,c.file,source),owners=[]
+ function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text===c.owner&&n.getText(sf).includes(c.from))owners.push(n);ts.forEachChild(n,visit)}visit(sf)
+ if(owners.length!==1)throw Error('Source function guard')
+ const mutant=source.replace(c.from,()=>c.to);g.parse(ts,c.file,mutant)
+ if(fs.readFileSync(DIR+'/'+c.id+'-prospective-owner.ts','utf8')!==mutant)throw Error('Existing prospective fault changed')
+ const oracles={}
+ for(const phase of['transfer','cut']){
+  const text=fs.readFileSync(P+'/'+phase+'/'+c.keeperFile,'utf8'),row=g.registrations(ts,c.keeperFile,text).get(c.keeperName)
+  const matching=row.assertions.filter(a=>a.startLine===c.expectedFirstTestFrame.lines[phase]);if(matching.length!==1)throw Error('Oracle guard')
+  oracles[phase]={startLine:matching[0].startLine,text:matching[0].text,keeperSha256:sha(row.statement),testFileSha256:sha(text)}
+ }
+ const command=[process.execPath,'--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+c.keeperName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$',c.keeperFile]
+ return {id:c.id,candidate:c.candidateId,file:c.file,sourceSha256:c.sourceSha256,from:c.from,to:c.to,mutatedSha256:sha(mutant),anchor:{kind:'function',scope:c.owner,scopeSha256:sha(owners[0].getText(sf)),expectedOccurrences:1},test:{file:c.keeperFile,name:c.keeperName},command,oracles,intendedAssertion:c.expectedIntendedAssertion,expectedOperator:diagnostic[c.id][0],errorMessageIncludes:diagnostic[c.id][1]}
+})
+if(fs.readFileSync(BASE+'-controls-normalized.json','utf8')!==JSON.stringify(controls,null,2)+'\n')throw Error('Existing normalized controls changed')
+const pin=file=>({path:file,sha:fs.existsSync(file)?sha(fs.readFileSync(file)):null,realpath:fs.existsSync(file)?fs.realpathSync(file):null})
+const gitDir=path.resolve(ROOT,fs.readFileSync(ROOT+'/.git','utf8').trim().replace(/^gitdir: /,'')),commonDir=path.resolve(gitDir,fs.readFileSync(gitDir+'/commondir','utf8').trim())
+const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+m.branch,commonDir+'/packed-refs'].map(pin)
+const repositoryTrees=[],readsetMap=new Map(),cohort=new Set(m.files.map(f=>f.file))
+for(const r of m.guards){if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha256)throw Error('Final readset drift '+r.file);if(!cohort.has(r.file))readsetMap.set(r.file,r.sha256)}
+for(const f of ['.nvmrc','tsconfig.json','next-env.d.ts','tests/server-only-register.cjs','package.json','package-lock.json'])if(fs.existsSync(ROOT+'/'+f))readsetMap.set(f,sha(fs.readFileSync(ROOT+'/'+f)))
+// Literal local import graph only; custom test loader's dynamic Stripe route is an explicit root.
+// No whole-source/data/migrations freeze and no recursive vendor package dependency closure.
+const pending=[...m.files.map(f=>f.file),...m.guards.map(f=>f.file).filter(f=>/\.[cm]?[jt]sx?$/.test(f)),'src/app/api/stripe/create-checkout-session/route.ts'],visited=new Set(),bareEntries=new Set(),dynamicExpressions=[]
+function localModule(spec,parent){const base=spec.startsWith('@/')?path.join(ROOT,'src',spec.slice(2)):path.resolve(path.dirname(path.join(ROOT,parent)),spec);const variants=[base,...['.ts','.tsx','.js','.cjs','.mjs','.json','/index.ts','/index.tsx','/index.js'].map(e=>base+e)];if(/\.[cm]?js$/.test(base))variants.push(base.replace(/\.[cm]?js$/,'.ts'));return variants.find(p=>fs.existsSync(p)&&fs.statSync(p).isFile())}
+while(pending.length){const file=pending.pop();if(visited.has(file))continue;visited.add(file);const p=path.join(ROOT,file),text=fs.readFileSync(p,'utf8');if(!cohort.has(file))readsetMap.set(file,sha(text));if(!/\.[cm]?[jt]sx?$/.test(file))continue;const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true);function v(n){let lit;if((ts.isImportDeclaration(n)||ts.isExportDeclaration(n))&&n.moduleSpecifier)lit=n.moduleSpecifier;else if(ts.isCallExpression(n)&&(n.expression.kind===ts.SyntaxKind.ImportKeyword||n.expression.getText(sf)==='require')){lit=n.arguments[0];if(lit&&!ts.isStringLiteralLike(lit))dynamicExpressions.push({file,expression:n.getText(sf)})}if(lit&&ts.isStringLiteralLike(lit)){const spec=lit.text;if(spec.startsWith('@/')||spec.startsWith('.')){const resolved=localModule(spec,file);if(resolved&&resolved.startsWith(ROOT+'/'))pending.push(path.relative(ROOT,resolved))}else if(!spec.startsWith('node:')){try{const entry=require.resolve(spec,{paths:[path.dirname(p)]});if(entry.startsWith(ROOT+'/node_modules/'))bareEntries.add(entry)}catch{}}}ts.forEachChild(n,v)}v(sf)}
+// Exact SQL fixtures named by these already-retained PGlite callbacks, not all migrations.
+for(const f of ['tests/stripe-trial-continuation-reconcile.test.ts','tests/stripe-trial-subscription-lifecycle.test.ts'])for(const match of fs.readFileSync(ROOT+'/'+f,'utf8').matchAll(/["'](20\d{12}_[a-z0-9_]+)(\.sql)?["']/g)){const file='supabase/migrations/'+match[1]+'.sql';if(!fs.existsSync(ROOT+'/'+file))throw Error('Missing selected SQL fixture');readsetMap.set(file,sha(fs.readFileSync(ROOT+'/'+file)))}
+const dependencyNames=['tsx','esbuild','get-tsconfig','resolve-pkg-maps','fsevents','@esbuild/darwin-arm64','react','react-dom','zod','@electric-sql/pglite','stripe/cjs','@supabase/auth-js/dist','@supabase/ssr/dist','@supabase/supabase-js/dist','@supabase/postgrest-js/dist','@supabase/realtime-js/dist','@supabase/storage-js/dist','@supabase/functions-js/dist','next/dist/server/web','next/dist/shared/lib','next/dist/server/request','next/dist/server/after','next/dist/compiled/@edge-runtime/cookies'].filter(n=>fs.existsSync(ROOT+'/node_modules/'+n))
+const dependencyTrees=dependencyNames.map(n=>({path:ROOT+'/node_modules/'+n,names:g.inventory(ROOT+'/node_modules/'+n)}))
+const depFiles=new Map();for(const t of dependencyTrees)for(const n of t.names){const f=t.path+'/'+n;depFiles.set(f,pin(f))}
+for(const n of ['typescript/package.json','typescript/lib/typescript.js','next/package.json','next/server.js','next/headers.js','next/dist/api/headers.js','next/dist/client/components/headers.js','server-only/package.json','server-only/index.js','stripe/package.json','stripe/types/index.d.ts','stripe/types/Subscriptions.d.ts','stripe/types/Invoices.d.ts','stripe/types/Checkout/Sessions.d.ts','@supabase/auth-js/package.json','@supabase/ssr/package.json','@supabase/supabase-js/package.json','@supabase/postgrest-js/package.json','@supabase/realtime-js/package.json','@supabase/storage-js/package.json','@supabase/functions-js/package.json']){const f=ROOT+'/node_modules/'+n;if(fs.existsSync(f))depFiles.set(f,pin(f))}
+for(const entry of bareEntries){depFiles.set(entry,pin(entry));let dir=path.dirname(entry);while(dir.startsWith(ROOT+'/node_modules/')){if(fs.existsSync(dir+'/package.json')){depFiles.set(dir+'/package.json',pin(dir+'/package.json'));break}dir=path.dirname(dir)}}
+fs.writeFileSync(DIR+'/bounded-readset-evidence.json',JSON.stringify({originalGuards:m.guards,localImportGraphFiles:[...visited].sort(),dynamicExpressions,bareRuntimeEntries:[...bareEntries].sort(),selectedDistributions:dependencyNames,limits:['Literal repository import graph is an overapproximation and includes type-only source references; no whole-source semantic read claim.','Custom returning-checkout loader route is explicitly rooted to Stripe; dynamic nonliteral expressions are recorded and not silently treated as resolved.','Installed runtime distributions and actual bare import entries are byte guards. Unselected SDK vendor transitives, platform conditions and dev/build tools are not comprehensively frozen. Package-lock and package manifests remain pinned.','No .env or secret files inspected. No whole data tree or unconsumed migrations frozen.']},null,2)+'\n',{flag:'wx'})
+const artifactFiles=[];function artifacts(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,d.name);if(d.isDirectory())artifacts(p);else artifactFiles.push(p)}}artifacts(P)
+artifactFiles.push(DIR+'/bounded-readset-evidence.json',BASE+'-guard.cjs',BASE+'-proof.cjs',BASE+'-readonly-preload.cjs',BASE+'-controls-normalized.json',DIR+'/prepare-pins.cjs',...controls.map(c=>DIR+'/'+c.id+'-prospective-owner.ts'))
+const artifactHashes=Object.fromEntries(artifactFiles.map(p=>[p,sha(fs.readFileSync(p))]))
+const entrypointTemplateHashes=Object.fromEntries(['edit','run-controls'].map(n=>[BASE+'-'+n+'.cjs',sha(fs.readFileSync(BASE+'-'+n+'.cjs'))]))
+const pins={root:ROOT,head:m.head,branch:m.branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,readset:[...readsetMap].sort().map(([file,sha])=>({file,sha})),repositoryTrees,dependencies:[...depFiles.values()].sort((a,b)=>a.path.localeCompare(b.path)),dependencyTrees:dependencyTrees.sort((a,b)=>a.path.localeCompare(b.path)),artifactHashes,entrypointTemplateHashes,counts:m.counts,controls:9,lock:g.LOCK,dependencyScope:'Explicit selected installed runtime distributions, their membership, and resolved direct bare import entries/manifests. See bounded-readset-evidence.json for selected paths, local TS/JS closure, dynamic limits; no recursive whole-vendor dependency/peer traversal.'}
+const bytes=JSON.stringify(pins,null,2)+'\n';fs.writeFileSync(BASE+'-pins.json',bytes,{flag:'wx',mode:0o444});const hash=sha(bytes)
+for(const n of['edit','run-controls']){const p=BASE+'-'+n+'.cjs',text=fs.readFileSync(p,'utf8');if(text.split('PIN_SHA_PLACEHOLDER').length!==2)throw Error('Already pinned');fs.writeFileSync(p,text.replace('PIN_SHA_PLACEHOLDER',hash))}
+console.log(JSON.stringify({dir:DIR,pinSHA:hash,readsets:pins.readset.length,repositoryTrees:repositoryTrees.length,dependencyFiles:pins.dependencies.length,dependencyPackages:dependencyTrees.length,identityFiles:identityFiles.length},null,2))

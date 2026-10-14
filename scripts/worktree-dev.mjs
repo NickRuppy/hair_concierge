@@ -128,7 +128,7 @@ async function main() {
     );
   }
 
-  const child = spawn(nextBinary, ["dev", "--port", String(port)], {
+  const child = spawn(nextBinary, ["dev", "-H", "localhost", "--port", String(port)], {
     cwd: worktreeRoot,
     stdio: "inherit",
   });

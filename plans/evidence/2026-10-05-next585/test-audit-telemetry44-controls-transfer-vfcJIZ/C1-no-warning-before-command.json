@@ -1,0 +1,15 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern=^bounded FIFO drops the oldest exception and preserves rejection order$",
+    "tests/sentry-client-runtime.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "environment": "inherited; no env files loaded by driver"
+}

@@ -114,8 +114,11 @@ export function deriveRequiredProtocolRoles(
       return ["intensive_conditioning_mask"]
     case "leave_in": {
       const specs = categorySpecs.product_leave_in_specs as
-        | { provides_heat_protection?: unknown }
+        | { provides_heat_protection?: unknown; heat_activation_required?: unknown }
         | undefined
+      // Leave-In v1.2 (AD-7, I8): an activated product serves only the pre-heat
+      // slot, so it needs exactly one pre-heat protocol and no post-wash protocol.
+      if (specs?.heat_activation_required === true) return ["pre_heat_protection"]
       return specs?.provides_heat_protection === true
         ? ["post_wash_leave_in", "pre_heat_protection"]
         : ["post_wash_leave_in"]

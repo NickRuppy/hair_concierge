@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": "R4",
+  "role": "reserve",
+  "substitutesFor": "MONDAY Smooth Anti-Frizz Haarmaske (archetype 6) if MONDAY's EAN/pack cannot be independently confirmed",
+  "captureDepth": "lighter (per instructions: identity + INCI source check only, no full directions transcription required) - though a real conflict surfaced during even this light pass, see status",
+  "identity": {
+    "brand": "John Frieda",
+    "productName": "Frizz Ease Wunder-Kur (Tiefenwirksame Wunder-Kur) - EXACT VARIANT NOT CONFIRMED, see conflict",
+    "packSize": "250 ml (per proposal; not independently confirmed on either source page found this pass)",
+    "gtinEan": null,
+    "eanSourceNote": "Proposal gave no EAN. Two DIFFERENT hautschutzengel.de pages were found under near-identical 'Frizz Ease Wunder-Kur' names, with two different (non-matching) ingredient lists - see conflict below. Neither was confirmed as the specific 250ml 'Tiefenwirksame' Müller-sold SKU the proposal describes.",
+    "market": "DE (Müller, per proposal)"
+  },
+  "rawInci": "AMBIGUOUS - two candidate lists found, not resolved to one SKU this pass (see conflicts)",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/john-frieda-frizz-ease-wunder-kur-inhaltsstoffe/produkt/346138.html (candidate B, matches proposal's claimed marker chemistry) vs https://www.hautschutzengel.de/john-frieda-frizz-ease-wunder-kur-haarkur-inhaltsstoffe/produkt/87803.html (candidate A, EAN 5037156254273, does not match)",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel",
+    "notes": "Neither page's fetch confirmed pack size or a clearly-labeled 'Tiefenwirksame' variant name."
+  },
+  "directions": {
+    "text": null,
+    "contactTimeFound": false,
+    "source": "not sourced this pass - lighter reserve capture per instructions; a separate general web search (not tied to either specific variant with confidence) mentioned '3-5 Minuten einwirken lassen' for a John Frieda Frizz Ease deep treatment, but this could not be confidently attributed to one of the two candidate SKUs below",
+    "confidence": null
+  },
+  "claims": [],
+  "conflicts": [
+    {
+      "type": "identity + formula",
+      "description": "Candidate A ('JOHN FRIEDA Frizz Ease Wunder-Kur Haarkur', hautschutzengel produkt/87803, EAN 5037156254273) has INCI: AQUA, CETEARYL ALCOHOL, ERYTHRITOL, GLYCERIN, PARFUM, BEHENAMIDOPROPYL DIMETHYLAMINE, CETYL ESTERS, BEHENTRIMONIUM CHLORIDE, BENZYL ALCOHOL, DIPROPYLENE GLYCOL, LACTIC ACID, DISODIUM EDTA, DICETYLDIMONIUM CHLORIDE, DIMETHICONE, PROPYLENE GLYCOL, SODIUM HYDROXIDE, GLYCINE, STEAROXYPROPYL DIMETHYLAMINE, C14-28 ISOALKYL ACID, LAURETH-23, C14-28 ALKYL ACID, ALOE BARBADENSIS LEAF EXTRACT, LAURETH-4, STEARYL ALCOHOL, BENZOIC ACID, DIAZOLIDINYL UREA, PHENOXYETHANOL, IODOPROPYNYL BUTYLCARBAMATE, BUTYLPHENYL METHYLPROPIONAL, LIMONENE, LINALOOL - this has only Dimethicone (no Dimethiconol/Amodimethicone), NOT matching the proposal's stated marker chemistry for this reserve. Candidate B ('JOHN FRIEDA Frizz ease Wunder Kur', hautschutzengel produkt/346138, no EAN captured) has INCI: AQUA, CETEARYL ALCOHOL, DIMETHICONE, BEHENTRIMONIUM CHLORIDE, BEHENYL ALCOHOL, DIPROPYLENE GLYCOL, PARFUM, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE, DIMETHICONOL, PEG-45M, TETRASODIUM GLUTAMATE DIACETATE, MALIC ACID, COCOS NUCIFERA OIL, OLEA EUROPAEA FRUIT OIL, RICINUS COMMUNIS SEED OIL, SODIUM HYDROXIDE, SILICA, CERAMIDE NG, CERAMIDE NP, TOCOPHEROL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, BENZYL SALICYLATE, LIMONENE, LINALOOL - this DOES contain Dimethicone + Dimethiconol + Amodimethicone, matching the proposal's claimed marker chemistry for R4. These are clearly two different John Frieda 'Wunder-Kur' products or reformulations, not the same SKU, and were NOT merged.",
+      "resolution": "unresolved - candidate B appears to be the intended product based on matching the proposal's chemistry claim, but pack size (250ml) and EAN were not confirmed for candidate B specifically. Recommend a direct Müller.de lookup at freeze/substitution time to pin down the exact SKU before use."
+    }
+  ],
+  "status": "captured_with_conflict",
+  "statusNotes": "Even at the lighter reserve-capture depth, this product surfaced a genuine identity/formula ambiguity between two same-brand, similarly-named products. If R4 is ever activated (MONDAY substitution triggers), this SKU needs a proper identity re-check before use - do not treat either candidate list as confirmed."
+}

@@ -1,0 +1,33 @@
+{
+  "blindId": "W108",
+  "packSize": "400 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Urea",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Sodium Cocoyl Glutamate",
+    "Disodium Cocoamphodiacetate",
+    "Panthenol",
+    "Sodium Laureth-8 Sulfate",
+    "Glycol Distearate",
+    "Magnesium Laureth Sulfate",
+    "Magnesium Laureth-8-Sulfate",
+    "Laureth-4",
+    "Sodium Oleth Sulfate",
+    "Magnesium Oleth Sulfate",
+    "Parfum",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Glycerin",
+    "Formic Acid",
+    "Propylene Glycol"
+  ],
+  "inciFingerprintSha256": "665d3815e74298d11968ebf3d989b3157a858499dcb4e7d5708e8756c36a803e",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

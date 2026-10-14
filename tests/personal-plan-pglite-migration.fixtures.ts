@@ -91,7 +91,37 @@ const MIGRATIONS = [
   "supabase/migrations/20260929231100_user_facts_domains.sql",
   "supabase/migrations/20260929231200_personal_plan_facts_cursor.sql",
   "supabase/migrations/20260929231300_user_facts_save_v1.sql",
+  // care_habits precedence: an assumed field never replaces a stored real one. Only
+  // re-defines `user_facts_save_v1`, so it can follow it directly.
+  "supabase/migrations/20261006180000_user_facts_assumed_never_replaces_real.sql",
+  // Direct-acceptance draft ownership column + its save RPC; interactive saves clear it.
+  "supabase/migrations/20261006180100_personal_plan_direct_acceptance_draft_owner.sql",
 ] as const
+
+/**
+ * Hair Tools port: `tools` joins the module ids of the three module-aware functions
+ * (`personal_plan_complete_stage2_module`, `personal_plan_open_optional_refinement_v1`,
+ * `personal_plan_rebase_on_facts_v1`). One file that re-defines all three, so it must be applied
+ * AFTER the latest definition of each — i.e. last in every chain, never inside `MIGRATIONS`,
+ * where the rebase function does not exist yet and a later `CREATE OR REPLACE` would silently
+ * revert the widened list.
+ */
+export const PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION =
+  "supabase/migrations/20261012125714_20261009170000_personal_plan_stage2_tools_module.sql"
+
+/**
+ * The default chain has no paid-migration admission, but `personal_plan_open_optional_refinement_v1`
+ * declares `v_enrollment public.personal_plan_migration_enrollments%ROWTYPE`, which plpgsql
+ * resolves when the function is CREATEd. A shape-only stub table lets the real file apply and is
+ * dropped right after: suites that build the admission themselves (`personal-plan-unified-
+ * migrations`) `CREATE TABLE` it, and no default-chain suite calls the optional-entry function.
+ */
+const ENROLLMENTS_COMPILE_STUB = `
+CREATE TABLE public.personal_plan_migration_enrollments (id uuid PRIMARY KEY);
+`
+const DROP_ENROLLMENTS_COMPILE_STUB = `
+DROP TABLE public.personal_plan_migration_enrollments;
+`
 
 const STUB_PREREQUISITES = `
 CREATE ROLE anon;
@@ -219,8 +249,29 @@ export type PersonalPlanTestDb = PGlite
  */
 export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20261003120000_user_facts_lock.sql"
 
+/**
+ * The fourth facts domain (`shopping_preferences`): adds the column, extends the lock's two
+ * fact-column lists to 27 keys and re-creates `user_facts_save_v1` with the new branch. It must
+ * run AFTER `USER_FACTS_LOCK_MIGRATION` (the lock's apply-time check refuses an unclassified
+ * column), so it is never part of the `MIGRATIONS` chain.
+ */
+export const USER_FACTS_SHOPPING_PREFERENCES_MIGRATION =
+  "supabase/migrations/20261009130000_user_facts_shopping_preferences.sql"
+
+/**
+ * HISTORICAL mode: the lock exactly as the first deploy shipped it (26 fact columns, a door
+ * without `shopping_preferences`). The suites that seed a legacy row and then lock call this;
+ * readers there select only columns that exist in this mode.
+ */
 export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> {
   await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
+}
+
+/** CURRENT mode: the historical lock, then the `shopping_preferences` migration — the order
+ * production applies them in. This is what `migratedPersonalPlanDatabase` applies by default. */
+export async function applyCurrentUserFacts(pg: PersonalPlanTestDb): Promise<void> {
+  await applyUserFactsLock(pg)
+  await pg.exec(await readFile(new URL(USER_FACTS_SHOPPING_PREFERENCES_MIGRATION, ROOT), "utf8"))
 }
 
 /**
@@ -309,9 +360,20 @@ function migrationChain(options: { stage1Sources?: boolean }): string[] {
   }
   chain.push(PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION)
   chain.push(PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION)
+  chain.push(PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION)
   return chain
 }
 
+/**
+ * The personal-plan schema on PGlite, ending with the tools-module migration
+ * (`20261009170000`), which widens the module list to products/tools/habits.
+ *
+ * Trap: that widening lives in a function/constraint the older module-aware migrations also
+ * define. A suite that builds the DEFAULT chain itself (or runs this fixture and then re-applies
+ * an older module-aware migration) silently reverts the module list to the two-module form, and
+ * the tools module then fails its checks with confusing errors. Re-apply
+ * `PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION` last, as the tail of this function does.
+ */
 export async function migratedPersonalPlanDatabase(
   t: {
     after: (fn: () => Promise<void>) => void
@@ -327,7 +389,21 @@ export async function migratedPersonalPlanDatabase(
   for (const migration of migrationChain(options)) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
   }
-  if (options.lock !== false) await applyUserFactsLock(pg)
+  if (!options.stage1Sources) {
+    await pg.exec(ENROLLMENTS_COMPILE_STUB)
+    await pg.exec(
+      await readFile(new URL(PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION, ROOT), "utf8"),
+    )
+    await pg.exec(DROP_ENROLLMENTS_COMPILE_STUB)
+  }
+  if (options.lock !== false) await applyCurrentUserFacts(pg)
+  // NR2/NR3: newest helper/CHECK, after all historical prerequisites. In-memory only.
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20261012190000_widen_engine_concern_goal_vocabulary.sql", ROOT),
+      "utf8",
+    ),
+  )
   return pg
 }
 
@@ -868,6 +944,8 @@ export type UserFactsSaveResult = {
   diagnosticsHash?: string | null
   reason?: string
   updatedAt?: string
+  /** `true` when this call inserted the `hair_profiles` row. */
+  created?: boolean
 }
 
 export type UserFactsSaveInput = {
@@ -923,6 +1001,9 @@ export type HairProfileRow = {
   diagnostics: Record<string, unknown> | null
   care_habits: Record<string, unknown> | null
   quiz_context: Record<string, unknown> | null
+  /** Only present in CURRENT mode (the column exists once the shopping_preferences migration
+   * ran); `readHairProfile` omits it on a historical database. */
+  shopping_preferences?: Record<string, unknown> | null
   facts_provenance: Record<string, unknown>
   facts_revision: number
   hair_texture: string | null
@@ -953,8 +1034,15 @@ export async function readHairProfile(
   pg: PersonalPlanTestDb,
   userId: string,
 ): Promise<HairProfileRow | null> {
+  const { rows: columns } = await pg.query<{ present: boolean }>(
+    `SELECT EXISTS (
+       SELECT 1 FROM pg_catalog.pg_attribute
+        WHERE attrelid = 'public.hair_profiles'::pg_catalog.regclass
+          AND attname = 'shopping_preferences' AND NOT attisdropped) AS present`,
+  )
+  const shopping = columns[0]?.present ? "shopping_preferences, " : ""
   const { rows } = await pg.query<HairProfileRow>(
-    `SELECT diagnostics, care_habits, quiz_context, facts_provenance, facts_revision,
+    `SELECT diagnostics, care_habits, quiz_context, ${shopping}facts_provenance, facts_revision,
             hair_texture, thickness, density, hair_length, cuticle_condition,
             protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment,
             concerns, goals, desired_volume, primary_concern, drying_method, heat_styling, styling_tools,

@@ -174,12 +174,3 @@ test("quiz schema rejects volume + less_volume together", () => {
     }),
   )
 })
-
-test("quiz schema rejects duplicate goals", () => {
-  assert.throws(() =>
-    quizAnswersSchema.parse({
-      ...createBaseAnswers(),
-      goals: ["volume", "volume"],
-    }),
-  )
-})

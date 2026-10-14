@@ -528,6 +528,9 @@ function getLeaveInRoleLabel(
   meta: LeaveInRecommendationMetadata | null,
   product: Product,
 ): string | null {
+  // Leave-In v1.2: activation is checked first — an activated product is never a
+  // conditioner booster or replacement, it only works with a heat step.
+  if (product.leave_in_specs?.heat_activation_required === true) return "Wirkt erst mit Hitze"
   const relationship =
     meta?.conditioner_relationship ?? product.leave_in_specs?.conditioner_relationship ?? null
   if (relationship === "booster_only") return "Booster nach dem Conditioner"

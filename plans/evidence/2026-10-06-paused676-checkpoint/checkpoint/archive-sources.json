@@ -1,0 +1,66 @@
+[
+  {
+    "path": "/tmp/test-audit-676-commit-checkpoint",
+    "label": "checkpoint"
+  },
+  {
+    "path": "/tmp/test-audit-final676-ci",
+    "label": "ci"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/command.json",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/files.json",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/result.json",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/run.log",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/tests.tap",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/coverage-summary.json",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/coverage-final.json",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-retirement-final676-proof/lcov.info",
+    "label": "whole-native"
+  },
+  {
+    "path": "/tmp/test-audit-final676-tested-tree.json",
+    "label": "integration"
+  },
+  {
+    "path": "/tmp/test-audit-final676-tree-verification.json",
+    "label": "integration"
+  },
+  {
+    "path": "/tmp/test-audit-final676-compare.cjs",
+    "label": "integration"
+  },
+  {
+    "path": "/tmp/test-audit-final676-tree.py",
+    "label": "integration"
+  },
+  {
+    "path": "/tmp/test-audit-next676-current-inventory.json",
+    "label": "integration"
+  },
+  {
+    "path": "/tmp/test-audit-next676-current-loc.json",
+    "label": "integration"
+  }
+]

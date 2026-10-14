@@ -1,0 +1,11 @@
+--- before/tests/product-identity-resolution.test.ts
++++ transfer/tests/product-identity-resolution.test.ts
+@@ -42,6 +42,8 @@
+   const nonMatch = resolveBrandFromText("SK18 Leave-in Molecular Repair Hair Oil", brands)
+   assert.equal(nonMatch.match, "none")
+   assert.equal(nonMatch.brand, null)
++  assert.equal(nonMatch.confidence, "none")
++  assert.equal(nonMatch.reason, "unresolved")
+   assert.equal(nonMatch.unresolvedRawText, "SK18 Leave-in Molecular Repair Hair Oil")
+ })
+ 

@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "staticOnly": true,
+  "fullSnapshotsParsed": 6,
+  "fullMutantsParsed": 1,
+  "pricingDeclarations": [
+    14,
+    12
+  ],
+  "untouchedPricingCallbacks": 12,
+  "retirementGuardExact": true,
+  "retainedBoundaryWholeFileExact": true,
+  "repositoryWrites": 0,
+  "childrenStartedByCheck": 0,
+  "productImports": 0,
+  "runtimeExecuted": false,
+  "credit": 0,
+  "guards": 46,
+  "moduleResolvedImports": 28,
+  "trackedJSTSFilesScanned": 3121
+}

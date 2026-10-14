@@ -1,5 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  buildStage3SelectionProfile,
+  type Stage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import {
   CATEGORY_LABELS,
@@ -11,7 +16,10 @@ import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/produc
 import {
   computeStage1ProductExamplePreviews,
   createSupabaseStage1ProductExamplePreviewCandidateLoader,
+  type Stage1ProductExamplePreviewBudget,
+  type Stage1ProductExamplePreviewCandidateLoader,
 } from "@/lib/personal-plan/product-previews"
+import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import {
   stage3DecisionKey,
@@ -32,6 +40,12 @@ import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+
+import {
+  discoveryApplicationLabelOf,
+  discoveryEqualOptions,
+  type DiscoveryEqualOption,
+} from "./equal-options"
 
 /**
  * The participant's Idealplan, read for the admin cockpit.
@@ -91,6 +105,14 @@ export type DiscoveryIdealStep = {
   preview: Stage1ProductExampleRolePreview | null
   /** Step detail for the call — see `DiscoveryStepDepth` (never hashed). */
   depth?: DiscoveryStepDepth
+  /**
+   * Products the authority rates exactly as well as the preview's pick, when it resolved a
+   * tie by price (Bondbuilder → cheapest first) — swap options for the call. Never hashed:
+   * nothing prints until a swap names one. See `equal-options.ts`.
+   */
+  equalOptions?: DiscoveryEqualOption[]
+  /** The pick's own application label when it has equals to be told apart from (E2). */
+  idealApplicationLabel?: string | null
 }
 
 /** A malformed decision target must thin the step detail, not fail the whole cockpit. */
@@ -287,6 +309,14 @@ export async function loadDiscoveryIdealRoutine(
      * computation, so every legacy intake keeps its steps and its fingerprint.
      */
     routineOverride?: PlanRoutineContext | null
+    /**
+     * The participant's saved shopping budget (flag on, one was saved): the previews are
+     * allocated under it exactly like her own Stage-1 previews. Absent or null = no budget,
+     * the price-neutral previews as before. Never uncapped-by-default.
+     */
+    budget?: Stage1ProductExamplePreviewBudget | null
+    /** Her user-answered visible root colour; absent = unknown (as her own previews). */
+    visibleHairColor?: Stage3VisibleHairColor | null
   } = {},
 ): Promise<DiscoveryIdealRoutineResult> {
   let context
@@ -305,15 +335,28 @@ export async function loadDiscoveryIdealRoutine(
   // `stage1-service` / shared-context loading this path must stay clear of. Nothing here
   // is persisted, because nothing on this path persists. The previews run on the SAME
   // snapshot the steps come from, so steps and previews stay consistent.
+  const loaded = recordingCandidateLoader(
+    createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
+  )
+  const previewInput = discoveryPreviewInput(intakeId, context)
   const previews = await computeStage1ProductExamplePreviews({
-    ...discoveryPreviewInput(intakeId, context),
+    ...previewInput,
     snapshot,
-    loadCandidates: createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
+    loadCandidates: loaded.loader,
+    ...(options.budget ? { budget: options.budget } : {}),
+    ...(options.visibleHairColor ? { visibleHairColor: options.visibleHairColor } : {}),
   })
 
   return {
     status: "ready",
-    steps: buildDiscoveryIdealSteps(snapshot, previews.previews),
+    steps: withDiscoveryEqualOptions(
+      buildDiscoveryIdealSteps(snapshot, previews.previews),
+      snapshot,
+      previewInput.sourceNeedVersionId,
+      await loaded.settled(),
+      // The same slice the previews above ran on.
+      buildStage3SelectionProfile(snapshot, options.visibleHairColor ?? null),
+    ),
     routineSource,
     heatProtectionDeferred: discoveryHeatProtectionDeferred(snapshot),
     context: {
@@ -328,4 +371,66 @@ export async function loadDiscoveryIdealRoutine(
       sourceNeedVersionId: previews.sourceNeedVersionId,
     },
   }
+}
+
+/**
+ * The preview's own candidate loads, kept for the equal-fit options — the very lists the
+ * preview evaluated, so the options cannot disagree with its pick, and no second read.
+ * Keyed `category:role` (the preview loads Shampoo per role, every other category once).
+ */
+function recordingCandidateLoader(loader: Stage1ProductExamplePreviewCandidateLoader) {
+  const loads = new Map<string, Promise<Stage3CategoryProductFacts[]>>()
+  return {
+    loader: ((input) => {
+      const promise = loader(input)
+      loads.set(`${input.category}:${input.role}`, promise)
+      return promise
+    }) satisfies Stage1ProductExamplePreviewCandidateLoader,
+    async settled(): Promise<ReadonlyMap<string, readonly Stage3CategoryProductFacts[]>> {
+      const entries = await Promise.all(
+        [...loads].map(async ([key, promise]) => [key, await promise.catch(() => [])] as const),
+      )
+      return new Map(entries)
+    },
+  }
+}
+
+/**
+ * Pure: every step whose recommendation came out of an equal tie gets the other equally
+ * ideal candidates as `equalOptions`; every other step is returned unchanged.
+ */
+export function withDiscoveryEqualOptions(
+  steps: DiscoveryIdealStep[],
+  snapshot: InitialNeedPlanSnapshot,
+  sourceNeedVersionId: string,
+  candidatesByKey: ReadonlyMap<string, readonly Stage3CategoryProductFacts[]>,
+  selectionProfile: Stage3SelectionProfile,
+): DiscoveryIdealStep[] {
+  const decisions = new Map(snapshot.decisions.map((decision) => [decision.category, decision]))
+  return steps.map((step) => {
+    const preview = step.preview
+    const decision = decisions.get(step.category)
+    if (!preview || preview.kind !== "recommendation" || !decision) return step
+    const candidates =
+      candidatesByKey.get(`${step.category}:${step.role}`) ??
+      [...candidatesByKey].find(([key]) => key.startsWith(`${step.category}:`))?.[1] ??
+      []
+    const equalOptions = discoveryEqualOptions({
+      category: step.category,
+      role: step.role,
+      decision,
+      snapshot,
+      sourceNeedVersionId,
+      candidates,
+      selectedProductId: preview.productId,
+      selectionProfile,
+    })
+    if (equalOptions.length === 0) return step
+    const selected = candidates.find((candidate) => candidate.productId === preview.productId)
+    return {
+      ...step,
+      equalOptions,
+      idealApplicationLabel: selected ? discoveryApplicationLabelOf(selected) : null,
+    }
+  })
 }

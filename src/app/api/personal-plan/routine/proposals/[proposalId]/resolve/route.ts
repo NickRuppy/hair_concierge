@@ -11,6 +11,7 @@ import {
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { routineProposalResolveRequestSchema } from "@/lib/personal-plan/routine/contracts"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseRoutineProposalService } from "@/lib/personal-plan/routine/proposal-service"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -65,6 +66,12 @@ const handlers = createPersonalPlanRoutineResolveRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () => createSupabaseRoutineProposalService({ client: createAdminClient() as never }),
+  service: () => {
+    const admin = createAdminClient()
+    return createSupabaseRoutineProposalService({
+      client: admin as never,
+      toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, admin),
+    })
+  },
 })
 export const POST = handlers.POST

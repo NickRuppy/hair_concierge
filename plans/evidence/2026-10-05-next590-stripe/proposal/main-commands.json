@@ -1,0 +1,200 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "before": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/stripe-trial-invoice.test.ts",
+    "tests/stripe-trial-account-activation.test.ts",
+    "tests/stripe-trial-subscription-lifecycle.test.ts",
+    "tests/stripe-trial-continuation.test.ts",
+    "tests/stripe-trial-authorization.test.ts",
+    "tests/stripe-trial-checkout.test.ts",
+    "tests/stripe-trial-continuation-reconcile.test.ts",
+    "tests/stripe-trial-management.test.ts",
+    "tests/stripe-trial-cancellation.test.ts",
+    "tests/stripe-trial-prior-paid-history.test.ts",
+    "tests/stripe-trial-checkout-route.test.ts",
+    "tests/stripe-trial-checkout-session-params.test.ts",
+    "tests/stripe-trial-catalog.test.ts"
+  ],
+  "transfer": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/stripe-trial-invoice.test.ts",
+    "tests/stripe-trial-account-activation.test.ts",
+    "tests/stripe-trial-subscription-lifecycle.test.ts",
+    "tests/stripe-trial-continuation.test.ts",
+    "tests/stripe-trial-authorization.test.ts",
+    "tests/stripe-trial-checkout.test.ts",
+    "tests/stripe-trial-continuation-reconcile.test.ts",
+    "tests/stripe-trial-management.test.ts",
+    "tests/stripe-trial-cancellation.test.ts",
+    "tests/stripe-trial-prior-paid-history.test.ts",
+    "tests/stripe-trial-checkout-route.test.ts",
+    "tests/stripe-trial-checkout-session-params.test.ts",
+    "tests/stripe-trial-catalog.test.ts"
+  ],
+  "cut": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/stripe-trial-invoice.test.ts",
+    "tests/stripe-trial-account-activation.test.ts",
+    "tests/stripe-trial-subscription-lifecycle.test.ts",
+    "tests/stripe-trial-continuation.test.ts",
+    "tests/stripe-trial-authorization.test.ts",
+    "tests/stripe-trial-checkout.test.ts",
+    "tests/stripe-trial-continuation-reconcile.test.ts",
+    "tests/stripe-trial-management.test.ts",
+    "tests/stripe-trial-cancellation.test.ts",
+    "tests/stripe-trial-prior-paid-history.test.ts",
+    "tests/stripe-trial-checkout-route.test.ts",
+    "tests/stripe-trial-checkout-session-params.test.ts",
+    "tests/stripe-trial-catalog.test.ts"
+  ],
+  "selected": [
+    {
+      "id": "C1-fingerprint",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^retrieves provider authorities itself before returning verified trial facts$",
+        "tests/stripe-trial-authorization.test.ts"
+      ]
+    },
+    {
+      "id": "C1-clock",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^retrieves provider authorities itself before returning verified trial facts$",
+        "tests/stripe-trial-authorization.test.ts"
+      ]
+    },
+    {
+      "id": "C2-no-invoice",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+        "tests/stripe-trial-account-activation.test.ts"
+      ]
+    },
+    {
+      "id": "C2-error-code",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+        "tests/stripe-trial-account-activation.test.ts"
+      ]
+    },
+    {
+      "id": "C2-release",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+        "tests/stripe-trial-account-activation.test.ts"
+      ]
+    },
+    {
+      "id": "C3-cause",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation$",
+        "tests/stripe-trial-account-activation.test.ts"
+      ]
+    },
+    {
+      "id": "C4-phase",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op$",
+        "tests/stripe-trial-invoice.test.ts"
+      ]
+    },
+    {
+      "id": "C4-outcome",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op$",
+        "tests/stripe-trial-invoice.test.ts"
+      ]
+    },
+    {
+      "id": "C5-no-intent",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern",
+        "^missing initial binding is typed retryable and restored binding succeeds without payment$",
+        "tests/stripe-trial-invoice.test.ts"
+      ]
+    }
+  ],
+  "notes": [
+    "Native repository runner exactly matches package test:node loaders. All 13 are in tests/*.test.ts and .github/workflows/ci.yml invokes test:node.",
+    "128/123 are AST counts, not expected executed subtest counts: existing tables expand into more runtime cases. Compare real baseline/transfer/cut results, preserving any baseline failure.",
+    "Main alone applies phases or executes source faults. These commands have not been run. Use isolated output locations; do not load environment files.",
+    "No source cleanup, production file edit, additional test input/call/table row/skip, or fake provider response is included."
+  ]
+}

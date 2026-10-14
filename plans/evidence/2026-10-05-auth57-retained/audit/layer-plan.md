@@ -1,0 +1,35 @@
+# Auth replay / credential quiz-return57 — second-layer decision
+
+Verdict: **no declaration cuts**. Exact11 owned files have57 AST registrations:53R,4F,0C,0D. F remains byte-identical and earns no removal credit. All57 callbacks/assertions/fixture rows are unchanged in all three snapshot phases. The result-page template executes two rows while counting as one declaration; browser6 and opt-in PostgreSQL1 retain their native boundaries.
+
+The first layer is the complete per-declaration ledger. This second layer rejects the following apparent overlaps:
+
+- Auth-confirm and middleware are separate live owners. Confirmation executes verification, potential profile linking and owner-frontier recovery; middleware classifies routes, checks entitlement and scrubs intake redirects. Successful PKCE, OTP recovery, consumed signed-in, consumed signed-out, unsafe next, missing frontier and thrown frontier are different effective inputs and observable side-effect sequences. No declaration can replace another by destination equality.
+- Canonical intake helper versus its forwarding wrapper: seven declarations include different native URL/NextURL inputs, source pathnames and query key sets. Clearing every query on `/auth` does not subsume preserving ordinary `reason`/`next` outside `/auth`, nor onboarding's lead-only exception. The actual browser history test protects Back/Forward behavior that Node values cannot prove. The wrapper itself can plausibly retire without deleting these tests; see the separate bounded closure brief.
+- Routine entitlement grants use independent one-time, field-test, moderator and partner disjuncts. Ordinary app access is an intentional negative. Current-access=false versus true cannot be made equivalent by combining fixtures or rows.
+- Credential selection, issue/hash/TTL, revocation adapters, scoped signed-cookie exchange, deliberate choice events and SQL lifecycle are distinct. A mocked RPC result does not execute revocation or expiry predicates. The opt-in PG test applies the actual migration to a minimal fresh roles/leads foundation; it must remain even when default Node runs skip it. The source permission test checks denied/granted roles and functions more broadly than the PG case and remains an architecture/security contract.
+- Entry GET is a clean-URL capability exchange, while choice POST creates an attributed session. Continue's exact bound lead and Edit's null lead/projected answers are deliberately different. Browser responses are mocked but real page/lead-capture interactions execute; endpoint tests execute response/event assembly but not the browser. No boundary absorbs all others' assertions.
+- ResultPage VM executes the actual server page with mocked framework/auth/database/funnel collaborators. It independently protects incomplete legacy/Personal Plan routing, complete legacy presentation, wrong package/visitor rejection, outage escalation and rollout-off recovery. It does not verify database `.eq` enforcement or rendered offer DOM. Identical successful DTOs in mocks cannot justify deleting database/browser contracts.
+
+## Held gaps
+
+1. `tests/quiz-email-return-selection.test.ts:72`: selector twice plus old object-id assertion does not redeem an issued credential after a newer lead exists. Future stored-binding proof must exercise issuance and resolution; no added call/input is proposed here.
+2. `tests/quiz-email-return-credential.test.ts:138`: inserted-row capture keeps only last value, with no insertion count and no later click. Its hash, TTL and source-id assertions are valuable and remain; exactly-once/later-click claims are not established.
+3. `tests/quiz-email-return-browser.spec.ts:202`: unavailable prefill only reaches blank name/disabled Next. The documented completable fallback (`plans/returning-lead-prefill/plan.md:17`) needs later interaction proof; current initial-state assertions remain.
+4. `tests/result-email-return-page.test.ts:198`: five existing negative rows omit wrong lead. Actual lead filtering lives in `src/lib/funnel/server.ts:67-78`, while fixture query equality is inert and lookup is mocked. Keep all useful negative rows; do not claim exact database binding proof from the title.
+
+Narrow claim limits that do not automatically make other tests F: credential empty-RPC/lifecycle DTO tests are retained for exact transport/validation mapping, not SQL lifecycle; choice event count is real at its injected sink, not deployed SQL; browser routes are mocked, not live provider/backend proof. Entry prefetch and disabled share `enabled:false`; the204/303 difference still detects ordering, while enabled-prefetch independence remains uncovered.
+
+## Live callers and documented APIs
+
+`src/proxy.ts:1,68,190` invokes actual middleware. It uses canonical intake owner at `src/lib/supabase/middleware.ts:771,889`; the wrapper at360 has no current app caller. Auth confirm exports GET at435 and the route adapter calls actual handler at188/227. Entry GET at97 calls the real credential adapter; context/choice/lead handlers call the signed-cookie source owner, which re-resolves link-id lifecycle and exact source lead. The result page uses actual lead/session lookup at238-263; database query equality is in funnel server67-78.
+
+Issuance is a documented guarded operator/library capability in `docs/customerio-data-contract.md:17-39`, even though ordinary app callers do not currently invoke it. Its absence from the request graph does not establish obsolescence. Revocation, SQL and issuer stay. The excluded documented `email-return-url` seam is not reopened.
+
+## History, CI, and proof boundaries
+
+History inspected: current log lists #585 (`1291bad1`, returning scanner leads) and #587 (`f918bf16`, identity prefill); middleware wrapper history `f2eb7cfa` explicitly replaced the live app wrapper call with canonical intake handling while preserving wrapper export for compatibility tests. `12619247` introduced original auth cleanup. Prior complete auth ledger (`plans/evidence/2026-10-02-auth-runtime-ledger.md:15-26,83`) identifies browser Back/Forward as independently valuable; it is not newly counted here.
+
+`package.json:49` includes ten owned `.test.ts` files in Node discovery; default opt-in PG skips unless separately enabled. Result page one template expands to two runtime callbacks. `package.json:69` browser-contract list excludes `quiz-email-return-browser.spec.ts`, and the six owned browser titles have no `@ci` tag. Generic smoke workflow uses `--grep @ci`; thus no claim this owned browser suite automatically runs in ordinary CI. Explicit Chromium invocation against an approved local server is required for browser proof. Playwright config reads environment files when executed; it was read as text only and never loaded.
+
+No baseline, mutation, browser, Postgres, compiler or provider execution occurred. The parent owns any future runtime. `controls.json` contains only statically anchored actual-owner diagnostics for canonical wrapper cleanup; they are UNRUN and do not authorize mutation. No broader auth/postcheckout/password/billing audit or full source/dependency tree read claim is made.

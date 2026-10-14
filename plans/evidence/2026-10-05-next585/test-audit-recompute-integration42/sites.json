@@ -1,0 +1,538 @@
+{
+  "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": [
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "stages the historical Routine as a successor of the current one and confirms it",
+      "line": 115,
+      "start": 3531,
+      "end": 4941,
+      "body": "test(\"stages the historical Routine as a successor of the current one and confirms it\", async () => {\n  const { client, rpcCalls } = fakeClient({})\n\n  const result = await run(client)\n\n  assert.deepEqual(result, { status: \"activated\", routineVersionId: \"routine-a\" })\n  assert.deepEqual(\n    rpcCalls.map((call) => call.fn),\n    [\"personal_plan_stage_routine_successor\", \"personal_plan_confirm_routine_proposal\"],\n  )\n  const stage = rpcCalls[0]!.args\n  // Every source field comes from the HISTORICAL Routine row, which is what\n  // makes the RPC's stale_source guards pass (20260808070000:76-88).\n  assert.equal(stage.p_source_refined_need_version_id, \"refined-a\")\n  assert.equal(stage.p_source_portfolio_version_id, \"portfolio-a\")\n  assert.equal(stage.p_source_product_draft_id, DRAFT_ID)\n  assert.equal(stage.p_source_product_draft_revision, 4)\n  assert.deepEqual(stage.p_routine_payload, historicalRoutine.payload)\n  // CAS taken from the plan read, against the CURRENT active Routine.\n  assert.equal(stage.p_expected_active_routine_version_id, \"routine-b\")\n  assert.equal(stage.p_expected_revision, 7)\n  assert.equal(stage.p_expected_source_revision, 5)\n  assert.equal(stage.p_origin, \"source_sync\")\n  // The confirm uses the revision staging just returned, not the pre-stage one.\n  assert.equal(rpcCalls[1]!.args.p_expected_revision, 8)\n  assert.equal(rpcCalls[1]!.args.p_proposal_id, \"proposal-new\")\n})",
+      "sha256": "0ce4240dc00cf0054d243eba66e19e09b2269c29c8d972f1218bf596f9a1ed2f"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "the direct operation keys name the exact transition, so a repeated flip stages afresh",
+      "line": 151,
+      "start": 5415,
+      "end": 6197,
+      "body": "test(\"the direct operation keys name the exact transition, so a repeated flip stages afresh\", async () => {\n  const first = fakeClient({})\n  await run(first.client)\n  const secondFlip = fakeClient({\n    // The state after one re-activation and one flip away: a different active\n    // Routine, and a plan revision that has moved on.\n    rows: { plan: { revision: 11, source_revision: 5, active_routine_version_id: \"routine-b2\" } },\n  })\n  await run(secondFlip.client)\n\n  const keysOf = (calls: Array<{ args: Record<string, unknown> }>) =>\n    calls[0]!.args.p_direct_operation_keys as string[]\n  assert.deepEqual(keysOf(first.rpcCalls), [\n    \"refinement_recompute:reactivate:routine-a:routine-b:7\",\n  ])\n  assert.notDeepEqual(keysOf(secondFlip.rpcCalls), keysOf(first.rpcCalls))\n})",
+      "sha256": "a825b097fb7559fdbdca792790c773f6a9367e17ef9b1ec328e5f9f05a3d013f"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "an identical retry at the same plan revision reuses the same fingerprint inputs",
+      "line": 170,
+      "start": 6270,
+      "end": 6619,
+      "body": "test(\"an identical retry at the same plan revision reuses the same fingerprint inputs\", async () => {\n  const first = fakeClient({})\n  await run(first.client)\n  const retry = fakeClient({})\n  await run(retry.client)\n\n  assert.deepEqual(\n    retry.rpcCalls[0]!.args.p_direct_operation_keys,\n    first.rpcCalls[0]!.args.p_direct_operation_keys,\n  )\n})",
+      "sha256": "81fd56e387ae4a09ac2341fcd6f628c4f7b8f55525f056b3508df3b9dd800215"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a still-pending proposal for the target Routine is reported, never staged over",
+      "line": 188,
+      "start": 6922,
+      "end": 7604,
+      "body": "test(\"a still-pending proposal for the target Routine is reported, never staged over\", async () => {\n  const { client, rpcCalls, queries } = fakeClient({\n    rows: { pendingProposal: { id: \"proposal-pending\" } },\n  })\n\n  assert.deepEqual(await run(client), { status: \"unavailable\", reason: \"proposal_pending\" })\n  assert.deepEqual(rpcCalls, [], \"nothing is staged and nothing is superseded\")\n  const proposalQuery = queries.find((query) => query.table === \"personal_plan_routine_proposals\")\n  assert.deepEqual(proposalQuery?.filters, [\n    [\"candidate_routine_version_id\", \"routine-a\"],\n    [\"user_id\", USER_ID],\n    [\"personal_plan_id\", PLAN_ID],\n    [\"status\", \"pending\"],\n  ])\n})",
+      "sha256": "24acc9c417309f272c85648a5b404bf4292d4bddb6cc2afd86a27c86a2ab9ec5"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a missing or foreign plan row gets its own terminal reason",
+      "line": 204,
+      "start": 7606,
+      "end": 7884,
+      "body": "test(\"a missing or foreign plan row gets its own terminal reason\", async () => {\n  const { client, rpcCalls } = fakeClient({ rows: { plan: null } })\n\n  assert.deepEqual(await run(client), { status: \"unavailable\", reason: \"plan_unavailable\" })\n  assert.deepEqual(rpcCalls, [])\n})",
+      "sha256": "64edc2157833df2a960149d1e3771f5f92a43acb1962d24fbad0290ce04d7879"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "does nothing when the historical Routine is already the active one",
+      "line": 211,
+      "start": 7886,
+      "end": 8220,
+      "body": "test(\"does nothing when the historical Routine is already the active one\", async () => {\n  const { client, rpcCalls } = fakeClient({\n    rows: { plan: { revision: 7, source_revision: 5, active_routine_version_id: \"routine-a\" } },\n  })\n\n  assert.deepEqual(await run(client), { status: \"unchanged\" })\n  assert.deepEqual(rpcCalls, [])\n})",
+      "sha256": "5c1a4284049f7b606d7bf2ad4e3850482c02bc0af9bba8c7f1f97a4ac22a4a3e"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "reports no_routine_for_draft when nothing was ever compiled from the draft",
+      "line": 220,
+      "start": 8222,
+      "end": 8754,
+      "body": "test(\"reports no_routine_for_draft when nothing was ever compiled from the draft\", async () => {\n  const missingPortfolio = fakeClient({ rows: { portfolio: null } })\n  assert.deepEqual(await run(missingPortfolio.client), {\n    status: \"unavailable\",\n    reason: \"no_routine_for_draft\",\n  })\n  assert.deepEqual(missingPortfolio.rpcCalls, [])\n\n  const missingRoutine = fakeClient({ rows: { routine: null } })\n  assert.deepEqual(await run(missingRoutine.client), {\n    status: \"unavailable\",\n    reason: \"no_routine_for_draft\",\n  })\n})",
+      "sha256": "b308fb78fb64e4218f03dde69fc032ffb49321db5a138d31dc25e6dd0b3c463a"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a moved plan between the read and the stage is a retryable conflict",
+      "line": 235,
+      "start": 8756,
+      "end": 9084,
+      "body": "test(\"a moved plan between the read and the stage is a retryable conflict\", async () => {\n  for (const outcome of [\"stale_active_version\", \"revision_conflict\", \"source_revision_conflict\"]) {\n    const { client } = fakeClient({ stage: { outcome } })\n    assert.deepEqual(await run(client), { status: \"conflict\" }, outcome)\n  }\n})",
+      "sha256": "a22bd406ecbb92e3cf53c575f60ea7741f9803fb68dd23c29048c2820e5573bc"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a moved plan between the stage and the confirm is a retryable conflict",
+      "line": 242,
+      "start": 9086,
+      "end": 9383,
+      "body": "test(\"a moved plan between the stage and the confirm is a retryable conflict\", async () => {\n  for (const outcome of [\"revision_conflict\", \"stale_source\"]) {\n    const { client } = fakeClient({ confirm: { outcome } })\n    assert.deepEqual(await run(client), { status: \"conflict\" }, outcome)\n  }\n})",
+      "sha256": "32cdea91aefa4134a60f9ca0d93f274215f13c999397257305ee653f4c80fa3f"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a stale_proposal confirm is terminal, never retried",
+      "line": 254,
+      "start": 9597,
+      "end": 9843,
+      "body": "test(\"a stale_proposal confirm is terminal, never retried\", async () => {\n  const { client } = fakeClient({ confirm: { outcome: \"stale_proposal\" } })\n\n  assert.deepEqual(await run(client), { status: \"unavailable\", reason: \"confirm_rejected\" })\n})",
+      "sha256": "8aeea9e9acaccefcd6ab56196c13a6e559cd6a220654d01981c86e9585c9c8a8"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "a refused staging is terminal, not retried",
+      "line": 265,
+      "start": 10059,
+      "end": 10578,
+      "body": "test(\"a refused staging is terminal, not retried\", async () => {\n  for (const outcome of [\"suppressed_rejected\", \"invalid_source\", \"stale_source\"]) {\n    const { client } = fakeClient({ stage: { outcome } })\n    assert.deepEqual(\n      await run(client),\n      { status: \"unavailable\", reason: \"stage_rejected\" },\n      outcome,\n    )\n  }\n\n  const errored = fakeClient({ stageError: new Error(\"network\") })\n  assert.deepEqual(await run(errored.client), {\n    status: \"unavailable\",\n    reason: \"stage_rejected\",\n  })\n})",
+      "sha256": "d2ce619b1c833ba374bc4f185ccf8c6857c26bc3a26768bed5896bb8011c1914"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "an already-staged identical proposal is confirmed rather than re-staged",
+      "line": 282,
+      "start": 10580,
+      "end": 10965,
+      "body": "test(\"an already-staged identical proposal is confirmed rather than re-staged\", async () => {\n  const { client } = fakeClient({\n    stage: {\n      outcome: \"already_staged\",\n      routineVersionId: \"routine-a\",\n      routineProposalId: \"proposal-existing\",\n      revision: 8,\n    },\n  })\n\n  assert.deepEqual(await run(client), { status: \"activated\", routineVersionId: \"routine-a\" })\n})",
+      "sha256": "f79c6687c4a863ef98bb81c89df2dbc36409455c8041467fe2c4ff57009d58a9"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "an already-accepted proposal counts as activated, not as a failure",
+      "line": 295,
+      "start": 10967,
+      "end": 11244,
+      "body": "test(\"an already-accepted proposal counts as activated, not as a failure\", async () => {\n  const { client } = fakeClient({ confirm: { outcome: \"already_accepted\", revision: 8 } })\n\n  assert.deepEqual(await run(client), { status: \"activated\", routineVersionId: \"routine-a\" })\n})",
+      "sha256": "56a6caa6eb6e9c74cd4545bec916594504f1087e7735f22ac2bfb929c3064a00"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts",
+      "name": "an unrecognised confirm outcome is terminal",
+      "line": 301,
+      "start": 11246,
+      "end": 11484,
+      "body": "test(\"an unrecognised confirm outcome is terminal\", async () => {\n  const { client } = fakeClient({ confirm: { outcome: \"invalid_source\" } })\n\n  assert.deepEqual(await run(client), { status: \"unavailable\", reason: \"confirm_rejected\" })\n})",
+      "sha256": "60efccb49c891ee8ae2d6b24af6dbd209ae51eaf9c71aafdb626a6ee27f08337"
+    }
+  ],
+  "tests/personal-plan-refinement-recompute-activation.test.ts": [
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the recompute-activation migration wraps the existing RPCs instead of copying them",
+      "line": 17,
+      "start": 476,
+      "end": 2884,
+      "body": "test(\"the recompute-activation migration wraps the existing RPCs instead of copying them\", async () => {\n  const source = await readFile(migrationPath, \"utf8\")\n\n  assert.ok(Buffer.byteLength(\"personal_plan_complete_draft_activate_v2\", \"utf8\") <= 63)\n  assert.match(\n    source,\n    /CREATE OR REPLACE FUNCTION public\\.personal_plan_complete_draft_activate_v2/,\n  )\n  assert.match(source, /p_mark_unrefined_direct_accept boolean DEFAULT false/)\n  assert.match(source, /public\\.personal_plan_complete_draft_activate_initial_v1\\(/)\n  assert.match(source, /public\\.personal_plan_confirm_routine_proposal\\(/)\n  // The immediate activation is gated on server-derived module lineage only.\n  assert.match(source, /refinement\\.module_projections <> '\\{\\}'::jsonb/)\n  assert.match(source, /projection\\.value->>'needVersionId' = v_refined_id::text/)\n  assert.match(source, /refinement\\.result_refined_need_version_id = v_refined_id/)\n  // ...and only for the recompute the module completion itself caused: any\n  // earlier Routine from the same version means this is an ordinary successor.\n  assert.match(source, /source_refined_need_version_id = v_refined_id/)\n  assert.match(source, /prior\\.id <> v_routine_id/)\n  // No second lifecycle implementation, and no proposal rows of its own.\n  assert.doesNotMatch(source, /INSERT INTO public\\.personal_plan_routine_/)\n  assert.match(source, /RAISE EXCEPTION 'refinement recompute could not activate its successor/)\n  // ...but only for a proposal this transaction staged: an unconfirmable\n  // proposal on the replay path degrades to reporting it, never a 503 loop.\n  assert.match(source, /ELSIF \\(v_result->>'status'\\) = 'already_completed' THEN/)\n  // Source reconciliation never reaches this RPC, so it must not be listed.\n  assert.doesNotMatch(source, /editor edits, source reconciliation/)\n  assert.match(source, /unrefined_direct_accept = true/)\n  assert.match(source, /nudge_dismissed_until = NULL/)\n  assert.match(source, /SET search_path = ''/)\n  assert.match(\n    source,\n    /REVOKE ALL ON FUNCTION public\\.personal_plan_complete_draft_activate_v2[\\s\\S]*FROM PUBLIC, anon, authenticated/,\n  )\n  assert.match(\n    source,\n    /GRANT EXECUTE ON FUNCTION public\\.personal_plan_complete_draft_activate_v2[\\s\\S]*TO service_role/,\n  )\n  // Never applied from a migration file.\n  assert.doesNotMatch(source, /SELECT public\\.personal_plan_complete_draft_activate_v2/)\n})",
+      "sha256": "31c0ff73c9b736ff900ee94a8151c461ddccd177c423a500e96bac07b6e43113"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the recompute-activation migration keeps the provenance write out of the revision CAS",
+      "line": 59,
+      "start": 2886,
+      "end": 3281,
+      "body": "test(\"the recompute-activation migration keeps the provenance write out of the revision CAS\", async () => {\n  const source = await readFile(migrationPath, \"utf8\")\n  const provenanceWrite = source.slice(source.indexOf(\"IF p_mark_unrefined_direct_accept THEN\"))\n\n  assert.match(provenanceWrite, /UPDATE public\\.personal_plans/)\n  assert.doesNotMatch(provenanceWrite, /revision = revision \\+ 1/)\n})",
+      "sha256": "f8a5a3f091893491f2d7177b2866bebe3db83897911915d2b1da78f557ec7d0e"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a module-driven recompute activates the successor immediately instead of proposing it",
+      "line": 252,
+      "start": 10531,
+      "end": 11463,
+      "body": "test(\"a module-driven recompute activates the successor immediately instead of proposing it\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-2\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: \"refined-module-2\",\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status, \"completed\")\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : \"unset\", null)\n  assert.equal(world.plan.activeRoutineVersionId, world.routineVersions.at(-1))\n  assert.equal(world.plan.pendingProposalId, null)\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "193dd8d8ad07fac1bf2f027e18b9fd0dfbe6bbfeb3ffb0907e4452c1fff2b534"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a module-1 projection activates immediately even before the closing module",
+      "line": 279,
+      "start": 11465,
+      "end": 12151,
+      "body": "test(\"a module-1 projection activates immediately even before the closing module\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : \"unset\", null)\n  assert.equal(world.plan.pendingProposalId, null)\n})",
+      "sha256": "3f35736ada2314539fd9863f09a4a1a78e01051c1db95df5373bdd9956546d79"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "today's linear refinement keeps its pending proposal",
+      "line": 300,
+      "start": 12153,
+      "end": 12953,
+      "body": "test(\"today's linear refinement keeps its pending proposal\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-linear\",\n      refinementDrafts: [{ moduleProjections: {}, resultRefinedNeedVersionId: \"refined-linear\" }],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status, \"completed\")\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : null, \"proposal-1\")\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-active\")\n  assert.equal(world.plan.pendingProposalId, \"proposal-1\")\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"pending\"],\n  )\n})",
+      "sha256": "3f295f9037946e7b853027615c709f34c7c7eef8689316a2878d168f242d018f"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a refined version from another plan's module lineage never activates this one",
+      "line": 322,
+      "start": 12955,
+      "end": 13681,
+      "body": "test(\"a refined version from another plan's module lineage never activates this one\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-linear\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-somewhere-else\" } },\n          resultRefinedNeedVersionId: \"refined-somewhere-else\",\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : null, \"proposal-1\")\n  assert.equal(world.plan.pendingProposalId, \"proposal-1\")\n})",
+      "sha256": "0c2529eeb43e4cf8a7be79dc17e2cf1f07959cbef49ed7e7258ecb26393362b6"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a later recompute on the same module-projected version proposes instead of activating",
+      "line": 350,
+      "start": 14023,
+      "end": 15163,
+      "body": "test(\"a later recompute on the same module-projected version proposes instead of activating\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  // The module completion's own recompute already activated from this version.\n  world.routineVersions.push(\"routine-from-module\")\n  world.routineSources[\"routine-from-module\"] = \"refined-module-1\"\n  world.plan.activeRoutineVersionId = \"routine-from-module\"\n\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : null, \"proposal-1\")\n  assert.equal(world.plan.pendingProposalId, \"proposal-1\")\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-from-module\")\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"pending\"],\n  )\n})",
+      "sha256": "d1e27f9b90c780f8251d9707757b0c22fc111f23bf9759dbd7bb640007129c90"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the first Routine still activates without any proposal",
+      "line": 381,
+      "start": 15165,
+      "end": 15776,
+      "body": "test(\"the first Routine still activates without any proposal\", async () => {\n  const world = emptyWorld(null)\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-1\",\n      refinementDrafts: [{ moduleProjections: {}, resultRefinedNeedVersionId: \"refined-1\" }],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : \"unset\", null)\n  assert.deepEqual(world.proposals, [])\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-1\")\n})",
+      "sha256": "5e75b779c968d08715eed1f426ffd2f08b0a103d41276adedf716d6d6d07eb5f"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "replaying a module-driven completion reports the activation, not a pending proposal",
+      "line": 398,
+      "start": 15778,
+      "end": 17133,
+      "body": "test(\"replaying a module-driven completion reports the activation, not a pending proposal\", async () => {\n  const world: V2World = {\n    plan: {\n      activeRoutineVersionId: \"routine-1\",\n      pendingProposalId: null,\n      revision: 6,\n      unrefinedDirectAccept: false,\n    },\n    proposals: [{ id: \"proposal-1\", candidateRoutineVersionId: \"routine-1\", status: \"accepted\" }],\n    routineVersions: [\"routine-1\"],\n    // The replayed completion's own Routine — it must not count as a \"previous\n    // recompute on this version\" against itself.\n    routineSources: { \"routine-1\": \"refined-module-1\" },\n  }\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n      draftAlreadyCompleted: true,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status, \"already_completed\")\n  assert.equal(result.status === \"already_completed\" ? result.routineProposalId : \"unset\", null)\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-1\")\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "ff3864b4406bee86ac51f01086931c7dc24bdbc4f7990322cc320befb0fa5baa"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "an unconfirmable proposal on the replay path degrades to its pending proposal",
+      "line": 443,
+      "start": 17445,
+      "end": 18932,
+      "body": "test(\"an unconfirmable proposal on the replay path degrades to its pending proposal\", async () => {\n  const world: V2World = {\n    plan: {\n      activeRoutineVersionId: \"routine-active\",\n      pendingProposalId: \"proposal-1\",\n      revision: 6,\n      unrefinedDirectAccept: false,\n    },\n    proposals: [{ id: \"proposal-1\", candidateRoutineVersionId: \"routine-1\", status: \"pending\" }],\n    routineVersions: [\"routine-1\", \"routine-active\"],\n    routineSources: { \"routine-1\": \"refined-module-1\", \"routine-active\": \"refined-previous\" },\n  }\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n      draftAlreadyCompleted: true,\n      confirmOutcome: \"stale_source\",\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status, \"already_completed\")\n  assert.equal(\n    result.status === \"already_completed\" ? result.routineProposalId : \"unset\",\n    \"proposal-1\",\n  )\n  // Nothing was activated and nothing was lost: the proposal is still there.\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-active\")\n  assert.equal(world.plan.pendingProposalId, \"proposal-1\")\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"pending\"],\n  )\n})",
+      "sha256": "3fd17358e199a32e48d7d3c2131ebd875dbe49ea0d975837f37ce5229bfd3660"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "an unconfirmable proposal the completion itself staged still fails loudly",
+      "line": 486,
+      "start": 18934,
+      "end": 19814,
+      "body": "test(\"an unconfirmable proposal the completion itself staged still fails loudly\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n      confirmOutcome: \"stale_source\",\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  // The invariant violation rolls the whole completion back.\n  assert.deepEqual(result, { status: \"temporarily_unavailable\" })\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-active\")\n  assert.deepEqual(world.routineVersions, [\"routine-active\"])\n  assert.equal(world.plan.revision, 4)\n})",
+      "sha256": "e8750380e6842f0e9f81c703348a170ed5f403274cd0a98b467cc3680d9c178f"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the direct-accept provenance is written by the same transaction that activates",
+      "line": 511,
+      "start": 19816,
+      "end": 20336,
+      "body": "test(\"the direct-accept provenance is written by the same transaction that activates\", async () => {\n  const world = emptyWorld(null)\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-1\",\n      refinementDrafts: [],\n      world,\n    }),\n  })\n\n  await stager.stage({ ...stageRequest, markUnrefinedDirectAccept: true })\n\n  assert.equal(world.plan.unrefinedDirectAccept, true)\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-1\")\n})",
+      "sha256": "24a4377705c27cd982039043b444f202c4d3fc9fdb8bceed4694d9f431ab6a5f"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a failing provenance write rolls the whole completion back",
+      "line": 527,
+      "start": 20338,
+      "end": 21032,
+      "body": "test(\"a failing provenance write rolls the whole completion back\", async () => {\n  const world = emptyWorld(null)\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-1\",\n      refinementDrafts: [],\n      world,\n      provenanceWriteFails: true,\n    }),\n  })\n\n  const result = await stager.stage({ ...stageRequest, markUnrefinedDirectAccept: true })\n\n  assert.deepEqual(result, { status: \"temporarily_unavailable\" })\n  assert.equal(world.plan.unrefinedDirectAccept, false)\n  assert.equal(world.plan.activeRoutineVersionId, null)\n  assert.deepEqual(world.routineVersions, [])\n  assert.equal(world.plan.revision, 4)\n})",
+      "sha256": "9f1bb8d985087e280f2f541bc9368b9f972aa8218693fd15f64f43af6ced17b0"
+    }
+  ],
+  "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": [
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a superseded refined version is stale without reading the refinement lineage",
+      "line": 69,
+      "start": 2056,
+      "end": 2574,
+      "body": "test(\"a superseded refined version is stale without reading the refinement lineage\", async () => {\n  const { client, reads } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [\n      {\n        module_projections: { habits: { needVersionId: ids.previous } },\n        result_refined_need_version_id: null,\n      },\n    ],\n  })\n\n  assert.equal(await classify(client, ids.previous), \"stale_target\")\n  assert.deepEqual(\n    reads.map((read) => read.table),\n    [\"personal_plans\"],\n  )\n})",
+      "sha256": "3d4769e7cde4d44731d5ec7dcd2b2b26d30ae76adf568819eb3606a2b5bfcc95"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a plan without a current refined version is stale rather than module-driven",
+      "line": 87,
+      "start": 2576,
+      "end": 2815,
+      "body": "test(\"a plan without a current refined version is stale rather than module-driven\", async () => {\n  const { client } = fakeAdmin({ plan: { current_refined_need_version_id: null } })\n  assert.equal(await classify(client), \"stale_target\")\n})",
+      "sha256": "47010e9b670b1a25a54b1cc385bdf24d3d30323417163eb681a9a2a135a196ba"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a missing plan row is stale rather than an exception",
+      "line": 92,
+      "start": 2817,
+      "end": 2996,
+      "body": "test(\"a missing plan row is stale rather than an exception\", async () => {\n  const { client } = fakeAdmin({ plan: null })\n  assert.equal(await classify(client), \"stale_target\")\n})",
+      "sha256": "c37d4e90917f3594b1b96efc549f958c3edbcd126bcadd1fa7938226426d461b"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a module projection naming the current version is module-driven, owner-scoped on both reads",
+      "line": 97,
+      "start": 2998,
+      "end": 3738,
+      "body": "test(\"a module projection naming the current version is module-driven, owner-scoped on both reads\", async () => {\n  const { client, reads } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [\n      {\n        module_projections: {\n          habits: { needVersionId: ids.current, projectedAtRevision: 4, stage3Handoff: false },\n        },\n        result_refined_need_version_id: null,\n      },\n    ],\n  })\n\n  assert.equal(await classify(client), \"module_driven\")\n  assert.deepEqual(reads, [\n    { table: \"personal_plans\", filters: { id: ids.plan, user_id: \"owner-a\" } },\n    {\n      table: \"personal_plan_refinement_drafts\",\n      filters: { personal_plan_id: ids.plan, user_id: \"owner-a\" },\n    },\n  ])\n})",
+      "sha256": "63075b0a58b458047280b71928fc9cb0f9e29153114250b4baff945a055fc6aa"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a completed module draft whose result is the current version is module-driven",
+      "line": 120,
+      "start": 3740,
+      "end": 4227,
+      "body": "test(\"a completed module draft whose result is the current version is module-driven\", async () => {\n  const { client } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [\n      {\n        module_projections: {\n          products: { needVersionId: ids.previous, projectedAtRevision: 2, stage3Handoff: true },\n        },\n        result_refined_need_version_id: ids.current,\n      },\n    ],\n  })\n\n  assert.equal(await classify(client), \"module_driven\")\n})",
+      "sha256": "850dbc9b7a50c3fe686f5f3e3d3fe5245ba83ed8bc0c2fa75b13769135140a3c"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a module-driven plan whose lineage names only other versions is not module-driven",
+      "line": 136,
+      "start": 4229,
+      "end": 4724,
+      "body": "test(\"a module-driven plan whose lineage names only other versions is not module-driven\", async () => {\n  const { client } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [\n      {\n        module_projections: {\n          habits: { needVersionId: ids.previous, projectedAtRevision: 1, stage3Handoff: false },\n        },\n        result_refined_need_version_id: ids.previous,\n      },\n    ],\n  })\n\n  assert.equal(await classify(client), \"not_module_driven\")\n})",
+      "sha256": "fa3c2a837153a0f87a31243fc52ad9f83410559bd03155f8531db2ecc62a7470"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a linear refinement completion carries no module lineage and stays on today's terminal path",
+      "line": 152,
+      "start": 4726,
+      "end": 5088,
+      "body": "test(\"a linear refinement completion carries no module lineage and stays on today's terminal path\", async () => {\n  const { client } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [{ module_projections: {}, result_refined_need_version_id: ids.current }],\n  })\n\n  assert.equal(await classify(client), \"not_module_driven\")\n})",
+      "sha256": "221a6080744df87ac49473fb3c4525509655bf5ea738d01b4e34811cba2d0de0"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "a plan with no refinement draft at all is not module-driven",
+      "line": 161,
+      "start": 5090,
+      "end": 5349,
+      "body": "test(\"a plan with no refinement draft at all is not module-driven\", async () => {\n  const { client } = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    drafts: [],\n  })\n\n  assert.equal(await classify(client), \"not_module_driven\")\n})",
+      "sha256": "312968602b658451e860ed4be63e604d4c241109a8fa101c71d287ef869a6a01"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts",
+      "name": "read failures surface instead of being misclassified as not module-driven",
+      "line": 170,
+      "start": 5351,
+      "end": 5837,
+      "body": "test(\"read failures surface instead of being misclassified as not module-driven\", async () => {\n  const planFailure = fakeAdmin({ planError: new Error(\"plan read failed\") })\n  await assert.rejects(() => classify(planFailure.client), /plan read failed/)\n\n  const draftFailure = fakeAdmin({\n    plan: { current_refined_need_version_id: ids.current },\n    draftsError: new Error(\"draft read failed\"),\n  })\n  await assert.rejects(() => classify(draftFailure.client), /draft read failed/)\n})",
+      "sha256": "465a8f022bf97be6c09797ff7a7fb85ed8b722ae5edb1c07361f25417d655046"
+    }
+  ],
+  "tests/personal-plan/refinement-recompute/production-deps.test.ts": [
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-deps.test.ts",
+      "name": "the production routine-state reader returns null with a single read when the plan has no active routine",
+      "line": 64,
+      "start": 1641,
+      "end": 2189,
+      "body": "test(\"the production routine-state reader returns null with a single read when the plan has no active routine\", async () => {\n  const { client, calls } = fakeAdmin({ plan: { id: ids.plan, active_routine_version_id: null } })\n  const deps = createProductionStage3RecomputeDeps({\n    userId: \"owner-1\",\n    admin: client as unknown as never,\n  })\n  const result = await deps.routineState.loadActiveRoutineVersion({\n    userId: \"owner-1\",\n    personalPlanId: ids.plan,\n  })\n  assert.equal(result, null)\n  assert.deepEqual(calls, [\"personal_plans\"])\n})",
+      "sha256": "32aeb23ac48a981534a7d404131d54b27c660c6edf78753c66184ddcd252a9d5"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-deps.test.ts",
+      "name": "the production routine-state reader composes the plan and version rows, translating undefined source-draft fields to null",
+      "line": 78,
+      "start": 2191,
+      "end": 3115,
+      "body": "test(\"the production routine-state reader composes the plan and version rows, translating undefined source-draft fields to null\", async () => {\n  const { client } = fakeAdmin({\n    plan: { id: ids.plan, active_routine_version_id: ids.active },\n    version: {\n      id: ids.active,\n      payload: routinePayload(),\n      source_refined_need_version_id: ids.refined,\n      // source_product_draft_id / _revision intentionally absent (legacy row).\n    },\n  })\n  const deps = createProductionStage3RecomputeDeps({\n    userId: \"owner-1\",\n    admin: client as unknown as never,\n  })\n  const result = await deps.routineState.loadActiveRoutineVersion({\n    userId: \"owner-1\",\n    personalPlanId: ids.plan,\n  })\n  assert.deepEqual(result, {\n    routineVersionId: ids.active,\n    payload: routinePayload(),\n    source: {\n      refinedVersionId: ids.refined,\n      productDraftId: null,\n      productDraftRevision: null,\n    },\n  })\n})",
+      "sha256": "b719cf50345717aa1121946f39566ea374a29f6cf6de6724ff4126807e84e224"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-deps.test.ts",
+      "name": "the production routine-state reader carries real source-draft fields through unchanged",
+      "line": 107,
+      "start": 3117,
+      "end": 3926,
+      "body": "test(\"the production routine-state reader carries real source-draft fields through unchanged\", async () => {\n  const { client } = fakeAdmin({\n    plan: { id: ids.plan, active_routine_version_id: ids.active },\n    version: {\n      id: ids.active,\n      payload: routinePayload(),\n      source_refined_need_version_id: ids.refined,\n      source_product_draft_id: \"draft-1\",\n      source_product_draft_revision: 3,\n    },\n  })\n  const deps = createProductionStage3RecomputeDeps({\n    userId: \"owner-1\",\n    admin: client as unknown as never,\n  })\n  const result = await deps.routineState.loadActiveRoutineVersion({\n    userId: \"owner-1\",\n    personalPlanId: ids.plan,\n  })\n  assert.deepEqual(result?.source, {\n    refinedVersionId: ids.refined,\n    productDraftId: \"draft-1\",\n    productDraftRevision: 3,\n  })\n})",
+      "sha256": "0896be03e1c0a5a2c6b9991ccec4a6ba68f3186844436fa036089499eebac17d"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-deps.test.ts",
+      "name": "the production routine-state reader rejects a routine version row missing its source refined-need id",
+      "line": 133,
+      "start": 3928,
+      "end": 4468,
+      "body": "test(\"the production routine-state reader rejects a routine version row missing its source refined-need id\", async () => {\n  const { client } = fakeAdmin({\n    plan: { id: ids.plan, active_routine_version_id: ids.active },\n    version: { id: ids.active, payload: routinePayload() },\n  })\n  const deps = createProductionStage3RecomputeDeps({\n    userId: \"owner-1\",\n    admin: client as unknown as never,\n  })\n  await assert.rejects(() =>\n    deps.routineState.loadActiveRoutineVersion({ userId: \"owner-1\", personalPlanId: ids.plan }),\n  )\n})",
+      "sha256": "e3d8565664cda904b58b77a68067ff33069730cbf73ffb2a962f95538b28b467"
+    }
+  ],
+  "tests/personal-plan/refinement-recompute/production-lane.test.ts": [
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-lane.test.ts",
+      "name": "a rebuilt draft for a person who owns products completes and activates",
+      "line": 512,
+      "start": 17143,
+      "end": 18135,
+      "body": "test(\"a rebuilt draft for a person who owns products completes and activates\", async () => {\n  const world = createWorld({ retainedProduct: false })\n\n  const result = await recomputeRoutineAfterHabitsCompletion(createDeps(world), {\n    userId: OWNER,\n    personalPlanId: PLAN_ID,\n    refinedVersionId: REFINED_NEW,\n  })\n\n  assert.deepEqual(result, { status: \"applied\", routineVersionId: \"routine-2\" })\n  assert.equal(world.activeRoutine.source.refinedVersionId, REFINED_NEW)\n\n  const rebuilt = world.drafts.get(`draft-${REFINED_NEW}`)!\n  assert.equal(rebuilt.status, \"completed\")\n  // The person's own product survived the recompute.\n  assert.deepEqual(\n    rebuilt.roleAssignments.map((assignment) => [assignment.category, ...assignment.roles]),\n    [[\"conditioner\", \"conditioner_rinse_out\"]],\n  )\n  assert.deepEqual(\n    rebuilt.decisions.map((decision) => [decision.decisionKey, decision.choiceState]),\n    [[\"decision:conditioner:conditioner_rinse_out:capture-a\", \"owned_active\"]],\n  )\n})",
+      "sha256": "11be136c6e100ec4989b0faf1aef2173fe5585ae1d34c4d0d20ac7b1a3d6b559"
+    },
+    {
+      "file": "tests/personal-plan/refinement-recompute/production-lane.test.ts",
+      "name": "a retained (unassigned) product's disposition never blocks the recompute",
+      "line": 537,
+      "start": 18137,
+      "end": 19030,
+      "body": "test(\"a retained (unassigned) product's disposition never blocks the recompute\", async () => {\n  const world = createWorld({ retainedProduct: true })\n\n  const result = await recomputeRoutineAfterHabitsCompletion(createDeps(world), {\n    userId: OWNER,\n    personalPlanId: PLAN_ID,\n    refinedVersionId: REFINED_NEW,\n  })\n\n  assert.deepEqual(result, { status: \"applied\", routineVersionId: \"routine-2\" })\n\n  const rebuilt = world.drafts.get(`draft-${REFINED_NEW}`)!\n  const dispositions = rebuilt.inventoryDispositions ?? []\n  assert.deepEqual(\n    dispositions.map((disposition) => [disposition.capturedProductId, disposition.acknowledged]),\n    [[\"capture-b\", true]],\n  )\n  // Derived by the real state machine, not hand-written by the rehydration.\n  assert.match(dispositions[0]!.authorityFingerprint, /^[0-9a-f]{64}$/)\n  assert.equal(dispositions[0]!.reason, \"not_assigned_to_final_role\")\n})",
+      "sha256": "2cef1341dd5fed1003c21eb0a296caa4267ef23bebe79bcf655e32697b5f8771"
+    }
+  ],
+  "tests/personal-plan-refinement-recompute-activation-migration.test.ts": [
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the first Routine still activates without any proposal (no active Routine yet)",
+      "line": 202,
+      "start": 7658,
+      "end": 8929,
+      "body": "test(\"the first Routine still activates without any proposal (no active Routine yet)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-1\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(result.routineProposalId, null)\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n})",
+      "sha256": "054ca5abaa2369be9cb40f8a0477cb99f1cd4b09bd07295cbcccae946cc2b271"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "a module-driven recompute activates the successor immediately instead of proposing it",
+      "line": 238,
+      "start": 8931,
+      "end": 11998,
+      "body": "test(\"a module-driven recompute activates the successor immediately instead of proposing it\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the module-driven completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Module completion writes lineage on a SEPARATE draft id — a second\n  // in_progress draft sharing the SAME base initial need is blocked by the\n  // partial unique index, so this uses a fresh draft row instead.\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n  })\n  const moduleDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: moduleRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: moduleRefined,\n      sourceDraftRevision: moduleDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "e1e5eb158aebc6f15ddd7e6ce87c796555fbf72854a9ec59f851aee74c69cdf7"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "replaying a module-driven completion reports the activation, not a pending proposal (self-exclusion)",
+      "line": 320,
+      "start": 12000,
+      "end": 15008,
+      "body": "test(\"replaying a module-driven completion reports the activation, not a pending proposal (self-exclusion)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-3\")\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n  })\n  const moduleDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: moduleRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n  const portfolio = portfolioSnapshot({\n    personalPlanId: initial.personalPlanId,\n    refinedVersionId: moduleRefined,\n    sourceDraftRevision: moduleDraft.revision,\n  })\n  const first = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio,\n  })\n  assert.equal(first.status, \"completed\")\n\n  // Same request, replayed (e.g. the client never saw the first response).\n  const replay = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio,\n  })\n  assert.equal(replay.status, \"already_completed\")\n  assert.equal(\n    replay.routineProposalId,\n    null,\n    \"the accepted proposal is nulled out on replay, not re-reported\",\n  )\n  assert.equal(replay.routineVersionId, first.routineVersionId)\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, first.routineVersionId)\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n    \"the replay must not create or touch a second proposal\",\n  )\n})",
+      "sha256": "eda36707858ba0deefc63c28fe2d972e0cb592a809ea39605320386cc6e2924a"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "a habits-module-driven recompute activates the successor immediately too (habits-shaped lineage)",
+      "line": 405,
+      "start": 15010,
+      "end": 17867,
+      "body": "test(\"a habits-module-driven recompute activates the successor immediately too (habits-shaped lineage)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2b\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the module-driven completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // habits-module completion writes its lineage entry under the `habits` key\n  // of module_projections instead of `products` — condition 1 of the gate\n  // reads ANY module_projections entry, not just the products one.\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n    module: \"habits\",\n  })\n  const moduleDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: moduleRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: moduleRefined,\n      sourceDraftRevision: moduleDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed — habits lineage gates identically to products\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n})",
+      "sha256": "42271eb63495d6ade2859b276136117ff0b7299edf7cfd0761ed62fa451954fa"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)",
+      "line": 479,
+      "start": 17869,
+      "end": 21298,
+      "body": "test(\"the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2c\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the closing completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Canonical order: Modul-1 (products) projects a refined version WITHOUT\n  // closing the draft, then the draft is CLOSED. The refined version the\n  // Stage-3 completion below actually targets is the CLOSING one\n  // (result_refined_need_version_id), which never appears as a\n  // module_projections VALUE — only `refinement.result_refined_need_version_id\n  // = v_refined_id` can satisfy condition 1 here.\n  const closingRefined = await closingCompletionRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    moduleInputHash: \"c\".repeat(64),\n    closeInputHash: \"d\".repeat(64),\n  })\n  const closingDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: closingRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: closingDraft.id,\n    expectedDraftRevision: closingDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: closingRefined,\n      sourceDraftRevision: closingDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "491d41882b7c9cf135c396181a4bf04ad5ddb4a8afaf891701e0702b8f1dad64"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "today's linear (non-module) recompute keeps its pending proposal — the gate does not fire",
+      "line": 565,
+      "start": 21300,
+      "end": 24005,
+      "body": "test(\"today's linear (non-module) recompute keeps its pending proposal — the gate does not fire\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-4\")\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n\n  // A SECOND initial-need version staless the first linear draft, letting a\n  // fresh in_progress draft coexist, WITHOUT disturbing the Routine already\n  // activated above (only refinement/product drafts are staled by an\n  // initial-need move, never the active Routine pointer).\n  const initial2 = await createInitialNeed(pg, { userId: USER_ID, inputHash: \"d\".repeat(64) })\n  const linearRefined2 = await linearRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial2.needVersionId,\n    inputHash: \"e\".repeat(64),\n  })\n  const linearDraft2 = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: linearRefined2,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: linearDraft2.id,\n    expectedDraftRevision: linearDraft2.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: linearRefined2,\n      sourceDraftRevision: linearDraft2.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.ok(\n    result.routineProposalId,\n    \"no module lineage backs this version, so the gate must not fire\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(\n    after.active_routine_version_id,\n    midPlan.active_routine_version_id,\n    \"unchanged: still pending\",\n  )\n  assert.equal(after.pending_routine_proposal_id, result.routineProposalId)\n})",
+      "sha256": "87d71b5a0b698961e75e2001c42c412e398815c9260b3e88882ff541cbe1ff37"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the direct-accept provenance write is atomic with activation",
+      "line": 638,
+      "start": 24007,
+      "end": 25352,
+      "body": "test(\"the direct-accept provenance write is atomic with activation\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-5\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n  assert.equal(plan.unrefined_direct_accept, false)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n    markUnrefinedDirectAccept: true,\n  })\n  assert.equal(result.status, \"completed\")\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.unrefined_direct_accept, true)\n  assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )\n})",
+      "sha256": "c4cbadb4e0a765b38f9fc2510a767838bb975d44d9d53c5d55a3f8a34e347463"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "an already_completed replay whose staged proposal has since gone stale degrades to reporting it, without a RAISE",
+      "line": 679,
+      "start": 25354,
+      "end": 32085,
+      "body": "test(\"an already_completed replay whose staged proposal has since gone stale degrades to reporting it, without a RAISE\", async (t) => {\n  // This state is only reachable via a genuine race between the ORIGINAL\n  // completion (which staged the proposal and gated on module lineage) and\n  // something ELSE bumping the plan's source_revision before a RETRY of the\n  // SAME request lands. PGlite is single-connection, so the race itself\n  // cannot be reproduced live; the downstream row state it would leave behind\n  // is constructed directly here (a targeted mutation of INPUT ROWS, not of\n  // the migration under test) to prove `personal_plan_complete_draft_activate_v2`\n  // really does take the \"degrade, don't raise\" branch — see the migration's\n  // own comment: \"a non-accepted outcome is a recoverable state, not an\n  // invariant violation\" for the `already_completed` status specifically.\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-6\")\n\n  // A real, already-active Routine (unrelated to the module lineage below).\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activatedPrevious = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activatedPrevious.status, \"completed\")\n  const routinePreviousId = activatedPrevious.routineVersionId!\n\n  // A module-driven refined version whose Stage-3 draft is hand-set to\n  // 'completed', with the portfolio/routine/proposal rows a real completion\n  // would have written — a PENDING proposal, exactly as if the original\n  // transaction's gate had NOT yet confirmed it.\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n  })\n  const moduleDraftId = id(4, 4)\n  await pg.query(\n    `INSERT INTO public.personal_plan_product_drafts\n       (id, user_id, personal_plan_id, refined_need_version_id, contract_version, status, revision)\n     VALUES ($1, $2, $3, $4, 1, 'completed', 0)`,\n    [moduleDraftId, USER_ID, initial.personalPlanId, moduleRefined],\n  )\n  const portfolioId = id(5, 5)\n  await pg.query(\n    `INSERT INTO public.personal_plan_portfolio_versions\n       (id, user_id, personal_plan_id, refined_need_version_id, source_product_draft_id,\n        source_product_draft_revision, schema_version, category_authority_versions, content_hash, snapshot)\n     VALUES ($1, $2, $3, $4, $5, 0, 1, '{}'::jsonb, $6, '{}'::jsonb)`,\n    [portfolioId, USER_ID, initial.personalPlanId, moduleRefined, moduleDraftId, \"a\".repeat(64)],\n  )\n  const routineCandidateId = id(6, 6)\n  await pg.query(\n    `INSERT INTO public.personal_plan_routine_versions\n       (id, user_id, personal_plan_id, source_refined_need_version_id, source_portfolio_version_id,\n        source_product_draft_id, source_product_draft_revision, schema_version, compiler_version,\n        authority_versions, source_fingerprint, payload_hash, payload)\n     VALUES ($1, $2, $3, $4, $5, $6, 0, 1, 'compiler-v1', '{}'::jsonb, 'fp-candidate', $7, '{}'::jsonb)`,\n    [\n      routineCandidateId,\n      USER_ID,\n      initial.personalPlanId,\n      moduleRefined,\n      portfolioId,\n      moduleDraftId,\n      \"b\".repeat(64),\n    ],\n  )\n  const stagedProposalSourceRevision = (await readPlan(pg, initial.personalPlanId)).source_revision\n  const proposalId = id(7, 7)\n  await pg.query(\n    `INSERT INTO public.personal_plan_routine_proposals\n       (id, user_id, personal_plan_id, base_routine_version_id, candidate_routine_version_id,\n        origin, status, source_revision, source_fingerprint, proposal_fingerprint, delta)\n     VALUES ($1, $2, $3, $4, $5, 'stage3_completion', 'pending', $6, 'fp-candidate', $7, '{}'::jsonb)`,\n    [\n      proposalId,\n      USER_ID,\n      initial.personalPlanId,\n      routinePreviousId,\n      routineCandidateId,\n      stagedProposalSourceRevision,\n      \"c\".repeat(64),\n    ],\n  )\n  await pg.query(\n    \"UPDATE public.personal_plans SET pending_routine_proposal_id = $1 WHERE id = $2\",\n    [proposalId, initial.personalPlanId],\n  )\n\n  // Something else observes a source change after the proposal was staged —\n  // a real, additive bump via the actual enqueue RPC, exactly what would make\n  // the proposal's recorded source_revision stale.\n  await pg.query(\n    `SELECT public.personal_plan_enqueue_routine_source_change($1::uuid, $2::uuid, 'user_product', 'unrelated-change')`,\n    [USER_ID, initial.personalPlanId],\n  )\n  const staleCheckPlan = await readPlan(pg, initial.personalPlanId)\n  assert.notEqual(\n    staleCheckPlan.source_revision,\n    stagedProposalSourceRevision,\n    \"precondition: source moved on\",\n  )\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraftId,\n    // already_completed short-circuits before either expected-revision is\n    // checked, so these values are deliberately arbitrary.\n    expectedDraftRevision: 999,\n    expectedSourceRevision: 999,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: moduleRefined,\n      sourceDraftRevision: 0,\n    }),\n  })\n\n  assert.equal(result.status, \"already_completed\")\n  assert.equal(\n    result.routineProposalId,\n    proposalId,\n    \"the stale proposal is reported, not silently dropped\",\n  )\n  assert.equal(result.routineVersionId, routineCandidateId)\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, routinePreviousId, \"nothing was activated\")\n  assert.equal(\n    after.pending_routine_proposal_id,\n    proposalId,\n    \"the pending proposal survives untouched\",\n  )\n\n  const proposalRow = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE id = $1\",\n    [proposalId],\n  )\n  assert.equal(\n    proposalRow.rows[0]!.status,\n    \"pending\",\n    \"confirm's stale_source outcome must not flip the proposal\",\n  )\n})",
+      "sha256": "fd577f490d3be2a85180886c5edd808db2f33952f43b0066553945181ca582ca"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "a returning (A→B→A) refined version can re-activate its historical Routine through the existing RPCs",
+      "line": 857,
+      "start": 32990,
+      "end": 39754,
+      "body": "test(\"a returning (A→B→A) refined version can re-activate its historical Routine through the existing RPCs\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-flip\")\n  // ONE habits draft, re-answered twice — the real shape of a mind change. The\n  // partial unique index allows only one open refinement draft per base initial\n  // need, and a module completion deliberately leaves the draft open at its\n  // recorded revision, so changing an answer (which bumps the draft revision)\n  // is what makes the next completion a genuine new projection instead of the\n  // replay branch.\n  const habitsDraftId = id(2, 2)\n  await insertOpenRefinementDraft(pg, {\n    draftId: habitsDraftId,\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n  })\n\n  async function completeHabitsModule(expectedRevision: number, inputHash: string) {\n    const result = await completeStage2Module(pg, {\n      userId: USER_ID,\n      planId: initial.personalPlanId,\n      draftId: habitsDraftId,\n      module: \"habits\",\n      expectedRevision,\n      inputHash,\n    })\n    assert.equal(result.outcome, \"completed\")\n    return result.refinedNeedVersionId!\n  }\n\n  /** The person edits an answer: the draft revision moves on. */\n  async function reAnswer() {\n    await pg.query(\n      \"UPDATE public.personal_plan_refinement_drafts SET revision = revision + 1 WHERE id = $1\",\n      [habitsDraftId],\n    )\n  }\n\n  async function activateVersion(refined: string) {\n    const draft = await loadProductDraft(pg, {\n      userId: USER_ID,\n      planId: initial.personalPlanId,\n      refinedNeedVersionId: refined,\n    })\n    const plan = await readPlan(pg, initial.personalPlanId)\n    const result = await activateV2(pg, {\n      userId: USER_ID,\n      planId: initial.personalPlanId,\n      productDraftId: draft.id,\n      expectedDraftRevision: draft.revision,\n      expectedSourceRevision: plan.source_revision,\n      portfolio: portfolioSnapshot({\n        personalPlanId: initial.personalPlanId,\n        refinedVersionId: refined,\n        sourceDraftRevision: draft.revision,\n      }),\n    })\n    assert.equal(result.status, \"completed\")\n    return { refined, draftId: draft.id, routineVersionId: result.routineVersionId! }\n  }\n\n  // A, then B. Both are ordinary module-driven recomputes that activate.\n  const versionA = await activateVersion(await completeHabitsModule(0, \"a\".repeat(64)))\n  await reAnswer()\n  const versionB = await activateVersion(await completeHabitsModule(1, \"b\".repeat(64)))\n  assert.notEqual(versionA.refined, versionB.refined)\n  assert.equal(\n    (await readPlan(pg, initial.personalPlanId)).active_routine_version_id,\n    versionB.routineVersionId,\n  )\n\n  // Back to A: the module RPC returns the EXISTING version id and moves the\n  // plan's head back to it, without touching the completed draft or Routine.\n  await reAnswer()\n  const backToA = await completeHabitsModule(2, \"a\".repeat(64))\n  assert.equal(backToA, versionA.refined, \"the input-hash dedupe returns the FIRST version\")\n  const flipped = await readPlan(pg, initial.personalPlanId)\n  assert.equal(flipped.current_refined_need_version_id, versionA.refined)\n  assert.equal(\n    flipped.active_routine_version_id,\n    versionB.routineVersionId,\n    \"precondition: the plan still runs on B while its head is back on A\",\n  )\n\n  // Draft acquisition lands on A's own, already COMPLETED draft — the state\n  // that made `complete()` a pure receipt replay.\n  const historicalDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: versionA.refined,\n  })\n  assert.equal(historicalDraft.id, versionA.draftId)\n  assert.equal(historicalDraft.status, \"completed\")\n\n  const historical = await loadRoutineVersionForProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: historicalDraft.id,\n  })\n  assert.ok(historical, \"A's Routine version still exists; it is only inactive\")\n\n  // The fix, driven through the REAL service against real Postgres.\n  const client = pgliteReactivationClient(pg) as unknown as RoutineReactivationClient\n  const reactivated = await reactivateRoutineForProductDraft({\n    client,\n    userId: USER_ID,\n    personalPlanId: initial.personalPlanId,\n    productDraftId: historicalDraft.id,\n  })\n  assert.deepEqual(\n    reactivated.status,\n    \"activated\",\n    \"the stale_source guards accept a historical completed draft on the plan's CURRENT head\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.pending_routine_proposal_id, null)\n  assert.notEqual(after.active_routine_version_id, versionB.routineVersionId)\n  assert.equal(await activeSourceVersion(pg, after), versionA.refined, \"the plan runs on A again\")\n\n  // ── The SECOND round trip: A→B→A→B→A ──────────────────────────────────────\n  //\n  // This is where a deterministic proposal fingerprint dead-ended. The first\n  // re-activation left an ACCEPTED proposal; without something per-transition\n  // in `p_direct_operation_keys`, the second return to A re-derives that same\n  // fingerprint, the stager answers `already_staged` for the accepted proposal\n  // without re-pending it (20260808070000:152-179), and the confirm answers\n  // `stale_proposal` (20260808062603:405-412) — on deterministic inputs, so\n  // every retry reproduces it and the outbox claim re-arms forever.\n  async function flipTo(inputHash: string, expectedRevision: number, refined: string) {\n    await reAnswer()\n    assert.equal(await completeHabitsModule(expectedRevision, inputHash), refined)\n    const draft = await loadProductDraft(pg, {\n      userId: USER_ID,\n      planId: initial.personalPlanId,\n      refinedNeedVersionId: refined,\n    })\n    assert.equal(draft.status, \"completed\")\n    return reactivateRoutineForProductDraft({\n      client,\n      userId: USER_ID,\n      personalPlanId: initial.personalPlanId,\n      productDraftId: draft.id,\n    })\n  }\n\n  const backToB = await flipTo(\"b\".repeat(64), 3, versionB.refined)\n  assert.equal(backToB.status, \"activated\")\n  assert.equal(\n    await activeSourceVersion(pg, await readPlan(pg, initial.personalPlanId)),\n    versionB.refined,\n  )\n\n  const backToASecondTime = await flipTo(\"a\".repeat(64), 4, versionA.refined)\n  assert.equal(\n    backToASecondTime.status,\n    \"activated\",\n    \"a repeated flip stages a FRESH proposal instead of re-finding the accepted one\",\n  )\n  const settled = await readPlan(pg, initial.personalPlanId)\n  assert.equal(settled.pending_routine_proposal_id, null)\n  assert.equal(\n    await activeSourceVersion(pg, settled),\n    versionA.refined,\n    \"the plan runs on A again after the SECOND return, not just the first\",\n  )\n})",
+      "sha256": "0bb38ec13a85ffc42dd518b6f4d7206b82a79f873c34d7b2026cff6eeca0923b"
+    },
+    {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "EXECUTE is granted only to service_role",
+      "line": 1025,
+      "start": 39756,
+      "end": 41401,
+      "body": "test(\"EXECUTE is granted only to service_role\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const signature =\n    \"public.personal_plan_complete_draft_activate_v2(uuid,uuid,uuid,bigint,bigint,integer,jsonb,integer,text,jsonb,text,jsonb,jsonb,boolean)\"\n  const privileges = await pg.query<{ service: boolean; anon: boolean; authenticated: boolean }>(\n    `SELECT\n       has_function_privilege('service_role', $1, 'EXECUTE') AS service,\n       has_function_privilege('anon', $1, 'EXECUTE') AS anon,\n       has_function_privilege('authenticated', $1, 'EXECUTE') AS authenticated`,\n    [signature],\n  )\n  assert.deepEqual(privileges.rows[0], { service: true, anon: false, authenticated: false })\n\n  const initial = await seedPlan(pg, \"seed-7\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  await pg.exec(\"SET ROLE anon\")\n  await assert.rejects(\n    () =>\n      activateV2(pg, {\n        userId: USER_ID,\n        planId: initial.personalPlanId,\n        productDraftId: draft.id,\n        expectedDraftRevision: draft.revision,\n        expectedSourceRevision: 0,\n        portfolio: portfolioSnapshot({\n          personalPlanId: initial.personalPlanId,\n          refinedVersionId: refined,\n          sourceDraftRevision: draft.revision,\n        }),\n      }),\n    /permission denied for function/,\n  )\n  await pg.exec(\"RESET ROLE\")\n})",
+      "sha256": "b4e89be462dfe4122105518b90aed7f216d714e4043a8fad27e5d2243ce0fbf0"
+    }
+  ],
+  "tests/personal-plan/persistence/routine-proposal-stager.test.ts": [
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter always calls the activation-aware delegating RPC",
+      "line": 30,
+      "start": 752,
+      "end": 2343,
+      "body": "test(\"routine-proposal adapter always calls the activation-aware delegating RPC\", async () => {\n  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []\n  const client: RoutineProposalRpcClient = {\n    async rpc(fn, args) {\n      calls.push({ fn, args })\n      return {\n        data: {\n          status: \"completed\",\n          portfolioVersionId: \"portfolio-1\",\n          routineVersionId: \"routine-1\",\n          routineProposalId: \"proposal-1\",\n          revision: 5,\n        },\n        error: null,\n      }\n    },\n  }\n\n  const result = await createRoutineProposalStagerRpcAdapter({ client }).stage(request)\n\n  assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: \"proposal-1\",\n    revision: 5,\n  })\n  assert.deepEqual(calls, [\n    {\n      fn: \"personal_plan_complete_draft_activate_v2\",\n      args: {\n        p_user_id: \"user-1\",\n        p_personal_plan_id: \"plan-1\",\n        p_product_draft_id: \"draft-1\",\n        p_expected_draft_revision: 4,\n        p_expected_source_revision: 7,\n        p_portfolio_schema_version: 1,\n        p_portfolio_snapshot: { personalPlanId: \"plan-1\", plannedPurchases: [] },\n        p_routine_schema_version: 1,\n        p_routine_compiler_version: \"routine-v1\",\n        p_routine_authority_versions: { shampoo: \"authority-1\" },\n        p_routine_source_fingerprint: \"source-fingerprint\",\n        p_routine_payload: { steps: [] },\n        p_proposal_delta: { kind: \"initial\" },\n        p_mark_unrefined_direct_accept: false,\n      },\n    },\n  ])\n})",
+      "sha256": "ae9a65d861536c88cf0c2c7c5d8889bedae87f0420e64ae7661f5d1fe88ff09e"
+    },
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter carries the compiler's fresh source CAS token",
+      "line": 80,
+      "start": 2345,
+      "end": 2940,
+      "body": "test(\"routine-proposal adapter carries the compiler's fresh source CAS token\", async () => {\n  const calls: Array<Record<string, unknown>> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(_fn, args) {\n        calls.push(args)\n        return {\n          data: { status: \"source_revision_conflict\", currentSourceRevision: 8 },\n          error: null,\n        }\n      },\n    },\n  }).stage(request)\n\n  assert.deepEqual(result, { status: \"source_revision_conflict\", currentSourceRevision: 8 })\n  assert.equal(calls[0]?.p_expected_source_revision, 7)\n})",
+      "sha256": "d4fab5d53485e463161f74acd281fb0326b69bfead6da0fef63f99ea355caa10"
+    },
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "activation-aware delegating RPC permits no proposal pointer for first activation",
+      "line": 98,
+      "start": 2942,
+      "end": 3874,
+      "body": "test(\"activation-aware delegating RPC permits no proposal pointer for first activation\", async () => {\n  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(fn, args) {\n        calls.push({ fn, args })\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage(request)\n\n  assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })\n  assert.equal(calls[0]?.fn, \"personal_plan_complete_draft_activate_v2\")\n  assert.equal(calls[0]?.args.p_expected_source_revision, 7)\n})",
+      "sha256": "5df2815e3234412fc428aebb42d6d53df1bbe4ea2504d78e4859811d08066014"
+    },
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter preserves stable SQL outcomes and maps transport failures",
+      "line": 129,
+      "start": 3876,
+      "end": 4594,
+      "body": "test(\"routine-proposal adapter preserves stable SQL outcomes and maps transport failures\", async () => {\n  const adapter = createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc() {\n        throw new Error(\"network unavailable\")\n      },\n    },\n  })\n  assert.deepEqual(await adapter.stage(request), { status: \"temporarily_unavailable\" })\n\n  assert.deepEqual(\n    parseRoutineProposalStageResult({ status: \"invalid_source\", reasonCode: \"draft_not_active\" }),\n    { ok: true, value: { status: \"invalid_source\", reasonCode: \"draft_not_active\" } },\n  )\n  assert.deepEqual(parseRoutineProposalStageResult({ status: \"snapshot_too_large\" }), {\n    ok: true,\n    value: { status: \"snapshot_too_large\" },\n  })\n})",
+      "sha256": "61dec1b1a2092208f90a03578c31e3f8a1207f157aa1d3c98e5d39e89610922f"
+    },
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter rejects invalid bounded payloads before its sole RPC",
+      "line": 149,
+      "start": 4596,
+      "end": 5107,
+      "body": "test(\"routine-proposal adapter rejects invalid bounded payloads before its sole RPC\", async () => {\n  let calls = 0\n  const adapter = createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc() {\n        calls += 1\n        return { data: null, error: null }\n      },\n    },\n  })\n\n  assert.deepEqual(\n    await adapter.stage({\n      ...request,\n      candidate: { ...request.candidate, payload: new Date() as never },\n    }),\n    { status: \"temporarily_unavailable\" },\n  )\n  assert.equal(calls, 0)\n})",
+      "sha256": "b46f4f8d69390e92264e220c55659cd5c8a2a4aa3d1377ac494c21919da9ec90"
+    },
+    {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter forwards the atomic direct-accept provenance flag",
+      "line": 170,
+      "start": 5109,
+      "end": 5839,
+      "body": "test(\"routine-proposal adapter forwards the atomic direct-accept provenance flag\", async () => {\n  const calls: Array<Record<string, unknown>> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(_fn, args) {\n        calls.push(args)\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage({ ...request, markUnrefinedDirectAccept: true })\n\n  assert.equal(result.status, \"completed\")\n  assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)\n})",
+      "sha256": "6ca818625a36d3264b384a51bad59da6a948f1f8c66838c5c9c69e1d40e2fc23"
+    }
+  ]
+}

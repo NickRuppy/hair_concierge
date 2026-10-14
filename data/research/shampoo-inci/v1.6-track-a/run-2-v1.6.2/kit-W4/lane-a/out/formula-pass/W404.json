@@ -1,0 +1,256 @@
+{
+ "blindId": "W404",
+ "inciFingerprintSha256": "3abc85e9d0d10aa7a4a09ed68635d66990e6389dbd33f9d7278ef1107576678f",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "300 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Sodium Xylenesulfonate",
+   "4. Cocamidopropyl Betaine",
+   "5. Sodium Citrate",
+   "6. Dimethiconol",
+   "7. Parfum",
+   "8. Citric Acid",
+   "9. Cocamide MEA",
+   "10. Glycol Distearate",
+   "11. Dimethicone",
+   "12. Sodium Chloride",
+   "13. Guar Hydroxypropyltrimonium Chloride",
+   "14. Piroctone Olamine",
+   "15. Sodium Benzoate",
+   "16. TEA-Dodecylbenzenesulfonate",
+   "17. Sodium Salicylate",
+   "18. Trideceth-10",
+   "19. Tetrasodium EDTA",
+   "20. Panthenol",
+   "21. Sodium Hydroxide",
+   "22. Hexyl Cinnamal",
+   "23. Histidine",
+   "24. Triethylene Glycol",
+   "25. Propylene Glycol",
+   "26. Benzyl Alcohol"
+  ],
+  "e3Point": "Parfum@7 (fragrance marker); prominent = positions 1-6"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, one prominent buffer Cocamidopropyl Betaine@4, no prominent reinforcing route. TEA-Dodecylbenzenesulfonate@16 is a strong anionic but after the E3 point (recorded, not reinforcing, C4). Sodium Xylenesulfonate@3 is a hydrotrope (no route).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "`high` by C2: early (prominent) silicone Dimethiconol@6, plus cationic polymer Guar Hydroxypropyltrimonium Chloride@13, pearlizing Glycol Distearate@10 and a deliberate humectant route Panthenol@20 (own INCI entry, R11 list); supporting Dimethicone@11. Confidence moderate: the guar, pearlizer and the only humectant all sit after the fragrance marker (Panthenol near the end), so the C2 complement rests on late elements and realistic dose unknowns could leave one bounded silicone system (`moderate`).",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "E3",
+    "5",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@13"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [
+     "Dimethiconol@6",
+     "Dimethicone@11"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2 (defining), TEA-Dodecylbenzenesulfonate@16 (non-prominent)",
+     "amphoteric: Cocamidopropyl Betaine@4"
+    ],
+    "humectantContext": [
+     "Panthenol@20",
+     "Triethylene Glycol@24, Propylene Glycol@25 (solvents)"
+    ],
+    "excluded": [
+     "Glycol Distearate@10 (pearlizing wax)",
+     "Cocamide MEA@9 (alkanolamide thickener)",
+     "Trideceth-10@18 (ethoxylate, solubilizer)",
+     "Sodium Xylenesulfonate@3 (hydrotrope)",
+     "Histidine@23 (amino acid, no deposition role)",
+     "Tetrasodium EDTA@19 (chelator)",
+     "Hexyl Cinnamal@22 (fragrance allergen)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "7 Parfum",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point 7 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Parfum@7 is the only candidate up to the cap: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap -> plausible; W-line = cap",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate — silicone system (Dimethiconol + Dimethicone) with a cationic guar; no lipid, no protein.",
+   "persistence": "moderate — dimethiconol/dimethicone are persistent silicones, delivered by a guar coacervate; but no amino-silicone and no lipid.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with a betaine buffer.",
+   "counterevidence": "Two converging deposition families (silicone + cationic) — the convergence leg of the high anchor; silicones read wherever listed (W-LINE item 5).",
+   "whyThisBand": "Silicone plus guar in an effective ordinary sulfate chassis plausibly leaves noticeable but bounded residue.",
+   "whyNotNeighborBand": "Not `high`: W1 does not apply (no amodimethicone, set without amodimethicone creates no presumption), but the architecture is the same silicone+guar pairing that holdout-v3 settled at moderate in a sulfate/betaine base; no third family, no lipid, no W-RICH, reset not limited. Not `low`: two distinct deposition families, one a persistent silicone system (W2).",
+   "confidenceLimitingFactor": "silicone and guar doses unknown; two-family convergence keeps `high` realistic.",
+   "rationale": "`moderate`: silicone + cationic guar converge, ordinary C1 reset, no richness (6.6, W1 set note, W-RICH). Neighbor `high`.",
+   "ruleIds": [
+    "6.6",
+    "W1",
+    "W-RICH",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "not_applicable (provisional)",
+    "moistureRoutes": [
+     "Panthenol@20"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Dimethiconol@6",
+     "Dimethicone@11",
+     "Guar Hydroxypropyltrimonium Chloride@13"
+    ],
+    "limitation": "recognized dandruff active present; scalp_active depends on a dandruff claim at reveal"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "treatment",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `treatment` fires only with a moderate/high-graded E2 dandruff claim (U3) — the formula half (Piroctone Olamine) is present; `alternating` impossible (not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "none",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "`not_targeted`, decided by the formula: CSA FAILS — no E4 comfort or humectant/refatting route is prominent (Panthenol@20 is after Parfum@7; no Glycerin, no payload lipid). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. Without a listed prominent route and without MB, even an explicitly positioned product is `not_targeted` (Section 10), so positioning cannot change the value; a sensitive/dry claim at reveal would trigger S-FAIL with the missing route named.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`supported`: complete INCI contains Piroctone Olamine@14 (Section 11 table). Formula-only property; a dandruff target additionally needs a dandruff claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@4 amphoteric (buffer)",
+   "TEA-Dodecylbenzenesulfonate@16 strong anionic sulfonate (after E3, not prominent)",
+   "Sodium Xylenesulfonate@3 hydrotrope",
+   "Cocamide MEA@9 alkanolamide"
+  ],
+  "conditioningRoutes": [
+   "silicone: Dimethiconol@6 (prominent), Dimethicone@11",
+   "cationic: Guar Hydroxypropyltrimonium Chloride@13",
+   "pearlizing: Glycol Distearate@10",
+   "humectant: Panthenol@20"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@20 (not prominent); E4 humectant/refatting: none prominent",
+  "actives": [
+   "Piroctone Olamine@14 (recognized anti-dandruff active)",
+   "Sodium Salicylate@17 (preservative)"
+  ],
+  "exposureFlags": [
+   "Parfum@7",
+   "Hexyl Cinnamal@22",
+   "no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@15",
+   "Sodium Salicylate@17",
+   "Benzyl Alcohol@26"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

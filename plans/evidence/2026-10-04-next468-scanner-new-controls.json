@@ -1,0 +1,1843 @@
+[
+  {
+    "id": "research-close-omitted",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Search auxiliary open remains true after successful receipt; transferred false fails.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-close-omitted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-close-omitted-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-close-omitted-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1147
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-pending-headline",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Literal Eingereicht! sheet title fails.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-pending-headline-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-pending-headline-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-pending-headline-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1149
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-omitted",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "submitted existence assertion fails after valid pending UI.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-omitted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-omitted-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-omitted-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1152
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-category",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred literal category assertion fails; request and pending delivery remain valid.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-category-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-category-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-category-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1154
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-suggestion",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred literal suggestion assertion fails; request and pending delivery remain valid.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-suggestion-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-suggestion-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-suggestion-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1156
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-selection",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred literal selection assertion fails; request and pending delivery remain valid.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-selection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-selection-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-selection-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1155
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-interaction",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred literal interaction assertion fails; request and pending delivery remain valid.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-interaction-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-interaction-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-interaction-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1157
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "research-event-path",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred literal path assertion fails; request and pending delivery remain valid.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-path-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-path-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/research-event-path-after.tap"
+    },
+    "keeperAssertionLines": [
+      1138,
+      1144,
+      1147,
+      1148,
+      1149,
+      1152,
+      1153,
+      1154,
+      1155,
+      1156,
+      1157
+    ],
+    "assertionStacks": [
+      1153
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "retailer-open-category",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Exact opened event payload Conditioner fails while GTIN callback still succeeds.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/retailer-open-category-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/retailer-open-category-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/retailer-open-category-after.tap"
+    },
+    "keeperAssertionLines": [
+      1517,
+      1519,
+      1521
+    ],
+    "assertionStacks": [
+      1521
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "flag-off-telemetry",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "No retailer HTTP request still passes, added event violates transferred zero-event assertion.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/flag-off-telemetry-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/flag-off-telemetry-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/flag-off-telemetry-after.tap"
+    },
+    "keeperAssertionLines": [
+      1540,
+      1544
+    ],
+    "assertionStacks": [
+      1544
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "invitation-terminal-overlap",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Existing invitation renders terminal-empty copy too; transferred false fails.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (word-boundary), and every \u00a76 string matches verbatim, across every state incl. intake"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/invitation-terminal-overlap-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/invitation-terminal-overlap-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/invitation-terminal-overlap-after.tap"
+    },
+    "keeperAssertionLines": [
+      1891,
+      1899,
+      1900,
+      1908,
+      1926,
+      1927,
+      1928,
+      1943,
+      1944,
+      1950,
+      1951,
+      1955,
+      1988,
+      1992
+    ],
+    "assertionStacks": [
+      1944
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "catalog-recovery-copy",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Initial full recovery phrase fails before unchanged reload behavior.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/catalog-recovery-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/catalog-recovery-copy-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/catalog-recovery-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      2206,
+      2208,
+      2216,
+      2221,
+      2225,
+      2230,
+      2235
+    ],
+    "assertionStacks": [
+      2206
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "masked-header-lock",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Omittedtier masked-response header locked musttrue, fault reads premiumprop only.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-header-lock-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-header-lock-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-header-lock-after.tap"
+    },
+    "keeperAssertionLines": [
+      2784,
+      2785,
+      2786,
+      2787,
+      2788,
+      2794,
+      2795,
+      2796,
+      2797
+    ],
+    "assertionStacks": [
+      2786
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "masked-footer-lock",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Masked-response footer saveLocked true fails with prop-only lock.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-footer-lock-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-footer-lock-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-footer-lock-after.tap"
+    },
+    "keeperAssertionLines": [
+      2784,
+      2785,
+      2786,
+      2787,
+      2788,
+      2794,
+      2795,
+      2796,
+      2797
+    ],
+    "assertionStacks": [
+      2787
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "background-reveal-product",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Recorded silent reveal body must p-a, fault changes actual HTTP payload.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background-reveal-product-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background-reveal-product-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background-reveal-product-after.tap"
+    },
+    "keeperAssertionLines": [
+      2844,
+      2845,
+      2846,
+      2847,
+      2851,
+      2852,
+      2857
+    ],
+    "assertionStacks": [
+      2845
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "wishlist-flag-bypass",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred countundefined or zero-counter fails; with ORIGINAL selected Z1 throwing fixture this fault should pass (old oracle control).",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/wishlist-flag-bypass-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/wishlist-flag-bypass-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/wishlist-flag-bypass-after.tap"
+    },
+    "keeperAssertionLines": [
+      3202,
+      3203,
+      3204,
+      3208,
+      3209
+    ],
+    "assertionStacks": [
+      3202
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "premium-debug-present",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Premium root exact absence false fails for first attribute; storage remains0.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "F5: premium and flag-off (no tier prop) cause zero trigger-storage activity"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/premium-debug-present-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/premium-debug-present-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/premium-debug-present-after.tap"
+    },
+    "keeperAssertionLines": [
+      3588,
+      3589,
+      3591,
+      3603,
+      3604,
+      3606
+    ],
+    "assertionStacks": [
+      3591
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "back-query-cleared",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Query must remain kerastase ciment, focus flag otherwise untouched.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: Zur\u00fcck returns focus to the search field"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-query-cleared-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-query-cleared-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-query-cleared-after.tap"
+    },
+    "keeperAssertionLines": [
+      1859,
+      1860,
+      1861,
+      1862,
+      1868,
+      1871
+    ],
+    "assertionStacks": [
+      1860
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "back-header-corrupted",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Restored header literal Produkt finden fails after Back.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: Zur\u00fcck returns focus to the search field"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-header-corrupted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-header-corrupted-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/back-header-corrupted-after.tap"
+    },
+    "keeperAssertionLines": [
+      1859,
+      1860,
+      1861,
+      1862,
+      1868,
+      1871
+    ],
+    "assertionStacks": [
+      1859
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "keyboard-hint",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred actual input prop hint literal fails.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-hint-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-hint-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-hint-after.tap"
+    },
+    "keeperAssertionLines": [
+      1483,
+      1485,
+      1486,
+      1487,
+      1488,
+      1492,
+      1493
+    ],
+    "assertionStacks": [
+      1485
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "keyboard-correct",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred actual input prop correct literal fails.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-correct-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-correct-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-correct-after.tap"
+    },
+    "keeperAssertionLines": [
+      1483,
+      1485,
+      1486,
+      1487,
+      1488,
+      1492,
+      1493
+    ],
+    "assertionStacks": [
+      1486
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "keyboard-cap",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred actual input prop cap literal fails.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-cap-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-cap-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-cap-after.tap"
+    },
+    "keeperAssertionLines": [
+      1483,
+      1485,
+      1486,
+      1487,
+      1488,
+      1492,
+      1493
+    ],
+    "assertionStacks": [
+      1487
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "keyboard-spell",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred actual input prop spell literal fails.",
+    "source": "src/components/scan/scan-search-sheet.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "originalHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-spell-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-spell-fault.tap"
+    },
+    "restoredHash": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/keyboard-spell-after.tap"
+    },
+    "keeperAssertionLines": [
+      1483,
+      1485,
+      1486,
+      1487,
+      1488,
+      1492,
+      1493
+    ],
+    "assertionStacks": [
+      1488
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "resolved-slot-retained",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Full result still opens but transferred activeRequest null fails.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/resolved-slot-retained-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/resolved-slot-retained-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/resolved-slot-retained-after.tap"
+    },
+    "keeperAssertionLines": [
+      899,
+      900,
+      901,
+      902,
+      903
+    ],
+    "assertionStacks": [
+      900
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "result-payload-corrupted",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Whole step literal result payload differs at productId.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/result-payload-corrupted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/result-payload-corrupted-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/result-payload-corrupted-after.tap"
+    },
+    "keeperAssertionLines": [
+      899,
+      900,
+      901,
+      902,
+      903
+    ],
+    "assertionStacks": [
+      899
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "pending-payload-corrupted",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Whole pending step differs despite no proactive card and unchanged history.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/pending-payload-corrupted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/pending-payload-corrupted-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/pending-payload-corrupted-after.tap"
+    },
+    "keeperAssertionLines": [
+      949,
+      950,
+      951,
+      952
+    ],
+    "assertionStacks": [
+      951
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "unknown-spends-budget",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Intermediate unknown active trigger expectednull; fault evaluates qualifying session2 and spends winner.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/unknown-spends-budget-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/unknown-spends-budget-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/unknown-spends-budget-after.tap"
+    },
+    "keeperAssertionLines": [
+      960,
+      961,
+      962,
+      969,
+      970
+    ],
+    "assertionStacks": [
+      960
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "history-unknown_product",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Exact [] categoriesScanned fails for unknown_product at existing state point.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-unknown_product-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-unknown_product-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-unknown_product-after.tap"
+    },
+    "keeperAssertionLines": [
+      960,
+      961,
+      962,
+      969,
+      970
+    ],
+    "assertionStacks": [
+      962
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "history-pending_submission",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Exact [] categoriesScanned fails for pending_submission at existing state point.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-pending_submission-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-pending_submission-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/history-pending_submission-after.tap"
+    },
+    "keeperAssertionLines": [
+      949,
+      950,
+      951,
+      952
+    ],
+    "assertionStacks": [
+      952
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "background409-toast",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred toasts [] fails on silent409 while same gate remains.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background409-toast-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background409-toast-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/background409-toast-after.tap"
+    },
+    "keeperAssertionLines": [
+      2844,
+      2845,
+      2846,
+      2847,
+      2851,
+      2852,
+      2857
+    ],
+    "assertionStacks": [
+      2847
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "nonrevealed-empty-array",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Transferred revealedAlternatives exactlynull fails, [] is not accepted.",
+    "source": "src/lib/scan/scan-flow-state.ts",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "originalHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/nonrevealed-empty-array-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/nonrevealed-empty-array-fault.tap"
+    },
+    "restoredHash": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/nonrevealed-empty-array-after.tap"
+    },
+    "keeperAssertionLines": [
+      2844,
+      2845,
+      2846,
+      2847,
+      2851,
+      2852,
+      2857
+    ],
+    "assertionStacks": [
+      2846
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "masked-paywall-auto-open",
+    "lane": "scanner",
+    "phase": "new",
+    "intended": "Initial premium sheet mustclosed before onReveal; automatic gate opening fails.",
+    "source": "src/components/scan/scan-flow.tsx",
+    "selectedTest": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-paywall-auto-open-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-paywall-auto-open-fault.tap"
+    },
+    "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-scanner-mutations-new/masked-paywall-auto-open-after.tap"
+    },
+    "keeperAssertionLines": [
+      2784,
+      2785,
+      2786,
+      2787,
+      2788,
+      2794,
+      2795,
+      2796,
+      2797
+    ],
+    "assertionStacks": [
+      2788
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  }
+]

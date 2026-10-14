@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: findOpenScanSubmission: queries every GTIN spelling of the same number
+ok 1 - findOpenScanSubmission: queries every GTIN spelling of the same number
+  ---
+  duration_ms: 0.867542
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 275.788167

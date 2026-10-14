@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 4,
+  "role": "primary",
+  "archetypeSlots": ["4a - named-bond mask (gluconamide)", "11 - multi-use 4in1, mode-scoped"],
+  "identity": {
+    "brand": "Schwarzkopf Gliss",
+    "productName": "Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+    "packSize": "400 ml",
+    "gtinEan": "4015100813913",
+    "eanSourceNote": "Proposal figure; dm.de and Rossmann.de both list this EAN in their URL slugs (cross-agreement per original proposal), though neither page's body content could be fetched directly this pass (dm.de JS-blocked, Rossmann.de Cloudflare-blocked).",
+    "market": "DE (dm.de + Rossmann.de)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BEHENTRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, ISOPROPYL MYRISTATE, BEHENAMIDOPROPYL DIMETHYLAMINE, HYDROXYPROPYLGLUCONAMIDE, HYDROXYPROPYLAMMONIUM GLUCONATE, GLYCOSPHINGOLIPIDS, HYDROLYZED SILK, SERICIN, PARFUM, AMODIMETHICONE, BUTYROSPERMUM PARKII BUTTER, LACTIC ACID, ISOPROPYL ALCOHOL, PRUNUS ARMENIACA KERNEL OIL, BUTYLENE GLYCOL, SODIUM BENZOATE, CETEARETH-20, TRIDECETH-10, PHENOXYETHANOL, BENZYL ALCOHOL, ALPHA-ISOMETHYL IONONE, LIMONENE, POTASSIUM SORBATE, METHYLPARABEN, PROPYLPARABEN",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/gliss-kur-haarmaske-4-in-1-liquid-silk-inhaltsstoffe/produkt/325099.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel (fallback - dm.de and Rossmann.de both blocked this pass)",
+    "notes": "Confirms the named-bond marker: HYDROXYPROPYLGLUCONAMIDE and HYDROXYPROPYLAMMONIUM GLUCONATE both present, above the midpoint of the list - archetype 4a coverage solid."
+  },
+  "directions": {
+    "text": "Nach dem Waschen sanft auf das nasse Haar auftragen und 2 bis 3 Minuten einwirken lassen, gründlich ausspülen. 2-3 Mal pro Woche anwenden. Kann zusätzlich als Pre-Shampoo-Behandlung, als Spülung nach dem Shampoonieren, oder als Leave-in verwendet werden (4-in-1).",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2-3 (mask mode)",
+    "source": "Aggregated from schwarzkopf.de and retailer copy (bipa.at, drogeriedepot.de) - schwarzkopf.de direct fetch rendered the page shell/claims but not the Anwendung body text, so this is search-aggregated, not a single verbatim page fetch.",
+    "confidence": "moderate-high - consistent across multiple independent retailer copy blocks"
+  },
+  "claims": [
+    "ölfrei",
+    "ohne Mineralöle",
+    "ohne Farbstoffe",
+    "ohne Aluminium",
+    "ohne Mikroplastik",
+    "ohne Palmöl",
+    "HaptIQ System & Seide",
+    "4-in-1 Anwendung: Pre-Shampoo, Spülung, Maske, Leave-in"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "Solid capture. Named-bond marker chemistry confirmed verbatim. Directions are aggregated rather than single-source verbatim; recommend a direct dm.de/Rossmann.de re-check at freeze time if a higher-confidence source becomes reachable."
+}

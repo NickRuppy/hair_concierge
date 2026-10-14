@@ -106,7 +106,7 @@ Scalp safety does not silently delete the category or overwrite the product-fit 
 - Active irritation, burning, soreness, wounds/pustules, dry flakes, or active dandruff sets `executionState = pause`.
 - Visible buildup or repeated layering sets `executionState = pause` until the next wet wash.
 - Hair loss alone is not a prohibition, but Dry Shampoo cannot be framed as support for hair loss.
-- A product reaction triggers stop/reassessment guidance and can justify `wechseln empfohlen`.
+- A product reaction triggers stop/reassessment guidance and can justify `Passt nicht`.
 - Persistent, severe, painful, weeping, or otherwise concerning symptoms route to the shared medical-escalation boundary.
 
 A paused category remains visible when it was already included, labeled `Aktuell pausieren`, so the user's accepted portfolio does not disappear without explanation.
@@ -166,7 +166,7 @@ Use one clean cutover with no compatibility aliases or dual authority:
 5. preserve all eight current `aerosol_spray` values mechanically in the schema/runtime migration;
 6. set the two legacy `foam_or_liquid` rows to `null` in that migration rather than inserting product-specific facts into the schema/runtime PR;
 7. in the shared cross-category follow-up enrichment PR, write the verified exact mappings `Balea Trockenshampoo Schaum Kopfhaut Sensitive -> aerosol_foam` and `got2b Liquid-to-Dry -> non_aerosol_liquid` from the sources recorded in `evidence.md`;
-8. use `null` for any other unverified format and keep that product `unknown` / `noch in Prüfung` and out of executable instructions until reviewed.
+8. use `null` for any other unverified format and keep that product `unknown` / `Nicht geprüft` and out of executable instructions until reviewed.
 
 The schema/runtime PR may therefore land inert without guessing. Dry Shampoo activation requires all 10 active recommended products to have a verified canonical format after the shared enrichment PR.
 
@@ -174,23 +174,7 @@ The schema/runtime PR may therefore land inert without guessing. Dry Shampoo act
 
 Evaluate product fit separately from cadence adjustment and execution pause.
 
-| Verdict | Deterministic meaning |
-|---|---|
-| `ideal` / `passt sehr gut` | Verified Dry Shampoo identity; sensitivity and hair-colour facts are compatible or universal; no known negative reaction |
-| `supportive` / `passt mit Einschränkung` | Core refresh job works, but sensitivity positioning, tint, or styling direction has an explicit limitation |
-| `mismatch` / `wechseln empfohlen` | Wrong category, known negative reaction, or another genuinely incompatible verified property—not tint/sensitivity positioning alone |
-| `unknown` / `noch in Prüfung` | Product is pending or a required product fact for the current assessment is unverified |
-
-Rules:
-
-- normal scalp accepts `normal_only` or `sensitive_ok` as ideal;
-- sensitive scalp plus `sensitive_ok` can be ideal;
-- sensitive scalp plus `normal_only` is supportive, not an automatic mismatch;
-- `universal` hair-colour fit is compatible for everyone;
-- a wrong tint is supportive because root refresh can still work while visible tone/residue may be suboptimal;
-- no visible-residue and format facts never independently change the verdict;
-- a direction mismatch (`volume` with `standard_refresh`, or `less_volume` with `volume_texture`) is supportive rather than mismatch;
-- unknown catalog facts never become an optimistic pass.
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): **Passt**, **Passt bedingt**, **Passt nicht**, or **Nicht geprüft**, with answered tint and scalp sensitivity as the degree axes. Volume is ranking only (Nick 2026-10-13); unknown colour is unscored. Sum their distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive fallback with its evaluator reason; cadence and execution pauses remain separate from product fit.
 
 The Stage-2 assessment payload is:
 
@@ -208,7 +192,7 @@ interface DryShampooFitAssessment {
 }
 ```
 
-The product tile shows what the product needs to do, the decisive matches, and at most one decisive limitation/switch reason. A fitting product used five to six times weekly can therefore remain `passt sehr gut` while separately receiving:
+The product tile shows what the product needs to do, the decisive matches, and at most one decisive limitation/switch reason. A fitting product used five to six times weekly can therefore remain `Passt` while separately receiving:
 
 > Das Produkt eignet sich für dich. Du nutzt es aktuell aber zu häufig – reduziere es auf eine kurze Brücke zwischen Waschtagen.
 
@@ -221,6 +205,8 @@ Selection order:
 3. `volume` prefers `volume_texture`; `less_volume` prefers `standard_refresh`; with neither, both are acceptable;
 4. preserve a suitable owned product before proposing an unnecessary replacement;
 5. use curated catalog priority and then stable catalog order for a remaining tie.
+
+**Amendment (S1, implemented in S2a; Nick 2026-10-13, ranking only):** new-product selection uses the shared Stage-3 comparator (`candidate-ranking.ts`): `ideal` before `supportive` → more fulfilled compact rows → fewer cautions → volume preference → catalogue `sort_order` → lower price → product id. Native uses the same comparator with its existing price-first tie policy; volume preference precedes price there too. Volume direction comes from the shared Personal-Plan rule (`planVolumeDirection`) and only orders candidates inside the same verdict. It never excludes a product, adds a limitation, or contributes to `supportive` / `mismatch`; the compact volume row is informational and passing. Sensitivity = quiz scalp concern `irritated`; hair colour = the refinement answer with `user` provenance only. Unknown colour is unscored, including for tinted products, as in #669's missing-target rule. A universal product and a matching tint are equal full fits (Q1 = A, ruled by Nick; `dryShampooTintFit`). Only an answered wrong tint and scalp sensitivity add fit steps; together they produce `mismatch` under the additive #669 rule. Until the schema cutover, legacy `sensitive_refresh` counts as standard refresh, with sensitivity solely from `scalp_sensitivity_fit`. An uncovered role carries its selected candidate's verdict. Rule id `dry_shampoo.selection.shared_rank`. The #654 budget policy applies afterwards, unchanged.
 
 Format has no global preference order. The winning suitable product brings its format. Stage 2 may show an equally suitable alternative-format tile such as:
 
@@ -249,7 +235,7 @@ This inline answer represents visible hair-colour/tint fit only. It does not rec
 - Do not create a primary/secondary rotation model for this category.
 - Switching the main product reruns assessment and creates a proposed successor that requires confirmation.
 - Opening a shopping link never marks the recommendation as acquired.
-- A pending product appears immediately as `Noch in Prüfung` but does not receive a fit verdict or executable instruction.
+- A pending product appears immediately with the `Nicht geprüft` verdict and receives no executable instruction.
 - A currently confirmed active product remains active while a submitted replacement is pending.
 - If the pending product is the only product, Stage 2 shows it but Stage 3 creates no exact-product step.
 
@@ -321,15 +307,15 @@ The engine emits reason codes and structured facts. Presentation maps them to co
 2. oily roots plus non-wash days plus accepted bridge -> `optional`;
 3. same profile plus declined bridge -> `not_needed` and absent;
 4. no existing use and no bridge-question condition -> `not_needed`;
-5. volume goal plus `volume_texture` product -> `ideal`;
-6. less-volume goal plus `volume_texture` product -> `supportive`;
+5. volume goal -> `volume_texture` ranks first among equally fitting candidates; other styling effects retain their tint/sensitivity verdict (Nick 2026-10-13, ranking only);
+6. less-volume goal plus `volume_texture` product -> styling guidance remains separate from the tint/sensitivity fit verdict (canonical model §3);
 7. neither volume direction -> either styling effect remains acceptable;
 8. sensitive scalp plus `sensitive_ok` -> `ideal` when all other facts fit;
-9. sensitive scalp plus `normal_only` -> `supportive`;
+9. sensitive scalp plus `normal_only` -> `supportive` if it is the only one-step miss; a simultaneous tint miss produces `mismatch` (canonical model §4);
 10. normal scalp plus either sensitivity positioning -> no sensitivity limitation;
 11. universal hair-colour fit -> compatible without a tint question;
-12. resolved wrong tint -> `supportive`, not mismatch;
-13. otherwise preferred tinted candidate with unresolved colour -> request inline variant resolution before confirmation;
+12. resolved wrong tint -> `supportive` if it is the only one-step miss; a simultaneous sensitivity miss produces `mismatch` (canonical model §4);
+13. unresolved colour -> tint axis unscored; tinted products retain their sensitivity-only verdict (Nick 2026-10-13);
 14. verified product used up to three to four times weekly -> no average-frequency warning solely from that fact;
 15. fitting product used five to six times weekly -> fit verdict retained plus `decrease_frequency`;
 16. fitting product used daily -> fit verdict retained plus stronger `decrease_frequency`;

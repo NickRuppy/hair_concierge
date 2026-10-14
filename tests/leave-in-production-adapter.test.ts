@@ -8,6 +8,8 @@ import {
   LEAVE_IN_BASE_STANDARD,
   LEAVE_IN_OVERLAY_PATH,
   LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
+  LEAVE_IN_V1_1_OVERLAY,
+  LEAVE_IN_V1_1_RESEARCH_METHOD,
   expandLeaveInEligibility,
   leaveInFormulaFingerprintSha256,
   normalizeLeaveInInciForFingerprint,
@@ -43,6 +45,8 @@ const completeInput = (): LeaveInResearchEnvelope => ({
     gtin: "4066447919387",
     productForm: "spray",
     applicationStage: ["towel_dry", "dry_hair"],
+    // Leave-In v1.2 (T21): silence in the directions is `not_required` (HA-1).
+    heatActivation: { value: "not_required", route: null, statements: [], counterSignals: [] },
     identityStatus: "verified",
     categoryBoundaryStatus: "eligible",
     confidence: "high",
@@ -87,7 +91,7 @@ const completeInput = (): LeaveInResearchEnvelope => ({
   },
 })
 
-test("projects the complete v1.1 lean profile into exact current Leave-In fields", () => {
+test("projects the complete v1.2 lean profile into exact current Leave-In fields", () => {
   const input = completeInput()
   const before = structuredClone(input)
   const outcome = projectLeaveInForProduction(input)
@@ -113,6 +117,8 @@ test("projects the complete v1.1 lean profile into exact current Leave-In fields
     // AD-3a revision (2026-09-29): a balanced product gets no moisture_softness,
     // however high its conditioning level.
     functional_benefits: ["smooth_anti_frizz", "heat_protect", "repair_support"],
+    // AD-7 (v1.2): the route is null exactly when activation is not required.
+    heat_activation_route: null,
   })
   assert.deepEqual(projection.category_specs.product_leave_in_fit_specs, {
     weight: "medium",
@@ -135,7 +141,7 @@ test("projects the complete v1.1 lean profile into exact current Leave-In fields
   // are different values and both must be emitted on their own side.
   assert.deepEqual(outcome.requiredProtocolRoles, ["post_wash_leave_in", "pre_heat_protection"])
   assert.equal(projection.adapter_version, "leave-in-production-adapter-v1")
-  assert.equal(projection.research_model_version, "leave-in-inci-v1.1")
+  assert.equal(projection.research_model_version, "leave-in-inci-v1.2")
   assert.match(projection.research_input_sha256, /^[a-f0-9]{64}$/)
   assert.match(projection.projection_sha256, /^[a-f0-9]{64}$/)
 })
@@ -156,6 +162,7 @@ test("emits plain-string rationales under the exact intake field paths", () => {
     "category_specs.product_leave_in_specs.roles",
     "category_specs.product_leave_in_specs.provides_heat_protection",
     "category_specs.product_leave_in_specs.heat_activation_required",
+    "category_specs.product_leave_in_specs.heat_activation_route",
     "category_specs.product_leave_in_specs.care_benefits",
     "category_specs.product_leave_in_specs.ingredient_flags",
     "category_specs.product_leave_in_specs.application_stage",
@@ -517,33 +524,40 @@ test("splits on a comma with a digit on only one side, protecting only digit-com
   assert.equal(normalizeLeaveInInciForFingerprint("1,2-Hexanediol"), "1,2-HEXANEDIOL")
 })
 
-test("pins the exact v1.1 overlay, the frozen v1.0 base and the runbook used by the adapter", () => {
+test("pins the exact v1.2 overlay, the v1.1 overlay, the frozen v1.0 base and the runbook", () => {
   const hash = (relativePath: string) =>
     createHash("sha256")
       .update(readFileSync(path.resolve(relativePath)))
       .digest("hex")
 
-  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policyId, "leave-in-classification-v1.1")
-  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.modelVersion, "leave-in-inci-v1.1")
-  // policySha256 pins the v1.1 overlay document ...
+  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policyId, "leave-in-classification-v1.2")
+  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.modelVersion, "leave-in-inci-v1.2")
+  // policySha256 pins the v1.2 overlay document ...
+  assert.equal(
+    LEAVE_IN_OVERLAY_PATH,
+    "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
+  )
   assert.equal(
     hash(LEAVE_IN_OVERLAY_PATH),
     LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policySha256,
   )
-  // ... which names the byte-frozen v1.0 base it applies to.
+  // ... which names the byte-frozen v1.1 overlay and v1.0 base it applies to.
+  const overlay = readFileSync(path.resolve(LEAVE_IN_OVERLAY_PATH), "utf8")
+  assert.equal(hash(LEAVE_IN_V1_1_OVERLAY.path), LEAVE_IN_V1_1_OVERLAY.sha256)
+  assert.equal(LEAVE_IN_V1_1_OVERLAY.sha256, LEAVE_IN_V1_1_RESEARCH_METHOD.policySha256)
+  assert.ok(overlay.includes(LEAVE_IN_V1_1_OVERLAY.sha256), "v1.1 overlay sha named")
   assert.equal(
     hash("docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"),
     "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
   )
   assert.equal(hash(LEAVE_IN_BASE_STANDARD.path), LEAVE_IN_BASE_STANDARD.sha256)
-  assert.match(
-    readFileSync(path.resolve(LEAVE_IN_OVERLAY_PATH), "utf8"),
-    new RegExp(LEAVE_IN_BASE_STANDARD.sha256),
-  )
+  assert.ok(overlay.includes(LEAVE_IN_BASE_STANDARD.sha256), "v1.0 base sha named")
   assert.equal(
     hash("docs/research/leave-in-inci/v1.0/runbook.md"),
     LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.runbookSha256,
   )
+  assert.equal(LEAVE_IN_V1_1_RESEARCH_METHOD.policyId, "leave-in-classification-v1.1")
+  assert.equal(LEAVE_IN_V1_1_RESEARCH_METHOD.modelVersion, "leave-in-inci-v1.1")
 })
 
 test("T20: a v1.0-stamped envelope is refused — care_direction must be re-derived under v1.1", () => {
@@ -638,7 +652,9 @@ test("the ported eligibility expansion reproduces the SQL function's rules", () 
       .every((row) => row.styling_context === "heat_style"),
   )
 
-  // heat_activation_required collapses every context to heat_style.
+  // heat_activation_required collapses every context to heat_style, and (v1.2,
+  // D-e) every care bucket emits that heat_style row. Activation is never
+  // protection: without the heat binary there is no heat_protect bucket.
   const activated = expandLeaveInEligibility({
     thicknesses: ["fine", "normal"],
     roles: ["styling_prep"],
@@ -647,9 +663,15 @@ test("the ported eligibility expansion reproduces the SQL function's rules", () 
     providesHeatProtection: false,
     heatActivationRequired: true,
   })
-  assert.ok(activated.length > 0)
-  assert.ok(activated.every((row) => row.styling_context === "heat_style"))
-  assert.ok(activated.some((row) => row.need_bucket === "heat_protect"))
+  assert.deepEqual(activated, [
+    { thickness: "fine", need_bucket: "curl_definition", styling_context: "heat_style" },
+    { thickness: "fine", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+    { thickness: "fine", need_bucket: "shine_protect", styling_context: "heat_style" },
+    { thickness: "normal", need_bucket: "curl_definition", styling_context: "heat_style" },
+    { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+    { thickness: "normal", need_bucket: "shine_protect", styling_context: "heat_style" },
+  ])
+  assert.ok(!activated.some((row) => row.need_bucket === "heat_protect"))
 
   // No care benefit maps to a bucket -> no rows at all.
   assert.deepEqual(
@@ -749,4 +771,254 @@ test("renders the review markdown from the typed outcome in the library", () => 
   const refused = renderLeaveInProductionMarkdown(projectLeaveInForProduction({}))
   assert.match(refused, /Status: needs_research/)
   assert.match(refused, /## Reasons/)
+})
+
+// ---------------------------------------------------------------------------
+// Leave-In Standard v1.2 (T21) — heat activation, adapter AD-7
+// ---------------------------------------------------------------------------
+
+const NEQI_URL = "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray"
+
+const requiredActivation = (): LeaveInResearchEnvelope["identity"]["heatActivation"] => ({
+  value: "required",
+  route: "airflow_shaping",
+  statements: [
+    {
+      kind: "activation_statement",
+      quote: "Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray",
+      sourceTier: "C2",
+      sourceUrl: NEQI_URL,
+      retrievedAt: "2026-10-09",
+    },
+    {
+      kind: "heat_step_direction",
+      quote: "Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+      sourceTier: "C2",
+      sourceUrl: NEQI_URL,
+      retrievedAt: "2026-10-09",
+    },
+  ],
+  counterSignals: [],
+})
+
+/** completeInput() is replacement_capable with heat protection; activation must override that. */
+const activatedInput = () => {
+  const input = completeInput()
+  input.identity.applicationStage = ["towel_dry", "pre_heat"]
+  input.identity.heatActivation = requiredActivation()
+  return input
+}
+
+test("v1.1 envelope is refused under v1.2", () => {
+  const v11 = completeInput() as unknown as {
+    researchMethod: Record<string, string>
+    identity: Record<string, unknown>
+  }
+  v11.researchMethod = { ...LEAVE_IN_V1_1_RESEARCH_METHOD }
+  delete v11.identity.heatActivation
+  const outcome = projectLeaveInForProduction(v11)
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status !== "needs_research") return
+  assert.deepEqual(outcome.reasons, [
+    "researchMethod.policyId: leave-in-classification-v1.1 — v1.2 added identity.heatActivation; re-stamp required",
+  ])
+  assert.equal(outcome.summary.researchId, "new-leave-in-1")
+
+  // A v1.2 stamp without the capture fails the strict parse on the missing field.
+  const unstamped = completeInput() as unknown as { identity: Record<string, unknown> }
+  delete unstamped.identity.heatActivation
+  const missing = projectLeaveInForProduction(unstamped)
+  assert.equal(missing.status, "needs_research")
+  if (missing.status === "needs_research") {
+    assert.match(missing.reasons.join(" "), /identity\.heatActivation/)
+  }
+})
+
+test("activation projects pre_heat_application only with styling_prep and booster_only", () => {
+  const input = activatedInput()
+  const before = structuredClone(input)
+  const outcome = projectLeaveInForProduction(input)
+  assert.deepEqual(input, before, "the research authority must not be mutated")
+  assert.equal(
+    outcome.status,
+    "projection_ready",
+    outcome.status === "projection_ready" ? "" : outcome.reasons.join("; "),
+  )
+  if (outcome.status !== "projection_ready") return
+  const { category_specs: specs } = outcome.productionProjection
+  const leaveIn = specs.product_leave_in_specs
+  // I2/I3: AD-3/AD-4 would have given replacement_conditioner + post-wash.
+  assert.deepEqual(leaveIn.roles, ["styling_prep"])
+  assert.deepEqual(leaveIn.plan_roles, ["pre_heat_application"])
+  assert.equal(leaveIn.heat_activation_required, true)
+  assert.equal(leaveIn.heat_activation_route, "airflow_shaping")
+  assert.equal(leaveIn.provides_heat_protection, true)
+  assert.deepEqual(leaveIn.application_stage, ["towel_dry", "pre_heat"])
+  // I4
+  assert.equal(specs.product_leave_in_fit_specs.conditioner_relationship, "booster_only")
+  // I7: heat_style only; every care bucket emits its heat_style row.
+  assert.deepEqual(specs.product_leave_in_eligibility, [
+    { thickness: "normal", need_bucket: "heat_protect", styling_context: "heat_style" },
+    { thickness: "normal", need_bucket: "repair", styling_context: "heat_style" },
+    { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+    { thickness: "coarse", need_bucket: "heat_protect", styling_context: "heat_style" },
+    { thickness: "coarse", need_bucket: "repair", styling_context: "heat_style" },
+    { thickness: "coarse", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+  ])
+  // I8
+  assert.deepEqual(outcome.requiredProtocolRoles, ["pre_heat_protection"])
+
+  const rationales = outcome.productionProjection.field_rationales
+  const activation = rationales["category_specs.product_leave_in_specs.heat_activation_required"]
+  assert.match(activation, /AD-7/)
+  assert.match(activation, /hitzeaktivierte Polymere/)
+  assert.match(activation, /mit Hitze und auf Spannung föhnen/)
+  assert.match(
+    rationales["category_specs.product_leave_in_specs.heat_activation_route"],
+    /airflow_shaping/,
+  )
+  assert.match(rationales["category_specs.product_leave_in_specs.roles"], /AD-7/)
+  assert.match(rationales["category_specs.product_leave_in_specs.plan_roles"], /AD-7/)
+  assert.match(
+    rationales["category_specs.product_leave_in_fit_specs.conditioner_relationship"],
+    /AD-7/,
+  )
+  // HA-8: every `required` routes to human review.
+  assert.match(outcome.warnings.join(" "), /heat_activation_required/)
+
+  const markdown = renderLeaveInProductionMarkdown(outcome)
+  assert.match(markdown, /- Heat activation: required \(route airflow_shaping, AD-7\)/)
+  assert.match(markdown, /Required protocol roles: pre_heat_protection\n/)
+})
+
+test("activation without heat protection refuses with the Styling reason", () => {
+  const input = activatedInput()
+  input.profile.specialistFunctions = evidence({ providesHeatProtection: false })
+  const outcome = projectLeaveInForProduction(input)
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status !== "needs_research") return
+  assert.equal(outcome.reasons.length, 1)
+  assert.match(outcome.reasons[0]!, /^identity\.heatActivation: /)
+  assert.match(outcome.reasons[0]!, /Styling program/)
+  assert.match(outcome.reasons[0]!, /I5/)
+})
+
+test("activation without a pre_heat stage refuses", () => {
+  const input = activatedInput()
+  input.identity.applicationStage = ["towel_dry"]
+  const outcome = projectLeaveInForProduction(input)
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status !== "needs_research") return
+  assert.equal(outcome.reasons.length, 1)
+  assert.match(outcome.reasons[0]!, /^identity\.heatActivation: /)
+  assert.match(outcome.reasons[0]!, /pre_heat/)
+  assert.match(outcome.reasons[0]!, /HA-7/)
+})
+
+test("non-activated projection is byte-identical to v1.1", () => {
+  // Every frozen v1.1 calibration envelope, re-stamped to v1.2 with a
+  // `not_required` capture, projects exactly its frozen v1.1 golden outcome.
+  // The only documented differences: the version pin, the input/projection
+  // hashes, the new `heat_activation_route: null` spec key, and the two AD-7
+  // rationale strings (`heat_activation_required` replaced, `heat_activation_route` added).
+  type Ready = Extract<
+    ReturnType<typeof projectLeaveInForProduction>,
+    { status: "projection_ready" }
+  >
+  const dir = path.resolve("data/research/leave-in-inci/v1.1/calibration-envelopes")
+  const golden = JSON.parse(
+    readFileSync(
+      path.resolve("data/research/leave-in-inci/v1.1/calibration-expected-projections.json"),
+      "utf8",
+    ),
+  ) as { projections: Record<string, Ready> }
+  const strip = (outcome: Ready) => {
+    const copy = structuredClone(outcome) as Ready
+    const projection = copy.productionProjection as unknown as Record<string, unknown> & {
+      category_specs: { product_leave_in_specs: Record<string, unknown> }
+      field_rationales: Record<string, string>
+    }
+    delete projection.research_model_version
+    delete projection.research_input_sha256
+    delete projection.projection_sha256
+    delete projection.category_specs.product_leave_in_specs.heat_activation_route
+    delete projection.field_rationales[
+      "category_specs.product_leave_in_specs.heat_activation_required"
+    ]
+    delete projection.field_rationales[
+      "category_specs.product_leave_in_specs.heat_activation_route"
+    ]
+    return copy
+  }
+  const files = Object.keys(golden.projections).sort()
+  assert.equal(files.length, 11)
+  for (const file of files) {
+    const v11 = JSON.parse(readFileSync(path.join(dir, file), "utf8")) as LeaveInResearchEnvelope
+    const restamped: LeaveInResearchEnvelope = {
+      ...v11,
+      researchMethod: { ...LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD },
+      identity: {
+        ...v11.identity,
+        heatActivation: { value: "not_required", route: null, statements: [], counterSignals: [] },
+      },
+    }
+    const outcome = projectLeaveInForProduction(restamped)
+    assert.equal(outcome.status, "projection_ready", file)
+    if (outcome.status !== "projection_ready") continue
+    const specs = outcome.productionProjection.category_specs.product_leave_in_specs
+    assert.equal(specs.heat_activation_route, null, `${file}: route key present and null`)
+    assert.equal(outcome.productionProjection.research_model_version, "leave-in-inci-v1.2")
+    assert.match(
+      outcome.productionProjection.field_rationales[
+        "category_specs.product_leave_in_specs.heat_activation_required"
+      ]!,
+      /AD-7/,
+    )
+    assert.equal(
+      JSON.stringify(strip(outcome)),
+      JSON.stringify(strip(golden.projections[file]!)),
+      `${file}: byte-identical to v1.1 apart from the documented AD-7 keys`,
+    )
+  }
+})
+
+test("requiredProtocolRoles is pre_heat_protection only for activation", () => {
+  const cases: Array<[string, () => LeaveInResearchEnvelope, string[]]> = [
+    [
+      "protected, not activated",
+      () => completeInput(),
+      ["post_wash_leave_in", "pre_heat_protection"],
+    ],
+    [
+      "unprotected, not activated",
+      () => {
+        const input = completeInput()
+        input.profile.specialistFunctions = evidence({ providesHeatProtection: false })
+        return input
+      },
+      ["post_wash_leave_in"],
+    ],
+    [
+      "pre_heat stage without activation keeps post-wash",
+      () => {
+        const input = completeInput()
+        input.identity.applicationStage = ["towel_dry", "pre_heat"]
+        return input
+      },
+      ["post_wash_leave_in", "pre_heat_protection"],
+    ],
+    ["activated", activatedInput, ["pre_heat_protection"]],
+  ]
+  for (const [label, build, expected] of cases) {
+    const outcome = projectLeaveInForProduction(build())
+    assert.equal(outcome.status, "projection_ready", label)
+    if (outcome.status !== "projection_ready") continue
+    assert.deepEqual(outcome.requiredProtocolRoles, expected, label)
+  }
+})
+
+test("a not_required capture prints its AD-7 status in the review markdown", () => {
+  const markdown = renderLeaveInProductionMarkdown(projectLeaveInForProduction(completeInput()))
+  assert.match(markdown, /- Heat protection: true \(binary only, AD-6\)/)
+  assert.match(markdown, /- Heat activation: not_required \(AD-7\)/)
 })

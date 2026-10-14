@@ -1,0 +1,158 @@
+[
+  {
+    "id": "C1-fixed-responsive-frame",
+    "file": "src/components/quiz/hair-length-option-card.tsx",
+    "from": "        \"personal-plan-option-card group relative flex h-[184px] w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0\",",
+    "to": "        \"personal-plan-option-card group relative flex h-[183px] w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-full sm:min-h-[183px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0\",",
+    "text": "assert.match(html, /h-\\[184px\\]/)",
+    "expectedRegex": "/h-\\[184px\\]/",
+    "messageHeader": "The input did not match the regular expression /h-\\[184px\\]/.",
+    "actualPredicate": "Actual HTML string contains h-[183px] and lacks h-[184px] including former sm:min-h variant.",
+    "sourceSHA256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "mutantSHA256": "ffe155f482fbcda66eac3d19ecfb4db9bd156bc97b2561ae05e945f6ef81c7f5",
+    "test": {
+      "file": "tests/quiz-option-card.test.tsx",
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height"
+    },
+    "operator": "match",
+    "expectedEncoded": "RegExp serializes as empty top-level expected object in Node22; regex identity comes from exact decoded message header.",
+    "oracles": {
+      "transfer": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 104
+        },
+        "assertion": "assert.match(html, /h-\\[184px\\]/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      },
+      "cut": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 104
+        },
+        "assertion": "assert.match(html, /h-\\[184px\\]/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^grid portrait cards fit the complete silhouette to the fixed media height$",
+      "tests/quiz-option-card.test.tsx"
+    ],
+    "proof": "Main-only clean1 -> single named ERR_ASSERTION match with exact decoded header + typed actual predicate + FIRST keeper assertion frame -> owned CAS byte restore -> clean1. No native/source fault executed. Reject skipped/zero/import/setup/timeout/signal/unrelated assertion. Representative 3 transferred contracts only."
+  },
+  {
+    "id": "C1-description-association",
+    "file": "src/components/quiz/hair-length-option-card.tsx",
+    "from": "      aria-describedby={description ? descriptionId : undefined}",
+    "to": "      aria-describedby={undefined}",
+    "text": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+    "expectedRegex": "/aria-describedby=\"[^\"]+\"/",
+    "messageHeader": "The input did not match the regular expression /aria-describedby=\"[^\"]+\"/.",
+    "actualPredicate": "Actual HTML retains description text but lacks aria-describedby.",
+    "sourceSHA256": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "mutantSHA256": "835e1e297f8e23f1f5c8051a6addc5611eae81d1146b4a0624ca6366e025dda2",
+    "test": {
+      "file": "tests/quiz-option-card.test.tsx",
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height"
+    },
+    "operator": "match",
+    "expectedEncoded": "RegExp serializes as empty top-level expected object in Node22; regex identity comes from exact decoded message header.",
+    "oracles": {
+      "transfer": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 110
+        },
+        "assertion": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      },
+      "cut": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 110
+        },
+        "assertion": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^grid portrait cards fit the complete silhouette to the fixed media height$",
+      "tests/quiz-option-card.test.tsx"
+    ],
+    "proof": "Main-only clean1 -> single named ERR_ASSERTION match with exact decoded header + typed actual predicate + FIRST keeper assertion frame -> owned CAS byte restore -> clean1. No native/source fault executed. Reject skipped/zero/import/setup/timeout/signal/unrelated assertion. Representative 3 transferred contracts only."
+  },
+  {
+    "id": "C1-decorative-body",
+    "file": "src/components/quiz/hair-portrait-figure.tsx",
+    "from": "          aria-hidden=\"true\"",
+    "to": "          aria-hidden=\"false\"",
+    "text": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+    "expectedRegex": "/<svg aria-hidden=\"true\"/",
+    "messageHeader": "The input did not match the regular expression /<svg aria-hidden=\"true\"/.",
+    "actualPredicate": "Actual HTML body SVG has aria-hidden=\"false\" and no SVG with aria-hidden=\"true\".",
+    "sourceSHA256": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "mutantSHA256": "0b960310eb6fe3b541f1029aa3a57edb089ea59f6f1dbfae708110ac9f7cea83",
+    "test": {
+      "file": "tests/quiz-option-card.test.tsx",
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height"
+    },
+    "operator": "match",
+    "expectedEncoded": "RegExp serializes as empty top-level expected object in Node22; regex identity comes from exact decoded message header.",
+    "oracles": {
+      "transfer": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 107
+        },
+        "assertion": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      },
+      "cut": {
+        "firstKeeperAssertionFrame": {
+          "file": "tests/quiz-option-card.test.tsx",
+          "line": 107
+        },
+        "assertion": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "keeperSHA256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+        "fileSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^grid portrait cards fit the complete silhouette to the fixed media height$",
+      "tests/quiz-option-card.test.tsx"
+    ],
+    "proof": "Main-only clean1 -> single named ERR_ASSERTION match with exact decoded header + typed actual predicate + FIRST keeper assertion frame -> owned CAS byte restore -> clean1. No native/source fault executed. Reject skipped/zero/import/setup/timeout/signal/unrelated assertion. Representative 3 transferred contracts only."
+  }
+]

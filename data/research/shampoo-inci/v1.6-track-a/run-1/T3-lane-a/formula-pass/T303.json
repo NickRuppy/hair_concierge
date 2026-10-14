@@ -1,0 +1,197 @@
+{
+  "blindId": "T303",
+  "inciFingerprintSha256": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "No split synonym entries; 'Maris Sal (Dead Sea Salt)' one entry. E3: no Parfum -> first preservative Sodium Benzoate (8); prominent = 1-7.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "rawInciCount": 16
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (5); Laureth-9 is a nonionic ethoxylate, neither a route nor a buffer under C3; no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Only one buffer and no refatting oils; does not move C1."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful conditioning system: prominent cationic guar (7) with humectant Urea (6); no silicone, lipid or pearlizer.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Single light guar in a cleansing-led base could read as little substantive slip (low)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single deposition family (one cationic guar at 7) facing an effective C1 reset; urea/glycerin are humectant context, not deposition.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Guar is prominent (before preservative).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "one guar only"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "light guar, no silicone/lipid to reinforce"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine"
+        }
+      },
+      "whyThisBand": "Single light polymer facing moderate reset; no converging system.",
+      "whyNotNeighborBand": "moderate requires a plausibly persistent system or interacting routes; one guar with no second family is below that (no polymer floor).",
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            7
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Urea",
+            6
+          ],
+          [
+            "Glycerin",
+            9
+          ],
+          [
+            "Panthenol",
+            14
+          ]
+        ],
+        "excluded": [
+          [
+            "Menthol",
+            12,
+            "cooling agent"
+          ],
+          [
+            "Mentha Arvensis Leaf Oil",
+            16,
+            "essential oil (6.4)"
+          ],
+          [
+            "Maris Sal (Dead Sea Salt)",
+            10,
+            "salt"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Laureth-9",
+            3,
+            "ethoxylate, not a C3 cleansing route"
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Formula pattern (Urea 6, Laureth-9/polidocanol 3, late menthol, Dead Sea salt) suggests a scalp-comfort role; needs SC1 positioning."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "Positioning hidden; CSA passes via prominent Urea (6, E4 comfort + humectant). Laureth-9 is the INCI name of Polidocanol (E4 comfort list) - recorded as mapping. Menthol/mint oil are not prominent."
+    }
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "rationale": "Urea/glycerin humectants but only one light conditioning route; reads as a scalp-comfort formula rather than a lengths moisture cluster."
+  },
+  "formulaGateFacts": {
+    "csa": "pass (Urea 6)",
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "pass"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Laureth-9",
+      "position": 3,
+      "role": "nonionic ethoxylate (INCI of polidocanol); not a C3 buffer; comfort-route candidate"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 6,
+      "role": "humectant; E4 comfort + humectant route"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 7,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Sodium Benzoate",
+      "position": 8,
+      "role": "E3 cut-off"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 9,
+      "role": "humectant, not prominent"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 12,
+      "role": "cooling agent, not prominent"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 14,
+      "role": "not prominent"
+    },
+    {
+      "ingredient": "Mentha Arvensis Leaf Oil",
+      "position": 16,
+      "role": "essential oil, not prominent"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

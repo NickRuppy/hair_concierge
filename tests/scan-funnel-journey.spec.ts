@@ -310,7 +310,8 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
       await expect(
         problemInsert.getByRole("heading", { name: "Vorm Regal raten alle." }),
       ).toBeVisible()
-      await expect(problemInsert.getByText("Passt nicht zu deinem Haar")).toBeVisible()
+      // fit-verdict spec §1/§7b, ruled 2026-10-12
+      await expect(problemInsert.getByText("Passt nicht", { exact: true })).toBeVisible()
       // The insert's "Weiter" renders into the mobile bottom-action portal outside
       // the insert container, so it is addressed page-level (exactly one copy is in
       // the accessibility tree at any viewport).
@@ -348,7 +349,8 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
       await expect(
         solutionInsert.getByRole("heading", { name: "Nicht mehr raten. Scannen." }),
       ).toBeVisible()
-      await expect(solutionInsert.getByText("Passt nicht zu deiner Kopfhaut")).toBeVisible()
+      // fit-verdict spec §1/§7b, ruled 2026-10-12
+      await expect(solutionInsert.getByText("Passt nicht", { exact: true })).toBeVisible()
       // The insert's "Weiter" renders into the mobile bottom-action portal outside
       // the insert container, so it is addressed page-level (exactly one copy is in
       // the accessibility tree at any viewport).

@@ -121,7 +121,6 @@ function journeyDeps(
     }),
     cohortCutoff: () => null,
     appEnabled: () => true,
-    appRollout: () => "all",
     stage2Enabled: () => true,
     stage3Enabled: () => true,
     stage4Enabled: () => true,
@@ -129,7 +128,6 @@ function journeyDeps(
     loadPlan: async () => plan,
     loadCurrentRefinedNeed: async () => null,
     loadCurrentProductDraft: async () => null,
-    loadIsInternal: async () => false,
     ...overrides,
   }
 }

@@ -1,0 +1,502 @@
+{
+  "blindId": "T206",
+  "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+  "identity": {
+    "productName": "Neqi Volume Victory",
+    "brand": "Neqi",
+    "market": "DE",
+    "packSize": "330 ml",
+    "formulaSourceTier": 4,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "'Aqua [Water]' is one entry. Normalized positions = packet positions.",
+    "sourceIds": [
+      "formula:T206 (tier 4, complete)",
+      "reveal:T206#0 manufacturer_ch_shop_de_language [manufacturer_foreign, grade low]",
+      "reveal:T206#1 retailer_notino_de [retailer, grade low]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; earliest prominent cleansing surfactant is a mild anionic sulfosuccinate (2) with prominent amphoteric co-surfactants (3, 4) -> low.",
+      "formulaFacts": [
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        }
+      ],
+      "counterSignal": "None material; sulfosuccinate is an ether-derived mild anionic.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Little substantive slip: prominent route only PEG-18 Glyceryl Oleate/Cocoate (5, weak refatter); Panthenol (7), Avena Sativa Peptide (8), Glycol Distearate (14), Polyquaternium-11 (17), Glycerin (22) are post-fragrance light routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-18 Glyceryl Oleate/Cocoate",
+          "position": 5
+        },
+        {
+          "ingredient": "Avena Sativa Peptide",
+          "position": 8
+        },
+        {
+          "ingredient": "Polyquaternium-11",
+          "position": 17
+        }
+      ],
+      "counterSignal": "Several light routes together could read as moderate.",
+      "neighboringAlternative": "moderate",
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: weak refatter, a late oat peptide and a late Polyquaternium-11; no silicone or payload lipid.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PEG-18 Glyceryl Oleate/Cocoate (5), Avena Sativa Peptide (8), Polyquaternium-11 (17), trace C13-15 Alkane (21)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Water-soluble peptide, low-charge PQ-11, weak refatter."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "Mild sulfosuccinate/amphoteric chassis; gentle but sufficient against these light routes (weak-to-moderate)."
+        }
+      },
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "PEG-18 Glyceryl Oleate/Cocoate",
+            5
+          ]
+        ],
+        "protein_film": [
+          [
+            "Avena Sativa Peptide",
+            8
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-11",
+            17
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Disodium Laureth Sulfosuccinate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Hydroxysultaine",
+            3
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Panthenol",
+            7
+          ],
+          [
+            "Glycerin",
+            22
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Juniperus Virginiana Oil",
+          12,
+          "fragrance oil (6.4)"
+        ],
+        [
+          "Citrus Aurantium Peel Oil",
+          13,
+          "fragrance oil"
+        ],
+        [
+          "Glycol Distearate",
+          14,
+          "pearlizer"
+        ],
+        [
+          "Cocamide MEA",
+          18,
+          "thickener"
+        ],
+        [
+          "C13-15 Alkane",
+          21,
+          "light volatile-leaning emollient/solvent, trace"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Three deposition families; mild chassis offers less reset.",
+      "whyThisBand": "Only light, low-persistence routes; nothing substantive is prominent.",
+      "whyNotNeighborBand": "Not moderate (W2): families are a weak refatter, a post-fragrance water-soluble peptide (8) and a late PQ-11 (17); no silicone, lipid or strong cationic, so combined residue stays below noticeable even with a mild reset.",
+      "confidenceLimitingFactor": "Mild chassis gives less reset; realistic unknowns could move to moderate.",
+      "ruleNotes": [
+        "W2"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-18 Glyceryl Oleate/Cocoate",
+          "position": 5,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Avena Sativa Peptide",
+          "position": 8,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "Polyquaternium-11",
+          "position": 17,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 7,
+          "family": "humectant_context"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 22,
+          "family": "humectant_context"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+        "sourceTier": 4,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Volume: 'Volume' is in the exact product name (graded high, CL-SRC). Formula is compatible: weightPotential low, conditioningLevel low, mild C6 chassis, light film routes (Polyquaternium-11 17).",
+      "counterSignal": "Lengths-care wording ('stärkt die Haarstruktur', Pro-Vitamin B5) only in low-graded sources.",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-11",
+          "position": 17
+        },
+        {
+          "ingredient": "Avena Sativa Peptide",
+          "position": 8
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)",
+        "reveal:T206#0 manufacturer_ch_shop_de_language [manufacturer_foreign, grade low]",
+        "reveal:T206#1 retailer_notino_de [retailer, grade low]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: strengthening/moisture claims are low-graded (Swiss shop page, Notino).",
+      "counterSignal": "Secondary candidates fail Section 8 (distinct graded positioning plus independent route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)",
+        "reveal:T206#0 manufacturer_ch_shop_de_language [manufacturer_foreign, grade low]",
+        "reveal:T206#1 retailer_notino_de [retailer, grade low]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: no frequency wording from a moderate/high source.",
+      "counterSignal": "None.",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)",
+        "reveal:T206#0 manufacturer_ch_shop_de_language [manufacturer_foreign, grade low]",
+        "reveal:T206#1 retailer_notino_de [retailer, grade low]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 scalp claim ('alle Arten von Kopfhaut' is not positioning).",
+      "counterSignal": "CSA formula half fails anyway (no prominent listed route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)",
+        "reveal:T206#0 manufacturer_ch_shop_de_language [manufacturer_foreign, grade low]",
+        "reveal:T206#1 retailer_notino_de [retailer, grade low]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T206 (tier 4, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [],
+      "limitation": "Volume focus."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "No dedicated volumizing polymer beyond light PQ-11.",
+    "neighboringAlternative": "none"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "volume (product name, high)",
+      "formulaCompatible": true,
+      "compatibleRoute": "Low weight, low conditioning, Polyquaternium-11 17",
+      "decisionReason": "Name-claimed job plus compatible light formula -> volume"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [],
+      "independentRoutes": [],
+      "whyDistinctFromPrimary": "n/a",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "No trigger."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=low -> ideal for fine. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=low -> ideal for normal. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=low -> acceptable for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "S-ORDINARY way 1. Confidence moderate: the manufacturer shop is a foreign (CH) page graded low, so the packet effectively has retailer-grade copy only (E1)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low, D1 false -> gentle. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal; weightPotential neighbor moderate -> acceptable"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "volume",
+      "evidence": "product name 'Volume Victory'",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "no trigger",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "no scalp claim",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [
+    {
+      "claim": "Pro-Vitamin B5",
+      "inci": "Panthenol (7)",
+      "result": "match"
+    },
+    {
+      "claim": "Hemisqualan",
+      "inci": "C13-15 Alkane (21)",
+      "result": "match (hemisqualane = C13-15 alkane); trace, unchanged weight reading"
+    },
+    {
+      "claim": "Peptide, Goji, Malve, Tahiti-Gardenie",
+      "inci": "Avena Sativa Peptide 8, Lycium Barbarum 10, Malva Sylvestris 11, Gardenia Taitensis 9",
+      "result": "match"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T206.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "Mild chassis gives less reset; realistic unknowns could move to moderate.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "C13-15 Alkane (21) treated as trace light emollient/solvent, excluded; even as payload_lipid it is trace."
+  ]
+}

@@ -234,16 +234,11 @@ Fit is assessed relative to one required role.
 3. **Protocol readiness:** known/reviewed format, rinse mode, and complete safety-critical exact directions. Missing repeat cadence alone is executable through the explicit `as_needed` fallback.
 4. **Verdict and limitation:** explicit non-critical limitations and the density role's category-level evidence limitation remain visible.
 
-| Verdict | Deterministic meaning |
-|---|---|
-| `ideal` / `passt sehr gut` | Verified cosmetic Scalp Care identity; exact primary-role match; no known safety conflict; reviewed format; complete critical protocol; no relevant limitation. |
-| `supportive` / `passt mit Einschränkung` | Exact role and safety/protocol gates pass, but one explicit product- or user-specific non-critical suitability limitation remains. Limited role-level efficacy evidence alone does not change this fit verdict. |
-| `mismatch` / `wechseln empfohlen` | Wrong category, wrong verified primary role, known reaction, verified contraindication, or medicine misclassified as cosmetic Scalp Care. |
-| `unknown` / `noch in Prüfung` | Pending identity/lifecycle or missing/conflicting primary role, format, rinse mode, or critical non-cadence protocol fact. Missing repeat cadence alone does not create `unknown`. Unknown never becomes an optimistic pass. |
+Fit verdicts follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): this category has gates only, with **Passt**, **Passt nicht**, or **Nicht geprüft** and no `supportive` verdict. Known hard-gate failures take precedence over missing required facts; owned mismatches retain the shared `acknowledge_override` and `leave_uncovered` actions without becoming verified coverage.
 
 Presentation format has no fit preference order. A tonic is not better or worse than a serum because of format alone. Ingredient presence does not raise role confidence or evidence confidence.
 
-Product fit and efficacy confidence are separate axes. A verified cosmetic density product may therefore be `ideal` / `passt sehr gut` for the requested role while the adjacent `limited_evidence` statement explains that the expected effect is uncertain and can vary individually. The evidence statement is never hidden, but it does not convert a suitable product into a fit limitation.
+Product fit and efficacy confidence are separate axes. A verified cosmetic density product may therefore be `ideal` / `Passt` for the requested role while the adjacent `limited_evidence` statement explains that the expected effect is uncertain and can vary individually. The evidence statement is never hidden, but it does not convert a suitable product into a fit limitation.
 
 ### Uncovered-job gate
 
@@ -262,13 +257,15 @@ For each uncovered role:
 1. if exactly one product is owned for the role, assign and assess it as the main product;
 2. if several products are owned for the same role and no main product has been selected, return a shared conditional `primary_product_selection_required` state; save/show every product and assess none automatically;
 3. after the user chooses the role's main product, assess only that product;
-4. a safe `ideal` or `supportive` owned product counts as adequate and suppresses a replacement purchase for the same role;
+4. a safe `ideal` owned product counts as adequate and suppresses a replacement purchase for the same role;
 5. do not replace an adequate owned product for a marginal upgrade, stronger marketing claim, presentation format, or small price difference;
-6. for a new recommendation, prefer `ideal` over `supportive`;
-7. when no ideal candidate exists, a supportive candidate may be offered with its limitation because the category is optional; it is never forced;
+6. for a new recommendation, require `ideal` under the canonical gate-only model;
+7. when no ideal candidate exists, preserve the unresolved job;
 8. compare exact role, product-specific safety/contraindications, protocol completeness and practicality, then current Drogerie availability and an actually collected budget preference;
 9. verified finished-product evidence may break a remaining density-role tie; otherwise do not invent efficacy differences;
 10. curated catalog priority and then stable product ID resolve a final tie.
+
+**Amendment (S1, 2026-10-09; implemented in S2a):** within a role every verified candidate is equally ideal, so the shared Stage-3 comparator decides by catalogue `sort_order`, then lower price, then product id (previously raw product-ID order). The #654 budget policy applies afterwards, unchanged (an uncapped budget may still nudge to a fit-comparable product above 15 €).
 
 Opening a shopping link does not mark acquisition. Availability and budget never rescue a mismatch or unknown product.
 
@@ -290,7 +287,7 @@ The shared owned-inventory cardinality change is a launch prerequisite. It is no
 
 | Reconciliation state | Condition | Saved/proposed behavior |
 |---|---|---|
-| `keep_and_use` | Selected owned product is `ideal` or adequate `supportive` and its protocol is executable | Keep active; no same-role shopping recommendation. |
+| `keep_and_use` | Selected owned product is `ideal` and its protocol is executable | Keep active; no same-role shopping recommendation. |
 | `keep_pending_protocol` | Product appears role-compatible but identity, rinse behavior, contact/rinse requirements, or another critical non-cadence protocol fact remains unresolved and no safety conflict is known | Keep visible as owned/pending; do not schedule and do not recommend a duplicate solely because review is incomplete. Missing repeat cadence alone uses the confirmed `as_needed` fallback and does not create this state. |
 | `do_not_use` | Mismatch, known reaction, active safety conflict, contraindication, or medicine/cosmetic misclassification | Keep the inventory/context record but create no cosmetic execution. Show the material reason and appropriate boundary. |
 | `replace_recommended` | The job remains uncovered because the selected owned product is materially mismatched, unsafe, or remains non-executable after reasonable review | Add one verified replacement proposal for that role. Existing active plan remains unchanged until confirmation. |
@@ -460,7 +457,7 @@ The shared presentation pass chooses at most two primary card facts later. It ma
 | `SC-27` | `presentationFormat = unknown` on active candidate | `unknown` until reviewed format/other is set. |
 | `SC-28` | missing rinse mode, required contact/rinse behavior, placement, or another critical non-cadence instruction | `unknown`, `keep_pending_protocol`; no executable step. |
 | `SC-29` | known reaction to exact product | `mismatch`, `do_not_use`, execution paused. |
-| `SC-30` | no ideal new candidate but one supportive safe candidate | may offer supportive candidate with limitation; never force it. |
+| `SC-30` | no ideal new candidate | preserve the unresolved job; supportive is unused in this gate-only category (canonical model §3). |
 | `SC-31` | uncovered role with only mismatch/unknown/unavailable candidates | explicit no-valid-match state. |
 | `SC-32` | two owned products for same role, no assignment | `primary_product_selection_required`; both remain saved/visible and neither is analysed automatically. |
 | `SC-33` | explicit selection changes same-role product | proposed successor; active assignment unchanged until confirmation. |

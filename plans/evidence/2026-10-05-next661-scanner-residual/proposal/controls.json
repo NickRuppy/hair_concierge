@@ -1,0 +1,912 @@
+[
+  {
+    "id": "M01",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "deriveAlternativeComparison",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "fd5b81c2a3b4ff7f4a5df9555f227e2b1493da959fca3f1c41ee163af7be28da",
+    "from": "summaryScore: rows.length > 0 ? matchCount / rows.length : 0,",
+    "to": "summaryScore: rows.length > 0 ? matchCount / rows.length : 1,",
+    "ownerBefore": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "ownerAfter": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 1,\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskAlternative: an alternative with no carried criteria yields an empty comparison",
+        "callbackSha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+        "line": 57,
+        "assertion": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskAlternative: an alternative with no carried criteria yields an empty comparison",
+        "callbackSha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+        "line": 36,
+        "assertion": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "rows": [],
+        "summaryScore": 1
+      },
+      "expected": {
+        "rows": [],
+        "summaryScore": 0
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [],\n+   summaryScore: 1\n-   summaryScore: 0\n  }\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M02",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "comparisonRowState",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "1df3280a6a04ab56c1f0b5f85159cb09a821fae49ce95620beca214d38b4da87",
+    "from": "case \"pass\":\n      return \"match\"",
+    "to": "case \"pass\":\n      return \"partial\"",
+    "ownerBefore": "function comparisonRowState(result: Stage3CriterionResult[\"result\"]): ScanComparisonRowState {\n  switch (result) {\n    case \"pass\":\n      return \"match\"\n    case \"caution\":\n      return \"partial\"\n    case \"fail\":\n      return \"mismatch\"\n    case \"unknown\":\n      return \"unknown\"\n  }\n}",
+    "ownerAfter": "function comparisonRowState(result: Stage3CriterionResult[\"result\"]): ScanComparisonRowState {\n  switch (result) {\n    case \"pass\":\n      return \"partial\"\n    case \"caution\":\n      return \"partial\"\n    case \"fail\":\n      return \"mismatch\"\n    case \"unknown\":\n      return \"unknown\"\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 89,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 68,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "partial"
+          }
+        ],
+        "summaryScore": 0
+      },
+      "expected": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 1
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n+       state: 'partial'\n-       state: 'match'\n      }\n    ],\n+   summaryScore: 0\n-   summaryScore: 1\n  }\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M03",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "deriveAlternativeComparison",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "3116911a1af6dfc872326530f67151d03091b4933085f6578cbdce86ac52eb72",
+    "from": "rowId: criterion.criterionId,",
+    "to": "...{ debug: true },\n      rowId: criterion.criterionId,",
+    "ownerBefore": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "ownerAfter": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      ...{ debug: true },\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 89,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 68,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match",
+            "debug": true
+          }
+        ],
+        "summaryScore": 1
+      },
+      "expected": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 1
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n+       debug: true,\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n        state: 'match'\n      }\n    ],\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M04",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "owner": "maskAlternative",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutantSha256": "a3f737e3b846eca2a5f9cf1cc3dc55405135073935089e37cd596b25dc54d5bf",
+    "from": "verdict: alternative.verdict,",
+    "to": "...{ productId: alternative.productId },\n    verdict: alternative.verdict,",
+    "ownerBefore": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "ownerAfter": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    ...{ productId: alternative.productId },\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 94,
+        "assertion": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 73,
+        "assertion": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": [
+        "comparison",
+        "productId",
+        "verdict",
+        "verdictLabel"
+      ],
+      "expected": [
+        "comparison",
+        "verdict",
+        "verdictLabel"
+      ],
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'comparison',\n+   'productId',\n    'verdict',\n    'verdictLabel'\n  ]\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M05",
+    "candidates": [
+      "C5"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "owner": "maskAlternative",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutantSha256": "bb4227f19d9e717a38a5f7d01f36b1f8041d6920ec24013427fbe2839c2380ca",
+    "from": "verdict: alternative.verdict,",
+    "to": "verdict: \"ideal\",",
+    "ownerBefore": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "ownerAfter": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: \"ideal\",\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 339,
+        "assertion": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 339,
+        "assertion": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "ideal",
+      "expected": "supportive",
+      "decodedMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ideal'\n- 'supportive'\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M06",
+    "candidates": [
+      "C5"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "owner": "maskAlternative",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutantSha256": "3d8cce738765b9f9efc35c8dcba8fb06f16fc8ef8dab436d1d40d072e1f17ed9",
+    "from": "verdictLabel: alternative.verdictLabel,",
+    "to": "verdictLabel: \"Passt\",",
+    "ownerBefore": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "ownerAfter": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: alternative.verdict,\n    verdictLabel: \"Passt\",\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 340,
+        "assertion": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 340,
+        "assertion": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "Passt",
+      "expected": "Passt eingeschränkt",
+      "decodedMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Passt'\n- 'Passt eingeschränkt'\n        ^\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M07",
+    "candidates": [
+      "C6"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "deriveAlternativeComparison",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "057715b842785065da29b370d3bdf9681f4aa5c806d1d3aea6566001bab39d22",
+    "from": "rowId: criterion.criterionId,",
+    "to": "rowId: criterion.label,",
+    "ownerBefore": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "ownerAfter": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.label,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 89,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 68,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "rows": [
+          {
+            "rowId": "Kopfhaut-Fokus",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 1
+      },
+      "expected": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 1
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n+       rowId: 'Kopfhaut-Fokus',\n-       rowId: 'shampoo.scalp_route',\n        state: 'match'\n      }\n    ],\n    summaryScore: 1\n  }\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M08",
+    "candidates": [
+      "C6"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "deriveAlternativeComparison",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "76cb96fa19f53a5ef11d7791dce5adaea72e59fe4947a8be0f11c87acb897794",
+    "from": "summaryScore: rows.length > 0 ? matchCount / rows.length : 0,",
+    "to": "summaryScore: 0,",
+    "ownerBefore": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "ownerAfter": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: 0,\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 89,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-masked-alternative.test.ts",
+        "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+        "callbackSha256": "a268040a0860a30853646df8ced0d6a4a8a2d8d7c949b60048ec7d1c14e5bc18",
+        "line": 68,
+        "assertion": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 0
+      },
+      "expected": {
+        "rows": [
+          {
+            "rowId": "shampoo.scalp_route",
+            "label": "Kopfhaut-Fokus",
+            "state": "match"
+          }
+        ],
+        "summaryScore": 1
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    rows: [\n      {\n        label: 'Kopfhaut-Fokus',\n        rowId: 'shampoo.scalp_route',\n...\n    ],\n+   summaryScore: 0\n-   summaryScore: 1\n  }\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M09",
+    "candidates": [
+      "C7"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "owner": "maskScanVerdictPayload",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutantSha256": "c29c5bed6f714ea45d7ea529cc70a55c3410f62421c0a0892020da6be18cb030",
+    "from": "alternatives: verdict.alternatives.map(maskAlternative),",
+    "to": "alternatives: verdict.alternatives.slice(0, 1).map(maskAlternative),",
+    "ownerBefore": "export function maskScanVerdictPayload(\n  verdict: ScanInCatalogVerdictPayload,\n): ScanMaskedInCatalogVerdictPayload {\n  const {\n    mobileDimensions: _mobileDimensions,\n    mobileAuthority: _mobileAuthority,\n    ...maskedBase\n  } = verdict\n  void _mobileDimensions\n  void _mobileAuthority\n  return {\n    ...maskedBase,\n    alternatives: verdict.alternatives.map(maskAlternative),\n  }\n}",
+    "ownerAfter": "export function maskScanVerdictPayload(\n  verdict: ScanInCatalogVerdictPayload,\n): ScanMaskedInCatalogVerdictPayload {\n  const {\n    mobileDimensions: _mobileDimensions,\n    mobileAuthority: _mobileAuthority,\n    ...maskedBase\n  } = verdict\n  void _mobileDimensions\n  void _mobileAuthority\n  return {\n    ...maskedBase,\n    alternatives: verdict.alternatives.slice(0, 1).map(maskAlternative),\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 315,
+        "assertion": "assert.equal(body.alternatives.length, 2)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 315,
+        "assertion": "assert.equal(body.alternatives.length, 2)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 1,
+      "expected": 2,
+      "decodedMessage": "Expected values to be strictly equal:\n\n1 !== 2\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M10",
+    "candidates": [
+      "C7"
+    ],
+    "file": "src/lib/scan/masked-alternative.ts",
+    "owner": "maskAlternative",
+    "sourceSha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "mutantSha256": "6960c885889f12d77d260427a811c1127cfc3fac081a6ef1b5bd8de850dead10",
+    "from": "verdict: alternative.verdict,",
+    "to": "...{ debug: true },\n    verdict: alternative.verdict,",
+    "ownerBefore": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "ownerAfter": "export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlternative {\n  return {\n    ...{ debug: true },\n    verdict: alternative.verdict,\n    verdictLabel: alternative.verdictLabel,\n    comparison: deriveAlternativeComparison(alternative.criteria ?? []),\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 325,
+        "assertion": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 325,
+        "assertion": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": [
+        "comparison",
+        "debug",
+        "label",
+        "rowId",
+        "rows",
+        "state",
+        "summaryScore",
+        "verdict",
+        "verdictLabel"
+      ],
+      "expected": [
+        "comparison",
+        "label",
+        "rowId",
+        "rows",
+        "state",
+        "summaryScore",
+        "verdict",
+        "verdictLabel"
+      ],
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'comparison',\n+   'debug',\n    'label',\n    'rowId',\n    'rows',\n    'state',\n    'summaryScore',\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M11",
+    "candidates": [
+      "C8"
+    ],
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "owner": "deriveAlternativeComparison",
+    "sourceSha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "mutantSha256": "bbd14d854dd22e7983fd92d8d492167c0c8fc8587a3ddced4a03e3f8ee52b0fb",
+    "from": "label: criterion.label,",
+    "to": "label: \"Kriterium\",",
+    "ownerBefore": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: criterion.label,\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "ownerAfter": "export function deriveAlternativeComparison(\n  criteria: readonly Stage3CriterionResult[],\n): ScanAlternativeComparison {\n  const rows = criteria.map(\n    (criterion): ScanComparisonRow => ({\n      rowId: criterion.criterionId,\n      label: \"Kriterium\",\n      state: comparisonRowState(criterion.result),\n    }),\n  )\n  const matchCount = rows.filter((row) => row.state === \"match\").length\n  return {\n    rows,\n    summaryScore: rows.length > 0 ? matchCount / rows.length : 0,\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 338,
+        "assertion": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-resolve-anti-leak.test.ts",
+        "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+        "callbackSha256": "bba4c147236c60688cf7be7b76dc56a120a0d9fb4a3683df442867912902f459",
+        "line": 338,
+        "assertion": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": [
+        "Kriterium",
+        "Kriterium"
+      ],
+      "expected": [
+        "Kopfhaut-Fokus",
+        "Reinigungsstärke"
+      ],
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'Kriterium',\n+   'Kriterium'\n-   'Kopfhaut-Fokus',\n-   'Reinigungsstärke'\n  ]\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M12",
+    "candidates": [
+      "C9"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "owner": "recordScanSession",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutantSha256": "d3edd852c2d1cf2162bb5fc6d1099661922568a46ab73db84a8a09e59c07ba85",
+    "from": "    return count\n",
+    "to": "    return previous === null ? 0 : count\n",
+    "ownerBefore": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return count\n  } catch {\n    return 1\n  }\n}",
+    "ownerAfter": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return previous === null ? 0 : count\n  } catch {\n    return 1\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 48,
+        "assertion": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 36,
+        "assertion": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 0,
+      "expected": 1,
+      "decodedMessage": "Expected values to be strictly equal:\n\n0 !== 1\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M13",
+    "candidates": [
+      "C9"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "owner": "recordScanSession",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutantSha256": "cfa7910361407e08778b71daacd0e723c13ad83a42f4e7a1553ad75f3d2cb1a4",
+    "from": "    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))",
+    "to": "    if (previous !== null) storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))",
+    "ownerBefore": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return count\n  } catch {\n    return 1\n  }\n}",
+    "ownerAfter": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    if (previous !== null) storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return count\n  } catch {\n    return 1\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 49,
+        "assertion": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 37,
+        "assertion": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "actual": null,
+      "expected": true,
+      "decodedMessage": "fresh session must persist the session record",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M14",
+    "candidates": [
+      "C10"
+    ],
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "owner": "recordScanSession",
+    "sourceSha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "mutantSha256": "469710a00277be4af70a36e7ae4224c4896f4cf2263bc1348e6fe57de155c5ef",
+    "from": "    return count\n",
+    "to": "    return count === 2 ? 1 : count\n",
+    "ownerBefore": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return count\n  } catch {\n    return 1\n  }\n}",
+    "ownerAfter": "export function recordScanSession(\n  storage: ScanTriggerStorage | null,\n  now: number = Date.now(),\n): number {\n  if (!storage) return 1\n  try {\n    const previous = parseScanSessionRecord(storage.getItem(SCAN_SESSION_RECORD_KEY))\n    const isNewSession = previous === null || now - previous.lastSeenAt > NEW_SESSION_GAP_MS\n    const count = previous === null ? 1 : isNewSession ? previous.count + 1 : previous.count\n    storage.setItem(SCAN_SESSION_RECORD_KEY, JSON.stringify({ count, lastSeenAt: now }))\n    return count === 2 ? 1 : count\n  } catch {\n    return 1\n  }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 50,
+        "assertion": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-trigger-session-marker.test.ts",
+        "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+        "callbackSha256": "e01f26fc026506ad02e145db5f3b6d5e03d0d294a75522525dd04de8a8080cca",
+        "line": 38,
+        "assertion": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 1,
+      "expected": 2,
+      "decodedMessage": "Expected values to be strictly equal:\n\n1 !== 2\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M15",
+    "candidates": [
+      "C11"
+    ],
+    "file": "src/lib/scan/profile-context.ts",
+    "owner": "loadScanEvaluationContext",
+    "sourceSha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+    "mutantSha256": "0781b4e0cb82901dd0f42d50643dc8b84fc16e59d71f81f0e75931dd94c8fad3",
+    "from": "  return loaded?.prepared ?? null",
+    "to": "  return loaded ? { ...loaded.prepared, snapshot: { ...loaded.prepared.snapshot, profile: { ...loaded.prepared.snapshot.profile, hair: { ...loaded.prepared.snapshot.profile.hair, thickness: \"coarse\" } } } } : null",
+    "ownerBefore": "export async function loadScanEvaluationContext(\n  client: SupabaseClient,\n  userId: string,\n): Promise<ScanEvaluationContext | null> {\n  const loaded = await loadSharedScannerContext(client, userId)\n  return loaded?.prepared ?? null\n}",
+    "ownerAfter": "export async function loadScanEvaluationContext(\n  client: SupabaseClient,\n  userId: string,\n): Promise<ScanEvaluationContext | null> {\n  const loaded = await loadSharedScannerContext(client, userId)\n  return loaded ? { ...loaded.prepared, snapshot: { ...loaded.prepared.snapshot, profile: { ...loaded.prepared.snapshot.profile, hair: { ...loaded.prepared.snapshot.profile.hair, thickness: \"coarse\" } } } } : null\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-profile-context.test.ts",
+        "title": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions",
+        "callbackSha256": "e66400a2aecdb39b1420735d73505ce2df8ffb1ca8aa18375b7989b83c7d4a3b",
+        "line": 82,
+        "assertion": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-profile-context.test.ts",
+        "title": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions",
+        "callbackSha256": "e66400a2aecdb39b1420735d73505ce2df8ffb1ca8aa18375b7989b83c7d4a3b",
+        "line": 82,
+        "assertion": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "actual": {
+        "texture": "wavy",
+        "thickness": "coarse",
+        "density": "medium",
+        "length": "long",
+        "surface": "rough",
+        "elasticity": "stretches_bounces",
+        "chemicalTreatments": [
+          "natural"
+        ]
+      },
+      "expected": {
+        "texture": "wavy",
+        "thickness": "fine",
+        "density": "medium",
+        "length": "long",
+        "surface": "rough",
+        "elasticity": "stretches_bounces",
+        "chemicalTreatments": [
+          "natural"
+        ]
+      },
+      "decodedMessage": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    chemicalTreatments: [\n      'natural'\n    ],\n    density: 'medium',\n...\n    texture: 'wavy',\n+   thickness: 'coarse'\n-   thickness: 'fine'\n  }\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M16",
+    "candidates": [
+      "C12"
+    ],
+    "file": "src/lib/scan/pending-submission.ts",
+    "owner": "findOpenScanSubmission",
+    "sourceSha256": "849cbb78f7fd710238aa91168c5ca67383fc825025c112ae779731b4d6f486fa",
+    "mutantSha256": "b3f280f27a38e6bb4fa27e839ca02edbd9fb1f13e35b3168272edf7789acd1ec",
+    "from": "  if (!data) return null",
+    "to": "  if (!data) return { submissionId: \"unexpected\", status: \"researching\" }",
+    "ownerBefore": "export async function findOpenScanSubmission(\n  client: SupabaseClient,\n  userId: string,\n  normalizedValue: string,\n): Promise<ScanPendingSubmission> {\n  // Stored submissions hold whatever spelling the scanner sent at submission time;\n  // match every GTIN spelling of the same number (mirrors the catalog lookup).\n  const queryValues = gtinQueryVariants(normalizedValue)\n\n  const { data, error } = await client\n    .from(\"product_submissions\")\n    .select(\"id, status\")\n    .eq(\"user_id\", userId)\n    .in(\"scanned_identifier_value\", queryValues)\n    .in(\"status\", OPEN_SUBMISSION_STATUSES)\n    .order(\"created_at\", { ascending: false })\n    .limit(1)\n    .maybeSingle()\n  if (error) throw new Error(\"scan_pending_submission_lookup_failed\")\n  if (!data) return null\n\n  const row = data as OpenSubmissionRow\n  return { submissionId: row.id, status: row.status }\n}",
+    "ownerAfter": "export async function findOpenScanSubmission(\n  client: SupabaseClient,\n  userId: string,\n  normalizedValue: string,\n): Promise<ScanPendingSubmission> {\n  // Stored submissions hold whatever spelling the scanner sent at submission time;\n  // match every GTIN spelling of the same number (mirrors the catalog lookup).\n  const queryValues = gtinQueryVariants(normalizedValue)\n\n  const { data, error } = await client\n    .from(\"product_submissions\")\n    .select(\"id, status\")\n    .eq(\"user_id\", userId)\n    .in(\"scanned_identifier_value\", queryValues)\n    .in(\"status\", OPEN_SUBMISSION_STATUSES)\n    .order(\"created_at\", { ascending: false })\n    .limit(1)\n    .maybeSingle()\n  if (error) throw new Error(\"scan_pending_submission_lookup_failed\")\n  if (!data) return { submissionId: \"unexpected\", status: \"researching\" }\n\n  const row = data as OpenSubmissionRow\n  return { submissionId: row.id, status: row.status }\n}",
+    "prospectiveTsParsed": true,
+    "sqlLimit": null,
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-pending-submission.test.ts",
+        "title": "findOpenScanSubmission: queries every GTIN spelling of the same number",
+        "callbackSha256": "c60246324744a61dff12ff40b6be7970bc6a818fc792323d7b6a532b22e71bea",
+        "line": 62,
+        "assertion": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-pending-submission.test.ts",
+        "title": "findOpenScanSubmission: queries every GTIN spelling of the same number",
+        "callbackSha256": "c60246324744a61dff12ff40b6be7970bc6a818fc792323d7b6a532b22e71bea",
+        "line": 54,
+        "assertion": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": {
+        "submissionId": "unexpected",
+        "status": "researching"
+      },
+      "expected": null,
+      "decodedMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   status: 'researching',\n+   submissionId: 'unexpected'\n+ }\n- null\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M17",
+    "candidates": [
+      "D1"
+    ],
+    "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "owner": "migration",
+    "sourceSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+    "mutantSha256": "187b82d368749d5287eeda56140cf235017b8d1dea9734357e19fe4e033d34f9",
+    "from": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "to": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_ean AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NOT NULL DO INSTEAD NOTHING;\n",
+    "ownerBefore": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "ownerAfter": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_ean AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NOT NULL DO INSTEAD NOTHING;\n",
+    "prospectiveTsParsed": false,
+    "sqlLimit": "SQL text recipe inspected only; main must validate local PGlite support and intended assertion before acceptance. No database ran.",
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-name-only-submission-migration.test.ts",
+        "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+        "callbackSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "line": 211,
+        "assertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-name-only-submission-migration.test.ts",
+        "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+        "callbackSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "line": 184,
+        "assertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 1,
+      "expected": 2,
+      "decodedMessage": "Expected values to be strictly equal:\n\n1 !== 2\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  },
+  {
+    "id": "M18",
+    "candidates": [
+      "D2"
+    ],
+    "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "owner": "migration",
+    "sourceSha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+    "mutantSha256": "bfb5f25433cc6062daf1878f4c3bdc361f60c8cdc389e61397580efc93940e44",
+    "from": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "to": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_name AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NULL DO INSTEAD NOTHING;\n",
+    "ownerBefore": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n",
+    "ownerAfter": "-- Name-based research intake (plan Rev. 6 §4/§6, Task 5): the search sheet's terminal\n-- recovery lets a user submit \"Marke + Produktname\" for research when neither the catalog\n-- nor the dm lane found a match -- no scanned identifier at all. Two changes.\n--\n-- 1) product_submissions_scan_requires_identifier_check (migration 20260820100100) today\n--    requires EVERY source='scan' row to carry a scanned identifier, which would reject\n--    every name-only submission outright. Relax it to also accept a scan row that carries\n--    both brand_text and product_name_text instead -- an identifier-based row (existing\n--    behavior, unchanged) OR a name-based one (new), never neither.\nALTER TABLE public.product_submissions\n  DROP CONSTRAINT IF EXISTS product_submissions_scan_requires_identifier_check;\n\nALTER TABLE public.product_submissions\n  ADD CONSTRAINT product_submissions_scan_requires_identifier_check\n  CHECK (\n    source <> 'scan'\n    OR scanned_identifier_value IS NOT NULL\n    OR (brand_text IS NOT NULL AND product_name_text IS NOT NULL)\n  );\n\n-- 2) idx_product_submissions_one_open_scan (migration 20260820103000) enforces \"one open\n--    submission per (user, scanned identifier)\" for the EAN lane, but a name-only row has\n--    no scanned_identifier_value at all -- that partial index's own WHERE clause excludes\n--    it, so nothing would stop the same user from opening duplicate name-only research\n--    requests for the same product. This is the mirrored invariant for that lane: one open\n--    submission per (user, category, lower(brand_text), lower(product_name_text)), scoped\n--    to name-only scan rows only (scanned_identifier_value IS NULL) so it can never overlap\n--    the EAN lane's own index. A lost race here answers 23505, the same shape the EAN\n--    lane's insert already produces; the scan submit route reloads the winning row and\n--    answers with its pending receipt instead of an error (get-or-create), mirroring\n--    submitScanProductIntake's existing EAN-lane coalesce.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_product_submissions_one_open_scan_name\n  ON public.product_submissions (user_id, category, lower(brand_text), lower(product_name_text))\n  WHERE scanned_identifier_value IS NULL\n    AND source = 'scan'\n    AND status IN ('pending_review', 'researching', 'ready_for_review', 'needs_more_info');\n\nCREATE RULE audit_drop_name AS ON INSERT TO public.product_submissions WHERE NEW.scanned_identifier_value IS NULL DO INSTEAD NOTHING;\n",
+    "prospectiveTsParsed": false,
+    "sqlLimit": "SQL text recipe inspected only; main must validate local PGlite support and intended assertion before acceptance. No database ran.",
+    "oracles": {
+      "transfer": {
+        "file": "tests/scan-name-only-submission-migration.test.ts",
+        "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+        "callbackSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "line": 211,
+        "assertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "firstKeeperFrameRequired": true
+      },
+      "cut": {
+        "file": "tests/scan-name-only-submission-migration.test.ts",
+        "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+        "callbackSha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+        "line": 184,
+        "assertion": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "firstKeeperFrameRequired": true
+      }
+    },
+    "expectedError": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 1,
+      "expected": 2,
+      "decodedMessage": "Expected values to be strictly equal:\n\n1 !== 2\n",
+      "messageGeneratedFromLiteralShapeOnly": true
+    },
+    "acceptance": "Exactly one selected keeper: clean pass -> intended ERR_ASSERTION/operator/decoded message/FIRST keeper frame -> own CAS byte restoration -> clean pass. No import/setup/hook/timeout/cancel/skip/todo accepted. No actual execution in this packet."
+  }
+]

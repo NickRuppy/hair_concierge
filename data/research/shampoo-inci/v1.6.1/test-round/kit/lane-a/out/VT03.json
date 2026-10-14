@@ -1,0 +1,391 @@
+{
+ "blindId": "VT03",
+ "identity": {
+  "brand": "Maria Nila",
+  "productName": "Head & Hair Heal Shampoo",
+  "packSize": "350 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "551dab3550a91893bd1a4377c3be93ac9a4796534a387457b5d7ef334fb513af",
+  "normalization": "ID-2: 'Aqua/Water/Eau' one entry; colour entries 'CI 16035/Red 40', 'CI 19140/Yellow 5' one entry each; 39 normalized entries; normalized positions",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Parfum/Fragrance @37; prominent = positions 1-36",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "identityNotes": [
+   "Claimed \"Vitamin E\", \"Aloe Vera\", \"Apigenin\", \"Peptide\", \"Oleanolsäure\", \"Piroctone Olamine\" all map to frozen INCI entries."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT03.json",
+   "sha256": "8a40d2c0e765f06fa7fc8533c952672068ba804452383006b222fb3ebd38181f"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2, followed by mild anionics Sodium Lauroyl Methyl Isethionate @3, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5. Any order among them still yields C6 low. Counter-signal: three mild anionic routes (breadth).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6"
+   ],
+   "counterSignal": "three mild anionic routes after the betaine",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by C2: early (prominent) silicone Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18, cationic polymer Guar Hydroxypropyltrimonium Chloride @16, pearlizing route Glycol Distearate @6, deliberate humectant Glycerin @17; plus Sunflower Seed Oil @15 and Quaternium-95 @26. Counter-signal: silicone, guar and oil all sit after Piroctone Olamine @12 and peptides @7/@10 (plausibly sub-1 % each); neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "silicone/guar/oil after a capped active, plausibly sub-1 %",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "silicone": [
+     "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18"
+    ],
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride @16"
+    ],
+    "cationic_conditioner": [
+     "Quaternium-95 @26 (quaternary by name)"
+    ],
+    "payload_lipid": {
+     "material": [
+      "Helianthus Annuus (Sunflower) Seed Oil @15"
+     ],
+     "nonMaterial": []
+    },
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "reset": [
+     "amphoteric Cocamidopropyl Betaine @2",
+     "mild anionic Sodium Lauroyl Methyl Isethionate @3, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5"
+    ],
+    "humectantContext": [
+     "Glycerin @17",
+     "Propanediol @30",
+     "Butylene Glycol @32",
+     "Aloe Barbadensis Leaf Extract @14"
+    ],
+    "excluded": [
+     "Glycol Distearate @6 (pearlizing wax, 6.4)",
+     "PEG-150 Pentaerythrityl Tetrastearate @25 (PEG thickener)",
+     "PEG-40 Hydrogenated Castor Oil @28 (solubilizer, 6.4)",
+     "PPG-26-Buteth-26 @27 (solubilizer)",
+     "Trideceth-5 @20 (ethoxylate solubilizer/thickener)",
+     "PPG-2 Hydroxyethyl Cocamide @19 (alkanolamide thickener, not deposition)",
+     "Dextran @23 (polysaccharide, no cationic charge)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 21,
+     "inci": "Benzoic Acid",
+     "classes": [
+      "preservative_or_capped_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 37,
+     "inci": "Parfum/Fragrance"
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Biotinoyl Tripeptide-1@7 (ii) alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide@19 listed after it before the cap",
+     "w_line_skipped:Acetyl Tetrapeptide-3@10 (ii) PPG-2 Hydroxyethyl Cocamide@19",
+     "w_line_skipped:Piroctone Olamine@12 (ii) PPG-2 Hydroxyethyl Cocamide@19",
+     "w_line_skipped:Tocopheryl Acetate@13 (ii) PPG-2 Hydroxyethyl Cocamide@19"
+    ],
+    "codes": [],
+    "note": "Benzoic Acid @21: (i) surfactants @2-5 before it; (ii) nothing of the structurant classes between @22 and @36. Sunflower Seed Oil @15 < 21 is therefore material."
+   },
+   "depositionLoad": "moderate",
+   "persistence": "high",
+   "resetCapacity": "weak",
+   "counterevidence": "All deposition (oil @15, guar @16, silicone copolymer @18, Quaternium-95 @26) sits after a capped active (Piroctone Olamine @12) and peptide actives, so each is plausibly sub-1 %; the alkanolamide @19 after those actives shows the list below about 1 % is not in descending order. The oil is material only because the W-line is pushed to @21.",
+   "whyThisBand": "W-RICH holds for weight: material payload_lipid Sunflower Seed Oil @15 (before W-line @21) converging with a persistent amino-silicone copolymer @18 and cationic guar @16; reset is limited (C6 low mild chassis, resetCapacity weak), so the rich route of the high anchor holds; the convergence route (silicone + cationic polymer + cationic conditioner + material lipid) points the same way.",
+   "whyNotNeighborBand": "moderate would need reset to offset the converging deposition, which a mild C6 chassis does not do; the case for moderate rests only on unknown (probably small) amounts.",
+   "confidenceLimitingFactor": "every deposition route is in the probable sub-1 % zone; material lipid status depends on the alkanolamide skip",
+   "rationale": "high: W-RICH with limited reset (6.7 W-RICH, W-LINE) plus converging persistent families (6.6); confidence moderate because amounts are plausibly small (neighbor moderate).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W3",
+    "P0",
+    "N-ALT"
+   ],
+   "counterSignal": "All deposition (oil @15, guar @16, silicone copolymer @18, Quaternium-95 @26) sits after a capped active (Piroctone Olamine @12) and peptide actives, so each is plausibly sub-1 %; the alkanolamide @19 after those actives shows the list below about 1 % is not in descending order. The oil is material only because the W-line is pushed to @21.",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "repairRoutes": [],
+    "moistureRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "scalp focus"
+   },
+   "claimRole": "candidate",
+   "counterSignal": "hair-loss/growth claims dominate much of the text but are out of scope (F5); the formula is conditioning-rich (C high, W high)",
+   "decisionTrace": {
+    "claimDirection": "dandruff (\"Ein beruhigendes Shampoo, das Schuppen behandelt\", \"Verhindert Schuppen\", manufacturer DE moderate)",
+    "formulaCompatible": true,
+    "compatibleRoute": "Piroctone Olamine @12",
+    "decisionReason": "problem-led anti-dandruff positioning with recognized active (7.2); hair-loss claims ignored (F5)"
+   },
+   "rationale": "scalp_active: moderate-graded dandruff claim + Piroctone Olamine @12; hair-loss claims ignored (7.2, F5).",
+   "ruleIds": [
+    "7.2",
+    "F5",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingClaims": [
+     "\"schützt vor Farbverlust\" (colour protection, not a focus value)"
+    ],
+    "independentRoutes": [],
+    "whyDistinct": "no in-scope lengths-care claim; hair growth is out of scope (F5)",
+    "exceptionCode": null
+   },
+   "rationale": "[]: no in-scope secondary positioning.",
+   "ruleIds": [
+    "8",
+    "F5"
+   ]
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "moderate",
+   "neighboringAlternative": "frequent",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "Piroctone Olamine @12",
+    "\"das Schuppen behandelt\", \"Verhindert Schuppen\" (manufacturer DE, moderate)"
+   ],
+   "losingTriggers": [
+    "explicit_frequent_non_strong: \"Für die tägliche Anwendung geeignet\", \"Täglich anwendbar\" (moderate) with cleansingStrength low"
+   ],
+   "counterSignal": "daily-use directions fire frequent; U1 keeps treatment",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": "recognized_active_problem_led",
+    "triggerEvidence": [
+     "Piroctone Olamine @12",
+     "manufacturer dandruff claim"
+    ],
+    "rationale": "U3; U1 precedence over frequent"
+   },
+   "rationale": "treatment (U3, U1); frequent loses.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "targeted",
+   "counterSignal": "\"bei trockener Kopfhaut\" and \"beruhigend\" exist but are bundled with dandruff units",
+   "rationale": "not_targeted: \"beruhigendes Shampoo, das Schuppen behandelt\" is inside a dandruff unit; \"bei trockener Kopfhaut ... hilft\" stands directly before \"Piroctone Olamine ... vermindern Schuppen\" in the same paragraph (bundled, E2b); \"Beruhigender Aloe Vera-Extrakt\" is an ingredient description (E2a). No SC1 positioning.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a",
+    "E2b"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: Piroctone Olamine @12 in a complete formula (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Sodium Lauroyl Methyl Isethionate @3",
+    "Disodium Laureth Sulfosuccinate @4",
+    "Sodium Lauryl Sulfoacetate @5"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @2"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "Glycol Distearate @6",
+    "PPG-2 Hydroxyethyl Cocamide @19 (alkanolamide-type)",
+    "Trideceth-5 @20",
+    "PEG-150 Pentaerythrityl Tetrastearate @25",
+    "PPG-26-Buteth-26 @27",
+    "PEG-40 Hydrogenated Castor Oil @28",
+    "Sodium Chloride @29"
+   ],
+   "c4": "no defining anionic; C6 earliest prominent = Cocamidopropyl Betaine @2"
+  },
+  "conditioningRoutes": [
+   "Guar Hydroxypropyltrimonium Chloride @16",
+   "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18",
+   "Quaternium-95 @26",
+   "Sunflower Seed Oil @15",
+   "Glycol Distearate @6",
+   "Glycerin @17"
+  ],
+  "actives": [
+   "Biotinoyl Tripeptide-1 @7",
+   "Oleanolic Acid @8",
+   "Apigenin @9",
+   "Acetyl Tetrapeptide-3 @10",
+   "Trifolium Pratense (Clover) Flower Extract @11",
+   "Piroctone Olamine @12",
+   "Tocopheryl Acetate @13"
+  ],
+  "scalpExposure": [
+   "Parfum/Fragrance @37 (no allergens declared)"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @12"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "claimUnitsAndGrades": [
+  "manufacturer_de (moderate): \"Ein beruhigendes Shampoo, das Schuppen behandelt, Kopfhautproblemen und Haarausfall vorbeugt und das Haarwachstum anregt\" (dandruff unit; soothing wording absorbed; hair loss out of scope)",
+  "\"Verhindert Schuppen und andere Kopfhautprobleme\" (dandruff)",
+  "\"Stimuliert das Haarwachstum\" (hair growth, S-HAIRLOSS)",
+  "\"Beruhigender Aloe Vera-Extrakt\" (ingredient description)",
+  "\"... auch bei trockener Kopfhaut und Haarausfall hilft\" (dryness wording bundled: next sentence is a dandruff unit)",
+  "\"Für die tägliche Anwendung geeignet\" / \"Täglich anwendbar\" (U2)"
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "scalp_active",
+   "evidence": "manufacturer dandruff claims",
+   "reason": "7.2"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional)",
+   "final": "treatment",
+   "evidence": "dandruff claim + Piroctone Olamine",
+   "reason": "U3"
+  }
+ ],
+ "projection": {
+  "status": "proposal",
+  "statusReasons": [],
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=high (neighbor moderate), C=high (neighbor moderate): fine not_suited, normal acceptable, coarse ideal; T6 floor applies (scalp-concern target dandruff); T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "heavy",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy, confidence moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "moderate",
+    "rationale": "S-DANDRUFF: manufacturer DE dandruff claim (moderate) + dandruffSupport supported; no secondary (R17.2)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low with D1 false -> gentle; bucket expects regular (amber row, I2); I3 neighbor none.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "no D1 term",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (D1 false)",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "dandruff_bundled_comfort_wording: \"Ein beruhigendes Shampoo, das Schuppen behandelt\" (manufacturer DE, moderate); S-SENSITIVE formula gate failed: CSA met (Glycerin @17, Sunflower Seed Oil @15) but no prominent E4 comfort route; unlisted_route_candidate:Aloe Barbadensis Leaf Extract",
+   "hair_loss_claim_not_evaluated: \"Haarausfall vorbeugt\", \"Stimuliert das Haarwachstum\", \"Oleanolsäure beugt zudem Haarausfall vor\"",
+   "scalp_concern_floor_applied:fine"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "\"beruhigendes Shampoo\" read as comfort wording inside a dandruff unit (feeds only the sensitive combination, whose gate fails). Alternative: not comfort wording at all; outcome identical (no combination value).",
+  "Weight high rests on W-RICH with weak reset where every deposition route is plausibly sub-1 % (see formula pass).",
+  "weightPotential high vs moderate: the W-RICH rich route is formally met (material oil @15, persistent silicone/cationic, weak reset) but every route is in the probable sub-1 % zone; recorded high at moderate confidence, neighbor moderate (P0 heavier side).",
+  "Quaternium-95 read as cationic_conditioner by name; immaterial to the band."
+ ]
+}

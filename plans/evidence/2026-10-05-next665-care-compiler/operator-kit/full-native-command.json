@@ -1,0 +1,19 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+}

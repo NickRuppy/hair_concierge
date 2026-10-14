@@ -135,6 +135,10 @@ function groupText(heading: string): string {
   return rest.slice(0, Math.min(...ends))
 }
 
+function segmentLine(): HTMLElement | null {
+  return document.getElementById("runsheet-locked-in-segments")
+}
+
 function total(): string {
   return document.getElementById("runsheet-locked-in-total")?.textContent ?? ""
 }
@@ -278,4 +282,144 @@ test("cockpit: an accepted write keeps the row and refreshes from the server", a
   assert.ok(groupText("Neu kaufen").includes("Alpha Shampoo"))
   assert.equal(total(), EUR("9,95"))
   assert.equal(router.refresh.mock.callCount(), 1)
+})
+
+// --- Profi / Drogerie overview -------------------------------------------------------
+
+const withSegment = (
+  base: DiscoveryCockpitSwapOption,
+  marketSegment: "drugstore" | "professional" | null,
+): DiscoveryCockpitSwapOption => ({ ...base, marketSegment })
+
+test("segment line: both segments, no unknowns → „1 von 2 Profi · 1 von 2 Drogerie“, below the sum", () => {
+  render(
+    <RunsheetLockedInSection
+      lockedIn={runsheetLockedIn(
+        steps({
+          shampoo: {
+            ...swapShampoo,
+            swapOptions: [
+              withSegment(option("alpha", "Alpha Shampoo", EUR("9,95")), "professional"),
+            ],
+          },
+          conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" },
+        }),
+      )}
+    />,
+  )
+  assert.equal(segmentLine()?.textContent, "1 von 2 Profi · 1 von 2 Drogerie")
+  // Directly after the „Summe neu" row, before the open-steps line.
+  const text = section().textContent ?? ""
+  assert.ok(text.indexOf("Summe neu") < text.indexOf("1 von 2 Profi"))
+  assert.ok(text.indexOf("1 von 2 Profi") < text.indexOf("Alle Schritte entschieden"))
+})
+
+test("segment line: three of five Profi, two Drogerie", () => {
+  const sum = (professional: number, drugstore: number) => {
+    const rows = [
+      ...Array.from({ length: professional }, () => "professional" as const),
+      ...Array.from({ length: drugstore }, () => "drugstore" as const),
+    ]
+    return {
+      ...runsheetLockedIn(steps()),
+      buy: [],
+      discard: [],
+      skip: [],
+      keep: rows.map((marketSegment, index) => ({
+        label: `P${index}`,
+        categoryLabel: "Shampoo",
+        marketSegment,
+      })),
+    } satisfies RunsheetLockedIn
+  }
+  render(<RunsheetLockedInSection lockedIn={sum(3, 2)} />)
+  assert.equal(segmentLine()?.textContent, "3 von 5 Profi · 2 von 5 Drogerie")
+})
+
+test("segment line: unknown segments append „· 1 ohne Angabe“", () => {
+  render(
+    <RunsheetLockedInSection
+      lockedIn={runsheetLockedIn(
+        steps({
+          shampoo: {
+            ...swapShampoo,
+            swapOptions: [
+              withSegment(option("alpha", "Alpha Shampoo", EUR("9,95")), "professional"),
+            ],
+          },
+          conditioner: { outcome: "kept", ownedMarketSegment: null },
+        }),
+      )}
+    />,
+  )
+  assert.equal(segmentLine()?.textContent, "1 von 2 Profi · 0 von 2 Drogerie · 1 ohne Angabe")
+})
+
+test("segment line: nothing in the routine leaves an empty live region (announces the first change)", () => {
+  render(<RunsheetLockedInSection lockedIn={runsheetLockedIn(steps())} />)
+  const line = segmentLine()
+  assert.ok(line)
+  assert.equal(line.textContent, "")
+  assert.equal(line.getAttribute("aria-live"), "polite")
+  assert.equal(line.getAttribute("aria-atomic"), "true")
+})
+
+test("segment line is a polite, atomic live region when filled", () => {
+  render(
+    <RunsheetLockedInSection
+      lockedIn={runsheetLockedIn(
+        steps({ conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" } }),
+      )}
+    />,
+  )
+  assert.equal(segmentLine()?.getAttribute("aria-live"), "polite")
+  assert.equal(segmentLine()?.getAttribute("aria-atomic"), "true")
+})
+
+test("per-row tags: Profi / Drogerie after the label on Neu kaufen and Behalten, none for null", () => {
+  render(
+    <RunsheetLockedInSection
+      lockedIn={runsheetLockedIn(
+        steps({
+          shampoo: {
+            ...swapShampoo,
+            swapOptions: [
+              withSegment(option("alpha", "Alpha Shampoo", EUR("9,95")), "professional"),
+            ],
+          },
+          conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" },
+        }),
+      )}
+    />,
+  )
+  assert.ok(groupText("Neu kaufen").includes("Alpha Shampoo"))
+  assert.equal(within(section()).getAllByText("Profi", { selector: "span" }).length, 1)
+  assert.equal(within(section()).getAllByText("Drogerie", { selector: "span" }).length, 1)
+  assert.ok(groupText("Neu kaufen").includes("Profi"))
+  assert.ok(groupText("Behalten").includes("Drogerie"))
+  cleanup()
+
+  render(
+    <RunsheetLockedInSection
+      lockedIn={runsheetLockedIn(steps({ conditioner: { outcome: "kept" } }))}
+    />,
+  )
+  assert.equal(within(section()).queryByText("Profi", { selector: "span" }), null)
+  assert.equal(within(section()).queryByText("Drogerie", { selector: "span" }), null)
+})
+
+test("the cockpit updates the segment line live as a decision is clicked", () => {
+  deferredFetch()
+  renderCockpit(
+    steps({
+      shampoo: {
+        swapOptions: [withSegment(option("alpha", "Alpha Shampoo", EUR("9,95")), "professional")],
+      },
+      conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" },
+    }),
+  )
+  assert.equal(segmentLine()?.textContent, "0 von 1 Profi · 1 von 1 Drogerie")
+
+  fireEvent.click(screen.getByRole("radio", { name: /Tauschen zu Alpha Shampoo/ }))
+  assert.equal(segmentLine()?.textContent, "1 von 2 Profi · 1 von 2 Drogerie")
 })

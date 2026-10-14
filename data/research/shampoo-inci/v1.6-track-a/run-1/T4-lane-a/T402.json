@@ -1,0 +1,449 @@
+{
+  "blindId": "T402",
+  "inciFingerprintSha256": "723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0",
+  "identity": {
+    "brand": "Balea",
+    "productName": "Balea Professional Shampoo Hydra Volume, 250 ml",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "E3 cut: Parfum at 11; prominent = 2-10."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T402.json (fingerprint 723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T402.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T402.json#positioningSources[1] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de (dm own brand)": "moderate",
+    "database user upload": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "volume",
+      "evidence": "name 'Hydra Volume', 'Volumenshampoo'",
+      "reason": "dominant compatible claim"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": "[]",
+      "evidence": "moisture claims",
+      "reason": "verdict nonspecific"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Hydroxysultaine (3), Coco-Glucoside (5) and no prominent reinforcing strong anionic -> moderate. Kaolin (8) is clay, not a cleansing route (C3). Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic (ether)"
+      },
+      {
+        "ingredient": "Cocamidopropyl Hydroxysultaine",
+        "position": 3,
+        "role": "buffer (amphoteric)"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 5,
+        "role": "buffer (glucoside)"
+      }
+    ],
+    "counterSignal": [
+      "Kaolin (8) adds an absorbent clay element (not a surfactant route)"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T402.json (fingerprint 723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "One meaningful conditioning system: prominent cationic Guar Hydroxypropyltrimonium Chloride (9) with humectant Sodium Hyaluronate (6); no silicone, lipid or pearlizer, so C2 is not met and high is not reachable. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Hyaluronate",
+        "position": 6,
+        "role": "humectant (R11, E4)"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 9,
+        "role": "cationic polymer"
+      }
+    ],
+    "counterSignal": [
+      "clay (Kaolin 8) and a cleansing-led short list argue toward low"
+    ],
+    "neighboringAlternative": "low",
+    "sources": [
+      "formula/T402.json (fingerprint 723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "low: the only depositing route is one cationic guar facing a moderate C1 reset; noticeable loss of lift is unlikely. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Single deposition family: one cationic guar (9) in a 13-ingredient list; no silicone, lipid, protein or film former."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "A single guar in an ordinary rinse-off base is weakly retained; clay contributes no persistent film."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES chassis with sultaine and glucoside buffers; Kaolin absorbent adds a little oil-uptake but is not a surfactant route."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          9
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Hydroxysultaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          5
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Sodium Hyaluronate",
+          6
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Kaolin",
+        8,
+        "clay, absorbent; not deposition"
+      ],
+      [
+        "Niacinamide",
+        7,
+        "vitamin, not deposition"
+      ]
+    ],
+    "whyThisBand": "low: the only depositing route is one cationic guar facing a moderate C1 reset; noticeable loss of lift is unlikely.",
+    "whyNotNeighborBand": "Not moderate: only one deposition family (no W2 trigger), no silicone/lipid/protein reinforcement; a single light polymer facing moderate reset stays low (no polymer floor).",
+    "counterEvidence": [
+      "guar is before Parfum (prominent)"
+    ],
+    "confidenceLimitingFactor": "INCI-only: guar charge density/level unknown; could plausibly move to moderate.",
+    "formulaFacts": [
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 9,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Hydroxysultaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 5,
+        "family": "nonionic_surfactant"
+      },
+      {
+        "ingredient": "Sodium Hyaluronate",
+        "position": 6,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "guar is before Parfum (prominent)"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T402.json (fingerprint 723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "volume",
+    "confidence": "moderate",
+    "rationale": "Volume is the dominant job: 'Volume' in the exact name (high), headline 'Volumenshampoo' and 'Fülle' (manufacturer, moderate); the formula is compatible (weightPotential low, no silicone, light single-guar deposition).",
+    "formulaFacts": [
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 9
+      },
+      {
+        "ingredient": "Kaolin",
+        "position": 8
+      }
+    ],
+    "counterSignal": [
+      "'Hydra' in name and 'Feuchtigkeitsspendend' compete; moisture verdict nonspecific"
+    ],
+    "neighboringAlternative": "moisture",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "moderate",
+    "rationale": "Moisture considered ('Hydra', 'Feuchtigkeitsspendend', 'Feuchtigkeit bis in die Spitzen'), but the care-direction verdict is nonspecific (single humectant Sodium Hyaluronate 6), so F1 keeps moisture out.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "route not moisture_supported"
+    ],
+    "neighboringAlternative": [
+      "moisture"
+    ],
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "nonspecific",
+      "moistureRoutes": [
+        "Sodium Hyaluronate 6"
+      ],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Guar 9"
+      ],
+      "limitation": "one humectant is not a coherent cluster (7.3)"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "'Hydra' in name and 'Feuchtigkeitsspendend' compete; moisture verdict nonspecific"
+    ],
+    "neighboringAlternative": "moisture",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "volume (name + manufacturer)",
+        "formulaCompatible": true,
+        "compatibleRoute": "light low-deposition architecture (W low; Kaolin, single guar)",
+        "decisionReason": "7.2 dominant compatible claim"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "Hydra (name)",
+          "Feuchtigkeitsspendend (manufacturer)"
+        ],
+        "independentRoutes": [
+          "Sodium Hyaluronate 6 (not a cluster)"
+        ],
+        "whyDistinctFromPrimary": "route not moisture_supported",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No frequency wording; cleansing not strong (no alternating); no D1; no active."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No frequency wording; cleansing not strong (no alternating); no D1; no active.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "Only protective wording ('pH-hautneutrale Formel', 'Hautverträglichkeit dermatologisch bestätigt'); no E2 sensitive/dry unit. CSA would pass but positioning is absent.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T402.json (fingerprint 723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor moderate -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 unit ('platten Ansatz' is not an oil/sebum claim); manufacturer source present -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "INCI-only: guar charge density/level unknown; could plausibly move to moderate.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioning moderate (lone prominent guar = one meaningful system)",
+      "alternative": "low (cleansing-led, clay)"
+    },
+    {
+      "reading": "secondary [] because moisture verdict nonspecific",
+      "alternative": "['moisture'] if Sodium Hyaluronate + guar is read as moisture_supported"
+    }
+  ]
+}

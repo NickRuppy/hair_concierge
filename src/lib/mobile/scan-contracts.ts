@@ -1,6 +1,9 @@
 import { z } from "zod"
 
-/** Versioned wire contract for the native scanner. All values are render-ready German. */
+/**
+ * Versioned wire contract for the native scanner. All values are render-ready German.
+ * Optional additive fields retain v1; installed iOS clients ignore unknown keys.
+ */
 export const MOBILE_SCAN_CONTRACT_VERSION = 1 as const
 
 export const mobileScanResolveRequestSchema = z
@@ -59,6 +62,7 @@ const assessmentSchema = z.object({
   verdict: z.enum(["ideal", "supportive", "mismatch"]),
   verdictLabel: z.string().min(1),
   verdictTitle: z.string().min(1),
+  reasonLines: z.array(z.string().min(1)).optional(),
   subtitle: z.string().min(1),
   mismatchSummary: z.string().min(1),
   rows: z.array(mobileScanRowSchema),
@@ -67,9 +71,14 @@ const assessmentSchema = z.object({
     .array(
       z.object({
         product: productSchema,
+        // Optional so budget-less / flag-off responses stay byte-identical; declared here
+        // because zod would otherwise strip them from the parsed output.
+        overBudget: z.boolean().optional(),
+        marketSegment: z.enum(["drugstore", "professional"]).optional(),
         verdict: z.enum(["ideal", "supportive"]),
         verdictLabel: z.string().min(1),
         verdictTitle: z.string().min(1),
+        reasonLines: z.array(z.string().min(1)).optional(),
         mismatchSummary: z.string().min(1),
         rows: z.array(mobileScanRowSchema),
         categoryFit: z.string().nullable(),

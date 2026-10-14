@@ -1,0 +1,28 @@
+{
+  "blindId": "W308",
+  "productName": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume (Rossmann: 'ISANA Shampoo Sensitiv')",
+  "brand": "ISANA",
+  "positioningSources": [
+    {
+      "sourceType": "pack_photo_on_manufacturer_page",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das ISANA SHAMPOO SENSITIV mit Baumwollblumen- und Kornblumen-Extrakt reinigt und pflegt besonders sanft. Durch seine milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol ist es auch bei empfindlicher Kopfhaut bestens geeignet. | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt und pH-hautneutral | HINWEIS: Augenkontakt vermeiden | vegan | Hergestellt in der EU | Hergestellt für Dirk Rossmann GmbH, Isernhägener Str. 16, 30938 Burgwedel",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das ISANA SHAMPOO SENSITIV mit Baumwollblumen- und Kornblumen-Extrakt reinigt und pflegt besonders sanft. Durch seine milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol ist es auch bei empfindlicher Kopfhaut bestens geeignet. | für empfindliche Kopfhaut & normales Haar | Baumwoll-& Kornblume | ohne Silikone | Hautverträglichkeit: dermatologisch bestätigt und pH-hautneutral",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_rossmann_dk_prior_capture",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "",
+      "directionsVerbatim": "Masseres ind i fugtigt hår. Skylles grundigt ud."
+    }
+  ]
+}

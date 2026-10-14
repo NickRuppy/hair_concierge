@@ -99,14 +99,6 @@ const DENSE_WEEKS: TrackerLogDay[] = [
   noneDay("2026-06-20"),
 ]
 
-test("observed wash cadence: 4 washes over 2 observed weeks -> 2/week", () => {
-  assert.equal(estimateObservedWashCadencePerWeek(DENSE_WEEKS), 2)
-})
-
-test("observed wash cadence: null with fewer than 2 observed weeks", () => {
-  assert.equal(estimateObservedWashCadencePerWeek([washDay("2026-06-10", ["shampoo"])]), null)
-})
-
 test("shampoo cadence is the measured wash rhythm, not the self-report", () => {
   const cadences = computeObservedCadences(DENSE_WEEKS, 5, CADENCE_POLICIES)
   const shampoo = cadences.find((c) => c.category === "shampoo")
@@ -122,15 +114,6 @@ test("shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
     cadences.find((c) => c.category === "shampoo"),
     undefined,
   )
-})
-
-test("need-based policy: mask uses observed-week cadence instead of wash share", () => {
-  const cadences = computeObservedCadences(DENSE_WEEKS, null, CADENCE_POLICIES)
-  const mask = cadences.find((c) => c.category === "mask")
-  assert.ok(mask)
-  assert.equal(mask.basis, "day_level")
-  assert.equal(mask.anchorSource, null)
-  assert.equal(mask.weeklyCadence, 1)
 })
 
 test("match-shampoo policy falls back to self-reported anchor for sparse loggers", () => {
@@ -311,6 +294,8 @@ test("custom and unconfirmed days do not affect cadence denominators or category
   const cadences = computeObservedCadences(withCustom, null, CADENCE_POLICIES)
   const mask = cadences.find((cadence) => cadence.category === "mask")
   assert.ok(mask)
+  assert.equal(mask.basis, "day_level")
+  assert.equal(mask.anchorSource, null)
   assert.equal(mask.usageDays, 2)
   assert.equal(mask.weeklyCadence, 1)
   assert.equal(estimateObservedWashCadencePerWeek(withCustom), 2)

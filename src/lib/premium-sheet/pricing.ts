@@ -29,7 +29,7 @@ export const PREMIUM_SHEET_PLAN_ORDER: readonly BillingInterval[] = ["year", "qu
  * same plan, so nothing new is invented here. Prices are untouched (99,99 / 34,99 / 14,99).
  */
 export const PREMIUM_SHEET_DEFAULT_INTERVAL: BillingInterval = "quarter"
-export const PREMIUM_SHEET_RECOMMENDED_INTERVAL: BillingInterval = "quarter"
+const PREMIUM_SHEET_RECOMMENDED_INTERVAL: BillingInterval = "quarter"
 export const PREMIUM_SHEET_RECOMMENDED_BADGE = "Beliebteste Wahl"
 
 /**

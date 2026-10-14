@@ -1,0 +1,135 @@
+'use strict'
+// Main-only shared support. Loading/checking creates no children and writes no files.
+const fs = require('node:fs')
+const path = require('node:path')
+const crypto = require('node:crypto')
+const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const BASE = '/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator'
+const PROPOSAL = '/tmp/test-audit-dormant-rollout-closure'
+const LOCK = '/tmp/test-audit-pruning-operator-lock'
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+const fail = message => { throw Error(message) }
+const readJSON = file => JSON.parse(fs.readFileSync(file, 'utf8'))
+function checkFile(pin) {
+  if (pin.sha === null) { if (fs.existsSync(pin.path)) fail('Previously absent identity file appeared: ' + pin.path); return }
+  if (!fs.existsSync(pin.path) || fs.realpathSync(pin.path) !== pin.realpath) fail('Pinned path drift: ' + pin.path)
+  const bytes = fs.readFileSync(pin.path)
+  if (pin.sharedConfigRelevantSHA) {
+    if (pin.path !== '/Users/nick/AI_work/hair_conscierge/.git/config' || pin.sharedConfigTargetBranch !== 'codex/test-audit-pruning') fail('Config exception outside exact shared metadata')
+    const text = bytes.toString('utf8'); if (!Buffer.from(text).equals(bytes)) fail('Non-UTF8 config')
+    let keep = true; const lines = []
+    for (const line of text.match(/[^\n]*\n|[^\n]+$/g) || []) {
+      if (line.startsWith('[')) {
+        const branch = line.match(/^\[branch "([^"\\]+)"\]\r?\n?$/)
+        keep = !branch || branch[1] === pin.sharedConfigTargetBranch
+      }
+      if (keep) lines.push(line)
+    }
+    if (sha(lines.join('')) !== pin.sharedConfigRelevantSHA) fail('Relevant shared config drift')
+  } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)
+}
+function inventory(dir) {
+  const names = []
+  function visit(p) {
+    for (const d of fs.readdirSync(p, { withFileTypes: true }).sort((a,b) => a.name.localeCompare(b.name))) {
+      const full = path.join(p,d.name)
+      if (d.isDirectory()) visit(full)
+      else if (d.isFile() || d.isSymbolicLink()) names.push(path.relative(dir,full))
+      else fail('Unexpected file kind: ' + full)
+    }
+  }
+  visit(dir)
+  return names.sort()
+}
+function identity(pins) {
+  if (process.cwd() !== ROOT || fs.realpathSync(process.cwd()) !== ROOT || pins.root !== ROOT) fail('Exact real checkout required')
+  if (process.version !== pins.node.version || fs.realpathSync(process.execPath) !== pins.node.realpath || sha(fs.readFileSync(process.execPath)) !== pins.node.sha) fail('Pinned Node binary required')
+  for (const pin of pins.identityFiles) checkFile(pin)
+  const head = fs.readFileSync(path.join(pins.gitDir,'HEAD'),'utf8').trim()
+  if (head !== 'ref: refs/heads/' + pins.branch) fail('Branch drift')
+  const ref = path.join(pins.commonDir,'refs/heads',pins.branch)
+  const commit = fs.existsSync(ref) ? fs.readFileSync(ref,'utf8').trim() : fs.readFileSync(path.join(pins.commonDir,'packed-refs'),'utf8').split('\n').find(l => l.endsWith(' refs/heads/' + pins.branch))?.split(' ')[0]
+  if (commit !== pins.head) fail('HEAD drift')
+}
+function parse(ts,file,text) {
+  const sf = ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS)
+  if (sf.parseDiagnostics.length) fail('Syntax parse failed: ' + file)
+  return sf
+}
+function registrations(ts,file,text) {
+  const sf = parse(ts,file,text), rows = new Map()
+  function walk(n) {
+    if (ts.isCallExpression(n) && n.expression.getText(sf) === 'test') {
+      const cb = n.arguments.at(-1), title = n.arguments[0]
+      const name = ts.isStringLiteralLike(title) ? title.text : title.getText(sf)
+      if (!(ts.isArrowFunction(cb) || ts.isFunctionExpression(cb)) || rows.has(name)) fail('Unexpected duplicate registration: ' + file)
+      const assertions = []
+      function assertionWalk(x) {
+        if (ts.isCallExpression(x) && x.expression.getText(sf).startsWith('assert.')) assertions.push({startLine:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)})
+        ts.forEachChild(x,assertionWalk)
+      }
+      assertionWalk(cb)
+      rows.set(name,{name,statement:n.getText(sf),callback:cb.getText(sf),start:n.getStart(sf),end:n.end,assertions})
+    }
+    ts.forEachChild(n,walk)
+  }
+  walk(sf)
+  return rows
+}
+function replaceOnce(text,from,to,label) {
+  if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+  return text.replace(from,() => to)
+}
+function activate(c,phase){
+ const p=c.phases[phase];if(!p)fail('Unknown source phase');return {...c,sourceSha256:p.sourceSha256,mutatedSha256:p.mutatedSha256,command:c.commands[phase],test:{file:c.test.file,name:c.test.names[phase]}}
+}
+function load(pinSHA){
+ const raw=fs.readFileSync(BASE+'-pins.json');if(sha(raw)!==pinSHA)fail('Tool pins changed');const pins=JSON.parse(raw);identity(pins)
+ function artifacts(){
+  for(const p of pins.dependencies)checkFile(p)
+  for(const t of pins.dependencyTrees)if(JSON.stringify(inventory(t.path))!==JSON.stringify(t.names))fail('Installed dependency membership drift')
+  for(const[f,h]of Object.entries(pins.artifactHashes))if(sha(fs.readFileSync(f))!==h)fail('Artifact drift: '+f)
+  for(const[f,h]of Object.entries(pins.entrypointTemplateHashes))if(sha(fs.readFileSync(f,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'"))!==h)fail('Entrypoint drift')
+ }
+ artifacts();const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(PROPOSAL+'/candidates.json'),controls=readJSON(BASE+'-controls-normalized.json'),ts=require(ROOT+'/node_modules/typescript')
+ if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==6||controls.length!==14||ts.version!==pins.typescriptVersion)fail('Proposal identity/count drift')
+ const snapshots={},counts={before:0,transfer:0,cut:0};let unchangedRetained=0,modifiedRetained=0,deleted=0,changedFiles=0
+ const edits=readJSON(BASE+'-phase-edits.json')
+ for(const file of evidence.files){snapshots[file]={};for(const phase of Object.keys(counts)){const p=evidence.phases[phase].find(p=>p.file===file),bytes=fs.readFileSync(p.path);if(sha(bytes)!==p.sha256)fail('Phase snapshot drift');parse(ts,file,bytes.toString());const rows=file.startsWith('tests/')?registrations(ts,file,bytes.toString()):new Map();snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size}
+  const s=snapshots[file];if(!s.before.bytes.equals(s.transfer.bytes))fail('Unchanged transfer required');if(!s.before.bytes.equals(s.cut.bytes))changedFiles++
+  // Explicit original byte ranges rederive the entire prospective cut, including source and support.
+  let cursor=0,parts=[];for(const e of edits[file]||[]){if(!Number.isInteger(e.start)||!Number.isInteger(e.end)||e.start<cursor||e.end<e.start||s.before.bytes.toString().slice(e.start,e.end)!==e.before)fail('Owned edit range drift');parts.push(s.before.bytes.toString().slice(cursor,e.start),e.after);cursor=e.end}parts.push(s.before.bytes.toString().slice(cursor));if(parts.join('')!==s.cut.bytes.toString())fail('Complete cut reconstruction mismatch')
+  for(const[name,row]of s.before.rows){const map=evidence.testMapping.find(x=>x.file===file&&x.title===name);if(!map||sha(row.callback)!==map.beforeBodySHA)fail('Original callback identity');if(s.transfer.rows.get(name)?.statement!==row.statement)fail('Transfer callback changed');if(!map.cutTitle){if(s.cut.rows.has(name)||map.decision!=='D-conditional'||!candidates.some(c=>c.file===file&&c.title===name))fail('Donor closure mismatch');deleted++;continue}
+   const after=s.cut.rows.get(map.cutTitle);if(!after||sha(after.callback)!==map.cutBodySHA)fail('Retained callback mismatch');if(map.unchangedCallback){if(row.callback!==after.callback)fail('Unchanged callback drift');unchangedRetained++}else modifiedRetained++
+   if(JSON.stringify(row.assertions.map(a=>a.text))!==JSON.stringify(map.originalAssertions.map(a=>a.text))||JSON.stringify(after.assertions.map(a=>a.text))!==JSON.stringify(map.cutAssertions.map(a=>a.text)))fail('Full assertion union accounting drift')
+   let pool=row.assertions.map(a=>a.text);for(const a of after.assertions){const i=pool.indexOf(a.text);if(i<0)fail('New assertion');pool.splice(i,1)}if(JSON.stringify(pool)!==JSON.stringify(map.removedAssertions))fail('Unaccounted assertion removal')
+  }
+ }
+ if(Object.keys(snapshots).length!==10||changedFiles!==9||JSON.stringify(counts)!=='{"before":103,"transfer":103,"cut":97}'||unchangedRetained!==92||modifiedRetained!==5||deleted!==6)fail('Exact phase conservation failed')
+ function guards(overrides={}){identity(pins);artifacts();for(const[f,h]of Object.entries(overrides))if(!controls.some(c=>c.file===f&&Object.values(c.phases).some(p=>p.mutatedSha256===h)))fail('Unowned source override');for(const r of pins.readset)if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha))fail('Readset drift: '+r.file)}
+ function current(overrides={}){guards(overrides);const bytes=Object.fromEntries(evidence.files.map(f=>[f,fs.readFileSync(path.join(ROOT,f))]));const matches=['transfer','cut'].filter(phase=>Object.entries(bytes).every(([f,b])=>overrides[f]?sha(b)===overrides[f]&&controls.some(c=>c.file===f&&c.phases[phase].mutatedSha256===overrides[f]):b.equals(snapshots[f][phase].bytes)));if(matches.length!==1)fail('Mixed/unknown source and test phase');const phase=matches[0];for(const[f,h]of Object.entries(overrides))if(!controls.some(c=>c.file===f&&c.phases[phase].mutatedSha256===h))fail('Mutant belongs to wrong phase');return{phase,phaseAliases:phase==='transfer'?['before','transfer']:['cut'],bytes}}
+ function checkCohort(expected){for(const[f,b]of Object.entries(expected))if(!fs.readFileSync(path.join(ROOT,f)).equals(b))fail('Cohort CAS drift: '+f)}
+ return{pins,evidence,candidates,controls,ts,snapshots,counts,unrelated:92,unchangedRetained,modifiedRetained,guards,current,checkCohort}
+}
+function fault(ctx,control,phase){
+ const c=activate(control,phase),escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),exact=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
+ if(JSON.stringify(c.command)!==JSON.stringify(exact))fail('Exact keeper command changed');const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase],matches=row?.assertions.filter(a=>a.text===o.text)||[]
+ if(!row||sha(row.statement)!==o.keeperSha256||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Full scoped keeper/first assertion mismatch')
+ const original=ctx.snapshots[c.file]?.[phase].bytes||fs.readFileSync(path.join(ROOT,c.file));if(sha(original)!==c.sourceSha256)fail('Phase owner drift');const mutated=Buffer.from(replaceOnce(original.toString(),c.from,c.to,c.id));parse(ctx.ts,c.file,mutated.toString());if(sha(mutated)!==c.mutatedSha256)fail('Phase mutant drift');return{original,mutated}
+}
+function atomicCAS(file,expected,next) {
+  const target=path.join(ROOT,file),temp=target+'.test-audit-'+process.pid+'-'+crypto.randomUUID()+'.tmp'
+  if(!fs.readFileSync(target).equals(expected))fail('Owned CAS refused: '+file)
+  try{
+    fs.writeFileSync(temp,next,{flag:'wx',mode:fs.statSync(target).mode})
+    if(!fs.readFileSync(target).equals(expected))fail('Pre-rename CAS refused: '+file)
+    fs.renameSync(temp,target)
+  }finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}
+}
+function lock() {
+  const token=crypto.randomUUID()
+  fs.mkdirSync(LOCK)
+  fs.writeFileSync(path.join(LOCK,'owner.json'),JSON.stringify({token,pid:process.pid,root:ROOT,operator:BASE}),{flag:'wx'})
+  return()=>{const owner=readJSON(path.join(LOCK,'owner.json'));if(owner.token!==token)fail('Lock ownership changed; preserve it');fs.unlinkSync(path.join(LOCK,'owner.json'));fs.rmdirSync(LOCK)}
+}
+module.exports={ROOT,BASE,PROPOSAL,LOCK,sha,fail,checkFile,inventory,identity,parse,registrations,replaceOnce,load,fault,activate,atomicCAS,lock}

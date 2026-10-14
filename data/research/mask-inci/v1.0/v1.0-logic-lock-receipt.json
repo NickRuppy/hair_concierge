@@ -1,0 +1,145 @@
+{
+  "schema_version": "mask-research-logic-lock.v1",
+  "locked_standard_version": "1.0",
+  "locked_at": "2026-10-06",
+  "decision": "approved_and_locked_for_reuse",
+  "normative_standard_path": "docs/research/mask-inci/v1.0/mask-classification-standard.md",
+  "review_source_snapshot": {
+    "version": "1.0-rc1",
+    "path": "docs/research/mask-inci/v1.0/mask-classification-standard.v1.0-rc1.md",
+    "bytes": 208903,
+    "sha256": "880371cef180dc17e11f8a8a7ccc15d3536f1dc77cb7fc2204ab126a53270fa7"
+  },
+  "approved_scope": {
+    "category": "mask",
+    "category_description": "rinse-out intensive masks/Haarkuren (Maske, Kur, Intensivkur, Express-Kur, Bond-Kur, Gloss-/Laminier-Kur) applied after cleansing with a product-stated contact time and rinsed out; multi-use products mode-scoped",
+    "market": "Germany/EU",
+    "g0_outcomes": [
+      "in_category",
+      "excluded_product_form",
+      "insufficient_information"
+    ],
+    "comparison_profile_fields": [
+      "conditioning_level",
+      "weight_potential",
+      "care_direction",
+      "repair_support_level",
+      "primary_focus",
+      "secondary_focus",
+      "hair_thickness_fit",
+      "damage_fit",
+      "texture_fit"
+    ],
+    "echo_fields": [
+      "hair_thickness_fit",
+      "damage_fit",
+      "texture_fit"
+    ],
+    "trace_level_fields": [
+      "bond_route",
+      "balanced_reading",
+      "overload_counter_signal",
+      "multi_use",
+      "hinweise",
+      "ingredient_flags"
+    ],
+    "focus_values": [
+      "moisture",
+      "detangling",
+      "smoothing",
+      "repair",
+      "shine",
+      "curl_support",
+      "color_care",
+      "general"
+    ],
+    "care_direction_values": [
+      "protein",
+      "moisture",
+      "balanced"
+    ],
+    "repair_support_level_values": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "bond_route_values": [
+      "maleate",
+      "gluconamide",
+      "peptide",
+      "none"
+    ],
+    "research_envelope_version": "mask-research-envelope-v1.0",
+    "production_adapter_version": "mask-production-adapter-v1"
+  },
+  "locked_interpretation": {
+    "care_direction": "Product formula direction only; never a diagnosis of a user's protein or moisture state (D6, G6). Always populated for an in-category record; `balanced` carries two readings — (a) substantive mixed protein-plus-moisture architecture, (b) neither-dominant film-led architecture (R6, E9, E15) — and is never an uncertainty bucket. `unknown` only under a G5 / §2.4.1 tier-2 conflict.",
+    "repair_support_level": "Comparative temporary damage-support potential only; no value proves structural repair. `high` is gated on a deterministic named bond route above the tail; 'Bond'/'Plex' naming, citric acid and hydrolysed protein never qualify.",
+    "conditioning_level": "D1: the `concentration` twin — conditioning/treatment intensity relative to the mask shelf from structural INCI position only; extremes need multiple independent signals (R3, E1).",
+    "repair_headline": "E16: the `repair` primary focus needs a qualifying bond route or a label-strong protein route (≥ 2 distinct qualifying hydrolysates or one quaternized protein derivative above the marker).",
+    "dwell": "Contact time is protocol metadata under TPL-MASK/P5 and earns zero classification credit; the 7-second segment is `dwell_efficacy: unknown`.",
+    "conservative_failure_invariant": "§1.1: every hard rule must fail toward human review or toward the anchor's own conservative value, never toward a recommendation or a more favourable reading than the evidence supports.",
+    "evidence_ceiling": "Formula-only conclusions remain E2 and cannot establish finished-product performance. Claims are E0 and never create efficacy.",
+    "research_uncertainty": "Confidence, evidence levels, counter-signals and reading conventions stay inside the research record and never reach a projected field or a user-facing surface."
+  },
+  "validation_basis": {
+    "review_source_standard_version": "1.0-rc1 (= v0.6)",
+    "promotion_rule_change": false,
+    "promotion_note": "v1.0 promotes the v0.6 draft unchanged. No anchor, threshold, enumeration, gate, projection, evidence bar, review trigger or string was edited; only the header block and a Version section were added.",
+    "final_gate_report": "docs/research/mask-inci/v1.0/calibration-round-2-report.md",
+    "cohort_gate": {
+      "section": "§1",
+      "standard_version": "0.5",
+      "products_classified": 12,
+      "exclusions_reproduced": 1,
+      "value_cells_agreeing": 97,
+      "value_cells_total": 97,
+      "value_disagreements": 0,
+      "reference_key": "data/research/mask-inci/v1.0/reference-key-v1/",
+      "blind_lane": "data/research/mask-inci/v1.0/blind-lane-v1/",
+      "lane_design": "zero-inheritance sealed blind lane, frozen packets only, attestation prohibitedFilesAccessed: false on all records"
+    },
+    "unseen_set": {
+      "section": "§2",
+      "products": 6,
+      "note": "example-disjoint adversarial set; both refuse-test traps (u5 pre-shampoo bondbuilder protocol, u6 colour-depositing) refused; u1/u2/u3 re-derived under v0.6 after E14/E15/E16"
+    },
+    "round_2p5": {
+      "section": "§5",
+      "standard_version": "0.6",
+      "products": 6,
+      "result": "6/6 against expectations pre-registered and committed before each lane dispatch",
+      "preregistration": "data/research/mask-inci/v1.0/round2p5-preregistered-expectations.md",
+      "records": "data/research/mask-inci/v1.0/blind-lane-v2p5/"
+    },
+    "agreement_trajectory": [
+      "r1 G0 12/13, profile 98/99 cells",
+      "r2 cohort 97/97 value cells, zero value disagreements",
+      "r2.5 6/6 vs pre-registered expectations"
+    ]
+  },
+  "known_limits_retained": [
+    "E15 / `balanced` reading (b) is validated on exactly one product (u3 John Frieda Wunder-Kur); round 2.5 surfaced no second natural reading-(b) candidate.",
+    "Independence caveat: the standard's own ruling notes (E2/E7/E10/E11/E12 annotations) name several cohort products and outcomes, so the cohort rerun on those fields is confirmation-grade rather than perfectly blind; the unseen set and round 2.5 compensate (round-2 report §1).",
+    "G0 stops are first-class outcomes: `insufficient_information` (q3 Syoss Intense Repair — no rinse text in the exact-product source) is an evidence stop routed to a fresh capture, and the charter exclusions (#13, u5, u6) carry no profile. Neither is a failure of the engine.",
+    "The `maleate` and `peptide` bond-route branches remain untested in-category (maleate seen only as boundary evidence on excluded Olaplex records).",
+    "The tail-marker rank convention is a reading convention, never a measurement; EU Art. 19 hides the 1 % line, which is why boundary-position species cap confidence (E1).",
+    "Every §18 open question stays open under v1.0.",
+    "The evidence lexicon's own header still reads its pre-freeze draft status (v0.2, 'Not ruled'); it is frozen unchanged and pinned by the adapter."
+  ],
+  "separate_gates": {
+    "individual_product_lab_approval": "required",
+    "production_adapter": "built_local_replay_only",
+    "product_intake_worker_wiring": "not_built",
+    "open_adapter_decisions": [
+      "MAD-1 functional_benefits baseline (moderate/high conditioning adds detangling_slip): an implementation default mirroring the leave-in AD-3a baseline clause, pending Nick's ruling",
+      "Product Intake worker wiring (mask envelope required by the worker): an activation decision",
+      "Mask runbook: not yet written; the adapter pins the evidence lexicon in the leave-in runbook slot"
+    ],
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "production_writes": false
+}

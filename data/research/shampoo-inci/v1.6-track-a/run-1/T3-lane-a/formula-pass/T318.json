@@ -1,0 +1,249 @@
+{
+  "blindId": "T318",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "'AQUA/WATER/EAU' and 'PARFUM (FRAGRANCE)' one entry each. E3: Parfum at 12; prominent = 1-11.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "rawInciCount": 24
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: Sodium C14-16 Olefin Sulfonate (3) is the defining sulfonate-type anionic, buffered by Cocamidopropyl Betaine (2), Coco-Glucoside (5) and Sodium Cocoyl Isethionate (7); no reinforcing strong anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Betaine listed ahead of the AOS and three buffers argue milder; C1 holds."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH: prominent payload lipids (Macadamia Seed Oil 8, Avocado Oil 9) converge with two cationic polymers (Polyquaternium-10 17, guar 18); Section 5 counts W-RICH as rich. C2 itself is not met (no pearlizing/fatty route).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Cationics are after Parfum and there is no pearlizer/fatty alcohol or silicone; care could be one meaningful oil system (moderate)."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (two plant oils + two late cationics) with a moderate C1 reset -> not limited reset; liquid oils and late cationics -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH and two cationic polymers converge.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "two prominent oils + two late cationic polymers"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-10 can build up; liquid oils light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS buffered by three co-surfactants"
+        }
+      },
+      "whyThisBand": "Converging oil + cationic routes, effective reset: noticeable but bounded residue.",
+      "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset moderate, no silicone, cationics late. low excluded by converging prominent oils + cationics (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Macadamia Integrifolia Seed Oil",
+            8
+          ],
+          [
+            "Persea Gratissima Oil",
+            9
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            17
+          ],
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            18
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            6
+          ],
+          [
+            "Panthenol",
+            16
+          ]
+        ],
+        "excluded": [
+          [
+            "Acrylates Copolymer",
+            14,
+            "acrylate thickener (6.4)"
+          ],
+          [
+            "Cyclodextrin",
+            20,
+            "complexing agent"
+          ],
+          [
+            "Sodium Starch Octenylsuccinate",
+            21,
+            "starch derivative/absorbent"
+          ],
+          [
+            "Hydroxypropyl Starch Phosphate",
+            24,
+            "thickener"
+          ],
+          [
+            "Disodium EDTA",
+            19,
+            "chelator"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            3
+          ],
+          [
+            "Sodium Cocoyl Isethionate",
+            7
+          ],
+          [
+            "Disodium Laureth Sulfosuccinate",
+            15
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            2
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "Formula supports moisture/nourish; needs claim."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Glycerin 6, Macadamia 8, Avocado 9); Panthenol (16) after Parfum, no prominent comfort route."
+    }
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "rationale": "Glycerin (6) + Panthenol with emollient macadamia/avocado oils and cationics: moisture/nourish cluster; no protein."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "fail (conditioning high)"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 2,
+      "role": "buffer (amphoteric), listed first"
+    },
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 3,
+      "role": "defining anionic, sulfonate type (C1)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 6,
+      "role": "humectant; E4"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 7,
+      "role": "buffer (mild anionic)"
+    },
+    {
+      "ingredient": "Macadamia Integrifolia Seed Oil",
+      "position": 8,
+      "role": "payload_lipid; E4 humectant/refatting"
+    },
+    {
+      "ingredient": "Persea Gratissima Oil",
+      "position": 9,
+      "role": "payload_lipid; E4 humectant/refatting"
+    },
+    {
+      "ingredient": "Acrylates Copolymer",
+      "position": 14,
+      "role": "anionic acrylate thickener, excluded (6.4)"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 15,
+      "role": "mild anionic, not prominent"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 16,
+      "role": "comfort route, not prominent"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 17,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 18,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Cyclodextrin",
+      "position": 20,
+      "role": "complexing agent"
+    },
+    {
+      "ingredient": "Sodium Starch Octenylsuccinate",
+      "position": 21,
+      "role": "starch derivative"
+    },
+    {
+      "ingredient": "Hydroxypropyl Starch Phosphate",
+      "position": 24,
+      "role": "thickener"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,141 @@
+{
+  "blindId": "W217",
+  "inciFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @5; positions 1-4 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Cocamidopropyl Betaine", "4 Sodium Chloride", "5 Parfum", "6 Sodium Benzoate", "7 Citric Acid", "8 Coco-Glucoside", "9 Glyceryl Oleate", "10 Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "11 Aloe Barbadensis Leaf Juice Powder", "12 Potassium Sorbate", "13 Sodium Hyaluronate", "14 Tocopherol", "15 Hydrogenated Palm Glycerides Citrate", "16 Lecithin", "17 Ascorbyl Palmitate"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic. Coco-Glucoside @8 is after Parfum @5 (recorded, not a buffer).",
+      "ruleIds": ["C3", "C4", "C1", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led; every care ingredient follows Parfum @5 and Sodium Benzoate @6 (trace zone): Glyceryl Oleate @9, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10, Sodium Hyaluronate @13, Hydrogenated Palm Glycerides Citrate @15, Lecithin @16, Ascorbyl Palmitate @17. C2 not met. Moderate is the neighbor because a cationic guar is present.",
+      "ruleIds": ["5", "C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @9", "Hydrogenated Palm Glycerides Citrate @15", "Lecithin @16", "Ascorbyl Palmitate @17"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @8 (non-prominent)"],
+        "humectantContext": ["Sodium Hyaluronate @13", "Aloe Barbadensis Leaf Juice Powder @11"],
+        "excluded": ["Tocopherol @14 (antioxidant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 5,
+        "inci": "Parfum",
+        "candidateClasses": ["fragrance"],
+        "cap": "e3Point @5 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: trace guar and weak refatters, all after Parfum @5.",
+      "persistence": "low: no silicone, lipid or film.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Two families (cationic_polymer, weak_refatter), both trace.",
+      "whyThisBand": "Low: only trace guar and weak refatters against an effective reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the only families are a cationic guar @10 and weak refatters @9/@15-17, all listed after Parfum @5 and Sodium Benzoate @6 (trace zone); no silicone, lipid, protein or film.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low with high confidence: trace light routes only (W-line @5).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Sodium Hyaluronate @13", "Aloe Barbadensis Leaf Juice Powder @11"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10", "Glyceryl Oleate @9"],
+        "limitation": "Humectant is a single trace Sodium Hyaluronate after Parfum; not a coherent humectant cluster."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "All care routes in the trace zone after an early Parfum @5.",
+      "decisionTrace": "Claim direction null (blind); nonspecific light formula; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional and formula-limited: CSA is NOT met. No E4 route is prominent (positions 1-4: Aqua, SLES, Cocamidopropyl Betaine, Sodium Chloride); listed routes Glyceryl Oleate @9, Sodium Hyaluronate @13 are after Parfum @5. MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic.",
+      "csaRoute": "none: listed routes only post-E3; MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @8 (non-prominent)"],
+      "notRouteNotBuffer": []
+    },
+    "conditioningRoutes": ["Glyceryl Oleate @9", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10", "Hydrogenated Palm Glycerides Citrate @15", "Lecithin @16", "Ascorbyl Palmitate @17"],
+    "humectants": ["Sodium Hyaluronate @13 (post-E3)"],
+    "actives": ["Aloe Barbadensis Leaf Juice Powder @11", "Sodium Hyaluronate @13", "Tocopherol @14"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @5 (early)", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Citric Acid @7"],
+    "preservatives": ["Sodium Benzoate @6", "Potassium Sorbate @12"]
+  },
+  "unresolvedMaterialIngredients": []
+}

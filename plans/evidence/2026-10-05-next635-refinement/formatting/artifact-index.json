@@ -1,0 +1,17 @@
+[
+  {
+    "file": "receipt.json",
+    "sha256": "b893d774bbc6ea1ed70031e6002d9ed9322dae0b5c395ff340308a6898f812b5",
+    "bytes": 1394
+  },
+  {
+    "file": "test-audit-next635-format-files.json",
+    "sha256": "06c04a0b330e47b11650ba94bbcb9e989bb87df544d98f721327d88245393c70",
+    "bytes": 243
+  },
+  {
+    "file": "test-audit-next635-format.cjs.txt",
+    "sha256": "8f1d52c1d46270ac060171f0dde2f27e65c96508f0cc3e276a3b35293d1ace73",
+    "bytes": 2279
+  }
+]

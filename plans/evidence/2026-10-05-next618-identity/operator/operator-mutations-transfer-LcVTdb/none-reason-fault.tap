@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: resolveBrandFromText returns an exact brand match without over-matching inside words
+not ok 1 - resolveBrandFromText returns an exact brand match without over-matching inside words
+  ---
+  duration_ms: 3.758292
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-identity-resolution.test.ts:2:1753'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'canonical_brand_exact'
+    - 'unresolved'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'unresolved'
+  actual: 'canonical_brand_exact'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-identity-resolution.test.ts:46:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 237.358

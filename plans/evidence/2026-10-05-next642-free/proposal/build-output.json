@@ -1,0 +1,47 @@
+{
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "untouched": 65,
+  "readset": 247,
+  "controls": [
+    {
+      "id": "C1-launch-false",
+      "oracles": {
+        "transfer": {
+          "line": 67,
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+          "fileSha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43"
+        },
+        "cut": {
+          "line": 57,
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+          "fileSha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5"
+        }
+      },
+      "decodedNodeMessage": "premium_sheet must submit the standard catalog (launch flag: false)\n+ actual - expected\n\n+ 'personal_plan_launch_v1'\n- 'standard'\n"
+    },
+    {
+      "id": "C1-launch-true",
+      "oracles": {
+        "transfer": {
+          "line": 67,
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+          "fileSha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43"
+        },
+        "cut": {
+          "line": 57,
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+          "fileSha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5"
+        }
+      },
+      "decodedNodeMessage": "premium_sheet must submit the standard catalog (launch flag: true)\n+ actual - expected\n\n+ 'personal_plan_launch_v1'\n- 'standard'\n"
+    }
+  ]
+}

@@ -40,14 +40,6 @@ test("other refusals keep their own copy without the session hint", () => {
   assert.ok(!markup.includes(HINT))
 })
 
-test("the invite CTA uses the coral funnel CTA, not plum", () => {
-  const markup = renderToStaticMarkup(
-    <DiscoveryInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
-  )
-  assert.ok(markup.includes("bg-[var(--brand-coral)]"))
-  assert.ok(!markup.includes("bg-[var(--brand-plum)]"))
-})
-
 test("the claim response's code decides whether the session hint appears", () => {
   assert.match(
     claimRefusalHint({ code: "signed_in_other_account", error: REFUSAL }) ?? "",
@@ -65,6 +57,8 @@ test("the invite always shows an editable e-mail field, prefilled when the admin
   )
   assert.match(prefilled, /<input[^>]*type="email"[^>]*value="lea@example.test"/)
   assert.ok(prefilled.includes("Deine E-Mail"))
+  assert.ok(prefilled.includes("bg-[var(--brand-coral)]"), "positive coral CTA absent")
+  assert.ok(!prefilled.includes("bg-[var(--brand-plum)]"), "negative plum token present")
   assert.ok(!/<input[^>]*readonly/i.test(prefilled))
   assert.ok(!/<input[^>]*disabled/i.test(prefilled))
 
@@ -73,6 +67,7 @@ test("the invite always shows an editable e-mail field, prefilled when the admin
   )
   assert.match(empty, /<input[^>]*type="email"[^>]*value=""/)
   assert.ok(empty.includes("Los geht"))
+  assert.match(empty, /motion-safe:animate-\[personalPlanStageTargetFade_var\(--motion-screen\)/)
 })
 
 test("the magic-link screen names the address the link went to", () => {
@@ -103,11 +98,6 @@ test("while the invite resolves, the card stands at its final size and says noth
   // The text loader appears only after 300 ms (the effect-driven timer).
   assert.match(markup, /<p class="[^"]*" role="status"><\/p>/)
   assert.doesNotMatch(markup, /Wird geöffnet/)
-})
-
-test("the ready card fades its content in", () => {
-  const markup = renderToStaticMarkup(<DiscoveryInvitationCard email="" mode="ready" name="Lea" />)
-  assert.match(markup, /motion-safe:animate-\[personalPlanStageTargetFade_var\(--motion-screen\)/)
 })
 
 test("the magic-link landing keeps its card but shows its line only after 300 ms", () => {

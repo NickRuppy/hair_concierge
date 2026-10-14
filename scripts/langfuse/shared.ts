@@ -179,7 +179,6 @@ function compactRecommendationMeta(value: unknown): Record<string, unknown> | nu
     need_strength: numberOrNull(value.need_strength ?? value.needStrength),
     role: stringOrNull(value.role),
     product_concentration: stringOrNull(value.product_concentration ?? value.productConcentration),
-    matched_intensity: stringOrNull(value.matched_intensity ?? value.matchedIntensity),
     application_mode: stringOrNull(value.application_mode ?? value.applicationMode),
     scalp_type_focus: stringOrNull(value.scalp_type_focus ?? value.scalpTypeFocus),
     reset_need_level: stringOrNull(value.reset_need_level ?? value.resetNeedLevel),

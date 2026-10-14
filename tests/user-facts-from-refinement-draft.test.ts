@@ -40,6 +40,7 @@ test("toCareHabitsPatch omits fields the current path never asked (partial answe
 const ALL_QUESTION_IDS: Stage2QuestionId[] = [
   "current_product_categories",
   "wet_wash_frequency",
+  "bondbuilder_timing",
   "scalp_irritation_detail",
   "dry_shampoo_bridge_preference",
   "dry_shampoo_visible_hair_color",
@@ -61,6 +62,7 @@ test("toFieldProvenance maps every static question id to its care_habits field",
   assert.deepEqual(fields, {
     currentProductCategories: "user",
     wetWashFrequency: "user",
+    bondbuilderTiming: "user",
     scalpIrritationDetail: "user",
     dryShampooBridgePreference: "user",
     dryShampooVisibleHairColor: "user",
@@ -78,6 +80,26 @@ test("toFieldProvenance marks a field assumed when its provenance entry says so"
     answerProvenance: { wet_wash_frequency: "assumed" },
   })
   assert.deepEqual(fields, { wetWashFrequency: "assumed" })
+})
+
+test("toFieldProvenance carries the Bondbuilder timing as user or assumed", () => {
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["bondbuilder_timing"],
+      answerProvenance: { bondbuilder_timing: "assumed" },
+    }),
+    { bondbuilderTiming: "assumed" },
+  )
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["bondbuilder_timing"],
+      answerProvenance: { bondbuilder_timing: "user" },
+    }),
+    { bondbuilderTiming: "user" },
+  )
+  assert.deepEqual(toCareHabitsPatch({ bondbuilderTiming: "before_wash" }), {
+    bondbuilderTiming: "before_wash",
+  })
 })
 
 test("toFieldProvenance: a completed id with no provenance entry defaults to user", () => {
@@ -151,4 +173,43 @@ test("toFieldProvenance combines static fields and the heatEvents aggregate toge
     dryingRoutes: "assumed",
     heatEvents: "user",
   })
+})
+
+test("an empty heat map carries the provenance of the answers that emptied it", () => {
+  // The resolver always returns `heatEvents: {}` when no heat source is selected; without a
+  // provenance entry that map replaced a member's real heat events (2026-10-06 review F1).
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "assumed", additional_heat_tools: "assumed" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "assumed",
+  )
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "user", additional_heat_tools: "assumed" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "assumed",
+  )
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "user", additional_heat_tools: "user" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "user",
+  )
+  // No heatEvents key in the answers → no provenance entry (unchanged).
+  assert.equal(
+    "heatEvents" in
+      toFieldProvenance({
+        completedQuestionIds: ["drying_routes"],
+        answerProvenance: { drying_routes: "user" },
+        answers: { dryingRoutes: ["air_dry"] },
+      }),
+    false,
+  )
 })

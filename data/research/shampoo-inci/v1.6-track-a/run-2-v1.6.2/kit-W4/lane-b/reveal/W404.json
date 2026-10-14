@@ -1,0 +1,21 @@
+{
+  "blindId": "W404",
+  "productName": "PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex",
+  "brand": "Pantene",
+  "positioningSources": [
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Procter & Gamble, Schwalbach",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Sanfte Reinigung | Pflegende Wirkung auf die Kopfhaut | Ohne Mineralöle und Farbstoffe | Das Anti Schuppen Shampoo Active Nutri-Plex von PANTENE PRO-V ist das Geheimnis für wunderschön gepflegtes Haar und eine gesunde Kopfhaut. Mit seiner sanften Formel reinigt es das Haar gründlich und sorgt gleichzeitig dafür, dass es mit wichtigen Nährstoffen versorgt wird. Dieses Shampoo ist ideal für die tägliche Anwendung und unterstützt die Haarpflege, um ein strahlendes und gesundes Aussehen zu fördern. Perfekt für alle, die Wert auf eine umfassende Pflege ihrer Haare legen. | Wirkung: Pflege, Glanz, Anti-Schuppen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen"
+    },
+    {
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 8700216558037; Rossmann Artikelnummer 180706; 300 ml; 3,29 EUR",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Entdecke das Pantene Pro-V Anti-Schuppen Shampoo, das Geheimnis für stärkeres* Haar und eine gesunde Kopfhaut. Die sanfte Formel mit PRO-V und der innovativen ACTIVE NUTRI-PLEX-Technologie reinigt das Haar und versorgt es gleichzeitig mit wichtigen Nährstoffen. Es bekämpft Schuppen** und hilft, Schuppen vorzubeugen, so dass dein Haar und deine Kopfhaut sauber und rein aussehen und einen gesunden Glanz erhalten. Getestet vom Schweizerischen Vitamininstitut. Erlebe den ultimativen Haarpflegegenuss mit dem Pantene Pro-V Active Nutri-Plex Shampoo. | *Gegen Stylingschäden im Vergleich zum Volumen Pur Shampoo. **Reduktion sichtbarer Schuppen bei regelmäßiger Anwendung. | reinigt dein Haar sanft und versorgt es mit Nährstoffen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. | Warnhinweise: Kontakt mit den Augen vermeiden. Bei Kontakt, gründlich mit Wasser spülen."
+    }
+  ]
+}

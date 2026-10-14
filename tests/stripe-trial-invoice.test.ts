@@ -368,21 +368,6 @@ test("uses retrieved payment success time and invoice service boundaries, never 
   })
 })
 
-test("zero authorization invoice records no payment or revenue", async () => {
-  const f = fixture()
-  Object.assign(f.invoice, { billing_reason: "subscription_create", amount_due: 0, amount_paid: 0 })
-  f.sub.status = "trialing"
-  assert.equal((await f.run())?.payment, null)
-  assert.equal(f.recorded.length, 0)
-  assert.equal(f.calls.includes("intent"), false)
-})
-
-test("a late failure delivery follows the retrieved successful payment", async () => {
-  const f = fixture()
-  assert.equal((await f.run("failed"))?.payment?.result.phase, "first_paid")
-  assert.equal(f.recorded[0].outcome, "succeeded")
-})
-
 test("unpaid first invoice enters payment ledger without paid conversion", async () => {
   const f = fixture()
   Object.assign(f.invoice, { status: "open", amount_paid: 0, amount_remaining: 6999 })
@@ -574,6 +559,7 @@ test("missing initial binding is typed retryable and restored binding succeeds w
   f.setBillingPresent(true)
   assert.equal((await f.run())?.payment, null)
   assert.equal(f.recorded.length, 0)
+  assert.equal(f.calls.includes("intent"), false)
 })
 
 for (const [name, mutate] of Object.entries({

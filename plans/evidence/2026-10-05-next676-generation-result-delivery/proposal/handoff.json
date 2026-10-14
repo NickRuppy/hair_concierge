@@ -1,0 +1,32 @@
+{
+  "packet": "/tmp/test-audit-plan-generation157-R7hJl1",
+  "manifestSHA256": "5a1b8e56f7e6fc31b1f972fa98d91d8746169261702e5a3bef33f9f6ce74abcd",
+  "counts": {
+    "before": 157,
+    "transfer": 157,
+    "cut": 150
+  },
+  "verdictCounts": {
+    "R": 139,
+    "F": 11,
+    "C": 4,
+    "D": 3
+  },
+  "controls": 18,
+  "unrelatedCallbacks": 143,
+  "heldF": 11,
+  "testFiles": 27,
+  "fullOriginalTestLines": 5038,
+  "proposal": "4 C + 3 D conditional; no source cleanup",
+  "mainRead": [
+    "layer-plan.md",
+    "ledger.md",
+    "candidates.json",
+    "complete.diff",
+    "read-depth.md",
+    "controls.json"
+  ],
+  "staticReceiptSHA256": "37ddaf68826d1c68b4dfd086be7a967b0d92c9bb593649e5a960d56de30042ca",
+  "limits": "No runtime, provider, database, browser or owner imports. Static syntax is not typecheck or intended-red proof. Full recursive dependency closure not semantically reviewed.",
+  "next": "Independent preservation then parent-only baseline/transfer/controls/cut; native commands in runtime-commands.json"
+}

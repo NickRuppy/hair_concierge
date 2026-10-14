@@ -344,6 +344,7 @@ test("buildCareBalanceSet returns one stable row per strong category", () => {
     ],
   )
   assert.equal(rows.length, 10)
+  assertRecommendation(rows, "shampoo", "add")
   for (const row of rows) {
     assert.equal(typeof row.present, "boolean")
     assert.ok("currentFrequency" in row)
@@ -490,12 +491,6 @@ test("buildCareBalanceSet recommends decreasing peeling when scalp is irritated"
   )
 
   assertRecommendation(rows, "peeling", "decrease_frequency")
-})
-
-test("buildCareBalanceSet recommends adding absent shampoo", () => {
-  const rows = buildRows({})
-
-  assertRecommendation(rows, "shampoo", "add")
 })
 
 test("recommendation runtime exposes oily weekly shampoo cadence as below high target", () => {

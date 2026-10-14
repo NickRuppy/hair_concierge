@@ -1,0 +1,78 @@
+{
+  "status": "PASS static only; no edits or source controls executed",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "proposalReceiptSHA": "52c9fa29f47e207a9a4765c27ff97327307717ee1714b0a098cb1edad7a75b63",
+  "toolPinsSHA": "6380a72d33c51970b590adf15f647a859747d87fb4092661c19999394ed7c00b",
+  "metadataDisposition": {
+    "file": "/Users/nick/AI_work/hair_conscierge/.git/packed-refs",
+    "oldSHA": "cfc2751a25445bec7bb6ea01774d158e5d2c898957f16875f5f69e4f156d4050",
+    "newSHA": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+    "authorization": "Main explicit message: adopt ONLY this current metadata hash; target branch/HEAD unchanged; loose target ref absent"
+  },
+  "finalChanges": [
+    "Corrected copied Stripe transfer-receipt path regex to exact Partner toolkit directory.",
+    "Added exact anchored command validation and one keeper match in every frozen phase.",
+    "Adopted only explicitly approved packed-refs identity hash; all other seven Git identity pins compare unchanged against original billing tool pins.",
+    "Final bounded dependencies1848 and fixed readset131 plus16 phase-aware tests; original64 guards covered."
+  ],
+  "readOnlyChecks": [
+    {
+      "chunk_id": "053146",
+      "wall_time_seconds": 1.845528792,
+      "exit_code": 0,
+      "original_token_count": 102,
+      "output": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"counts\": {\n    \"before\": 84,\n    \"transfer\": 84,\n    \"cut\": 76\n  },\n  \"unrelatedCallbacks\": 72,\n  \"unchangedRetainedCallbacks\": 72,\n  \"parsedPhaseFiles\": 48,\n  \"sourceControlsParsed\": 20,\n  \"readsetGuards\": 131,\n  \"dependencyFiles\": 1848,\n  \"repositoryWrites\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+    },
+    {
+      "chunk_id": "e64cc8",
+      "wall_time_seconds": 2.2104915,
+      "exit_code": 0,
+      "original_token_count": 91,
+      "output": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"controls\": 20,\n  \"allUniqueOwnersParsed\": true,\n  \"allControlsParsed\": true,\n  \"phaseOracles\": \"exact assertion startLine and text in transfer/cut\",\n  \"selectedTestCount\": 1,\n  \"repositoryWrites\": 0,\n  \"runtimeRuns\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+    }
+  ],
+  "counts": {
+    "before": 84,
+    "transfer": 84,
+    "cut": 76
+  },
+  "snapshotsParsed": 48,
+  "controlsParsed": 20,
+  "changedKeepers": 4,
+  "donors": 8,
+  "unchangedCallbacks": 72,
+  "heldFUnchanged": 5,
+  "sqlContractsUnchanged": 18,
+  "browserUnchanged": 4,
+  "dependencies": 1848,
+  "fixedReadsetGuards": 131,
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "hashes": {
+    "operator-guard.cjs": "834cbe12687c42dba0372ce961fcbe82cc79866780ba8475d4c77efc16cdc6f8",
+    "operator-edit.cjs": "ed6a2a82389384ee77f1155fdf859e30a4545e6a045b5f22880850cdf75af953",
+    "operator-run-controls.cjs": "34d95cce8eae38129401d60013d3435e4918b7c3ae8ac7c4931957d131a0f390",
+    "operator-proof.cjs": "adeae15ac34376c84db69015dcb1d7f962a9f04b81d09f11ab7d4c3153ad0616",
+    "operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "operator-controls-normalized.json": "d36409a658eea87854a9a2b36464d25eef0a06718cafac85b6088d1e995608fa",
+    "operator-pins.json": "6380a72d33c51970b590adf15f647a859747d87fb4092661c19999394ed7c00b",
+    "prepare-pins.cjs": "0b2cc1a6047a9286551eca0ed1cee73ea960a734570910b1bf0471f07b165ae4",
+    "README.md": "0789990a61d688540c122935bc799dca98199c3ef3f86d3ef0560a7e7e855a17",
+    "readonly-check-results.json": "d3e5b6742ef4a404cf1ab3b56efd0c97c38298f77a48b8f01b730918b363990e"
+  },
+  "runtimeControls": 0,
+  "testRuns": 0,
+  "applicationImports": 0,
+  "repositoryWrites": 0,
+  "limits": [
+    "No real TAP or fault behavior was executed; main must inspect actual logs and prove intended assertions.",
+    "Dependency pins are selected distributions/support, not every vendor module; hashes do not grant semantic reading credit.",
+    "Cooperating common lock does not detect unrelated test/editor activity; main must serialize.",
+    "SIGKILL/power loss can leave source fault and lock; inspect immutable backups and current bytes before recovery."
+  ]
+}

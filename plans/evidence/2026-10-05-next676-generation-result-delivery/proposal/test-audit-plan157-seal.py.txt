@@ -1,0 +1,144 @@
+import pathlib,json,hashlib,difflib,subprocess,collections,shutil
+root=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');d=pathlib.Path(pathlib.Path('/tmp/test-audit-plan157-current-packet.txt').read_text().strip());sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(n,x): (d/n).write_text(json.dumps(x,indent=2)+'\n' if not isinstance(x,str) else x)
+man=json.loads((d/'manifest-draft.json').read_text());cases=json.loads((d/'ledger.json').read_text());cs=json.loads((d/'candidates.json').read_text()); by={c['id']:c for c in cs}
+full='''src/lib/personal-plan/input.ts
+src/lib/personal-plan/compute-stage1.ts
+src/lib/personal-plan/reasons.ts
+src/lib/personal-plan/needs.ts
+src/lib/personal-plan/portfolio.ts
+src/lib/personal-plan/types.ts
+src/lib/personal-plan/persistence/stage1-service.ts
+src/lib/personal-plan/persistence/stage1-supabase.ts
+src/lib/personal-plan/persistence/index.ts
+src/app/api/personal-plan/stage-1/route.ts
+src/lib/personal-plan-quiz/preparation-client.ts
+src/app/api/quiz/personal-plan-prepare/route.ts
+src/app/api/quiz/personal-plan-email-precheck/route.ts
+src/lib/personal-plan-quiz/persistence.ts
+src/lib/personal-plan-quiz/prepared-plan.ts
+src/lib/personal-plan-quiz/offer-adapter.ts
+src/lib/personal-plan-quiz/result-return.ts
+src/app/api/quiz/personal-plan-result-return/reset/route.ts
+src/lib/personal-plan-quiz/return-artifact-repair.ts
+src/lib/customerio/personal-plan-result-artifact-service.ts
+src/lib/customerio/personal-plan-result-artifact.ts
+src/lib/customerio/quiz-result-artifact.ts
+src/lib/customerio/scanner-result-artifact.ts
+src/lib/customerio/result-artifact-service.ts
+src/lib/customerio/transactional.ts
+src/app/api/quiz/result-artifact/route.ts
+src/app/api/quiz/personal-plan-result-artifact/route.ts
+src/lib/personal-plan-quiz/result-email-client.ts
+src/lib/quiz/personal-plan-result-reveal.ts
+src/lib/personal-plan/refinement/http-gateway.ts
+src/lib/personal-plan/products/http-gateway.ts
+src/app/plan-bereit/personal-plan-ready-client.tsx
+src/app/plan-bereit/page.tsx
+src/app/plan-bereit/status/route.ts
+src/app/plan-bereit/transition.ts
+src/app/plan-bereit/plan-ready-arrival.tsx
+src/components/personal-plan-journey/journey-header.tsx
+src/components/personal-plan-journey/index.ts
+src/app/result/[leadId]/reveal/personal-plan-result-reveal.tsx
+src/app/result/[leadId]/loading.tsx
+src/lib/rate-limit.ts
+src/lib/analytics/page-url.ts
+src/lib/personal-plan-quiz/draft-scope.ts
+supabase/migrations/20260901170000_personal_plan_prepare_idempotency.sql
+supabase/migrations/20260901170100_rate_limits_retention_schedule.sql
+supabase/migrations/20260808100536_add_personal_plan_result_returns.sql
+supabase/migrations/20260918182402_repair_return_personal_plan_artifact.sql
+supabase/migrations/20260728130000_add_personal_plan_prepared_artifacts.sql
+supabase/migrations/20260812143000_personal_plan_legacy_quiz_source.sql
+scripts/ci/run-personal-plan-nested.mjs
+tests/server-only-register.cjs
+tests/personal-plan/fixtures.ts
+tests/personal-plan/compute-stage1.test.ts
+package.json'''.splitlines()
+partial={
+'src/components/quiz/quiz-results.tsx':'1–60 and150–230: complete trigger/redirect functions and mounted email effect; remainder not full read',
+'src/components/personal-plan-quiz/personal-plan-quiz.tsx':'2380–2450 preparation caller loop; not full component',
+'src/app/plan-start/page.tsx':'320–385 actual loadStage1Plan dependency wiring; remainder supporting navigation only',
+'src/app/plan-bereit/readiness.ts':'825–902 real provisioning defaults/package resolver/caller slice; remainder previously audited, not credited here',
+'src/app/result/[leadId]/page.tsx':'205–250 return trust and email-return eligibility; exit class grep; not full route',
+'src/app/lp/[slug]/page.tsx':'96–146 result capability→landing/resume resolution; not full route',
+'src/lib/personal-plan-quiz/server-draft.ts':'1–176 and176–340 read in overlapping outputs, initial long output truncated; complete operative cookie/HMAC/expiry/origin/no-store/reset dependency 176–340 fully re-read; no blanket full-module credit',
+'.github/workflows/ci.yml':'140–166 native contract lane and grep of runner references; not whole workflow',
+'docs/personal-plan/categories/scalp-care/decision.md':'244–259 normative uncovered-job gate; other snippets by search only',
+'plans/2026-08-06-personal-plan-stage1-bedarf-implementation.md':'matched INITIAL-05/portfolio normative lines127,181; not whole plan',
+'node_modules/react-dom/server.node.js':'full entrypoint; installed runtime implementation only excerpted below',
+'node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js':'9693–9722 hooks no-op effects;9850–9878 renderToStaticMarkup implementation entry. Not full React renderer.',
+'node_modules/zod/v4/classic/schemas.cjs':'195–199 parse/safeParse method linkage search only',
+'node_modules/zod/v4/core/parse.cjs':'1–90 actual parse/safeParse successful/value vs issue result',
+'node_modules/next/dist/server/web/spec-extension/response.js':'1–135 NextResponse JSON/headers/cookie implementation; not dependency closure',
+'node_modules/@electric-sql/pglite/dist/index.d.ts':'exports/API declaration navigation only; no WASM engine read or execution',
+'node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts':'query/exec signatures489–524,819–868 search only; no concurrency claim based on PGlite',
+}
+mechanical=['package-lock.json','tsconfig.json','.nvmrc','node_modules/typescript/package.json','node_modules/typescript/lib/typescript.js','node_modules/react/package.json','node_modules/react-dom/package.json','node_modules/tsx/package.json','node_modules/zod/package.json','node_modules/next/package.json','node_modules/@electric-sql/pglite/package.json']
+readset=[]
+for f in dict.fromkeys(man['scope']+full+list(partial)+mechanical):
+ b=(root/f).read_bytes(); depth='full assigned test, callbacks/tables/helpers' if f in man['scope'] else 'full file read' if f in full else partial.get(f,'mechanical hash only; not semantic read')
+ r={'file':f,'sha256':sha(b),'bytes':len(b),'readDepth':depth};readset.append(r)
+ if f not in man['scope']:
+  pp=d/'original-readsets'/f;pp.parent.mkdir(parents=True,exist_ok=True);pp.write_bytes(b)
+write('readsets.json',readset)
+# Only source descriptors, never apply source changes.
+controls=[]
+def ctrl(cid,owner,anchor,replacement,candidate,keeperidx,assertion,operator,expected,actual,selected=None,message=None):
+ b=(root/owner).read_text();assert b.count(anchor)==1,(cid,b.count(anchor));c=by[candidate];k=c['keepers'][keeperidx];phase={}
+ for p in ['transfer','cut']:
+  txt=(d/p/k['file']).read_text(); body=k[p]['statement'];assert assertion in body,(cid,assertion);pos=txt.index(body)+body.index(assertion);phase[p]={'line':txt[:pos].count('\n')+1,'assertion':assertion,'firstKeeperFrameFile':k['file']}
+ mutant=b.replace(anchor,replacement);mp=d/'controls'/cid/owner;mp.parent.mkdir(parents=True,exist_ok=True);mp.write_text(mutant)
+ controls.append({'id':cid,'candidate':candidate,'owner':owner,'sourceSHA256':sha(b.encode()),'uniqueFrom':anchor,'to':replacement,'mutantSnapshot':str(mp.relative_to(d)),'mutantSHA256':sha(mutant.encode()),'keeper':{'file':k['file'],'title':selected or k['name']},'oracle':{'code':'ERR_ASSERTION','operator':operator,'expected':expected,'prospectiveActual':actual,'messageIncludes':message,'phase':phase,'requireFirstKeeperFrame':True},'status':'static recipe only; no execution or observed diagnostics','requiredRuntimeSequence':'one selected clean pass → one intended assertion failure → byte-exact owned CAS restore → one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors'})
+ctrl('C1-unknown-heat-state','src/lib/personal-plan/needs.ts','return { knowledgeState: "unknown", state: "unknown", events: [], sourceFacts: [] }','return { knowledgeState: "unknown", state: "absent", events: [], sourceFacts: [] }','C1',0,'assert.deepEqual(assessment.heatExposure, {','deepStrictEqual',{'knowledgeState':'unknown','state':'unknown','events':[],'sourceFacts':[]},{'knowledgeState':'unknown','state':'absent','events':[],'sourceFacts':[]})
+ctrl('C2-default-reason','src/lib/personal-plan/types.ts','scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },','scalpIrritationState: { state: "unknown", reason: "heat_tool_use" },','C2',0,'assert.deepEqual(profile.routine, {','deepStrictEqual','full six-field routine literal in keeper','same literal except scalpIrritationState.reason=heat_tool_use')
+for key,prefix,limit in [('ip','personal-plan-prepare-ip',100),('journey','personal-plan-prepare-journey',10)]:
+ a=f'prefix: "{prefix}",\n  limit: {limit},\n  windowMs: 10_000,'
+ for field,to in [('prefix',a.replace(prefix,prefix+'-wrong')),('limit',a.replace(f'limit: {limit}',f'limit: {limit+1}')),('window',a.replace('10_000','11_000'))]:
+  ctrl(f'C3-{key}-{field}','src/lib/rate-limit.ts',a,to,'C3',0,'assert.deepEqual(fixture.rateConfigs, [','deepStrictEqual',[{'prefix':'personal-plan-prepare-ip','limit':100,'windowMs':10000},{'prefix':'personal-plan-prepare-journey','limit':10,'windowMs':10000}],f'same two captured configs with {key}.{field} as defined in to')
+ctrl('C3-lead-namespace','src/lib/rate-limit.ts','prefix: "quiz-lead",','prefix: "personal-plan-prepare-ip",','C3',0,'assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)','notStrictEqual','personal-plan-prepare-ip','personal-plan-prepare-ip')
+header='src/components/personal-plan-journey/journey-header.tsx'
+ctrl('C4-progressbar','src/app/plan-bereit/plan-ready-arrival.tsx','<PersonalPlanJourneyHeader currentStage={1} centeredBrand />','<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />','C4',0,'assert.doesNotMatch(html, /role="progressbar"/','doesNotMatch','/role="progressbar"/','rendered initial checking HTML contains role="progressbar"',message='non-ready header must omit the stage progressbar')
+ctrl('C4-retry-progressbar','src/app/plan-bereit/personal-plan-ready-client.tsx','<PersonalPlanJourneyHeader currentStage={1} centeredBrand />','<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />','C4',3,'assert.doesNotMatch(html, /role="progressbar"/','doesNotMatch','/role="progressbar"/','rendered timeout HTML contains role="progressbar"',message='non-ready header must omit the stage progressbar')
+ctrl('C4-retired-label','src/components/personal-plan-journey/journey-header.tsx','data-personal-plan-journey-header="true"\n    >','data-personal-plan-journey-header="true"\n    >\n      <span>Personal-Plan-Stufen</span>','C4',1,'assert.doesNotMatch(html, /Personal-Plan-Stufen/','doesNotMatch','/Personal-Plan-Stufen/','rendered missing-fact HTML contains Personal-Plan-Stufen',message='non-ready header must omit retired stage labels')
+ctrl('C4-wordmark','src/components/personal-plan-journey/journey-header.tsx','              chaarlie\n','              haarplan\n','C4',2,'assert.match(html, />chaarlie</','match','/>chaarlie</','rendered forbidden HTML has haarplan in place of chaarlie',message='non-ready header must retain the chaarlie wordmark')
+ctrl('D1-typed-failure','src/lib/personal-plan/input.ts',': { ok: false, error: { code: "invalid_quiz_envelope", quizVersion: 3 } }',': { ok: false, error: { code: "unsupported_quiz_version", quizVersion: 3 } }','D1',0,'assert.deepEqual(parsed, {','deepStrictEqual',{'ok':False,'error':{'code':'invalid_quiz_envelope','quizVersion':3}},{'ok':False,'error':{'code':'unsupported_quiz_version','quizVersion':3}},selected='mask-missing-thickness: required Mask target input fails closed at the shared parser')
+ctrl('D1-required-thickness','src/lib/personal-plan-quiz/persistence.ts','    thickness: z.enum(["fine", "normal", "coarse"]),','    thickness: z.enum(["fine", "normal", "coarse"]).optional(),','D1',0,'assert.deepEqual(parsed, {','deepStrictEqual',{'ok':False,'error':{'code':'invalid_quiz_envelope','quizVersion':3}},'ok=true,envelope=existing COMPLETE_V3_PLAN_ENVELOPE with thickness undefined; full decoded actual must be inspected by main, not accepted merely for any failure',selected='mask-missing-thickness: required Mask target input fails closed at the shared parser')
+ctrl('D2-numeric-message-id','src/lib/customerio/personal-plan-result-artifact.ts','return /^\\d+$/.test(configured) ? Number(configured) : configured','return /^\\d+$/.test(configured) ? configured : configured','D2',0,'assert.equal(sends[0].transactionalMessageId, 42)','strictEqual',42,'42')
+ctrl('D3-null-claim-result','src/lib/customerio/result-artifact-service.ts','if (!lead) {\n    return { sent: false, skipped: true }\n  }','if (!lead) {\n    return { sent: false, skipped: false }\n  }','D3',0,'assert.deepEqual(response.body, { sent: false, skipped: true })','deepStrictEqual',{'sent':False,'skipped':True},{'sent':False,'skipped':False})
+ctrl('D3-production-null-filter','src/app/api/quiz/result-artifact/route.ts','        .is("artifact_email_status", null)\n','', 'D3',1,'assert.deepEqual(filters, [','deepStrictEqual',[['eq','id','550e8400-e29b-41d4-a716-446655440000'],['is','artifact_email_status',None],['eq','quiz_kind','legacy'],['is','moderator_campaign_id',None]],[['eq','id','550e8400-e29b-41d4-a716-446655440000'],['eq','quiz_kind','legacy'],['is','moderator_campaign_id',None]])
+write('controls.json',controls)
+# Read-only git history: no owner import, runtime or child tests.
+h=[]
+for f in man['scope']:
+ out=subprocess.check_output(['git','log','-3','--format=%H %ad %s','--date=iso-strict','--',f],cwd=root,text=True)
+ h.append({'file':f,'history':out.strip().splitlines()})
+write('history.json',h)
+# Full prospective diffs; files with no changes are still snapshotted all phases.
+for a,b,n in [('before','transfer','transfer.diff'),('transfer','cut','cut.diff'),('before','cut','complete.diff')]:
+ diff=''.join(''.join(difflib.unified_diff((d/a/f).read_text().splitlines(True),(d/b/f).read_text().splitlines(True),fromfile=a+'/'+f,tofile=b+'/'+f)) for f in man['scope']);write(n,diff)
+# Fix one retained-ledger wording: reset valid cookie assertion only names cookies, not exact Max-Age for both.
+for r in cases['cases']:
+ if r['file']=='tests/personal-plan-result-return-reset.test.ts' and r['line']==84:r['evidence']='Valid result/draft revocation RPC arguments plus both cookie names are observed. Exact Max-Age for both is not asserted here; preserve this real orchestration/authority proof and do not overclaim cookie-options coverage.'
+write('ledger.json',cases)
+md=(d/'ledger.md').read_text();md=md.replace('Valid result and draft capability revocations plus both cookie expirations must occur; partial reset would leave resurrectable access.','Valid result/draft revocation RPC arguments plus both cookie names are observed. Exact Max-Age for both is not asserted here; preserve real orchestration/authority proof without overclaiming cookie-options coverage.');write('ledger.md',md)
+# Input/call conservation using whole original callback preservation plus literal changes; main source/toolkit verification still required.
+write('runtime-commands.json',{'cwd':str(root),'all27':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',*man['scope']],'controls':[{'id':c['id'],'argv':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+__import__('re').escape(c['keeper']['title'])+'$',c['keeper']['file']]} for c in controls],'note':'Commands for parent only. No runtime performed. PostgreSQL test retains its existing environment gate/skip; no Docker/DB setup authorized here.'})
+for src in ['/tmp/test-audit-plan157-prepare.cjs','/tmp/test-audit-plan157-ledger.py','/tmp/test-audit-plan157-seal.py']:
+ shutil.copyfile(src,d/pathlib.Path(src).name)
+write('read-depth.md',f'''# Read depth and limits
+
+All 27 assigned test files (5,233 lines), 157 declarations, every fixture/helper/table were fully read. Current AST independently recounted with TypeScript createSourceFile only; tests/owners were not imported or executed. Supporting compute-stage1.test.ts (6 declarations) and shared fixtures were fully read, but are outside the denominator. No source cleanup is proposed.
+
+`readsets.json` distinguishes full direct-owner reads, caller/dependency excerpts and mechanical pins. The category/ranking/assessment DAG is large: direct prepared artifact, adapter, Stage1 parser/needs/portfolio/service and HTTP owners were fully read; this pass does NOT claim a fresh recursive semantic audit of all ten category builders, the entire hair-assessment/priorities tree, readiness.ts, funnel billing/auth loaders, PostgREST SDK, SQL engine or React renderer. Those remain implementation dependencies and prior audit evidence, not new full-read credit. No deletion rests on those unread branches.
+
+Candidate comparison specifically follows actual same-owner paths. C1/C2 read complete input/needs/types and same fixtures. C3 reads complete rate config/route/adapter and observational fake. C4 reads complete readiness client/arrival/header, confirms default destination, and checks installed React SSR hook effects are no-ops. D1 reads complete V3/shared durable schema path. D2 reads complete regular route/service/quiz serializer/personal serializer and shared getter. D3 reads complete fake claim, real route/service and production query adapter. Neither D3 nor retained mock concurrency tests execute SQL atomicity.
+
+Six SQL migrations were fully read, including service permissions, search_path, original prepared artifact storage, repair predecessor retention and both source types. PGlite is actual local SQL replay when parent runs it; no WASM execution occurred here. The separate Docker/PostgreSQL two-session test remains unchanged and gated; its lock waits cannot be replaced by PGlite sequential replay.
+
+History: three latest commits per assigned file captured in history.json; focused commit context read for810f20f0 replay protection,2ae521b5 stage-header retirement and9e6c33c5 scanner transactional routing; initial needs/input/types last changed12619247. These explain live contracts, not authority to retire them. Package native runner and nested recursive runner are current; CI quality-node explicitly invokes both. Whole CI workflow and all historical commits were not read.
+
+No environment files, secrets, live providers, network or database were accessed. Root confirmed no active source mutation before this packet source pin capture. Test snapshots were captured earlier and are rechecked at sealing. Whole source hashes are guard material, not a claim that every line of excerpt-only files was semantically reviewed. No shared Git config was read or repinned.
+''')
+print(str(d),len(readset),len(controls))

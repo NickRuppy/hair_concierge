@@ -1,0 +1,20 @@
+{
+  "source": "Pinned Node embedded internal/test_runner/reporter/tap, source string only",
+  "sha256": "ec4c8ff12b8302e0dbe70c7dcd3d3fe79cb4bee1a29dc05f86aaed7b32df15c1",
+  "range": [
+    129,
+    132
+  ],
+  "lines": [
+    "  if (value === undefined) {",
+    "    return '';",
+    "  }",
+    ""
+  ],
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "limits": "Static source confirms omission; no native fault execution."
+}

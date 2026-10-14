@@ -1,0 +1,173 @@
+{
+  "productId": "u3-john-frieda-wunder-kur",
+  "lane": "blind-v1-unseen",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "rederivedUnder": "mask-inci-v0.6 (E13-E17)",
+  "rederivation": {
+    "rederivedAt": "2026-10-06",
+    "rulingsApplied": [
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E17"
+    ],
+    "changes": [
+      "care_direction moisture (low) -> balanced / neither_dominant (moderate) (E15: DIPROPYLENE GLYCOL @6 is a solvent, so clauses 3-4 of reading (b) hold)",
+      "care_direction.balanced_reading: neither_dominant added",
+      "hinweise: candidate_below_tail added for COCOS NUCIFERA OIL @12 + RICINUS COMMUNIS SEED OIL @14 (E13)",
+      "reviewTriggers: low_confidence_field removed (no field at low any more); candidate_below_tail_review added (E13)",
+      "unchanged: conditioning_level moderate, weight_potential moderate, repair_support_level low, primary_focus smoothing, secondary_focus [], echo fields (no echo reads care_direction)"
+    ],
+    "verifiedAgainstPacket": "blind-packets-round2/u3-john-frieda-wunder-kur.json rawInci: DIMETHICONE @3, DIPROPYLENE GLYCOL @6, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE @7, DIMETHICONOL @8, TETRASODIUM GLUTAMATE DIACETATE @10, COCONUT @12, OLIVE @13, CASTOR @14; no glycerin or other humectant above @10; no R5 species"
+  },
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json (original truncated version and replaced 2026-10-06 version)",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json (original unresolved version and replaced 2026-10-06 version)",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask (single mode: nach Shampoo, nasses gewaschenes Haar, 3-5 Minuten, gründlich ausspülen)",
+    "identityState": "verified",
+    "rationale": "The directions state one mode: wash with shampoo, then work the Kur into wet, washed hair with emphasis on the ends, leave 3-5 minutes, and rinse thoroughly. All three G0 conjuncts are clear and the placement matches P5. Identity is resolved to one SKU: Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur, 250 ml, Müller PPN3176126, with a dated direct-extraction INCI. There is no GTIN; the Müller PPN serves as the reliable identifier.",
+    "evidenceSignals": [
+      "directions: 'Haare mit Wunder-Reparatur Shampoo waschen. Wunder-Kur ins nasse, gewaschene Haar einmassieren, insbesondere in die Spitzen ... 3-5 Minuten einwirken lassen. Gründlich ausspülen.'",
+      "mueller.de PPN3176126 direct extraction 2026-10-06"
+    ],
+    "notes": "Replaces the earlier insufficient-information stop. GTIN is still absent; identity rests on the retailer PPN."
+  },
+  "tailMarker": {
+    "ingredient": "TETRASODIUM GLUTAMATE DIACETATE",
+    "index": 10,
+    "status": "plausible",
+    "note": "The earliest tail-class species is the trace chelator TETRASODIUM GLUTAMATE DIACETATE @10. MALIC ACID @11 and SODIUM HYDROXIDE @15 are not marker-eligible. The preservatives (MCI/MIT @20-21), FRAGRANCE @22 and the allergen HEXYL CINNAMAL @23 follow it in a consistent order, and the chelator is not printed beneath the preservatives anywhere else on the capture, so the E2 third limb does not fire. The base (CETEARYL ALCOHOL @2, DIMETHICONE @3, BEHENTRIMONIUM CHLORIDE @4, BEHENYL ALCOHOL @5, amodimethicone @7, DIMETHICONOL @8) outranks the marker. All three plant oils (COCONUT @12, OLIVE @13, CASTOR @14) sit below it and are read as sub-1% secondary lipids. tail_index-1 = PEG-45M @9, which is not load-bearing in any field. (v0.6, E13) The marker is plausible because every species establishing conditioning_level/weight_potential (CETEARYL ALCOHOL @2, DIMETHICONE @3, BTAC @4, BEHENYL ALCOHOL @5, amodimethicone @7, DIMETHICONOL @8) outranks it; below-marker oils are extras and can never flip it (candidate_below_tail recorded)."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Only S2 fires: CETEARYL ALCOHOL at rank 2, with BEHENYL ALCOHOL @5 also above the tail. S1 fails, because BEHENTRIMONIUM CHLORIDE @4 is the only cationic on the list. S3 fails: there is no non-fatty-alcohol lipid above the tail, and silicones are R2, not R4. One signal gives moderate.",
+      "evidenceSignals": [
+        "S2 CETEARYL ALCOHOL @2",
+        "single cationic BTAC @4"
+      ],
+      "counterSignals": [
+        "coconut/olive/castor oils @12-14 are tail (no credit)"
+      ]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "High is unavailable: no R4b lipid sits above the chelator marker @10. Low fails conjunct 2: an occlusive silicone stack sits above the tail (DIMETHICONE @3, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE @7, DIMETHICONOL @8, including a dimethicone/dimethiconol pair). Conjuncts 1 and 3 hold (no R4b above the marker, BTAC the only cationic on the full list). No boundary species is load-bearing (PEG-45M @9 carries no weight signal).",
+      "evidenceSignals": [
+        "occlusive silicone stack @3/@7/@8 (blocks low)",
+        "no R4b above tail"
+      ],
+      "counterSignals": [
+        "three plant oils sit just below the chelator marker: COCOS NUCIFERA OIL @12 and RICINUS COMMUNIS SEED OIL @14 are heavy band (R4b), OLEA EUROPAEA FRUIT OIL @13 is mid band (E14). Under E13 they are below-marker extras: no credit, the marker stays plausible, and the two heavy oils would have formed a high core with the dense base, so the record carries candidate_below_tail and routes to review"
+      ]
+    },
+    "care_direction": {
+      "value": "balanced",
+      "balanced_reading": "neither_dominant",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Re-derived under v0.6 (E15, 2026-10-06). Reading (b), neither-dominant, holds on all four clauses. Marker: TETRASODIUM GLUTAMATE DIACETATE @10 (plausible). Clause 1: no R5 protein, peptide or keratin species anywhere on the list (CERAMIDE NG @17 / NP @18 are not R5). Clause 2: a substantive R2 silicone system above the marker — DIMETHICONE @3, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE @7, DIMETHICONOL @8, three distinct species (E9). Clause 3: no leading moisture leg above the marker — DIPROPYLENE GLYCOL @6 is a carrier/solvent glycol and not a humectant-leg species under E15, so there are zero humectants above the tail, and there is no non-fatty-alcohol lipid above the tail (no S3); the base is only the R1 baseline (CETEARYL ALCOHOL @2, BEHENTRIMONIUM CHLORIDE @4, BEHENYL ALCOHOL @5). Clause 4: every film species (@3, @7, @8) outranks every subordinate leg species, all of which sit in the tail: COCOS NUCIFERA OIL @12, OLEA EUROPAEA FRUIT OIL @13, RICINUS COMMUNIS SEED OIL @14, CERAMIDE NG @17, CERAMIDE NP @18 (recorded, creating no direction). The silicone film carries the product's care result and neither protein nor moisture leads: balanced / neither_dominant. Confidence is moderate, reading (b)'s ceiling; the marker is plausible, so no step-down applies. This is reading (b)'s first reached case on the mask shelf.",
+      "evidenceSignals": [
+        "balanced_reading: neither_dominant (all four §9.3 reading-(b) clauses hold)",
+        "R2 silicone system above the marker: DIMETHICONE @3, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE @7, DIMETHICONOL @8",
+        "no R5 species at any rank; no humectant and no S3 lipid stack above TETRASODIUM GLUTAMATE DIACETATE @10"
+      ],
+      "counterSignals": [
+        "DIPROPYLENE GLYCOL @6 recorded as a carrier solvent, not a humectant leg (E15)",
+        "subordinate tail legs (no direction): COCOS NUCIFERA OIL @12, OLEA EUROPAEA FRUIT OIL @13, RICINUS COMMUNIS SEED OIL @14, CERAMIDE NG @17, CERAMIDE NP @18"
+      ]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "There is no protein, peptide or keratin film route and no named bond token. CERAMIDE NG @17 and CERAMIDE NP @18 are tail-only and are explicit non-upgraders. 'Wunder-Reparatur' naming is E0.",
+      "evidenceSignals": [
+        "no R5 / R7 species"
+      ],
+      "counterSignals": [
+        "repair positioning with no formula route (claim mismatch)"
+      ]
+    },
+    "primary_focus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Repair, curl, colour and moisture fail (no R5 or bond route; no above-tail humectant once DIPROPYLENE GLYCOL @6 is read as a carrier solvent, E15). Shine fails criterion 3: there is no Gloss/Glanz/Laminierung positioning, and the film is the smoothing film (criterion 2). Smoothing clears step 6, because the architecture extends materially beyond the ordinary R1 base through a distinct three-species silicone route above the tail (DIMETHICONE @3, amodimethicone @7, DIMETHICONOL @8). 'Frizz Ease' anti-frizz positioning corroborates it but did not create the route. focus_care_verdict: not_applicable; claim_role: corroborating.",
+      "evidenceSignals": [
+        "R2 silicone system @3/@7/@8",
+        "claim_role: corroborating (Frizz Ease)"
+      ],
+      "counterSignals": [
+        "competing detangling lost: slip is baseline and no distinct combability route",
+        "competing shine lost: no gloss claim, film already counted as smoothing (§6 rule 2)"
+      ]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No second endpoint clears. Shine fails corroboration and would reuse the smoothing film. Moisture fails criterion 1: no humectant above the tail (DIPROPYLENE GLYCOL @6 is a carrier solvent under E15).",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "echoFields": {
+    "hair_thickness_fit": [
+      "fine",
+      "normal",
+      "coarse"
+    ],
+    "damage_fit": [
+      "healthy",
+      "moderately_damaged"
+    ],
+    "texture_fit": [
+      "straight",
+      "wavy",
+      "curly"
+    ]
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Wunder-Reparatur' / 'Tiefenwirksame' positioning vs repair_support_level low (no R5/R7 route; ceramides tail-only)",
+        "note": "Repair naming is E0; moves no value."
+      },
+      {
+        "flag": "candidate_below_tail",
+        "value": "COCOS NUCIFERA OIL @12, RICINUS COMMUNIS SEED OIL @14 (heavy band, R4b); marker TETRASODIUM GLUTAMATE DIACETATE @10 -> either above the marker would form the weight_potential high core with the dense base CETEARYL ALCOHOL @2",
+        "note": "Below-marker extras (E13): no credit, never make the marker implausible; weight_potential holds its rank-supported moderate; routed to review. OLEA EUROPAEA FRUIT OIL @13 is mid band and would qualify no anchor."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    {
+      "trigger": "candidate_below_tail_review",
+      "note": "Two heavy-band oils (coconut @12, castor @14) sit two and four ranks below the chelator marker @10; either above it would have moved weight_potential moderate -> high (E13)."
+    }
+  ]
+}

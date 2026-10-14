@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web reason transport.
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -122,6 +123,8 @@ function baseDeps(overrides: Partial<ScanRevealRouteDeps> = {}): ScanRevealRoute
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
+    isShoppingBudgetEnabled: () => false,
+    loadShoppingBudget: async () => null,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async (_client, input) =>
       Object.fromEntries(input.roles.map((role) => [role, []])),
@@ -226,6 +229,7 @@ test("scan reveal: a free user's first reveal consumes the credit and returns fu
       netContentLabel: "250 ml",
       verdict: "ideal",
       verdictLabel: "Passt",
+      reasonLines: [],
       brand: "Kérastase",
       purchaseUrl: "https://shop.test/b",
     },

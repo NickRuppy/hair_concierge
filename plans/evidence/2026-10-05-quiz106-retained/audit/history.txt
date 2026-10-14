@@ -1,0 +1,8 @@
+f452cb04c0ee6ff1ab74c948fced862df53e5da4 feat(quiz,scan): Hauptproblem-Auswahl im Quiz + Suche ohne Pfeil-Tap (batch 7a) (#611)
+f918bf16be230ea304b9ba4bbd0ae3d1c7c8e490 feat(quiz): prefill returning lead details (#587)
+1291bad1288dddb33e6165b640f5681c03f7da28 feat(quiz): resume returning leads into scanner trial (#585)
+f8c28328b6b7d374f627d6edc1951701de109e58 Scanner-first funnel package scan_v1 (/lp/scan, variant B Regal-Moment) (#534)
+3f9b284b2e06168bfbd8272f0615c0b9491df4f9 Streamline the creator partner journey (#497)
+9ae684fc3658f2732890bc3e8ebdae3aaad1325c Add hair loss concern guidance across both quizzes (#331)
+b34d67871d2f082c1db6d93a0f6dcbea542c4683 feat: simplify organic quiz funnel (#316)
+cb6fb1b349d932422cad1e9ee0364375d89539d0 Expand chemical treatment taxonomy (#187)

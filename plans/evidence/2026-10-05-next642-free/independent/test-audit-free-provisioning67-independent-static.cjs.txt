@@ -1,0 +1,50 @@
+'use strict';
+// Independent read-only static review. No owner/test imports, children, network or writes.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const PACKET='/tmp/test-audit-free-provisioning67';
+const ts=require(path.join(ROOT,'node_modules/typescript/lib/typescript.js'));
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+const read=p=>fs.readFileSync(p,'utf8'), json=p=>JSON.parse(read(p));
+const errors=[],checks=[];
+function check(ok,label){checks.push(label);if(!ok)errors.push(label);}
+function parse(file,text){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);check(sf.parseDiagnostics.length===0,'parse '+file);return sf;}
+function visit(n,fn){fn(n);ts.forEachChild(n,c=>visit(c,fn));}
+function sites(file,text){const sf=parse(file,text),out=[];visit(sf,n=>{if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test') {const a=n.arguments[0];const body=n.getText(sf);const assertions=[],calls=[];visit(n,c=>{if(c===n||!ts.isCallExpression(c))return;const exp=c.expression.getText(sf);(exp.startsWith('assert.')?assertions:calls).push(c.getText(sf));});out.push({title:ts.isStringLiteral(a)?a.text:a.getText(sf),body,sha:sha(body),assertions,calls,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,node:n,sf});}});return out;}
+const manifestPath=path.join(PACKET,'manifest.json'), artifactPath=path.join(PACKET,'artifact-hashes.json');
+check(sha(read(manifestPath))==='c93ab0f88ad471a0bddda81ebeef2db9b5c0cccecbbbb20b039bc000e9c041a1','immutable manifest');
+check(sha(read(artifactPath))==='1c46dea2a5aeecb35a2bf4cbd380a1d97f5bcce4bcd8253247b20504f1ae0ca0','immutable artifact manifest');
+const m=json(manifestPath), artifacts=json(artifactPath), ledger=json(path.join(PACKET,'ledger.json')), c=json(path.join(PACKET,'candidates.json'))[0], controls=json(path.join(PACKET,'controls.json'));
+for(const [f,h] of Object.entries(artifacts))check(fs.existsSync(path.join(PACKET,f))&&sha(fs.readFileSync(path.join(PACKET,f)))===h,'artifact '+f);
+check(fs.realpathSync(ROOT)===ROOT,'canonical root');
+const gitFile=read(path.join(ROOT,'.git')).trim();const gitDir=path.resolve(ROOT,gitFile.slice(8));const head=read(path.join(gitDir,'HEAD')).trim();check(head==='ref: refs/heads/'+m.branch,'branch');
+const common=path.resolve(gitDir,read(path.join(gitDir,'commondir')).trim());const ref=head.slice(5);let commit;if(fs.existsSync(path.join(common,ref)))commit=read(path.join(common,ref)).trim();else {const entry=read(path.join(common,'packed-refs')).split('\n').find(l=>l.endsWith(' '+ref));commit=entry?.split(' ')[0];}check(commit===m.head,'HEAD');
+const readsetStatus=m.readset.map(({file,sha256})=>{const p=path.join(ROOT,file);const current=fs.existsSync(p)?sha(fs.readFileSync(p)):null;check(current===sha256,'current pin '+file);return {file,expected:sha256,current,match:current===sha256};});
+const phases={},counts={},runtime={},perFile=[];
+for(const phase of ['before','transfer','cut']){phases[phase]={};counts[phase]=0;runtime[phase]=0;for(const f of m.files){const text=read(path.join(PACKET,'snapshots',phase,f));check(sha(text)===m.phaseHashes[phase][f],phase+' hash '+f);const ss=sites(f,text);phases[phase][f]={text,ss};counts[phase]+=ss.length;let extras=0;for(const s of ss){if(ts.isTemplateExpression(s.node.arguments[0])){let p=s.node.parent;while(p&&!ts.isForOfStatement(p))p=p.parent;check(Boolean(p),'templated site enclosed by for-of');let ex=p?.expression;if(ex&&ts.isAsExpression(ex))ex=ex.expression;check(Boolean(ex&&ts.isArrayLiteralExpression(ex)&&ex.elements.length===2&&ex.elements.every(e=>ts.isStringLiteral(e))),'two literal registration rows');if(ex&&ts.isArrayLiteralExpression(ex))extras+=ex.elements.length-1;}}runtime[phase]+=ss.length+extras;if(phase==='before')perFile.push({file:f,sites:ss.length,runtime:ss.length+extras});}check(counts[phase]===m.counts[phase],phase+' count');check(runtime[phase]===m.runtimeCountsFromLiteralRows[phase],phase+' literal runtime count');}
+check(ledger.length===67,'67 ledger entries');
+const marks=ledger.reduce((a,s)=>(a[s.mark]=(a[s.mark]||0)+1,a),{});check(marks.R===65&&marks.C===1&&marks.F===1&&!marks.D,'65R 1C 1F');
+for(const s of ledger){const original=phases.before[s.file].ss.find(x=>x.title===s.title);check(original?.sha===s.sha256&&original?.body===s.body,'ledger callback '+s.file+':'+s.line);}
+let unchanged=0;
+for(const f of m.files){const b=phases.before[f],t=phases.transfer[f],a=phases.cut[f];if(f!==c.file){check(b.text===t.text&&t.text===a.text,'entire untouched file '+f);}for(const s of b.ss){if(f===c.file&&[c.donor.title,c.keeperBefore.title].includes(s.title))continue;const ts=t.ss.find(x=>x.title===s.title),as=a.ss.find(x=>x.title===s.title);check(ts?.body===s.body&&as?.body===s.body,'unchanged survivor '+f+':'+s.line);unchanged++;}}
+check(unchanged===65,'65 exact unrelated callbacks');
+const b=phases.before[c.file],t=phases.transfer[c.file],a=phases.cut[c.file];
+const donor=b.ss.find(s=>s.title===c.donor.title),keeper=b.ss.find(s=>s.title===c.keeperBefore.title),kt=t.ss.find(s=>s.title===c.keeperBefore.title),ka=a.ss.find(s=>s.title===c.keeperBefore.title);
+check(donor.body===c.donor.body&&keeper.body===c.keeperBefore.body&&kt.body===c.keeperAfter.body&&ka.body===kt.body,'candidate full bodies');
+check(t.text===b.text.replace(keeper.body,kt.body),'whole transfer reconstruction');
+check(a.text===t.text.replace(donor.body+'\n\n',''),'whole cut reconstruction');
+check(t.ss.find(s=>s.title===donor.title)?.body===donor.body&&!a.ss.some(s=>s.title===donor.title),'donor retained transfer and absent cut');
+check(JSON.stringify(keeper.calls)===JSON.stringify(kt.calls),'no new keeper non-assertion calls');
+check(JSON.stringify(keeper.assertions)===JSON.stringify(kt.assertions.slice(1)),'all three original keeper assertions exact');
+check(kt.assertions[0]===donor.assertions[0].replace('resolveCheckoutPricingCatalog({ source: "premium_sheet", launchPricingEnabled })','catalog'),'complete donor literal and message union');
+check(kt.body.indexOf(kt.assertions[0])<kt.body.indexOf('for (const row'),'new oracle before row loop');
+for(const s of [donor,keeper,kt])check(s.body.includes('for (const launchPricingEnabled of [false, true])'),'same two flag literals '+s.title);
+const controlReceipts=[];
+for(const q of controls){const src=read(path.join(ROOT,q.file));check(sha(src)===q.sourceSHA256,q.id+' whole owner SHA');check(sha(q.scopeAnchor)===q.scopeSHA256,q.id+' function SHA');check(src.split(q.scopeAnchor).length===2&&q.scopeAnchor.split(q.from).length===2,q.id+' unique scoped anchor');const mutant=src.replace(q.scopeAnchor,q.scopeAnchor.replace(q.from,q.to));check(sha(mutant)===q.mutatedSHA256,q.id+' mutant SHA');const sf=parse(q.file,mutant);const funcs=[];visit(sf,n=>{if(ts.isFunctionDeclaration(n)&&n.name?.text===q.scope)funcs.push(n);});check(funcs.length===1&&funcs[0].getText(sf)===q.scopeAnchor.replace(q.from,q.to),q.id+' complete function mutation only');
+const expectedCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+q.test.name+'$',q.test.file];check(JSON.stringify(q.command)===JSON.stringify(expectedCommand),q.id+' exact native argv');
+const pattern=new RegExp(q.command[7].split('--test-name-pattern=')[1]);
+for(const phase of ['transfer','cut']){const ps=phases[phase][q.test.file];check(ps.ss.filter(s=>pattern.test(s.title)).length===1,q.id+' exact one selected '+phase);const k=ps.ss.find(s=>s.title===q.test.name),o=q.oracles[phase];check(k.sha===o.keeperSha256&&sha(ps.text)===o.fileSha256,q.id+' oracle hashes '+phase);const lineOffset=ps.text.split('\n').slice(0,o.line-1).join('\n').length+1;check(k.assertions[0]===o.text&&ps.text.slice(lineOffset).trimStart().startsWith(o.text),q.id+' first assertion exact line '+phase);}
+check(q.expectedCode==='ERR_ASSERTION'&&q.expectedOperator==='strictEqual'&&q.expected==='standard'&&q.actual==='personal_plan_launch_v1'&&q.firstKeeperFrameRequired===true,q.id+' strict oracle');
+const flag=q.id.endsWith('false')?'false':'true';check(q.message===`premium_sheet must submit the standard catalog (launch flag: ${flag})`,q.id+' message flag');check(q.decodedNodeMessage===q.message+"\n+ actual - expected\n\n+ 'personal_plan_launch_v1'\n- 'standard'\n",q.id+' decoded message descriptor');controlReceipts.push({id:q.id,sourceSHA:q.sourceSHA256,mutantSHA:q.mutatedSHA256,selectedSites:1,transferFirstLine:q.oracles.transfer.line,cutFirstLine:q.oracles.cut.line,runtimeStatus:'NOT_RUN'});}
+const result={status:errors.length?'FAIL':'STATIC_PASS',scope:'independent read-only static preservation; no runtime proof',manifestSHA:sha(read(manifestPath)),handoffSHA:sha(read(path.join(PACKET,'handoff.json'))),artifactManifestSHA:sha(read(artifactPath)),checkCount:checks.length,errors,counts,runtimeRegistrationsFromLiteralRows:runtime,marks,perFile,unchangedCallbacks:unchanged,changedKeepers:1,donors:1,newKeeperCalls:0,newInputs:0,newRows:0,sourceChanges:0,readsetCount:readsetStatus.length,readsetDrift:readsetStatus.filter(r=>!r.match),controlReceipts,nodeVersion:process.version,typescriptVersion:ts.version,repositoryWrites:0,configWrites:0,ownerImports:0,testImports:0,childProcesses:0,networkRequests:0};
+console.log(JSON.stringify(result,null,2));if(errors.length)process.exitCode=1;

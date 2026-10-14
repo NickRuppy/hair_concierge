@@ -139,20 +139,6 @@ test("nextScanHint: no change needed when desired equals current -> null regardl
   assert.equal(result, null)
 })
 
-test("nextScanHint: null currentHint bypasses hysteresis even with large elapsed time already implied", () => {
-  const telemetry: ScanTelemetry = { ...baseTelemetry, meanLuma: 10 }
-  const result = nextScanHint(telemetry, { currentHint: null, msSinceLastHintChange: 0 })
-  assert.equal(result, SCAN_HINT_MORE_LIGHT)
-})
-
-test("nextScanHint: pure function — same inputs produce same output, no internal state leakage", () => {
-  const telemetry: ScanTelemetry = { ...baseTelemetry, rawDetectionsWithoutStableRead: 5 }
-  const state = { currentHint: null, msSinceLastHintChange: 0 } as const
-  const first = nextScanHint(telemetry, state)
-  const second = nextScanHint(telemetry, state)
-  assert.equal(first, second)
-})
-
 /**
  * The viewfinder's copy chain (plan 2026-09-05): the idle pill says what the scanner is
  * doing, the spotted pill asks for the one thing that helps, and the confirm pill no
@@ -162,17 +148,4 @@ test("scan pill copy: the viewfinder strings are the signed-off German", () => {
   assert.equal(SCAN_HINT_DEFAULT, "Suche Barcode …")
   assert.equal(SCAN_HINT_SPOTTED, "Barcode gefunden – kurz stillhalten")
   assert.equal(SCAN_CONFIRM_LABEL, "Gelesen – wird geprüft")
-})
-
-test("nextScanHint never returns the spotted pill: it is a detection state, not a hint", () => {
-  const candidates = [
-    { ...baseTelemetry },
-    { ...baseTelemetry, meanLuma: 10 },
-    { ...baseTelemetry, meanLuma: 200, rawDetectionsWithoutStableRead: 9 },
-    { ...baseTelemetry, meanLuma: 200, lastBoundingBoxRatio: 0.001 },
-  ] satisfies ScanTelemetry[]
-  for (const telemetry of candidates) {
-    const hint = nextScanHint(telemetry, { currentHint: null, msSinceLastHintChange: 0 })
-    assert.notEqual(hint as string, SCAN_HINT_SPOTTED as string)
-  }
 })

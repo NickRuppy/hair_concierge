@@ -1,0 +1,508 @@
+[
+  {
+    "id": "C1",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.equal(first.reconciliation.linked_baseline_products, 38)",
+    "source": "scripts/scanner-catalog-coverage/build-existing-coverage-ledger.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-existing-ledger.test.ts",
+      "name": "research lanes are complete, category-disjoint, and stable"
+    },
+    "originalHash": "d66dd1418b5c9cbd0a1e747b92a5842ca97d1d8d1836f63b2ee9d57cae8d6c50",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C1-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C1-fault.tap"
+    },
+    "restoredHash": "d66dd1418b5c9cbd0a1e747b92a5842ca97d1d8d1836f63b2ee9d57cae8d6c50",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C1-after.tap"
+    },
+    "keeperAssertionLines": [
+      51,
+      54,
+      55,
+      56,
+      62,
+      67,
+      68,
+      69,
+      70,
+      75,
+      82,
+      83,
+      84,
+      85,
+      86
+    ],
+    "assertionStacks": [
+      84
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C2",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.ok(\n      selected.every(\n        (row) =>\n          row.catalog_readiness.strict_status === \"ready_for_ean_research\" &&\n          row.catalog_readiness.strict_blockers.length === 0 &&\n          row.catalog_readiness.static_blockers.length === 0,\n      ),\n      category,\n    )",
+    "source": "scripts/scanner-catalog-coverage/build-phase1a-ledger.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "name": "Phase 1A content fingerprint is stable across capture times"
+    },
+    "originalHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C2-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C2-fault.tap"
+    },
+    "restoredHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C2-after.tap"
+    },
+    "keeperAssertionLines": [
+      87,
+      89,
+      90,
+      93,
+      94,
+      104,
+      105,
+      107,
+      108,
+      112,
+      116
+    ],
+    "assertionStacks": [
+      94
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C3",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.equal(\n    pilotRows.reduce((sum, row) => sum + (row.pilot_gtin_evidence?.packages.length ?? 0), 0),\n    22,\n  )",
+    "source": "scripts/scanner-catalog-coverage/build-phase1a-ledger.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "name": "Phase 1A content fingerprint is stable across capture times"
+    },
+    "originalHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C3-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C3-fault.tap"
+    },
+    "restoredHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C3-after.tap"
+    },
+    "keeperAssertionLines": [
+      87,
+      89,
+      90,
+      93,
+      94,
+      104,
+      105,
+      107,
+      108,
+      112,
+      116
+    ],
+    "assertionStacks": [
+      112
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C4",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.ok(\n      rows.every(\n        (row) =>\n          row.catalog_readiness.research_only &&\n          !row.catalog_readiness.catalog_intake_ready &&\n          !row.catalog_readiness.scan_result_ready,\n      ),\n      category,\n    )",
+    "source": "scripts/scanner-catalog-coverage/build-phase1b-ledger.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "originalHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C4-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C4-fault.tap"
+    },
+    "restoredHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C4-after.tap"
+    },
+    "keeperAssertionLines": [
+      113,
+      124,
+      125,
+      134,
+      135,
+      138,
+      139,
+      147,
+      158,
+      162,
+      167,
+      192,
+      195,
+      196,
+      198,
+      199,
+      204
+    ],
+    "assertionStacks": [
+      147
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C5",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.ok(\n    first.rows.every(\n      (row) => row.sources.pdp_urls.length > 0 && row.sources.pdp_urls.every(isExactRetailerPdp),\n    ), \"every row retains nonempty exact PDP evidence\",\n  )",
+    "source": "scripts/scanner-catalog-coverage/build-phase1b-ledger.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "originalHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C5-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C5-fault.tap"
+    },
+    "restoredHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C5-after.tap"
+    },
+    "keeperAssertionLines": [
+      113,
+      124,
+      125,
+      134,
+      135,
+      138,
+      139,
+      147,
+      158,
+      162,
+      167,
+      192,
+      195,
+      196,
+      198,
+      199,
+      204
+    ],
+    "assertionStacks": [
+      162
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C6",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.equal(candidate.sources[0].url, expectedUrl, candidate.candidate_id)",
+    "source": "data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "originalHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C6-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C6-fault.tap"
+    },
+    "restoredHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C6-after.tap"
+    },
+    "keeperAssertionLines": [
+      113,
+      124,
+      125,
+      134,
+      135,
+      138,
+      139,
+      147,
+      158,
+      162,
+      167,
+      192,
+      195,
+      196,
+      198,
+      199,
+      204
+    ],
+    "assertionStacks": [
+      192
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C7",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.ok(\n    heat.sources.pdp_urls.some((url) =>\n      url.includes(\"syoss-foehnschutz-spray-keratin-volume/p/4015100860160\"),\n    ), \"heat005 retains the exact Rossmann product route\",\n  )",
+    "source": "data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "originalHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C7-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C7-fault.tap"
+    },
+    "restoredHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C7-after.tap"
+    },
+    "keeperAssertionLines": [
+      113,
+      124,
+      125,
+      134,
+      135,
+      138,
+      139,
+      147,
+      158,
+      162,
+      167,
+      192,
+      195,
+      196,
+      198,
+      199,
+      204
+    ],
+    "assertionStacks": [
+      199
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C8",
+    "lane": "catalog",
+    "phase": "new",
+    "intended": "assert.deepEqual(first.products[0]?.category_primary_facts, {\n    product_shampoo_specs: [{ shampoo_bucket: \"normal\" }],\n  })",
+    "source": "scripts/scanner-catalog-coverage/live-baseline-export.ts",
+    "selectedTest": {
+      "file": "tests/scanner-catalog-coverage-live-baseline.test.ts",
+      "name": "baseline is deterministic, supported-active-only, and reconciles barcode rows"
+    },
+    "originalHash": "f10367982e221aec2aba4c3bcfcdd651e7d4be7ee36f4d0e08bf3c6a87c9a634",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C8-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C8-fault.tap"
+    },
+    "restoredHash": "f10367982e221aec2aba4c3bcfcdd651e7d4be7ee36f4d0e08bf3c6a87c9a634",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-catalog-mutations-new/C8-after.tap"
+    },
+    "keeperAssertionLines": [
+      90,
+      91,
+      95,
+      96,
+      97,
+      98,
+      101,
+      102,
+      114
+    ],
+    "assertionStacks": [
+      114
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

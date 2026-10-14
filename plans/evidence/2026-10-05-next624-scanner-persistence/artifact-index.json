@@ -1,0 +1,1010 @@
+[
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-auto-save.test.ts",
+    "archived": "proposal/before/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-event-log.test.ts",
+    "archived": "proposal/before/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+    "bytes": 10500
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-events-migration.test.ts",
+    "archived": "proposal/before/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-route.test.ts",
+    "archived": "proposal/before/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88",
+    "bytes": 41708
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "proposal/before/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-wishlist-route.test.ts",
+    "archived": "proposal/before/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before-cut.diff",
+    "archived": "proposal/before-cut.diff",
+    "sha256": "8c26d6fefaad9fcb7b0c55d05d214d3a1b549116ad749731f7da0e635c530a86",
+    "bytes": 7668
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/before-transfer.diff",
+    "archived": "proposal/before-transfer.diff",
+    "sha256": "b4ca7bb2c8b2f7714e219ba4b82364c71d52eadcdc868bb9e3afa77e4a30794e",
+    "bytes": 1557
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "bc06817e9182e0879d206be0697219197fd062ca9b6d5398f9959380fe0b7509",
+    "bytes": 45335
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "5909f015e213410a5094640a06b6097d3384d8b248ffa4a58e9d9f8907aa8221",
+    "bytes": 11489
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-auto-save.test.ts",
+    "archived": "proposal/cut/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+    "bytes": 13049
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-event-log.test.ts",
+    "archived": "proposal/cut/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+    "bytes": 8166
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-events-migration.test.ts",
+    "archived": "proposal/cut/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+    "bytes": 9111
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-route.test.ts",
+    "archived": "proposal/cut/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "bytes": 41813
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "proposal/cut/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-wishlist-route.test.ts",
+    "archived": "proposal/cut/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "f989c7de839b79f046383f90431a7e60628a3de81f0a6202abf5e9b1c8047085",
+    "bytes": 3498
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "3c245d386e464c222263d6232674d50e94f8bf933397da0f8b0bbfa599844179",
+    "bytes": 26893
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/ledger.md",
+    "archived": "proposal/ledger.md",
+    "sha256": "8666ce98728a87c97220bd1da4c45bf762e93427d1677db59f99eeb62dc679d5",
+    "bytes": 16533
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "a9367b8fe81c65ebedd648184a6b09c5f1783b702fd6d3457d08925133919a43",
+    "bytes": 81993
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/report.md",
+    "archived": "proposal/report.md",
+    "sha256": "0abb7b95053bcf90bf672064f07af3b0a473226ddbd892df080e0844f40edabd",
+    "bytes": 11937
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "ac7827458e2242ddd4b5a57a0a143aafe24fa9cb9e6431558f10907965cee6c5",
+    "bytes": 436
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-auto-save.test.ts",
+    "archived": "proposal/transfer/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-event-log.test.ts",
+    "archived": "proposal/transfer/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "bytes": 10604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-events-migration.test.ts",
+    "archived": "proposal/transfer/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-route.test.ts",
+    "archived": "proposal/transfer/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "bytes": 41813
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "proposal/transfer/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-wishlist-route.test.ts",
+    "archived": "proposal/transfer/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer-cut.diff",
+    "archived": "proposal/transfer-cut.diff",
+    "sha256": "94b1d8ca6b3922335a9e3539965d25751af92589dd75d10f079e5fae0e2e1715",
+    "bytes": 5525
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-proposal-RDeysZ/verify.cjs",
+    "archived": "proposal/verify.cjs.txt",
+    "sha256": "91699595c2ebbfccc05a518b90df5af8543867b483b2b693622fa210418fd415",
+    "bytes": 4972
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/README.md",
+    "archived": "operator/README.md",
+    "sha256": "1a7402969262197f7b83c73f568c58dabc86002b0be30589696dd42c1122a3e0",
+    "bytes": 10712
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/controls-check.log",
+    "archived": "operator/controls-check.log",
+    "sha256": "6df55d52a41c95728c0226dd32a2d7f5cd012a0987ba54711686201bae5386f4",
+    "bytes": 436
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/editor-check.log",
+    "archived": "operator/editor-check.log",
+    "sha256": "92e1352181d5e53befe3516938f22a7f2dece99dfe0eea4fa9828e63d66d6bf0",
+    "bytes": 485
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/handoff.json",
+    "archived": "operator/handoff.json",
+    "sha256": "bb665ddaec27d426bb6f284d9822d4914cc645c2a5c06e78f4baaadfda80ad75",
+    "bytes": 2343
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/intent.json",
+    "archived": "operator/operator-apply-cut-56xtim/intent.json",
+    "sha256": "3973245814562df4cfc0a8144fc5130f883c83f372556789dd46de034591561b",
+    "bytes": 1988
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-resolve-auto-save.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-resolve-event-log.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "bytes": 10604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-resolve-events-migration.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-resolve-route.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "bytes": 41813
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/originals/tests/scan-wishlist-route.test.ts",
+    "archived": "operator/operator-apply-cut-56xtim/originals/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-cut-56xtim/receipt.json",
+    "archived": "operator/operator-apply-cut-56xtim/receipt.json",
+    "sha256": "31e706009c69bfa840df4d496af5bc2919220f20feaf3ecb4dfb9d8200fc9002",
+    "bytes": 1477
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/intent.json",
+    "archived": "operator/operator-apply-transfer-OddzcP/intent.json",
+    "sha256": "18c6e798b178a16e936acee82355a63efbf1ece12c6f60da89ac21fd632eda1d",
+    "bytes": 1748
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-auto-save.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-event-log.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+    "bytes": 10500
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-events-migration.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-route.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88",
+    "bytes": 41708
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals/tests/scan-wishlist-route.test.ts",
+    "archived": "operator/operator-apply-transfer-OddzcP/originals/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/receipt.json",
+    "archived": "operator/operator-apply-transfer-OddzcP/receipt.json",
+    "sha256": "bbd4d5ebf52bb9334765de493b10405160fd47c8b015fa8c0de379869ccac51f",
+    "bytes": 1192
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-candidates.json",
+    "archived": "operator/operator-candidates.json",
+    "sha256": "f421f2add2aa9f89e594ad961ecfc221dfd4c26b76e520fc0a63cf1ea1208c38",
+    "bytes": 27558
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-controls-normalized.json",
+    "archived": "operator/operator-controls-normalized.json",
+    "sha256": "d9322fa6498a1ff5458ac2c8d7c30bde255ec0e7a96bda6294afd1262f459d95",
+    "bytes": 21397
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-edit.cjs",
+    "archived": "operator/operator-edit.cjs.txt",
+    "sha256": "6a77a8227068e44d776f7ae515ec2c92add0902604f8aab551244d920bc3ff80",
+    "bytes": 3657
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-evidence.json",
+    "archived": "operator/operator-evidence.json",
+    "sha256": "2a3c80a8264a0c70a2f912cd85490bc37d7a637e4f6a15dedf9b680f1a25a33d",
+    "bytes": 5171
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-guard.cjs",
+    "archived": "operator/operator-guard.cjs.txt",
+    "sha256": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a",
+    "bytes": 12929
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection/originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection/originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-after.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-after.tap",
+    "sha256": "83dfbd0a742ab066aea82baeb5cf562b1819471e2547f63a2b724cb253a5dc80",
+    "bytes": 450
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-before.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-before.tap",
+    "sha256": "5985327a5e22fb871737fb057d82032f10a50d38ff8ab8f66db99abea1c09325",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-fault.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M1-start-rejection-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M1-start-rejection-fault.tap",
+    "sha256": "a34fd86d02e7fe0e36f920b4020caeeaad4427b66e12956e94d6b08e6a0bfd5b",
+    "bytes": 2639
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity/originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity/originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-after.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-after.tap",
+    "sha256": "d063d1d3ee4d03ccdc51c94148035f28de830cc06b06b9be2addae02d6a67443",
+    "bytes": 456
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-before.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-before.tap",
+    "sha256": "22af3238d5b1a36663c033d502c9d3f371f7a70b42a7934eaab302721402f05f",
+    "bytes": 456
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-fault.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M2-start-warning-severity-fault.tap",
+    "sha256": "359041a29aba434a654701a64b7ccedd0234cfc8e55a3e69918698ec03f4118c",
+    "bytes": 1502
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection/originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection/originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-after.command.json",
+    "sha256": "50c544dea4c14f4c378ddeb5d687cb4d5a30b1155247da17d024ff4a3ff75125",
+    "bytes": 399
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-after.tap",
+    "sha256": "217bced9d7608dd040a78f7bd5d8442f24e5fd2a4297789e1533da016deb53b4",
+    "bytes": 352
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-before.command.json",
+    "sha256": "50c544dea4c14f4c378ddeb5d687cb4d5a30b1155247da17d024ff4a3ff75125",
+    "bytes": 399
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-before.tap",
+    "sha256": "cd85d713f4c28e508de507850004ec5f5588c4a3ec51d908d656371f195ea651",
+    "bytes": 354
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-fault.command.json",
+    "sha256": "50c544dea4c14f4c378ddeb5d687cb4d5a30b1155247da17d024ff4a3ff75125",
+    "bytes": 399
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M3-completion-rejection-fault.tap",
+    "sha256": "f43c73963c3e34f0f63840cad7b1c22edb42c8a60395ea5cbb7e8be088e8830f",
+    "bytes": 2243
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at/originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at/originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-after.command.json",
+    "sha256": "d8c3a0aff8ae262e3873817e101c186d8e4a4fa3dfc1f1eac824324a27b5672b",
+    "bytes": 395
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-after.tap",
+    "sha256": "f73fc6cbb90a7e8f42014aea861c391c210fa713ea3bfeb5d78ef2314ee5c9b7",
+    "bytes": 266
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-before.command.json",
+    "sha256": "d8c3a0aff8ae262e3873817e101c186d8e4a4fa3dfc1f1eac824324a27b5672b",
+    "bytes": 395
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-before.tap",
+    "sha256": "8035f7b21db18c55dedcea75089a18e934c818658a26b2c5598fde35e4f29126",
+    "bytes": 267
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-fault.command.json",
+    "sha256": "d8c3a0aff8ae262e3873817e101c186d8e4a4fa3dfc1f1eac824324a27b5672b",
+    "bytes": 395
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M4-default-created-at-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M4-default-created-at-fault.tap",
+    "sha256": "3963365730e236e4ccc571f9d37736e210d6b6af60215cf0a524c86209022dad",
+    "bytes": 1536
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version/originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version/originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "bytes": 7481
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-after.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-after.tap",
+    "sha256": "720fbf0a8b2a3699c8875ae193035640db84598546cb0b9f5e650b57d6d728e5",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-before.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-before.tap",
+    "sha256": "e410437f0ac8750d6efe29cbf57a106b0eee7488ed81855504b49668ab142264",
+    "bytes": 354
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-fault.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M5-legacy-version-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M5-legacy-version-fault.tap",
+    "sha256": "02d78437512ceab632f4db1bf4a1dce75e0869dd5098c5036aa6e8f4d64a1f97",
+    "bytes": 998
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution/originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution/originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "bytes": 7481
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-after.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-after.tap",
+    "sha256": "461985ab90c80695a5a360ce454bd00b8d11ca06255b2de218fcf763a33eee50",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-before.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-before.tap",
+    "sha256": "8a3e67a470e2d771e9c05303126290702ab72c161eea2f22d3c53f47969d71c0",
+    "bytes": 356
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-fault.command.json",
+    "sha256": "78509be299ce1414e626e5daf218b7f899fc33074238c0b823544e4af7469114",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M6-legacy-resolution-fault.tap",
+    "sha256": "a553dc067fede01a3d686045ca05a6e0238d84051d85500ab2dc730450099403",
+    "bytes": 998
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction/originals/src/app/api/scan/resolve/route.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction/originals/src/app/api/scan/resolve/route.ts.txt",
+    "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "bytes": 27604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-after.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-after.command.json",
+    "sha256": "481aaa84dcc80a6ebcf71e2bcf13788ae41d34014710e91829079627ad89f851",
+    "bytes": 436
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-after.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-after.tap",
+    "sha256": "2a843b40aea4ab7753b0be460a55f54642a5fcc0519e65ce8849862494ad3192",
+    "bytes": 350
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-before.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-before.command.json",
+    "sha256": "481aaa84dcc80a6ebcf71e2bcf13788ae41d34014710e91829079627ad89f851",
+    "bytes": 436
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-before.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-before.tap",
+    "sha256": "2aee4327e2fc70ddbd51104bc2922a3cf4837fc78676abc3de4ae5b1263bbab1",
+    "bytes": 350
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-fault.command.json",
+    "sha256": "481aaa84dcc80a6ebcf71e2bcf13788ae41d34014710e91829079627ad89f851",
+    "bytes": 436
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-fault.tap",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/M7-premium-prediction-fault.tap",
+    "sha256": "958c247bc2e642e42e2cea53de53cd90363e8f01eb70fa2ad438868f13056e27",
+    "bytes": 1466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/src/app/api/scan/resolve/route.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/src/app/api/scan/resolve/route.ts.txt",
+    "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "bytes": 27604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "bytes": 7481
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-auto-save.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-event-log.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "bytes": 10604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-events-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "bytes": 41813
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-wishlist-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/all-originals/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/complete.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/complete.json",
+    "sha256": "46897612a2b296c6443c040c16886b8f8c20d0d9864d981f97b880949bcf33ba",
+    "bytes": 28953
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/intent.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/intent.json",
+    "sha256": "22f826d20b9610d0e5d2c4e7cf96b856cc59f91e7d67a2c14baaaeb57711e989",
+    "bytes": 1407
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG/receipt.json",
+    "archived": "operator/operator-mutations-transfer-Nt8yyG/receipt.json",
+    "sha256": "976e71acb251984adede8006c3e66ee21fb3aed22f8e55bcd363dc9eea40127f",
+    "bytes": 329163
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection/originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection/originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-after.command.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-after.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-after.tap",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-after.tap",
+    "sha256": "93e5823db950b64812fcc7ebc522a2f240b708662a38b8ff4f4779e9cd2f42f0",
+    "bytes": 456
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-before.command.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-before.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-before.tap",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-before.tap",
+    "sha256": "48a71e44275a676897bd28dacbde52dd410116fd335f5c9834cfafad93f5986b",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-fault.command.json",
+    "sha256": "e01745ea1931bc7e445287db193b3e4d200667e9f6decd791961bee2707455f0",
+    "bytes": 457
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/M1-start-rejection-fault.tap",
+    "archived": "operator/operator-mutations-transfer-atRScf/M1-start-rejection-fault.tap",
+    "sha256": "e3c2d5ba2b58901a6b9ec9ea332841399cf2dda678fc30391bf2b9c9ed70363c",
+    "bytes": 2643
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/src/app/api/scan/resolve/route.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/src/app/api/scan/resolve/route.ts.txt",
+    "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "bytes": 27604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/src/lib/scan/resolve-event-log.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/src/lib/scan/resolve-event-log.ts.txt",
+    "sha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "bytes": 5692
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "bytes": 7481
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-auto-save.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-auto-save.test.ts.txt",
+    "sha256": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "bytes": 13777
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-event-log.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-event-log.test.ts.txt",
+    "sha256": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "bytes": 10604
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-events-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-events-migration.test.ts.txt",
+    "sha256": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "bytes": 9466
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-resolve-route.test.ts.txt",
+    "sha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "bytes": 41813
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-wishlist-auto-save-postgres.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-wishlist-auto-save-postgres.test.ts.txt",
+    "sha256": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "bytes": 12508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/all-originals/tests/scan-wishlist-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-atRScf/all-originals/tests/scan-wishlist-route.test.ts.txt",
+    "sha256": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "bytes": 7603
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/failure.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/failure.json",
+    "sha256": "9943b946d18f0d2c4bd04f8d6d870da47f3706ec294a3dba7fb9feafd0267a7f",
+    "bytes": 139
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/intent.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/intent.json",
+    "sha256": "15c50450be9e5bc2beffb0778028fe63e094781683d9e943373a23514a06e635",
+    "bytes": 1407
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-atRScf/receipt.json",
+    "archived": "operator/operator-mutations-transfer-atRScf/receipt.json",
+    "sha256": "2c66b0f02ec36a213941796ebb20fbbc4cee9b9664d650126183da598d4aa05b",
+    "bytes": 46976
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-pins.json",
+    "archived": "operator/operator-pins.json",
+    "sha256": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+    "bytes": 1549191
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-proof.cjs",
+    "archived": "operator/operator-proof.cjs.txt",
+    "sha256": "ccb2967f1b8ebb1cf11321f54239872cac7ff344470c56e0480c9269d54194c9",
+    "bytes": 5729
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-readonly-preload.cjs",
+    "archived": "operator/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-run-controls.cjs",
+    "archived": "operator/operator-run-controls.cjs.txt",
+    "sha256": "a30bf8e42c8a9ba79966633ef1eb94e0ccad5d41eb71eabe6ba8f0cfa186878b",
+    "bytes": 8070
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-selected-closure.json",
+    "archived": "operator/operator-selected-closure.json",
+    "sha256": "2656c83dfe375c7b4e71db99e97d8e2b90b3df846d9240697f0319576844e9a7",
+    "bytes": 99341
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/preparation-receipt.json",
+    "archived": "operator/preparation-receipt.json",
+    "sha256": "49a97e50891598da82e6f582b997851a70217abc26eaab0841100f00f3f9e1e9",
+    "bytes": 455
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/prepare-pins.cjs",
+    "archived": "operator/prepare-pins.cjs.txt",
+    "sha256": "1adab74af3954a84a0cbe6e4eea0e8d43db68df4dac4342bcf30632a5ce15416",
+    "bytes": 12186
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/prepare-tools.py",
+    "archived": "operator/prepare-tools.py.txt",
+    "sha256": "560630cf66b7c1aee30a8a085a361f5e6839334fefae971eebedb76f6e07a923",
+    "bytes": 5925
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/proof-attestation.cjs",
+    "archived": "operator/proof-attestation.cjs.txt",
+    "sha256": "648eb62fcc1ade4a4bcd69ca71ba92f5b9898108a50913f27e144f1773ff7bd3",
+    "bytes": 3340
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/proof-attestation.log",
+    "archived": "operator/proof-attestation.log",
+    "sha256": "e07ed4a1426954762b436b62d91b4fe1cbc380287e81813d85d24b9ed06e36a7",
+    "bytes": 422
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/static-receipt.json",
+    "archived": "operator/static-receipt.json",
+    "sha256": "624cc83c979879106f7046376b7655969f9e3906b4e0032175347cb722e1d095",
+    "bytes": 1346
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/template-delta.patch",
+    "archived": "operator/template-delta.patch",
+    "sha256": "ff7ac27a4429d26c765d6bac7e0541f4764299dd69d420106f94ba98fbfbdec2",
+    "bytes": 16337
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/template-provenance.json",
+    "archived": "operator/template-provenance.json",
+    "sha256": "628ea87ba9be41273af3040069de6547f270a513507329dca44d523641ac4d21",
+    "bytes": 1552
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-tools-xrqyw5u6/tool-code-hashes.json",
+    "archived": "operator/tool-code-hashes.json",
+    "sha256": "193be87629153243949cee4539a1a4f0e127b8845861381a6c7ef83c75cb7a90",
+    "bytes": 755
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/alias-disposition.json",
+    "archived": "main-tool-repair/alias-disposition.json",
+    "sha256": "67417557426f87dc078198521be512e440cad6494bb1fd3a7d14d91983dacfa4",
+    "bytes": 368
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/disposition.json",
+    "archived": "main-tool-repair/disposition.json",
+    "sha256": "c3940a532be1a120c5e2e438f21b8783a30639276c379b4b6f802cff3331733a",
+    "bytes": 1368
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/operator-edit.cjs",
+    "archived": "main-tool-repair/operator-edit.cjs.txt",
+    "sha256": "16e0205ce808a2e83cb353262d15c4ba9e7efa9cba149f420e1b0726b3548224",
+    "bytes": 3657
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/operator-pins.json",
+    "archived": "main-tool-repair/operator-pins.json",
+    "sha256": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+    "bytes": 1549056
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/operator-proof.cjs",
+    "archived": "main-tool-repair/operator-proof.cjs.txt",
+    "sha256": "c49ee44a3bdf85b8a71a6087189bccdd224340c44086a850488abdda78abd2fd",
+    "bytes": 5711
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/operator-run-controls.cjs",
+    "archived": "main-tool-repair/operator-run-controls.cjs.txt",
+    "sha256": "f2e4c3a30b129a38f9bb45d68be7c62d4c4b17e6d0cf0fb6be3638ec013889b7",
+    "bytes": 8070
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/parser-actual-review.json",
+    "archived": "main-tool-repair/parser-actual-review.json",
+    "sha256": "c4b286c56e7fe85e78f43fcfe7a13e8c7512438d057cab614ee9f3b053d735ce",
+    "bytes": 1002
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/pre-alias-pins.json",
+    "archived": "main-tool-repair/pre-alias-pins.json",
+    "sha256": "dbfb119c5495d133879823ddd8636ca5829ccee5a2efa4619328cae28cfb6f6a",
+    "bytes": 1549191
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-independent-preservation.md",
+    "archived": "independent/test-audit-scanner46-independent-preservation.md",
+    "sha256": "30db00c1f8ebc446bb307cc01a0f5266c50c71aa35e66bddb8dfa54e510c8358",
+    "bytes": 14257
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-independent-static.json",
+    "archived": "independent/test-audit-scanner46-independent-static.json",
+    "sha256": "8bdfd4785d3ee679e4ac2b609f3d02893e9cecc8c1bd12942752f5a65c0c0b2b",
+    "bytes": 7682
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-before-native.tap",
+    "archived": "native/test-audit-scanner46-main-before-native.tap",
+    "sha256": "540417e8a14ce080c95efa14a102416908c3e525cca326e2900b260d72226dfa",
+    "bytes": 30067
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-before-native.command.json",
+    "archived": "native/test-audit-scanner46-main-before-native.command.json",
+    "sha256": "de3b13db3f4364a7127094816ce9c8ba4694cef8cb550cdb8072d985ecb7b30e",
+    "bytes": 508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-before-native.result.json",
+    "archived": "native/test-audit-scanner46-main-before-native.result.json",
+    "sha256": "c29b4c09a5b8b2987eb28a672859772566d9d01daae10a235ac818afe8edb15b",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-transfer.tap",
+    "archived": "native/test-audit-scanner46-main-transfer.tap",
+    "sha256": "5df8cbbda66582317ded297950e6169aac501592c79a15dc3615b73e0bade71b",
+    "bytes": 30050
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-transfer.command.json",
+    "archived": "native/test-audit-scanner46-main-transfer.command.json",
+    "sha256": "de3b13db3f4364a7127094816ce9c8ba4694cef8cb550cdb8072d985ecb7b30e",
+    "bytes": 508
+  },
+  {
+    "original": "/tmp/test-audit-scanner46-main-transfer.result.json",
+    "archived": "native/test-audit-scanner46-main-transfer.result.json",
+    "sha256": "c29b4c09a5b8b2987eb28a672859772566d9d01daae10a235ac818afe8edb15b",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-scanner40-main-cut.tap",
+    "archived": "native/test-audit-scanner40-main-cut.tap",
+    "sha256": "8308327c6fb99a007951a8077a56c76ebccecda2d958eaa25775862786537a94",
+    "bytes": 28687
+  },
+  {
+    "original": "/tmp/test-audit-scanner40-main-cut.command.json",
+    "archived": "native/test-audit-scanner40-main-cut.command.json",
+    "sha256": "de3b13db3f4364a7127094816ce9c8ba4694cef8cb550cdb8072d985ecb7b30e",
+    "bytes": 508
+  },
+  {
+    "original": "/tmp/test-audit-scanner40-main-cut.result.json",
+    "archived": "native/test-audit-scanner40-main-cut.result.json",
+    "sha256": "6f815b3fffa158971bbc9b3446dde479ddc74016ee49f4cb730f2513d10f2f1c",
+    "bytes": 170
+  }
+]

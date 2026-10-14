@@ -1,0 +1,72 @@
+[
+  {
+    "id": "C1",
+    "classification": "C",
+    "status": "conditional; main and independent preservation acceptance plus actual native/owner-fault proof required",
+    "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "donor": {
+      "title": "\"initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering\"",
+      "line": 279,
+      "endLine": 350,
+      "callbackSHA256": "63be9968ecc5e38bcfba1a3ee70a150f4908df2916eff3f762d7cc23689e92cf"
+    },
+    "keeper": {
+      "title": "\"initial Routine compilation is deterministic and excludes volatile portfolio metadata\"",
+      "line": 184,
+      "endLine": 198,
+      "callbackSHA256": "d0599f1af47f7dae2e23b46595ecc6175dda0305c697b16deaa3a599c61b7d7a"
+    },
+    "transfer": "Complete donor payload declaration and seven assertion calls, byte exact except candidate.payload -> first.payload, appended after existing keeper assertions; original donor retained during transfer.",
+    "inputEquivalence": "Both existing calls are compileInitialRoutineCandidate(compilerInput()) with no arguments to compilerInput. Identical default source revision 7, draft revision 12, plan-a, portfolio schema 1, createdAt 2026-08-08T08:00:00.000Z, same shared immutable refinedNeedSnapshot, absent cadenceAuthorityFacts. Fresh portfolio created on each call; no input mutation or global mutable owner state. Keeper second call changes only createdAt to 09:00 and cannot change first returned object.",
+    "owner": "src/lib/personal-plan/routine-candidate-compiler.ts:384-525",
+    "readset": "Compiler input fields and shared CATEGORY_ROLE_POLICIES/STAGE1_CATEGORY_ORDER, canonical hash and pure cadence formatter. No I/O, provider, auth, DB, time or cache read in compileInitialRoutineCandidate; imported editor/diff are not called by this export.",
+    "assertionUnion": [
+      {
+        "line": 283,
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(payload.sections, [\n    { key: \"basis\", itemKeys: [\"item:conditioner:conditioner_rinse_out:captured-a\"] },\n    {\n      key: \"optional\",\n      itemKeys: [\n        \"item:oil:dry_finish:planned-a\",\n        \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n      ],\n    },\n  ])"
+      },
+      {
+        "line": 293,
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(payload.source.renderedOrder, [\"conditioner\", \"oil\", \"heat_protectant\"])"
+      },
+      {
+        "line": 294,
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(\n    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),\n    [\"conditioner\", \"oil\", \"heat_protectant\"],\n  )"
+      },
+      {
+        "line": 298,
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )"
+      },
+      {
+        "line": 347,
+        "expression": "assert.equal",
+        "text": "assert.equal(\"applicationOrder\" in payload, false)"
+      },
+      {
+        "line": 348,
+        "expression": "assert.equal",
+        "text": "assert.equal(\"dayTypes\" in payload, false)"
+      },
+      {
+        "line": 349,
+        "expression": "assert.equal",
+        "text": "assert.equal(\"user_product_usage\" in payload, false)"
+      }
+    ],
+    "supportDeletion": null,
+    "productionDeletion": null,
+    "addedOwnerCalls": 0,
+    "addedFixtureRows": 0,
+    "addedInputs": 0,
+    "expectedCounts": [
+      102,
+      102,
+      101
+    ],
+    "unchangedUnrelatedCallbacks": 100
+  }
+]

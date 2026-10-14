@@ -1,0 +1,1694 @@
+[
+  {
+    "source": "/tmp/test-audit-partner-access84/candidates.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/candidates.json",
+    "sha256": "1cb535117dd738bb68b985f34ca16868e171119596aa0b0b83e8d259be29ef6c",
+    "bytes": 37513
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/complete-ledger.md",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/complete-ledger.md",
+    "sha256": "f8762208d49c240659b5ec4c25b8d1b1a611dd24ff92e75a802c092bb86a5181",
+    "bytes": 25038
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/complete.diff",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/complete.diff",
+    "sha256": "6f9bb00f0a4f7c8bf98dc6846c73fa304e71bc9ac7d8f1b8b03d6c2866f53bf8",
+    "bytes": 8332
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/controls.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/controls.json",
+    "sha256": "e8380572fb83586221fcb5094bfdb3636f9b69cf8d5d583b0596921b55434e35",
+    "bytes": 25840
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/controls.py",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/controls.py.txt",
+    "sha256": "e6bc60c548443d1d2299a0e38793093f1605cb30af9963ff9952410139378e7f",
+    "bytes": 6614
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/evidence.py",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/evidence.py.txt",
+    "sha256": "a51bb074b70a8213cb9c1e4497e17d979dc5f73d322be0408ab4f89da3781288",
+    "bytes": 8735
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/handoff-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/handoff-receipt.json",
+    "sha256": "52c9fa29f47e207a9a4765c27ff97327307717ee1714b0a098cb1edad7a75b63",
+    "bytes": 1205
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/inventory.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/inventory.cjs.txt",
+    "sha256": "6da62f84349bc77065d19fa01a5274693744aa16c97fef3d4e9ac4af29438d94",
+    "bytes": 1504
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/judgments.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/judgments.json",
+    "sha256": "96fa391fa7326d2bb32a57cfb921e28b8c141bc14600374bbb86923e3f7803cd",
+    "bytes": 122655
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/layer-plan.md",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/layer-plan.md",
+    "sha256": "441f9dd37517979ea1c49da65ab8cadcf76017018287d7ea041137880ceade22",
+    "bytes": 14464
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/ledger.py",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/ledger.py.txt",
+    "sha256": "7090b02ce9d350150afe9401ca0042737a172bcb0c26fb7696a23385881fcd51",
+    "bytes": 17796
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/manifest.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/manifest.json",
+    "sha256": "a6ebc4f3d1ebeece0a5778a91dd5a00ccdda53e473c92c1bdcdfbf0a8115a307",
+    "bytes": 16214
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/prepare.py",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/prepare.py.txt",
+    "sha256": "4af1c918987c2f492b973ba5d5c7a3a8093eeea1df1abe265bd848bb624be80d",
+    "bytes": 3319
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/sites.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/sites.json",
+    "sha256": "23875f6960e08f62bc328e0277fddb9615e1b44d3b0160dd28ebe952d48c5aa4",
+    "bytes": 106173
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "778f12ad0ecf8401ae36cd21d24a2321cff345bc83d00b3a45bbc2eec6c6d0ba",
+    "bytes": 10956
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-journey.test.ts.txt",
+    "sha256": "e0bc90aa2fd44868ef5e262cddd09e75803616bc40232da2df5d5a41b17b1798",
+    "bytes": 9880
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/before/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/before/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "3807b260eea45de0dc2f62fa33045bc7092b48c2bf75b84495456d3883d18044",
+    "bytes": 2969
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "e9fe8be4f1ef650ce44b58a9cf6b3f1abb533e0d30f73b366bb99c765d7dda6b",
+    "bytes": 9673
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-journey.test.ts.txt",
+    "sha256": "d17395421bb3572ab6d3b1ef09fde594e2f9faab6dcad5b44b64897dcbdbd689",
+    "bytes": 8237
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/cut/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/cut/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "e9668625ee1d8260aa961234fa9478e8f266bf1b7622223b200d955048eb112f",
+    "bytes": 2611
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "47daff78b59b56f64f1d4525b3e090e681ff615f166bc246afb5ad1d8b389fff",
+    "bytes": 11349
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-journey.test.ts.txt",
+    "sha256": "fef75b4b53499b42c3c27aa86966b2aa48132c736c300c62d5ab9d8e83a8aa84",
+    "bytes": 10095
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/snapshots/transfer/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/snapshots/transfer/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "60bb4d0575be8472da12b4aeeaebe5b7a8099b72bbd81097326eb89c538030be",
+    "bytes": 3318
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/static-check.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/static-check.cjs.txt",
+    "sha256": "970232066c4428c6c2ae32f43e10973e92a247ad8f925febb570210205471b5e",
+    "bytes": 4414
+  },
+  {
+    "source": "/tmp/test-audit-partner-access84/static-check.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/proposal/static-check.json",
+    "sha256": "14470627be778729fbc8090cf7d79aff3dc3de6cce65e0a0509f611858fc18cf",
+    "bytes": 353
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/README.md",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/README.md",
+    "sha256": "0789990a61d688540c122935bc799dca98199c3ef3f86d3ef0560a7e7e855a17",
+    "bytes": 8716
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/intent.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/intent.json",
+    "sha256": "00233714b087a0cd051668f509edf477888ce375ac214e44f76d0f64b27a3356",
+    "bytes": 4341
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "47daff78b59b56f64f1d4525b3e090e681ff615f166bc246afb5ad1d8b389fff",
+    "bytes": 11349
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-journey.test.ts.txt",
+    "sha256": "fef75b4b53499b42c3c27aa86966b2aa48132c736c300c62d5ab9d8e83a8aa84",
+    "bytes": 10095
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/originals/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/originals/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "60bb4d0575be8472da12b4aeeaebe5b7a8099b72bbd81097326eb89c538030be",
+    "bytes": 3318
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-cut-dMMOCZ/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-cut-dMMOCZ/receipt.json",
+    "sha256": "6a6d1a9865160c182a69462980895327dfca02ed67a28affcfc6bb6140ed0205",
+    "bytes": 2613
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/intent.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/intent.json",
+    "sha256": "da72b64d809cdcd67489985b0ce0f8fc6972d5c3b86ebe36f03ff3c15ab4c38a",
+    "bytes": 4100
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "778f12ad0ecf8401ae36cd21d24a2321cff345bc83d00b3a45bbc2eec6c6d0ba",
+    "bytes": 10956
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-journey.test.ts.txt",
+    "sha256": "e0bc90aa2fd44868ef5e262cddd09e75803616bc40232da2df5d5a41b17b1798",
+    "bytes": 9880
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/originals/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/originals/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "3807b260eea45de0dc2f62fa33045bc7092b48c2bf75b84495456d3883d18044",
+    "bytes": 2969
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-apply-transfer-YxVaJf/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-apply-transfer-YxVaJf/receipt.json",
+    "sha256": "d24b1199a6da8de61d4a145e65338e730c56cb1c6987fae8c55b3232d4bfd9ac",
+    "bytes": 2382
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-controls-normalized.json",
+    "sha256": "d36409a658eea87854a9a2b36464d25eef0a06718cafac85b6088d1e995608fa",
+    "bytes": 44094
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-edit.cjs.txt",
+    "sha256": "ed6a2a82389384ee77f1155fdf859e30a4545e6a045b5f22880850cdf75af953",
+    "bytes": 3510
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-guard.cjs.txt",
+    "sha256": "834cbe12687c42dba0372ce961fcbe82cc79866780ba8475d4c77efc16cdc6f8",
+    "bytes": 11676
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-after.command.json",
+    "sha256": "7fb8bbccec2787df98066149025edc515fb1c3bcc54d619b03bc6bb2972d8675",
+    "bytes": 411
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-after.tap",
+    "sha256": "fb0d4b76612cc97dd7a3fff402b2156d4d79a3439a8a01716a8e61d089d969a2",
+    "bytes": 299
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-before.command.json",
+    "sha256": "7fb8bbccec2787df98066149025edc515fb1c3bcc54d619b03bc6bb2972d8675",
+    "bytes": 411
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-before.tap",
+    "sha256": "f88800ada73d83ddcf7cad5fe99bbb0455ed4b6071863b21893ba1c1af2ffac9",
+    "bytes": 299
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-fault.command.json",
+    "sha256": "7fb8bbccec2787df98066149025edc515fb1c3bcc54d619b03bc6bb2972d8675",
+    "bytes": 411
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C1-no-session-not-outage-fault.tap",
+    "sha256": "1690025d3cd7dfd520e3f1cb465ee13994190bf5409c87098c9bda0f61d3c6a4",
+    "bytes": 1049
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-after.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-after.tap",
+    "sha256": "c6aac1fb3f601d6446e95ee21886c560fafa16fe20a84fdb024f34b44ab4b9ef",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-before.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-before.tap",
+    "sha256": "df9c1fb706a9ac68ad4b2a41847346da80b8b09d0c00aef05ce82dab0ee53540",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-fault.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-email-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-email-fault.tap",
+    "sha256": "2b2d5306f78c920637bf3629ce70d60e05f65297f2dc15e5b655d2d2b4dffa1c",
+    "bytes": 1695
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-after.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-after.tap",
+    "sha256": "745ca3d36605a9d7c537e2f25cdca50a53f4e267ac4ae7f4b43a3e8d86561bf4",
+    "bytes": 315
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-before.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-before.tap",
+    "sha256": "db1a1e3ef8113a8b68ad2d92003df902d5e68ebd15851f57b940831eec82f342",
+    "bytes": 315
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-fault.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-funnelSessionId-fault.tap",
+    "sha256": "7969a2f74f09574006284dca9c42fd5b6b9b24185e06b1cc488764309e15e161",
+    "bytes": 1713
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-after.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-after.tap",
+    "sha256": "eccee01d171ed1278eb91211c41d4bb9eadcd5895b55912db9a75f7ee962a45f",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-before.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-before.tap",
+    "sha256": "85ccd90bc29b0c6810783414f91f77b01dd1f40d08f161b275026baa4c0c8ba0",
+    "bytes": 315
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-fault.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-invitationId-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-invitationId-fault.tap",
+    "sha256": "cbbc8ec712f4d06364e6ee855e7a622e6d7369f4e30361441f0482ad6f078f86",
+    "bytes": 1704
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-after.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-after.tap",
+    "sha256": "cf2005f768e5efd53f5cbaac2592a4137e1ece2c52218afa3449c83377b8e1c7",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-before.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-before.tap",
+    "sha256": "9260e0ab487861a6a5178cc533efa55434d95790325595787bb53fd476b08b57",
+    "bytes": 316
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-fault.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-name-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-name-fault.tap",
+    "sha256": "3c4d7b65d3e251bc9e57b96859df523a317ccae684a7b3c1b0003a5b2fc5e986",
+    "bytes": 1706
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-after.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-after.tap",
+    "sha256": "a06694d6bdd3aa2a4302b1e01abac6ea8a194fb73f7ede1210a600501fa1125b",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-before.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-before.tap",
+    "sha256": "a0b17968bfe1fc91238e1d397d011369be59d3d82022288b881b847572e3a52f",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-fault.command.json",
+    "sha256": "56ea72ca8a583f8e07f1602253526c19fc2705546f812a942946ae0534736a43",
+    "bytes": 420
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C2-projection-userId-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C2-projection-userId-fault.tap",
+    "sha256": "e4a760451c0ac4d5dfe5770ae4ff1910ac8763c76d60f6cb094532f61f91cc1f",
+    "bytes": 1709
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-after.command.json",
+    "sha256": "83d5f2cc3514bb4761f61ff847a652e050a362f67448088424bb029f957966b6",
+    "bytes": 421
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-after.tap",
+    "sha256": "efd0a443d140a8df155236f059341c961b69a8dd3425a85c79bc9cb663a1a539",
+    "bytes": 405
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-before.command.json",
+    "sha256": "83d5f2cc3514bb4761f61ff847a652e050a362f67448088424bb029f957966b6",
+    "bytes": 421
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-before.tap",
+    "sha256": "44f935fde94b4532e05d111f343c067cb54262ea93f7d2cd4d3518ece14a9b35",
+    "bytes": 405
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-fault.command.json",
+    "sha256": "83d5f2cc3514bb4761f61ff847a652e050a362f67448088424bb029f957966b6",
+    "bytes": 421
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C3-auth-fault-not-none-fault.tap",
+    "sha256": "a9147d41801efc43661d63406710a1163f412d445e7a9ddf2a65be42566ded33",
+    "bytes": 1155
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-after.command.json",
+    "sha256": "3337048e6702630ac8967f3c70a259b7ce0253de3ccc88610af25ee659903365",
+    "bytes": 408
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-after.tap",
+    "sha256": "931c69b469e3d003b5b7c14c7d8e9eb4fd2d5e2538a6c4b77b9e03bcd6e68715",
+    "bytes": 927
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-before.command.json",
+    "sha256": "3337048e6702630ac8967f3c70a259b7ce0253de3ccc88610af25ee659903365",
+    "bytes": 408
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-before.tap",
+    "sha256": "54f7fed2d9b99a6b0538286e00dfc32e202a9796d496c6c4139a88b1c9d716f4",
+    "bytes": 924
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-fault.command.json",
+    "sha256": "3337048e6702630ac8967f3c70a259b7ce0253de3ccc88610af25ee659903365",
+    "bytes": 408
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-stamped-read-fault-fault.tap",
+    "sha256": "d39944e89a49ec5d734a9510e3dbc72b1611f847a5fb70a06e1815fae977d87e",
+    "bytes": 1677
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup/originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup/originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-after.command.json",
+    "sha256": "b9d534c80e813b0f23f01c970fced9aa139f8b9cbf1da86d061432b262c14f74",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-after.tap",
+    "sha256": "00a692c0166750db17b24c7cb710a6b1fd4842df24b53fcbc9bc5c1db24de153",
+    "bytes": 321
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-before.command.json",
+    "sha256": "b9d534c80e813b0f23f01c970fced9aa139f8b9cbf1da86d061432b262c14f74",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-before.tap",
+    "sha256": "a84e8bb522836cf980385c15cf9f4324ac884d6273e8ed7a3403f7a922dfe2c7",
+    "bytes": 321
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-fault.command.json",
+    "sha256": "b9d534c80e813b0f23f01c970fced9aa139f8b9cbf1da86d061432b262c14f74",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C4-unstamped-lookup-fault.tap",
+    "sha256": "9997713887a128fe79f425bd58edef3c447a3f4189ea8e8d52837ff179788623",
+    "bytes": 945
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-after.command.json",
+    "sha256": "1cb93fcc77a42bc7c8c35fdaaf0549bbdbffc673724cc794d1362d8e3a4d086b",
+    "bytes": 423
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-after.tap",
+    "sha256": "4cf3fc4d8092e00b53dd9e158514e1cfa42a28bb0d4dbf391fbb028cdaffd79d",
+    "bytes": 314
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-before.command.json",
+    "sha256": "1cb93fcc77a42bc7c8c35fdaaf0549bbdbffc673724cc794d1362d8e3a4d086b",
+    "bytes": 423
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-before.tap",
+    "sha256": "ade9803dd7e13b4962bb9506dd99a3d3e47b7e752762846521184f381186745d",
+    "bytes": 314
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-fault.command.json",
+    "sha256": "1cb93fcc77a42bc7c8c35fdaaf0549bbdbffc673724cc794d1362d8e3a4d086b",
+    "bytes": 423
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C5-unpaid-restart-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C5-unpaid-restart-fault.tap",
+    "sha256": "ee2901a4bc0438439d4b1b081658324dbdeb7df16d94cd900a12c9d882e1acac",
+    "bytes": 964
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-after.command.json",
+    "sha256": "132fff18b75c5e690cac79cb3caf2233ec1a6ecd6831fb132ca2c9b02a5edc46",
+    "bytes": 444
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-after.tap",
+    "sha256": "80504382082b5edeb868d5240a2439df38e7e3b5414708941fcaf27a6b9e1753",
+    "bytes": 354
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-before.command.json",
+    "sha256": "132fff18b75c5e690cac79cb3caf2233ec1a6ecd6831fb132ca2c9b02a5edc46",
+    "bytes": 444
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-before.tap",
+    "sha256": "52ec14f7950147576833cb3347f841d02111a5a497d6e4ff189fe5e11cfad3ed",
+    "bytes": 354
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-fault.command.json",
+    "sha256": "132fff18b75c5e690cac79cb3caf2233ec1a6ecd6831fb132ca2c9b02a5edc46",
+    "bytes": 444
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C6-new-account-billing-read-fault.tap",
+    "sha256": "13a9c079da41c06a3568cda62ca334f2aae7cd54c225a9e777faff6c75448d80",
+    "bytes": 998
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-after.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-after.tap",
+    "sha256": "832cc64d6ca301d60084ece729c77f80aaccc77624b198a3e69e748e59645e86",
+    "bytes": 290
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-before.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-before.tap",
+    "sha256": "999b407e77d79d6f4a0e93614d0c6b3b285a2164afda34612aade57f48fe2f23",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-fault.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-account-copy-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-account-copy-fault.tap",
+    "sha256": "018464d7ba40b0425c3908de59deb778692274a8001b5ff259dbb1e54d6edcca",
+    "bytes": 3537
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-after.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-after.tap",
+    "sha256": "504918da97ad00dd8c34f276239b983304edd67b4b42a83b343050db67ab2310",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-before.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-before.tap",
+    "sha256": "3403895c67d8f80dce26ed43f8fd83ec18d74f050088c9cb8ea06aeac9c64bc5",
+    "bytes": 291
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-fault.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-change-email-copy-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-change-email-copy-fault.tap",
+    "sha256": "e783e277c99d4707599332b208dc02ea74add9acf2deea8f02328e8c88e61cb3",
+    "bytes": 3529
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-after.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-after.tap",
+    "sha256": "a552f8e3e3e60bd4c6e104de9f0c237b32ae8540fcad2a7a5db224bd61f49da7",
+    "bytes": 294
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-before.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-before.tap",
+    "sha256": "2bb8b308a53cff88e21f81f22285a5503894ef87c652f17fe59739338d52d216",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-fault.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-noncommercial-copy-fault.tap",
+    "sha256": "a8ba1bc71695c501d4c699066a5d9fdb3639a6054c69fa59cd1138c696472cfc",
+    "bytes": 3601
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy/originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-after.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-after.tap",
+    "sha256": "9b00d1f27f05815c316e1dd0911e27dd5df402e51dfd04643d75285d19d5a761",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-before.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-before.tap",
+    "sha256": "bbcb56750a40cae65f8d090e463717907577de04edb28448cdd1dcb6f0adc045",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-fault.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-start-copy-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-start-copy-fault.tap",
+    "sha256": "282c84ab0d5850a3e6b8ac9fe7136935f134506223ae74c1d45d52852701acb0",
+    "bytes": 3521
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email/originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email/originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-after.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-after.tap",
+    "sha256": "31a70be0cc608228d9dd2d69af796c92fe4726278a2d8304a6e7f72344708c6f",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-before.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-before.tap",
+    "sha256": "779f48dec0f560df0f78fe800752bc63036f0ac1a8f75bd2953898961b9beef4",
+    "bytes": 293
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-fault.command.json",
+    "sha256": "d2fa4966e1185c629331d905ecaf5b2d279a089c01b4e73b228c1a2146d4f17f",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C7-visible-email-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C7-visible-email-fault.tap",
+    "sha256": "1c24e005c8bc9827fe66eb793f65bfaf91cdfdc6f8f228837486fe03d63e77b4",
+    "bytes": 3546
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-after.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-after.tap",
+    "sha256": "652a4c216d04880cad4b5c829be1c72a73daf3a946da80922ecd953e8b0bdda0",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-before.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-before.tap",
+    "sha256": "88b1307a096cc98db0094b30a8ff9c399e9cbb524808577f96e3d4be74f7d56c",
+    "bytes": 311
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-fault.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-address-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-address-fault.tap",
+    "sha256": "5dbf1546bd35616dbba9413de2a184a2f78a172a0582018ee9afe2a46f570f86",
+    "bytes": 1190
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-after.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-after.tap",
+    "sha256": "11f9f58fb5d3bb144bcbb3f91d7c7dbf8e15871b8a26e74e572bd428eeee4fed",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-before.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-before.tap",
+    "sha256": "73eb11e8d16f95ae4c73ea6b8e04777963d48a0c2f5a149e55bfb3990531f6de",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-fault.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-required-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-required-fault.tap",
+    "sha256": "ca274084258450b31cd5fe04a5fd5ee24df447d0d3560a592a7ed89ddcb5f74e",
+    "bytes": 1182
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-after.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-after.tap",
+    "sha256": "0c5112c90b672c2250a21fe9eff6927ae6185ab82e8d0abcf87bc7da01a92835",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-before.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-before.tap",
+    "sha256": "6fab1bb6a19dbd6c1c9f9e703afd89ebeb5de0eb49d72132938dfbbe2f6d0910",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-fault.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-mail-status-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-mail-status-fault.tap",
+    "sha256": "10f1f4bd68b21e4a8f93b03fa1f6a74f0b56dad9abfb9ccc2c82acac3a3d54ea",
+    "bytes": 955
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail/originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail/originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-after.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-after.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-after.tap",
+    "sha256": "bd5a3a896fc3874c6d20f4b53b98621692164ffd907c3dcbc3e75a3f71bdad19",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-before.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-before.tap",
+    "sha256": "6131520f8376bcdfe6780b61b4d0fb2f7d273d8902822331e10002de88efcc5f",
+    "bytes": 313
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-fault.command.json",
+    "sha256": "08a99bb6d89870d761d04f9e9e5572459e860774df0d1e78cbb1e32b44eb9488",
+    "bytes": 422
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/C8-release-before-mail-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/C8-release-before-mail-fault.tap",
+    "sha256": "4c817813126abeef2a0a6103b7e5d8772600dbb0a2bac1ae1292d55451585194",
+    "bytes": 1128
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/src/app/api/partner-access/claim/route.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/src/app/api/partner-access/claim/route.ts.txt",
+    "sha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "bytes": 19881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/src/app/partner/einladung/partner-invitation-client.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/src/app/partner/einladung/partner-invitation-client.tsx.txt",
+    "sha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "bytes": 9989
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/src/lib/partner-access/journey.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/src/lib/partner-access/journey.ts.txt",
+    "sha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "bytes": 5607
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/admin-partner-access-page.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/admin-partner-access-page.test.tsx.txt",
+    "sha256": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "bytes": 611
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-activation-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-activation-route.test.ts.txt",
+    "sha256": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "bytes": 4092
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-claim-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-claim-route.test.ts.txt",
+    "sha256": "47daff78b59b56f64f1d4525b3e090e681ff615f166bc246afb5ad1d8b389fff",
+    "bytes": 11349
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-cli.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-cli.test.ts.txt",
+    "sha256": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "bytes": 1665
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-email-change-routes.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-email-change-routes.test.ts.txt",
+    "sha256": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "bytes": 4250
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-email.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-email.test.ts.txt",
+    "sha256": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "bytes": 1076
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-intent.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-intent.test.ts.txt",
+    "sha256": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+    "bytes": 1070
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-journey.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-journey.spec.ts.txt",
+    "sha256": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "bytes": 4878
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-journey.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-journey.test.ts.txt",
+    "sha256": "fef75b4b53499b42c3c27aa86966b2aa48132c736c300c62d5ab9d8e83a8aa84",
+    "bytes": 10095
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-quiz-context.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-quiz-context.test.ts.txt",
+    "sha256": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "bytes": 3658
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-resolve-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-resolve-route.test.ts.txt",
+    "sha256": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "bytes": 3926
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-schema.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-schema.test.ts.txt",
+    "sha256": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "bytes": 3282
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-service.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-service.test.ts.txt",
+    "sha256": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "bytes": 5817
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-sql-execution.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-sql-execution.test.ts.txt",
+    "sha256": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "bytes": 48639
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-token.test.ts",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-token.test.ts.txt",
+    "sha256": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "bytes": 1941
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-ui.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/all-originals/tests/partner-access-ui.test.tsx.txt",
+    "sha256": "60bb4d0575be8472da12b4aeeaebe5b7a8099b72bbd81097326eb89c538030be",
+    "bytes": 3318
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/complete.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/complete.json",
+    "sha256": "2fa2455efefaeede6f93cc7190e675c2ac7a71c2e66b0fe04a3c66768c23d083",
+    "bytes": 22460
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/intent.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/intent.json",
+    "sha256": "4e3aac54f4164fce4a8f2471d54518dd1f86e85f175c41e2663481ffe01414f5",
+    "bytes": 2888
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-mutations-transfer-YxWejd/receipt.json",
+    "sha256": "1c2abf2e624a80273923f34e61cd75a8223b3328a933174cf4f5081334901a01",
+    "bytes": 693947
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-pins.json",
+    "sha256": "6380a72d33c51970b590adf15f647a859747d87fb4092661c19999394ed7c00b",
+    "bytes": 792881
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-proof.cjs.txt",
+    "sha256": "adeae15ac34376c84db69015dcb1d7f962a9f04b81d09f11ab7d4c3153ad0616",
+    "bytes": 4928
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/operator-run-controls.cjs.txt",
+    "sha256": "34d95cce8eae38129401d60013d3435e4918b7c3ae8ac7c4931957d131a0f390",
+    "bytes": 8012
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/prepare-pins.cjs.txt",
+    "sha256": "0b2cc1a6047a9286551eca0ed1cee73ea960a734570910b1bf0471f07b165ae4",
+    "bytes": 9217
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/readonly-check-results.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/readonly-check-results.json",
+    "sha256": "d3e5b6742ef4a404cf1ab3b56efd0c97c38298f77a48b8f01b730918b363990e",
+    "bytes": 1159
+  },
+  {
+    "source": "/tmp/test-audit-partner84-tools-5qofnelt/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/tools/static-receipt.json",
+    "sha256": "f47ca481897434756658037f1519a7275004236be14171046192b897a4bf061c",
+    "bytes": 4552
+  },
+  {
+    "source": "/tmp/test-audit-partner84-independent-preservation.md",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner84-independent-preservation.md",
+    "sha256": "9599832f357644578006621be075c88ec26f9a800ffd62f2f0afbb6220d47f39",
+    "bytes": 15861
+  },
+  {
+    "source": "/tmp/test-audit-partner84-independent-static.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner84-independent-static.json",
+    "sha256": "f85ba149b262eb6d84c45fc240698804014fdde3f4b51ae8a98d2380ff13deae",
+    "bytes": 80371
+  },
+  {
+    "source": "/tmp/test-audit-partner80-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner80-main-before.tap",
+    "sha256": "c1d04d3ca43f5bb6e10f5195f7b84a967a2d4c58b1769f5a3de7795dc8bf9ef0",
+    "bytes": 19330
+  },
+  {
+    "source": "/tmp/test-audit-partner80-main-transfer.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner80-main-transfer.tap",
+    "sha256": "74e67e53afa79145af73ff736746042c700701668c66be4c139556c93dbbdd68",
+    "bytes": 19349
+  },
+  {
+    "source": "/tmp/test-audit-partner80-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner80-main-cut.tap",
+    "sha256": "756718ebc3e2b5dea200f1070a0ed30ec5d86f63a218f63b3f2555e6cfd9b657",
+    "bytes": 16306
+  },
+  {
+    "source": "/tmp/test-audit-partner84-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner84-main-controls.log",
+    "sha256": "5c2fec26b4576eb33ac65355ee42a2a5346c61c0e55f00dc5027198ff0b9b218",
+    "bytes": 1606
+  },
+  {
+    "source": "/tmp/test-audit-partner84-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-partner84-main-formatted-verification.json",
+    "sha256": "3d013a83fb086585cc01e15f490920fe7ad1fa42aa0e18801b843c8fd18d9501",
+    "bytes": 2134
+  },
+  {
+    "source": "/tmp/test-audit-next598-counts.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-next598-counts.json",
+    "sha256": "59be3eec8f3a9a4791ee4f7eefa7ca6bcd6f2914f8d55d6e37ec50c35cc14632",
+    "bytes": 81
+  },
+  {
+    "source": "/tmp/test-audit-next598-current-inventory.json",
+    "archive": "plans/evidence/2026-10-05-next598-partner/test-audit-next598-current-inventory.json",
+    "sha256": "4c65900b051a810b6e6d2be87ec0301fa30efec6eaf96efb93d3956b3873941f",
+    "bytes": 2493107
+  }
+]

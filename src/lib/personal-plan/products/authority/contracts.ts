@@ -5,6 +5,8 @@ import type {
   PlanPortfolioCoverageFact,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
+import type { HeatActivationRoute, UserHeatRoute } from "@/lib/heat-activation/contract"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import type {
   PersonalPlanCategory,
@@ -14,6 +16,7 @@ import type {
   Stage3ProductIdentity,
   Stage3Recommendation,
 } from "../contracts"
+import type { Stage3SelectionProfile } from "./selection-profile"
 
 export const STAGE3_AUTHORITY_ACTION_KINDS = [
   "keep_owned",
@@ -71,6 +74,8 @@ export type Stage3AuthorityCommonProductFacts = {
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
   currency?: string | null
+  /** Catalog market bucket (Drogerie/Profi). Presentation only; never fit authority. */
+  marketSegment?: "drugstore" | "professional" | null
 }
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
@@ -82,6 +87,8 @@ export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
   }
   spec: {
     thickness: string | null
+    /** Contextual row(s) retained for distance-based fit evaluation. */
+    thicknesses?: string[] | null
     shampooBucket: string | null
     scalpRoute: string | null
     cleansingIntensity: string | null
@@ -93,6 +100,8 @@ export type Stage3ConditionerFacts = Stage3AuthorityCommonProductFacts & {
   category: "conditioner"
   spec: {
     thickness: string | null
+    /** Contextual row(s) retained for distance-based fit evaluation. */
+    thicknesses?: string[] | null
     proteinMoistureBalance: string | null
     weight: string | null
     repairSupportLevel: string | null
@@ -112,6 +121,13 @@ export type Stage3LeaveInFacts = Stage3AuthorityCommonProductFacts & {
     providesHeatProtection: boolean | null
     careBenefits: string[] | null
     applicationStages: string[] | null
+    /**
+     * Leave-In v1.2 heat activation (S3). The key is present ONLY when the
+     * catalogue says the product needs heat to work, so every non-activated
+     * product keeps its pre-S3 fact fingerprint. `route: null` = drifted row
+     * without a route (fails closed as unknown).
+     */
+    heatActivation?: { route: HeatActivationRoute | null }
   }
 }
 
@@ -128,6 +144,8 @@ export type Stage3OilFacts = Stage3AuthorityCommonProductFacts & {
   spec: {
     roleSupport: Partial<Record<PlanProductRole, boolean | null>>
     weight: string | null
+    /** Shared product thickness authority, kept as values rather than an exact-match flag. */
+    thicknesses?: string[] | null
     targetThicknessEligible: boolean | null
     providesHeatProtection: boolean | null
   }
@@ -173,7 +191,9 @@ export type Stage3BondbuilderFacts = Stage3AuthorityCommonProductFacts & {
     technologyFamily?: string | null
     claimTrustLevel?: string | null
     trustBasis?: string | null
-    researchProfile?: import("@/lib/bondbuilder-research/contracts").BondbuilderResearchProfile | null
+    researchProfile?:
+      | import("@/lib/bondbuilder-research/contracts").BondbuilderResearchProfile
+      | null
   }
 }
 
@@ -181,7 +201,11 @@ export type Stage3DeepCleansingFacts = Stage3AuthorityCommonProductFacts & {
   category: "deep_cleansing_shampoo"
   spec: {
     supportedResetRoles: PlanProductRole[] | null
-    scalpTypeFocus: string | null
+    /**
+     * Soft scalp-target positioning (Shampoo v1.6 §13.5, decisions.md D-a). null = not
+     * engine-assessed (no soft rank); [] = assessed, no explicit target.
+     */
+    targetScalpTypes: Array<"oily" | "balanced" | "dry"> | null
     colorTreatedSuitability: string | null
   }
 }
@@ -212,6 +236,17 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
   hairThickness?: PlanHairThickness
+  /**
+   * The user's heat routes from the refined need snapshot
+   * (`stage3HeatRoutesFromSnapshot`). Read only by heat-activated products;
+   * `undefined` = not supplied by the builder (fails closed as unknown).
+   */
+  heatRoutes?: readonly UserHeatRoute[]
+  /**
+   * The profile answers dry shampoo and deep cleansing rank by; built only by
+   * `buildStage3SelectionProfile` (or `UNKNOWN_SELECTION_PROFILE` for synthetic callers).
+   */
+  selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     /**
@@ -230,6 +265,12 @@ export type Stage3EvaluationContext = Readonly<{
   currentRefinedVersionId: string
   refinedNeedSnapshot: InitialNeedPlanSnapshot
   hairThickness: PlanHairThickness
+  /** Stage-3 selection slice built from `refinedNeedSnapshot` + the user's visible root colour. */
+  selectionProfile: Stage3SelectionProfile
+  /** Saved per-package shopping budget; absent or null = unknown (never "uncapped"). */
+  budget?: ShoppingBudget | null
+  /** Stated concerns from the saved diagnostics (budget priority only); absent with the gate off. */
+  statedConcerns?: Readonly<{ currentConcerns: readonly string[]; primaryConcern: string | null }>
 }>
 
 export type Stage3KnownAuthorityEvaluation = {

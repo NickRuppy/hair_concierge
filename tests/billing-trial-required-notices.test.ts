@@ -79,6 +79,7 @@ test("PayPal confirmation notices retain and validate the winning authorization 
 })
 test("contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction", () => {
   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
+  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
   assert.equal(message.subject, "Dein Chaarlie-Test ist gestartet")
   assert.match(message.receipt_text, /69,99/)
   assert.match(message.receipt_text, /99,99/)
@@ -466,11 +467,6 @@ test("PayPal contract confirmation states the day-after first-charge date instea
   assert.match(message.receipt_text, /Die erste Zahlung ist für den 22\. September 2026 vorgesehen/)
   assert.doesNotMatch(message.receipt_text, /zu diesem Zeitpunkt/)
   assert.match(message.receipt_text, /21\. September 2026 um 12:00:00 MESZ/)
-})
-
-test("Stripe contract confirmation keeps the exact-moment first-charge statement", () => {
-  const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
-  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
 })
 
 test("PayPal contract confirmation with a frozen midnight trial end names one date for trial end and first charge", () => {

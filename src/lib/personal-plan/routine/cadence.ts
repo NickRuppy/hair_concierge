@@ -1,5 +1,5 @@
 import type { PersonalPlanCategory } from "../products/contracts"
-import type { PlanProductRole } from "../types"
+import type { PlanDamageLevel, PlanProductRole } from "../types"
 
 export type ResolvedRoutineCadence = {
   copyDe: string
@@ -21,7 +21,14 @@ export type RoutineCadenceResolutionInput = {
   recommended: unknown
   userOverride: string | null
   authorityFacts: readonly ProductCadenceAuthorityFact[]
+  /**
+   * The refined plan's `assessments.damage.structuralLevel`. Read only by a Bondbuilder
+   * protocol of kind `damage_branched` (S4, decisions B1/D-b); every other cadence ignores it.
+   */
+  structuralDamageLevel?: PlanDamageLevel | null
 }
+
+const PLAN_DAMAGE_LEVELS: readonly PlanDamageLevel[] = ["none", "low", "moderate", "high", "severe"]
 
 const delegated = (category: PersonalPlanCategory, recommended: unknown) =>
   category === "bondbuilder" && kind(recommended) === "product_protocol_course"
@@ -62,6 +69,36 @@ function canonicalProtocolCopy(
           "label_schedule",
         ])
   return cadenceKind && allowed.has(cadenceKind) ? nonBlank(cadence?.copy_de) : null
+}
+
+/**
+ * `damage_branched` (Bondbuilder only): one reviewed copy per damage band. The branch whose
+ * `structural_levels` holds the plan's level wins; no level, an unbound level or any malformed
+ * branch (empty/unknown/overlapping levels, blank copy) yields `null` → the safe generic line.
+ */
+function damageBranchedCopy(
+  value: unknown,
+  level: PlanDamageLevel | null | undefined,
+): string | null {
+  const cadence = record(value)
+  if (cadence?.kind !== "damage_branched" || !Array.isArray(cadence.branches)) return null
+  if (cadence.branches.length === 0) return null
+  const seen = new Set<string>()
+  let match: string | null = null
+  for (const entry of cadence.branches) {
+    const branch = record(entry)
+    const levels = branch?.structural_levels
+    const copy = nonBlank(branch?.copy_de)
+    if (!copy || !Array.isArray(levels) || levels.length === 0) return null
+    for (const candidate of levels) {
+      if (!PLAN_DAMAGE_LEVELS.includes(candidate as PlanDamageLevel) || seen.has(candidate)) {
+        return null
+      }
+      seen.add(candidate)
+      if (candidate === level) match = copy
+    }
+  }
+  return match
 }
 
 function legacyScalpCopy(
@@ -198,6 +235,11 @@ export function resolveRoutineItemCadence(
   const fact = matchingFacts.length === 1 ? matchingFacts[0] : undefined
   const canonical = fact && canonicalProtocolCopy(fact.cadence, owner)
   if (canonical) return { copyDe: canonical, source: "exact_product_protocol" }
+  const branched =
+    owner === "bondbuilder" && fact
+      ? damageBranchedCopy(fact.cadence, input.structuralDamageLevel)
+      : null
+  if (branched) return { copyDe: branched, source: "exact_product_protocol" }
   const legacy = owner === "scalp_care" && fact ? legacyScalpCopy(fact.cadence) : null
   if (legacy) return legacy
   return {

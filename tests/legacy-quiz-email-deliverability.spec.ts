@@ -131,6 +131,15 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     await expect(email).toHaveAttribute("aria-invalid", "true")
     await expect(error).toContainText("Diese E-Mail-Domain kann keine E-Mails empfangen")
     await expect(email).toHaveAttribute("aria-describedby", "legacy-quiz-email-error")
+    // Check focus after shell cleanup and both scheduled focus frames have settled.
+    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => {
+          window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve()))
+        }),
+    )
+    await expect(email).toBeFocused()
 
     await page
       .getByRole("button", { name: /Korrektur übernehmen.*legacy\.test@gmail\.com/i })

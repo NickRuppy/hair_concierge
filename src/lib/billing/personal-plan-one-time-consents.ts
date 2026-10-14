@@ -97,17 +97,6 @@ export async function createPersonalPlanOneTimeCheckoutConsent(
   return data as PersonalPlanOneTimeCheckoutConsentRow
 }
 
-export async function findPersonalPlanOneTimeConsentByStripeCheckoutSessionId(
-  supabase: SupabaseBillingClient,
-  stripeCheckoutSessionId: string,
-): Promise<PersonalPlanOneTimeCheckoutConsentRow | null> {
-  return findPersonalPlanOneTimeCheckoutConsentByProviderReference(
-    supabase,
-    "stripe_checkout_session_id",
-    stripeCheckoutSessionId,
-  )
-}
-
 export async function findPersonalPlanOneTimeConsentById(
   supabase: SupabaseBillingClient,
   consentId: string,
@@ -116,39 +105,6 @@ export async function findPersonalPlanOneTimeConsentById(
     .from("personal_plan_one_time_checkout_consents")
     .select("*")
     .eq("id", consentId)
-    .maybeSingle()
-
-  if (error) throw error
-  return (data as PersonalPlanOneTimeCheckoutConsentRow | null) ?? null
-}
-
-export async function findPersonalPlanOneTimeConsentByPayPalReference(
-  supabase: SupabaseBillingClient,
-  reference: { orderId: string } | { captureId: string },
-): Promise<PersonalPlanOneTimeCheckoutConsentRow | null> {
-  if ("orderId" in reference) {
-    return findPersonalPlanOneTimeCheckoutConsentByProviderReference(
-      supabase,
-      "paypal_order_id",
-      reference.orderId,
-    )
-  }
-  return findPersonalPlanOneTimeCheckoutConsentByProviderReference(
-    supabase,
-    "paypal_capture_id",
-    reference.captureId,
-  )
-}
-
-export async function findPersonalPlanOneTimeConsentByLeadSession(
-  supabase: SupabaseBillingClient,
-  lookup: { leadId: string; funnelSessionId: string },
-): Promise<PersonalPlanOneTimeCheckoutConsentRow | null> {
-  const { data, error } = await supabase
-    .from("personal_plan_one_time_checkout_consents")
-    .select("*")
-    .eq("lead_id", lookup.leadId)
-    .eq("funnel_session_id", lookup.funnelSessionId)
     .maybeSingle()
 
   if (error) throw error
@@ -267,19 +223,4 @@ function toProviderReferencePatch(
     }
   }
   return { paypal_capture_id: reference.paypalCaptureId }
-}
-
-async function findPersonalPlanOneTimeCheckoutConsentByProviderReference(
-  supabase: SupabaseBillingClient,
-  column: "stripe_checkout_session_id" | "paypal_order_id" | "paypal_capture_id",
-  reference: string,
-): Promise<PersonalPlanOneTimeCheckoutConsentRow | null> {
-  const { data, error } = await supabase
-    .from("personal_plan_one_time_checkout_consents")
-    .select("*")
-    .eq(column, reference)
-    .maybeSingle()
-
-  if (error) throw error
-  return (data as PersonalPlanOneTimeCheckoutConsentRow | null) ?? null
 }

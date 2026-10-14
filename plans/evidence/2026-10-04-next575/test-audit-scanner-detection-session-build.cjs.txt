@@ -1,0 +1,131 @@
+'use strict';
+const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');
+const root='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',ts=require(root+'/node_modules/typescript'),sha=x=>crypto.createHash('sha256').update(x).digest('hex'),prefix='/tmp/test-audit-scanner-detection-session-';
+const files=['tests/scan-detection-state.test.ts','tests/scan-scanner-session.test.ts','tests/scan-scanner-loop.test.ts','tests/scan-flow-state.test.ts'];
+function parse(f,s){const t=ts.createSourceFile(f,s,ts.ScriptTarget.Latest,true);if(t.parseDiagnostics.length)throw Error('parse '+f);return t;}
+function decls(f,s){const t=parse(f,s);return t.statements.filter(n=>ts.isExpressionStatement(n)&&ts.isCallExpression(n.expression)&&n.expression.expression.getText(t)==='test').map(n=>({title:n.expression.arguments[0].text,line:t.getLineAndCharacterOfPosition(n.getStart(t)).line+1,start:n.getStart(t),end:n.end,statement:n.getText(t),body:n.expression.arguments.at(-1).body.getText(t),statements:n.expression.arguments.at(-1).body.statements.map(x=>x.getText(t))}));}
+const reasons=[
+`Normalizes each pixel dimension by corresponding video axis; wrong axis fails exact fractions.
+Negative origin and overshooting box clamp to frame; nominal box cannot detect missing clamp.
+Zero intrinsic dimensions yield zero geometry, avoiding division by zero/NaN.
+90-degree retry inverse uses videoHeight and swapped dimensions; direct frame paths never call it.
+Full rotated-frame extent maps exactly to full video, including origin/extents boundary.
+Equal aspect ratio yields zero crop and exact CSS geometry; portrait/landscape branches differ.
+Portrait overflows vertical axis; wrong crop offset gives wrong top/height.
+Landscape overflows horizontal axis; exact left150 and scale prevent wrong-axis crop.
+Both missing video and missing element dimensions independently return zero rect.
+Searching to raw spotted chooses event box; distinct from updating already-spotted state.
+Later raw input moves existing outline to new box; stale box retention fails.
+Accepted read changes kind and box; raw event cannot prove read kind.
+Empty streak1/2 preserves prior spotted outline rather than flickering.
+Threshold3 clears spotted outline; below-threshold case cannot prove release.
+Read outline survives first empty but clears threshold; preserves previous-kind handling.
+Explicit rearmAfter1 overrides default; deletion loses custom argument contract.
+Restart from read clears outline independently of empty streak.
+Searching equality retains stable identity despite distinct objects.
+Both searching/spotted and spotted/read kind changes are reported.
+Subthreshold x/y jitter is suppressed; >=threshold comparison drift fails.
+0.009 x delta exceeds0.005; boundary-near motion unlike larger move.
+Bucket-edge0.00249→0.00251 remains same; rounding-based comparator regression.
+Repeated0.002 increments compare against original reported box, eventually cross tolerance at3 steps.
+Large movement in both x/y reports change, not just local jitter.
+Unpaused spotted maps visual/box and frozen=false; confirm tests use different precedence.
+Searching/unpaused has no outline; stale box leak fails.
+D3: visual=read already asserted by existing drifted-box confirm keeper; nonnull confirmBox short-circuits live box lookup.
+Paused spotted without confirm becomes frozen searching/no outline; not confirm precedence.
+Read+paused+confirm remains read with frozen=false; dropped confirm exception fails.
+KeeperD3: active confirm chooses captured boxA despite live boxB and stays read.
+Confirm with searching input still draws captured box; fallback has no live box.
+Initial idle hint present and repeated searching produces no announcement changes.
+Five alternating spotted/searching states announce once each; unbounded flicker fails.
+Accepted read announces confirmation after spotted; budgeted spotted/search does not prove this.
+Situational more-light hint bypasses spent searching budget.
+C6: same spotted→searching flags and fresh restarted spotted occur in detailed mount-policy keeper; add surviving spotted flag at existing afterSearchingAgain state.
+KeeperC6: initial identity/no budget spend, spotted/searching, repeated idle and fresh restart; preserves complete state plus speech-text union.
+Unpause edge reports restart and actual restart clears a spotted outline.
+Pause entry is silent; adding redundant restart notification fails.
+Both unchanged false/false and true/true states are silent.`.split('\n'),
+`C1: full default-shape assertion transfers to existing first factory result before mutation.
+KeeperC1: two factory calls, first mutated, second isolated; retains fresh identity and four reset fields plus full initial defaults.
+Two unmutated factory calls must have complete equal shapes yet distinct references; unlike mutation keeper this directly compares all fields of both results.
+KeeperD1: seeded fired/debounce/telemetry fields reset in place and timestamps use5000; original session lastFiredValue=null already proves mutation.
+D1: const alias identity is tautological; lastFiredValue reset already observed on original session by comprehensive restart keeper.
+Restart while detecting=true preserves in-flight guard; clearing it permits overlapping detector calls.
+C2: exact first read100 and second read200 already prefix third/fourth-read keeper; transfer complete telemetry/debounce union before continuation.
+KeeperC2: exact prefix plus two later identical reads must not refire.
+Injected validator failure consumes streak without firing and counts raw telemetry; this tests validation-port refusal, not real checksum algorithm.
+Two empty attempts then raw read resets empty counter; continuous raw reads omit that starting state.
+Restart-fired barcode stays blocked through four reads without hasDecoded; release tests must not replace held-in-frame behavior.
+Empty-empty/raw/three-empty preserves banked streak1 and refires on next read; cold rearm differs.
+Three empties from cold clears block but requires two new reads; banked rearm differs.
+Repeated blocked pairs reset clock/hint telemetry without decode/timeout consumption.
+After blocked reset and three empties, fallback starts at0 and fires precisely threshold; rearm clock coupling.
+DifferentEAN_B fires while EAN_A remains blocked; no broad block clearing.
+Five empty attempts remain counted/idempotent after threshold and clear both identity fields.
+Explicit100+250 accumulates350; loop16ms cadence lacks same operands.
+Positive100 followed by-500/NaN must remain100; loop fixture has no negative/NaN tick.
+Timeout checks at2999/3000 and after5000 prove exact edge and one-shot; loop uses100ms granularity.
+F: title claims30s pause but body only reports800/900/3000 deltas, no pause or wall-clock input. Retain executed accumulation/timeout contract; actual loop pause test owns pause exclusion.
+C3: decoded guard short-circuits before activeMs read; existing decoded loop calls actual shouldFireTimeout repeatedly and gains unconsumed timeoutFired=false observation.
+Restart after timeout clears activeMs/empty count/one-shot and re-arms2999→3000; independent lifecycle reset.
+Restart with no new fire preserves inherited block; fired prior branch would overwrite block.
+Literal2reads/3empties/3000ms protocol pin; runtime tests using same constants cannot independently pin values.
+Refused decode rolls back firing and requires fresh pair; ordinary dedupe never calls unfire.
+Unfire wrong EAN_B leaves EAN_A fire/decode intact; identity guard.
+Unfire currentEAN_A keeps inherited different D6 blockEAN_B.
+One-result selection returns that object-shaped value; multi-result priority branch differs.
+Empty candidate input returns null; no result is not an all-blocked list.
+Blocked first plus valid unblocked second selects second; otherwise new bottle starves.
+Two blocked results return first rather than no candidate, preserving clean-read telemetry behavior.
+Invalid second cannot displace blocked first; actual validator false drives separate branch.
+Unblocked two-result list returns first even if another readable barcode follows.`.split('\n'),
+`Stopped controller defaults/null anchor/empty reasons forbid scheduling before acquisition.
+Complete schedule/noop/cancel/noop decision states; fake scheduler does not independently prove every return value.
+Repeated three syncs cannot schedule second frame; counters apply actual decisions but do not run browser callback API.
+Pause/hidden/unpause/delivery sequence preserves exactly one outstanding frame; distinct sequence/race ownership.
+Removing hidden reason must retain sheet pause, then releasing final sheet resumes.
+Repeated add/remove returns accurate changed booleans including false removal; generation keeper covers add-only no-op.
+Real pause change increments generation/drops anchor; redundant change preserves both.
+Old-generation detection and even current generation during pause both rejected.
+Explicit epoch generation bump drops old and accepts new while running.
+Teardown running=false rejects both generations and cancels frame; pause cannot prove stopped path.
+C4: initial1000 tick already first call of consecutive-tick keeper; transfer timedOut=false/activeMs0/anchor1000 before ticks1016/1032.
+KeeperC4: exact initial tick then16+16 active gap; retains accrual plus initial union.
+30000ms single stall capped at250, not full budget; ordinary short gaps cannot prove cap.
+Sheet-paused stray tick drops anchor/accrues0 and resumed clock excludes30000 wall gap.
+One-shot timeout after active3000 despite middle3s pause; exact1 fallback over additional60 ticks.
+KeeperC3: hasDecoded=true suppresses actual timeout on100 existing ticks; additionally assert timeoutFired=false.
+Releasing exact live object clears bothslots; stale case cannot prove owned release.
+KeeperD2: bothslots point at fresh object while released stale differs; exact false/false object.
+D2: same identity predicates as stale-instance keeper; id string and narrative are not read by streamReleasePlan.
+Mixed slot ownership evaluated independently (current-only and video-only), including null.
+Literal3000ms foreground mute grace is externally visible recovery policy.
+Live and live+ended track lists remain usable; some/every confusion fails mixed list.
+All-ended, duplicate-ended, empty-list and null stream all dead; distinct cardinality/null branches.
+Ended trigger stalls for dead and reportedly-live state; event itself is proof.
+Mute/visibility/pageshow with live previousstream keep old stream on reacquire failure.
+Same three triggers with dead previousstream stall; inverted liveness or missing trigger fails.`.split('\n')
+];
+const flowPrior=fs.readFileSync('/tmp/test-audit-scanner-current-ledger.md','utf8');
+const cohort=files.map((file,i)=>{const text=fs.readFileSync(root+'/'+file,'utf8'),ds=decls(file,text);if(i<3&&ds.length!==reasons[i].length)throw Error('reason count '+file);return{file,text,sha256:sha(text),declarations:ds.map((d,j)=>{let reason=i<3?reasons[i][j]:flowPrior.split('\n').find(l=>l.includes('`tests/scan-flow-state.test.ts:')&&l.includes('` '+d.title+' |'))?.split(' | ').at(-1)?.replace(/ \|$/,'');if(!reason)throw Error('missing reason '+d.title);let cls=/^C[0-9]+:/.test(reason)?'C':/^D[0-9]+:/.test(reason)?'D':reason.startsWith('F:')||reason.startsWith('TITLE F')?'F':'R';if(i===3&&d.title==='auxiliary_closed with cancelSubmit: dismissing the search sheet while a research-intake submit is in flight cancels it (same bug class as F4)'){reason='C5: exact three-action state already named dismissed in reopen/resubmit keeper; transfer all four cancellation fields before reopen.';cls='C';}if(i===3&&d.title.startsWith('fatigue_hydrated: null'))cls='F';return{...d,class:cls,reason,statementSha256:sha(d.statement),bodySha256:sha(d.body)};})};});
+const flowReasonFixes={269:'Reset returns scanning and clears saveOpen, submitError, submitting and activeRequest; this callback does not assert auxiliary clearing or durable history.',303:'An already-shown in_catalog result blocks auxiliary opening; callback does not exercise unknown/pending steps.',317:'Timeout reason remains explicit; a separate fresh run with omitted reason defaults to manual, while UI callbacks pass explicit reasons.',467:'Pause truth table exercises scanning/resolving/unknown/pending/result steps, search/wishlist auxiliary and saveOpen; premiumOpen is separately checked by the Premium-sheet callback.',804:'Two mismatch verdicts increment the streak to2, then an ideal verdict resets it; supportive is not an input in this callback.'};
+for(const d of cohort[3].declarations)if(flowReasonFixes[d.line])d.reason=flowReasonFixes[d.line];
+const byTitle=(file,title)=>cohort.find(f=>f.file===file).declarations.find(d=>d.title===title);
+const candidates=[],replacements=new Map();function add(id,kind,donorFile,donorTitle,keeperFile,keeperTitle,transform,why){const d=byTitle(donorFile,donorTitle),k=byTitle(keeperFile,keeperTitle);if(!d||!k)throw Error('callback missing '+id);const key=keeperFile+'\0'+keeperTitle;const before=replacements.get(key)??k.statement,after=transform?transform(before,d,k):before;replacements.set(key,after);candidates.push({id,class:kind,donorFile,donor:d,keeperFile,keeper:k,assertionUnion:why,keeperStepBefore:before,keeperStepAfter:after});}
+const S=files[1],L=files[2],F=files[3],V=files[0];
+function once(s,a,b){if(s.split(a).length!==2)throw Error('nonunique edit '+a);return s.replace(a,()=>b);}
+add('C1','C',S,cohort[1].declarations[0].title,S,cohort[1].declarations[1].title,(s,d)=>once(s,'  const first = createScanSessionState()','  const first = createScanSessionState()\n  '+d.statements[0].replace('createScanSessionState()','first')),'Original full literal default deepEqual on existing first call, before any mutation; no new constructor/input.');
+add('C2','C',S,cohort[1].declarations[6].title,S,cohort[1].declarations[7].title,(s,d)=>{s=once(s,'  read(session, EAN_A, 100)','  '+d.statements[1]+'\n  '+d.statements[2]);return once(s,'  assert.equal(read(session, EAN_A, 200), EAN_A)','  '+d.statements.slice(3).join('\n  '));},'Exact100/200 first-read prefix; existing bare100 call wrapped by original assert rather than duplicated; all original fields asserted before300/400 continuation.');
+add('C3','C',S,cohort[1].declarations[21].title,L,cohort[2].declarations[15].title,s=>s.slice(0,-2)+'\n  assert.equal(session.timeoutFired, false)\n})','hasDecoded true dominates before activeMs. Existing loop asserts actual timeout false on every tick including6000ms; added final flag proves one-shot not consumed; no extra clock call.');
+add('C4','C',L,cohort[2].declarations[10].title,L,cohort[2].declarations[11].title,(s,d)=>once(s,'  advanceLoopClock(controller, session, 1_000)','  '+d.statements.slice(2).join('\n  ')),'Samecontroller/session creation and identical initial1000 tick. Wrap existing call and inspect activeMs0/anchor1000 before next two existing ticks.');
+add('C5','C',F,'auxiliary_closed with cancelSubmit: dismissing the search sheet while a research-intake submit is in flight cancels it (same bug class as F4)',F,'auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)',(s,d)=>once(s,'  const reopened = scanFlowReducer(dismissed, {','  '+d.statements.slice(1).map(x=>x.replace(/\bstate\b/g,'dismissed')).join('\n  ')+'\n\n  const reopened = scanFlowReducer(dismissed, {'),'Identicalrun(searchopen,submit5,cancelSubmitclose) already produces dismissed; inspectfourfields before existing reopen.');
+add('C6','C',V,cohort[0].declarations[35].title,V,cohort[0].declarations[36].title,s=>once(s,'  assert.equal(afterSearchingAgain.searchingAnnounced, true)','  assert.equal(afterSearchingAgain.searchingAnnounced, true)\n  assert.equal(afterSearchingAgain.spottedAnnounced, true)'),'Extra initial searching/default call returns same INITIAL object (already asserted), then exact spotted/searching pair. Existing searching flag and restarted announcement prove donorremaining observations; add carried spotted flag.');
+add('D1','D',S,cohort[1].declarations[4].title,S,cohort[1].declarations[3].title,null,'const loopReference=session identity cannot be changed by callee. Both assert original session.lastFiredValue=null after sameEAN restart;now1versus5000 onlywrites timestamps, no reset predicate.');
+add('D2','D',L,cohort[2].declarations[18].title,L,cohort[2].declarations[17].title,null,'Both current and videoSource point at objectY; releasedobjectX differs. Ownerreads only strictidentity, neverid strings. KeeperdeepEqual false/false includes both donor equal assertions.');
+add('D3','D',V,cohort[0].declarations[26].title,V,cohort[0].declarations[29].title,null,'Both confirmActive=true,detectionPaused=false,confirmBox=boxA,kindspotted. NonnullconfirmBox avoids detectionBoxOf, so liveboxAversusB unused. Keeperalready asserts visualread pluscaptured outline.');
+for(const f of cohort){let transfer=f.text;for(const[key,next]of replacements){const[file,title]=key.split('\0');if(file===f.file)transfer=once(transfer,byTitle(file,title).statement,next);}let cut=transfer;for(const d of decls(f.file,transfer).filter(d=>candidates.some(c=>c.donorFile===f.file&&c.donor.title===d.title)).reverse())cut=cut.slice(0,d.start)+cut.slice(d.end);f.phases={};for(const[phase,text]of Object.entries({before:f.text,transfer,cut})){const ds=decls(f.file,text);f.phases[phase]={text,sha256:sha(text),declarations:ds.map(d=>({title:d.title,statementSha256:sha(d.statement),bodySha256:sha(d.body)}))};if(phase!=='before')fs.writeFileSync(prefix+f.file.split('/').at(-1).replace('.test.ts','')+'-'+phase+'.ts',text);}for(const d of decls(f.file,cut)){const old=byTitle(f.file,d.title);if(!candidates.some(c=>c.keeperFile===f.file&&c.keeper.title===d.title)&&d.statement!==old.statement)throw Error('unrelated callback drift');}}
+for(const c of candidates){const f=cohort.find(f=>f.file===c.keeperFile);c.keeperTransfer=decls(f.file,f.phases.transfer.text).find(d=>d.title===c.keeper.title);c.keeperCut=decls(f.file,f.phases.cut.text).find(d=>d.title===c.keeper.title);}
+const readsets=['src/lib/scan/scanner-session.ts','src/lib/scan/scanner-loop.ts','src/lib/scan/scan-flow-state.ts','src/lib/scan/guidance.ts','src/lib/scan/verdict-access.ts','src/lib/scan/triggers/trigger-rules.ts','src/components/scan/use-scanner-loop.ts','src/components/scan/scanner.tsx','src/components/scan/scan-flow.tsx','src/app/scan/scan-page-client.tsx','src/app/labs/scan/scan-lab-client.tsx','package.json','package-lock.json','.github/workflows/ci.yml','tests/server-only-register.cjs'];
+const counts={};for(const f of cohort)for(const d of f.declarations)counts[d.class]=(counts[d.class]??0)+1;
+const evidence={root,head:cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),counts,phases:Object.fromEntries(['before','transfer','cut'].map(p=>[p,cohort.reduce((n,f)=>n+f.phases[p].declarations.length,0)])),cohort,readsets:readsets.map(file=>({file,sha256:sha(fs.readFileSync(root+'/'+file))})),limits:'No execution or repo mutation.6puremodules,hook+Scanner fullyread; largerScanFlow/page/lab targeted production callsites only. No browser/wasm/provider behavior claimed. Pending main review/controls; zero applied removal credit.'};
+fs.writeFileSync(prefix+'evidence.json',JSON.stringify(evidence,null,2)+'\n');fs.writeFileSync(prefix+'candidates.json',JSON.stringify(candidates,null,2)+'\n');console.log(JSON.stringify({counts,phases:evidence.phases,candidates:candidates.map(c=>({id:c.id,donorLine:c.donor.line,keeperLine:c.keeper.line}))}));

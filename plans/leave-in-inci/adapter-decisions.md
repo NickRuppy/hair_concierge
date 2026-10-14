@@ -24,11 +24,15 @@ No new research fields. Derivation, deterministic:
 - `replacement_conditioner` iff AD-4 yields `replacement_capable`; otherwise `extension_conditioner` (exactly one of the two, so min-1 always holds).
 - `styling_prep` added when `hold_support ≠ none` OR `application_stage ∋ pre_heat`.
 - `oil_replacement`: never emitted by this adapter (oil category's own domain).
-- `heat_activation_required`: always `false` (no research source; DB CHECK satisfied since we never claim activation).
+- `heat_activation_required`: always `false` (no research source; DB CHECK satisfied since we never claim activation). **[Superseded 2026-10-09 by AD-7: Standard v1.2 adds the `identity.heatActivation` research source; the value now comes from that capture.]**
+
+**Note (AD-7, 2026-10-09):** AD-3's role derivation is overridden when heat activation is required — the roles are then exactly `[styling_prep]` (no `replacement_conditioner`, no `extension_conditioner`).
 
 ## AD-4 — `conditioner_relationship` (ruled 2026-09-14)
 
 `replacement_capable` iff `conditioning_level ∈ {moderate, high}` AND `persistence ∈ {moderate, high}`; else `booster_only`. Deterministic from already-scored fields.
+
+**Note (AD-7, 2026-10-09):** overridden when heat activation is required — the relationship is then `booster_only` whatever the conditioning and persistence levels (ruling A2: a product that needs heat to work is never a conditioner replacement).
 
 ## AD-5 — eligibility emission (ruled 2026-09-14)
 
@@ -61,6 +65,23 @@ Each keeps at least one other functional benefit (`smooth_anti_frizz`, plus `hea
 **New refusal path (fail-closed, AD-2 shape).** A profile whose only functional benefit used to be the conditioning-granted `moisture_softness` now carries none, and the adapter returns `needs_research`. Example: `balanced`/`protein` direction, focus `general`, no film route, no heat, `repair_support_level: low`. No corpus record has this shape. It is recorded here so a refusal is recognised as this revision and not as a bug.
 
 **Adapter version.** `leave-in-production-adapter-v1` is kept, following the AD-6 precedent: a ruled AD change without a version bump. Provenance stays unambiguous because every projection also carries `research_model_version: leave-in-inci-v1.1`, and the adapter refuses v1.0-stamped envelopes.
+
+## AD-7 — heat activation projection (ruled 2026-10-09, with Standard v1.2 / T21)
+
+**Rulings (Nick, 2026-10-09):** A1 ("needs heat to work" is a real property from manufacturer statements and directions; such products are offered only in the heat-styling routine, never as conditioner replacement, never as a plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-c, D-d (manufacturer-only evidence) and D-e (activation and heat protection are separate). Normative research rule: `docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md` §1 (HA-1…HA-9, invariants I1–I8).
+
+**Rule.** The adapter reads `identity.heatActivation` (required on every v1.2 envelope) and routes the projection through `applyHeatActivationToLeaveInProjection` (`src/lib/heat-activation/contract.ts`), so the adapter and the field-scoped amendment path cannot drift:
+
+- `heat_activation_required` = (`value = required`); `heat_activation_route` = the captured route, `null` when not required (I6).
+- When required: `roles = [styling_prep]` (AD-3 overridden, I3), `conditioner_relationship = booster_only` (AD-4 overridden, I4), `plan_roles = [pre_heat_application]` only (I2), eligibility rows `heat_style` only (I7; the expander emits a `heat_style` row for every care bucket), `requiredProtocolRoles = [pre_heat_protection]` only (I8).
+- Refusals (`needs_research`, reason prefixed `identity.heatActivation:`): activation without `application_stage ∋ pre_heat` (HA-7, I1 — a capture error) and activation without a heat-protection claim (I5 — no Leave-In plan role; such a product belongs to the Styling program).
+- Activation never sets or reads `provides_heat_protection`; the `heat_protect` eligibility bucket comes from heat protection only (D-e).
+- Review routing: every `required` projection carries the warning `heat_activation_required` (HA-8); a `not_required` capture with C3–C5 counter-signals carries `activation_authority_gap` (HA-3).
+- Post-derivation invariants I1–I6 are re-checked on the built rows.
+
+**Version handling.** The research-method pin moves to `leave-in-classification-v1.2` / `leave-in-inci-v1.2`; the policy hash pins the v1.2 overlay. A v1.1-stamped envelope is refused with "v1.2 added identity.heatActivation; re-stamp required" — a missing capture must never default to "not activated" (§1.1 fails toward review). The envelope version (`leave-in-research-envelope-v1.0`) and `leave-in-production-adapter-v1` are kept, following the AD-6 precedent; provenance stays unambiguous through `research_model_version: leave-in-inci-v1.2`.
+
+**Consequence on the calibration set** (`data/research/leave-in-inci/v1.2/calibration-expected-projections.json`): only gold slot 13 (Neqi Diamond Glass Ultimate Styling Spray) moves — roles `{styling_prep}`, `booster_only`, plan role `pre_heat_application` only, `airflow_shaping`, eligibility 6 → 4 rows, protocol role `pre_heat_protection` only. Every other projection is unchanged apart from the new `heat_activation_route: null` key and the AD-7 rationale strings.
 
 ## Context rulings (same session)
 

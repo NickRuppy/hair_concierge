@@ -3,10 +3,12 @@ import { z } from "zod"
 import { personalPlanDurableAnswersBaseSchema } from "@/lib/personal-plan-quiz/persistence"
 import {
   ADDITIONAL_HEAT_TOOLS,
+  BONDBUILDER_TIMINGS,
   DRYING_ROUTES,
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   HEAT_PROTECTION_CONSISTENCIES,
+  NIGHT_WEARS,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
   STAGE2_HEAT_EVENT_SOURCES,
@@ -14,6 +16,13 @@ import {
   WET_WASH_FREQUENCIES,
 } from "@/lib/personal-plan/refinement/types"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
+import { TOOL_FAMILIES } from "@/lib/personal-plan/tools/contracts"
+import {
+  TOOL_FORM_PAGES,
+  toolFormCareKey,
+  type ToolFormCareKey,
+  type ToolFormPage,
+} from "@/lib/personal-plan/tools/labels"
 import {
   BRUSH_TYPES,
   NIGHT_PROTECTIONS,
@@ -23,16 +32,22 @@ import {
 
 /**
  * Pure schema/type layer for the `hair_profiles` user-facts domains
- * (`diagnostics`, `care_habits`, `quiz_context`). No `server-only` import:
+ * (`diagnostics`, `care_habits`, `quiz_context`, `shopping_preferences`). No `server-only` import:
  * client code is allowed to import these types/schemas later.
  */
 
-export const USER_FACTS_DOMAINS = ["diagnostics", "care_habits", "quiz_context"] as const
+export const USER_FACTS_DOMAINS = [
+  "diagnostics",
+  "care_habits",
+  "quiz_context",
+  "shopping_preferences",
+] as const
 export type UserFactsDomain = (typeof USER_FACTS_DOMAINS)[number]
 
 export const DIAGNOSTICS_SCHEMA_VERSION = 1
 export const CARE_HABITS_SCHEMA_VERSION = 1
 export const QUIZ_CONTEXT_SCHEMA_VERSION = 1
+export const SHOPPING_PREFERENCES_SCHEMA_VERSION = 1
 
 /** Thrown by the projectors in `project-artifact.ts` / `project-legacy-lead.ts` on unsupported
  * or incomplete input. Projections never synthesize missing answers into a silent partial
@@ -264,6 +279,40 @@ export const quizContextV1Schema = z
 export type QuizContextV1 = z.infer<typeof quizContextV1Schema>
 
 // ---------------------------------------------------------------------------
+// ShoppingPreferencesV1
+// ---------------------------------------------------------------------------
+
+/** Price ceilings (EUR per pack) a member can cap their care products at. */
+export const SHOPPING_BUDGET_LIMITS_EUR = [5, 15] as const
+export type ShoppingBudgetLimitEur = (typeof SHOPPING_BUDGET_LIMITS_EUR)[number]
+
+const cappedBudgetSchema = z
+  .object({
+    kind: z.literal("capped"),
+    limitEur: z.union([z.literal(5), z.literal(15)]),
+    allowExceptions: z.boolean(),
+  })
+  .strict()
+
+const uncappedBudgetSchema = z.object({ kind: z.literal("uncapped") }).strict()
+
+/** `budget` is replaced whole (the SQL merge is top-level). Absent = not collected; it is never
+ * to be read as "uncapped". */
+export const shoppingBudgetSchema = z.discriminatedUnion("kind", [
+  cappedBudgetSchema,
+  uncappedBudgetSchema,
+])
+export type ShoppingBudget = z.infer<typeof shoppingBudgetSchema>
+
+export const shoppingPreferencesV1Schema = z
+  .object({
+    budget: shoppingBudgetSchema.optional(),
+  })
+  .strict()
+
+export type ShoppingPreferencesV1 = z.infer<typeof shoppingPreferencesV1Schema>
+
+// ---------------------------------------------------------------------------
 // CareHabitsV1 (full PersonalPlanRefinementAnswersV1 shape + brushesCombs)
 // ---------------------------------------------------------------------------
 
@@ -283,10 +332,31 @@ const towelSchema = z
   })
   .strict()
 
+/**
+ * Hair Tools (plan `plans/2026-10-09-hair-tools-port.md` §4): one key per product-form page,
+ * `toolForms_<family>_<n>`, holding that page's reported forms. Generated from
+ * `TOOL_FORM_PAGES`, so a new page gets its key with it. Values are canonicalized (sorted) by
+ * the readers before they validate against the Stage-2 path.
+ */
+function toolFormPageSchema<Page extends ToolFormPage>(page: Page) {
+  return dedupeArray(
+    z.enum(page.forms as unknown as [Page["forms"][number], ...Page["forms"][number][]]),
+  ).optional()
+}
+
+type ToolFormPageShape = {
+  [Key in ToolFormCareKey]: ReturnType<typeof toolFormPageSchema<ToolFormPage>>
+}
+
+const toolFormPageShape = Object.fromEntries(
+  TOOL_FORM_PAGES.map((page) => [toolFormCareKey(page.pageKey), toolFormPageSchema(page)]),
+) as ToolFormPageShape
+
 export const careHabitsV1Schema = z
   .object({
     currentProductCategories: dedupeArray(z.enum(STAGE2_PRODUCT_CATEGORIES)).optional(),
     wetWashFrequency: z.enum(WET_WASH_FREQUENCIES).optional(),
+    bondbuilderTiming: z.enum(BONDBUILDER_TIMINGS).optional(),
     scalpIrritationDetail: z.enum(SCALP_IRRITATION_DETAILS).optional(),
     dryShampooBridgePreference: z.enum(DRY_SHAMPOO_BRIDGE_PREFERENCES).optional(),
     dryShampooVisibleHairColor: z.enum(DRY_SHAMPOO_VISIBLE_HAIR_COLORS).optional(),
@@ -296,9 +366,16 @@ export const careHabitsV1Schema = z
     additionalHeatTools: dedupeArray(z.enum(ADDITIONAL_HEAT_TOOLS)).optional(),
     heatEvents: z.partialRecord(z.enum(HEAT_EVENT_QUESTION_IDS), heatEventAnswerSchema).optional(),
     nightProtection: dedupeArray(z.enum(NIGHT_PROTECTIONS)).optional(),
+    // Rev. 6 (Hair Tools): how the hair is worn at night. Its technique is also merged into the
+    // derived `nightProtection` above; „Offen" (`open`) adds none.
+    nightWear: z.enum(NIGHT_WEARS).optional(),
     // Legacy `hair_profiles.brush_type` vocabulary; no Stage-2 version ever carried it (see
     // explore/B-habits.md §10).
     brushesCombs: dedupeArray(z.enum(BRUSH_TYPES)).optional(),
+    // Hair Tools: the overview answer (families the member owns something in) and one key per
+    // page. `brushesCombs` above is DERIVED from the two brush pages when they are settled.
+    toolFamiliesWithSomething: dedupeArray(z.enum(TOOL_FAMILIES)).optional(),
+    ...toolFormPageShape,
   })
   .strict()
 
@@ -324,6 +401,8 @@ export const domainProvenanceSchema = z
           "onboarding",
           "profile_editor",
           "account_link",
+          "shopping_preferences_editor",
+          "consultation_staff",
         ]),
         id: z.string().min(1).optional(),
       })
@@ -353,6 +432,7 @@ export const factsProvenanceSchema = z.object({
   diagnostics: domainProvenanceSchema.optional(),
   care_habits: domainProvenanceSchema.optional(),
   quiz_context: domainProvenanceSchema.optional(),
+  shopping_preferences: domainProvenanceSchema.optional(),
 })
 
 export type FactsProvenance = z.infer<typeof factsProvenanceSchema>
@@ -383,3 +463,6 @@ export type CareHabitsPatch = z.infer<typeof careHabitsPatchSchema>
 
 export const quizContextPatchSchema = toPatchSchema(quizContextV1Schema.shape)
 export type QuizContextPatch = z.infer<typeof quizContextPatchSchema>
+
+export const shoppingPreferencesPatchSchema = toPatchSchema(shoppingPreferencesV1Schema.shape)
+export type ShoppingPreferencesPatch = z.infer<typeof shoppingPreferencesPatchSchema>

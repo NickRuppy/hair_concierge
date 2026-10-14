@@ -1,0 +1,193 @@
+--- a/tests/personal-plan-stage4-ui.test.tsx
++++ b/tests/personal-plan-stage4-ui.test.tsx
+@@ -1126,56 +1126,13 @@
+   assert.equal(refined, 1)
+ })
+ 
+-test("post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too", () => {
+-  const routine = payload([item()])
+-  const view = activeViewFor(routine)
+-  const html = renderToStaticMarkup(
+-    <RoutinePage
+-      view={view}
+-      refinementBanner={{ module: "habits", completedSteps: 3, totalSteps: 4 }}
+-      onDismissRefinementBanner={() => undefined}
+-      onRefineFromBanner={() => undefined}
+-    />,
+-  )
+-
+-  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
+-  assert.match(html, />3 von 4</)
+-  assert.match(html, /Weiter · 3 Min\./)
+-  // Field test 26.08.2026: below the blocks the second ask scrolled out of
+-  // view and was never seen, so both modules share the products slot.
+-  assert.ok(html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"))
+-})
+-
+-test("dismissed state: refinementBanner absent renders no banner", () => {
+-  const routine = payload([item()])
+-  const view = activeViewFor(routine)
+-  const html = renderToStaticMarkup(<RoutinePage view={view} refinementBanner={null} />)
+-
+-  assert.doesNotMatch(html, /Mach deinen Plan genauer\./)
+-  assert.doesNotMatch(html, /Noch ein Schritt: deine Gewohnheiten\./)
+-  assert.doesNotMatch(html, /Hinweis schließen/)
+-})
+-
+-test("all-done state: no refinementBanner prop at all renders no banner", () => {
+-  const routine = payload([item()])
+-  const view = activeViewFor(routine)
+-  const html = renderToStaticMarkup(<RoutinePage view={view} />)
+-
+-  assert.doesNotMatch(html, /Hinweis schließen/)
+-  assert.doesNotMatch(html, /von 4/)
+-})
+-
+-test("Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks", () => {
+-  const routine = payload([item()])
+-  const view = activeViewFor(routine)
+-  const html = renderToStaticMarkup(
+-    <RoutinePage view={view} showPlanUpdatedToast onDismissPlanUpdatedToast={() => undefined} />,
+-  )
+-
+-  assert.match(html, /role="status"/)
+-  assert.match(html, /Plan aktualisiert/)
+-  assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"))
+-})
++
++
++
++
++
++
++
+ 
+ test("Task 2.6: the plan-updated toast is absent without the signal", () => {
+   const routine = payload([item()])
+@@ -1192,6 +1149,11 @@
+   // (incorrectly) set — there would be no way to ever clear it.
+   const withoutHandler = renderToStaticMarkup(<RoutinePage view={view} showPlanUpdatedToast />)
+ 
++  assert.doesNotMatch(withoutFlag, /Mach deinen Plan genauer\./)
++  assert.doesNotMatch(withoutFlag, /Noch ein Schritt: deine Gewohnheiten\./)
++  assert.doesNotMatch(withoutFlag, /Hinweis schließen/)
++  assert.doesNotMatch(withoutFlag, /von 4/)
++
+   for (const html of [withoutFlag, withFlagFalse, withoutHandler]) {
+     assert.doesNotMatch(html, /Plan aktualisiert/)
+   }
+@@ -1212,6 +1174,17 @@
+   )
+ 
+   assert.match(html, /Plan aktualisiert/)
++  assert.match(html, /role="status"/)
++  assert.ok(
++    html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"),
++    "plan-updated toast remains above the routine blocks",
++  )
++  assert.match(html, />3 von 4</)
++  assert.match(html, /Weiter · 3 Min\./)
++  assert.ok(
++    html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"),
++    "habits refinement banner remains above the routine blocks",
++  )
+   assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
+   // Toast at the very top, banner further down (mockup screen 3): the two
+   // never fight for the same slot.
+--- a/tests/personal-plan-stage4-route-ui.test.tsx
++++ b/tests/personal-plan-stage4-route-ui.test.tsx
+@@ -186,6 +186,8 @@
+   assert.match(html, /<button[^>]*type="button"/)
+   assert.match(html, />Erneut laden<\/button>/)
+ 
++  assert.match(html, /<a[^>]*href="\/plan-start"[^>]*>Zum Plan<\/a>/)
++
+   let retries = 0
+   const retry = RetryRefreshButtonView({ label: "Erneut laden", onRetry: () => retries++ })
+   retry.props.onClick()
+@@ -195,19 +197,7 @@
+   assert.match(retrySource, /onRetry=\{\(\) => router\.refresh\(\)\}/)
+ })
+ 
+-test("Routine unavailable recovery also offers a forward CTA out of the dead end", () => {
+-  const html = renderToStaticMarkup(
+-    RoutineUnavailableState({
+-      retryAction: createElement(RetryRefreshButtonView, {
+-        label: "Erneut laden",
+-        onRetry: () => undefined,
+-      }),
+-    }),
+-  )
+-  assert.match(html, /<a[^>]*href="\/plan-start"[^>]*>Zum Plan<\/a>/)
+-  // Both actions stay reachable side by side; the reload button is unchanged.
+-  assert.match(html, />Erneut laden<\/button>/)
+-})
++
+ 
+ test("Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable", async () => {
+   let read = false
+--- a/tests/personal-plan-portfolio-presentation.test.ts
++++ b/tests/personal-plan-portfolio-presentation.test.ts
+@@ -54,33 +54,7 @@
+   }
+ }
+ 
+-test("loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation", async () => {
+-  const calls: Array<[string, string]> = []
+-  const query: any = {
+-    select: () => query,
+-    eq: (column: string, value: string) => {
+-      calls.push([column, value])
+-      return query
+-    },
+-    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot: v3Snapshot() }, error: null }),
+-  }
+-  const result = await loadOwnerPortfolioPresentation(
+-    {
+-      from: () => query,
+-    },
+-    ids.user,
+-    ids.plan,
+-    ids.portfolio,
+-  )
+-
+-  assert.equal(result?.schemaVersion, 3)
+-  assert.equal(result?.retainedOwnedProducts[0]?.displayName, "Altes Shampoo")
+-  assert.deepEqual(calls, [
+-    ["id", ids.portfolio],
+-    ["user_id", ids.user],
+-    ["personal_plan_id", ids.plan],
+-  ])
+-})
++
+ 
+ test("uses v3-only labels for a replacement and an informed override, preserving legacy wording", () => {
+   const v3 = routinePresentationLabels({
+@@ -303,12 +277,14 @@
+ 
+ test("profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays", async () => {
+   const calls: Array<[string, string]> = []
++  const portfolioCalls: Array<[string, string]> = []
+   const client = {
+     from(table: string) {
+       const query: any = {
+         select: () => query,
+         eq: (column: string, value: string) => {
+           calls.push([column, value])
++          if (table === "personal_plan_portfolio_versions") portfolioCalls.push([column, value])
+           return query
+         },
+         maybeSingle: async () => ({
+@@ -337,6 +313,12 @@
+   const body = await response.json()
+ 
+   assert.equal(response.status, 200)
++  assert.equal(body.presentation.schemaVersion, 3)
++  assert.deepEqual(portfolioCalls, [
++    ["id", ids.portfolio],
++    ["user_id", ids.user],
++    ["personal_plan_id", ids.plan],
++  ])
+   assert.equal(response.headers.get("Cache-Control"), "no-store")
+   assert.deepEqual(body.presentation.plannedPurchaseDecisionKeys, ["decision-replace"])
+   assert.deepEqual(

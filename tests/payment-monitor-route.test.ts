@@ -361,48 +361,6 @@ test("payment monitor fails closed when an emitted incident has no Sentry receip
   })
 })
 
-test("payment monitor flushes completed integrity findings before returning success", async () => {
-  let flushes = 0
-  const response = await handlePaymentMonitor(request(), {
-    triggerSecret: secret,
-    checkRateLimit: () => ({ allowed: true }),
-    runPaymentIntegrity: async () =>
-      result({
-        counters: {
-          ...emptyPaymentIntegrityCounters(),
-          providersScanned: 2,
-          candidatesChecked: 4,
-          findings: 1,
-        },
-        findings: [
-          {
-            signal: "payment_integrity_mismatch",
-            provider: "stripe",
-            commerceKind: "subscription",
-            boundary: "billing",
-            errorFamily: "billing_state",
-            invariant: "provider_success_without_billing_success",
-            providerReferenceDigest:
-              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            method: "card",
-            truth: "succeeded",
-            live: true,
-            isInternalTest: false,
-          },
-        ],
-        telemetryEventIds: ["0123456789abcdef0123456789abcdef"],
-      }),
-    captureCheckIn: () => undefined,
-    flushTelemetry: async () => {
-      flushes += 1
-      return true
-    },
-  })
-
-  assert.equal(response.status, 200)
-  assert.equal(flushes, 1)
-})
-
 test("payment monitor uses uncapped incident counters when requiring Sentry receipts", async () => {
   let flushes = 0
   const response = await handlePaymentMonitor(request(), {

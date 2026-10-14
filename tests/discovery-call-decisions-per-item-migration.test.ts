@@ -1,5 +1,4 @@
 import assert from "node:assert/strict"
-import { readdirSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
@@ -154,21 +153,6 @@ async function rows(pg: PGlite, intakeId: string) {
   )
   return result.rows
 }
-
-test("the migration has a unique version that sorts after every migration", () => {
-  const versions = readdirSync(dir)
-    .filter((name) => name.endsWith(".sql"))
-    .map((name) => name.split("_")[0])
-  const own = OWN.split("_")[0]
-  assert.equal(versions.filter((version) => version === own).length, 1)
-  // Was "sorts after every migration" when it was the newest; the call-sheet, iOS paywall and catalog-hardening
-  // migrations now follow it, so what still matters is that it follows its chain.
-  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
-  assert.ok(
-    predecessors.every((version) => version < own),
-    "must sort after its prerequisites",
-  )
-})
 
 test("one row per (step, product); an empty step still holds exactly one (NULLS NOT DISTINCT)", async (t) => {
   const pg = await migrated(t)

@@ -1,0 +1,1 @@
+58bd94e17c5bef86e1c52226699a7ac7391cdea4 2026-09-25 feat(beratung): cockpit „Quiz-Antworten" + „Hauptproblem"-Rezept (batch 7c) (#610)

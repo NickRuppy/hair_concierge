@@ -16,7 +16,6 @@ import {
   loadTrialManagementOperation,
   guardTrialManagementOperation,
   commitTrialManagementOperation,
-  abandonTrialManagementOperation,
   type TrialManagementOperation,
 } from "../billing/trial-management-operations"
 import { getPayPalAppId, paypalRequest } from "./client"
@@ -480,47 +479,6 @@ export async function reconcilePayPalTrialManagement(
     deps,
   )
   return { status: "committed", operationId: operation.id }
-}
-
-/** Explicit abandonment is safe only after the replacement is conclusively noncollectible. */
-export async function abandonPayPalTrialManagement(
-  input: { operationId: string; authenticatedUserId: string },
-  deps: PayPalTrialManagementDeps,
-): Promise<PayPalTrialManagementResult> {
-  const operation = await loadTrialManagementOperation(deps.supabase, input)
-  checkOperation(operation, input.authenticatedUserId)
-  const completed = terminal(operation)
-  if (completed) {
-    if (operation.status === "committed") await projectPayPalTrialManagement(operation, deps)
-    return completed
-  }
-  const frozen = await loadRequest(deps, operation.id, operation.userId)
-  if (frozen) {
-    assertFrozenRequest(operation, frozen)
-    await assertAttested(frozen, deps)
-    // There is no documented cancel-pending-revision API. An old approval link could still apply later.
-    if (operation.kind === "switch" && frozen.requestSentAt) return pending(operation)
-    if (operation.kind === "restore" && frozen.requestSentAt && !frozen.targetAgreementId)
-      return { status: "reconciliation_required", operationId: operation.id }
-    if (frozen.targetAgreementId)
-      await neutralizeRestoreCandidate(frozen.targetAgreementId, operation, deps)
-  }
-  const source = await (deps.retrieve ?? retrievePayPalTrialSubscription)(
-    operation.sourceAgreementId,
-  )
-  assertOwned(source, operation, operation.sourceAgreementId)
-  if (operation.kind === "restore" && source.status !== "CANCELLED")
-    throw new Error("PayPal restoration cancellation no longer effective")
-  if (operation.kind === "switch") {
-    if (!frozen) return pending(operation)
-    assertEffectivePlan(source, operation, frozen, false)
-    assertFutureTrial(source, operation, true, frozen.sourceStartTime)
-  }
-  const abandoned = await abandonTrialManagementOperation(deps.supabase, {
-    ...input,
-    reconciliationReference: `paypal:abandoned:${operation.id}`,
-  })
-  return { status: abandoned ? "abandoned" : "reconciliation_required", operationId: operation.id }
 }
 async function neutralizeRestoreCandidate(
   id: string,

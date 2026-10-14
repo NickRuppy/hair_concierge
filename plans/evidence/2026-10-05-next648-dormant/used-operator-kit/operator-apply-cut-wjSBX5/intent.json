@@ -1,0 +1,75 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6",
+  "prerequisite": {
+    "cohort": {
+      "dir": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi",
+      "completionSHA": "32e89a2c36cde73c351921357dbc0c89b90f10b17d4808564d8f6def8eb3d272",
+      "phase": "transfer",
+      "verified": 103
+    },
+    "controls": {
+      "dir": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A",
+      "completionSHA": "f048bb7e29026d6cba39074071da5b00ef330068cd4f70c562459d229f682610",
+      "phase": "transfer",
+      "verified": 14,
+      "logFiles": 42
+    }
+  },
+  "files": [
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "before": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "after": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c"
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "before": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "after": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd"
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "before": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "after": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0"
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "before": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+      "after": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "before": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+      "after": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec"
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "before": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+      "after": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24"
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "before": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+      "after": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1"
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "before": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+      "after": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2"
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "before": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+      "after": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963"
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "before": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "after": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18"
+    }
+  ]
+}

@@ -1,0 +1,368 @@
+{
+  "authorization": "MAIN ONLY, after acceptance and exclusive no-other-mutation-runner sequencing. No commands executed by author.",
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "fullCohort": {
+    "argv": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "tests/funnel-api.test.ts",
+      "tests/funnel-client.test.ts",
+      "tests/funnel-cookie.test.ts",
+      "tests/funnel-migration.test.ts",
+      "tests/funnel-rate-limit.test.ts",
+      "tests/funnel-route.test.ts",
+      "tests/funnel-server.test.ts",
+      "tests/gated-example-pages.test.tsx",
+      "tests/gated-pages-zero-mutation.test.tsx",
+      "tests/gated-preview-component.test.tsx",
+      "tests/editorial-pages.test.tsx",
+      "tests/landing-client-import-boundary.test.ts"
+    ],
+    "expectedNativePass": {
+      "before": 79,
+      "transfer": 79,
+      "cut": 74
+    },
+    "requireExactTitles": true,
+    "requireZeroSkipCancelTodo": true
+  },
+  "selectedControls": [
+    {
+      "id": "C1-01",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-01"
+    },
+    {
+      "id": "C1-02",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-02"
+    },
+    {
+      "id": "C1-03",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-03"
+    },
+    {
+      "id": "C1-04",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-04"
+    },
+    {
+      "id": "C1-05",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-05"
+    },
+    {
+      "id": "C1-06",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-06"
+    },
+    {
+      "id": "C1-07",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-07"
+    },
+    {
+      "id": "C1-08",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-08"
+    },
+    {
+      "id": "C1-09",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^renders\\ the\\ frame,\\ the\\ Beispiel\\ band,\\ the\\ benefit\\ line\\ and\\ exactly\\ one\\ CTA$",
+        "tests/gated-preview-component.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C1-09"
+    },
+    {
+      "id": "C2-01",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^the\\ Chat\\ example\\ is\\ a\\ short,\\ capability\\-true\\ transcript\\ through\\ the\\ real\\ bubbles$",
+        "tests/gated-example-pages.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C2-01"
+    },
+    {
+      "id": "C2-02",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^the\\ Chat\\ example\\ is\\ a\\ short,\\ capability\\-true\\ transcript\\ through\\ the\\ real\\ bubbles$",
+        "tests/gated-example-pages.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C2-02"
+    },
+    {
+      "id": "C3-01",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ routine\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-01"
+    },
+    {
+      "id": "C3-02",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ routine\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-02"
+    },
+    {
+      "id": "C3-03",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ routine\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-03"
+    },
+    {
+      "id": "C3-04",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ anwendung\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-04"
+    },
+    {
+      "id": "C3-05",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ anwendung\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-05"
+    },
+    {
+      "id": "C3-06",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ anwendung\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-06"
+    },
+    {
+      "id": "C3-07",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ chat\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-07"
+    },
+    {
+      "id": "C3-08",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ chat\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-08"
+    },
+    {
+      "id": "C3-09",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=^gated\\ chat\\ renders\\ without\\ touching\\ the\\ network$",
+        "tests/gated-pages-zero-mutation.test.tsx"
+      ],
+      "expectedSelected": 1,
+      "recipe": "controls.json#C3-09"
+    }
+  ],
+  "requiredSequence": [
+    "79 clean before",
+    "exact guarded transfer",
+    "79 clean transfer",
+    "20 sequential clean/red/exact-restore/clean intended-oracle controls",
+    "79 clean transfer",
+    "guarded donor cut only after current attested proof",
+    "74 clean cut",
+    "20 sequential controls on cut with exact restores",
+    "74 clean final"
+  ],
+  "noRepoOperatorToolProvided": true
+}

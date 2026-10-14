@@ -1,0 +1,22 @@
+{
+  "applicationTooling": {
+    "added": 66,
+    "deleted": 9002,
+    "paths": 118,
+    "netRemoved": 8936
+  },
+  "testsSupport": {
+    "added": 3225,
+    "deleted": 12967,
+    "paths": 266,
+    "netRemoved": 9742
+  },
+  "totalNetRemoved": 18678,
+  "untrackedTestSupport": [
+    {
+      "file": "tests/paypal-trial-plan.fixtures.ts",
+      "lines": 49
+    }
+  ],
+  "excluded": "plans/docs"
+}

@@ -1,3 +1,4 @@
+import { evaluateGateCriteria } from "../fit-criteria"
 import type { PlanCategoryTarget } from "@/lib/personal-plan/types"
 
 import type {
@@ -9,7 +10,6 @@ import {
   commonUnknownFacts,
   criterion,
   hasValidTarget,
-  isInactiveOrRetired,
   isPendingIdentity,
   knownEvaluation,
   pendingEvaluation,
@@ -20,10 +20,41 @@ import {
 
 type HeatInput = Stage3AuthorityInput<"heat_protectant">
 
-function hasCompleteProtocol(facts: Stage3HeatProtectantFacts, input: HeatInput): boolean {
-  return facts.protocols.some(
-    (protocol) => protocol.role === input.role && protocol.status === "verified_complete",
+function evaluateFacts(input: HeatInput, facts: Stage3HeatProtectantFacts) {
+  const missing = commonUnknownFacts(
+    { ...input, productFacts: facts },
+    { requiresSuitableThickness: false },
   )
+  if (facts.spec.providesHeatProtection === null) missing.push("provides_heat_protection")
+  if (protocolForRole({ ...input, productFacts: facts })?.status !== "verified_complete")
+    missing.push("application_protocol")
+  const capability =
+    facts.spec.providesHeatProtection === null
+      ? "unknown"
+      : facts.spec.providesHeatProtection
+        ? "pass"
+        : "fail"
+  const criteria = [
+    criterion(
+      "heat_protectant.capability",
+      "Verifizierter Hitzeschutz",
+      capability,
+      capability === "pass"
+        ? "Das Produkt deckt die Hitzeschutzrolle mit einem vollständigen Protokoll ab."
+        : capability === "fail"
+          ? "Das Produkt besitzt keinen verifizierten Hitzeschutz und kann diese Rolle nicht abdecken."
+          : "Die Hitzeschutzfähigkeit oder das Anwendungsprotokoll ist noch nicht vollständig verifiziert.",
+    ),
+  ]
+  // Keep the existing unknown capability row for incomplete application facts.
+  if (missing.length > 0 && capability === "pass")
+    criteria[0] = criterion(
+      "heat_protectant.capability",
+      "Verifizierter Hitzeschutz",
+      "unknown",
+      "Die Hitzeschutzfähigkeit oder das Anwendungsprotokoll ist noch nicht vollständig verifiziert.",
+    )
+  return evaluateGateCriteria(input, facts, criteria, missing)
 }
 
 function stableCandidateName(candidate: Stage3HeatProtectantFacts): string {
@@ -48,16 +79,7 @@ function compareRecommendationCandidates(
 
 function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | null {
   const sharedFit = input.recommendationCandidates.filter(
-    (candidate) =>
-      candidate.isActive &&
-      candidate.lifecycleStatus === "active" &&
-      candidate.recommendable &&
-      candidate.spec.providesHeatProtection === true &&
-      commonUnknownFacts(
-        { ...input, productFacts: candidate },
-        { requiresSuitableThickness: false },
-      ).length === 0 &&
-      hasCompleteProtocol(candidate, input),
+    (candidate) => candidate.recommendable && evaluateFacts(input, candidate).verdict === "ideal",
   )
 
   const candidates = [...sharedFit].sort(compareRecommendationCandidates)
@@ -141,72 +163,20 @@ export function evaluateHeatProtectantAuthority(input: HeatInput): Stage3Authori
   }
 
   const facts = input.productFacts
-  const missingFacts = commonUnknownFacts(input, { requiresSuitableThickness: false })
-  if (facts.spec.providesHeatProtection === null) missingFacts.push("provides_heat_protection")
-  const protocol = protocolForRole(input)
-  if (!protocol || protocol.status !== "verified_complete")
-    missingFacts.push("application_protocol")
-  if (missingFacts.length > 0) {
-    return unknownEvaluation(input, missingFacts, [
-      criterion(
-        "heat_protectant.capability",
-        "Verifizierter Hitzeschutz",
-        "unknown",
-        "Die Hitzeschutzfähigkeit oder das Anwendungsprotokoll ist noch nicht vollständig verifiziert.",
-      ),
-    ])
-  }
-
-  if (isInactiveOrRetired(input)) {
-    return knownEvaluation(input, {
-      verdict: "mismatch",
-      criteria: [
-        criterion(
-          "heat_protectant.lifecycle",
-          "Verfügbarkeit",
-          "fail",
-          "Das Produkt ist nicht aktiv.",
-        ),
-      ],
-      allowedActions: ["leave_uncovered"],
-      recommendation: null,
-      productFactFingerprint: facts.factFingerprint,
-      recommendationFactFingerprint: null,
-    })
-  }
-
-  if (facts.spec.providesHeatProtection === false) {
-    const candidate = recommendationCandidate(input)
-    return knownEvaluation(input, {
-      verdict: "mismatch",
-      criteria: [
-        criterion(
-          "heat_protectant.capability",
-          "Verifizierter Hitzeschutz",
-          "fail",
-          "Das Produkt besitzt keinen verifizierten Hitzeschutz und kann diese Rolle nicht abdecken.",
-        ),
-      ],
-      allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: candidate ? recommendation(candidate, input) : null,
-      productFactFingerprint: facts.factFingerprint,
-      recommendationFactFingerprint: candidate?.factFingerprint ?? null,
-    })
-  }
-
+  const result = evaluateFacts(input, facts)
+  if (result.verdict === "unknown") return unknownEvaluation(input, result.missing, result.criteria)
+  const candidate = result.verdict === "mismatch" ? recommendationCandidate(input) : null
   return knownEvaluation(input, {
-    verdict: "ideal",
-    criteria: [
-      criterion(
-        "heat_protectant.capability",
-        "Verifizierter Hitzeschutz",
-        "pass",
-        "Das Produkt deckt die Hitzeschutzrolle mit einem vollständigen Protokoll ab.",
-      ),
-    ],
-    allowedActions: ["keep_owned"],
-    recommendation: null,
+    verdict: result.verdict,
+    criteria: result.criteria,
+    allowedActions:
+      result.verdict === "mismatch"
+        ? candidate
+          ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+          : ["acknowledge_override", "leave_uncovered"]
+        : ["keep_owned"],
+    recommendation: candidate ? recommendation(candidate, input) : null,
     productFactFingerprint: facts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint: candidate?.factFingerprint ?? null,
   })
 }

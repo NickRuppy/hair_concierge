@@ -1032,7 +1032,7 @@ function MembershipResultOfferPricing({
           body: JSON.stringify({
             source: "quiz_result_offer",
             leadId,
-            funnelSessionId: leadId ? offerContext?.funnelSessionId ?? undefined : undefined,
+            funnelSessionId: leadId ? (offerContext?.funnelSessionId ?? undefined) : undefined,
           }),
         })
         failureFamily = "entitlement_state"

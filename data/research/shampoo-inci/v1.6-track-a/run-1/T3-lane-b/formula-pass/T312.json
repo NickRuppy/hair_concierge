@@ -1,0 +1,142 @@
+{
+  "blindId": "T312",
+  "inciFingerprintSha256": "389e6c9ab6edb330ef33566bb360461478df9f3d653a9f68ee0a94905a0d5d7c",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffers Cocamidopropyl Betaine (3), Coco-Glucoside (4); no reinforcing route. E3 point Parfum (21).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Humectant-rich, but C1 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (9) with weak refatter Glyceryl Oleate (10) and humectants Betaine (5), Glycerin (6), Panthenol (7). No silicone, lipid or pearlizer; C2 not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Single cationic route."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Single cationic guar (9) plus weak refatter (10); humectants are context; ordinary C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar + Glyceryl Oleate."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + two buffers."
+        }
+      },
+      "whyThisBand": "Light routes, ordinary reset.",
+      "whyNotNeighborBand": "W2: only one light polymer plus a weak_refatter and humectants; no silicone, lipid or film.",
+      "counterSignal": "Guar mid-list.",
+      "excluded": [
+        "Sorbitan Caprylate (11): preservative booster",
+        "Erythritol (12), Maltodextrin (16): sugar/filler",
+        "Mentha Aquatica Leaf Extract (18): extract, not a cooling agent"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional: Piroctone Olamine (15) present; needs a qualifying dandruff claim. Humectant cluster (Betaine 5, Glycerin 6, Panthenol 7) suggests dry-scalp comfort.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Active-led candidate."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "low",
+      "rationale": "Provisional: needs qualifying dandruff claim (U3).",
+      "neighboringAlternative": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes: Panthenol (7) prominent comfort; Betaine (5), Glycerin (6), Glyceryl Oleate (10) prominent humectant/refatting.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (15).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Betaine",
+      "position": 5,
+      "role": "humectant (INCI Betaine)"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 6,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 7,
+      "role": "E4 comfort"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 9,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 10,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 15,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 21,
+      "role": "E3 point"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: renders the frame, the Beispiel band, the benefit line and exactly one CTA
+not ok 1 - renders the frame, the Beispiel band, the benefit line and exactly one CTA
+  ---
+  duration_ms: 2.476791
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-preview-component.test.tsx:2:3415'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /overflow-y-auto/. Input:
+    
+    'min-h-0 flex-1 overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'min-h-0 flex-1 overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-preview-component.test.tsx:141:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 740.0215

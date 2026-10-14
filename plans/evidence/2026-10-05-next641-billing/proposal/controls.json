@@ -1,0 +1,318 @@
+[
+  {
+    "id": "expired-access",
+    "candidates": [
+      "C1",
+      "D1"
+    ],
+    "file": "src/lib/billing/subscriptions.ts",
+    "sourceSHA256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "functionName": "isWithinExpiryGrace",
+    "functionSHA256": "11cb103a44b58743fd81927a151fbc7d9f8541121867ca399a3eb0256f560c81",
+    "functionBefore": "function isWithinExpiryGrace(periodEndIso: string, now: Date): boolean {\n  const timestamp = Date.parse(periodEndIso)\n  if (!Number.isFinite(timestamp)) return false\n  return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS\n}",
+    "from": "return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS",
+    "to": "return true",
+    "prospectiveSHA256": "f43f8088024d0d0f8c870c189843e30beac8b6bf250aab865f2c002d36c805f8",
+    "keeper": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement just beyond the 24h expiry grace reports expired",
+      "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "active",
+      "expected": "expired",
+      "assertion": "assert.equal(summary.status, \"expired\")",
+      "firstKeeperFrame": {
+        "file": "tests/admin-user-billing-summary.test.ts",
+        "line": 202,
+        "column": 3
+      },
+      "phaseFirstKeeperFrames": {
+        "before": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 202,
+          "column": 3
+        },
+        "transfer": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 202,
+          "column": 3
+        },
+        "cut": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 194,
+          "column": 3
+        }
+      },
+      "messageRequirement": "Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure."
+    },
+    "command": {
+      "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^active entitlement just beyond the 24h expiry grace reports expired$",
+        "tests/admin-user-billing-summary.test.ts"
+      ]
+    },
+    "execution": "Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit."
+  },
+  {
+    "id": "premature-grace-end",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/lib/billing/subscriptions.ts",
+    "sourceSHA256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "functionName": "isWithinExpiryGrace",
+    "functionSHA256": "11cb103a44b58743fd81927a151fbc7d9f8541121867ca399a3eb0256f560c81",
+    "functionBefore": "function isWithinExpiryGrace(periodEndIso: string, now: Date): boolean {\n  const timestamp = Date.parse(periodEndIso)\n  if (!Number.isFinite(timestamp)) return false\n  return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS\n}",
+    "from": "return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS",
+    "to": "return timestamp >= now.getTime()",
+    "prospectiveSHA256": "dde0d118b6d18660a486d908aa1566e8fca64e62c905ac30b468945f27080c50",
+    "keeper": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement within the 24h expiry grace still reports active",
+      "sha256": "e4157422ed89b274f6379fded3044d177040dbabc724b5bf3d4ad4887c2908f1"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "expired",
+      "expected": "active",
+      "assertion": "assert.equal(summary.status, \"active\")",
+      "firstKeeperFrame": {
+        "file": "tests/admin-user-billing-summary.test.ts",
+        "line": 194,
+        "column": 3
+      },
+      "phaseFirstKeeperFrames": {
+        "before": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 194,
+          "column": 3
+        },
+        "transfer": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 194,
+          "column": 3
+        },
+        "cut": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 186,
+          "column": 3
+        }
+      },
+      "messageRequirement": "Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure."
+    },
+    "command": {
+      "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^active entitlement within the 24h expiry grace still reports active$",
+        "tests/admin-user-billing-summary.test.ts"
+      ]
+    },
+    "execution": "Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit."
+  },
+  {
+    "id": "reject-future-access",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/billing/subscriptions.ts",
+    "sourceSHA256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "functionName": "isWithinExpiryGrace",
+    "functionSHA256": "11cb103a44b58743fd81927a151fbc7d9f8541121867ca399a3eb0256f560c81",
+    "functionBefore": "function isWithinExpiryGrace(periodEndIso: string, now: Date): boolean {\n  const timestamp = Date.parse(periodEndIso)\n  if (!Number.isFinite(timestamp)) return false\n  return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS\n}",
+    "from": "return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS",
+    "to": "return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS && timestamp <= now.getTime()",
+    "prospectiveSHA256": "6ec9105203944cabfaa69115653f77407ceb656633d63d58774e8018ecc476e7",
+    "keeper": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "plain active subscription reports active",
+      "sha256": "8ca602f5fef8dab1eaf5d02c1bf58e309d3fb3a8f58c354a2c0f93e3b9527ff2"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "expired",
+      "expected": "active",
+      "assertion": "assert.equal(summary.status, \"active\")",
+      "firstKeeperFrame": {
+        "file": "tests/admin-user-billing-summary.test.ts",
+        "line": 140,
+        "column": 3
+      },
+      "phaseFirstKeeperFrames": {
+        "before": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 140,
+          "column": 3
+        },
+        "transfer": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 140,
+          "column": 3
+        },
+        "cut": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 140,
+          "column": 3
+        }
+      },
+      "messageRequirement": "Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure."
+    },
+    "command": {
+      "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^plain active subscription reports active$",
+        "tests/admin-user-billing-summary.test.ts"
+      ]
+    },
+    "execution": "Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit."
+  },
+  {
+    "id": "reject-legacy-null",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/lib/billing/subscriptions.ts",
+    "sourceSHA256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "functionName": "hasCurrentBillingAccess",
+    "functionSHA256": "d7ea2a5da0568aef9f6a69a8e05fb8c51369e30cd49b131a18c2dc102a8e1322",
+    "functionBefore": "export function hasCurrentBillingAccess(\n  row: BillingSubscriptionRow,\n  now: Date = new Date(),\n): boolean {\n  const trialAccess = resolveBillingTrialAccess(row, now)\n  if (trialAccess !== null) return trialAccess.hasAccess\n\n  if (OPEN_ENTITLEMENTS.has(row.entitlement_status)) {\n    // Null current_period_end is legacy/incomplete billing_subscriptions\n    // data (e.g. rows backfilled from profiles before a first webhook ever\n    // populated the period) — there's no period end to measure a grace\n    // window against, so preserve the pre-existing status-only behavior.\n    if (row.current_period_end == null) return true\n    return isWithinExpiryGrace(row.current_period_end, now)\n  }\n  return (\n    row.entitlement_status === \"canceled\" &&\n    row.cancel_at_period_end &&\n    isFutureIso(row.current_period_end, now)\n  )\n}",
+    "from": "if (row.current_period_end == null) return true",
+    "to": "if (row.current_period_end == null) return false",
+    "prospectiveSHA256": "adeaf1f289b2f7eeb0f484073ad96788b7ce42cc19463797cbf178c6ffb39b4e",
+    "keeper": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "legacy active subscription without period end reports active",
+      "sha256": "c87a1642eb13d3528d156017ed9dcf282ba996ff23f89c1804afdf61346ee4fa"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": "expired",
+      "expected": "active",
+      "assertion": "assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")",
+      "firstKeeperFrame": {
+        "file": "tests/admin-user-billing-summary.test.ts",
+        "line": 145,
+        "column": 3
+      },
+      "phaseFirstKeeperFrames": {
+        "before": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 145,
+          "column": 3
+        },
+        "transfer": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 145,
+          "column": 3
+        },
+        "cut": {
+          "file": "tests/admin-user-billing-summary.test.ts",
+          "line": 145,
+          "column": 3
+        }
+      },
+      "messageRequirement": "Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure."
+    },
+    "command": {
+      "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^legacy active subscription without period end reports active$",
+        "tests/admin-user-billing-summary.test.ts"
+      ]
+    },
+    "execution": "Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit."
+  },
+  {
+    "id": "skip-incident-flush",
+    "candidates": [
+      "D2"
+    ],
+    "file": "src/app/api/billing/payment-monitor/route.ts",
+    "sourceSHA256": "3b1163b0be8c29500d706328ad2e7d3ebacd681ac536a0aded16197147c91ce8",
+    "functionName": "confirmTelemetryDelivery",
+    "functionSHA256": "4b150e204abba3b69d47ae8750ed253e82f95d74612871f14327f793c70c2383",
+    "functionBefore": "async function confirmTelemetryDelivery(\n  result: PaymentIntegrityResult,\n  flush: (() => Promise<unknown>) | undefined,\n): Promise<boolean> {\n  const expectedReceipts = result.counters.findings + result.counters.monitorFailures\n  if (expectedReceipts === 0) return true\n  const receipts = (result.telemetryEventIds ?? []).filter(isSentryEventId)\n  if (receipts.length < expectedReceipts || !flush) return false\n  return flushTelemetryWithRetry(flush)\n}",
+    "from": "return flushTelemetryWithRetry(flush)",
+    "to": "return true",
+    "prospectiveSHA256": "7f8e9998bfdeaf1aaac9efabf41471bbaba04c7a91983a2cb417a740d6b924e8",
+    "keeper": {
+      "file": "tests/payment-monitor-route.test.ts",
+      "title": "payment monitor uses uncapped incident counters when requiring Sentry receipts",
+      "sha256": "3386c69f68c413ab9dceb3fd16070f7df0b889d16d971c4a257d40ff8043836c"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "actual": 0,
+      "expected": 1,
+      "assertion": "assert.equal(flushes, 1)",
+      "firstKeeperFrame": {
+        "file": "tests/payment-monitor-route.test.ts",
+        "line": 428,
+        "column": 3
+      },
+      "phaseFirstKeeperFrames": {
+        "before": {
+          "file": "tests/payment-monitor-route.test.ts",
+          "line": 428,
+          "column": 3
+        },
+        "transfer": {
+          "file": "tests/payment-monitor-route.test.ts",
+          "line": 428,
+          "column": 3
+        },
+        "cut": {
+          "file": "tests/payment-monitor-route.test.ts",
+          "line": 386,
+          "column": 3
+        }
+      },
+      "messageRequirement": "Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure."
+    },
+    "command": {
+      "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^payment monitor uses uncapped incident counters when requiring Sentry receipts$",
+        "tests/payment-monitor-route.test.ts"
+      ]
+    },
+    "execution": "Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit."
+  }
+]

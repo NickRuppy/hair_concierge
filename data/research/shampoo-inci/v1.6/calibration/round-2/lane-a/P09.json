@@ -1,0 +1,139 @@
+{
+  "blindId": "P09",
+  "identity": {
+    "productName": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo",
+    "brand": "Guhl",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 23,
+    "formulaFingerprintSha256": "4efc223d59cb6d05a123e2fa5b82af90bfca8cda42b7ff22e47af7ff8402de8e",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "product name high ('Feuchtigkeits-Shampoo', 'Hyaluron+'); manufacturer moderate; retailers low",
+    "conflicts": "'Hyaluron' maps to Hydrolyzed Hyaluronic Acid (17) and Sodium Hyaluronate (18) - no conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with two prominent buffers Coco-Glucoside (3) and Cocamidopropyl Betaine (4), no reinforcing route; E3 point Parfum (20). Refatting counter-signals (Hydrogenated Vegetable Oil 6, Glyceryl Oleate 8) recorded; convention robust with two buffers.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: one meaningful lipid/cationic system - prominent Hydrogenated Vegetable Oil (6) with Guar Hydroxypropyltrimonium Chloride (9) and weak refatter Glyceryl Oleate (8) - plus humectants Erythritol (11), Glycerin (12), Panthenol (13), hyaluronates (17, 18). C2 not met: the payload lipid takes the silicone's place but there is no separate pearlizing/fatty route. Counter-signal: close to C2 -> neighbor high.",
+      "ruleIds": ["C2", "§5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "formulaIdentifiers": {"fingerprint": "4efc223d59cb6d05a123e2fa5b82af90bfca8cda42b7ff22e47af7ff8402de8e", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (9)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Hydrogenated Vegetable Oil (6) - waxy/hydrogenated"],
+        "weak_refatter": ["Glyceryl Oleate (8)"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "nonionic: Coco-Glucoside (3)", "amphoteric: Cocamidopropyl Betaine (4)"],
+        "humectantContext": ["Erythritol (11)", "Glycerin (12)", "Panthenol (13)", "Hydrolyzed Hyaluronic Acid (17)", "Sodium Hyaluronate (18)"],
+        "excluded": ["Sorbitan Caprylate (10) - preservative booster/emulsifier", "Tetrasodium Glutamate Diacetate (14) - chelator", "Piroctone Olamine (15) - active", "Lactic Acid (7), Citric Acid (16) - pH adjusters"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Early waxy hydrogenated oil plus cationic guar plus weak refatter: W-RICH formally met."},
+      "persistence": {"value": "moderate", "rationale": "Hydrogenated (waxy) lipid is more substantive than a liquid oil (6.4); guar coacervates with it; no silicone."},
+      "resetCapacity": {"value": "moderate", "rationale": "SLES with two buffers: normal reset, not limited, not clarifying."},
+      "counterEvidence": "W-RICH and an early waxy lipid pull toward high; two-buffer sulfate reset and the absence of silicone/second polymer pull toward moderate.",
+      "whyThisBand": "A lipid/guar coacervate system plausibly leaves bounded noticeable residue; the reset is not limited.",
+      "whyNotNeighborBand": "Not high: the high anchor needs rich architecture with limited reset or multiple persistent systems; reset is a normal two-buffer SLES chassis, there is one cationic polymer and no silicone. Not low: an early waxy payload lipid converging with guar (W-RICH, W2) makes 'lightweight' an understatement. W1 does not apply (early waxy lipid).",
+      "limitingFactor": "Lipid level unknown; waxy lipid at position 6 makes high a realistic neighbor.",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity moderate); neighbor high.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W1", "W-RICH", "W2", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment; 'ohne zu beschweren' (retailer) ignored per 6.5 step 5; no count/position assigned band; subjudgments present; whyNotNeighborBand specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Erythritol (11)", "Glycerin (12)", "Panthenol (13)", "Hydrolyzed Hyaluronic Acid (17)", "Sodium Hyaluronate (18)"], "repairRoutes": [], "sharedConditioningRoutes": ["Hydrogenated Vegetable Oil (6)", "Glyceryl Oleate (8)", "Guar Hydroxypropyltrimonium Chloride (9)"], "limitation": "Rinse-off context; hyaluronates are late."},
+      "claimRole": "candidate",
+      "counterSignal": "Shine wording ('gesund glänzende Längen'); hyaluronates listed late.",
+      "rationale": "Moisture: named in the exact product name ('Feuchtigkeits-Shampoo', high) and manufacturer copy ('für feuchtigkeitsbedürftiges Haar', 'trockenes Haar'); formula moisture_supported - coherent humectant cluster with emollient/deposition support (F1).",
+      "decisionTrace": {"claimDirection": "moisture (name, high)", "formulaCompatible": true, "compatibleRoute": "Glycerin (12) + Panthenol (13) + Erythritol (11) with Hydrogenated Vegetable Oil (6)", "decisionReason": "Dominant name claim, moisture_supported."},
+      "ruleIds": ["F1", "§7.2", "§7.3", "CL-SRC", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: shine ('glänzen', 'gesund glänzende Längen') is an outcome of the same lipid/guar conditioning route (F2) and Lactic/Citric Acid cannot create an independent shine route (F4).",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": ["gesund glänzende Längen (manufacturer)"], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "F2", "F3", "F4", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: Piroctone Olamine present but no E2 dandruff claim -> no treatment (U3); no U2 wording ('bei regelmäßiger Anwendung' is not frequency); no reset intent.",
+      "decisionTrace": "default regular; treatment checked and not fired (active_without_dandruff_positioning).",
+      "ruleIds": ["§9", "U1", "U2", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive/dry scalp claim; 'sanft zur Kopfhaut', 'dermatologisch bestätigt' (retailer) are mildness.",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine (15).",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable. T4 (ordinary target): W neighbor high -> not_suited (lower) -> flag fine."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal. T4: neighbor high -> acceptable -> flag normal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W moderate, C moderate -> acceptable; neighbors (W high, C high) give ideal (higher) -> no flag."},
+      "ruleIds": ["T1", "T4", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "moderate", "rationale": "S-ORDINARY way 1 (no qualifying E2 claim) and way 3 (recognized active Piroctone Olamine without dandruff claim; S-DANDRUFF). Lane recorded moderate because way 3 applies."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "S-DANDRUFF", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "high", "rationale": "I1 moderate -> regular; high confidence -> no I3.", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "high", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor high would make fine not_suited (T4, ordinary target)."},
+      {"code": "review_thickness_boundary", "detail": "normal: weightPotential neighbor high would make normal acceptable (T4)."}
+    ],
+    "informationalNotes": ["active_without_dandruff_positioning"]
+  },
+  "uncertainties": [
+    "13.8 ordinary-target confidence when way 1 (high) and way 3 (moderate) both apply is not specified; lane took moderate (no projection effect beyond confidence)."
+  ]
+}

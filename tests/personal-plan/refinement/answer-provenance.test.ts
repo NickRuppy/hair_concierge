@@ -4,7 +4,6 @@ import test from "node:test"
 import {
   applyUserAnswerProvenance,
   buildAssumedAnswerProvenance,
-  effectiveAnsweredQuestionIds,
   pruneAnswerProvenance,
   userAnsweredQuestionIds,
 } from "@/lib/personal-plan/refinement/answer-provenance"
@@ -121,17 +120,4 @@ test("userAnsweredQuestionIds returns an empty list when everything is assumed",
     userAnsweredQuestionIds(["current_product_categories", "wet_wash_frequency"], provenance),
     [],
   )
-})
-
-/* ── effectiveAnsweredQuestionIds: the projection-completeness read path ── */
-
-test("effectiveAnsweredQuestionIds is the full completed set regardless of provenance", () => {
-  assert.deepEqual(
-    effectiveAnsweredQuestionIds(["current_product_categories", "wet_wash_frequency"]),
-    ["current_product_categories", "wet_wash_frequency"],
-  )
-})
-
-test("effectiveAnsweredQuestionIds is empty when nothing is completed", () => {
-  assert.deepEqual(effectiveAnsweredQuestionIds([]), [])
 })

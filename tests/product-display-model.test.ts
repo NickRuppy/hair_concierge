@@ -2,11 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  buildCompactProductFacts,
   buildDrawerProductProfileRows,
   buildProductApplicationSentence,
   buildProductMatchSummary,
-  formatProductPrice,
   getProductCategoryLabel,
   getProductShopCtaLabel,
   getPurchaseLinkHelperText,
@@ -145,14 +143,6 @@ function createFineHairProfile(): HairProfile {
   }
 }
 
-test("buildCompactProductFacts returns whitelisted leave-in facts for a Wella-like product", () => {
-  assert.deepEqual(buildCompactProductFacts(createWellaLikeLeaveIn()), [
-    { label: "Leave-in", source: "category" },
-    { label: "Lotion", source: "format" },
-    { label: "Hitzeschutz", source: "heat_protection" },
-  ])
-})
-
 test("buildDrawerProductProfileRows maps leave-in metadata to user-facing profile rows", () => {
   assert.deepEqual(buildDrawerProductProfileRows(createWellaLikeLeaveIn()), [
     { label: "Textur/Form", value: "Lotion" },
@@ -209,14 +199,6 @@ test("non-leave-in products get drawer profile rows and a match summary without 
     /internal:|matched_profile|raw_unknown_code|schuppen|dryness|fine|0\.87/,
   )
   assert.doesNotMatch(rendered, /[a-z]+_[a-z]+/)
-})
-
-test("formatProductPrice formats EUR prices for German UI", () => {
-  assert.equal(formatProductPrice(18.51, "EUR"), "18,51 €")
-})
-
-test("formatProductPrice falls back to EUR for unexpected currency values", () => {
-  assert.equal(formatProductPrice(18.51, "NOT_A_CURRENCY"), "18,51 €")
 })
 
 test("buildProductApplicationSentence returns a complete usage sentence", () => {
@@ -367,4 +349,29 @@ test("fallback summaries drop internal-looking description text", () => {
 
   assert.match(summary, /Dieses Shampoo passt/)
   assert.doesNotMatch(summary, /internal:leave-in|matched-profile|raw_code/)
+})
+
+test("activated leave-in shows Wirkt erst mit Hitze", () => {
+  const product = createWellaLikeLeaveIn()
+  product.leave_in_specs = {
+    product_id: product.id,
+    format: "spray",
+    weight: "medium",
+    conditioner_relationship: "booster_only",
+    roles: ["styling_prep"],
+    provides_heat_protection: true,
+    heat_activation_required: true,
+    care_benefits: ["anti_frizz"],
+    ingredient_flags: [],
+    application_stage: ["towel_dry", "pre_heat"],
+  }
+  const rows = buildDrawerProductProfileRows(product)
+  assert.deepEqual(
+    rows.find((row) => row.label === "Rolle"),
+    { label: "Rolle", value: "Wirkt erst mit Hitze" },
+  )
+  assert.doesNotMatch(
+    buildProductMatchSummary(product, createFineHairProfile()),
+    /Booster nach dem Conditioner/,
+  )
 })
