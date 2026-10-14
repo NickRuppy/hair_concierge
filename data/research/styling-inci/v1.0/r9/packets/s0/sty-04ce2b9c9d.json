@@ -1,0 +1,124 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r8amend",
+  "sample_id": "sty-04ce2b9c9d",
+  "product": {
+    "confirmed_name": "VOLUMIZING STYLING POWDER",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "BALI GENTS",
+    "format": "powder"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 20,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 4,
+        "inci": "Fructose"
+      },
+      {
+        "rank": 5,
+        "inci": "Oryza Sativa Starch"
+      },
+      {
+        "rank": 6,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 7,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 8,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 10,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 11,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 12,
+        "inci": "Amyl Salicylate"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 14,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 15,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 16,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Vanillin"
+      },
+      {
+        "rank": 18,
+        "inci": "Cananga Odorata Flower Extract"
+      },
+      {
+        "rank": 19,
+        "inci": "Benzaldehyde"
+      },
+      {
+        "rank": 20,
+        "inci": "Methyl Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge des Puders in den Handflächen verreiben oder direkt auf den Haaransatz streuen. In das trockene Haar einmassieren und nach Belieben stylen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Leichtigkeit trifft auf maximales Volumen! Das Volumizing Styling Powder ist die perfekte Lösung für sofortige Fülle und einen natürlich strukturierten Look.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}
