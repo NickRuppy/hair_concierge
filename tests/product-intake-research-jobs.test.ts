@@ -301,7 +301,7 @@ test("workspace wiring keeps review cockpit separate from root app checks", () =
   )
   assert.equal(
     packageJson.scripts["products:intake:review-cockpit:verify"],
-    "npm run typecheck --workspace @chaarlie/product-intake-review && npm run lint --workspace @chaarlie/product-intake-review && npm run build --workspace @chaarlie/product-intake-review",
+    "npm run products:intake:review-cockpit:typecheck && npm run products:intake:review-cockpit:lint && npm run products:intake:review-cockpit:build",
   )
   assert.equal(
     packageJson.scripts["products:intake:codex-worker"],

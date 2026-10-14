@@ -415,13 +415,14 @@ test("Docker-backed Personal Plan jobs and commands stay retired", () => {
   )
 })
 
-test("scheduled CI explicitly forces every path-aware gate", () => {
+test("scheduled and manually dispatched CI force every path-aware gate", () => {
   const detectScope = jobSource(ciWorkflow, "detect-ci-scope")
 
   assert.match(ciWorkflow, /^  schedule:\n    - cron: "[^\n]+"$/m)
+  assert.match(ciWorkflow, /^  workflow_dispatch:$/m)
   assert.match(
     detectScope,
-    /^          FORCE_FULL_CI: \$\{\{ github\.event_name == 'schedule' \}\}$/m,
+    /^          FORCE_FULL_CI: \$\{\{ github\.event_name == 'schedule' \|\| github\.event_name == 'workflow_dispatch' \}\}$/m,
   )
 })
 

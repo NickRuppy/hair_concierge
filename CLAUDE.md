@@ -1,5 +1,9 @@
 # Chaarlie — Project Instructions
 
+## Verification resource budget
+
+Follow `docs/coding-verification.md`: focused owner/sibling checks during iteration; one shared heavy-job slot across apps/worktrees; final required verification consolidated by the orchestrator. Reuse valid evidence for unchanged content/environment. Advisory Codex reviewers run extra focused checks only for concrete gaps, not independent broad suites/builds. Use `test:personal-plan:nested` alongside `test:node` to avoid repeating top-level coverage. Raw commands/older worktrees use `~/.local/bin/coding-check -- <command> <args...>`; do not double-wrap gated npm scripts. Full CI contracts stay intact.
+
 ## Core Workflow
 
 ```text
