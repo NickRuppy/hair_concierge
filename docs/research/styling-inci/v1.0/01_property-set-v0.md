@@ -1,16 +1,24 @@
 # Styling v1.0 property set (v0 — Phase 2, pre-calibration)
 
-Status: **lock suspended (LOCK-1-S) — final re-check r12 pending**.
+Status: **lock re-instatement pending the independent review (R12-L)**.
 **Version note (2026-10-12, updated in place).** This file keeps its name and section numbers; the round-1 rulings change §2.2 (shine_finish job, R1-Q2), §2.3 (particulate count corrected to 11), §2.4 (PQ-69, R1-T), §2.10 („Kleber", name-derived words; RG-14, P-2), §2.11 (RG-10), §2.12 (RG-11, RG-12), §2.13 (RG-2, RG-8), §2.14 (RG-9), §2.15 (R1-Q4), §5.2–§5.4 and §5.6 (R1-Q1, RG-13, RG-19, P-1) and add §9 items 16–20. The standard v0.2 changelog lists every change with its ruling id; where this file and the standard differ, the standard's executable reading governs below the ledger.
 **Amendment (2026-10-13, Codex review; text only, no version bump).** Leftover text that contradicted R3-H2 (Flowing Form ⇒ held `smoothing_styler`), R3-H5 (Wella EIMI „Haltegrad"/„Haltestufe" is a 1–4 scale), R4-Q4 (thin-care fixative-led smoothing sprays), R4-H (§13.4 resolved) and R3-L / R4-L (agreement means resolved, not identical) is aligned in §2.1, §5.3, §5.6, §7 and §9 items 25, 32, 33. Next: the round-6 final confirmation round (`r6/`; round 5 aborted, never scored).
-**Amendment (2026-10-13, R6).** R6-Q1 replaces D3/R2-Q4 for the named NEQI products: both are held Styling `smoothing_styler`; the general route covers heat-activated smoothing-film blow-out sprays/lotion with trace-only care and no fixative, while Ultimate remains an explicit owner-named exception because it retains FX-1 r8. R6-T reads `target_zone` from the main required application and requires an explicit curl/wave define-or-shape promise for `definition` in descriptive sentences; R7-Q2 adds the product-name rule below. The historical targeted `r7/` re-check did not close the lock; lock suspended (LOCK-1-S) — final re-check r12 pending.
+**Amendment (2026-10-13, R6).** R6-Q1 replaces D3/R2-Q4 for the named NEQI products: both are held Styling `smoothing_styler`; the general route covers heat-activated smoothing-film blow-out sprays/lotion with trace-only care and no fixative, while Ultimate remains an explicit owner-named exception because it retains FX-1 r8. R6-T reads `target_zone` from the main required application and requires an explicit curl/wave define-or-shape promise for `definition` in descriptive sentences; R7-Q2 adds the product-name rule below. The historical targeted `r7/` re-check did not close the lock; lock re-instatement pending the independent review (R12-L).
 **Version note v0.5 (2026-10-13, updated in place).** The round-4 rulings act on §2.1 (R4-Q1 a one-job C1/C2 name meets the promise input of the evidence gate; R4-Q2 „Beach Waves" = salt-spray look, „Glaze"/„Topcoat"/„Gloss" = shine words; R4-Q3 care verbs and nouns only; R4-Q4 straightening limb for fixative-led smoothing sprays; R4-Q5 registry D6/D7 rows keep ruling; R4-Q6; R4-Q7 product noun vs qualifier), §2.2 (R4-Q4, RG4-13) and §2.12 (RG4-10, RG4-12, RG4-17) through the standard v0.5 (§4.1–§4.6, §5, §6.10), whose executable reading governs below the ledger; this file is edited in §2.3 (lexicon v0.5), §2.8 (RG4-15, RG4-27), §2.15 (RG4-18), §7 (R4-L lock scope, the RG4-18 crossing, the P4-1…P4-3 packet fields) and §9 items 29–32. The standard v0.5 changelog lists every change with its ruling id; the lock scope is in standard §14.1 and charter §15 P1.
 **Version note v0.4 (2026-10-13, updated in place).** The round-3 rulings change §2.1 (R3-Q2 shop-title fallback, R3-Q3 one-job name, R3-Q4 D7 straightening extension, RG3-1, RG3-4, RG3-12, RG3-19), §2.2 (R3-Q4, RG3-18), §2.3 (lexicon v0.4), §2.9 and §5.2 step 7 (R3-H replaces PH1-8's pack-vs-page `null`), §5.2 step 2 and §5.3 (Taft Paste re-read closed, RG3-10; Balea 1–7 words only, RG3-23), §5.4 („extra Halt", RG3-9), §5.6 (round-3 rows), §6 (negated hold claim, RG3-11), §7 (R3-L lock reading, P3-1) and add §9 items 25–28. The standard v0.4 changelog lists every change with its ruling id; the lock criteria with R3-L and R3-Q1 are in standard §14.1 and charter §15 P1.
 **Version note v0.3 (2026-10-12, updated in place).** The round-2 rulings change §2.1 (R2-Q1, R2-Q2, R2-Q4, RG2-19, RG2-20, RG2-24), §2.2 (RG2-13, RG2-14, RG2-15), §2.3 (lexicon v0.3; natural_film 10), §2.9 (Taft Balm „Halt 3" closed by capture), §2.10 (RG2-12, RG2-6), §2.11 (RG2-11), §2.12 (RG2-4…RG2-7, RG2-16), §2.13 (RG2-8, RG2-9), §2.14 (RG2-10), §2.15 (RG2-26), §5.4 and §5.6 (RG2-18), §6 (RG2-22), §7 (R2-Q3, RG2-24, RG2-26) and add §9 items 21–24. The standard v0.3 changelog lists every change with its ruling id.
-Charter: `00_category_charter.md` (its former proposals are cited as charter P1–P4, now ruled as PH1-11, PH1-7, PH1-8, PH1-9). Governing order: `plans/styling-concept/02-rulings.md` (SD1–SD5, D1–D8b, PH1-1…PH1-16, PH2-1…PH2-12, R1-Q1…R1-Q4, R1-T, R1-H1…R1-H3, R2-Q1…R2-Q4, R2-T, R2-H1…R2-H6, R3-L, R3-Q1…R3-Q4, R3-H, R3-T, R3-H2…R3-H4, R4-L, R4-Q1…R4-Q7, R4-T, R4-H, R6-Q1, R6-T, LOCK-1-S, R7-F, R7-Q1…R7-Q3, R8-Q1, R8-Q2, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, R10-Q1, R10-Q2, R11-Q1, R11-Q2) > charter > `plans/styling-concept/01-styling-concept.md` Rev. 2.
+Charter: `00_category_charter.md` (its former proposals are cited as charter P1–P4, now ruled as PH1-11, PH1-7, PH1-8, PH1-9). Governing order: `plans/styling-concept/02-rulings.md` (SD1–SD5, D1–D8b, PH1-1…PH1-16, PH2-1…PH2-12, R1-Q1…R1-Q4, R1-T, R1-H1…R1-H3, R2-Q1…R2-Q4, R2-T, R2-H1…R2-H6, R3-L, R3-Q1…R3-Q4, R3-H, R3-T, R3-H2…R3-H4, R4-L, R4-Q1…R4-Q7, R4-T, R4-H, R6-Q1, R6-T, LOCK-1-S, R7-F, R7-Q1…R7-Q3, R8-Q1, R8-Q2, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, R10-Q1, R10-Q2, R11-Q1, R11-Q2, R12-L) > charter > `plans/styling-concept/01-styling-concept.md` Rev. 2.
 Inherited method: Leave-In Standard v1.0 (cited "LI §x"); Mask Standard (cited "Mask §x").
 Evidence: `data/research/styling-inci/concept-v0/calibration-set-r2.json` (70 Styling records) with the raw INCI, claims and directions in `samples/*.json` and `round2/`. Every example names a real `sample_id`, re-read from the raw record on 2026-10-09. Counts marked **dry run** come from one scratch pass of the v0 rules over the 70 records. That pass is not committed; Phase 3 reproduces it under the versioned lexicon.
 Stop condition: research artifact only (charter §16). No catalog, Supabase, intake or matcher change.
+
+### Amendment (R12, 2026-10-14)
+
+Source: R12-L in the governing ledger. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
+
+| Amendment | Ruling / date | Consuming procedure |
+|---|---|---|
+| Secondary jobs are a SOFT signal with known judgement tolerance. Differences in which job fills a secondary slot never block the lock; all other user-facing fields still do. Matching may use secondary jobs only as a light extra signal, never for eligibility, exclusion or ranking floors. | R12, 2026-10-14 — R12-L | standard §6.10 / §14.1; property set §2.12 / §7; Personal Plan allocation |
 
 ### Amendment (R11, 2026-10-14)
 
@@ -43,7 +51,7 @@ Source: R10-Q1 and R10-Q2 in the governing ledger. The final re-check `r11/` use
 |---|---|---|
 | Refresh between washes in the Dry Shampoo sense alongside volume/texture triggers the Dry Shampoo tie even with a volume-first name; L'Oréal Elvital Big Hair Day ⇒ `dry_shampoo`. | R8, 2026-10-14 — R8-Q1 | standard §4.2 / §4.6 |
 | Puder/Powder names `volume`; promised texture/grip is an eligible secondary. Redken Powder Grip is a two-job name and falls to its lead line. | R8, 2026-10-14 — R8-Q2 | standard §4.2 / §6.10; property set §2.12 |
-| Moroccanoil Glättende Creme has no care + curl-definition tie under R7-Q2; the border rules route it to `leave_in`. Current status: lock suspended (LOCK-1-S) — final re-check r12 pending. | R8, 2026-10-14 — R8-H | standard §4.2 / §4.6; header |
+| Moroccanoil Glättende Creme has no care + curl-definition tie under R7-Q2; the border rules route it to `leave_in`. Current status: lock re-instatement pending the independent review (R12-L). | R8, 2026-10-14 — R8-H | standard §4.2 / §4.6; header |
 
 ### Amendment (R7 rulings, 2026-10-13)
 
@@ -52,7 +60,7 @@ Source: R10-Q1 and R10-Q2 in the governing ledger. The final re-check `r11/` use
 | A no-job lead falls through to the next eligible C1/C2 promise line's first vocabulary job; if none has a job, `primary_job: null` + internal `primary_job_unresolved`. A promise need not name a vocabulary job, and the one-job C1/C2 name may meet the gate without a promise line. | R7-F, M3 | §1 row 12, §2.12 |
 | An adjective before a job phrase supplies no separate job (Wellaflex ⇒ `definition`); curl/wave words in the product's own name supply definition, while descriptive sentences need an explicit define/shape-curls-or-waves promise. Non-curl „Definition“/„Define“ supplies none (Bali Gents; Balea Sea Salt Care & Define). | R7-Q1, R7-Q2 | §2.12; standard §4.2 / §6.10 |
 | All brand line / collection names are excluded from job words (Frizz Ease, Traumlocken, Volume Lift, Diamond Sleek, Glow & Shine, Nutricurls …); the product's own name words decide. | R7-Q3 | §2.12 |
-| Status is lock suspended (LOCK-1-S) — final re-check r12 pending; worked examples are corrected in the standard, without changing historical classifications. | LOCK-1-S, L2, M2 | header; standard §11.3 / §11.8 / §11.9 |
+| Status is lock re-instatement pending the independent review (R12-L); worked examples are corrected in the standard, without changing historical classifications. | LOCK-1-S, L2, M2 | header; standard §11.3 / §11.8 / §11.9 |
 
 ## 0. Conventions for every property
 
@@ -241,6 +249,15 @@ Subtype extras are in §3 and derived echo fields and notes in §4. Section numb
 | Calibration | `schwarzkopf-taft-matt-wax-halt-5` ⇒ matt (C2 „mattes, nicht glänzendes Finish"; consistent with its wax/fatty-acid chassis). `american-crew-pomade` ⇒ glänzend (cross-market C2 „Mittlerer Halt – viel Glanz", Glanzfaktor 9). `schwarzkopf-taft-haarspray-classic-halt-3` ⇒ unbekannt (no finish claim; the calibration set currently says „natürlich", §9 item 4). |
 
 ### 2.12 `primary_job` + `secondary_jobs`
+
+**Secondary jobs `[R12-L]` are a SOFT signal with known judgement tolerance. Matching may use them only as a light extra signal, never for eligibility, exclusion or ranking floors. Differences in which job fills a secondary slot never block the lock; all other user-facing fields still do.**
+
+#### R12-L adjudicated examples (verbatim from the owner ledger)
+
+- Bali Curls Volumizing Curl Spray ⇒ [volume, texture] (curl revival is refresh, not definition — lane A right)
+- Balea Locken Crunchgel ⇒ [frizz_control, texture] („Das Haar erhält eine flexible Struktur" = stated result ⇒ strong texture; curl Sprungkraft weak)
+- Balea Pro Styling Cream Traumlocken ⇒ [frizz_control, hold_fix] (graded hold = strong; „natürlicher Glanz" = finish description ⇒ weak)
+- Balea Finishing Spray Glow & Care ⇒ [frizz_control, sleek] („bleibt … glatt" weak, slot free)
 
 | Field | Definition |
 |---|---|
@@ -552,7 +569,7 @@ Every blind-to-final change is recorded with its reason.
 - Two independent claim normalisations of the hold level (PH1-11, charter §15 P1 criterion c): every mismatch is resolved by a proven lane error or a closed rule gap (R3-H4 (c)); literal identity is not required.
 - **Lock reading (R3-L):** for criterion (b), „the lanes agree" means **resolved, not identical** — every remaining A/B disagreement is a lane error proven against a clear rule or traces to a closed rule gap, and a final confirmation round shows only lane errors and no new rule gaps (standard §14.1). It also governs criterion (c), hold levels (R3-H4 (c), standard §14.1 (c)). `smoothing_styler` may lock below 5 as a market-size exception (R3-Q1).
 - **S0 packet (P3-1):** `identity.identity_status` (and `identity.inci_alt` next to it) ships in every S0 packet, verified records included.
-- **Lock scope (R4-L):** only differences in **user-facing fields** block the lock — route and recommendability (incl. held vs committed and the evidence gate), subtype, `chaarlie_hold_level`, `weight`, `finish`, `flexibility`, `target_zone`, `application_moment`, `primary_job` and `secondary_jobs`, `provides_heat_protection`, and the user-shown notes (alcohol and buildup notes, neutral fact, „Hitzeschutz laut Hersteller", hold display). Differences confined to the **calculation log** — reason code, rule path, internal review triggers, confidence, internal flags, lexicon placements that move no value — do not block: they are fixed in the text and documented, without a further round (standard §14.1).
+- **Lock scope (R4-L, R12-L):** only differences in **user-facing fields** block the lock — route and recommendability (incl. held vs committed and the evidence gate), subtype, `chaarlie_hold_level`, `weight`, `finish`, `flexibility`, `target_zone`, `application_moment`, `primary_job`, `provides_heat_protection`, and the user-shown notes (alcohol and buildup notes, neutral fact, „Hitzeschutz laut Hersteller", hold display). **`secondary_jobs` is a SOFT field `[R12-L]`: differences in which job fills a secondary slot never block the lock. All other user-facing fields listed here still block the lock.** Differences confined to the **calculation log** — reason code, rule path, internal review triggers, confidence, internal flags, lexicon placements that move no value — do not block: they are fixed in the text and documented, without a further round (standard §14.1).
 - **Packet fields since round 5 (P4-1…P4-3):** directions only from a G1 tier (a C5 page ships as `missing`); a heat sentence inside a C1/C2 promise line also ships as its own heat-protection claim; every promise line carries `position` (`pack_front` · `headline` · `bullet` · `body` · `unknown`).
 
 ## 8. Phase 1 rulings on PS1–PS6 (2026-10-09)

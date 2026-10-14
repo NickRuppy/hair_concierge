@@ -14,7 +14,7 @@ evidence_file: plans/styling-concept/03-d5-evidence.md
 
 ## Authority and checkpoint status
 
-**DRAFT — not in force; for owner review; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check, integration not started**
+**DRAFT — not in force; for owner review; Styling v1.0 lock re-instatement pending the independent review (R12-L), integration not started**
 
 This document records the owner-ruled Styling policy for the Personal Plan and the decisions still needed before integration. It follows the structure of the [category design framework](../category-design-framework.md) and the Dry Shampoo, Heat Protectant, and Leave-in decisions. It does not turn the concept's matching sketch into confirmed policy.
 
@@ -24,7 +24,7 @@ Authority order:
 2. the [Styling classification standard](../../../research/styling-inci/v1.0/styling-classification-standard.md), [evidence lexicon v0.5](../../../research/styling-inci/v1.0/02_evidence_lexicon.v0.5.md), [property set](../../../research/styling-inci/v1.0/01_property-set-v0.md), and [category charter](../../../research/styling-inci/v1.0/00_category_charter.md), under the suspended-lock status above;
 3. [Concept Rev. 2](../../../../plans/styling-concept/01-styling-concept.md), where not superseded, with [D5 evidence](../../../../plans/styling-concept/03-d5-evidence.md) as rationale for product composition.
 
-**Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** This does not approve this full Personal Plan checkpoint or release held products. Changes to the research engine require an explicit owner amendment. No runtime, catalog, Product Intake, Supabase, or production change is made by this draft.
+**Styling v1.0 lock re-instatement pending the independent review (R12-L).** This does not approve this full Personal Plan checkpoint or release held products. Changes to the research engine require an explicit owner amendment. No runtime, catalog, Product Intake, Supabase, or production change is made by this draft.
 
 ## Intended user decision
 
@@ -130,6 +130,8 @@ The concept also sketches a `not_needed` branch when neither signal applies. Its
 These examples do not silently approve the exact trigger set or the concept's subtype choices. Care-led frizz must respect the Leave-in/Oil ownership boundary before a Styling job is assigned.
 
 ## Product allocation and combinations
+
+`secondary_jobs` is a soft signal with known judgement tolerance; matching may use it only as a light extra signal, never for eligibility, exclusion or ranking floors (`R12-L`).
 
 `D5` fixes **one product per job**, with one shaping styler as the normal setup.
 
@@ -277,7 +279,7 @@ Product-specific research uncertainties and weak lexicon evidence retain the rul
 
 ## Handoff and stop gates
 
-**Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; the Personal Plan Styling decision remains a draft for owner review. Integration has not started.
+**Styling v1.0 lock re-instatement pending the independent review (R12-L)**; the Personal Plan Styling decision remains a draft for owner review. Integration has not started.
 
 The queued Leave-in addendum must be refreshed with the later ruled moves and approved before held products become matchable/recommendable. The Heat Protectant companion decision needs the documented `PH1-15` amendment carried through in the later integration work. Neither dependency is cleared by creating this file.
 

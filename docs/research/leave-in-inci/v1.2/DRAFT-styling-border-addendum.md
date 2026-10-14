@@ -1,16 +1,22 @@
 # Leave-In Research and Classification Standard — Styling-border addendum (DRAFT overlay)
 
-Status: **DRAFT — not in force; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; every move of an already-ruled Leave-in product needs owner approval.**
+Status: **DRAFT — not in force; Styling v1.0 lock re-instatement pending the independent review (R12-L); every move of an already-ruled Leave-in product needs owner approval.**
 Proposed document version: `v1.2` · proposed engine version: `leave-in-inci-v1.2` (both open, §6 item O-10)
 Base: **Standard v1.1** = Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, sha256 `7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace`, 421855 bytes) + the T20 overlay (`docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md`, sha256 `9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b`, 21091 bytes). **Both byte-identical, not edited.**
-Mirrors (owner rulings, not new rules): `plans/styling-concept/02-rulings.md`, through R9 and LOCK-1-S. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; use the current standard v0.5 and lexicon as amended through R9. Where the Styling standard and the ledger differ, **the ledger governs**. Historical D3/R2-Q4 NEQI routes are superseded by R6-Q1; their original artifacts remain frozen.
+Mirrors (owner rulings, not new rules): `plans/styling-concept/02-rulings.md`, through R12-L and LOCK-1-S. **Styling v1.0 lock re-instatement pending the independent review (R12-L)**; use the current standard v0.5 and lexicon as amended through R12-L. Where the Styling standard and the ledger differ, **the ledger governs**. Historical D3/R2-Q4 NEQI routes are superseded by R6-Q1; their original artifacts remain frozen.
 Scope: the Leave-in ↔ Styling border only — G0 (§2.1–§2.3.2), the L5 fixative enumeration (§5), the Polysilicone-9 placement, the WT rich-member list (§5 L3, §7.5), and the dual-use directions clause for care creams (§2.4 rule 2).
 Companion: `DRAFT-styling-border-affected-products.md` (this folder) — every product the addendum would move or newly classify.
-Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** This Leave-in overlay is not locked or activated; its own calibration and approval remain open. The two NEQI category moves are already owner-approved (R6-Q1).
+Refreshed: 2026-10-14. **Styling v1.0 lock re-instatement pending the independent review (R12-L).** This Leave-in overlay is not locked or activated; its own calibration and approval remain open. The two NEQI category moves are already owner-approved (R6-Q1).
 
 **Location.** The Leave-in standard has an overlay convention (README, „Versioning note"; the T20 overlay): `v1.0/` is byte-frozen and hash-pinned, and a policy change lands as an overlay in a **sibling version root** (`v1.1/` for T20). This draft therefore sits in `docs/research/leave-in-inci/v1.2/`, not in `v1.0/addenda/`. On approval it is renamed `leave-in-classification-overlay.v1.2.md` and gets its lock receipt and manifest under `data/research/leave-in-inci/v1.2/`.
 
 ---
+
+### Amendment (R12, 2026-10-14)
+
+| Amendment | Ruling / date | Scope |
+|---|---|---|
+| Styling lock re-instatement is pending independent review; secondary jobs are a SOFT signal only under the Styling standard. This does not change the Leave-in border rules or approve this overlay. | R12, 2026-10-14 — R12-L | Research disposition; Styling standard §6.10 / §14.1 |
 
 ## 0. How to read this overlay
 
@@ -19,7 +25,7 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 **What the addendum does.** The Styling owner rulings moved the Leave-in ↔ Styling border. PH1-16 kept the locked Leave-in letter unchanged and parked those border rules in the Styling standard's own lists. This addendum writes the same rules into Leave-in wording, so that both engines read **one** border: a product the Styling S0 routes to Styling is excluded at Leave-in G0, and a product Styling routes to Leave-in is still claimed here. It adds no rule the Styling rulings did not decide. Where the Leave-in wording of a Styling rule is not settled by the rulings, the point is listed in §6 instead of being decided.
 
 **Approval protocol (PH1-16).**
-1. **Research status:** Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; this draft remains queued pending that re-check.
+1. **Research status:** Styling v1.0 lock re-instatement pending the independent review (R12-L); this draft remains queued pending that independent review.
 2. The owner reads the amendments and the §6 open items.
 3. The owner reads every **already-ruled Leave-in product** that would move (companion file, part A). **Two moves are ALREADY APPROVED by the owner under R6-Q1 (2026-10-13): NEQI Diamond Glass Ultimate (historical D3/T15) and NEQI Diamond Glass All (historical R2-Q4). No other already-ruled Leave-in product moves.** The 29-record audit includes 25 Leave-in-positive rulings and 4 already-excluded corpus records; 23 positive rulings and all 4 exclusions stay put.
 4. On approval: rename to `leave-in-classification-overlay.v1.2.md`; write `data/research/leave-in-inci/v1.2/` (lock receipt, manifest; README row); the Styling lexicon cites the Leave-in L5 list instead of holding FX-4 itself (lexicon §7); the held Styling records are released (PH2-2). Approval of this text authorises no catalog, Supabase, matcher or Product Intake change.
@@ -245,7 +251,7 @@ Recounted with Node on 2026-10-13 from the **143-record r6 cohort and both r6 la
 | Other explicit border statuses | **47**: 45 direct PH2-1 products without a Leave-in ruling + Polysilicone-9 case + GUHL 3in1 | no Styling destination change; the 46 direct 3.4(ii) records include already-excluded Alcina Föhn Lotion, counted in the 29, not twice here |
 | Further border products staying put | **16** | care/Leave-in, mixed review or Heat Protectant destinations retained; listed by name in companion part D |
 
-LOCK-1-S leaves the old “confirm in round 4” gates pending the final targeted re-check. This recount does not re-run lanes, change research data or apply any release.
+LOCK-1-S leaves the old “confirm in round 4” gates pending the independent review (R12-L). This recount does not re-run lanes, change research data or apply any release.
 
 ---
 
@@ -254,7 +260,7 @@ LOCK-1-S leaves the old “confirm in round 4” gates pending the final targete
 - **§1.1 conservative-failure invariant.** Each amendment states its failure direction above. Every unresolved limb (A2 limb 1 on FX-2c or Polysilicone-9; A2 limb 2 without a yardstick) routes to `provisional_boundary` + review; no amendment creates a Leave-in claim or raises a value on an unresolved read. A held Styling profile becomes matchable only after overlay approval and with its evidence gates satisfied. The category destination is an owner product call (D6, D7, R3-Q4/R4-Q4, PH2-1, R6-Q1), not a formula inference; both NEQI category moves are already approved.
 - **G4 evidence ceiling.** Only rank comparisons on one list and closed enumerations; no percentage, ratio or dose. A2 limb 2's yardstick is an ordinal position, as in PH1-13.
 - **Authority clause.** The v1.0 standard admits no science absent from SR/HO. A1–A4, A9–A11 are owner product calls with T15 as precedent (an adjudicated boundary, not a science claim). A5–A7 are enumerations of trade-named film formers with a CosIng basis (Styling lexicon T1/T3/T4 tiers). A8 rests on PH1-2/PS3 and Mask R8, **not on SR** — §6 O-6.
-- **Calibration honesty.** This draft has **not** been run by two sealed Leave-in lanes. The corpus check in §4 is one scripted pass plus a reading of the Styling lanes' own §4.5 re-runs of the v1.1 letter. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; the r6/r7 readings do not themselves calibrate or activate this Leave-in overlay.
+- **Calibration honesty.** This draft has **not** been run by two sealed Leave-in lanes. The corpus check in §4 is one scripted pass plus a reading of the Styling lanes' own §4.5 re-runs of the v1.1 letter. **Styling v1.0 lock re-instatement pending the independent review (R12-L)**; the r6/r7 readings do not themselves calibrate or activate this Leave-in overlay.
 
 ---
 
@@ -287,8 +293,8 @@ The v1.0 ledger (`v1.0/rule-changes.md`) and the v1.1 block (T20 overlay §8) ar
 
 ## 8. Source anchors
 
-- Rulings: `plans/styling-concept/02-rulings.md` (D2, D3, D6, D7, PH1-6, PH1-10, PH1-12, PH1-13, PH1-14, PH1-16, PH2-1, PH2-2, PH2-3, PH2-12, R1-Q2, R1-T, R1-H3, R2-Q1, R2-Q2, R2-Q4, R2-H2, R2-H4, R3-Q4, R3-H2, R3-H3, R3-H4, R3-T, R4-Q1…Q7, R4-H, R6-Q1, R6-T, R7-Q2, R7-Q3, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, LOCK-1-S).
-- Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; standard v0.5 amended through R9: §3.2 (markers), §4.1 (owner-named limits, R2-H2), §4.2 (lead order, `li_function`, R1-Q2), §4.3 (3.1 exception test, 3.4 (i) limbs and (i′)–(iii), D6), §4.5 (double-claim hold), §4.6 (registry), §13.3 items 1 and 6.
+- Rulings: `plans/styling-concept/02-rulings.md` (D2, D3, D6, D7, PH1-6, PH1-10, PH1-12, PH1-13, PH1-14, PH1-16, PH2-1, PH2-2, PH2-3, PH2-12, R1-Q2, R1-T, R1-H3, R2-Q1, R2-Q2, R2-Q4, R2-H2, R2-H4, R3-Q4, R3-H2, R3-H3, R3-H4, R3-T, R4-Q1…Q7, R4-H, R6-Q1, R6-T, R7-Q2, R7-Q3, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, R12-L, LOCK-1-S).
+- Styling v1.0 lock re-instatement pending the independent review (R12-L); standard v0.5 amended through R12-L: §3.2 (markers), §4.1 (owner-named limits, R2-H2), §4.2 (lead order, `li_function`, R1-Q2), §4.3 (3.1 exception test, 3.4 (i) limbs and (i′)–(iii), D6), §4.5 (double-claim hold), §4.6 (registry), §13.3 items 1 and 6.
 - Styling lexicon v0.5, under the same suspended-lock status: §0.2 (T_LI, T_S), §1A FX-1…FX-4, FX-R, FX-U, RH-1; §1B WL-1…WL-6, SI-1, SI-4; §2 consumer index (S0 rows); §5 items 7–9; §7.
 - Leave-in standard v1.0: §1.1, §2.1, §2.2, §2.3, §2.3.1, §2.3.2, §2.4 rule 2, §3.1.1, §5 L2/L3/L5, §7.5, §7.6, §7.7, §8.5, §13.3, §17.19, §17.21. T20 overlay v1.1 §0, §8 (overlay pattern).
 - Data: `data/research/leave-in-inci/v1.1/lab-fixture.json` (19 records); `data/research/styling-inci/v1.0/r6/cohort.json`; `…/r7/cohort.json`; `…/blind-lane-A-r6/results.json`; `…/blind-lane-B-r6/results.json`; `…/blind-lane-A-r7/results.json`; `…/blind-lane-B-r7/results.json`; `…/round-6/report.md`; `…/round-7/report.md`; `data/research/styling-inci/concept-v0/round2/G0-border-verdicts.json` (concept-phase Leave-in G0 letter reads, research only).
