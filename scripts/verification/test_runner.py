@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import os
+import json
+import fcntl
 import signal
 import shutil
 import subprocess
@@ -291,6 +293,54 @@ time.sleep(30)
         )
         self.assertEqual(result.returncode, 37, result.stderr)
         self.assertIn("hosted build reached Next", result.stdout)
+
+    def test_status_shows_active_owner_and_idle_after_release(self) -> None:
+        entered = self.root / "status-entered"
+        release = self.root / "status-release"
+        program = self.write_program(
+            "status-owner.py",
+            "from pathlib import Path\nimport sys,time\n"
+            "entered,release=map(Path,sys.argv[1:])\nentered.touch()\n"
+            "while not release.exists(): time.sleep(0.02)\n",
+        )
+        owner = self.launch("--", PYTHON, str(program), str(entered), str(release))
+        try:
+            wait_for(entered)
+            result = self.invoke("--status")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            status = json.loads(result.stdout)
+            self.assertEqual(status["state"], "running")
+            self.assertEqual(status["pid"], owner.pid)
+            self.assertEqual(status["cwd"], str(self.work_one.resolve()))
+            self.assertEqual(status["command"], Path(PYTHON).name)
+            self.assertNotIn(str(program), result.stdout)
+            bypass = self.invoke(
+                "--", PYTHON, "-c", "pass", env=self.environment(CODING_VERIFY_BYPASS="1")
+            )
+            self.assertEqual(bypass.returncode, 0, bypass.stderr)
+            self.assertEqual(json.loads(self.invoke("--status").stdout)["pid"], owner.pid)
+        finally:
+            release.touch()
+            owner.wait(timeout=3)
+        self.assertEqual(json.loads(self.invoke("--status").stdout), {"state": "idle"})
+
+    def test_idle_status_probes_do_not_report_each_other_as_jobs(self) -> None:
+        self.lock_dir.mkdir()
+        with (self.lock_dir / "slot.lock").open("w+") as another_status_probe:
+            fcntl.flock(another_status_probe, fcntl.LOCK_SH | fcntl.LOCK_NB)
+            result = self.invoke("--status")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout), {"state": "idle"})
+
+    def test_status_ignores_stale_sidecar_when_kernel_lock_is_free(self) -> None:
+        self.lock_dir.mkdir()
+        (self.lock_dir / "slot.lock").touch()
+        (self.lock_dir / "current.json").write_text(
+            json.dumps({"pid": os.getpid(), "cwd": str(self.work_one), "command": "stale"})
+        )
+        result = self.invoke("--status")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout), {"state": "idle"})
 
 if __name__ == "__main__":
     unittest.main()

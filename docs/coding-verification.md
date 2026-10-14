@@ -14,6 +14,10 @@ Composite commands take the slot through their leaves. Do not wrap gated npm scr
 
 ## Consolidate verification
 
+Start with `npm run verification:plan -- --base origin/main` to collect committed branch changes plus staged, unstaged and untracked paths. Use `--json` for structured output, or `--files <paths...>` to inspect explicit paths. The plan recommends focused owner tests for known seams and flags unknown/mixed changes for owner review. Recommendations cover iteration, never complete release coverage; no changes detected is not a verification waiver. No tests run automatically, and required CI gates remain intact.
+
+Before launching another heavy check, use `~/.local/bin/coding-check --status`. It reports the shared slot's kernel state and the recorded supervisor PID/cwd/command basename when available. This is local slot ownership, not total computer activity: old unwrapped jobs, remote jobs and emergency bypasses are outside the status command. Metadata is advisory; stale metadata cannot mark a free lock as running. After updating the runner, run `npm run verification:install` to refresh the installed command.
+
 - Workers run focused owner/sibling checks and report command, content/revision, working directory, environment and result.
 - The orchestrator runs required final checks once for combined proposed content. Relevant code/config/fixture/environment changes invalidate evidence.
 - Advisory reviewers inspect recorded evidence and run extra focused checks for concrete gaps. They do not launch whole suites/builds to reconfirm unchanged content.
