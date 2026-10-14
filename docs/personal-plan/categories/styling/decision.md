@@ -3,8 +3,8 @@ category: styling
 document_type: decision
 status: in_progress
 decision_version: 1
-last_reviewed_at: 2026-10-13
-research_engine_status: lock_suspended (LOCK-1-S)
+last_reviewed_at: 2026-10-14
+research_engine_status: lock_reinstatement_pending_independent_review (R12-L)
 integration_status: not_started
 owner_ledger: plans/styling-concept/02-rulings.md
 evidence_file: plans/styling-concept/03-d5-evidence.md
@@ -140,7 +140,7 @@ These examples do not silently approve the exact trigger set or the concept's su
 | Normal shaping job | One shaping styler; never two of the same subtype |
 | Blow-dried or heat-styled look | Hairspray is the default finisher |
 | Air-dried curls or short-hair molding | Hairspray appears only on `lost_shape` |
-| Curly/coily hair with normal–coarse thickness **or** dry ends | `curl_cream` plus `gel` is allowed for different jobs: cream first for softness/definition, gel last for hold |
+| Curly/coily hair with normal–coarse thickness **or** dry ends | `curl_cream` plus `gel` is allowed: two stylers with different jobs (D5) |
 | Day-2 curl/wave refresh | Reuse the existing gel with water; a separate `refresher` is only an optional extra |
 
 The ceiling is **three Styling products**. Separate Leave-in and Heat Protectant products do not count toward that ceiling (`D5`). A Styling product that also covers heat remains one Styling product; the additional role does not add another product.
@@ -202,7 +202,7 @@ Exact application and role allocation must respect verified directions. The ledg
 
 `PH1-16` and `PH2-2` hold every Styling route that the unchanged Leave-in standard could also claim, including the ruled D6/D7 moves, straightening amendments, R6-Q1 smoothing-film routes, and relevant owner-named records.
 
-Held records retain a **complete Styling profile marked provisional**, with their lean subtype. They may count toward research coverage, reported separately, but are **not matchable or recommendable until the Leave-in addendum is approved**. Historically, `LOCK-1` said the addendum was drafted and queued for a post-lock refresh; that claim is suspended by `LOCK-1-S` pending the final targeted re-check. Research status alone does not release these products.
+Held records retain a **complete Styling profile marked provisional**, with their lean subtype. They may count toward research coverage, reported separately, but are **not matchable or recommendable until the Leave-in addendum is approved**. Historically, `LOCK-1` said the addendum was drafted and queued for a post-lock refresh; lock re-instatement is now pending the independent review (R12-L, 2026-10-14), with `LOCK-1-S` still in force. Research status alone does not release these products.
 
 The addendum must carry the later straightening/smoothing extensions and owner-approved moves, including both NEQI Diamond Glass products. Already-ruled Leave-in products that move require the owner handling specified in `PH1-16`; a draft destination is not catalog publication.
 

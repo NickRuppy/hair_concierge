@@ -1,12 +1,12 @@
 # Styling evidence lexicon — v0.5
 
 Status: **lock re-instatement pending the independent review (R12-L)**.
-Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r10amend`).
+Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r12amend`, amended through R12, 2026-10-14).
 Scope: leave-on styling products (12 subtypes), German/EU market, plus the boundary families the S0 gate reads at the edges of Leave-in, Heat Protectant, Oil and Dry Shampoo.
 
 ### Amendment (R12, 2026-10-14)
 
-Source: R12-L in the governing ledger. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
+Source: R12-L in the governing ledger. Current engine: `styling-inci-v0.5-r12amend` (amended through R12, 2026-10-14); formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
 
 | Amendment | Ruling / date | Consuming procedure |
 |---|---|---|

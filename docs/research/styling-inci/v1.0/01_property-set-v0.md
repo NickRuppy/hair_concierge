@@ -14,7 +14,7 @@ Stop condition: research artifact only (charter §16). No catalog, Supabase, int
 
 ### Amendment (R12, 2026-10-14)
 
-Source: R12-L in the governing ledger. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
+Source: R12-L in the governing ledger. Current engine: `styling-inci-v0.5-r12amend` (amended through R12, 2026-10-14); formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
 
 | Amendment | Ruling / date | Consuming procedure |
 |---|---|---|
@@ -253,6 +253,8 @@ Subtype extras are in §3 and derived echo fields and notes in §4. Section numb
 **Secondary jobs `[R12-L]` are a SOFT signal with known judgement tolerance. Matching may use them only as a light extra signal, never for eligibility, exclusion or ranking floors. Differences in which job fills a secondary slot never block the lock; all other user-facing fields still do.**
 
 #### R12-L adjudicated examples (verbatim from the owner ledger)
+
+These four examples are **product-specific owner-adjudicated outcomes (R12-L), not a general strong/weak rule**.
 
 - Bali Curls Volumizing Curl Spray ⇒ [volume, texture] (curl revival is refresh, not definition — lane A right)
 - Balea Locken Crunchgel ⇒ [frizz_control, texture] („Das Haar erhält eine flexible Struktur" = stated result ⇒ strong texture; curl Sprungkraft weak)

@@ -1,8 +1,8 @@
 # Styling-border addendum — affected products (DRAFT)
 
-Status: **DRAFT — not in force; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; every move of an already-ruled Leave-in product needs owner approval.**
+Status: **DRAFT — not in force; Styling v1.0 lock re-instatement pending the independent review (R12-L); every move of an already-ruled Leave-in product needs owner approval.**
 Companion to `DRAFT-styling-border-addendum.md` (this folder); A1–A11 and the remaining §6 open items refer to that file.
-Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** No standard, ledger, research data, catalog or database was changed.
+Refreshed: 2026-10-14. **Styling v1.0 lock re-instatement pending the independent review (R12-L).** No standard, ledger, research data, catalog or database was changed.
 
 ## How this list was built
 
@@ -10,6 +10,7 @@ Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the fina
 - **Styling:** Node mapped each lane's opaque ids through its own `id_map` in `data/research/styling-inci/v1.0/r6/cohort.json` (143) and `r7/cohort.json` (69 targeted records). Read `blind-lane-A-r6/results.json`, `blind-lane-B-r6/results.json`, `blind-lane-A-r7/results.json`, `blind-lane-B-r7/results.json`. For each lane separately, r7 replaces r6 by source slug; non-targeted records retain r6. Do not merge the two lanes or treat r7's 69 as the full cohort.
 - **Hold predicate:** `boundary_reason` or `reason_code` equals `pending_leave_in_addendum`. Both r6 lanes held 18; both r7 lanes held 15 within their targeted population; the final 143-record merged set is **21**, identical by slug and lean subtype between lanes. R6-Q1 adds John Frieda Unendlich Smooth and the two NEQIs; R4-Q4's Balea Glattspray is already held in r6.
 - **Direct scope predicate:** final lane A selects actual committed Styling with `pair_rule: 3.4(ii)`, or (r7's representation without that field) `li_function: no` plus a 3.4(ii) path. Require actual `route: styling` and no hold; a rejected/counterfactual path is not a destination. Both lanes' final subtypes are checked. There are **46**, including already-excluded Alcina Föhn Lotion; part C1 lists the other **45**.
+- **Latest-lane re-check (2026-10-14):** this list was re-checked against both lanes r6–r12, replacing targeted records by source slug within each lane. Each latest merged lane still has 143 records and 21 holds; the only destination/subtype/hold change from r6+r7 is Moroccanoil Glättende Creme ⇒ `leave_in` (R8-H), already reflected in part D.
 - This is a source-data recount and rule/identity review, **not a new classification run**. Live catalog state was not queried.
 
 | Count (Node, unique products) | Value |
@@ -22,7 +23,7 @@ Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the fina
 | Other explicit border statuses | **47**: 45 direct scope + 1 Polysilicone-9 + 1 GUHL 3in1 |
 | Further border products staying put | **16** (part D) |
 
-The two moves are included in the 21 holds; these are **not additive counts**. The final targeted re-check under LOCK-1-S must close the old round-4 confirmation gates.
+The two moves are included in the 21 holds; these are **not additive counts**. Under R12-L, secondary-slot differences are soft and do not block; LOCK-1-S remains in force pending the independent review, with no LOCK-2 issued.
 
 ---
 
@@ -60,7 +61,7 @@ No corpus record contains an FX-4 member (A5), Polysilicone-9 (A6) or Polyquater
 
 ### A2. Products ruled Leave-in by owner rulings on the Styling side (10)
 
-Source: Styling v1.0 §4.6 registry and the ledger, under **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**. Nine are in the r6 cohort: final lanes retain eight Leave-in destinations and hold NEQI All as `smoothing_styler`; syoss Curl Control remains excluded from the DE cohort (not sold in Germany).
+Source: Styling v1.0 §4.6 registry and the ledger, under **Styling v1.0 lock re-instatement pending the independent review (R12-L)**. Nine are in the r6 cohort: final lanes retain eight Leave-in destinations and hold NEQI All as `smoothing_styler`; syoss Curl Control remains excluded from the DE cohort (not sold in Germany).
 
 | Product | Slug | Current Leave-in status | Outcome under the addendum | Reason | Owner approval |
 |---|---|---|---|---|---|
