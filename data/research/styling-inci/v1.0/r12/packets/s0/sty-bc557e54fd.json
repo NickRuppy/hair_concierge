@@ -1,0 +1,116 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-bc557e54fd",
+  "product": {
+    "confirmed_name": "EIMI Texture Ocean Spritz (Texturizing Salt Spray)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Wella Professionals",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 10,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Sodium Chloride"
+      },
+      {
+        "rank": 4,
+        "inci": "Magnesium Sulfate"
+      },
+      {
+        "rank": 5,
+        "inci": "Sorbitol"
+      },
+      {
+        "rank": 6,
+        "inci": "Peg-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Pvp"
+      },
+      {
+        "rank": 9,
+        "inci": "Fragrance/Parfum"
+      },
+      {
+        "rank": 10,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das trockene oder leicht feuchte Haar sprühen, dann mit den Fingern die Frisur in Form bringen. Für eine noch grobere Textur das Haar nach dem Formen föhnen",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Kreiere mit EIMI Ocean Spritz, einem natürlichen Mineralsalzspray, das das Haar vor Austrocknung und UV-Schäden schützt, eine lockere, strandähnliche Textur. [CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Professionelles Styling-Salzspray mit [CLAIM] Halt",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit natürlichem Mineralsalz für die Strandfrisur",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Schutz vor Austrocknung und UV-Schäden",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Beachy-Look",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

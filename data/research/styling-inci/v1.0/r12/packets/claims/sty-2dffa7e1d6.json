@@ -1,0 +1,43 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-2dffa7e1d6",
+  "brand": "LANGHAARMÄDCHEN",
+  "confirmed_name": "Lockenspray Natur Lockenwunder",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "lockenspray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "für mehr Griff deiner Locken und Wellen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "mehr Griff",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mehr Griff"
+    },
+    {
+      "type": "duration",
+      "text": "belebt deine Locken auch am zweiten oder dritten Tag",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

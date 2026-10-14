@@ -1,0 +1,128 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-be474fbb57",
+  "product": {
+    "confirmed_name": "Sea Salt Spray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "BALI GENTS",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "MAGNESIUM SULFATE"
+      },
+      {
+        "rank": 3,
+        "inci": "POLYGLYCERYL-6 CAPRYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYGLYCERYL-4 CAPRATE"
+      },
+      {
+        "rank": 5,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 6,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 7,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED RICE PROTEIN"
+      },
+      {
+        "rank": 10,
+        "inci": "MARIS SAL"
+      },
+      {
+        "rank": 11,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 12,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 13,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 14,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 15,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 16,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 17,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 18,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 19,
+        "inci": "ETHYL BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sea Salt Spray: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Für natürliche Beach Waves, mehr Struktur und den perfekten Undone Look. Das Bali Gents Sea Salt Spray verleiht dem Haar spürbare Griffigkeit und Definition, ohne es zu verkleben oder unnötig auszutrocknen.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Die spezielle Formulierung mit Meersalz sorgt für ein authentisches Beach-Hair-Finish und unterstützt natürliche Wellen, Locken und Textur. Gleichzeitig helfen Panthenol, Glycerin und hydrolysiertes Reisprotein dabei, das Haar geschmeidig zu halten und ihm ein gepflegtes Gefühl zu verleihen.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

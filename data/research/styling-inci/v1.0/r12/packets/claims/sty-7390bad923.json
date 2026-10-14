@@ -1,0 +1,102 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-7390bad923",
+  "brand": "L'ORÉAL PARiS Elnett",
+  "confirmed_name": "Stylingspray Hitzeschutz 3 Tage Glatt",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Die 230° Hitzeschutz-Technologie ist speziell für das Stylen mit heißem Fön und Glätteisen entwickelt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Elnett de Luxe | POWER-SHINE-TECHNOLOGIE | 230°C HITZE STYLING-SPRAY | [GLATT 3 TAGE] | Hitze-Schutz-Technologie | Schutz vor Frizz & Feuchtigkeit | Starker Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-13",
+      "position": "pack_front"
+    },
+    {
+      "type": "hold",
+      "text": "Starker Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-13",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Starker Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "ohne zu verkleben",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "spielend leichtes Ausbürsten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "geschmeidig",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "hält selbst widerspenstiges Haar bis zu drei Tage lang seidig glatt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "GLATT 3 TAGE; bis zu drei Tage lang seidig glatt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "mixed_source": true
+    },
+    {
+      "type": "humidity",
+      "text": "Schutz vor Frizz & Feuchtigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_protection",
+      "text": "230°C HITZE STYLING-SPRAY / Hitze-Schutz-Technologie; schützt das Haar bis zu 230 Grad",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "mixed_source": true
+    }
+  ]
+}

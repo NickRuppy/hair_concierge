@@ -1,0 +1,116 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-310ac05b20",
+  "brand": "GUHL",
+  "confirmed_name": "LOCKEN PFLEGE & STYLING 3in1 LOCKENCREME, KUR & SPÜLUNG",
+  "confirmed_name_tier": "C1",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Lockencreme, Kur & Spülung in einem",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit wenig Aufwand zu definierten Locken & Wellen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "3in1 LOCKENCREME, KUR & SPÜLUNG",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Tiefenwirksame Pflege & natürlich langanhaltende Definition",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Aloe Vera + [Duo]-Pflege-Style-Komplex mit Leinsamenöl",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "LOCKEN PFLEGE & STYLING",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "MULTIFUNKTIONALE ANWENDUNG",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "finish",
+      "text": "gesunder Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Mit integriertem Hitzeschutz bis 220°C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Für definierte Locken & Wellen voller Sprungkraft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Spendet Feuchtigkeit & stärkt das Haar",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "natürlich langanhaltende Definition",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

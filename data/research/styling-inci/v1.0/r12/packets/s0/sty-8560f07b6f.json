@@ -1,0 +1,129 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-8560f07b6f",
+  "product": {
+    "confirmed_name": "Finishing Spray Glow & Care",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_dm_missing_separator_and_typo_rank6_from_pack: dm text lacks the comma and reads 'Stativa'; Parfum and Linalool are not visible on the pack photo and come from the dm text",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 16,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Propane"
+      },
+      {
+        "rank": 4,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 5,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 6,
+        "inci": "Triheptanoin"
+      },
+      {
+        "rank": 7,
+        "inci": "Camelina Sativa Seed Oil"
+      },
+      {
+        "rank": 8,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 9,
+        "inci": "Polyurethane-14"
+      },
+      {
+        "rank": 10,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 11,
+        "inci": "AMP- Acrylates Copolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Tetramethylacetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 14,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 15,
+        "inci": "Citrus Limon Peel Oil"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Finishing Spray",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Mit pflegendem Camelinaöl",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Hinterlässt ein seidiges Haargefühl",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

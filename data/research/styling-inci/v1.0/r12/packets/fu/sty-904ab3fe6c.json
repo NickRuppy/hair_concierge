@@ -1,0 +1,120 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-904ab3fe6c",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 24,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua / Water"
+      },
+      {
+        "rank": 2,
+        "inci": "Acrylates Copolymer"
+      },
+      {
+        "rank": 3,
+        "inci": "Polyurethane-34"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 5,
+        "inci": "Triethanolamine"
+      },
+      {
+        "rank": 6,
+        "inci": "Acrylates/Beheneth-25 Methacrylate Copolymer"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum / Fragrance"
+      },
+      {
+        "rank": 8,
+        "inci": "PEG-12 Dimethicone"
+      },
+      {
+        "rank": 9,
+        "inci": "Polysorbate 80"
+      },
+      {
+        "rank": 10,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 11,
+        "inci": "Calcium Carbonate"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 13,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Lauryl Sulfate"
+      },
+      {
+        "rank": 15,
+        "inci": "Methylpropanediol"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 17,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 18,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 19,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 20,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 21,
+        "inci": "Citral"
+      },
+      {
+        "rank": 22,
+        "inci": "Phenylpropanol"
+      },
+      {
+        "rank": 23,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 24,
+        "inci": "Tocopherol"
+      }
+    ]
+  },
+  "directions_status": "paraphrase",
+  "directions": {
+    "directions_verbatim": false,
+    "paraphrase_text": "Auf das feuchte Haar auftragen, dann trockenföhnen oder an der Luft trocknen lassen; für definiertere Welle mit Lockenstab stylen. Pack image: spray into wet hair, air-dry; re-spray on dry hair during the day.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "easycosmetic.de",
+    "date": "2026-10-11",
+    "masked_with": "[CLAIM]"
+  }
+}

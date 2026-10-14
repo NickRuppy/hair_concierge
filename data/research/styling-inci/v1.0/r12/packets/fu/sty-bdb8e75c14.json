@@ -1,0 +1,92 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-bdb8e75c14",
+  "format": "cream",
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "Cetyl Alcohol"
+      },
+      {
+        "rank": 6,
+        "inci": "Helianthus Annuus (Sunflower) Seed Extract"
+      },
+      {
+        "rank": 7,
+        "inci": "Chamomilla Recutita (Matricaria) Flower Extract"
+      },
+      {
+        "rank": 8,
+        "inci": "Polysorbate 20"
+      },
+      {
+        "rank": 9,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 10,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 11,
+        "inci": "Quaternium-95"
+      },
+      {
+        "rank": 12,
+        "inci": "Propanediol"
+      },
+      {
+        "rank": 13,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 14,
+        "inci": "Triethanolamine"
+      },
+      {
+        "rank": 15,
+        "inci": "Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate"
+      },
+      {
+        "rank": 16,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 17,
+        "inci": "Parfum/Fragrance"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Für ein optimales Ergebnis die [CLAIM] im feuchten Haar anwenden. Das Haar in einzelne Partien abteilen und die Haar-Creme einarbeiten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "marianila.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

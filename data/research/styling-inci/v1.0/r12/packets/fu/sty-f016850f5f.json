@@ -1,0 +1,104 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-f016850f5f",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 20,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Magnesium Sulfate"
+      },
+      {
+        "rank": 4,
+        "inci": "Polyglycerin-3"
+      },
+      {
+        "rank": 5,
+        "inci": "PEG-60 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 6,
+        "inci": "Polyquaternium-68"
+      },
+      {
+        "rank": 7,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 8,
+        "inci": "Sea Salt/Maris Sal/Sel marin"
+      },
+      {
+        "rank": 9,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 10,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 11,
+        "inci": "Moringa Oleifera Seed Oil"
+      },
+      {
+        "rank": 12,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 13,
+        "inci": "Fragrance/Parfum"
+      },
+      {
+        "rank": 14,
+        "inci": "Citrus Aurantium Amara (Bitter Orange) Peel Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 18,
+        "inci": "Pogostemon Cablin Oil"
+      },
+      {
+        "rank": 19,
+        "inci": "Rose Ketones"
+      },
+      {
+        "rank": 20,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Gut schütteln. 2. Großzügig abschnittsweise auf das trockene Haar sprühen. 3. Locken kneten, um sie aufzufrischen und zu definieren. 4. Lufttrocknen lassen oder mit einem Diffusor föhnen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}
