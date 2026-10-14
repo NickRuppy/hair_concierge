@@ -1,0 +1,3313 @@
+{
+ "lane": "B",
+ "model": "codex",
+ "standard": "v0.5-r10amend",
+ "records": [
+  {
+   "id": "sty-0133e25419",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "li_styling_first",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R7-Q1",
+    "§4.3 3.4(iii): excluded_styling_first",
+    "§4.5",
+    "§5–7/R10"
+   ],
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "Wellaflex 3/5 → 2; Zahl schlägt Stärke-Wort.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix",
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "C1 definierte Locken führt; Name-Hold vor Sprungkraft. PVP r4/VP-VA r5 zählen; PQ-16 r10, Silikone und Öl bleiben Tail."
+   ]
+  },
+  {
+   "id": "sty-030973c09c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 12,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Hydroxycitronellal",
+     "rank": 4,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "C1/C2 Extra starker Halt → 4.",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "R2-Marker Benzyl Alcohol r12; F-Werte gleich. Haarschwung/Volumen kompatibel; shine gestrichen, da PEG-Silikon kein silicone_coat ist."
+   ]
+  },
+  {
+   "id": "sty-07710e4c45",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 12,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R4-Q7",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "Henkel Haltegrad 4/5 → 3.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Glanz ist Name-Qualifikator. Isopropyl Myristate r7: Familie a, medium und Shine-Gate-Pass. D8b-Sibling-Prüfung erfolgt erst in der Pipeline."
+   ]
+  },
+  {
+   "id": "sty-0868adf2f8",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1(c)/§4.6: R6-Q1",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R7-F/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film",
+    "silicone_coat"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": null,
+   "secondary_jobs": [
+    "frizz_control",
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_unresolved",
+    "candidate_below_tail",
+    "heat_claim_without_l9",
+    "claim_authority_gap",
+    "ruled_route_override",
+    "primary_job_unresolved",
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Registry-Override trotz FX-1 r8. Polysilicone-29 r7 trägt medium; R2 Hydroxyacetophenone r10 ändert nichts. Primary nicht aus Finish inferiert; starkes Anti-Frizz vor schwacher Glanzbeschreibung. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-0de1fa27f7",
+   "identity_status": "verified_with_minor_source_difference",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5–7/R9-F/R10"
+   ],
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_or_identity_conflict",
+    "heat_claim_without_l9",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Ester r4/r5: eine Familie a → medium. R9-F Frizz-Kontrolle berücksichtigt. Shine bleibt trotz Glätteisen-Schritt. Hitzeschutz laut Hersteller; kein HP-1."
+   ]
+  },
+  {
+   "id": "sty-148fda88d7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.4(ii): PH2-1",
+    "§5–7/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "C2 house_brand sehr starker Halt → 4; Ultra qualifiziert Volumen.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "frizz_control",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "C1 Anti-Frizz vor C2 Haltstärke, beide stark. Pflichtbereich Ansatz bis Längen = all; Föhnen ist keine Aktivierungsbehauptung."
+   ]
+  },
+  {
+   "id": "sty-1f13895102",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(iii)/D6/PH1-13",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": "unknown",
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke; definierte Locken für 24h ist Dauer.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "house_brand_ownership",
+    "claim_authority_gap",
+    "inci_tail_defect",
+    "transcription_defect",
+    "flags_incomplete"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Frizz, definition und volume scheitern an humectant_only. Coconut r13/Shea r14 bleiben Tail. Unlesbares r15 lässt Salzflag unknown."
+   ]
+  },
+  {
+   "id": "sty-276e5dd7a4",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R4-Q7",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "molding",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "house_brand_ownership",
+    "claim_authority_gap",
+    "job_formula_conflict"
+   ],
+   "notes": [
+    "Glow ist Finish-Qualifikator. Keine Wax-/Hold-Architektur über T_S; Primary bleibt mit Konflikt. Sleek/shine gestrichen; Dicaprylyl Ether r11 ist Tail."
+   ]
+  },
+  {
+   "id": "sty-298644326c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(i): R3-H2/R4-Q4",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "Wella EIMI Haltegrad 2/4 → 1.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "heat_claim_without_l9"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Familien a: Ester r4; e: PQ-37 r3/Guar r6; kein Rich-Mitglied → medium. Fettalkohol r11 bleibt Tail. Hitzeschutz laut Hersteller; kein HP-1."
+   ]
+  },
+  {
+   "id": "sty-2d06e6e4b6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/§4.2/R2-H5",
+    "§4.3 3.4(i): D7",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "C2 house_brand mittlerer Halt → 2.",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "frizz_control",
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "heat_claim_without_l9",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "R10: starkes Frizz-Versprechen und Sprungkraft vor schwacher glänzende-Locken-Beschreibung. LGN r2/r9 → rich. Silikone r12/r13 bleiben Tail. Natürlicher Glanz bestimmt Finish. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-324483ca6e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/§4.2",
+    "§4.3 3.4(i): D7",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "Henkel HALT 3/5 → 2; Zahl schlägt starker Halt.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix",
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Name-Hold vor Sprungkraft aus flexibility-Zeile. Ester r2/r3 + Shea r7 + PQ-37 r5 → rich; r7 zählt mit Confidence-Cap. Isopropyl Alcohol r14 verhindert T_LI-Vakuosität."
+   ]
+  },
+  {
+   "id": "sty-38528b2109",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R4-Q7",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "Henkel Haltegrad 2/5 → 1.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [
+    "claim_formula_conflict"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_formula_conflict"
+   ],
+   "notes": [
+    "Mineral Oil r5: einzelne Familie b → medium; kein strukturierender Hold-Mechanismus. Primary bleibt. D8b-Flag als owner-named Ausnahme, intern; Level unverändert."
+   ]
+  },
+  {
+   "id": "sty-3f280c7f60",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/A13",
+    "§4.3 3.4(iii)/D6",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "refresh",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "C1 refreshes curls & adds shine zählt; shine scheitert am Formel-Gate. Magnesium Sulfate r7/Shea r10 bleiben Tail. Next-day im Namen setzt keinen U-Wert."
+   ]
+  },
+  {
+   "id": "sty-44a72edd06",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Benzyl Alcohol",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/§4.2: care + definition",
+    "§4.3 3.4(i): D7 vor mixed",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film",
+    "silicone_coat"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "pvm_ma"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "Wella EIMI Haltestufe 2/4 → 1.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "frizz_control",
+   "secondary_jobs": [
+    "definition",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Curl/Defining plus Gel: mehrere Name-Jobs, erste C2-Promise führt Frizz. Name-definition und Gel/Halt sind starke Secondaries. Silikon r2/PQ-4 r9, kein Rich-Mitglied → medium; Jojoba r14 bleibt Tail."
+   ]
+  },
+  {
+   "id": "sty-4bda8e022c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/§4.2: Revival",
+    "§4.3 3.4(iii)/D6",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "C2 Revival führt; volume stark, Beachlook texture schwach. Magnesium Sulfate r2 passt beiden Gates. Pflichtbereich Spitzen bis Ansatz = all."
+   ]
+  },
+  {
+   "id": "sty-58ae39f1f9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R7-Q3",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film",
+    "particulate"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Volume Lift ist Kollektion; eigener Dry Texture-Job führt. VP/VA r4 und Silica r5 tragen die Jobs. Hauptanwendung vom Ansatz her."
+   ]
+  },
+  {
+   "id": "sty-59eead9331",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 11,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(i): R4-Q4",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_vacuous",
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "R4-Q4 braucht keinen COND-Mindestwert. Frizz passt; shine mangels Lipid/Silikon gestrichen. Natürlicher Glanz setzt Finish. Föhnen ist optional."
+   ]
+  },
+  {
+   "id": "sty-5f1c5b1b5e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "Wella EIMI Haltegrad 1/4 → 1.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "frizz_control",
+    "sleek"
+   ],
+   "d8b_flags": [
+    "claim_formula_conflict"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_formula_conflict"
+   ],
+   "notes": [
+    "Starkes Anti-Frizz vor schwacher glattes-Finish-Beschreibung. hold_fix scheitert ohne Hold-Mechanismus; Level 1 bleibt. Dimethicone r6 → medium. Repariertes Hexyl Cinnamal ist kein Block."
+   ]
+  },
+  {
+   "id": "sty-6270710cb7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "wax_lipid",
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Lang anhaltender/flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap",
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "Name texture stark; flexibler Dauer-Hold schwach, Slot frei. Arganöl r4: einzelne Familie a → medium. Halbmatt schlägt natürlich."
+   ]
+  },
+  {
+   "id": "sty-6455fbf286",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(iii)/D6/PH2-3",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "gel",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke; Crunch ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix",
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Name-Gel stark vor Anti-Frizz. Hydrolyzed Corn Starch r3 passt; shine gestrichen. Magnesium Sulfate r11 ist Tail. Flexible Struktur setzt beweglich; Crunch setzt nicht fest."
+   ]
+  },
+  {
+   "id": "sty-66a146cdf5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Natürlicher Halt ist keine Stärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "R10-Beispiel: volume stark, natürlicher Halt schwach und kompatibel über Silica Silylate r2. Ansatz bis Spitzen = all."
+   ]
+  },
+  {
+   "id": "sty-6a02eaf3a6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "sleek"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. PVP)",
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Haargel/Jelly führt. Sleek-Look passt; bloßes Locken in beschreibender Zeile ist keine Definition-Promise. Geleeartige Textur beschreibt das Produkt."
+   ]
+  },
+  {
+   "id": "sty-6f1d39472f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R2-H3",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "surface",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Einfache Fixierung ist keine Stärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "frizz_control",
+    "sleek"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Wax-Name führt. Bändigt Babyhaare stark vor schwachen glattes/glänzendes-Finish-Looks; sleek füllt Slot. Familien a/b/c mit Rich-Mitgliedern → rich. Streichen über fertiges Haar = surface/dry_finish."
+   ]
+  },
+  {
+   "id": "sty-7155af23fb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Piroctone Olamine",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Piroctone Olamine",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.4(ii)",
+    "§5–7/RG4-18/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": null,
+   "hold_basis": "48h Halt ist Dauer, keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Schwacher Hold passt über Starch r3. C1 Föhn-Aktiv hebt heat_activated auf yes. Hitzeschutz laut Hersteller; kein HP-1 über T_S."
+   ]
+  },
+  {
+   "id": "sty-71c0092b58",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R1-Q2/R7-Q3",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "polyurethane"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Glow&Shine-Kollektion liefert keinen Job; Finishing führt shine. Öle/Ester r6/r7/r9: Familie a → medium. Polyurethane-14 r11 zählt; AMP-Acrylates r16 bleibt Tail."
+   ]
+  },
+  {
+   "id": "sty-742d30aa4d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1/§4.2",
+    "§4.3 3.4(i′): R6-Q1",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R9-Q2/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "shine",
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_unresolved",
+    "candidate_below_tail",
+    "heat_claim_without_l9",
+    "claim_authority_gap",
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "R9-Q2 Glass-Hair-Shape führt sleek. Verleiht Glanz und reduziert Frizz sind starke Signale. R2 Hydroxyacetophenone r9; Silicone Quaternium-18 r10 bleibt Tail. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-777281d549",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Halt für bis zu 24 Stunden ist keine Stärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Powder = volume; schwacher 24h-Hold passt über Partikel. Hauptbereich Ansatz bis Spitzen = all, Zusatz-Tipp ändert ihn nicht."
+   ]
+  },
+  {
+   "id": "sty-78953bfdc7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R4-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "natural_film",
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Natürlicher/flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "natürlich",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Sea Salt/Beach Waves zählen texture, keine definition. Schwacher Hold passt über Salz/Starch. Lufttrocknen erlaubt; Föhn-Tipp bedeutet keine Aktivierung."
+   ]
+  },
+  {
+   "id": "sty-7df7eff2b7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Hydroxyacetophenone",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Hydroxyacetophenone",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/RG4-26",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "hairline",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C2 starken Halt → 3.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "hold_fix",
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Sleek ist ein Name-Job; Brows/Edges sind Zonen. Formgebung und Babyhaar-Kontrolle passen. Crosspolymer-3 bleibt FX-U; PVP r3 begründet present."
+   ]
+  },
+  {
+   "id": "sty-89f7af23d1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 14,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "molding",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "Henkel Haltegrad 5/5 → 4; Max Hold ebenfalls 4.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "sleek",
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Sleek/shine sind schwache Look-Beschreibungen und füllen freie Slots. Wax/Petrolatum r2/r3, Ester r5, Fettalkohol r8 → rich."
+   ]
+  },
+  {
+   "id": "sty-8d7c2957f5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 39,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 36,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film",
+    "natural_film",
+    "wax_lipid",
+    "salt"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Spürbarer Halt ist keine Stärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/VA Copolymer)",
+   "review_triggers": [
+    "claim_authority_gap",
+    "weight_claim_conflict",
+    "natural_film_unsettled"
+   ],
+   "notes": [
+    "R10-Beispiel: starkes Textur-Aufbauen vor schwachem spürbarem Halt. Familien a: Argan r6/Ester r34; e: PQ r30/r31, kein Rich-Mitglied → medium. Algin/Pullulan sind NF-U."
+   ]
+  },
+  {
+   "id": "sty-8df2361a7c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1(d)/§4.6: R4-Q5/D6",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R3-H/R10"
+   ],
+   "subtype": "gel",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "Strong Hold 3 und Extra-starker Halt 4 → aufgerundeter Median 4.",
+   "flexibility": "beweglich",
+   "finish": "natürlich",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "ruled_route_override",
+    "natural_film_unsettled",
+    "hold_claim_conflict"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Registry hält den sonst committed Gel-Route. Carrageenan r3 trägt NF-U; Sodium Chloride ist kein Salzmechanismus. Definition passt, shine scheitert."
+   ]
+  },
+  {
+   "id": "sty-8fa57bd14b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10-Q2"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "R10-Beispiel: natürlich strukturierter Look liefert schwaches texture, keinen natürlichen Finish. C3 Griff/Flex ausgeschlossen. Oryza Starch r5 bleibt Tail."
+   ]
+  },
+  {
+   "id": "sty-8fe397b738",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5/R4-Q6",
+    "§5–7/R10"
+   ],
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Shine führt unabhängig vom Föhnmoment. Ester r3/r4/r8: Familie a → medium; FX-4 r5. 3.5 wird nicht held. Hitzeschutz laut Hersteller; kein HP-1."
+   ]
+  },
+  {
+   "id": "sty-938a432ae4",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Caprylyl Glycol",
+     "rank": 11,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Caprylyl Glycol",
+     "rank": 11,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(ii)",
+    "§6.2/PH1-6",
+    "§5–7/R10"
+   ],
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "ambiguous",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "Alcina Hold-Faktor 5/10 → 2; Zahl schlägt starker Halt.",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "pq_only_film_former"
+   ],
+   "notes": [
+    "PQ-11 r5 allein: ambiguous, Familie e medium und Buildup; kein fixative_film/neutral_fact. Volume/shine scheitern am Gate. R2 Phenoxyethanol r13, F-Werte gleich."
+   ]
+  },
+  {
+   "id": "sty-9526045786",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(ii): PH2-1",
+    "§5–7/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "heat_claim_without_l9",
+    "house_brand_ownership",
+    "claim_authority_gap",
+    "job_formula_conflict"
+   ],
+   "notes": [
+    "PH2-1 routet Volumen direkt. Primary bleibt mit Formelkonflikt; shine gestrichen. Guar-HPTC r10 bleibt Tail. Hitzeschutz laut Hersteller; kein HP-1."
+   ]
+  },
+  {
+   "id": "sty-9ad8580646",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Caprylyl Glycol",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenylpropanol",
+     "rank": 11,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "Alcina Hold-Faktor 6/10 → 3.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "PQ-46 r4: Familie e → medium/Buildup; VP/VA r3 trägt Fixative. R2 Phenoxyethanol r15, Werte gleich. Flex-Faktor setzt keine Flexibilität."
+   ]
+  },
+  {
+   "id": "sty-9b67c09df6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Linalool",
+     "rank": 7,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.5",
+    "§5/RG4-13",
+    "§6.12/R6-T(2)/§7/R10"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate",
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Kontrolle ohne Stärke/Zahl normalisiert keinen Halt.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "R6-T: erforderlicher Ansatz-Schritt, dann ganzes Haar → all. Volumen/Toupieren führt texture_spray. Texture vor Kontrolle/Hold; R2 Parfum r11 ändert keine F-Werte."
+   ]
+  },
+  {
+   "id": "sty-9d34c5b843",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Methylparaben",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Methylparaben",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film",
+    "natural_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film",
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "Wella EIMI Haltegrad 3/4 → 3.",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Shine gestrichen ohne Lipid/Silikon; griffige Textur und Haltegrad stark. Starch r2/VP-VA r4/PVP r5. Reichhaltiges ist kein F-Gewicht."
+   ]
+  },
+  {
+   "id": "sty-ad5ce3462d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1(b)/§4.6: PH1-14",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C1 Starker Halt → 3.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [
+    "claim_formula_conflict"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "heat_claim_without_l9",
+    "ruled_route_override",
+    "directions_from_brand_article",
+    "claim_formula_conflict"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "PH1-14; pack_front führt glatt. POWER-SHINE-TECHNOLOGIE ist kein Finish/Job. Hold-Job gestrichen, Level/D8b bleiben. Familien c r3/d r2 ohne LGN/Rich → medium. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-b45c529fbb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 24,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Caprylhydroxamic Acid",
+     "rank": 14,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1(d)/§4.6: D7/R4-Q5",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "wax_lipid",
+    "silicone_coat"
+   ],
+   "hold_route": "ambiguous",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "24-Stunden Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "frizz_control",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_unresolved",
+    "tail_marker_vacuous",
+    "claim_authority_gap",
+    "ruled_route_override",
+    "acrylates_copolymer_function_unresolved",
+    "unsettled_film_former"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Registry routet, wertet Acrylates r2 nicht auf. Sodium Polystyrene Sulfonate r3 bleibt FX-U. LGN r4/r5 + r11 → rich. R2-Chelator r15 ändert F-Werte nicht. Starkes verhindert-Frizz vor schwachem 24h-Halt."
+   ]
+  },
+  {
+   "id": "sty-c204a3de6f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(i′): R6-Q1",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control",
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail",
+    "heat_claim_without_l9",
+    "claim_authority_gap",
+    "weight_claim_conflict",
+    "inci_tail_defect"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Polysilicone-29 r3, kein FX; andere Care nach erstem Preservative r7. Frizz Ease ist Kollektion; Smooth führt. Keine explizite C1/C2-Aktivierungsbehauptung. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-c33f023071",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_li_scope",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.4(ii)",
+    "§5–7/R10"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C2 house_brand starker Halt → 3.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Texture-Promise vor starkem Halt. Optionaler Ansatz-Schritt verengt Hauptanwendung all nicht. Carrageenan r7 bleibt Tail."
+   ]
+  },
+  {
+   "id": "sty-c449830114",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Benzyl Salicylate",
+     "rank": 7,
+     "status": "unresolved"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2: Form-Kompositum",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "C2 mittlere Kontrolle → 2.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "hold_fix",
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Wax Spray ist Form; Texturierendes führt. Fixierung/Kontrolle vor Volumen, beide stark. R2 Benzyl Alcohol r9; Octyldodecanol r10/Sojaöl r12 bleiben Tail."
+   ]
+  },
+  {
+   "id": "sty-cbf828d684",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 20,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 14,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid",
+    "particulate"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Langer/flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Typed other liefert starkes müheloses Volumen vor schwachem Hold. VP/VA r5, Zeolite r6, Argan r7; einzelne Familie a → medium. Trocken/griffig ist kein matt."
+   ]
+  },
+  {
+   "id": "sty-d3fe0909d7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5/RG2-13/§6–7/R10"
+   ],
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "damp_before_drying",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Flexibler Halt ist keine Stärke.",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "volume",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/VA Copolymer)",
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Overnight Wellen = definition. Sprungkraft vor zuverlässiger Fixierung, beide stark. Sodium Bisulfite ist Antioxidans, kein Marker. Heatless-Setting-Spray → gel."
+   ]
+  },
+  {
+   "id": "sty-d6e192b674",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": null,
+     "rank": null,
+     "status": "absent"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R8-Q2",
+    "§4.3 3.5",
+    "§5/RG4-13/§6.12/R6-T(1)/R10"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_restyle",
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "C2 house_brand leichter Halt → 1.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_absent",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "R6-T: roots; optionale Längen ändern nichts. Aerosol-Form → texture_spray. Starker Grad-Signal-Hold vor typed-other texture. Alcohol r4 löst die First-three-Note nicht aus."
+   ]
+  },
+  {
+   "id": "sty-d9c44194da",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2/R4-Q6",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "polyurethane"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "frizz_control",
+    "sleek"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Finishing führt; Care/Camelina ist Call-out. Starkes Anti-Frizz vor schwacher glatt-Look-Beschreibung. Ester/Öl r6/r7: Familie a → medium. INCI-Reparatur ist abgeschlossen."
+   ]
+  },
+  {
+   "id": "sty-e0a077487a",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": 4,
+   "hold_basis": "C2 extra Halt → 4; gespeichert, nicht zur Auswahl.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9"
+   ],
+   "notes": [
+    "Nicht-aqueous Acrylates r3 ist FX-2c-korroboriert. Polysilicone-9 r8 ist kein Coat/HP-1. Hitzereaktiv C2 → yes; Formgebung/extra Halt passt, shine scheitert. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-e40cd66e38",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzoic Acid",
+     "rank": 16,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Benzoic Acid",
+     "rank": 16,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.3 3.4(i): R3-Q4/R4-Q4",
+    "§4.5: PH1-16/PH2-2",
+    "§5–7/R10"
+   ],
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": "before_heat",
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_vacuous",
+    "heat_claim_without_l9",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; nicht matchbar.",
+    "Fixative-led Straightening. Ester r2/r3/r7: eine Familie a → medium. Formt das Haar ist explizites hold_fix; Wärme-Aktivierung C2 → yes. Hitzeschutz laut Hersteller."
+   ]
+  },
+  {
+   "id": "sty-ec0ed07645",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2: Revival",
+    "§4.3 3.5",
+    "§5–7/R10"
+   ],
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": "dry_finish",
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Keine C1/C2-Haltstärke.",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Revival führt, eigene Glanz-Promise bleibt. Ester r4/r5: Familie a → medium. FX-4 r8 unter Parfum r7 verdient keinen Film-/Hold-Credit. Sprühen ohne Formakt = dry_finish."
+   ]
+  }
+ ],
+ "ambiguous_rules": [],
+ "run_note": "Codex CLI read-only; executed commands scanned for forbidden reads (none)"
+}
