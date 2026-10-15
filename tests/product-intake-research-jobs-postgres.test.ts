@@ -11,10 +11,10 @@ const MIGRATIONS = [
   "20260630130000_product_intake_research_artifacts_decisions.sql",
   "20260701090000_product_intake_rework_resets_attempts.sql",
   "20260701100000_product_intake_auto_enqueue.sql",
-  "20261005190000_product_intake_job_attempt_hygiene.sql",
-  "20261005190100_product_intake_worker_heartbeats.sql",
-  "20261006160000_product_intake_job_engine_binding.sql",
-  "20261006190000_product_intake_stage_artifact_kinds.sql",
+  "20261006112322_product_intake_job_attempt_hygiene.sql",
+  "20261006112337_product_intake_worker_heartbeats.sql",
+  "20261006141653_product_intake_job_engine_binding.sql",
+  "20261007062729_product_intake_stage_artifact_kinds.sql",
 ] as const
 const USER = "11111111-1111-4111-8111-111111111111"
 const PRODUCT = "22222222-2222-4222-8222-222222222222"
