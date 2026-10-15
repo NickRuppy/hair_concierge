@@ -204,7 +204,8 @@
     "test:focused": "python3 scripts/verification/run.py --node-tests",
     "test:verification-runner": "python3 scripts/verification/run.py -- python3 -m unittest discover -s scripts/verification -p test_*.py",
     "verification:install": "python3 scripts/verification/install-local.py",
-    "test:remote:focused": "python3 scripts/verification/remote.py"
+    "test:remote:focused": "python3 scripts/verification/remote.py",
+    "verification:plan": "node scripts/verification/plan.mjs"
   },
   "dependencies": {
     "@apple/app-store-server-library": "^3.1.0",
