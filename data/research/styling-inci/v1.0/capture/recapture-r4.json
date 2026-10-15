@@ -1,0 +1,216 @@
+[
+  {
+    "slug": "balea-styling-spray-ultra-volumen",
+    "issue_id": "P-1",
+    "field": "dm_attribute_Halt",
+    "value_verbatim": "sehr starker Halt",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1436045",
+    "capture_date": "2026-10-12",
+    "note": "dm DAN 1436045 / GTIN 4070765016734 (dm Produktmerkmale block: Wirkung \"Volumen\", Haartyp \"alle Haartypen\", Halt \"sehr starker Halt\"). dm bullets: \"Bietet flexiblen und langanhaltenden Halt\". Pack front (C1, dm photo #1): \"LANGZEIT VOLUMEN 24h\" badge, \"ULTRA VOLUMEN SPRAY\", \"· Anti-Frizz · flexibler Halt\", \"sichtbar mehr Fülle\" - the pack itself says \"flexibler Halt\" while the dm attribute says \"sehr starker Halt\" (both quoted; they differ). \"Ultra\" is part of the product name \"Ultra Volumen Spray\" (qualifies Volumen)."
+  },
+  {
+    "slug": "balea-styling-spray-ultra-volumen",
+    "issue_id": "P-1",
+    "field": "pack_front_claims_C1",
+    "value_verbatim": "LANGZEIT VOLUMEN 24h | ULTRA VOLUMEN SPRAY | · Anti-Frizz · flexibler Halt | sichtbar mehr Fülle | Vegan",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1436045",
+    "capture_date": "2026-10-12",
+    "note": "Read from the dm-hosted pack front photo 2026-10-12. No hold number or dot scale printed on the front."
+  },
+  {
+    "slug": "balea-styling-creme-power-flex",
+    "issue_id": "P-1",
+    "field": "dm_attribute_Halt",
+    "value_verbatim": null,
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1612047",
+    "capture_date": "2026-10-12",
+    "note": "dm DAN 1612047 / GTIN 4066447991697: the Produktmerkmale block has NO \"Halt\" attribute (only Produkteigenschaften \"vegan, ohne Silikone\" and Haartyp \"normales Haar\"). dm bullet: \"Für flexiblen Halt\"; dm text: \"langanhaltenden, aber dennoch flexiblen Halt\"."
+  },
+  {
+    "slug": "balea-styling-creme-power-flex",
+    "issue_id": "P-1/RG-13",
+    "field": "pack_hold_display_C1",
+    "value_verbatim": "Lid text \"FORMING CREAM POWER FLEX\" above a row of seven numbered circles 1 2 3 4 5 6 7; the circle \"5\" is larger and highlighted (filled), the others are small outlined circles. Front label: \"FORMING CREAM POWER FLEX · kein Verkleben · für flexiblen Halt\".",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1612047",
+    "capture_date": "2026-10-12",
+    "note": "Pack photo read 2026-10-12 (jar lid + front). So the pack prints a 7-step scale with 5 highlighted; no hold WORD other than \"flexiblen Halt\". Scale max 7 is the count of circles shown, no text states \"5/7\".",
+    "value_kind": "observer_description_of_graphic"
+  },
+  {
+    "slug": "got2b-spruehkleber-freeze-haarlack",
+    "issue_id": "P-2",
+    "field": "full_pack_name_as_printed",
+    "value_verbatim": "got2b / SPRÜH KLEBER / Freeze Haarlack  (front, line by line; \"SPRÜH\" and \"KLEBER\" on two lines in large type)",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1136451",
+    "capture_date": "2026-10-12",
+    "note": "dm title is \"Haarlack Sprühkleber, 300 ml\". Pack front sub-lines: \"für bis zu 72 h ultrastarke Styles / sanft zur Kopfhaut / für alle Haartypen\"; back: \"EINFACHES STYLING – KRASSER HALT!\" and \"KLEBER-FACTS\". The word \"Freeze\" is on the pack front as the product-line name."
+  },
+  {
+    "slug": "got2b-spruehkleber-freeze-haarlack",
+    "issue_id": "P-8",
+    "field": "pack_hold_display",
+    "value_verbatim": "Six chevron-shaped boxes numbered 1 2 3 4 5 6; boxes 1-5 outlined (not filled), box 6 filled dark/solid; caption below: \"krasser Halt\" (next to \"VEGANE Formel*\").",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1136451",
+    "capture_date": "2026-10-12",
+    "note": "Read 2026-10-12 on the dm pack photo with an upscaled crop; legible. Scale max 6 equals the number of boxes; 6 of 6 highlighted. dm attribute \"Halt: sehr starker Halt\" (C3, dm attribute for non-house brand).",
+    "value_kind": "observer_description_of_graphic"
+  },
+  {
+    "slug": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+    "issue_id": "P-3",
+    "field": "pack_front_result_line",
+    "value_verbatim": "Elnett de Luxe | POWER-SHINE-TECHNOLOGIE | 230°C HITZE STYLING-SPRAY | [GLATT 3 TAGE] | Hitze-Schutz-Technologie | Schutz vor Frizz & Feuchtigkeit | Starker Halt",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1353305",
+    "capture_date": "2026-10-12",
+    "note": "Read from the single dm pack photo (front only) 2026-10-12. \"[GLATT 3 TAGE]\" is printed in a framed purple box. dm GTIN 3600522280774, 170 ml."
+  },
+  {
+    "slug": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+    "issue_id": "P-3",
+    "field": "directions_verbatim_real",
+    "value_verbatim": null,
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1353305",
+    "capture_date": "2026-10-12",
+    "note": "NOT FOUND. dm Verwendungshinweise (re-read 2026-10-12) still carry the hairspray text \"Haarspray mit 3 cm Abstand gleichmäßig auf das Haar sprühen. Für besonders viel Volumen, Deckhaar anheben und ein wenig Haarspray von unten auf die Haare sprühen.\" (dm copy; matches the Elnett hairspray). loreal-paris.de does not list this product (Elnett pages /elnett/haarspray/* and /haarstyling/hitzeschutz searched; /elnett/haarspray/halt-schutz exists but no Hitze Styling-Spray). gurkerl.at (AT retailer, C5) has the description only, no directions. UK retailers (Superdrug/Boots) returned 403 to the fetcher; a web-search summary (not read from the page) claims \"15 cm, onto damp hair\" - unverified, C5."
+  },
+  {
+    "slug": "balea-finishing-spray-glow-und-care",
+    "issue_id": "P-5",
+    "field": "inci_dm_text",
+    "value_verbatim": "Butane, Alcohol Denat., Propane, Isobutane, Isododecane, Triheptanoin Camelina Stativa Seed Oil, Aqua, Polyurethane-14, Parfum, AMP- Acrylates Copolymer, Tetramethylacetyloctahydronaphthalenes, Linalool, Citronellol, Citrus Limon Peel Oil, Limonene.",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3043007",
+    "capture_date": "2026-10-12",
+    "note": "dm text field, re-read 2026-10-12 (DAN 3043007, GTIN 4067796069679, 150 ml). Rank 6 \"Triheptanoin Camelina Stativa Seed Oil\" is missing a comma and has the typo \"Stativa\"."
+  },
+  {
+    "slug": "balea-finishing-spray-glow-und-care",
+    "issue_id": "P-5",
+    "field": "inci_pack_back_C1",
+    "value_verbatim": "... ISOBUTANE · ISODODECANE · TRIHEPTANOIN · CAMELINA SATIVA SEED OIL · AQUA · POLYUR[ETHANE-14] ... AMP-ACRYLATES COPOLYMER · TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES ... CITRONELLOL · CITRUS LIMON PEEL OIL · LIMONENE.  (leading words visible: \"INGREDIENTS/SASTOJCI/СЪСТАВКИ: BUTANE · ALCOHOL DENAT. · PROPANE ...\")",
+    "tier": "C1",
+    "source_url": "dm pack photo #2 of https://products.dm.de/product/products/detail/DE/dan/3043007",
+    "capture_date": "2026-10-12",
+    "note": "Pack back (multi-country print, dm AT distributor) read at 5x crop 2026-10-12: TRIHEPTANOIN and CAMELINA SATIVA SEED OIL are two items separated by \" · \" - the missing separator is a dm transcription defect, the correct reading is \"Triheptanoin, Camelina Sativa Seed Oil\". The words between POLYUR[...] and AMP-ACRYLATES (Parfum) and between TETRAMETHYL ... and CITRONELLOL (Linalool) wrap around the can and are NOT visible in the photo; they are taken from the dm text. Proposed identity.inci_flags entry: dm text missing comma + typo \"Stativa\" at rank 6."
+  },
+  {
+    "slug": "balea-finishing-spray-glow-und-care",
+    "issue_id": "P-5",
+    "field": "gtin_and_duplicate_check",
+    "value_verbatim": "GTIN 4067796069679 (DAN 3043007)  vs  balea-professional-glow-und-shine-finishing-spray GTIN 4070765016611 (DAN 3165375)",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3043007",
+    "capture_date": "2026-10-12",
+    "note": "NOT the same product: different GTIN, DAN, brand line (Balea vs Balea PROFESSIONAL), pack and INCI. 3165375 INCI (dm): \"Butane Alcohol denat. Propane Isobutane Isododecane Camelina sativa seed oil Triheptanoin Aqua Prunus armeniaca kernel oil Glycolic acid Polyurethane-14 Parfum Chenopodium quinoa seed extract Lens esculenta seed extract Hydrolyzed cicer seed extract AMP-acrylates copolymer Linalool Citrus limon peel oil Citronellol Limonene Hexadecalactone\" (dm text field is space-separated, no commas). Resolve A7 by GTIN: two units."
+  },
+  {
+    "slug": "balea-professional-glow-und-shine-finishing-spray",
+    "issue_id": "P-7",
+    "field": "dm_bullet_verbatim",
+    "value_verbatim": "Wirkt einem Anti-Frizz-Effekt entgegen",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3165375",
+    "capture_date": "2026-10-12",
+    "note": "The captured line is the exact dm bullet text (dm DAN 3165375, bullet 3 of 5) - NOT a capture slip; it is a dm copy-writing defect. dm description says \"Zudem wirkt das Spray einem Frizz-Effekt entgegen und lässt das Haar in einem besonderen Glanz erstrahlen.\""
+  },
+  {
+    "slug": "balea-professional-glow-und-shine-finishing-spray",
+    "issue_id": "P-7",
+    "field": "pack_claims_C1",
+    "value_verbatim": "Front: badge \"ANTI-FRIZZ-EFFEKT\" (left edge partly cut: \"TI-FRIZZ-EFFEKT\"); \"Glättet die Haaroberfläche und verleiht ultimativen Glanz und ein seidiges Finish\"; \"stumpfes und glanzloses Haar\"; \"GLOSSING-TECHNOLOGIE MIT GLYKOLSÄURE\". Back: \"LEISTUNGSSTARKE FORMEL FÜR ULTIMATIV GLÄNZENDES, GESUND AUSSEHENDES HAAR\" | \"GLÄNZEND. VERSIEGELND. GESCHMEIDIG.\" | \"Ultraseidiges Finish und Anti-Frizz-Effekt für geschmeidiges, gepflegtes Haar.\" | \"Glossing-Technologie sorgt für gesund aussehendes Haar bis in die Spitzen und verleiht strahlenden Glanz.\"",
+    "tier": "C1",
+    "source_url": "dm pack photo #2 of https://products.dm.de/product/products/detail/DE/dan/3165375",
+    "capture_date": "2026-10-12",
+    "note": "Pack photos #1-2 read 2026-10-12. The pack says \"Anti-Frizz-Effekt\" (positive), so the dm bullet \"Wirkt einem Anti-Frizz-Effekt entgegen\" contradicts the pack. Back ANWENDUNG: \"Vor Gebrauch gut schütteln. Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen. [..] auch für Lockenstylings.\" (line start partly hidden). GTIN 4070765016611."
+  },
+  {
+    "slug": "taft-styling-paste-forming-halt-5plus",
+    "issue_id": "P-8",
+    "field": "pack_hold_display",
+    "value_verbatim": "Front of the pot: four smaller filled (pale-green) dots in a row, then a larger circle containing \"5+\"; to the right: \"FORMING / STYLING PASTE / SANFT ZU HAAR & KOPFHAUT / [Verformbare Styles]\". No hold WORDS, no maximum number and no \"Halt\" printed on the front.",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1616411",
+    "capture_date": "2026-10-12",
+    "note": "Read 2026-10-12. So the display is 4 dots + a \"5+\" circle (5 positions); the \"5+\" is not shown beside a 4-dot display of a different scale - the 5th position is the numbered circle. Other texts: dm bullet \"Haltegrad: 5\", dm description \"Mit Haltegrad 5+\", dm attribute \"Halt: sehr starker Halt\" (C3, non-house brand). Back directions on pack: \"In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen.\" (dm Verwendungshinweise adds \"Für beste Ergebnisse mit TAFT Haarspray fixieren.\").",
+    "value_kind": "observer_description_of_graphic"
+  },
+  {
+    "slug": "bali-curls-leave-in-spray-curl-defining",
+    "issue_id": "RG-17",
+    "field": "pack_inci_C1_dated",
+    "value_verbatim": "AQUA, PROPYLENE GLYCOL, GLYCERIN, SACCHAROMYCES CEREVISIAE EXTRACT, HYDROGENATED ETHYLHEXYL OLIVATE, CETYL ALCOHOL, HYDROLYZED CORN PROTEIN, SODIUM STEAROYL GLUTAMATE, HYDROLYZED WHEAT PROTEIN, HYDROLYZED SOY PROTEIN, PARFUM, SODIUM BENZOATE, SCLEROTIUM GUM, POTASSIUM SORBATE, CITRIC ACID, HYDROGENATED OLIVE OIL UNSAPONIFIABLES, LACTOBACILLUS FERMENT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, LINALOOL, SODIUM CHLORIDE, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, GLUCOSE, GERANIOL, GERANYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, VANILLIN, METHYL BENZOATE.",
+    "tier": "C1",
+    "source_url": "dm pack photo #2 of https://products.dm.de/product/products/detail/DE/dan/3122368",
+    "capture_date": "2026-10-12",
+    "note": "Pack back photo read 2026-10-12 (dm-hosted image uploaded 2026-05-13 per the dm CDN version stamp v1778665603). Barcode printed \"4 262391 990490\" = GTIN 4262391990490 (matches dm). Identical to bali-care.com/de-de (C2, 2026-10-12, product page \"CURL DEFINING SPRAY\" handle leave-in-diffusing-heat-protection-spray). The dm.de text field STILL shows the old list (Aqua, Propylene Glycol, Hydrolyzed Corn Starch, Polyglyceryl-6 Caprylate, ...). Pack front (English): \"HEAT PROTECTION UP TO 230° C\", \"CURL DEFINING SPRAY\", \"NOURISHES, DEFINES, AND PROTECTS. BOOSTS CURL DEFINITION WHILE PROTECTING AGAINST HEAT DAMAGE AND BREAKAGE. PERFECT FOR STYLING AND DIFFUSING.\", \"WITH PLANT KERATIN* & YLANG YLANG EXTRACT\". Pack back (DE) directions: \"(DE) ANWENDUNG: Lockendefinitionsspray auf handtuchtrockenes Haar sprühen, stylen und diffusen. Für zusätzliche Definition und Feuchtigkeit mit unserer Curl Cream oder unserem Curl Gel kombinieren.\" bali-care.com says heat protection \"bis zu 220°C\", pack says 230° C."
+  },
+  {
+    "slug": "cantu-shea-butter-extra-hold-edge-stay-gel",
+    "issue_id": "RG-17",
+    "field": "pack_inci_C1_dated",
+    "value_verbatim": "WATER (AQUA/EAU), CETEARETH-25, PEG-7 GLYCERYL COCOATE, PEG-40 HYDROGENATED CASTOR OIL, GLYCERIN, BUTYROSPERMUM PARKII (SHEA) BUTTER*, THEOBROMA CACAO (COCOA) SEED BUTTER, PANTHENOL, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, CARAMEL, BIOTIN (VITAMIN B7), CYANOCOBALAMIN (VITAMIN B12), FOLIC ACID (VITAMIN B9), NIACIN (VITAMIN B3), PANTOTHENIC ACID (VITAMIN B5), PYRIDOXINE HCL (VITAMIN B6), RIBOFLAVIN (VITAMIN B2), THIAMINE HCL (VITAMIN B1), ETHYLHEXYLGLYCERIN, GLYCERETH-2 COCOATE, SILK AMINO ACIDS, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, POTASSIUM SORBATE, SODIUM BENZOATE, PHENOXYETHANOL, FRAGRANCE (PARFUM), BENZYL BENZOATE, BENZOIC ACID, COUMARIN, HEXYL CINNAMAL.  (footnotes: *CERTIFIED ORGANIC INGREDIENT; SLS/SLES SULFATES = SODIUM LAURYL SULFATE / SODIUM LAURETH SULFATE)",
+    "tier": "C1",
+    "source_url": "https://m.media-amazon.com/images/I/51zw1496VHL._AC_UF1000,1000_QL80_.jpg",
+    "capture_date": "2026-10-12",
+    "note": "Pack back photo (676x1000, English US-style pack: \"Distributed by pdc brands, Stamford CT\", \"EU RP: Bionok Healthcare SL, Domenico Veneciano 5-45223 Seseña Spain\", \"Dist UK: Original Additions BP Ltd\") re-read 2026-10-12; image taken from the Amazon.de gallery recorded in cohort (the listing page itself was NOT re-opened today, so its current German-market status is not re-verified). Barcode digits printed \"8 17513 01569 4\" = UPC-A 817513015694 (check digit verified) - read at moderate resolution, treat as C1 with caveat. Code \"07569-C06EUS\". Same list as the cohort C1 list."
+  },
+  {
+    "slug": "cantu-shea-butter-extra-hold-edge-stay-gel",
+    "issue_id": "RG-17",
+    "field": "directions_verbatim_pack",
+    "value_verbatim": "HOW TO USE: Apply to edges and smooth with fingertips or tightly bristled brush.  (English only; WARNING line follows)",
+    "tier": "C1",
+    "source_url": "https://m.media-amazon.com/images/I/51zw1496VHL._AC_UF1000,1000_QL80_.jpg",
+    "capture_date": "2026-10-12",
+    "note": "Only English directions exist on this pack; NO German directions found anywhere (dm does not list the item; beautybay.de/de page is C3 and had no readable Anwendung). Pack back also: \"WHY IT WORKS: Formulated with a unique moisture blend of fair trade organic shea butter, castor oil, jojoba oil, and caramel to help add volume and definition. Plus it's enriched with B vitamins to help encourage healthy hair growth.\" Pack front claims are in the cohort (up to 48 hour firm hold)."
+  },
+  {
+    "slug": "redken-styling-beach-spray",
+    "issue_id": "RG-20",
+    "field": "german_pack_text_C1",
+    "value_verbatim": null,
+    "tier": "C1",
+    "source_url": "https://cdn2.easycosmetic.de/images/Produkte/XL/redken-styling-volume-beach-spray-150ml.png",
+    "capture_date": "2026-10-12",
+    "note": "NOT FOUND. The only pack photo reachable (easycosmetic.de, front, 290x769) is English/French: \"BEACH SPRAY / BEACHY TEXTURE SPRAY / SPRAY TEXTURISANT EFFET PLAGE / BEACHY WAVES • TOUSLED LOOK • MATTE FINISH • INSTANT TEXTURE • LIGHTWEIGHT BODY / 150 ml\" - no German words. dm does not list it. redken.eu/de-de Styling pages (Textur, Locken, Volumen, Haarsprays, Primer) list Wax Spray, Root Tease, Powder Grip, Touchable Texture, Texture Paste etc. but NO Beach Spray as of 2026-10-12 (pages read via browser). German text exists only as C3 retailer copy already in the cohort (easycosmetic.de, parfumdreams.de: \"kommt ohne Meersalz aus\")."
+  },
+  {
+    "slug": "balea-styling-finishing-stick",
+    "issue_id": "RG-20",
+    "field": "directions_verbatim_pack",
+    "value_verbatim": "ANWENDUNG: Nach dem Frisurenstyling sanft über die abstehenden Härchen streichen.",
+    "tier": "C1",
+    "source_url": "dm pack photo #3 of https://products.dm.de/product/products/detail/DE/dan/1569189",
+    "capture_date": "2026-10-12",
+    "note": "Pack back (carton) photo #3 read 2026-10-12; dm Verwendungshinweise say \"keine vorhanden\" (dm gap, not a pack gap). Same carton: \"Leichte Fixierung, ohne zu fetten: für das perfekte Finish\", \"schnelle und einfache Anwendung | kein Verkleben oder Beschweren | ideal für unterwegs\", \"HAUTVERTRÄGLICHKEIT Dermatologisch bestätigt.\" Carton front: \"Au Revoir BABY HAAR · fixiert Baby-haare & Frizz · nicht fettend · perfektes Finish\", orange badge \"AUCH FÜR AUGENBRAUEN\"; tube: \"STYLING FINISHING STICK · fixiert Babyhaare und Frizz\". GTIN printed 4066447991796 (barcode digits visible). INCI on pack = dm list."
+  },
+  {
+    "slug": "schwarzkopf-taft-styling-balm-locken-halt-3",
+    "issue_id": "OPEN-5",
+    "field": "pack_hold_display_C1",
+    "value_verbatim": "Pack front: \"LOCKEN\" then a vertical stack of five marks - two hollow outlined circles, one larger filled circle containing \"3\", then two smaller filled dots - followed by \"STYLING BALM / HALT 3 / SANFT ZU HAAR & KOPFHAUT / [Definierte Locken]\".",
+    "tier": "C1",
+    "source_url": "dm pack photo #1 of https://products.dm.de/product/products/detail/DE/dan/1226644",
+    "capture_date": "2026-10-12",
+    "note": "YES, \"HALT 3\" is printed on the pack (C1, dm pack photo #1, read 2026-10-12): the exact text \"STYLING BALM HALT 3\" and the \"3\" circle in a 5-mark column (3 is the middle mark; the two marks above it are hollow, the two below filled). Pack back (photo #2): \"· Definierte Locken voller Sprungkraft · Für langanhaltenden, nicht klebrigen Halt & Anti Frizz-Effekt · Mit pflegender Sheabutter · Schützt die Frisur vor Luftfeuchtigkeit\", \"TAFT VERSPRECHEN: VEGANE FORMEL* | 0% SILIKON\", \"ANWENDUNG: In trockenes oder handtuchtrockenes Haar einarbeiten und Locken nach Wunsch modellieren. Für beste Ergebnisse mit Taft Haarspray fixieren.\" No maximum number printed. dm attribute \"Halt: mittlerer Halt\" (C3), dm bullet \"Haltegrad 3\" (C3).",
+    "value_kind": "observer_description_of_graphic"
+  },
+  {
+    "slug": "schwarzkopf-taft-styling-balm-locken-halt-3",
+    "issue_id": "OPEN-5",
+    "field": "schwarzkopf_de_C2",
+    "value_verbatim": "Page https://www.schwarzkopf.de/marken/haarstyling/taft/locken/Locken-balm.html: NO number. Words: \"Halt - Starker, langanhaltender Halt: bis zu 24 Stunden, ohne zu verkleben.\" and \"Vegane Formel mit starkem Halt.\"; description \"Die innovative Formel bietet bis zu 24 Stunden Halt, ohne zu verkleben.\"",
+    "tier": "C2",
+    "source_url": "https://www.schwarzkopf.de/marken/haarstyling/taft/locken/Locken-balm.html",
+    "capture_date": "2026-10-12",
+    "note": "The manufacturer page prints no Haltegrad number and no dots; it says \"Starker ... Halt\" while the pack says \"HALT 3\" and dm says \"mittlerer Halt\" - three different strength words/number for one product."
+  }
+]

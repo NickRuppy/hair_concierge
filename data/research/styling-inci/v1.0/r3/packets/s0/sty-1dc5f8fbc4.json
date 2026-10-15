@@ -1,0 +1,125 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-1dc5f8fbc4",
+  "product": {
+    "confirmed_name": "Haaröl Öl Magique, für alle Haartypen",
+    "confirmed_name_redacted": false,
+    "brand": "L'ORÉAL PARiS ELVITAL",
+    "format": "liquid"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ISODODECANE"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 3,
+        "inci": "DIMETHICONOL"
+      },
+      {
+        "rank": 4,
+        "inci": "COCOS NUCIFERA OIL / COCONUT OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 6,
+        "inci": "POGOSTEMON CABLIN OIL"
+      },
+      {
+        "rank": 7,
+        "inci": "ANISE ALCOHOL"
+      },
+      {
+        "rank": 8,
+        "inci": "SCLEROCARYA BIRREA SEED OIL"
+      },
+      {
+        "rank": 9,
+        "inci": "CAMELLIA JAPONICA SEED OIL"
+      },
+      {
+        "rank": 10,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 13,
+        "inci": "CARVONE"
+      },
+      {
+        "rank": 14,
+        "inci": "GARDENIA TAITENSIS FLOWER"
+      },
+      {
+        "rank": 15,
+        "inci": "ROSE KETONES"
+      },
+      {
+        "rank": 16,
+        "inci": "ROSA CANINA FLOWER EXTRACT"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 18,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 19,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 20,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 21,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Sichtbar mehr Glanz",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

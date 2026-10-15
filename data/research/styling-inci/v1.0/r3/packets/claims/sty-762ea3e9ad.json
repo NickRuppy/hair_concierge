@@ -1,0 +1,51 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-762ea3e9ad",
+  "brand": "BALI CURLS",
+  "confirmed_name": "Leave-In Spray Curl Defining (Curl Defining Spray)",
+  "confirmed_name_tier": "C1",
+  "format": "spray_gel",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definiert und formt deine Locken - mit natürlichem Stylingpolymer für langanhaltenden Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "langanhaltenden Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "natürlichem Stylingpolymer für langanhaltenden Halt; Für definierte Locken und Wellen mit Halt"
+    },
+    {
+      "type": "duration",
+      "text": "Für ein definiertes und gepflegtes Lockenbild, das den ganzen Tag hält",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Heat protection up to 230 C; Schützt bis zu 220 C",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "mixed_source": true
+    }
+  ]
+}

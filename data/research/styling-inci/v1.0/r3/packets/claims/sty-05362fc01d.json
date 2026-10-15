@@ -1,0 +1,50 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-05362fc01d",
+  "brand": "got2b (Schwarzkopf)",
+  "confirmed_name": "Styling Paste iStyler Texture Clay",
+  "confirmed_name_tier": "C2",
+  "format": "paste",
+  "product_type_word": "paste",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "kreiert individuelle, matte Looks mit ultra krassem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "ultra krassem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "ultra krasser Halt; flexiblem, mattem Halt; starkem Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibel",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "matte Looks / mattem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

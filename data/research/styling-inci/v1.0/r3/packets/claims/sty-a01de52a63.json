@@ -1,0 +1,21 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-a01de52a63",
+  "brand": "Kérastase",
+  "confirmed_name": "Curl Manifesto Refresh Absolu",
+  "confirmed_name_tier": "C3",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Kérastase Curl Manifesto Refresh Absolu ist die optimale Wahl, wenn Haarwäsche einmal schnell gehen soll. Das Trockenshampoo für lockiges und krauses Haar wird auf Haaransatz und die Haare aufgetragen und einmassiert. Anschließend lässt es sich leicht auskämmen. Zurück bleiben ein feiner Duft und ein Gefühl der Erfrischung.",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

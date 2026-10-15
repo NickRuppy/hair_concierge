@@ -1,0 +1,48 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-0e70065704",
+  "brand": "alverde NATURKOSMETIK",
+  "confirmed_name": "Locken Refresh-Spray",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Spray zur Auffrischung von Locken & Wellen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Bio-Traubenkern- & Leinsamen-Extrakt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Zertifizierte Naturkosmetik",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "other",
+      "text": "Verleiht geschmeidige Locken voller Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

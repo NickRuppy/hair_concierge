@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-7425d89b49",
+  "brand": "cantu",
+  "confirmed_name": "SHEA BUTTER COMEBACK CURL NEXT DAY CURL REVITALIZER",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definiert Locken neu",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Reduziert Frizz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Sheabutter & Rizinusöl",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "um Locken, Coils und Wellen aufzufrischen und wiederzubeleben",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "refreshes curls & adds shine",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "unknown",
+      "flags": [
+        "non_german_wording"
+      ]
+    },
+    {
+      "type": "finish",
+      "text": "Verleiht dem Haar Glanz & Geschmeidigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

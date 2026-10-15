@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-2a6efeef1f",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Smooth Perfect Me (Balsam-Lotion)",
+  "confirmed_name_tier": "C2",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 1,
+    "scale_as_written": "Haltegrad: 1",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Professionelle Balsam-Lotion für natürliches Haarstyling",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt die Haare und verleiht Geschmeidigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11",
+      "number": 1,
+      "scale_as_written": "Haltegrad: 1",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "finish",
+      "text": "verleiht Geschmeidigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Spendet Feuchtigkeit und Hitzeschutz; schützt das Haar auch vor der Hitze von Stylinggeräten",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

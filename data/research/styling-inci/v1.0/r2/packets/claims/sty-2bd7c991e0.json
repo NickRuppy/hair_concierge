@@ -1,0 +1,59 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-2bd7c991e0",
+  "brand": "BALI GENTS",
+  "format": "powder",
+  "product_type_word": "puder",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Stylingpuder für sofortiges Volumen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Leichtigkeit trifft auf maximales Volumen! Das Volumizing Styling Powder ist die perfekte Lösung für sofortige Fülle und einen natürlich strukturierten Look.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "natürlich strukturierten und voluminösen Stil",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Ultrafeine Pudertextur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Verleiht dem Haar mehr Griffigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "ermöglicht ein flexibles Umformen der Frisur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

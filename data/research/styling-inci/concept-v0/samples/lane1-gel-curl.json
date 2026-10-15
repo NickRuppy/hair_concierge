@@ -1,0 +1,579 @@
+[
+  {
+    "sample_id": "schwarzkopf-taft-power-haargel-halt-5",
+    "subtype_candidate": "gel",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Haargel POWER Halt 5",
+    "size": "150 ml",
+    "format": "gel",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 2.95,
+    "price_source_url": "https://www.dm.de/p/d/1296950/",
+    "ean": "4015100810844",
+    "inci": "Aqua (Water, Eau), Alcohol denat., PVP, Phenoxyethanol, Carbomer, PEG-32, PEG-40 Hydrogenated Castor Oil, Aminomethyl Propanol, Parfum (Fragrance), Panthenol, Ethylhexylglycerin, Linalool, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Terpineol, Dimethyl Phenethyl Acetate",
+    "inci_source_url": "https://www.dm.de/p/d/1296950/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Haltegrad 5: Bis zu 48 h Power-Halt, ohne zu verkleben",
+      "Gestärktes Haar vom Ansatz bis in die Spitzen",
+      "Hilft, das Haar vor dem Austrocknen zu schützen",
+      "Sanft zu Haar und Kopfhaut"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 5: Bis zu 48 h Power-Halt",
+      "number": 5,
+      "scale_max": null,
+      "words": "sehr starker Halt (dm-Merkmal)",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": "Hilft, die Frisur vor Feuchtigkeit & Wind zu schützen",
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegan (Taft Gele verwenden vegane Formeln)"
+    ],
+    "directions": "In trockenes oder feuchtes Haar einarbeiten, nach Wunsch stylen; für beste Ergebnisse mit Taft Haarspray fixieren.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Classic fixative gel: Aqua, then Alcohol denat. in 2nd position (high alcohol load), PVP in 3rd = the sole film-forming fixative; carbomer + aminomethyl propanol = thickener/neutralizer system; PEG-40 hydrogenated castor oil = solubilizer for fragrance. No oils, silicones, natural gums or acrylate polymers. Scale max for Halt 5 not printed in dm text (Taft convention is 1-5, unverified here).",
+    "notes": "Claim 'hilft das Haar vor dem Austrocknen zu schützen' and 'sanft zu Haar und Kopfhaut' sit next to Alcohol denat. as 2nd ingredient - claim vs formula tension. Directions allow damp OR dry hair (restyle usable). Scale max not stated on pack text seen; number 5 taken from 'Haltegrad 5'. Rossmann also lists a Taft Power gel (retailer listing seen via search, INCI not captured from Rossmann)."
+  },
+  {
+    "sample_id": "balea-locken-crunchgel",
+    "subtype_candidate": "gel",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Locken Crunchgel",
+    "size": "100 ml",
+    "format": "gel",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/2476122/",
+    "ean": "4066447991727",
+    "inci": "AQUA, GLYCERIN, HYDRO, LYZED CORN STARCH, XANTHAN GUM, POLYGLYCERYL, 6 CAPRYLATE, POLYGLYCERYL, 4 CAPRATE, PARFUM, POTASSIUM SORBATE, BETAINE, PANTHENOL, MAGNESIUM SULFATE, GELLAN GUM, SODIUM CITRATE, LACTIC ACID, SODIUM BENZOATE, LIMONENE, CITRONELLOL, GERANYL ACETATE, LINALOOL, PINENE",
+    "inci_source_url": "https://www.dm.de/p/d/2476122/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Haargel für definierte Locken",
+      "Mit Anti-Frizz-Effekt, ohne zu beschweren",
+      "Für definierte Locken voller Sprungkraft",
+      "Das Haar erhält eine flexible Struktur und einen schönen Glanz",
+      "Rezeptur mit Panthenol & Betain"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "flexible Struktur; Locken halten den ganzen Tag",
+      "none_stated": true
+    },
+    "finish_claim": "glänzend (raw: 'einen schönen Glanz')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar",
+      "natürliche Locken und Wellen"
+    ],
+    "free_from_claims": [
+      "Ohne Silikone",
+      "Ohne Alkohol"
+    ],
+    "directions": "Kleine Menge in handtuchtrockenes Haar einmassieren, nicht ausspülen, lufttrocknen oder diffusen; am Folgetag mit etwas Gel im angefeuchteten Haar auffrischen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "No synthetic film-forming fixative at all. Structure/hold comes from natural-polymer route: hydrolyzed corn starch (3rd), xanthan gum (4th), gellan gum (late, ~14th) with magnesium sulfate as gel-setting electrolyte (gellan crunch mechanism). Polyglyceryl-6 caprylate / -4 caprate = solubilizer. No alcohol, oils, silicones. Pure aqueous gel.",
+    "notes": "dm INCI text has OCR-style typos: 'HYDRO, LYZED CORN STARCH' = Hydrolyzed Corn Starch; 'POLYGLYCERYL, 6 CAPRYLATE' = Polyglyceryl-6 Caprylate; 'POLYGLYCERYL, 4 CAPRATE' = Polyglyceryl-4 Caprate. Name 'Crunchgel' is on retail listing (dm.at calls it 'Lockengel Crunch'); no hold number anywhere; no 'crunch' or 'cast' wording in the claims seen. Directions also describe a day-2 refresh use (gel on damp hair) - gel doubling as refresher."
+  },
+  {
+    "sample_id": "bali-curls-strong-hold-flaxseed-gel",
+    "subtype_candidate": "gel",
+    "boundary_probe": false,
+    "brand": "BALI CURLS",
+    "product_name": "Haargel Strong Hold Flaxseed",
+    "size": "150 ml",
+    "format": "gel",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 8.95,
+    "price_source_url": "https://www.dm.de/p/d/3106307/",
+    "ean": "4262391991138",
+    "inci": "Aqua, Glycerin, Carrageenan, Xylitol, Polyglyceryl-6 Caprylate, Polyglyceryl-4 Caprate, Sodium Chloride, Phenoxyethanol, Panthenol, Hydroxyacetophenone, Parfum, Linalool, Lactic Acid, Limonene, Amyl Salicylate, Linalyl Acetate, Cananga Odorata Flower Extract, Linum Usitatissimum Seed Extract, Geraniol, Geranyl Acetate, Benzoic Acid, Methyl Benzoate",
+    "inci_source_url": "https://www.dm.de/p/d/3106307/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Styling-Gel mit Leinsamenextrakt",
+      "Bietet extra starken Halt",
+      "Ideal für die Curly Girl Method",
+      "ohne das Haar zu verkleben oder zu verhärten",
+      "Für langanhaltend definierte Locken"
+    ],
+    "hold_claim": {
+      "raw": "extra starken Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "extra starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend (raw: 'verleiht das Gel einen natürlichen Glanz')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "für alle Lockentypen geeignet",
+      "Locken"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "konform mit der Curly Girl Method"
+    ],
+    "directions": "In nasse oder feuchte Locken einarbeiten, Scrunch-Technik von unten nach oben; lufttrocknen oder diffusen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "No synthetic fixative polymers. Gel body = carrageenan (3rd; seaweed gelling agent, the 'hold'/cast former) + glycerin + xylitol (humectant); sodium chloride adds viscosity to carrageenan gel. Polyglyceryl-6 caprylate/-4 caprate solubilize fragrance. Linum usitatissimum (flaxseed) seed extract sits near the very end of the list (after fragrance, ~trace level). No alcohol, oils, silicones.",
+    "notes": "Claim vs formula: pack headline 'Leinsamenextrakt' and 'extra starker Halt', but flax extract is at the tail of the INCI and the structure is carrageenan-based, not flaxseed-mucilage-based. Bali-care site lists the same product as 'Strong Hold Flaxseed Gel'. No hold number/scale."
+  },
+  {
+    "sample_id": "bali-curls-leave-in-spray-curl-defining",
+    "subtype_candidate": "gel",
+    "boundary_probe": true,
+    "brand": "BALI CURLS",
+    "product_name": "Leave-In Spray Curl Defining (Curl Defining Spray)",
+    "size": "150 ml",
+    "format": "spray_gel",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://www.dm.de/p/d/3122368/",
+    "ean": "4262391990490",
+    "inci": "Aqua, Propylene Glycol, Hydrolyzed Corn Starch, Polyglyceryl-6 Caprylate, Polyglyceryl-4 Caprate, Betaine, Glycerin, Parfum, Sodium Benzoate, Saccharomyces Cerevisiae Extract, Panthenol, Lactic Acid, Potassium Sorbate, Benzyl Alcohol, Linalool, Limonene, Leuconostoc/Radish Root Ferment Filtrate, Geraniol, Cananga Odorata Flower Extract.",
+    "inci_source_url": "https://www.dm.de/p/d/3122368/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Definierendes Lockenspray",
+      "Mit Hitzeschutz bis zu 230°C",
+      "Für definierte Locken und Wellen mit Halt",
+      "Für alle Haartypen geeignet",
+      "Angereichert mit einer pflanzlichen Keratin-Alternative"
+    ],
+    "hold_claim": {
+      "raw": "Für definierte Locken und Wellen mit Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "langanhaltenden Halt (Fließtext: 'kann dabei helfen ... langanhaltenden Halt zu geben')",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": "Mit Hitzeschutz bis zu 230°C",
+    "hair_type_claims": [
+      "lockiges oder welliges Haar",
+      "Für alle Haartypen geeignet"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Auf handtuchtrockenes oder trockenes Haar sprühen und wie gewohnt stylen.",
+    "application_moment": "before_heat",
+    "formula_observations": "Water-thin pump-spray base; hydrolyzed corn starch in 3rd position is the only hold-relevant film-former (natural starch), no synthetic polymer, no alcohol, no oil, no silicone. Propylene glycol 2nd (humectant/solvent). Polyglyceryl esters solubilize fragrance. Saccharomyces extract + radish-root ferment = 'plant keratin alternative'. No ingredient that is a recognised thermal protectant.",
+    "notes": "Boundary/mis-subtype: dm name 'Leave-In Spray Curl Defining', product page title reads 'Lockenspray' (URL slug 'heat protection'); Bali's own site calls it 'Curl Defining Spray'. Positioned as pre-styling/heat prep with 'Halt' wording but formula is near-identical to Langhaarmädchen Lockenspray Halt&Sprungkraft (dm 1677066): same corn-starch + polyglyceryl-ester + saccharomyces/radish-ferment backbone. Heat-protection claim (230°C) is not backed by a classic heat-protectant ingredient; candidate for leave-in / heat_styling_spray instead of gel."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-styling-balm-locken-halt-3",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Styling Balm LOCKEN Halt 3",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1226644/",
+    "ean": "4015100810981",
+    "inci": "Aqua (Water, Eau), Dicaprylyl Carbonate, Dicaprylyl Ether, PVP, Polyquaternium-37, Distearoylethyl Hydroxyethylmonium Methosulfate, Butyrospermum Parkii (Shea) Butter, Parfum (Fragrance), Cetearyl Alcohol, Sodium Benzoate, Phenoxyethanol, Linalool, Citric Acid, Isopropyl Alcohol, Benzyl Alcohol, Geraniol, Ethylhexylglycerin, Tetramethyl Acetyloctahydronaphthalenes, Terpineol, Dimethyl Phenethyl Acetate, Limonene, Citronellol, Alpha-Isomethyl Ionone, Citrus Aurantium Peel Oil, Rose Ketones, Methyl Benzoate",
+    "inci_source_url": "https://www.dm.de/p/d/1226644/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Haltegrad 3",
+      "Langanhaltende & definierte Locken voller Sprungkraft",
+      "Anti-Frizz-Effekt ohne zu verkleben",
+      "Er gibt den Locken auch bei Feuchtigkeit und Wind Halt",
+      "Enthält pflegende Shea-Butter"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 3",
+      "number": 3,
+      "scale_max": null,
+      "words": "mittlerer Halt (dm-Merkmal)",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": "Er gibt den Locken auch bei Feuchtigkeit und Wind Halt",
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken"
+    ],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegane Formel"
+    ],
+    "directions": "In trockenes oder handtuchtrockenes Haar einarbeiten, Locken nach Wunsch modellieren; für beste Ergebnisse mit Taft Haarspray fixieren.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "O/W emulsion balm: Aqua, then emollient esters/ether (dicaprylyl carbonate, dicaprylyl ether), PVP 4th and polyquaternium-37 5th = two film-forming/cationic fixatives high in the list; distearoylethyl hydroxyethylmonium methosulfate + cetearyl alcohol = cationic conditioner/emulsifier system; shea butter 7th. Isopropyl alcohol appears late (low). No silicones. True hold route present (PVP + PQ-37).",
+    "notes": "Hold level is a medium Halt 3, and balm also usable on dry hair (restyle) - the pack tells you to finish with Taft Haarspray. Scale max not printed in dm text. Behaves as lightweight styler rather than a leave-in conditioner."
+  },
+  {
+    "sample_id": "syoss-curl-cream-gel-3in1",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "syoss",
+    "product_name": "3in1 Curl Creme-Gel (Curl Control Cream Gel)",
+    "size": "250 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.at/p/d/1919771/",
+    "ean": "8410436462549",
+    "inci": "Aqua (Water, Eau),PVP,Acrylates/Hydroxyesters Acrylates Copolymer,Glycerin,Acrylates/Steareth-20 Methacrylate Crosspolymer, Phenoxyethanol,Aminomethyl Propanol,Benzyl Alcohol,Caprylyl Glycol,Parfum (Fragrance),Ricinus Communis (Castor) Seed Oil,Cocos Nucifera (Coconut) Oil,Caprylyl/Capryl Glucoside,Ethylhexylglycerin,Panthenol,Niacinamide,Sodium Benzoate,Tetrahydrolinalool,4-Tert- Butylcyclohexyl Acetate,Hexyl Salicylate,Terpineol,Heliotropine,Dihydro-Alpha-Terpinol,Pantolactone,2,4-Dimethyl-3-Cyclohexene Carboxaldehyde,Pogostemon Cablin Oil,Geranyl Acetate,Citronellol,Tocopherol,Methyl Dihydroxy-Dimethylbenzoate,Dimethyl Phenethyl Acetate,Vanillin,Geraniol,Allyl Cyclohexylpropionate,Rose Ketones,Lauraldehyde,Neryl acetate,Pinene,Pseudoionone, Trimethylcyclopentenyl Methylisopentenol,Terpinolene,Beta-Caryophyllene,Camphor,Limonene,7,11-Dimethyl-4,6,10-dodecatrien-3-one, Citral,Eugenol,Hydroxycitronellal,Linalool,Alpha-Isomethyl Ionone,Menthol,Benzaldehyde,Anethole,Alpha-Terpinene,Methyl Salicylate,1- Methyl-4-Methylethenyl-Cyclohexene Sulfurized,Myrcene,Isobutenyl Methyltetrahydropyran,Trans-2-Hexenal,BHT",
+    "inci_source_url": "https://www.dm.at/p/d/1919771/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Bis zu 48 Stunden Halt",
+      "Das Curl Control Cream Gel bietet ... einen starken Halt über Ihre Locken",
+      "Anti-Frizz Effekt",
+      "Hinterlässt keine Rückstände",
+      "Long-lasting hold 5 (syoss.net, englisch)",
+      "Protects your hairstyle from humidity (syoss.net, englisch)"
+    ],
+    "hold_claim": {
+      "raw": "Long-lasting hold 5 (syoss.net EN); dm.at: Bis zu 48 Stunden Halt / starken Halt",
+      "number": 5,
+      "scale_max": null,
+      "words": "starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": "Protects your hairstyle from humidity (syoss.net EN; not in dm.at text)",
+    "heat_claim": null,
+    "hair_type_claims": [
+      "normales Haar",
+      "lockiges Haar"
+    ],
+    "free_from_claims": [
+      "Free from alcohol and silicones (syoss.net EN, footnote: ethyl alcohol)"
+    ],
+    "directions": "Kleine Menge von unten nach oben in nasses Haar einarbeiten; nach dem Trocknen Locken sanft kneten, um den Film aufzubrechen (Scrunch-out-the-crunch).",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Hard-hold gel-cream: PVP 2nd + Acrylates/Hydroxyesters Acrylates Copolymer 3rd = two film-forming fixatives right behind water; acrylates/steareth-20 methacrylate crosspolymer = thickener (carbomer-like) neutralised by aminomethyl propanol; glycerin 4th. Castor and coconut oil sit after parfum (trace-level, despite being named in the claims). No alcohol denat., no silicones, no fatty-alcohol/emulsifier system, i.e. really a clear polymer gel, not an emulsion cream.",
+    "notes": "Mis-subtype candidate: marketed as 'Creme-Gel' (name, 'Cream Gel') but formula and directions ('Film aufbrechen', hold 5) = strong cast-forming gel; fits subtype gel better than curl_cream. INCI is from dm.at (Austrian listing, GTIN 8410436462549, 250 ml); German Rossmann page (EAN 4015100892802, 250 ml, UVP 4,99 EUR) was bot-walled and not read; the syoss.net English page gives the identical first 17 ingredients. 'Hold 5' appears only on the English brand page. Rossmann/Syoss 'Curl Creme-Gel' not in dm.de search results."
+  },
+  {
+    "sample_id": "balea-professional-styling-cream-traumlocken",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": false,
+    "brand": "Balea PROFESSIONAL",
+    "product_name": "Styling Cream Traumlocken",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 2.75,
+    "price_source_url": "https://www.dm.de/p/d/1536368/",
+    "ean": "4066447767353",
+    "inci": "AQUA, CETEARYL ALCOHOL, VP/VA COPOLYMER, ISOPROPYL PALMITATE, DICAPRYLYL CARBONATE, CAPRYLIC/CAPRIC TRIGLYCERIDE, PROPYLENE GLYCOL, POLYQUATERNIUM-37, CETRIMONIUM CHLORIDE, SODIUM BENZOATE, PARFUM, DIMETHICONE, TRIMETHYLSILOXYPHENYL DIMETHICONE, CITRIC ACID, HYDROLYZED KERATIN, POTASSIUM SORBATE, BUTYROSPERMUM PARKII BUTTER, PANTHENOL, DIMETHICONOL, TOCOPHEROL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, LAURYL GLUCOSIDE, ALPHA-ISOMETHYL IONONE, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, LIMONENE, PHENOXYETHANOL, TERPINEOL, VANILLIN, TETRASODIUM EDTA, CITRONELLOL, ISOEUGENYL ACETATE, PINENE",
+    "inci_source_url": "https://www.dm.de/p/d/1536368/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für definierte lebendige Locken",
+      "Schützt effektiv vor Frizz",
+      "Hitzeschutz bis zu 220 °C",
+      "Verbesserte Geschmeidigkeit",
+      "Anti-Statik-Formel verhindert Frizz"
+    ],
+    "hold_claim": {
+      "raw": "Halt: mittlerer Halt (dm-Merkmal)",
+      "number": null,
+      "scale_max": null,
+      "words": "mittlerer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend (raw: 'perfekt definierte und glänzende Locken')",
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis zu 220 °C",
+    "hair_type_claims": [
+      "lockiges und gewelltes Haar"
+    ],
+    "free_from_claims": [
+      "ohne Ammoniak"
+    ],
+    "directions": "Kleine Menge in handtuchtrockenes oder trockenes Haar einarbeiten, nicht ausspülen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "O/W emulsion cream: cetearyl alcohol 2nd, VP/VA copolymer 3rd = fixative with real position; polyquaternium-37 9th; emollient esters (isopropyl palmitate, dicaprylyl carbonate, caprylic/capric triglyceride) and cetrimonium chloride (cationic conditioner). Silicones present mid-list (dimethicone, trimethylsiloxyphenyl dimethicone, dimethiconol); acrylates/stearyl methacrylate copolymer late. Keratin + shea named in claims, both low in list. No alcohol denat.",
+    "notes": "Only product in the lane that combines a VP/VA fixative with silicones in a curl cream; pack does not claim silicone-free (contrast with Taft/Syoss). 'mittlerer Halt' comes from dm's structured Halt field, not from the claims text. Very cheap (2,75 EUR)."
+  },
+  {
+    "sample_id": "bali-curls-hydrating-curl-cream",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "BALI CURLS",
+    "product_name": "Lockencreme Hydrating Curl Cream",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 8.95,
+    "price_source_url": "https://www.dm.de/p/d/3070337/",
+    "ean": "4262391990025",
+    "inci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, CETYL ALCOHOL, MALTODEXTRIN, BUTYROSPERMUM PAPKII BUTTER, COCOS NUCIFERA OIL, BETAINE, DISTARCH PHOSPHATE, PHENOXYETHANOL, SODIUM STEAROYL GLUTAMATE, PARFUM, SODIUM BENZOATE, LACTIC ACID, POTASSIUM SORBATE, SCLEROTIUM GUM, LINALOOL, LIMONENE, SODIUM CHLORIDE, AMYL SALICYLATE, LINALYL ACETATE, GLUCOSE, GERANIOL, GERANYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, VANILLIN, METHYL BENZOATE.",
+    "inci_source_url": "https://www.dm.de/p/d/3070337/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Exotische Lockencreme",
+      "Mit Sheabutter, Kokosöl und Ylang-Ylang-Extrakt",
+      "Feuchtigkeitsspendend",
+      "Anti-Frizz-Effekt",
+      "Ihre leichte Textur definiert die Locken, ohne sie zu beschweren"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges und welliges Haar"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Haselnussgroße Menge in feuchtes/handtuchtrockenes Haar einarbeiten, wie gewohnt stylen; zum Abschluss ein Gel (Bali Curl Defining Gel) verwenden.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Emulsion leave-in-type cream: cetearyl + cetyl alcohol (fatty alcohols) 2nd/4th, glycerin, shea butter and coconut oil mid-list, betaine. Only weak definition aids: maltodextrin (5th), distarch phosphate and sclerotium gum (starch/gum film-formers). No synthetic fixative polymer, no alcohol denat., no silicone.",
+    "notes": "Boundary probe: brand's own directions say to finish with a gel, i.e. the cream itself carries no hold; reads as leave-in / curl-conditioning cream with soft definition ('definiert ... ohne zu beschweren'). Product name has typo in dm INCI 'PAPKII'. This is the 'real leave-in' end of curl_cream in the sample."
+  },
+  {
+    "sample_id": "balea-locken-revitalizing-spray",
+    "subtype_candidate": "curl_refresher",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Locken Revitalizing Spray",
+    "size": "150 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 2.45,
+    "price_source_url": "https://www.dm.de/p/d/3146889/",
+    "ean": "4066447983753",
+    "inci": "AQUA • GLYERIN • NITROGEN • SODIUM BENZOATE • PEG-40 HYDROGENATED CASTOR OIL • PARFUM • PANTHENOL • POTASSIUM SORBATE • PYRIDOXINE HCL • NIACINAMIDE • COCAMIDOPROPYL BETANE • LACTIC ACID • COCOS NUCIFERA OIL • BUTYROSPERMUM PARKII BUTTER • CITRONELLOL SODIUM CHLORIDE • GERANIOL • GERANYL ACETATE • CITRIC ACID.",
+    "inci_source_url": "https://www.dm.de/p/d/3146889/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Revitalisierendes Lockenspray",
+      "Für definierte Locken mit Sprungkraft",
+      "Wirkt einem Frizz-Effekt entgegen",
+      "Für bis zu 24 Stunden definierte Locken",
+      "Ideal zum Auffrischen von Naturlocken & dauergewelltem Haar"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "Für bis zu 24 Stunden definierte Locken (Dauer-, kein Halt-Claim)",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Naturlocken & dauergewelltes Haar",
+      "normales Haar (dm-Merkmal)"
+    ],
+    "free_from_claims": [
+      "ohne Sulfat",
+      "ohne Silikone",
+      "vegan"
+    ],
+    "directions": "Dose schütteln, gleichmäßig auf trockenes Haar sprühen, sanft einkneten, ggf. diffusen oder lufttrocknen.",
+    "application_moment": "second_day",
+    "formula_observations": "Aerosol water-based mist propelled by nitrogen (compressed gas) - no butane, no alcohol. No fixative polymer at all. Glycerin 2nd (humectant), PEG-40 hydrogenated castor oil as solubilizer, coconut oil/shea butter trace-level; panthenol/niacinamide/pyridoxine as care actives. Effectively a humectant refresh mist.",
+    "notes": "dm INCI text has typos: 'GLYERIN' = Glycerin, 'BETANE' = Betaine, missing separator in 'CITRONELLOL SODIUM CHLORIDE'. dm structured field says 'Wirkung: Volumen', 'Haartyp: normales Haar' which contradicts the curl text. Claims '24 Stunden definierte Locken' with no fixative in formula - claim vs formula mismatch (more likely humectant/moisture-driven re-clumping)."
+  },
+  {
+    "sample_id": "got2b-lockenspray-refresher-curlz",
+    "subtype_candidate": "curl_refresher",
+    "boundary_probe": true,
+    "brand": "got2b",
+    "product_name": "Lockenspray Refresher Curlz (gotCURLZ Locken Refresher Spray)",
+    "size": "200 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 5.95,
+    "price_source_url": "https://www.dm.de/p/d/3121124/",
+    "ean": "4015100866551",
+    "inci": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Parfum (Fragrance),  Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer, Linalool, Tetramethyl Acetyloctahydronaphthalenes, Limonene, Hexyl Cinnamal, Aqua (Water, Eau), Pinene",
+    "inci_source_url": "https://www.dm.de/p/d/3121124/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Leave-in-Spray zur Auffrischung von Locken & Wellen",
+      "Kann Frizz bekämpfen",
+      "Spendet Feuchtigkeit",
+      "Verleiht ein glänzendes Finish",
+      "Vegane* und silikonfreie Formel"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzend (raw: 'Verleiht ein glänzendes Finish', 'ultimativen glossy Look')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "welliges und lockiges Haar",
+      "für alle Lockentypen geeignet"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Silikone",
+      "ohne Ammoniak"
+    ],
+    "directions": "Auf trockenes Haar sprühen, von Haarmitte bis Spitzen; bei feinerem Haar erst auf die Hände sprühen und verteilen.",
+    "application_moment": "second_day",
+    "formula_observations": "Alcohol-based aerosol: butane + isododecane (volatile hydrocarbon, silicone-free 'shine' carrier) + alcohol denat. in 3rd = ~ the base; caprylic/capric triglyceride + dicaprylyl carbonate as light emollient oils (4th/5th). A fixative IS present: Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer (a hairspray-type polymer) but after parfum, i.e. low dose; Aqua is 13th (nearly water-free). No silicone.",
+    "notes": "Boundary: pack calls it 'Leave-in-Spray' with moisture claim, but the formula is a near-anhydrous alcohol/hydrocarbon aerosol with a hairspray polymer - closer to a light shine/finishing spray than a water-based refresher; 'spendet Feuchtigkeit' not backed by any humectant (no glycerin/panthenol). No hold claim made despite the polymer. Dry-hair application only, no wet-hair route."
+  },
+  {
+    "sample_id": "syoss-curl-control-hydrating-spray",
+    "subtype_candidate": "curl_refresher",
+    "boundary_probe": false,
+    "brand": "syoss",
+    "product_name": "Curl Control Hydrating Spray",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.at/p/d/1920069/",
+    "ean": "8410436366441",
+    "inci": "Aqua (Water, Eau),Zea Mays (Corn) Starch,Glycerin,Sodium Benzoate,PEG-40 Hydrogenated Castor Oil,Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer,Parfum (Fragrance),Panthenol,Lactic Acid,Cocos Nucifera (Coconut) Fruit Extract,Macadamia Ternifolia Seed Oil,Lysine,Linalool,Phenoxyethanol,Limonene,Benzyl Alcohol,Citronellol,Geraniol,Potassium Sorbate,Sodium Metabisulfite,Methyl Benzoate",
+    "inci_source_url": "https://www.dm.at/p/d/1920069/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Spendet Feuchtigkeit",
+      "Definiert und bändigt Frizz",
+      "Ideal für zwischen den Haarwäschen",
+      "Mit Kokosmilchextrakt und Macadamia-Öl",
+      "Für einen starken Halt, mit dem Curl Control Creme Gel kombinieren"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "kein eigener Halt; 'Für einen starken Halt mit dem Creme Gel kombinieren'",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Schütteln; auf feuchtes oder trockenes Haar sprühen und einarbeiten, lufttrocknen oder diffusen; zum Beleben zwischen den Haarwäschen auf trockenes Haar.",
+    "application_moment": "second_day",
+    "formula_observations": "Water-based pump mist: corn starch 2nd (light definition/film aid), glycerin 3rd, PEG-40 hydrogenated castor oil solubilizer, Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer 6th (cationic conditioning polymer, weak film former); macadamia oil and coconut extract only after parfum (trace). No alcohol, no silicone, no propellant.",
+    "notes": "INCI/directions from dm.at (Austria); not found at dm.de by search, German availability unverified. Dual-use: works on damp hair too and brand explicitly positions it as the light layer under the strong Creme-Gel. Brand itself says it gives no strong hold."
+  },
+  {
+    "sample_id": "alverde-locken-refresh-spray",
+    "subtype_candidate": "curl_refresher",
+    "boundary_probe": false,
+    "brand": "alverde NATURKOSMETIK",
+    "product_name": "Locken Refresh-Spray",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 3.75,
+    "price_source_url": "https://www.dm.de/p/d/3100916/",
+    "ean": "4066447919462",
+    "inci": "Aqua, Aloe Barbadensis Leaf Juice*, Propanediol, Glycerin, Caprylyl/Capryl Glucoside, Levulinic Acid, Lauryl Glucoside, Glyceryl Undecylenate, Sodium Levulinate, Betaine, Sodium PCA, Helianthus Annuus Hybrid Oil*, Lactic Acid, PCA Glyceryl Oleate, Arginine, Isoamyl Laurate, Brassicyl Isoleucinate Esylate, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Brassica Alcohol, Citric Acid, Lactobacillus Ferment, Vitis Vinifera Seed Extract*, Linum Usitatissimum Seed Extract*, Parfum**, Limonene**, Linalool**, Geraniol**, Pinene**, Benzaldehyde**, Geranyl Acetate**, Menthol**, Benzyl Salicylate**, Carvone** * ingredients from certified organic agriculture ** from natural essential oils",
+    "inci_source_url": "https://www.dm.de/p/d/3100916/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Spray zur Auffrischung von Locken & Wellen",
+      "Mit Bio-Traubenkern- & Leinsamen-Extrakt",
+      "Verleiht geschmeidige Locken voller Sprungkraft",
+      "Zertifizierte Naturkosmetik",
+      "Ohne Silikone & Sulfate"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar",
+      "Locken, Coils und Wellen"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Sulfat",
+      "Naturkosmetik",
+      "nach der Curly-Hair-Methode entwickelt"
+    ],
+    "directions": "Vor Gebrauch schütteln; Strähne für Strähne auf trockenes oder feuchtes Haar sprühen; bei Bedarf erneut auftragen.",
+    "application_moment": "second_day",
+    "formula_observations": "Natural-cosmetics water mist: aloe juice 2nd, propanediol + glycerin humectants, glucoside surfactants (solubilizer/light cleanse), betaine/sodium PCA humectants, hydrolyzed corn/wheat/soy proteins (low-position conditioning film), sunflower oil trace; flaxseed (Linum) extract far down (after fragrance-free actives, ~trace) despite being a headline claim. No fixative polymer, no alcohol denat. (Brassica Alcohol = fatty alcohol), no silicone, no propellant.",
+    "notes": "Claim vs formula: 'Leinsamen-Extrakt' as a hero but near the tail of the INCI; no hold effect expected. Pure moisture refresh at the lightest end of the lane. dm structured field texture 'Flüssig'; pump format is inferred (shake-before-use instruction, no propellant in INCI). Double spaces in dm text normalised in this record."
+  }
+]

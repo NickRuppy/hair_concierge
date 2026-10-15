@@ -1,0 +1,100 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-74ac90d8a3",
+  "format": "liquid",
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 4,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 6,
+        "inci": "HEPTYL GLUCOSIDE"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 9,
+        "inci": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 11,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 12,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 13,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 14,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 15,
+        "inci": "TERPINEOL"
+      },
+      {
+        "rank": 16,
+        "inci": "HEPTANOL"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 18,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 19,
+        "inci": "ROSE KETONES"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Nach dem Frisurenstyling sanft über die abstehenden Härchen streichen.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

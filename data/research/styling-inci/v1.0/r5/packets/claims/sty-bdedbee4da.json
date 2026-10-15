@@ -1,0 +1,30 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-bdedbee4da",
+  "brand": "Schwarzkopf taft",
+  "confirmed_name": "Texturspray Aloe Boost",
+  "confirmed_name_tier": "C1",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Textur und Pflege für mühelose Undone Looks und natürlich aussehende Wellen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "humidity",
+      "text": "Hilft die Frisur vor Luftfeuchtigkeit zu schützen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

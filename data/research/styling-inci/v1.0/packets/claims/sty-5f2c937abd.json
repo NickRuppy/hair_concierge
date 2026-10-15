@@ -1,0 +1,99 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-5f2c937abd",
+  "brand": "Batiste",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Schenkt Volumen und Textur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Leichte Formel für sauberes Haargefühl",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Zusätzlicher Volumenboost",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Entfernt sanft Fett",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "trocknet das Haar nicht aus",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Sauber aussehendes Haar",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Lang anhaltende Frische",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Textur & Griffigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Revitalisiert das Haar",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "finish",
+      "text": "Textur & Griffigkeit (matt/griffig, no gloss claim)",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Sorgt für lang anhaltende Frische",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

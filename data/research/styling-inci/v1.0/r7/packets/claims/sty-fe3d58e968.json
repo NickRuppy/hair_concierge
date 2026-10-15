@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-fe3d58e968",
+  "brand": "Balea",
+  "confirmed_name": "Sea Salt Texture Spray",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Zaubert Beach Waves",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal für lässige, Strand-Looks",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Rezeptur ohne Mikroplastik und wasserlösliche rein synthetische Polymere",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Sorgt für Textur & natürlichen Halt / flexiblen Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Sorgt für Textur & natürlichen Halt / flexiblen Halt"
+    },
+    {
+      "type": "finish",
+      "text": "natürliches Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "flexiblen Halt und... griffige Struktur, die für ein natürliches Finish sorgt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

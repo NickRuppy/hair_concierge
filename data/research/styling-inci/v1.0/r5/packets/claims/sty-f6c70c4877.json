@@ -1,0 +1,79 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-f6c70c4877",
+  "brand": "Schwarzkopf taft",
+  "confirmed_name": "Schaumfestiger Volumen Halt 4, für feines Haar",
+  "confirmed_name_tier": "C2",
+  "format": "foam",
+  "product_type_word": "schaumfestiger",
+  "scale_info": {
+    "number": 4,
+    "scale_as_written": "Haltegrad 4",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "sorgt für mehr Volumen und natürliche Bewegung im Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad 4",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "number": 4,
+      "scale_as_written": "Haltegrad 4",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "hold",
+      "text": "Halt 4",
+      "tier": "C2",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": 4,
+      "scale_as_written": "Halt 4",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "finish",
+      "text": "natürliche Bewegung",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "humidity",
+      "text": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_activation",
+      "text": "Föhnhitze verstärkt den Volumen-Effekt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

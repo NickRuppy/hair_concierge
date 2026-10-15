@@ -1,0 +1,99 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-633844fd47",
+  "product": {
+    "confirmed_name": "Haarpuder VOLUMEN",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Schwarzkopf taft",
+    "format": "powder"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate (nano)"
+      },
+      {
+        "rank": 3,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 4,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 5,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 6,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 7,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 8,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 9,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 10,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 11,
+        "inci": "Dimethyl Phenethyl Acetate"
+      },
+      {
+        "rank": 12,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 13,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 14,
+        "inci": "Alpha-Isomethyl Ionone"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge Puder in die Handflächen geben und gut verreiben. Anschließend auf das trockene Haar auftragen, vom Ansatz bis in die Spitzen verteilen und nach Wunsch stylen. Tipp: Für einen extra Volumen-Boost das Puder direkt auf das trockene Haar streuen. Das Puder anschließend mit den Fingerspitzen einmassieren und nach Wunsch stylen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "bietet einen Volumenschub für sofort voller aussehendes Haar und natürliche Haarbewegungen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,80 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-1798ef4f8e",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "ACRYLATES/t-BUTYLACRYLAMIDE COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 7,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 9,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 10,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 11,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRAL"
+      },
+      {
+        "rank": 13,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 14,
+        "inci": "GERANIOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor dem Föhnen auf den gewaschenen, noch feuchten Haaransatz sprühen und bis in die Längen verteilen. Kreieren Sie mehr Volumen, indem Sie mit einer Rundbürste gegen den gewohnten Scheitel trocken föhnen. Kann auch zwischendurch im trockenen Haar verwendet werden, um das Haar mit Volumen zu beleben.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

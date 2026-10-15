@@ -1,0 +1,190 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-74ac90d8a3",
+  "product": {
+    "confirmed_name": "Fixierungsbürste Styling Finishing Stick",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea",
+    "format": "liquid"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_missing_slash (rank 4): 'VPVA COPOLYMER' -> 'VP/VA COPOLYMER'",
+        "defect_rank": 4,
+        "status": "resolved"
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 4,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 6,
+        "inci": "HEPTYL GLUCOSIDE"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 9,
+        "inci": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 11,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 12,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 13,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 14,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 15,
+        "inci": "TERPINEOL"
+      },
+      {
+        "rank": 16,
+        "inci": "HEPTANOL"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 18,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 19,
+        "inci": "ROSE KETONES"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Nach dem Frisurenstyling sanft über die abstehenden Härchen streichen.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Haar-Finishing-Stick",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Bändigt abstehende Babyhaare und Frizz",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Ideal für die Anwendung unterwegs",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "auch für Augenbrauen",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "fixiert Babyhaare und Frizz",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Au Revoir BABY HAAR",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "fixiert Babyhaare & Frizz",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "nicht fettend",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "perfektes Finish",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

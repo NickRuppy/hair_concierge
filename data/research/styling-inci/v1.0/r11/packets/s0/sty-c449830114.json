@@ -1,0 +1,124 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-c449830114",
+  "product": {
+    "confirmed_name": "Wax Spray (Redken Spray Wax)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Redken",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "VA/CROTONATES/VINYL NEODECANOATE COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 6,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 7,
+        "inci": "BENZYL SALICYLATE"
+      },
+      {
+        "rank": 8,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 9,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 10,
+        "inci": "OCTYLDODECANOL"
+      },
+      {
+        "rank": 11,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 12,
+        "inci": "GLYCINE SOJA OIL / SOYBEAN OIL"
+      },
+      {
+        "rank": 13,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 14,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 15,
+        "inci": "ISOEUGENOL"
+      },
+      {
+        "rank": 16,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Schritt 1: Gut schütteln. Schritt 2: Auf das feuchte oder trockene Haar sprühen. Schritt 3: Mit den Händen die gewünschte Frisur formen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "REDKEN WAX SPRAY Texturierendes Sprühwachs.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "SPRAY WAX ist ein fixierender Haarspray mit [CLAIM] Kontrolle, der dem Haar Volumen und Körper gibt. Erreiche ein seidig-[CLAIM] Finish und eine perfekte Struktur. Die Microwax-Technologie kombiniert eine einfache Anwendung und die Leichtigkeit eines Sprays mit dem Finish eines Wachses.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

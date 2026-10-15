@@ -1,0 +1,72 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-71c5620239",
+  "brand": "Schwarzkopf Professional",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Belebt die Locken zwischen den Haarwäschen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Frische Deine Locken im Handumdrehen auf: OSiS Curl Retouch belebt Deine Locken neu, für mehr Sprungkraft, Definition und natürlichen Glanz.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "leichten Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "leichter Halt"
+    },
+    {
+      "type": "finish",
+      "text": "glänzendes Finish; natürliches und flexibles Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 230°C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Lockenverstärkendes Spray",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Definiert die Locken und verleiht Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "keshop.com",
+      "date": null
+    }
+  ]
+}

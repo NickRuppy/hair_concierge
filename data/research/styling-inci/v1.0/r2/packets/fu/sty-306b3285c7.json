@@ -1,0 +1,132 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-306b3285c7",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 27,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Maris Sal"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol* denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Pentylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Caprylyl/Capryl Glucoside"
+      },
+      {
+        "rank": 6,
+        "inci": "Levulinic Acid"
+      },
+      {
+        "rank": 7,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Levulinate"
+      },
+      {
+        "rank": 9,
+        "inci": "Propanediol"
+      },
+      {
+        "rank": 10,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 11,
+        "inci": "Pinus Sylvestris Leaf Extract"
+      },
+      {
+        "rank": 12,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 13,
+        "inci": "Lavandula Oil/Extract"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Camphor"
+      },
+      {
+        "rank": 18,
+        "inci": "Menthol"
+      },
+      {
+        "rank": 19,
+        "inci": "Pogostemon Cablin Oil"
+      },
+      {
+        "rank": 20,
+        "inci": "Pinene"
+      },
+      {
+        "rank": 21,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 22,
+        "inci": "Beta-Caryophyllene"
+      },
+      {
+        "rank": 23,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 24,
+        "inci": "Vanillin"
+      },
+      {
+        "rank": 25,
+        "inci": "Citrus Limon Peel Oil"
+      },
+      {
+        "rank": 26,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 27,
+        "inci": "Geranyl Acetate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Das Spray ins handtuchtrockene oder trockene Haar sprühen und sanft einarbeiten. Nicht auswaschen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

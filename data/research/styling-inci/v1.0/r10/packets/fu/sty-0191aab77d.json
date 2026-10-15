@@ -1,0 +1,84 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-0191aab77d",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Disiloxane"
+      },
+      {
+        "rank": 3,
+        "inci": "Cyclopentasiloxane"
+      },
+      {
+        "rank": 4,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 5,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 6,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 7,
+        "inci": "Propane"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 9,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 10,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 11,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 13,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 14,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 15,
+        "inci": "Citronellol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sprühe das [CLAIM] gleichmäßig auf dein Haar, um deinen Look mit schönem [CLAIM] zu vollenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

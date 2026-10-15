@@ -1,0 +1,144 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-bd5e4f61d3",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 30,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Dipropylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Polysilicone-29"
+      },
+      {
+        "rank": 4,
+        "inci": "Fragrance/Parfum"
+      },
+      {
+        "rank": 5,
+        "inci": "PPG-26-Buteth-26"
+      },
+      {
+        "rank": 6,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 7,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Argan Oil GLycereth-8 Esters"
+      },
+      {
+        "rank": 10,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 11,
+        "inci": "Hydrolyzed Keratin"
+      },
+      {
+        "rank": 12,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 13,
+        "inci": "Argania Spinosa Kernel Oil"
+      },
+      {
+        "rank": 14,
+        "inci": "Sclerocarya Birrea Seed Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Peg-40/PPG-8 Methylaminopropyl/Hydroxypropyl Dimethicone Copolymer"
+      },
+      {
+        "rank": 16,
+        "inci": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol"
+      },
+      {
+        "rank": 17,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 18,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 19,
+        "inci": "Sodium Phytate"
+      },
+      {
+        "rank": 20,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 21,
+        "inci": "Hydroxypropyltrimonium Hyaluronate"
+      },
+      {
+        "rank": 22,
+        "inci": "Silicone Quaternium-18"
+      },
+      {
+        "rank": 23,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 24,
+        "inci": "Trideceth-6"
+      },
+      {
+        "rank": 25,
+        "inci": "Trideceth-12"
+      },
+      {
+        "rank": 26,
+        "inci": "Sclerocarya Birrea Seed Oil"
+      },
+      {
+        "rank": 27,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 28,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 29,
+        "inci": "Tetramethyl Acetyloctahydronaaphthalene"
+      },
+      {
+        "rank": 30,
+        "inci": "Vanillin"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Großzügig in Abschnitten auf das handtuchtrockene Haar sprühen. 2. Für eine gleichmäßige Verteilung durchkämmen. 3. Mit einem Föhn und etwas Spannung die Haare stylen, um ein seidiges Finish wie frisch vom Friseur zu erzielen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

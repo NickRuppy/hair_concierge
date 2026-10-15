@@ -1,0 +1,7555 @@
+{
+ "lane": "B",
+ "model": "codex",
+ "standard": "v0.2",
+ "records": [
+  {
+   "id": "sty-01128727e1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 8,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-0137e78018",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7;R1-Q2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise. Ruled destination styling/shine_finish remains evidence-gated."
+   ]
+  },
+  {
+   "id": "sty-02644101fb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Co-equal styling/care; D7 not applicable."
+   ]
+  },
+  {
+   "id": "sty-028a43c091",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 12,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "HYDROXYCITRONELLAL",
+     "rank": 4,
+     "status": "unresolved",
+     "alt": {
+      "inci": "BENZYL ALCOHOL",
+      "rank": 12
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5)",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Dropped secondary shine: formula gate fails."
+   ]
+  },
+  {
+   "id": "sty-087f37707b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.6;D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "ruled_route_override",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Owner-named Balea Anti-Frizz Serum remains Leave-in."
+   ]
+  },
+  {
+   "id": "sty-08ed9a3576",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 13,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate",
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-0bf52ea049",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 22,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.1);RG-15;3.4(iii)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "water_based_serum_exception",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Aqua and conditioning LGN pair establish the water-based-serum exception."
+   ]
+  },
+  {
+   "id": "sty-0dd09447bf",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "brand_scale",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "review",
+   "secondary_jobs": [
+    "hold_fix",
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9",
+    "primary_job_unresolved"
+   ],
+   "notes": [
+    "Lead Schwung/Elastizität has no defined job mapping (§6.10)."
+   ]
+  },
+  {
+   "id": "sty-0f3d1aa947",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "BENZYL SALICYLATE",
+     "rank": 7,
+     "status": "unresolved",
+     "alt": {
+      "inci": "BENZYL ALCOHOL",
+      "rank": 9
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5);§5",
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Below T_S: soybean oil r12. Spray form breaks texture/molding tie; damp option retained."
+   ]
+  },
+  {
+   "id": "sty-0f821e495f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 35,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PARFUM (FRAGRANCE)",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "C1 defines, softens and moisturises; no D7 fixative."
+   ]
+  },
+  {
+   "id": "sty-0fa2f74326",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Diazolidinyl Urea",
+     "rank": 26,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 16,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-13652123d8",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "unresolved",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "directions_unresolved"
+   ],
+   "notes": [
+    "Powder-shaping directions do not state hair moisture."
+   ]
+  },
+  {
+   "id": "sty-1a18e51065",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));T15/D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "PQ-69 and persistent silicones establish real care; no fixative-class polymer."
+   ]
+  },
+  {
+   "id": "sty-1a6af9a3db",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-1ad1471a46",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval."
+   ]
+  },
+  {
+   "id": "sty-223c39665c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENYLPROPANOL",
+     "rank": 12,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PHENOXYETHANOL",
+      "rank": 16
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvm_ma",
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. BUTYL ESTER OF PVM/MA COPOLYMER)",
+   "review_triggers": [
+    "house_brand_ownership",
+    "tail_marker_unresolved"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-224000bc9a",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Care plus curl definition; no D7 fixative."
+   ]
+  },
+  {
+   "id": "sty-2554912e23",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6/R2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "care_decided_below_preservative"
+   ],
+   "notes": [
+    "PQ-10 r13 above post-preservative pH yardstick counts as real care."
+   ]
+  },
+  {
+   "id": "sty-25c369cb2e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 7,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PARFUM",
+      "rank": 16
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6/R2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Wheat Germ Oil r4, Camellia Oil r5 and ester r6 above T_LI establish real care."
+   ]
+  },
+  {
+   "id": "sty-27cff61bd9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture verbatim directions. Ruled destination leave_in remains blocked."
+   ]
+  },
+  {
+   "id": "sty-2a9415aef1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzoic Acid",
+     "rank": 9,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-2b69d72624",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5)",
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Fixative VCap/VP/DMAEMA r8 below T_S; hold remains absent."
+   ]
+  },
+  {
+   "id": "sty-2bd7c991e0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Oryza Sativa Starch r5 below T_S."
+   ]
+  },
+  {
+   "id": "sty-2d5ab4896e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "styling_first",
+   "rule_path": "§4.3(3.4(iii));T15",
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Below T_S: PQ-16 r10, Chitosan r11, Dimethicone r12, Dimethiconol r19, Macadamia Oil r25."
+   ]
+  },
+  {
+   "id": "sty-2e27533811",
+   "identity_status": "provisional_formula_conflict",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 14,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "formula_conflict",
+   "rule_path": "§2.2(A2);§4.1;T18",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_source_conflict"
+   ],
+   "notes": [
+    "Two INCI sets; no GTIN-bearing dated C1 release or T18 convergence proof."
+   ]
+  },
+  {
+   "id": "sty-2ef7d850b2",
+   "identity_status": "verified_with_minor_source_difference",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 12,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));T15/D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Packet documents GTIN-bearing dated C1 release. Olivate r5 and Cetyl Alcohol r6 establish real care."
+   ]
+  },
+  {
+   "id": "sty-2f35af2bc0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "POTASSIUM SORBATE",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "second_day"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Dropped shine: formula gate fails. Magnesium Sulfate r14 below T_S.",
+    "Repairs: HYDRO + LYZED CORN STARCH; POLYGLYCERYL + 6 CAPRYLATE; POLYGLYCERYL + 4 CAPRATE."
+   ]
+  },
+  {
+   "id": "sty-304ab61b0b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM/FRAGRANCE",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate",
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "weight_claim_conflict"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-306b3285c7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Levulinic Acid",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Levulinic Acid",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-327d9e3060",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Hydroxyacetophenone",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Hydroxyacetophenone",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§5(2)",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "hairline",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Repair: 1 + 2-Hexanediol."
+   ]
+  },
+  {
+   "id": "sty-33a0f263b5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "care",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "dual_use_directions"
+   ],
+   "notes": [
+    "Leave-on/rinse-out alternatives; leave-on route retained."
+   ]
+  },
+  {
+   "id": "sty-33d2db76f6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Methylparaben",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Methylparaben",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "natural_film",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Dropped shine: formula gate fails."
+   ]
+  },
+  {
+   "id": "sty-35a62834e5",
+   "identity_status": "provisional_formula_conflict",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "formula_conflict",
+   "rule_path": "§2.2(A2);§4.1;T18",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_source_conflict"
+   ],
+   "notes": [
+    "Two INCI sets; no GTIN-bearing dated C1 release or T18 convergence proof."
+   ]
+  },
+  {
+   "id": "sty-36c9f9ada0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-374bb95302",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance (Parfum)",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-398b2e7524",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE/PARFUM",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "oil",
+   "reason_code": "oil_name_rule",
+   "rule_path": "§4.3(3.1);D2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-39c3720ead",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_first",
+   "rule_path": "§4.2;§4.3(3.2)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Refresh/oil removal plus volume: Dry Shampoo tie precedence."
+   ]
+  },
+  {
+   "id": "sty-3d912c5bce",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 14,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "shine",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-3d926e0354",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;PH1-7",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "silicone_coat",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/DIMETHYLAMINOETHYLMETHACRYLATE COPOLYMER)",
+   "review_triggers": [],
+   "notes": [
+    "Bart use recorded; one Styling route."
+   ]
+  },
+  {
+   "id": "sty-3dbd7f76e5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 11,
+     "status": "unresolved",
+     "alt": {
+      "inci": "BENZYL ALCOHOL",
+      "rank": 20
+     }
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Moisture plus defined curls; no D7 fixative."
+   ]
+  },
+  {
+   "id": "sty-419a781646",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 15,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/VA COPOLYMER)",
+   "review_triggers": [
+    "candidate_below_tail",
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "PQ-7 r12 below T_S."
+   ]
+  },
+  {
+   "id": "sty-41cb0f4111",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "refresh",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Dropped shine: formula gate fails. Magnesium Sulfate r7 and Shea Butter r10 below T_S."
+   ]
+  },
+  {
+   "id": "sty-46bb0eb0fa",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 13,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PHENOXYETHANOL",
+      "rank": 17
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));PH2-1",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Smoothing promise, substantive care, no fixative."
+   ]
+  },
+  {
+   "id": "sty-49d6b4b803",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Benzyl Alcohol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "li_g0_provisional",
+   "rule_path": "§4.3(D6);R1-H3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "li_g0_provisional",
+    "hair_fixing_silicone_unresolved",
+    "care_below_dose_yardstick",
+    "unsettled_film_former"
+   ],
+   "notes": [
+    "Polysilicone-9 r3 leaves D6 hold limb unresolved. Steartrimonium Chloride r8 below Malic Acid r7."
+   ]
+  },
+  {
+   "id": "sty-4b24180c2d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "ANISE ALCOHOL",
+     "rank": 7,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PARFUM / FRAGRANCE",
+      "rank": 21
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "oil",
+   "reason_code": "oil_name_rule",
+   "rule_path": "§4.3(3.1);D2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-4b3b0fef0c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));T15/D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "No fixative; substantive conditioning architecture."
+   ]
+  },
+  {
+   "id": "sty-4ca8ad5d93",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "POTASSIUM SORBATE",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "POTASSIUM SORBATE",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "styling_first",
+   "rule_path": "§4.3(3.4(iii));T15",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/VA COPOLYMER)",
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-4d351672a6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 12,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§5",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "unmapped_brand_scale;no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. PVP)",
+   "review_triggers": [
+    "house_brand_ownership",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Balea 5/7 lacks approved mapping; no strength word. PQ-11 r7 below T_S."
+   ]
+  },
+  {
+   "id": "sty-4fb84d8dc7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 13,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.3(3.3);§4.6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-4fd8286910",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": null,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "candidate_below_tail",
+    "flags_incomplete",
+    "transcription_defect"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Dropped frizz_control and definition: formula gates fail. Coconut r13 and Shea r14 below T_S.",
+    "CITRONELLOL SODIUM CHLORIDE unreadable: salt flag unknown."
+   ]
+  },
+  {
+   "id": "sty-4fff74d3d1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 12,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-5468994b24",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7;PH1-14",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture verbatim directions. Ruled destination styling/smoothing_styler remains blocked."
+   ]
+  },
+  {
+   "id": "sty-54e716122d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.3(3.3)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-56226080d5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§5(2)",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "hairline",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "fest",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Repair: 1 + 2-Hexanediol. Removal instructions govern later cleansing."
+   ]
+  },
+  {
+   "id": "sty-56c00f9461",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Hydroxyacetophenone",
+      "rank": 10
+     }
+    }
+   },
+   "promise_class": "mixed",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.6;D3/T15",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "ruled_route_override",
+    "species_reading_conflict",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "D3/T15 names conditioning-film architecture; strict tail reading excludes Silicone Quaternium-18 r11."
+   ]
+  },
+  {
+   "id": "sty-58b4a48b0f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 15,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise",
+    "tail_marker_vacuous"
+   ],
+   "notes": [
+    "Co-equal Textur und Pflege; no D7 curl cream."
+   ]
+  },
+  {
+   "id": "sty-597ccec3a9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "phenoxyethanol",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-5ac2b80094",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 26,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "EDTA",
+     "rank": 24,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3;R1-H2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Confirmed Curl Care/Curl Defining name plus C1 moisturising promise; no D7 fixative."
+   ]
+  },
+  {
+   "id": "sty-5ace0c470d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.3(3.3)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-5b112b1dc0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "potassium sorbate",
+     "rank": 15,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt",
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-5e80cb65d4",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(3.4(i));D7;§4.5;PH2-2",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "wax_lipid",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix",
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "C1 HALT 3 and C2 name Halt 3 agree after number-over-word normalization."
+   ]
+  },
+  {
+   "id": "sty-614d0e5090",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Below T_S: Isopropyl Myristate r10, Dicaprylyl Ether r14, Lauryl Alcohol r15, Alkyl Benzoate r17.",
+    "Repair: TETRAMETHYL + ACETYLOCTAHYDRONAPHTHALENES."
+   ]
+  },
+  {
+   "id": "sty-63426f02d0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENYLPROPANOL",
+     "rank": 11,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PHENOXYETHANOL",
+      "rank": 15
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "weight_claim_conflict"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-6375ac2f38",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance/ Parfum",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.3(3.3)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-638a63f1ba",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-64d07e6664",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "dry_hair_finish",
+   "rule_path": "§4.2;R1-Q2;§4.3(3.5)",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "surface",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "shine",
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-68f50e2aa2",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "dry_hair_finish",
+   "rule_path": "§4.2;§4.3(3.4(ii));R1-Q2",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "wax_lipid",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "polyurethane"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "frizz_control",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-6ed150a5e5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "S0 lead job is redacted beyond determination. Capture unredacted C1/C2 lead; claims packet cannot repair S0."
+   ]
+  },
+  {
+   "id": "sty-6f89f81634",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-6fdde0c7c6",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE (PERFUM)",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Persistent silicone/quat/oil care; no fixative-class polymer."
+   ]
+  },
+  {
+   "id": "sty-71c5620239",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6/R2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "care_decided_below_preservative"
+   ],
+   "notes": [
+    "Fatty Alcohol r3; amidoamine r6 and Behentrimonium Chloride r7 count before post-preservative pH yardstick."
+   ]
+  },
+  {
+   "id": "sty-722c4e56de",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 20,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 20,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "silicone_coat",
+    "fixative_film",
+    "wax_lipid",
+    "particulate"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "brand_scale",
+   "flexibility": "beweglich",
+   "finish": "natürlich",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-74b398ae35",
+   "identity_status": "provisional_formula_conflict",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 19,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 19,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Leuconostoc/Radish Root Ferment Filtrate",
+      "rank": 22
+     }
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "formula_conflict",
+   "rule_path": "§2.2(A2);§4.1;T18",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_source_conflict",
+    "s0_evidence_gate",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Two INCI sets; no GTIN-bearing dated C1 release or T18 convergence proof. Directions also missing."
+   ]
+  },
+  {
+   "id": "sty-77d8902fe5",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Phenoxyethanol",
+      "rank": 16
+     }
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Care plus curl definition; D7 does not qualify."
+   ]
+  },
+  {
+   "id": "sty-78863e03c9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-7e0a7c51ec",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 28,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 24,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture verbatim directions and C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-7e7c92c7c4",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§7.3",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Taft gel number ignored; maximal/Power words govern."
+   ]
+  },
+  {
+   "id": "sty-7ebb51809e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Co-equal styling/care; D7 not applicable."
+   ]
+  },
+  {
+   "id": "sty-804bd327e1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 14,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Pflegende styling cream promises definition for curly hair; no D7 fixative."
+   ]
+  },
+  {
+   "id": "sty-82a615204a",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3;R1-H2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Restores curl structure and promises gepflegte Locken; no D7 fixative. Care adjective/callout boundary requires review."
+   ]
+  },
+  {
+   "id": "sty-841aa7fa1c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Fragrance/Parfum",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Polysilicone-29 r3 supplies real care; no fixative."
+   ]
+  },
+  {
+   "id": "sty-8fdc0f1f73",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Carrageenan r7 below T_S."
+   ]
+  },
+  {
+   "id": "sty-901eb40546",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;R1-Q4",
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": true,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "yes",
+   "hold_level": 3,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "natural_film_unsettled",
+    "weight_claim_conflict"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-938a8617ff",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 14,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;R1-Q1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Nicht glänzend is negated shine; no finish-word conflict."
+   ]
+  },
+  {
+   "id": "sty-93ce121a90",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": null,
+     "rank": null,
+     "status": "absent"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "tail_marker_absent"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-9776c28a27",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzoic Acid",
+     "rank": 19,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Benzoic Acid",
+     "rank": 19,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise",
+    "dual_use_directions",
+    "tail_marker_vacuous"
+   ],
+   "notes": [
+    "Care plus curl definition; no D7 fixative. Rinse-out and leave-on alternatives do not resolve the tie."
+   ]
+  },
+  {
+   "id": "sty-982992b85c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 23,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));PH1-13;PH2-11",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_vacuous"
+   ],
+   "notes": [
+    "R2 care: Stearamidopropyl Dimethylamine r4 above T_LI; named Leave-in route."
+   ]
+  },
+  {
+   "id": "sty-986b4544a4",
+   "identity_status": "provisional_formula_conflict",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "formula_conflict",
+   "rule_path": "§2.2(A2);§4.1;T18",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_source_conflict"
+   ],
+   "notes": [
+    "Two INCI sets; no GTIN-bearing dated C1 release or T18 convergence proof."
+   ]
+  },
+  {
+   "id": "sty-9990f27947",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 39,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Fragrance (Parfum)",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(3.4(i));§4.6;RG-21;§4.5;PH2-2",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "polyurethane"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "tail_marker_vacuous",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Families: fatty alcohol Cetearyl Alcohol r7; ester Ethylhexyl Palmitate r8. No rich member/LGN pair. Phenyl Trimethicone r29 below T_S."
+   ]
+  },
+  {
+   "id": "sty-9c00d270f1",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM / FRAGRANCE",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "oil",
+   "reason_code": "oil_name_rule",
+   "rule_path": "§4.3(3.1);D2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-9e1456446d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "dry_hair_finish",
+   "rule_path": "§4.2;R1-Q2;§4.3",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "sleek",
+    "frizz_control"
+   ],
+   "d8b_flags": [
+    "claim_formula_conflict"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_formula_conflict"
+   ],
+   "notes": [
+    "Dropped hold_fix: formula gate fails; stated level unchanged."
+   ]
+  },
+  {
+   "id": "sty-9fb9774bc4",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "styling_first",
+   "rule_path": "§4.3(3.4(iii));T15",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. PVP)",
+   "review_triggers": [
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Castor Oil r13 and Coconut Oil r14 below T_S. Repair: 1 + 2-Hexanediol."
+   ]
+  },
+  {
+   "id": "sty-9fc846e68e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "heat_claim_without_l9",
+    "job_formula_conflict",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Volume primary retained despite formula-gate failure. Dropped shine. Cationic guar r10 below T_S."
+   ]
+  },
+  {
+   "id": "sty-a03f3770fb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 8,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film",
+    "particulate"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-a18465f239",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "li_g0_provisional",
+   "rule_path": "§4.3(3.4(iii));PH2-1",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "li_g0_provisional"
+   ],
+   "notes": [
+    "Fixative plus substantive conditioning; smoothing balm outside D7."
+   ]
+  },
+  {
+   "id": "sty-a54bee0cd9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(3.4(i));D7;§4.5;PH2-2",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "frizz_control",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "heat_claim_without_l9",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "LGN pair Cetearyl Alcohol r2/Cetrimonium Chloride r9 makes rich. Silicones r12/r13/r19 below T_S."
+   ]
+  },
+  {
+   "id": "sty-a7710129ad",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;R1-H1",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Glow & Care names two jobs; first C2 lead is [CLAIM] Spray. Capture unredacted lead; claims packet cannot repair S0."
+   ]
+  },
+  {
+   "id": "sty-a999bc86c9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    "particulate",
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "natural_film_unsettled"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-aab1c9a3ff",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 11,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "styling_first",
+   "rule_path": "§4.3(3.4(iii));T15",
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "lengths",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "natürlich",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_vacuous",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Dropped shine: formula gate fails. Blow-drying is offered for more smoothing, not required."
+   ]
+  },
+  {
+   "id": "sty-ad209b3f0f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 13,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Fragrance (Parfum)",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-ad5ac2a57f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.3(3.3)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-ad82f44498",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzoic Acid",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));§7.2;§7.4",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "C1_strength_word:ultrastark;unmapped_number",
+   "flexibility": "fest",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Unmapped got2b 6-scale ignored; C1 ultrastarke Styles gives 4. Kleber/Freeze govern rigidity only."
+   ]
+  },
+  {
+   "id": "sty-ae499fa90d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 12,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));§7.8",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "§7.8_binding_example:ultra_krass",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "hold_rule_gap"
+   ],
+   "notes": [
+    "§7.8 binds ultra krass to 4; §13.2(4) still lists the phrase as a gap."
+   ]
+  },
+  {
+   "id": "sty-b0cfb3d9b0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise"
+   ],
+   "notes": [
+    "Styling & Pflege in einem; no D7 curl cream."
+   ]
+  },
+  {
+   "id": "sty-b25d389a6f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Persistent silicone, ester and fatty alcohol care; no fixative."
+   ]
+  },
+  {
+   "id": "sty-b7c497ef76",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "dry_hair_finish",
+   "rule_path": "§4.2;§4.3(3.4(ii));R1-Q2",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "surface",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Unambiguous alias repair: VPVA COPOLYMER r4 -> VP/VA Copolymer. Directions apply after styling."
+   ]
+  },
+  {
+   "id": "sty-bd594239a2",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 20,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 13,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "dry_hair_finish",
+   "rule_path": "§4.2;§4.3(3.4(ii));R1-Q2",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "wax_lipid",
+    "silicone_coat",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "surface",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "frizz_control",
+   "secondary_jobs": [
+    "shine"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Aliases: PerseaGratissima Oil -> Persea Gratissima Oil; IsostearylPalmitate -> Isostearyl Palmitate. Avocado plus silicone families make rich."
+   ]
+  },
+  {
+   "id": "sty-c0a3c59b1b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 11,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "CAPRYLYL GLYCOL",
+     "rank": 11,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PHENOXYETHANOL",
+      "rank": 13
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;PH1-6",
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "ambiguous",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "beweglich",
+   "finish": "glänzend",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "pq_only_film_former"
+   ],
+   "notes": [
+    "PQ-11 alone is ambiguous, not fixative-class. Dropped shine: formula gate fails."
+   ]
+  },
+  {
+   "id": "sty-c2a24858d2",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 15,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "natural_film_unsettled",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "Kaolin r13 below T_S. Matt outranks compatible natürlich finish."
+   ]
+  },
+  {
+   "id": "sty-c53e2c6aa3",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 12,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§7.5",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [
+    "d8b_identical_inci_sibling"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "d8b_identical_inci_sibling"
+   ],
+   "notes": [
+    "Character-identical same-brand INCI to sty-f4cef8a1f2, different stated level; verify packs."
+   ]
+  },
+  {
+   "id": "sty-c6d90897fe",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 12,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise."
+   ]
+  },
+  {
+   "id": "sty-c71739bd7d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_first",
+   "rule_path": "§4.2;§4.3(3.2)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Refresh/oil absorption plus volume/texture: Dry Shampoo tie precedence."
+   ]
+  },
+  {
+   "id": "sty-c76a286043",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 13,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Phenoxyethanol",
+      "rank": 16
+     }
+    }
+   },
+   "promise_class": "mixed",
+   "route": "styling",
+   "reason_code": "ruled_styling_first",
+   "rule_path": "§4.6;D3/T15;R1-H2",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "ruled_route_override",
+    "tail_marker_unresolved",
+    "quat_structure_unresolved"
+   ],
+   "notes": [
+    "Owner-named Curlicue exception stands. Quaternium-95 is opaque and never creates an LGN pair."
+   ]
+  },
+  {
+   "id": "sty-c7e2b1bf30",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5);PH1-7",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "particulate"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Bart use recorded; one Styling route."
+   ]
+  },
+  {
+   "id": "sty-caf68491bd",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 8,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Hydroxyacetophenone",
+      "rank": 9
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "conditioning_first",
+   "rule_path": "§4.3(3.4(iii));D6",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Polysilicone-29 r7 supplies real care; no fixative."
+   ]
+  },
+  {
+   "id": "sty-d0eb164a6b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "natürlich",
+   "primary_job": "definition",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "natural_film_unsettled"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Dropped shine: formula gate fails. Natural film supports D8b mechanism, not D6 real hold."
+   ]
+  },
+  {
+   "id": "sty-d311711f74",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "styling_first",
+   "rule_path": "§4.3(3.4(iii));T15",
+   "subtype": "gel",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_vacuous",
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Soft appears in the captured hold wording. Natural hair feel is not a finish word."
+   ]
+  },
+  {
+   "id": "sty-d3a44d2e5c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_first",
+   "rule_path": "§4.3(3.2)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-d477af541b",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 20,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE",
+     "rank": 14,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5)",
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film",
+    "particulate",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-d4bc3bd74a",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "DIMETHYL PHENETHYL ACETATE",
+     "rank": 10,
+     "status": "unresolved",
+     "alt": {
+      "inci": "BENZYL ALCOHOL",
+      "rank": 13
+     }
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_first",
+   "rule_path": "§4.2;§4.3(3.2)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Hair-freshness plus volume promise invokes Dry Shampoo tie precedence."
+   ]
+  },
+  {
+   "id": "sty-d8c1547871",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 9,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Phenoxyethanol",
+      "rank": 12
+     }
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "mixed_promise",
+   "rule_path": "§4.2;R1-Q3",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_mixed_promise",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Moisturising promise plus new curl definition; not a D7 cream."
+   ]
+  },
+  {
+   "id": "sty-db452d3722",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Levulinic Acid",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Levulinic Acid",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(D6);§4.5;PH2-2",
+   "subtype": "refresher",
+   "result_mechanisms": [
+    "humectant_only"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "house_brand_ownership",
+    "candidate_below_tail",
+    "care_below_dose_yardstick"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Oil r12, esters r14/r16, Brassica Alcohol r21 and flax extract r25 below T_S.",
+    "Brassicyl Isoleucinate Esylate r17 below Lactic Acid r13: no effective care under R2."
+   ]
+  },
+  {
+   "id": "sty-dbcb83ae42",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Benzyl Alcohol",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Benzyl Alcohol",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "mixed",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.3(3.4(i));D7;PH1-12;§4.5;PH2-2",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "silicone_coat",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "pvm_ma"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "frizz_control",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. Vp/va Copolymer)",
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "candidate_below_tail"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Families: silicone Dimethicone r2 and cationic polymer PQ-4 r9; no rich member/LGN pair. Oils/ester r14/r25/r28/r30 below T_S.",
+    "EIMI number 2 has no approved scale; no strength word."
+   ]
+  },
+  {
+   "id": "sty-dd72dedbab",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 9,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;R1-Q1",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "glänzend",
+   "primary_job": "shine",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Mineral Oil is one persistent family; no extra rich route from form."
+   ]
+  },
+  {
+   "id": "sty-e14e476dbf",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 12,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));§7.2;§7.3;R1-Q1;RG-19",
+   "subtype": "molding",
+   "result_mechanisms": [
+    "wax_lipid",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "Henkel_x5:5plus;five_mark_recapture",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "flexibility_rule_gap"
+   ],
+   "notes": [
+    "Re-read: five marks; fifth highlighted and labeled 5+. Maps to 4. Verformbar is unmapped; C3 matt claim ignored."
+   ]
+  },
+  {
+   "id": "sty-e3285fc7bb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "mousse",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": []
+  },
+  {
+   "id": "sty-e8d9c3524d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Piroctone Olamine",
+     "rank": 10,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Piroctone Olamine",
+     "rank": 10,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;R1-Q4",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "heat_claim_without_l9"
+   ],
+   "notes": [
+    "48h is duration, not strength. No captured explicit heat-activation statement."
+   ]
+  },
+  {
+   "id": "sty-e8edf7a0c0",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 24,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "CAPRYLHYDROXAMIC ACID",
+     "rank": 14,
+     "status": "unresolved",
+     "alt": {
+      "inci": "TETRASODIUM GLUTAMATE DIACETATE",
+      "rank": 15
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.6;D7;§4.5;PH2-2;FX-2c",
+   "subtype": "curl_cream",
+   "result_mechanisms": [
+    "wax_lipid",
+    "silicone_coat"
+   ],
+   "hold_route": "ambiguous",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "second_day"
+    ]
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "definition",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "ruled_route_override",
+    "tail_marker_vacuous",
+    "tail_marker_unresolved",
+    "acrylates_copolymer_function_unresolved",
+    "unsettled_film_former"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Owner route stands; generic Acrylates Copolymer is uncorroborated. Sodium Polystyrene Sulfonate is FX-U. LGN pair establishes rich."
+   ]
+  },
+  {
+   "id": "sty-ebeaf561cf",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "heat_protection",
+   "route": "heat_protectant",
+   "reason_code": "protection_first",
+   "rule_path": "§4.2;§4.3(3.3)",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Confirmed Hitzeschutzspray name supplies protection-first positioning."
+   ]
+  },
+  {
+   "id": "sty-ec09cf93c3",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 39,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE",
+     "rank": 36,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid",
+    "natural_film",
+    "salt"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": "Enthält Stylingpolymere (z. B. VP/VA COPOLYMER)",
+   "review_triggers": [
+    "weight_claim_conflict"
+   ],
+   "notes": [
+    "Families: oil Argan r6/ester CCT r34; cationic polymers PQ-11 r30/PQ-16 r31. No rich member/LGN pair."
+   ]
+  },
+  {
+   "id": "sty-ec3184f3aa",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§4.2",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "definition"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "Ingredient/feel callout is secondary, not co-equal care. C3 hold attribute ignored."
+   ]
+  },
+  {
+   "id": "sty-ee0f24fe5f",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 8,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;R1-Q4",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt",
+    "natural_film"
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "before_heat"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "beweglich",
+   "finish": "natürlich",
+   "primary_job": "texture",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": []
+  },
+  {
+   "id": "sty-f185e1f864",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 11,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Ethylhexylglycerin",
+     "rank": 11,
+     "status": "unresolved",
+     "alt": {
+      "inci": "Tetrasodium EDTA",
+      "rank": 18
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "ruled_styling",
+   "rule_path": "§4.1;§4.6;D2",
+   "subtype": "shine_finish",
+   "result_mechanisms": [
+    "wax_lipid"
+   ],
+   "hold_route": "absent",
+   "weight": "rich",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "fires",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": null,
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "ruled_route_override",
+    "tail_marker_unresolved",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "Owner-routed; C3-only claim fields take no-claim values."
+   ]
+  },
+  {
+   "id": "sty-f4cef8a1f2",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 12,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 11,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;§7.5",
+   "subtype": "hairspray",
+   "result_mechanisms": [
+    "fixative_film",
+    "wax_lipid"
+   ],
+   "hold_route": "present",
+   "weight": "medium",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 2,
+   "hold_basis": "brand_scale",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "hold_fix",
+   "secondary_jobs": [],
+   "d8b_flags": [
+    "d8b_identical_inci_sibling"
+   ],
+   "neutral_fact": null,
+   "review_triggers": [
+    "d8b_identical_inci_sibling"
+   ],
+   "notes": [
+    "Character-identical same-brand INCI to sty-c53e2c6aa3, different stated level; verify packs."
+   ]
+  },
+  {
+   "id": "sty-f68e671f8e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "PARFUM",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1;PH2-7;RG-13;R1-Q4",
+   "subtype": "blowdry_lotion",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp",
+     "acrylate"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": [
+     "dry_restyle"
+    ]
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 4,
+   "hold_basis": "strength_words",
+   "flexibility": "beweglich",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "frizz_control",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership"
+   ],
+   "notes": [
+    "Level from house-brand sehr starker Halt; Ultra Volumen is not a strength claim."
+   ]
+  },
+  {
+   "id": "sty-f722d2f309",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance/Parfum",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "direct_styling",
+   "rule_path": "§4.3(3.4(ii));PH2-1",
+   "subtype": "salt_spray",
+   "result_mechanisms": [
+    "salt",
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": [
+     "damp_before_drying"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "strength_words",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [],
+   "notes": [
+    "EIMI number 2 ignored; leichter Halt supplies level 1."
+   ]
+  },
+  {
+   "id": "sty-f7a0972320",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "LINALOOL",
+     "rank": 7,
+     "status": "unresolved",
+     "alt": {
+      "inci": "PARFUM / FRAGRANCE",
+      "rank": 11
+     }
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous_styling",
+   "rule_path": "§4.3(3.5);§6.11",
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    "fixative_film"
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": [
+     "vinyl_acetate",
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "unresolved",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "directions_unresolved",
+    "tail_marker_unresolved"
+   ],
+   "notes": [
+    "Teasing/shaping directions do not state hair moisture; spray-only fallback does not apply."
+   ]
+  },
+  {
+   "id": "sty-fa9454f7bd",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "DMDM Hydantoin",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "DMDM Hydantoin",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": "§4.1;§4.6;D2;§4.5;PH2-2",
+   "subtype": "smoothing_styler",
+   "result_mechanisms": [
+    "silicone_coat"
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": "does_not_fire",
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "unresolved",
+   "hold_level": null,
+   "hold_basis": "no_stated_strength",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": null,
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "ruled_route_override",
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": [
+    "provisional; lean_route=styling; not matchable before addendum approval.",
+    "Owner-routed; C3-only claim fields take no-claim values. Silicone Quaternium-18 r7 below T_S; activation only C3."
+   ]
+  },
+  {
+   "id": "sty-fcf576cfe3",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 4,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "unknown",
+   "route": "provisional_boundary",
+   "reason_code": "evidence_gate",
+   "rule_path": "§4.1;§4.7",
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": "not_emitted:§4.7",
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "s0_evidence_gate"
+   ],
+   "notes": [
+    "Capture C1/C2 primary promise and verbatim directions; current directions are a paraphrase."
+   ]
+  }
+ ],
+ "ambiguous_rules": [
+  {
+   "section": "§7.8 versus §7.4 and §13.2(4)",
+   "ambiguity": "The binding worked example assigns ultra krass level 4, while the open-gap register says krass is unmapped. Applied the expressly binding example and retained a review flag."
+  },
+  {
+   "section": "§4.2;R1-Q3/R1-H2 versus SFS-15",
+   "ambiguity": "The boundary between a care adjective that creates a care/definition tie and an ingredient or hair-feel callout remains partly judgment-based."
+  },
+  {
+   "section": "§4.2;R1-H1;§10.2",
+   "ambiguity": "Some S0 redactions remove the complete lead-job wording. A two-job name cannot replace that lead. Kept affected records evidence-gated rather than borrowing claims-packet text."
+  },
+  {
+   "section": "§6.10",
+   "ambiguity": "Schwung and Elastizität have no explicit primary-job mapping. Emitted review for the affected primary job."
+  },
+  {
+   "section": "§6.9;§13.2(4)",
+   "ambiguity": "Verformbar remains outside the flexibility lexicon. Emitted unbekannt with a rule-gap trigger."
+  },
+  {
+   "section": "§6.8",
+   "ambiguity": "Halbmatt was read in the matt family; natürlich aussehendes Finish was not treated as the required adjacent natürliches Finish phrase."
+  }
+ ],
+ "run_note": "saved verbatim from Codex job task-mv56lwwu-nyikp2 final answer by the orchestrator (wrapper did not write the file)"
+}

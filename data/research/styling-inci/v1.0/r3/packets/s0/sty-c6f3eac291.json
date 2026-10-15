@@ -1,0 +1,137 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-c6f3eac291",
+  "product": {
+    "confirmed_name": "EIMI Smooth Thermal Image (2-Phasen-Spray)",
+    "confirmed_name_redacted": false,
+    "brand": "Wella Professionals",
+    "format": "two_phase_spray"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 2,
+        "inci": "Water/Eau"
+      },
+      {
+        "rank": 3,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 4,
+        "inci": "Disiloxane"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Vp/Va Copolymer"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Polyquaternium-16"
+      },
+      {
+        "rank": 9,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 10,
+        "inci": "Fragrance/ Parfum"
+      },
+      {
+        "rank": 11,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 13,
+        "inci": "Dimethiconol"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 15,
+        "inci": "Violet 2"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gut schütteln und vor dem Hitzestyling abschnittsweise auf das trockene Haar sprühen",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Unser EIMI Thermal Image 2-Phasen-Spray schützt Ihr Haar bei der Verwendung von heißen Geräten. Phase 1 pflegt das Haar und schützt es vor Hitze bis zu 220°C. Phase 2 glättet Ihr Haar für ein makelloses, [CLAIM] Ergebnis. [CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Professionelles Haarspray mit [CLAIM] Halt",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Hitzeschutz bis zu 220°C",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Sorgt für ein glattes und [CLAIM] Ergebnis",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Schützt das Haar während des Stylings vor Hitze",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Hitzeschutz bis zu 220°C",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-ad328c0e4a",
+  "product": {
+    "confirmed_name": "LOCKEN METHODE SHAPE REFRESH STEP 4 FEUCHTIGKEITS-BOOST SPRAY",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "GARNIER FRUCTIS",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 3,
+        "inci": "GLUCOSE"
+      },
+      {
+        "rank": 4,
+        "inci": "SORBITOL"
+      },
+      {
+        "rank": 5,
+        "inci": "PEG-60 HYDROGENATED CASTOR OIL"
+      },
+      {
+        "rank": 6,
+        "inci": "CARRAGEENAN"
+      },
+      {
+        "rank": 7,
+        "inci": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM HYALURONATE"
+      },
+      {
+        "rank": 9,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "SUCROSE"
+      },
+      {
+        "rank": 11,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 13,
+        "inci": "PECTIN"
+      },
+      {
+        "rank": 14,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 15,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 16,
+        "inci": "METHYL 2-OCTYNOATE"
+      },
+      {
+        "rank": 17,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 18,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 19,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 20,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 21,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Haar mit dem N°0 Pre-Shampoo und dem N°1 Shampoo waschen, die N°2 feuchtigkeitsauffüllende Maske anwenden und anschließend das N°3 Shape Refresh Feuchtigkeitsboost Spray auf das feuchte oder trockene Haar auftragen; Locken kneten und um die Finger zwirbeln, um sie zu definieren; an der Luft oder im Diffusor trocknen lassen; täglich oder zwischen den Haarwäschen anwenden.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Die Formel mit dem Feuchtigkeits-Komplex mit Hyaluron und Shea-Fettsäuren spenden den Locken bis zu 48h Feuchtigkeit und definierte Locken.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

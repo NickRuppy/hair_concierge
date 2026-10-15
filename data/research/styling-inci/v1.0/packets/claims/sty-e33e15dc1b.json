@@ -1,0 +1,41 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-e33e15dc1b",
+  "brand": "feschi",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "bändigt fliegende Härchen und verleiht ein seidig glattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt; 'beschwert nicht, selbst bei feinem Haar'",
+      "absence_statement": true
+    },
+    {
+      "type": "finish",
+      "text": "seidiges Haargefühl & einzigartige Glanzreflexe",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

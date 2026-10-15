@@ -1,0 +1,125 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-67574cc53a",
+  "product": {
+    "confirmed_name": "Curl Cream Gel",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "syoss",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: '1' + '2-Hexanediol' -> '1,2-Hexanediol'",
+        "defect_rank": 16
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "PVP"
+      },
+      {
+        "rank": 3,
+        "inci": "Acrylates/Hydroxyesters Acrylates Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 5,
+        "inci": "Acrylates/Steareth-20 Methacrylate Crosspolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 7,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 8,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 9,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 10,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 11,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 12,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 13,
+        "inci": "Ricinus Communis (Castor) Seed Oil"
+      },
+      {
+        "rank": 14,
+        "inci": "Cocos Nucifera (Coconut) Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Caprylyl/Capryl Glucoside"
+      },
+      {
+        "rank": 16,
+        "inci": "1,2-Hexanediol"
+      },
+      {
+        "rank": 17,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 18,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 19,
+        "inci": "Terpineol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Für die „Curly Girl Methode\" eine kleine Menge in den Handflächen verteilen und das Gel gleichmäßig von unten nach oben in das nasse Haar einkneten. Für ein natürlicheres Ergebnis und weniger Frizz, die Locken nach dem Trocknen in ein Seidentuch wickeln und sanft kneten, damit sich der Film lösen kann. Für mehr Definition kann zusätzlich der SYOSS Curl Schaumfestiger verwendet werden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "syoss.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Gel hilft dabei, Locken zu formen und zu definieren – ohne das Haar zu beschweren",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

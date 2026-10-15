@@ -1,0 +1,54 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-5e46e8aeb5",
+  "brand": "got2b (Schwarzkopf/Henkel)",
+  "confirmed_name": "Glanz Spray got Gloss (gotGloss Glanz Spray)",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Bis zu 48h spiegelglänzendes Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "spiegelglänzendes Haar / Spiegelglanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 48h",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "Bis zu 48h Frizz-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Bis zu 230 C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

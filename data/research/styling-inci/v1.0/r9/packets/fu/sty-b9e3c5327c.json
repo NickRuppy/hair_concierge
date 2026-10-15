@@ -1,0 +1,56 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r8amend",
+  "sample_id": "sty-b9e3c5327c",
+  "format": "powder_shaker",
+  "inci": {
+    "inci_item_count": 8,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "SILICA SILYLATE [NANO] / SILICA SILYLATE"
+      },
+      {
+        "rank": 2,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 6,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 7,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 8,
+        "inci": "POTASSIUM SORBATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Schritt 1: Das Produkt schütteln. Schritt 2: Das Produkt über das Haar streuen. Schritt 3: Mit den Fingern durch das Haar kneten. Schritt 4: Für ein [CLAIM] und strukturierendes Finish etwas mehr Produkt auftragen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-8b81dcac7a",
+  "format": "paste",
+  "inci": {
+    "inci_item_count": 33,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Candelilla Cera"
+      },
+      {
+        "rank": 3,
+        "inci": "Cocos Nucifera Oil"
+      },
+      {
+        "rank": 4,
+        "inci": "Helianthus Annuus Seed Oil"
+      },
+      {
+        "rank": 5,
+        "inci": "Glyceryl Stearate"
+      },
+      {
+        "rank": 6,
+        "inci": "Zea Mays Starch"
+      },
+      {
+        "rank": 7,
+        "inci": "Stearic Acid"
+      },
+      {
+        "rank": 8,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 9,
+        "inci": "Palmitic Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Hydrogenated Starch Hydrolysate"
+      },
+      {
+        "rank": 11,
+        "inci": "Sucrose"
+      },
+      {
+        "rank": 12,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 13,
+        "inci": "Kaolin"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Cetearyl Sulfate"
+      },
+      {
+        "rank": 15,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 16,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 18,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 19,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 20,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 21,
+        "inci": "Amyl Salicylate"
+      },
+      {
+        "rank": 22,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 23,
+        "inci": "Sodium Sulfate"
+      },
+      {
+        "rank": 24,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 25,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 26,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 27,
+        "inci": "Vanillin"
+      },
+      {
+        "rank": 28,
+        "inci": "Disodium Phosphate"
+      },
+      {
+        "rank": 29,
+        "inci": "Sodium Chloride"
+      },
+      {
+        "rank": 30,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 31,
+        "inci": "Benzaldehyde"
+      },
+      {
+        "rank": 32,
+        "inci": "Potassium Phosphate"
+      },
+      {
+        "rank": 33,
+        "inci": "Methyl Benzoate Free of Ethanol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge zwischen den Handflächen verreiben und auf trockenes oder leicht feuchtes Haar auftragen. Anschließend mit den Fingern oder einem Kamm in Form bringen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

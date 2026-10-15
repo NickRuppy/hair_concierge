@@ -1,0 +1,590 @@
+[
+  {
+    "sample_id": "cantu-lockenspray-comeback-curl-next-day",
+    "subtype_candidate": "refresher",
+    "brand": "cantu",
+    "product_name": "Lockenspray Comeback Curl Next Day (Next Day Curl Revitalizer)",
+    "size": "355 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 6.95,
+    "price_source_url": "https://www.dm.de/p/d/1675023/cantu-lockenspray-comeback-curl-next-day",
+    "ean": "810006943474",
+    "inci": "Aqua (Water), Glycerin, Polysorbate 20, Phenoxyethanol, PEG-40 Hydrogenated Castor Oil, Parfum (Fragrance), Magnesium Sulfate, Hydroxyethylcellulose, Citric Acid, Butyrospermum Parkii (Shea) Butter, Polysorbate 60, Disodium Phosphate, Sodium Phosphate, Coumarin, Hexyl Cinnamal.",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1675023",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Definiert Locken neu",
+      "Reduziert Frizz",
+      "Verleiht dem Haar Glanz & Geschmeidigkeit",
+      "Mit Sheabutter & Rizinusöl",
+      "um Locken, Coils und Wellen aufzufrischen und wiederzubeleben"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "Glanz & Geschmeidigkeit (raw: 'Verleiht dem Haar Glanz & Geschmeidigkeit')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken, Coils und Wellen"
+    ],
+    "free_from_claims": [],
+    "directions": "Section by section onto dry or damp hair to refresh curls; re-apply on dry hair for extra moisture; evening tip: dampen hair lightly and loose top ponytail to cut next-day frizz.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. Only Hydroxyethylcellulose #8 (thickener) and Magnesium Sulfate #7. CONDITIONING: effectively none above the tail: Butyrospermum Parkii (Shea) Butter #10 sits below the first preservative (Phenoxyethanol #4) and below Parfum #6; no cationics, no fatty alcohols, no silicones; PEG-40 Hydrogenated Castor Oil #5 and Polysorbates #3/#11 are solubilisers/emulsifiers only. Base = water + glycerin #2. First preservative: Phenoxyethanol #4. First perfume: Parfum #6. Heat-protection claim: none. Alcohol: none.",
+    "notes": "Textbook 'refresher' formula: water/glycerin/solubiliser, no polymer, shea only below the tail. Claim 'Mit ... Rizinusöl' is supported only by PEG-40 Hydrogenated Castor Oil #5 (an ethoxylated solubiliser, not castor oil as a care oil). AVAILABILITY: dm.de detail endpoint returns the product (DAN 1675023, 'dm-Dauerpreis' since 28.09.2022) but it did NOT appear in dm.de site search for 'lockenspray'/'cantu' on 2026-10-11 and the page metadata says robots=noindex; dm.at lists it as lieferbar; beautybay.de and cloud10beauty.com (DE) show sold out. Treat as 'sold in DE per dm detail endpoint, listing status to be re-verified'. Brand site cantubeauty.de (C2) was not reachable via search, so claims are C3. Manufacturer on pack: Bionok Healthcare SL (Spain).",
+    "dm_dan": 1675023,
+    "capture_date": "2026-10-11",
+    "boundary_probe": false,
+    "duration_claim": null
+  },
+  {
+    "sample_id": "garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "GARNIER FRUCTIS",
+    "product_name": "Pflege-Spray Locken Methode Feuchtigkeitsboost (N°3 Shape Refresh)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 5.95,
+    "price_source_url": "https://www.dm.de/p/d/1319532/",
+    "ean": "3600542585996",
+    "inci": "AQUA / WATER, GLYCERIN, GLUCOSE, SORBITOL, PEG-60 HYDROGENATED CASTOR OIL, CARRAGEENAN, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER, SODIUM HYALURONATE, SODIUM HYDROXIDE, SUCROSE, CAPRYLYL GLYCOL, CITRIC ACID, PECTIN, LINALOOL, GERANIOL, METHYL 2-OCTYNOATE, COUMARIN, LIMONENE, CITRONELLOL, BENZYL ALCOHOL, PARFUM / FRAGRANCE",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1319532",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Feuchtigkeitsboost Pflege-Spray",
+      "Aus 5% Hyaluron und Shea-Fettsäuren",
+      "Geeignet für die Locken-Methode",
+      "Für ein natürliches Haargefühl",
+      "schenkt definierten Locken mehr Sprungkraft und das bis zu 48 Stunden lang"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "natürliches Haargefühl; kein Glanz-/Matt-Wort",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Silikone"
+    ],
+    "directions": "After wash routine (Pre-Shampoo, Shampoo, Maske) onto damp or dry hair, scrunch/twirl curls, air or diffuser dry; daily or between washes.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. Carrageenan #6 and Pectin #13 are natural gelling/film agents, not fixative-class. CONDITIONING: Butyrospermum Parkii (Shea) Butter #7 is the only lipid; no cationics, no fatty alcohols, no silicones, no oils. Humectants lead: Glycerin #2, Glucose #3, Sorbitol #4, Sodium Hyaluronate #8, Sucrose #10. PEG-60 Hydrogenated Castor Oil #5 = solubiliser. First preservative: Caprylyl Glycol #11 (single booster, no pair) then Benzyl Alcohol #20; first unambiguous preservative = Benzyl Alcohol #20. First perfume: Parfum #21 (last). Heat-protection claim: none. Alcohol: none.",
+    "notes": "BORDER: shea butter #7 sits above the first true preservative (Benzyl Alcohol #20; Caprylyl Glycol #11 is only a booster), so under the PH1-13 R2 'effective amount' rule it may count as care (oil/butter above the preservative) and push the product to Leave-in; in practice it reads as a humectant refresher with a trace shea. Sold under the 'Pflege-Spray' name, not 'Refresher'; the dm instructions call it N°3 'Shape Refresh'. 'Shea-Fettsäuren' claim = shea butter only. Garnier DE product page (C2) not found, so C3. Rossmann also lists it (EAN page /p/3600542585996, seen in search results only).",
+    "dm_dan": 1319532,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "guhl-styling-spray-locken-pflege-und-styling-2in1",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "GUHL",
+    "product_name": "Styling Spray Locken Pflege & Styling 2in1 (Pflegendes Styling Spray)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/3154460/",
+    "ean": "4072600715802",
+    "inci": "Aqua, Hydrolyzed Corn Starch, Glycerin, Coco-Betaine, Sucrose, Cetrimonium Chloride, Panthenol, Ethylhexylglycerin, Citric Acid, Linum Usitatissimum Seed Oil, Olea Europaea Fruit Oil, Prunus Amygdalus Dulcis Oil, Borago Officinalis Seed Oil, Aloe Barbadensis Leaf Extract, Tocopherol, Phenoxyethanol, Sodium Benzoate, Potassium Sorbate, Parfum, Alpha-Isomethyl Ionone, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes.",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3154460",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Pflegendes Styling Spray für Locken & Wellen",
+      "Aktiviert die Sprungkraft & schenkt Definition ohne zu verkleben",
+      "Spendet intensive Feuchtigkeit für ein unbeschwertes Haargefühl",
+      "Mit integriertem Hitzeschutz bis 220 °C",
+      "Ideal zur Auffrischung & Reaktivierung von Locken"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "flexiblem Styling; Definition ohne zu verkleben",
+      "none_stated": true
+    },
+    "finish_claim": "unbeschwertes Haargefühl; kein Glanz-/Matt-Wort",
+    "humidity_claim": null,
+    "heat_claim": "Mit integriertem Hitzeschutz bis 220 °C",
+    "hair_type_claims": [
+      "lockiges Haar",
+      "welliges Haar",
+      "Dauerwellen"
+    ],
+    "free_from_claims": [],
+    "directions": "Wet or dry hair, spray into the lengths and work in, style as usual; with heat protection up to 220 °C; also to reactivate curls.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. Hydrolyzed Corn Starch #2 and Sucrose #5 are starch/sugar film helpers, not fixative-class (PH1-9: no 'Enthält Stylingpolymere'). CONDITIONING: cationic Cetrimonium Chloride #6 (above first preservative), Panthenol #7, four oils Linum Usitatissimum (flax) #10, Olea Europaea (olive) #11, Prunus Amygdalus Dulcis (almond) #12, Borago Officinalis #13 all above Phenoxyethanol #16; no fatty alcohols, no silicones. Coco-Betaine #4 = mild surfactant. First preservative: Ethylhexylglycerin #8 (booster) then Phenoxyethanol #16 (first true preservative). First perfume: Parfum #19. Heat-protection claim verbatim above; no L9 heat-protectant ingredient above the tail. Alcohol: none.",
+    "notes": "BORDER / probably Leave-in: cationic + four oils above the preservative = real care under PH1-13 R2, so D6 does not apply and the 'Pflegendes Styling Spray' promise (Pflege first, Styling second) is closer to a care refresher than a pure styling mist. Kept as refresher candidate because the pack promise includes 'Auffrischung & Reaktivierung' and 'Definition'. Heat claim '220 °C' is a C3 retailer claim; guhl.com C2 page not found (404/search miss). Zero fixative-class polymer, so no D8b flag.",
+    "dm_dan": 3154460,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "wella-eimi-nutricurls-fresh-up",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Nutricurls Fresh Up (Curl Refreshing Detangling Spray)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "lookfantastic.de (sold out)"
+    ],
+    "price_eur": 17.54,
+    "price_source_url": "https://www.lookfantastic.de/p/wella-professionals-eimi-nutricurls-fresh-up-curl-refreshing-detangling-spray-150ml/12126180",
+    "ean": null,
+    "inci": "Aqua/Water/Eau, Propylene Glycol, PEG-40 Hydrogenated Castor Oil, Glycerin, Alcohol Denat., Phenoxyethanol, Parfum/Fragrance, Caprylyl Glycol, PVP, Panthenol, AMP-Acrylates/Allyl Methacrylate Copolymer, Simmondsia Chinensis (Jojoba) Seed Oil, Polyquaternium-10, Linalool, Hexyl Cinnamal, Trisodium Ethylenediamine Disuccinate, Citric Acid, Limonene, Geraniol, Citronellol, Polyquaternium-72, Sodium Hydroxide, Cetearyl Nonanoate, Ethylhexyl Isononanoate, Triticum Vulgare (Wheat) Germ Oil, Triticum Vulgare (Wheat) Bran Extract, Linoleic Acid, Camellia Oleifera Seed Oil, Tocopherol",
+    "inci_source_url": "https://www.lookfantastic.de/p/wella-professionals-eimi-nutricurls-fresh-up-curl-refreshing-detangling-spray-150ml/12126180",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.",
+      "Anti-Frizz-Effekt bis zum 72 Stunden",
+      "Definition und Glanz",
+      "Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren."
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 1",
+      "number": 1,
+      "scale_max": null,
+      "words": null,
+      "none_stated": false
+    },
+    "finish_claim": "Definition und Glanz",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken"
+    ],
+    "free_from_claims": [],
+    "directions": "Spray onto damp or dry hair; can be re-applied any time during the day to reactivate curls.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS (retailer INCI): PVP #9, AMP-Acrylates/Allyl Methacrylate Copolymer #11, Polyquaternium-10 #13 (conditioning polymer), Polyquaternium-72 #21; ALL are BELOW the first preservative (Phenoxyethanol #6) and Parfum #7, i.e. no fixative-class polymer above the tail (PH1-1 tail = #6). CONDITIONING: jojoba #12, wheat germ oil #25, camellia oil #28, Cetearyl Nonanoate #23, Ethylhexyl Isononanoate #24 all below the tail; no cationic surfactant above the tail, no fatty alcohols, no silicones. Leading: Propylene Glycol #2, PEG-40 Hydrogenated Castor Oil #3, Glycerin #4, Alcohol Denat. #5 (not in the first 3, so no PH1-3 alcohol-note trigger). First preservative: Phenoxyethanol #6. First perfume: Parfum #7. Heat-protection claim: none.",
+    "notes": "INCI CONFLICT: the wella.com/de-DE page text returned a completely different list (Water, Ceresin, Petrolatum, Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer, Carnauba Wax, PVP, Cetyl Alcohol, ... Iron Oxides, Mica, Titanium Dioxide) that looks like a wax/pomade and is probably a site data error. The retailer list (lookfantastic.de = beautyflash.co.uk, identical) matches the product description (wheat bran, jojoba) and is used here; verify against the pack. Claims (Haltegrad 1, 72h anti-frizz) are C2 from wella.com/de-DE. AVAILABILITY: lookfantastic.de shows 'Ausverkauft'; no confirmed DE retailer with stock found (NL/ES/FR shops list it). Salon-channel product. Fixatives below the tail means D8b flag does not apply, but PH1-1 would call this 'no hold mechanism above the tail' despite the 'Haltegrad 1' pack claim.",
+    "dm_dan": null,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "balea-glattspray-anti-frizz",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Balea",
+    "product_name": "Glattspray Anti-Frizz",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/2978038/balea-glattspray-anti-frizz",
+    "ean": "4070765016635",
+    "inci": "AQUA, ALCOHOL DENAT., VP/VA COPOLYMER, SODIUM PCA, CETRIMONIUM CHLORIDE, PANTHENOL, PARFUM, HYDROLYZED COLLAGEN, HYDROLYZED KERATIN, CITRIC ACID, PHENOXYETHANOL, SODIUM HYDROXIDE, POTASSIUM SORBATE",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/2978038",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Glattspray für die Haare",
+      "Für ein seidig-glattes Haargefühl",
+      "Wirkt Frizz entgegen",
+      "Formel mit Cashmere-Protein, Kollagen & Panthenol",
+      "erhält einen natürlichen Glanz",
+      "frei von Silikonen und beschwert das Haar nicht"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "seidig-glatt; natürlicher Glanz",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "frei von Silikonen"
+    ],
+    "directions": "From 20-25 cm generously on towel-dry hair, comb through leaving out the roots; for more smoothness blow-dry with paddle brush; for the smoothest result flat-iron single sections.",
+    "application_moment": "before_heat",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: VP/VA Copolymer #3 (rank 3, above the tail; the only polymer). CONDITIONING: cationic Cetrimonium Chloride #5, Panthenol #6 (both above Parfum #7); Hydrolyzed Collagen #8 and Hydrolyzed Keratin #9 below the tail; no oils, no esters, no fatty alcohols, no silicones. Alcohol Denat. #2 (PH1-3 alcohol-note trigger, within first 3). First perfume: Parfum #7. First preservative: Phenoxyethanol #11. Heat-protection claim: none (pack text only says to flat-iron single sections).",
+    "notes": "Fixative leads and conditioning is thin (one cationic + panthenol) -> Styling by T15, consistent with a smoothing_styler. D8b-relevant: a real hold mechanism (VP/VA #3, ~VP/VA + alcohol = a light hairspray base) but NO hold claim on the page. Claim vs formula: 'Cashmere-Protein' is not declared in the INCI (only hydrolyzed collagen and keratin). Free-from 'ohne Silikone' is consistent. Listed in dm.de search on 2026-10-11 (available).",
+    "dm_dan": 2978038,
+    "capture_date": "2026-10-11",
+    "boundary_probe": false,
+    "duration_claim": null
+  },
+  {
+    "sample_id": "john-frieda-frizz-ease-3-tage-glatt-styling-spray",
+    "subtype_candidate": "smoothing_styler",
+    "boundary_probe": true,
+    "brand": "John Frieda",
+    "product_name": "Frizz Ease 3-Tage-Glatt Styling-Spray",
+    "size": "100 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "rossmann",
+      "flaconi.at",
+      "flaconi.be"
+    ],
+    "price_eur": 9.99,
+    "price_source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-3-tage-glatt-styling-spray/p/5037156298277",
+    "ean": "5037156298277",
+    "inci": "Aqua, Alcohol, Polysilicone-9, Benzyl Alcohol, Dipropylene Glycol, Parfum, Malic Acid, Steartrimonium Chloride, Lactic Acid, Disodium EDTA, Isopropyl Alcohol, Sodium Hydroxide, Hydrolyzed Keratin, Sodium Benzoate, Phenoxyethanol, Potassium Sorbate, Citrus Aurantium Peel Oil, Citrus Limon Peel Oil, Hexamethylindanopyran, Hexyl Cinnamal, Limonene, Linalool, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes",
+    "inci_source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/3-tage-glatt-styling-spray/",
+    "inci_source_tier": "manufacturer",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Schützt vor Frizz und sorgt für 72 Stunden glattes Haar.",
+      "glatterem Haar, das bis zu 3 Tage* hält",
+      "Bändigt Frizz ohne zu beschweren.",
+      "Schützt vor Feuchtigkeit und Hitze.",
+      "Vegane Formel."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glatt, geschmeidig (raw: 'geschmeidigerem, glatterem Haar')",
+    "humidity_claim": "Schützt vor Feuchtigkeit und Hitze. / integrierter Feuchtigkeitsschutz",
+    "heat_claim": "schützt vor Hitze bis zu 230 °C.",
+    "duration_claim": "bis zu 3 Tage* (*oder bis zur nächsten Haarwäsche, falls weniger als 3 Tage); 72 Stunden",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Spray evenly on damp hair (sparingly on fine hair), comb through, blow-dry smooth, then seal with a flat iron.",
+    "application_moment": "before_heat",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none of the classic families (no PVP, VP/VA, PQ-11/-69, acrylates, PU). Polysilicone-9 #3 is a film-forming silicone polymer (acrylate-grafted silicone); whether it counts as fixative-class is NOT covered by the current fixative list -> flag for the standard. CONDITIONING: cationic Steartrimonium Chloride #8 (below Parfum #6, above the true preservative Sodium Benzoate #14), Hydrolyzed Keratin #13; no oils, esters, fatty alcohols or other silicones. Alcohol #2 and Isopropyl Alcohol #11 (PH1-3 trigger: Alcohol within first 3). First preservative: Benzyl Alcohol #4 (also a solvent, ambiguous); first unambiguous preservative Sodium Benzoate #14. First perfume: Parfum #6. Heat-protection claim verbatim above; no L9 heat-protectant ingredient above the tail.",
+    "notes": "BORDER: promise (smooth, anti-frizz, humidity + heat protection) overlaps Leave-in's own definition, so the full Leave-in check applies (PH2-1); with no classic fixative and only thin cationic conditioning it falls into the gap between T15 (no fixative, no film care) and D6 (sprays with neither real care nor real hold promising a styling look). Claims taken from the manufacturer DE page (C2); that page lists no retailers. Rossmann product page exists (EAN in URL, price 9.99 per search excerpt, page itself bot-walled; store stock unclear), Flaconi AT/BE list it; not found at dm.de. INCI whitespace artifacts of the page ('BenzylAlcohol', 'LimonPeel') normalised; page itself says the pack list is authoritative.",
+    "dm_dan": null,
+    "capture_date": "2026-10-11"
+  },
+  {
+    "sample_id": "syoss-hitzeschutzspray-keratin",
+    "subtype_candidate": "smoothing_styler",
+    "boundary_probe": true,
+    "brand": "syoss",
+    "product_name": "Hitzeschutzspray Keratin (Keratin Heat)",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/3047023/syoss-hitzeschutzspray-keratin",
+    "ean": "4015100860146",
+    "inci": "Aqua (Water, Eau), Alcohol denat., Hydrolyzed Keratin, Panthenol, Niacinamide, Propylene Glycol, Polyurethane-48, Sodium Benzoate, PEG-60 Hydrogenated Castor Oil, Parfum (Fragrance), Bis-Isobutyl PEG/PPG-20/35/Amodimethicone Copolymer, Cetyl Ethylhexanoate, Lactic Acid, Polysorbate 80, Butylene Glycol, Gluconolactone, Methylpropanediol, Tetramethyl Acetyloctahydronaphthalenes, Trimethylcyclopentenyl Methylisopentenol, Caprylyl Glycol, Dimethyl Phenethyl Acetate, Terpineol",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3047023",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Hitzeschutz für Haare",
+      "Schützt beim Stylen",
+      "Ideal vorm Föhnen oder Glätten",
+      "perfekte Balance zwischen Halt und Geschmeidigkeit",
+      "verleiht dem Haar ein seidiges, glattes Finish"
+    ],
+    "hold_claim": {
+      "raw": "Balance zwischen Halt und Geschmeidigkeit",
+      "number": null,
+      "scale_max": null,
+      "words": "Balance zwischen Halt und Geschmeidigkeit",
+      "none_stated": false
+    },
+    "finish_claim": "seidiges, glattes Finish; makellose Styles",
+    "humidity_claim": null,
+    "heat_claim": "Die hitzeaktivierte Formel bietet effektiven Schutz vor Hitzeeinwirkungen",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "ohne Ammoniak",
+      "ohne Sulfat"
+    ],
+    "directions": "Damp hair: spray evenly over all hair, blow-dry before using iron/curling tong. Dry hair: section, spray directly before straightening/curling and let dry briefly. No iron on damp hair.",
+    "application_moment": "before_heat",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: Polyurethane-48 #7 (above Sodium Benzoate #8 and Parfum #10). CONDITIONING: Hydrolyzed Keratin #3, Panthenol #4, Niacinamide #5 (actives, no film/lipid); amino silicone Bis-Isobutyl PEG/PPG-20/35/Amodimethicone Copolymer #11 and ester Cetyl Ethylhexanoate #12 both BELOW Parfum #10; no cationic surfactant, no fatty alcohols, no oils. Alcohol Denat. #2 (PH1-3 trigger). First preservative: Sodium Benzoate #8. First perfume: Parfum #10. Heat-protection claim verbatim above (no temperature on the dm page; Rossmann/Henkel excerpts cite 230 °C, not verified on a C1/C2 page).",
+    "notes": "BOUNDARY: named 'Hitzeschutzspray' (Heat Protectant territory), but the dm text promises a smooth finish and 'Balance zwischen Halt und Geschmeidigkeit', dm effect tags are 'Pflege, Styling, Glättung', and a real film-forming polymer (PU-48 #7) leads the formula with only trace conditioning -> read as smoothing_styler by job. PH1-15/PH2-4 heat check will probably fail (no L9 member above the tail), so 'Hitzeschutz laut Hersteller' would only be shown. Hold words only, no level. syoss.de C2 page not reached, so C3. Pack directions point to the SYOSS Keratin Haarspray as finisher.",
+    "dm_dan": 3047023,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "wella-eimi-smooth-perfect-me",
+    "subtype_candidate": "smoothing_styler",
+    "boundary_probe": true,
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Smooth Perfect Me (Balsam-Lotion)",
+    "size": "100 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "ebay.de (marketplace)"
+    ],
+    "price_eur": 12.87,
+    "price_source_url": "https://www.ebay.de/itm/184335122623",
+    "ean": null,
+    "inci": "Water/Eau, Isohexadecane, Isopropyl Palmitate, Dimethicone, Polyacrylamide, Stearyl Alcohol, C13-14 Isoparaffin, Sodium Benzoate, Phenoxyethanol, Benzyl Alcohol, Steareth-21, Panthenol, Fragrance /Parfum, Peg-23M, Steareth-2, Laureth-7, Disodium Edta.",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/hair-styling/eimi-smooth/perfect-me",
+    "inci_source_tier": "manufacturer",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Professionelle Balsam-Lotion für natürliches Haarstyling",
+      "Spendet Feuchtigkeit und Hitzeschutz",
+      "Bändigt die Haare und verleiht Geschmeidigkeit",
+      "schützt das Haar auch vor der Hitze von Stylinggeräten"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad: 1",
+      "number": 1,
+      "scale_max": null,
+      "words": null,
+      "none_stated": false
+    },
+    "finish_claim": "Glanz, Geschmeidigkeit (raw: 'verleiht Geschmeidigkeit'; description also mentions Glanz)",
+    "humidity_claim": null,
+    "heat_claim": "Spendet Feuchtigkeit und Hitzeschutz; schützt das Haar auch vor der Hitze von Stylinggeräten (no temperature stated)",
+    "hair_type_claims": [
+      "stumpfes, krauses Haar (EIMI Smooth collection)"
+    ],
+    "free_from_claims": [],
+    "directions": "Small amount on damp or dry hair in mid-lengths and ends, then style as desired.",
+    "application_moment": "before_heat",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. Polyacrylamide #5 (with C13-14 Isoparaffin #7 and Laureth-7 #16 = emulsion thickener system) and PEG-23M #14 are thickener/film helpers, not fixative-class. CONDITIONING (all above the tail): Isohexadecane #2 (emollient), Isopropyl Palmitate #3 (ester), Dimethicone #4, Stearyl Alcohol #6 (fatty alcohol); Panthenol #12 below the preservative; no cationic conditioners. First preservative: Sodium Benzoate #8. First perfume: Fragrance/Parfum #13. Heat-protection claim verbatim above (no temperature; the 220 °C figure belongs to EIMI Thermal Image). Alcohol: none.",
+    "notes": "BORDER / likely Leave-in: the promise (care + heat protection + tames frizz) overlaps Leave-in's definition (PH2-1) and the formula is care-led (silicone + ester + fatty alcohol + hydrocarbon emollient above the tail) with no fixative -> the unchanged Leave-in letter probably claims it; it is included as the 'smoothing lotion' reference for the border, not as a clean Styling record. Wella DE page (C2) quotes Haltegrad 1. DE availability: salon channel; only marketplace/eBay.de offers confirmed (also kaufland.at); no drugstore listing found. INCI as published on wella.com/de-DE (page was consistent with sizes and the product text).",
+    "dm_dan": null,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "bali-gents-haarpuder-volumizing-styling-powder",
+    "subtype_candidate": "hair_powder",
+    "brand": "BALI GENTS",
+    "product_name": "Haarpuder Volumizing Styling Powder (dm.at: Haarpuder Volumen natural hold)",
+    "size": "10 g",
+    "format": "powder",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/3117041/",
+    "ean": "4262391991091",
+    "inci": "Aqua, Silica Silylate, Parfum, Fructose, Oryza Sativa Starch, Sodium Benzoate, Glycerin, Lactic Acid, Potassium Sorbate, Linalool, Limonene, Amyl Salicylate, Linalyl Acetate, Geraniol, Geranyl Acetate, Benzoic Acid, Vanillin, Cananga Odorata Flower Extract, Benzaldehyde, Methyl Benzoate",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3117041",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Stylingpuder für sofortiges Volumen",
+      "Ultrafeine Pudertextur",
+      "Verleiht dem Haar mehr Griffigkeit",
+      "Ohne klebrige Rückstände",
+      "ermöglicht ein flexibles Umformen der Frisur"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "Griffigkeit; flexibles Umformen (dm.at product name says 'natural hold')",
+      "none_stated": true
+    },
+    "finish_claim": "natürlich strukturiert, voluminös (raw: 'natürlich strukturierten und voluminösen Stil')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Free of Ethanol"
+    ],
+    "directions": "Rub a little between palms or sprinkle directly on the roots, massage into dry hair, style as desired.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. Mechanism = particles: Silica Silylate #2 (hydrophobic silica powder) and Oryza Sativa (rice) Starch #5; Fructose #4 and Glycerin #7 as binders/humectants. CONDITIONING: none. Aqua is listed #1 as published (odd for a powder, probably a small moisture/preservation base). First perfume: Parfum #3. First preservative: Sodium Benzoate #6. Heat-protection claim: none. Alcohol: none ('Free of Ethanol').",
+    "notes": "Clean volume powder: particle mechanism (silica + starch), no polymer, no hold level (D8: hold plays no part for powders). dm.de carries it under 'Volumizing Styling Powder', dm.at as 'Haarpuder Volumen natural hold' (same DAN 3117041). Manufacturer Bali Treatment GmbH (Klagenfurt, AT); bali-care.com/de-de C2 product page not retrieved, so claims are C3. Also sold at Rossmann per brand mentions (not verified). In dm.de search 'haarpuder' on 2026-10-11 (available).",
+    "dm_dan": 3117041,
+    "capture_date": "2026-10-11",
+    "boundary_probe": false,
+    "duration_claim": null
+  },
+  {
+    "sample_id": "wella-eimi-nutricurls-curl-shaper",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Nutricurls Curl Shaper (Defining Gel Cream)",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "check24 price comparison (friseurbedarf-peters)",
+      "ebay.de"
+    ],
+    "price_eur": 14.99,
+    "price_source_url": "https://preisvergleich.check24.de/ul/haarstyling/1A5R11BSV95VB-wella-eimi-nutricurls-curl-shaper-defining-gel-cream-150-ml.html",
+    "ean": null,
+    "inci": "Aqua/water/eau, Dimethicone, Vp/va Copolymer, Propylene Glycol, Aminomethyl Propanol, Carbomer, Alcohol Denat., Ethyl Ester Of Pvm/ma Copolymer, Polyquaternium-4, Peg-40 Hydrogenated Castor Oil, Benzyl Alcohol, Parfum/fragrance, Panthenol, Simmondsia Chinensis (Jojoba) Seed Oil, Methylparaben, Tocopheryl Acetate, Hydroxyethylcellulose, Disodium Edta, Linalool, Hexyl Cinnamal, Limonene, Geraniol, Citronellol, Citric Acid, Cetearyl Nonanoate, Ethylhexyl Isononanoate, Triticum Vulgare (Wheat) Bran Extract, Triticum Vulgare (Wheat) Germ Oil, Linoleic Acid, Camellia Oleifera Seed Oil, Tocopherol",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/hair-styling/eimi-nutricurls/curl-shaper",
+    "inci_source_tier": "manufacturer",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Das Styling-Gel sorgt für definierte Locken, Kontrolle und Sprungkraft",
+      "Bis zu 72 Stunden Feuchtigkeit und wunderschöne, federleichte Locken.",
+      "Die Formel bändigt Frizz und schließt Feuchtigkeit ein"
+    ],
+    "hold_claim": {
+      "raw": "Haltestufe: 2",
+      "number": 2,
+      "scale_max": null,
+      "words": "HOLD LEVEL 2",
+      "none_stated": false
+    },
+    "finish_claim": "definierte, federleichte Locken (no shine/matt word)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "duration_claim": "Bis zu 72 Stunden Feuchtigkeit und wunderschöne, federleichte Locken.",
+    "hair_type_claims": [
+      "Locken",
+      "Wellen"
+    ],
+    "free_from_claims": [],
+    "directions": "Apply evenly to damp curls; air dry or diffuse.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: VP/VA Copolymer #3, Ethyl Ester of PVM/MA Copolymer #8, Polyquaternium-4 #9 (conditioning/film polymer); all above the first preservative (Benzyl Alcohol #11, Methylparaben #15) and Parfum #12. Carbomer #6 and Hydroxyethylcellulose #17 are thickeners. CONDITIONING: Dimethicone #2 (rank 2); Panthenol #13, Jojoba #14 and the esters/oils (Cetearyl Nonanoate #25, Ethylhexyl Isononanoate #26, wheat germ oil #28, camellia oil #30) are BELOW the tail; no cationic surfactant, no fatty alcohols. Alcohol Denat. #7 (not within first 3). First preservative: Benzyl Alcohol #11 (ambiguous; first unambiguous Methylparaben #15). First perfume: Parfum #12. Heat-protection claim: none.",
+    "notes": "Fixative-led (three polymer families before the tail, silicone fluid #2, care below the tail) -> Styling by T15 regardless of name. NAMING: Wella's DE page calls it 'Styling-Gel' / gel cream (not Lockencreme/Curl Cream), so D7's name rule does not clearly apply; subtype could equally be `gel`. Hold level 2 is a C2 manufacturer statement (scale max not stated on the page). INCI on wella.com/de matches the lookfantastic.com listing exactly. DE availability: salon-channel; confirmed on check24 comparison and eBay.de only, no drugstore listing.",
+    "dm_dan": null,
+    "capture_date": "2026-10-11"
+  },
+  {
+    "sample_id": "balea-styling-locken-lotion",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "Balea",
+    "product_name": "Styling Locken Lotion (dm.de URL slug: Lockenlotion; dm.at title: Lockencreme Seidiger Glanz Lotion)",
+    "size": "100 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.75,
+    "price_source_url": "https://www.dm.de/p/d/1436046/balea-lockenlotion",
+    "ean": "4066447991734",
+    "inci": "AQUA, ALCOHOL DENAT., GLYCERIN, POLYQUATERNIUM-69, TRIMETHYLSILOXYPHENYL DIMETHICONE, PHENYL TRIMETHICONE, PHENOXYETHANOL, ACRYLIC ACID/VP CROSSPOLYMER, PARFUM, CAPRYLYL GLYCOL, AMINOMETHYL PROPANOL, DIMETHICONE, PANTHENOL, LIMONENE, DIMETHICONOL, GERANIOL, CITRONELLOL, LINALOOL.",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1436046",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Stylinglotion für lockiges Haar",
+      "Für definierte Locken & flexible Sprungkraft",
+      "Mit Anti-Frizz-Effekt",
+      "Verleiht einen seidigen Glanz",
+      "Pflegende Formulierung mit Panthenol"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "flexible Sprungkraft; flexibles Styling-Ergebnis",
+      "none_stated": true
+    },
+    "finish_claim": "seidiger Glanz (raw: 'Verleiht einen seidigen Glanz')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Spread a small amount on the hands and work gently into towel-dry hair; do not rinse out.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: Polyquaternium-69 #4 (fixative-class) and Acrylic Acid/VP Crosspolymer #8 (below Phenoxyethanol #7 but above Parfum #9). CONDITIONING: silicone fluids Trimethylsiloxyphenyl Dimethicone #5 and Phenyl Trimethicone #6 (above the tail); Dimethicone #12 and Dimethiconol #15 below it; Panthenol #13 below; no cationic surfactant, no fatty alcohols, no oils or esters. Alcohol Denat. #2 (PH1-3 trigger). First preservative: Phenoxyethanol #7. First perfume: Parfum #9. Heat-protection claim: none.",
+    "notes": "D7 test: fixative-class polymers above/at the tail (PQ-69 #4 plus AA/VP #8) with only silicone-fluid conditioning (no cationic/fatty-alcohol system) -> Styling by T15 even before the name rule. NAMING: pack says 'Styling Locken Lotion' (a lotion), dm.at says 'Lockencreme Seidiger Glanz Lotion'; whether a 'Lotion' satisfies D7's name list (Lockencreme/Curl Cream/Styling Cream/Balm) is an owner call. Hold is words only (house-brand dm 'Halt' attribute absent). dm.de search 'lockengel' listed it on 2026-10-11 (available). Only 100 ml size.",
+    "dm_dan": 1436046,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  },
+  {
+    "sample_id": "isana-professional-styling-creme-locken-traum",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "ISANA PROFESSIONAL",
+    "product_name": "Styling Creme Locken Traum",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "rossmann"
+    ],
+    "price_eur": 2.79,
+    "price_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-styling-creme-locken-traum/p/4305615846972",
+    "ean": "4305615846972",
+    "inci": "AQUA, CETEARYL ALCOHOL, ISOPROPYL PALMITATE, SORBITOL, PVP, BUTYROSPERMUM PARKII BUTTER, GLYCERYL STEARATE, PANTHENOL, TRITICUM VULGARE GERM OIL, TRITICUM VULGARE BRAN EXTRACT, TRITICUM VULGARE GERM EXTRACT, CAMELLIA OLEIFERA SEED OIL, GLYCERIN, TOCOPHERYL ACETATE, TOCOPHEROL, QUARTZ POWDER, CAPRYLIC/CAPRIC TRIGLYCERIDE, SODIUM CETEARYL SULFATE, DICAPRYLYL CARBONATE, CETEARYL NONANOATE, XANTHAN GUM, LACTIC ACID, LINOLEIC ACID, PARFUM, LINALOOL, HEXYL CINNAMAL, LIMONENE, BENZYL ALCOHOL, SODIUM HYDROXIDE, CITRIC ACID, PHENOXYETHANOL, BENZOIC ACID, DEHYDROACETIC ACID, SODIUM BENZOATE, POTASSIUM SORBATE",
+    "inci_source_url": "https://www.codecheck.info/p/kosmetik/haarpflege/leave-in-pflege/isana-professional-styling-creme-locken-traum.html",
+    "inci_source_tier": "ingredient_database",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "vegan"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken (product line 'Locken Traum')"
+    ],
+    "free_from_claims": [
+      "vegan (CodeCheck)"
+    ],
+    "directions": "Not captured (Rossmann page bot-walled; CodeCheck lists none). Leave-in styling cream for curls.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: PVP #5 (the only polymer; above Parfum #24). CONDITIONING (substantive, all above the tail): fatty alcohol Cetearyl Alcohol #2, Isopropyl Palmitate #3 (ester), Shea Butter #6, Glyceryl Stearate #7, Panthenol #8, Wheat Germ Oil #9, Camellia Oil #12, later Caprylic/Capric Triglyceride #17, Dicaprylyl Carbonate #19, Cetearyl Nonanoate #20; no cationics, no silicones. Quartz Powder #16 (particle). First perfume: Parfum #24. First preservative: Phenoxyethanol #31 (after Benzyl Alcohol #28; Parfum precedes it, so the tail marker is Parfum #24). Heat-protection claim: none known. Alcohol: none.",
+    "notes": "Best fit for the D7 middle band: a fixative-class polymer above the tail (PVP #5) AND a substantive emulsion care system, sold as 'Styling Creme' for curls -> Styling curl_cream under D7/PH1-12. WEAK EVIDENCE: INCI is from CodeCheck (user-supplied, 'may not match the pack') and Rossmann blocks fetching (bot wall; not retried). A Rossmann search-result excerpt mentioned a shea-butter formula with 'Halt' wording and 2.79 EUR, but no pack-level claim text was captured, so no hold claim is recorded; claim tier C3 at best (house brand Isana at Rossmann would be C2_house_brand once the Rossmann page text or a pack photo is read). Must be re-verified on the Rossmann page or pack before use in calibration. Line promoted by Rossmann in Aug 2026 (Lockentraum Haaröl/Maske/Styling Spray), so the cream is probably current but this was not confirmed.",
+    "dm_dan": null,
+    "capture_date": "2026-10-11",
+    "duration_claim": null
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-1b305569d8",
+  "brand": "Wella Professionals",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Haltestufe: 2",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Die Formel bändigt Frizz und schließt Feuchtigkeit ein",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "Haltestufe: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11",
+      "number": 2,
+      "scale_as_written": "Haltestufe: 2",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "HOLD LEVEL 2"
+    },
+    {
+      "type": "finish",
+      "text": "definierte, federleichte Locken (no shine/matt word)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 72 Stunden Feuchtigkeit und wunderschöne, federleichte Locken.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Das Styling-Gel sorgt für definierte Locken, Kontrolle und Sprungkraft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

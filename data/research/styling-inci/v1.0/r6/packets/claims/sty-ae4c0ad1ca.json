@@ -1,0 +1,51 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-ae4c0ad1ca",
+  "brand": "BALI GENTS",
+  "confirmed_name": "Matt Paste",
+  "confirmed_name_tier": "C2",
+  "format": "paste",
+  "product_type_word": "paste",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Für müheloses Styling mit starkem Halt und natürlichem Finish!",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "starkem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starkem Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "starken, flexiblen Halt mit mattem Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "Die mattierende Wirkung verleiht deinem Look ein authentisches, unaufgeregtes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

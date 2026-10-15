@@ -1,0 +1,93 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-9a160e97c0",
+  "product": {
+    "confirmed_name": "Lockenspray Refresher Curlz (gotCURLZ Locken Refresher Spray)",
+    "brand": "got2b",
+    "format": "aerosol"
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 5,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 8,
+        "inci": "Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 9,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 10,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 11,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 12,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 13,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 14,
+        "inci": "Pinene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf trockenem Haar auftragen. Sprühe von der Haarmitte bis zu den Spritzen für den ultimativen glossy Look. HACK: bei feinerem Haar den Sprühnebel auf die Hände sprühen und von der Haarmitte bis zu den Spitzen verteilen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "sorgt für [CLAIM], geschmeidige und revitalisierte Locken",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

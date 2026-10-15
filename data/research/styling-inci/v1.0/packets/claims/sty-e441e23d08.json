@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-e441e23d08",
+  "brand": "Balea",
+  "format": "cream",
+  "product_type_word": "lotion",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Stylinglotion für lockiges Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Anti-Frizz-Effekt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Pflegende Formulierung mit Panthenol",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "flexible Sprungkraft; flexibles Styling-Ergebnis",
+      "absence_statement": true
+    },
+    {
+      "type": "finish",
+      "text": "seidiger Glanz (raw: 'Verleiht einen seidigen Glanz')",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Für definierte Locken & flexible Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

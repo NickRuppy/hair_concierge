@@ -1,0 +1,155 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-9776c28a27",
+  "product": {
+    "confirmed_name": "Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1",
+    "confirmed_name_redacted": false,
+    "brand": "GUHL",
+    "format": "cream"
+  },
+  "inci": {
+    "inci_item_count": 24,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 3,
+        "inci": "Behentrimonium Chloride"
+      },
+      {
+        "rank": 4,
+        "inci": "Cocos Nucifera Oil"
+      },
+      {
+        "rank": 5,
+        "inci": "Dipropylene Glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Triheptanoin"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Hydrolyzed Corn Starch"
+      },
+      {
+        "rank": 10,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 11,
+        "inci": "Glycine"
+      },
+      {
+        "rank": 12,
+        "inci": "Linum Usitatissimum Seed Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Olea Europaea Fruit Oil"
+      },
+      {
+        "rank": 14,
+        "inci": "Prunus Amygdalus Dulcis Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Borago Officinalis Seed Oil"
+      },
+      {
+        "rank": 16,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 18,
+        "inci": "Aloe Barbadensis Leaf Extract"
+      },
+      {
+        "rank": 19,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 20,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 21,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 22,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 23,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 24,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "3 uses. Spülung: in nasse Längen, kurz einwirken, ausspülen. Kur: 3-5 min einwirken, ausspülen. Lockencreme: ins handtuchtrockene oder trockene Haar einarbeiten, wie gewohnt stylen (leave-in); Hitzeschutz bis 220 °C.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Mit wenig Aufwand zu definierten Locken & Wellen",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "3in1 LOCKENCREME, KUR & SPÜLUNG",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "Tiefenwirksame Pflege & [CLAIM] Definition",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "Aloe Vera + [Duo]-Pflege-Style-Komplex mit Leinsamenöl",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

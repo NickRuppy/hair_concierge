@@ -1,0 +1,58 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-9c00d270f1",
+  "product": {
+    "confirmed_name": "Haarserum Keratin Sleek & Stay (Heat-Activated Serum), Anti-Frizz",
+    "confirmed_name_redacted": false,
+    "brand": "GARNIER FRUCTIS",
+    "format": "serum"
+  },
+  "inci": {
+    "inci_item_count": 5,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ISODODECANE"
+      },
+      {
+        "rank": 2,
+        "inci": "BIS-(MORPHOLINOMETHYL C1-4 DIALKOXYSILOXY) DIMETHICONE"
+      },
+      {
+        "rank": 3,
+        "inci": "BIS-CETEARYL AMODIMETHICONE"
+      },
+      {
+        "rank": 4,
+        "inci": "DIMETHICONOL"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Zu Beginn der Haarpflegroutine das Haar gründlich mit dem Fructis Keratin Sleek Shampoo waschen und dieses im Anschluss ausspülen. Anschließen mit der Haarmaske oder dem Conditioner fortfahren und das Haar leicht antrocknen lassen. Nun einen Pumpstoß des Fructis Sleek & Stay Heat-Activated Serums in die Hand geben und gleichmäßig im feuchten Haar verteilen. Dabei nicht ausspülen. Jetzt das Haar sorgfältig föhnen und bei Bedarf mithilfe eines Glätteisens glätten.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Die Formel des Haarserum enthält Alpha-Silane und sorgt für intensive Glättung und [CLAIM], mit bis zu fünf Haarwäschen [CLAIM].",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

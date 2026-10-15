@@ -1,0 +1,80 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-0de1fa27f7",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 5,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 8,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 9,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 10,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 11,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 12,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 13,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 14,
+        "inci": "Benzyl Alcohol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Das [CLAIM] Spray auf trockenes Haar auftragen und kurz einwirken lassen. Haare im Anschluss Glätten um den [CLAIM] zu verstärken. Bei Bedarf das Spray noch einmal als Finisch aufsprühen. Styling Hack: Für die ultimative \"Glass Hair\" Routine, zuerst den [CLAIM] Primer im handtuchtrockenen Haar verteilen und die Haare föhnen. Im Anschluss das [CLAIM] Spray auf das trockene Haar sprühen und die Haare glätten. Das Ergebnis: [CLAIM], glattes \"Glass Hair\" Haar!",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

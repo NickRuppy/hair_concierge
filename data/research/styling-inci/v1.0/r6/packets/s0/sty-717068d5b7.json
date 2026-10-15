@@ -1,0 +1,152 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-717068d5b7",
+  "product": {
+    "confirmed_name": "CURL MANIFESTO REFRESH ABSOLU Second day curl refreshing spray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "Kérastase",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: '2-oleamido-1' + '3-octadecanediol' -> '2-oleamido-1,3-octadecanediol'",
+        "defect_rank": 23
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 28,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "cocos nucifera oil"
+      },
+      {
+        "rank": 3,
+        "inci": "amodimethicone"
+      },
+      {
+        "rank": 4,
+        "inci": "polyquaternium-37"
+      },
+      {
+        "rank": 5,
+        "inci": "phenoxyethanol"
+      },
+      {
+        "rank": 6,
+        "inci": "propylene glycol dicaprylate/dicaprate"
+      },
+      {
+        "rank": 7,
+        "inci": "sodium hydroxide"
+      },
+      {
+        "rank": 8,
+        "inci": "dimethicone peg-7 phosphate"
+      },
+      {
+        "rank": 9,
+        "inci": "ppg-1 trideceth-6"
+      },
+      {
+        "rank": 10,
+        "inci": "benzyl salicylate"
+      },
+      {
+        "rank": 11,
+        "inci": "trideceth-6"
+      },
+      {
+        "rank": 12,
+        "inci": "behentrimonium chloride"
+      },
+      {
+        "rank": 13,
+        "inci": "xylose"
+      },
+      {
+        "rank": 14,
+        "inci": "linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "ethylhexylglycerin"
+      },
+      {
+        "rank": 16,
+        "inci": "benzyl alcohol"
+      },
+      {
+        "rank": 17,
+        "inci": "glycerin"
+      },
+      {
+        "rank": 18,
+        "inci": "sorbitan oleate"
+      },
+      {
+        "rank": 19,
+        "inci": "isopropyl alcohol"
+      },
+      {
+        "rank": 20,
+        "inci": "cetrimonium chloride"
+      },
+      {
+        "rank": 21,
+        "inci": "hydrolyzed vegetable protein pg-propyl silanetriol"
+      },
+      {
+        "rank": 22,
+        "inci": "mel extract"
+      },
+      {
+        "rank": 23,
+        "inci": "2-oleamido-1,3-octadecanediol"
+      },
+      {
+        "rank": 24,
+        "inci": "sodium benzoate"
+      },
+      {
+        "rank": 25,
+        "inci": "potassium sorbate"
+      },
+      {
+        "rank": 26,
+        "inci": "tocopherol"
+      },
+      {
+        "rank": 27,
+        "inci": "citric acid"
+      },
+      {
+        "rank": 28,
+        "inci": "parfum"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "zwischen den Haarwäschen täglich morgens aufsprühen und mit den Fingern Locken definieren",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "easycosmetic.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

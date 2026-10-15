@@ -1,0 +1,84 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-c574855cdf",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water)"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Polysorbate 20"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 5,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Magnesium Sulfate"
+      },
+      {
+        "rank": 8,
+        "inci": "Hydroxyethylcellulose"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 11,
+        "inci": "Polysorbate 60"
+      },
+      {
+        "rank": 12,
+        "inci": "Disodium Phosphate"
+      },
+      {
+        "rank": 13,
+        "inci": "Sodium Phosphate"
+      },
+      {
+        "rank": 14,
+        "inci": "Coumarin"
+      },
+      {
+        "rank": 15,
+        "inci": "Hexyl Cinnamal"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf trockenes oder feuchtes Haar Strähne für Strähne sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen. Vor dem Schlafengehen Haare leicht anfeuchten und zu lockerem Pferdeschwanz am Oberkopf zusammennehmen, um Frizz am nächsten Tag zu minimieren.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-76cd07f7be",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Nutricurls Curl Shaper (Defining Gel Cream)",
+  "confirmed_name_tier": "C2",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Haltestufe: 2",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Die Formel bändigt Frizz und schließt Feuchtigkeit ein",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltestufe: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11",
+      "number": 2,
+      "scale_as_written": "Haltestufe: 2",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "finish",
+      "text": "definierte, federleichte Locken",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 72 Stunden Feuchtigkeit und wunderschöne, federleichte Locken.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Das Styling-Gel sorgt für definierte Locken, Kontrolle und Sprungkraft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-2b4da98d51",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "SODIUM PCA"
+      },
+      {
+        "rank": 5,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 6,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 7,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROLYZED COLLAGEN"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED KERATIN"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 11,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 12,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 13,
+        "inci": "POTASSIUM SORBATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Aus 20 bis 25 cm Abstand großzügig auf das handtuchtrockene Haar aufsprühen und mit einem Kamm gleichmäßig einarbeiten, dabei den Ansatz aussparen. Für noch mehr Glätte mit einer Paddebürste trocken föhnen. Für den glättesten Effekt einzelne Haarpartien mit dem Glätteisen glätten.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

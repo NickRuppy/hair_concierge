@@ -1,0 +1,74 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-4b7edf496f",
+  "brand": "alverde NATURKOSMETIK",
+  "confirmed_name": "Beach Waves Spray Seaside Balance",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Haarstyling-Spray für lässige Strandwellen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Zertifizierte Naturkosmetik",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Rezeptur mit Bio-Kiefer & Bio-Meersalz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit erfrischendem, maritimem Duft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "natürlich definierten Look, wie frisch vom Strand",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "lässige Strandwellen; Textur & Griffigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Verleiht dem Haar Textur & Griffigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-a8336ac61a",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Glam Mist Shinespray",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": {
+    "number": 1,
+    "scale_as_written": "Haltegrad 1",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Vollende deinen glamourösen Style mit diesem Glanzspray. Entwickelt auch zum Schutz des Haares vor Auswirkung von Feuchtigkeit und UV-Strahlen. Haltegrad 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Professionelle Glanzpomade für ein glattes und glänzendes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "HALTEGRAD 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": 1,
+      "scale_as_written": "Haltegrad 1",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "humidity",
+      "text": "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

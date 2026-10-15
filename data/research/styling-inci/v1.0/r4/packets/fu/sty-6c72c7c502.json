@@ -1,0 +1,84 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-6c72c7c502",
+  "format": "foam",
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Hydroxypropyl Starch"
+      },
+      {
+        "rank": 3,
+        "inci": "Butane"
+      },
+      {
+        "rank": 4,
+        "inci": "Propane"
+      },
+      {
+        "rank": 5,
+        "inci": "Sucrose"
+      },
+      {
+        "rank": 6,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 7,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 8,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Guar Hydroxypropyltrimonium Chloride"
+      },
+      {
+        "rank": 10,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 11,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 12,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 13,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 14,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 15,
+        "inci": "Caprylyl/Capryl Glucoside"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor Gebrauch gut schütteln und Ventil nach unten halten. Eine Handvoll Schaum entnehmen und im feuchten Haar verteilen. Anschließend das Haar wie gewohnt stylen. Nicht auswaschen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

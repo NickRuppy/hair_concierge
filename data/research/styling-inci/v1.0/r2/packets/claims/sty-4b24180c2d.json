@@ -1,0 +1,67 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-4b24180c2d",
+  "brand": "L'ORÉAL PARiS ELVITAL",
+  "format": "liquid",
+  "product_type_word": "liquid",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Hochkonzentrierte Pflegeformel mit 6 Blütenölen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Wirkt gegen Frizz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Schützt das Haar vor dem Austrocknen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Sichtbar mehr Glanz",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "glanzvolles Haar; glanzvolles Styling-Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 230° C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Für tiefengenährtes, glanzvolles Haar",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

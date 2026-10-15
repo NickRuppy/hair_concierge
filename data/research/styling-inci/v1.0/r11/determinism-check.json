@@ -1,0 +1,21 @@
+{
+  "round": "r11",
+  "verified_on": "2026-10-14",
+  "algorithm": "sha256",
+  "runs": 2,
+  "generated_artifact_count_including_manifest": 157,
+  "all_generated_artifact_hashes_identical": true,
+  "manifest_sha256_first": "3f073a4388215567c582d10fedf11e05ad7bb4618b2d1b16df4204faebc29076",
+  "manifest_sha256_second": "3f073a4388215567c582d10fedf11e05ad7bb4618b2d1b16df4204faebc29076",
+  "all_manifest_artifacts_verified": true,
+  "all_inputs_verified": true,
+  "builder_hash_verified": true,
+  "cohort_records": 51,
+  "screened_records": 143,
+  "all_packet_ids_and_stamps_verified": true,
+  "source_identity_directions_claims_preserved_except_R9_F": true,
+  "s0_fu_inci_unchanged": true,
+  "leak_hits": 0,
+  "prior_id_overlap": 0,
+  "r6_rebuild_byte_identical_files": 432
+}

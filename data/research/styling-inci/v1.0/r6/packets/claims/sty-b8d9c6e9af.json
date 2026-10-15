@@ -1,0 +1,137 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-b8d9c6e9af",
+  "brand": "Schwarzkopf taft",
+  "confirmed_name": "Styling Balm LOCKEN Halt 3",
+  "confirmed_name_tier": "C2",
+  "format": "cream",
+  "product_type_word": "balm",
+  "scale_info": {
+    "number": 3,
+    "scale_as_written": "HALT 3",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Dieser Haarstyling-Balsam definiert Locken voller Elastizität.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Starker, langanhaltender Halt: bis zu 24 Stunden, ohne zu verkleben",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Starker, langanhaltender Halt: bis zu 24 Stunden, ohne zu verkleben"
+    },
+    {
+      "type": "hold",
+      "text": "HALT 3",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": 3,
+      "scale_as_written": "HALT 3",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "display": {
+        "marks": 5,
+        "labels_as_printed": "3 (only the middle, larger circle is numbered)",
+        "highlighted": [
+          3
+        ],
+        "filled": [
+          3,
+          4,
+          5
+        ],
+        "caption_as_printed": "HALT 3",
+        "description": "Pack front: \"LOCKEN\" then a vertical stack of five marks - two hollow outlined circles, one larger filled circle containing \"3\", then two smaller filled dots - followed by \"STYLING BALM / HALT 3 / SANFT ZU HAAR & KOPFHAUT / [Definierte Locken]\"."
+      }
+    },
+    {
+      "type": "hold",
+      "text": "Halt: mittlerer Halt",
+      "tier": "C3",
+      "source_class": "retailer_attribute",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": null,
+      "words": "mittlerer Halt",
+      "attribute": "Halt",
+      "retailer_attribute": true
+    },
+    {
+      "type": "hold",
+      "text": "Halt 3",
+      "tier": "C2",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": 3,
+      "scale_as_written": "Halt 3",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "flexibility",
+      "text": "Elastizität",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "Sprungkraft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "definierte Locken, Anti-Frizz-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "bis zu 24 Stunden Halt, ohne zu verkleben",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "humidity",
+      "text": "Die Frisur bleibt vor Luftfeuchtigkeit geschützt, das Haar vor dem Austrocknen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

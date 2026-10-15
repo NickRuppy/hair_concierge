@@ -1,0 +1,203 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-974002534f",
+  "product": {
+    "confirmed_name": "curls defining cream",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "HASK",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 39,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Cetearyl alcohol"
+      },
+      {
+        "rank": 3,
+        "inci": "Triethyl citrate"
+      },
+      {
+        "rank": 4,
+        "inci": "Glycol stearate"
+      },
+      {
+        "rank": 5,
+        "inci": "Behentrimonium chloride"
+      },
+      {
+        "rank": 6,
+        "inci": "Cetyl alcohol"
+      },
+      {
+        "rank": 7,
+        "inci": "Caprylic/capric triglyceride"
+      },
+      {
+        "rank": 8,
+        "inci": "Isononyl isononanoate"
+      },
+      {
+        "rank": 9,
+        "inci": "Cocos nucifera (coconut) oil"
+      },
+      {
+        "rank": 10,
+        "inci": "Argania spinosa (argan) kernel oil"
+      },
+      {
+        "rank": 11,
+        "inci": "Tocopheryl acetate (vitamin E)"
+      },
+      {
+        "rank": 12,
+        "inci": "Glycine soja (soybean) oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 14,
+        "inci": "Polyquaternium-10"
+      },
+      {
+        "rank": 15,
+        "inci": "Polyquaternium-68"
+      },
+      {
+        "rank": 16,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 17,
+        "inci": "Polyquaternium-37"
+      },
+      {
+        "rank": 18,
+        "inci": "PPG-1 trideceth-6"
+      },
+      {
+        "rank": 19,
+        "inci": "Oleyl erucate"
+      },
+      {
+        "rank": 20,
+        "inci": "Propylene glycol dicaprylate/dicaprate"
+      },
+      {
+        "rank": 21,
+        "inci": "Hydroxypropyl starch phosphate"
+      },
+      {
+        "rank": 22,
+        "inci": "Bis-diglyceryl polyacyladipate-2"
+      },
+      {
+        "rank": 23,
+        "inci": "Ceteareth-20"
+      },
+      {
+        "rank": 24,
+        "inci": "EDTA"
+      },
+      {
+        "rank": 25,
+        "inci": "Acrylates/stearyl methacrylate copolymer"
+      },
+      {
+        "rank": 26,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 27,
+        "inci": "Sodium acetate"
+      },
+      {
+        "rank": 28,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 29,
+        "inci": "Citric acid"
+      },
+      {
+        "rank": 30,
+        "inci": "Sodium chloride"
+      },
+      {
+        "rank": 31,
+        "inci": "Sorbitan oleate"
+      },
+      {
+        "rank": 32,
+        "inci": "Sodium hydroxide"
+      },
+      {
+        "rank": 33,
+        "inci": "Parfum/Fragrance"
+      },
+      {
+        "rank": 34,
+        "inci": "Benzyl benzoate"
+      },
+      {
+        "rank": 35,
+        "inci": "Cinnamyl alcohol"
+      },
+      {
+        "rank": 36,
+        "inci": "Coumarin"
+      },
+      {
+        "rank": 37,
+        "inci": "Hexyl cinnamal"
+      },
+      {
+        "rank": 38,
+        "inci": "Alpha isomethyl ionone"
+      },
+      {
+        "rank": 39,
+        "inci": "Limonene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Tragen Sie es auf das handtuchtrockene Haar auf. Nicht ausspülen. Frisieren Sie das Haar wie gewohnt.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "MOISTURIZES & CONTROLS FRIZZ",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown",
+      "flags": [
+        "non_german_wording"
+      ]
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

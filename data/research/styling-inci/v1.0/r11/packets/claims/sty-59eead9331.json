@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-59eead9331",
+  "brand": "Balea",
+  "confirmed_name": "Glattspray Anti-Frizz",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Glattspray für die Haare",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein seidig-glattes Haargefühl",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Wirkt Frizz entgegen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Formel mit Cashmere-Protein, Kollagen & Panthenol",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "seidig-glatt; natürlicher Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "erhält einen natürlichen Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

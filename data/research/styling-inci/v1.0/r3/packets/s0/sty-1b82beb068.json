@@ -1,0 +1,149 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-1b82beb068",
+  "product": {
+    "confirmed_name": "Styling Pomade",
+    "confirmed_name_redacted": false,
+    "brand": "American Crew",
+    "format": "pomade"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water (Eau))"
+      },
+      {
+        "rank": 2,
+        "inci": "PEG-25 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 3,
+        "inci": "Oleth-10"
+      },
+      {
+        "rank": 4,
+        "inci": "Lanolin"
+      },
+      {
+        "rank": 5,
+        "inci": "Oleth-20"
+      },
+      {
+        "rank": 6,
+        "inci": "Diisopropyl Dimer Dilinoleate"
+      },
+      {
+        "rank": 7,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 8,
+        "inci": "Hydroxypropyl Bisstearyldimonium Chloride"
+      },
+      {
+        "rank": 9,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 10,
+        "inci": "PVP"
+      },
+      {
+        "rank": 11,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 12,
+        "inci": "Carthamus Tinctorius (Safflower) Seed Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Salvia Officinalis (Sage) Leaf Extract"
+      },
+      {
+        "rank": 14,
+        "inci": "Panax Ginseng Root Extract"
+      },
+      {
+        "rank": 15,
+        "inci": "Quillaja Saponaria Bark Extract"
+      },
+      {
+        "rank": 16,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 17,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 18,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 19,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 20,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 21,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 22,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 23,
+        "inci": "Hydroxycitronellal"
+      },
+      {
+        "rank": 24,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 25,
+        "inci": "Citral"
+      },
+      {
+        "rank": 26,
+        "inci": "Diazolidinyl Urea"
+      },
+      {
+        "rank": 27,
+        "inci": "Methylparaben"
+      },
+      {
+        "rank": 28,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 29,
+        "inci": "Propylparaben"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge gleichmäßig im feuchten oder trockenen Haar verteilen und wie gewünscht stylen.",
+    "tier": "C5",
+    "source_class": "non_DE_page",
+    "source_host": "americancrew.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

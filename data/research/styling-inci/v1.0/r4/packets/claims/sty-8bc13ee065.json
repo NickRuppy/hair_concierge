@@ -1,0 +1,126 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-8bc13ee065",
+  "brand": "Schwarzkopf taft",
+  "confirmed_name": "FORMING STYLING PASTE",
+  "confirmed_name_tier": "C1",
+  "format": "paste",
+  "product_type_word": "paste",
+  "scale_info": {
+    "number": 5,
+    "scale_as_written": "5+",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Styling Paste",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal für verformbare und texturierte Haarstyles",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Sanft zu Haar & Kopfhaut",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "FORMING STYLING PASTE",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Verformbare Styles",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "5+",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": 5,
+      "scale_as_written": "5+",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "display": {
+        "marks": 5,
+        "labels_as_printed": "5+ (only the fifth, larger circle is numbered)",
+        "highlighted": [
+          5
+        ],
+        "filled": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "caption_as_printed": null,
+        "description": "Front of the pot: four smaller filled (pale-green) dots in a row, then a larger circle containing \"5+\"; to the right: \"FORMING / STYLING PASTE / SANFT ZU HAAR & KOPFHAUT / [Verformbare Styles]\". No hold WORDS, no maximum number and no \"Halt\" printed on the front.",
+        "confirmed": "packnames-r7 (2026-10-13): the pack front again shows four filled dots and a larger circle „5+\""
+      }
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 5",
+      "tier": "C3",
+      "source_class": "retailer_attribute",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "number": 5,
+      "scale_as_written": "Haltegrad: 5",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "retailer_attribute": true
+    },
+    {
+      "type": "finish",
+      "text": "Mit mattem Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "perfekt für jede Wetterlage geeignet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Bis zu 24h starker Halt und Kontrolle",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

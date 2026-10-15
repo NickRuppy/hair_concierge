@@ -1,0 +1,168 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-a8a7f66eba",
+  "product": {
+    "confirmed_name": "EIMI Nutricurls Curl Shaper (Defining Gel Cream)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Wella Professionals",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 31,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/water/eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 3,
+        "inci": "Vp/va Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 6,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 7,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 8,
+        "inci": "Ethyl Ester Of Pvm/ma Copolymer"
+      },
+      {
+        "rank": 9,
+        "inci": "Polyquaternium-4"
+      },
+      {
+        "rank": 10,
+        "inci": "Peg-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 11,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 12,
+        "inci": "Parfum/fragrance"
+      },
+      {
+        "rank": 13,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 14,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Methylparaben"
+      },
+      {
+        "rank": 16,
+        "inci": "Tocopheryl Acetate"
+      },
+      {
+        "rank": 17,
+        "inci": "Hydroxyethylcellulose"
+      },
+      {
+        "rank": 18,
+        "inci": "Disodium Edta"
+      },
+      {
+        "rank": 19,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 20,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 21,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 22,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 23,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 24,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 25,
+        "inci": "Cetearyl Nonanoate"
+      },
+      {
+        "rank": 26,
+        "inci": "Ethylhexyl Isononanoate"
+      },
+      {
+        "rank": 27,
+        "inci": "Triticum Vulgare (Wheat) Bran Extract"
+      },
+      {
+        "rank": 28,
+        "inci": "Triticum Vulgare (Wheat) Germ Oil"
+      },
+      {
+        "rank": 29,
+        "inci": "Linoleic Acid"
+      },
+      {
+        "rank": 30,
+        "inci": "Camellia Oleifera Seed Oil"
+      },
+      {
+        "rank": 31,
+        "inci": "Tocopherol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gleichmäßig auf die feuchten Locken auftragen. An der Luft trocknen lassen oder den Diffusor verwenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Die Formel bändigt Frizz und schließt Feuchtigkeit ein",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

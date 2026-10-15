@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-27e8297207",
+  "brand": "cantu",
+  "confirmed_name": "Lockencreme Kokos (Shea Butter for Natural Hair Coconut Curling Cream)",
+  "confirmed_name_tier": "C3",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definiert & pflegt Locken",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Mit reiner Shea-Butter & natürlichen Ölen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Spendet Feuchtigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "defines, softens & moisturises",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "flags": [
+        "non_german_wording"
+      ]
+    },
+    {
+      "type": "other",
+      "text": "Unterstützt die natürliche Locken-Sprungkraft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "für ein leichtes und langanhaltendes Stylingergebnis",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

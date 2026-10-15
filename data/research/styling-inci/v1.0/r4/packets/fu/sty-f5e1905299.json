@@ -1,0 +1,68 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-f5e1905299",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 11,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "VA/CROTONATES/VINYL NEODECANOATE COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 5,
+        "inci": "PVP"
+      },
+      {
+        "rank": 6,
+        "inci": "SODIUM SACCHARIN"
+      },
+      {
+        "rank": 7,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 8,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 9,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 10,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 11,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Schritt 1: Auf den Ansatz sprühen, um Volumen zu erhalten. Schritt 2 Anschliessend toupieren und auf das gesamte Haar sprühen, um die Frisur zu fixieren und ihr ein modernes, [CLAIM] Finish zu verleihen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

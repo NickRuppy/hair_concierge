@@ -1,0 +1,123 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-e441e23d08",
+  "product": {
+    "confirmed_name": "Styling Locken Lotion",
+    "brand": "Balea",
+    "format": "cream"
+  },
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYQUATERNIUM-69"
+      },
+      {
+        "rank": 5,
+        "inci": "TRIMETHYLSILOXYPHENYL DIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "inci": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 7,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 8,
+        "inci": "ACRYLIC ACID/VP CROSSPOLYMER"
+      },
+      {
+        "rank": 9,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 10,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 11,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 12,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 13,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 14,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 15,
+        "inci": "DIMETHICONOL"
+      },
+      {
+        "rank": 16,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "inci": "LINALOOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene Haar einarbeiten. Nicht ausspülen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Stylinglotion für lockiges Haar",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "Mit Anti-Frizz-Effekt",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "Pflegende Formulierung mit Panthenol",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

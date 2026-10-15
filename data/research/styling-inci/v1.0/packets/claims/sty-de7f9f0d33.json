@@ -1,0 +1,32 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-de7f9f0d33",
+  "brand": "Jean&Len",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "verleiht unser Meer in der Flasche Fülle sowie Griffigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "Griffigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Fülle sowie Griffigkeit; Haare ohne grossen Aufwand wellig fallen (kein Halt-Wort)"
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-f67ed22f62",
+  "product": {
+    "confirmed_name": "Barber Club Styling Pomade Bart & Haar mit ätherischem Zedernholzöl",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "L'Oréal Men Expert",
+    "format": "pomade"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "PARAFFINUM LIQUIDUM / MINERAL OIL"
+      },
+      {
+        "rank": 3,
+        "inci": "PEG-100 STEARATE"
+      },
+      {
+        "rank": 4,
+        "inci": "GLYCERYL STEARATE"
+      },
+      {
+        "rank": 5,
+        "inci": "CETEARYL ALCOHOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 7,
+        "inci": "CERA MICROCRISTALLINA / MICROCRYSTALLINE WAX"
+      },
+      {
+        "rank": 8,
+        "inci": "VP/DIMETHYLAMINOETHYLMETHACRYLATE COPOLYMER"
+      },
+      {
+        "rank": 9,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 10,
+        "inci": "EUCALYPTUS GLOBULUS LEAF OIL"
+      },
+      {
+        "rank": 11,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 12,
+        "inci": "CEDRUS ATLANTICA BARK OIL"
+      },
+      {
+        "rank": 13,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 14,
+        "inci": "PEG-150/DECYL ALCOHOL/SMDI COPOLYMER"
+      },
+      {
+        "rank": 15,
+        "inci": "PPG-1 TRIDECETH-6"
+      },
+      {
+        "rank": 16,
+        "inci": "EUGENOL"
+      },
+      {
+        "rank": 17,
+        "inci": "POLYQUATERNIUM-37"
+      },
+      {
+        "rank": 18,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 19,
+        "inci": "BENZYL SALICYLATE"
+      },
+      {
+        "rank": 20,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 21,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 22,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 23,
+        "inci": "PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE"
+      },
+      {
+        "rank": 24,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 25,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 26,
+        "inci": "PARAFFIN"
+      },
+      {
+        "rank": 27,
+        "inci": "FUSANUS SPICATUS WOOD OIL"
+      },
+      {
+        "rank": 28,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 29,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge zwischen den Händen verreiben und auf den trockenen oder feuchten Bart und/oder das Haar auftragen. Nutze einen Kamm für ein perfektes Styling.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "loreal-paris.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "speziell entwickelt für das optimale Styling von Bart und Haar",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

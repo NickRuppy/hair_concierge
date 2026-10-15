@@ -1,0 +1,2151 @@
+{
+  "screened_records": 143,
+  "selected_records": 69,
+  "records": [
+    {
+      "source_slug": "alcina-ansatz-volumen-spray-aerosol",
+      "name": "ALCINA Ansatz Volumen Spray Aerosol",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Spray ansatznah auf das handtuchtrockene Haar sprühen und anschließend wie gewohnt trocken föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "alcina-foehn-lotion",
+      "name": "ALCINA Föhn Lotion",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Ins feuchte Haar sprühen. Haare wie gewohnt föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "alcina-styling-mousse-aerosol",
+      "name": "ALCINA Styling Mousse Aerosol",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch gut schütteln. Schaumkopf nach unten richten. Je nach Haarlänge eine tennisballgroße Menge Schaum im feuchten Haar verteilen. Nicht ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "alverde-beach-waves-spray-seaside-balance",
+      "name": "alverde NATURKOSMETIK Beach Waves Spray Seaside Balance",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand promise: natürlich definierten Look, wie frisch vom Strand"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Anwendung: Das Spray ins handtuchtrockene oder trockene Haar sprühen und sanft einarbeiten. Nicht auswaschen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "promise",
+          "text": "natürlich definierten Look, wie frisch vom Strand"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "alverde-locken-refresh-spray",
+      "name": "alverde NATURKOSMETIK Locken Refresh-Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra moisture: repeat on dry hair"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Anwendung: Vor Gebrauch bitte gut schütteln. Strähne für Strähne auf trockenes oder feuchtes Haar sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "american-crew-fiber",
+      "name": "American Crew FIBER",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge in den Händen gut verreiben und in handtuchtrockenes Haar einarbeiten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "american-crew-pomade",
+      "name": "American Crew Styling Pomade",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "missing",
+      "directions": null,
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "aussie-leave-in-creme-work-that-curl",
+      "name": "AUSSIE WORK THAT CURL LEAVE-IN CREAM",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf tropfnasses Haar auftragen und formen – kein Ausspülen nötig! Tada",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-ansatzvolumen-booster",
+      "name": "Balea Ansatzvolumen Booster",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Produkt vor der Anwendung gut schütteln. Zur Dosierung senkrecht halten. 1. Eine tennisballgroße Menge des Schaums im Ansatz verteilen. 2. Trocken föhnen, über Nacht einwirken lassen oder lufttrocknen lassen. 3. Sofortige Frische für Haar und Kopfhaut und frisch gestyltes Haar.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-finishing-spray-glow-und-care",
+      "name": "Balea Finishing Spray Glow & Care",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-foehnlotion-volume-effect",
+      "name": "Balea Föhnlotion Volume Effect",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf feuchtem Haar: vor dem Föhnen gleichmäßig im gesamten Haar verteilen und wie gewohnt stylen. Glätteisen und Lockenstab nicht in feuchtem Haar verwenden, da dies zu starker Haarschädigung führen kann. Auf trockenem Haar, vor der Anwendung des Glätteisens oder Lockenstabs gleichmäßig auf das Haar sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-glattspray-anti-frizz",
+      "name": "Balea Glattspray Anti-Frizz",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Aus 20 bis 25 cm Abstand großzügig auf das handtuchtrockene Haar aufsprühen und mit einem Kamm gleichmäßig einarbeiten, dabei den Ansatz aussparen. Für noch mehr Glätte mit einer Paddebürste trocken föhnen. Für den glättesten Effekt einzelne Haarpartien mit dem Glätteisen glätten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-haargel-hair-jelly",
+      "name": "Balea Haargel Hair Jelly (Styling Hair Jelly)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-haarpuder-volumen-pomegranate",
+      "name": "Balea Haarpuder Volumen (Pomegranate)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conditional extra volume: direct root application after general hair application"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-haarserum-anti-frizz-glatt-und-glossy",
+      "name": "Balea Haarserum Anti-Frizz Glatt & Glossy",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig in den handtuchtrockenen Haarlängen verteilen. Nicht ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-haarwachs-glow-wax",
+      "name": "Balea Styling Glow Wax",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge auf dem trockenen Haar verteilen und wie gewohnt stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-haarwachs-styling-stick",
+      "name": "Balea Styling WAX STICK",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-leave-in-spray-sea-salt-care-define",
+      "name": "Balea Leave-In Spray Sea Salt Care & Define",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf das handtuchtrockene Haar sprühen und sanft einkneten. Danach für einen natürlichen Look entweder lufttrocknen lassen oder für mehr Volumen trocken föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-locken-crunchgel",
+      "name": "Balea Locken Crunchgel",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional next-day refresh: reapply a small amount to dampened hair"
+        },
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand promise: Haargel für definierte Locken / C2_house_brand other: Für definierte Locken voller Sprungkraft"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge in den Händen verteilen und sanft in das handtuchtrockene Haar einmassieren. Nicht ausspülen. Haare an der Luft trocknen lassen oder einen Diffuser verwenden, um Frizz zu vermeiden. Am nächsten Tag können die Locken durch Verteilung einer kleinen Menge in den angefeuchteten Haaren aufgefrischt werden.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "promise",
+          "text": "Haargel für definierte Locken"
+        },
+        {
+          "tier": "C2_house_brand",
+          "type": "other",
+          "text": "Für definierte Locken voller Sprungkraft"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-locken-revitalizing-spray",
+      "name": "Balea Locken Revitalizing Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand promise: Für bis zu 24 Stunden definierte Locken / C2_house_brand other: Für definierte Locken mit Sprungkraft"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "ANWENDUNG: Gleichmäßig auf das trockene Haar sprühen, um die Locken wiederzubeleben. Anschließend sanft einkneten und bei Bedarf mit einem Diffusor föhnen oder lufttrocknen lassen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "promise",
+          "text": "Für bis zu 24 Stunden definierte Locken"
+        },
+        {
+          "tier": "C2_house_brand",
+          "type": "other",
+          "text": "Für definierte Locken mit Sprungkraft"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-men-pomade-haar-bart-2in1",
+      "name": "Balea MEN Pomade Haar & Bart 2in1",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Balea MEN Pomade 2in1 zwischen den Handflächen verreiben und gleichmäßig ins trockene oder feuchte Haar einarbeiten oder einzelne Strähnen modellieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-men-styling-powder",
+      "name": "Balea MEN Styling Powder",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conditional extra volume: direct root application after general hair application"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-overnight-wellenspray",
+      "name": "Balea Overnight Wellenspray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In das feuchte oder trockene Haar sprühen. Für Locken das Haar mit einem Lockenband oder Papilotten eindrehen. Für Wellen die Haare vom Ansatz an flechten. Über die Nacht eingedreht lassen. Falls Ventil verstopft, den Schaumkopf hochklappen und unter warmem Wasser ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-professional-definier-spray-traumlocken",
+      "name": "Balea PROFESSIONAL Definier Spray Traumlocken (Traum Locken Definierende Spray)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand promise: Für bis zu 24 Stunden definierte Locken"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Großzügig und gleichmäßig ins feuchte Haar sprühen. Anschließend die Locken in Form kneten. Nicht auswaschen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "promise",
+          "text": "Für bis zu 24 Stunden definierte Locken"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-professional-glow-und-shine-finishing-spray",
+      "name": "Balea PROFESSIONAL Leave-In Glow&Shine Finishing Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Leave-In Glow&Shine Finishing Spray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch Dose gut schütteln. Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-professional-haarserum-glow-und-shine",
+      "name": "Balea PROFESSIONAL Haarserum Glow & Shine",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Haarserum Glow & Shine"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig in die Spitzen im feuchten oder trockenen Haar einarbeiten. Nicht ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-professional-styling-cream-traumlocken",
+      "name": "Balea PROFESSIONAL Styling Cream Traumlocken",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand promise: Für definierte lebendige Locken / C1 promise: Perfekt definierte, glänzende Locken und Hitzeschutz bis 220 °C / C1 promise: LEISTUNGSSTARKE FORMEL FÜR DEFINIERTE, LEBENDIGE LOCKEN VOLLER SPRUNGKRAFT UND NATÜRLICHEM GLANZ / C1 promise: SCHWUNGVOLL. DEFINIERT. VERWÖHNT. / C1 promise: Anti-Statik-Formel schützt effektiv vor Frizz, für definierte Locken und gewelltes Haar. / C2_house_brand finish: perfekt definierte und glänzende Locken / C1 duration: BIS ZU 24h DEFINIERTE LOCKEN"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene oder trockene Haar einarbeiten. Nicht ausspülen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "promise",
+          "text": "Für definierte lebendige Locken"
+        },
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "Perfekt definierte, glänzende Locken und Hitzeschutz bis 220 °C"
+        },
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "LEISTUNGSSTARKE FORMEL FÜR DEFINIERTE, LEBENDIGE LOCKEN VOLLER SPRUNGKRAFT UND NATÜRLICHEM GLANZ"
+        },
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "SCHWUNGVOLL. DEFINIERT. VERWÖHNT."
+        },
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "Anti-Statik-Formel schützt effektiv vor Frizz, für definierte Locken und gewelltes Haar."
+        },
+        {
+          "tier": "C2_house_brand",
+          "type": "finish",
+          "text": "perfekt definierte und glänzende Locken"
+        },
+        {
+          "tier": "C1",
+          "type": "duration",
+          "text": "BIS ZU 24h DEFINIERTE LOCKEN"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-pure-styling-volumenpuder-spray",
+      "name": "Balea Styling Spray Volumenpuder Pure Styling",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "OWNER T1: required roots; optional lengths for texture/grip"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Dose vor jedem Gebraucht kräftig schütteln, um ein Verstopfen der Düse zu vermeiden. Auf trockenen Haaransatz sprühen und wie gewohnt stylen. Für mehr Textur und Griffigkeit sparsam in die Haarlängen sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-sea-salt-texture-spray",
+      "name": "Balea Sea Salt Texture Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra dry-hair application for curl-tool finish"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "ANWENDUNG: Auf das handtuchtrockene Haar sprühen und sanft einkneten. Danach für einen natürlichen Look entweder lufttrocknen lassen oder für mehr Volumen trocken föhnen. Kann auch aufs trockene Haar gesprüht werden, um z.B. Locken mit dem Lockenstab ein natürliches Finish zu verleihen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-styling-creme-power-flex",
+      "name": "Balea Styling Creme Power Flex (Forming Cream Power Flex)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-styling-finishing-stick",
+      "name": "Balea Fixierungsbürste Styling Finishing Stick",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Nach dem Frisurenstyling sanft über die abstehenden Härchen streichen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "balea-styling-locken-lotion",
+      "name": "Balea Styling Locken Lotion",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2_house_brand other: Für definierte Locken & flexible Sprungkraft"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene Haar einarbeiten. Nicht ausspülen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2_house_brand",
+          "type": "other",
+          "text": "Für definierte Locken & flexible Sprungkraft"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "balea-styling-spray-ultra-volumen",
+      "name": "Balea Styling Spray Ultra Volumen",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-T2-directions",
+          "evidence": "required roots then lengths; optional interim dry-hair reuse"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor dem Föhnen auf den gewaschenen, noch feuchten Haaransatz sprühen und bis in die Längen verteilen. Kreieren Sie mehr Volumen, indem Sie mit einer Rundbürste gegen den gewohnten Scheitel trocken föhnen. Kann auch zwischendurch im trockenen Haar verwendet werden, um das Haar mit Volumen zu beleben.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bali-curls-hydrating-curl-cream",
+      "name": "BALI CURLS HYDRATING CURL CREAM",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 promise: Die vegane und leichte Hydrating Curl Cream mit ihrer wirksamen Anti-Frizz-Formel aus reiner Sheabutter, Kokosöl und Ylang-Ylang-Extrakt spendet deinen Locken nicht nur Feuchtigkeit, sondern definiert, stärkt und regeneriert sie."
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Beginne mit einer haselnussgroßen Menge der Lockencreme und verteile sie in deinen Händen. Arbeite dann die Creme in dein feuchtes oder handtuchtrockenes Haar. Passe bei Bedarf die verwendete Menge an die Länge deines Haares an. Style deine Locken nun wie gewohnt, um sie zu formen und die Sprungkraft zu erhöhen. Um deine Locken zu definieren kannst du deine Finger oder auch eine Stylingbürste wie die Behairful Brush nutzen. Verwende zum Abschluss deiner Styling-Routine ein Gel, wie das Defining Gel von Bali Curls.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "promise",
+          "text": "Die vegane und leichte Hydrating Curl Cream mit ihrer wirksamen Anti-Frizz-Formel aus reiner Sheabutter, Kokosöl und Ylang-Ylang-Extrakt spendet deinen Locken nicht nur Feuchtigkeit, sondern definiert, stärkt und regeneriert sie."
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bali-curls-leave-in-spray-curl-defining",
+      "name": "BALI CURLS Leave-In Spray Curl Defining (Curl Defining Spray)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 promise: Definiert und formt deine Locken - mit natürlichem Stylingpolymer für langanhaltenden Halt"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Sprühe das Spray auf handtuchtrockenes oder trockenes Haar und style es wie gewohnt.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "promise",
+          "text": "Definiert und formt deine Locken - mit natürlichem Stylingpolymer für langanhaltenden Halt"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bali-curls-sleek-stick-brows-and-edges",
+      "name": "Bali Curls Sleek Stick Brows & Edges",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Sanft über die Augenbrauen oder trockenes Haar streichen und nach Wunsch in Form bringen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "bali-curls-strong-hold-flaxseed-gel",
+      "name": "BALI CURLS Haargel Strong Hold Flaxseed",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 promise: Extra-starker Halt für definierte, langanhaltende Locken"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Gel in die nassen oder feuchten Locken einarbeiten. Zum Definieren die Scrunch-Technik anwenden, indem das Gel von unten nach oben in die Locken eingeknetet wird. An der Luft trocknen lassen oder mit einem Diffusor stylen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "promise",
+          "text": "Extra-starker Halt für definierte, langanhaltende Locken"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bali-curls-volumizing-curl-spray-refreshing",
+      "name": "BALI CURLS Volumizing Curl Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-T2-directions",
+          "evidence": "required tips-to-roots sequence; optional extra Curl Defining Gel"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Refreshing Curl Spray kann täglich auf nassem oder trockenem Haar angewendet werden, um die Wellen/Locken zu erfrischen und zu revitalisieren. Sprühe den Spray gleichmäßig in das feucht oder nasse Haar, beginnend an den Spitzen, und arbeite dich zum Ansatz vor. Bei dickerem Haar kann es hilfreich sein das Haar in Abschnitten aufzuteilen. Unser Tipp: Style deine Haar im nassen Zustand, dies reduziert Frizz und verleiht deinem Haar mehr Definition. Nutze Im Anschluss bei Bedarf nochmal eine kleine Menge des Curl Defining Gel.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bali-gents-haarpuder-volumizing-styling-powder",
+      "name": "BALI GENTS VOLUMIZING STYLING POWDER",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge des Puders in den Handflächen verreiben oder direkt auf den Haaransatz streuen. In das trockene Haar einmassieren und nach Belieben stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "bali-gents-matt-paste",
+      "name": "BALI GENTS Matt Paste",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge zwischen den Handflächen verreiben und auf trockenes oder leicht feuchtes Haar auftragen. Anschließend mit den Fingern oder einem Kamm in Form bringen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "bali-gents-sea-salt-spray",
+      "name": "BALI GENTS Sea Salt Spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Sea Salt Spray: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "batiste-trockenshampoo-all-in-one",
+      "name": "Batiste TROCKENSHAMPOO ALL IN ONE fruchtig frischer Duft",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Dose schütteln; Haar in Partien teilen, aus 30 cm in Richtung Ansatz sprühen; mit Fingerspitzen verteilen, Kopfhaut leicht massieren; leicht durchbürsten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "bumble-and-bumble-brilliantine",
+      "name": "Bumble and bumble brilliantine",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative dose/repeat screen: use little and build if needed"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge verwenden und bei Bedarf aufbauen; im feuchten oder trockenen Haar verwenden. Die Finger für einen verwuschelten Look verwenden, einen Kamm für glatte Looks.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "bumble-and-bumble-surf-spray",
+      "name": "Bumble and bumble Surf Spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig auf das feuchte oder trockene Haar sprühen. Stylen und trocknen lassen; stellen Sie sich in den Wind oder verwenden Sie einen Fön mit Aufsatz.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "cantu-lockencreme-kokos",
+      "name": "cantu SHEA BUTTER COCONUT CURLING CREAM",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional dry-hair moisture use after damp main use; oil after-treatment"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf feuchtes Haar Strähne für Strähne auftragen. Vom Ansatz bis zu den Spitzen in das Haar einmassieren. Nicht ausspülen. Kann auf trockenem Haar verwendet werden, um Locken zu befeuchten. Mit Öl nachbehandeln, um Feuchtigkeit einzuschließen",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "cantu-lockenspray-comeback-curl-next-day",
+      "name": "cantu SHEA BUTTER COMEBACK CURL NEXT DAY CURL REVITALIZER",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra moisture: repeat on dry hair"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf trockenes oder feuchtes Haar Strähne für Strähne sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen. Vor dem Schlafengehen Haare leicht anfeuchten und zu lockerem Pferdeschwanz am Oberkopf zusammennehmen, um Frizz am nächsten Tag zu minimieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "cantu-shea-butter-extra-hold-edge-stay-gel",
+      "name": "Cantu Shea Butter for Natural Hair Firm Hold Edge Stay Gel",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "missing",
+      "directions": null,
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "color-wow-dream-coat-supernatural-spray",
+      "name": "COLOR WOW Dream Coat Supernatural Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-film",
+          "evidence": "aqueous pump spray; first non-solvent film Polysilicone-29 r3; DMDM Hydantoin r4; Silicone Quaternium-18 r7; no FX-1..4; directions require blow-drying under tension; C3-only promise remains an evidence gate"
+        }
+      ],
+      "formula_screen": {
+        "reachable": true,
+        "evidence": "aqueous pump spray; first non-solvent film Polysilicone-29 r3; DMDM Hydantoin r4; Silicone Quaternium-18 r7; no FX-1..4; directions require blow-drying under tension; C3-only promise remains an evidence gate"
+      },
+      "directions_status": "verbatim",
+      "directions": "Teilen Sie das handtuchtrockene Haar in Abschnitte und sprühen Sie das Spray großzügig und gleichmäßig auf das feuchte Haar. Föhnen Sie jeden Abschnitt unter Spannung. Zusätzliche Styling-Produkte erst auf trockenem Haar verwenden.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "evo-head-mistress-cuticle-sealer",
+      "name": "EVO Head Mistress Cuticle Sealer",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "missing",
+      "directions": null,
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "feschi-smooth-and-shine-anti-frizz-spray-glanzspray",
+      "name": "feschi smooth & shine Anti Frizz Spray (Glanzspray)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conditional extra damp pre-styling application for coarse/thick hair"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Nach dem Styling oder zur Auffrischung zwischendurch die Dose gut schütteln und aus ca. 20 cm Entfernung sparsam in die trockenen Haarlängen sprühen. Anschließend kämmen. Tipp: Bei besonders krausem oder dickem Haar das Spray bereits vor dem Styling ins handtuchtrockene Haar sprühen, um es in die gewünschte Form zu bringen!",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "gard-haarspray-extrastark-pumpspray",
+      "name": "Gard Haarspray extrastark (Pumpspray, ohne Treibgas)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conditional extra-effect applications: roots for volume; individual strands for styling"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Finishing: Aus ca. 25 cm Entfernung gleichmäßig auf das Haar sprühen. Mehr Volumen: Aus ca. 15 cm Entfernung kopfüber ins Haar oder direkt in den Haaransatz sprühen. Styling: Einzelne Haarsträhnen gezielt besprühen und mit den Fingern in Form bringen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+      "name": "GARNIER FRUCTIS Leave-In Spray Diamond Sleek Glättungsspray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": {
+        "reachable": false,
+        "evidence": "not film-led trace care: argan oil r6, amidoamine r7, ester r9 before Polysilicone-29 r15 and Phenoxyethanol r17"
+      },
+      "directions_status": "verbatim",
+      "directions": "Nach der Haarwäsche- und pflege mit der Keratin Sleek Routine das handtuchtrockene Haar mit dem Diamond Sleek Shine-Coat Glättungsspray großzügig besprühen. Anschließend das Haar strähnenweise mit einer Bürste föhnen, um das Haar auf Spannung zu halten und die Formel zu aktivieren. Für ein ultimativ strahlendes Finish den Sleek Look mit einem Glätteisen versiegeln.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray",
+      "name": "GARNIER FRUCTIS LOCKEN METHODE SHAPE REFRESH STEP 4 FEUCHTIGKEITS-BOOST SPRAY",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 promise: Die Formel mit dem Feuchtigkeits-Komplex mit Hyaluron und Shea-Fettsäuren spenden den Locken bis zu 48h Feuchtigkeit und definierte Locken."
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Haar mit dem N°0 Pre-Shampoo und dem N°1 Shampoo waschen, die N°2 feuchtigkeitsauffüllende Maske anwenden und anschließend das N°3 Shape Refresh Feuchtigkeitsboost Spray auf das feuchte oder trockene Haar auftragen; Locken kneten und um die Finger zwirbeln, um sie zu definieren; an der Luft oder im Diffusor trocknen lassen; täglich oder zwischen den Haarwäschen anwenden.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "promise",
+          "text": "Die Formel mit dem Feuchtigkeits-Komplex mit Hyaluron und Shea-Fettsäuren spenden den Locken bis zu 48h Feuchtigkeit und definierte Locken."
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "garnier-fructis-sleek-and-stay-heat-activated-serum",
+      "name": "GARNIER FRUCTIS SLEEK & STAY HEAT-ACTIVATED SERUM",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Zu Beginn der Haarpflegroutine das Haar gründlich mit dem Fructis Keratin Sleek Shampoo waschen und dieses im Anschluss ausspülen. Anschließen mit der Haarmaske oder dem Conditioner fortfahren und das Haar leicht antrocknen lassen. Nun einen Pumpstoß des Fructis Sleek & Stay Heat-Activated Serums in die Hand geben und gleichmäßig im feuchten Haar verteilen. Dabei nicht ausspülen. Jetzt das Haar sorgfältig föhnen und bei Bedarf mithilfe eines Glätteisens glätten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-anti-frizz-lotion-schmusekatze",
+      "name": "got2b Anti-Frizz Lotion Schmusekatze",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative optional-use screen: extra heat-protection use in HACK"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Verteile die Lotion gleichmäßig im handtuchtrockenen oder trockenen Haar und style es, wie es dir gefällt. HACK: Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "got2b-gotgloss-glanz-spray",
+      "name": "got2b (Schwarzkopf/Henkel) Glanz Spray got Gloss (gotGloss Glanz Spray)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional repeat finish application; optional Primer combination routine"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Anwendung: Das GOT2B gotGloss Glanz Spray auf trockenes Haar auftragen und kurz einwirken lassen. Haare im Anschluss Glätten um den Glanz zu verstärken. Bei Bedarf das Spray noch einmal als Finisch aufsprühen. Styling Hack: Für die ultimative \"Glass Hair\" Routine,  zuerst den gotGloss Glanz Primer im handtuchtrockenen Haar verteilen und die Haare föhnen. Im Anschluss das gotGloss Glanz Spray auf das trockene Haar sprühen und die Haare glätten. Das Ergebnis: Spiegelglänzendes, glattes \"Glass Hair\" Haar!",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "got2b-hitzeschutzspray-schutzengel",
+      "name": "got2b Schutz-engel Hitzeschutz Spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Großzügig ins handtuchtrockene Haar sprühen. Das Haar wie gewohnt föhnen. Für den ultimativen heißen Style ein Glätteisen oder einen Lockenstab benutzen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-kleber-4-brows-and-edges-2in1-stylinggel",
+      "name": "got2b Kleber 4 Brows & Edges 2in1 Stylinggel",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Die vielseitige Faserbürste ermöglicht ein einfaches und präzises Auftragen und Stylen. Verwende die breite Seite, um das Produkt auf die Augenbrauen und die Haare am Haaransatz aufzutragen. Verwende die flache Seite, um die Augenbrauen und Kanten zu stylen und zu fixieren. Nicht auf den Wimpern anwenden. Entferne das Produkt mit warmem Wasser und einer milden Seife von den Augenbrauen und Kanten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-lockenspray-refresher-curlz",
+      "name": "got2b Lockenspray Refresher Curlz (gotCURLZ Locken Refresher Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf trockenem Haar auftragen. Sprühe von der Haarmitte bis zu den Spritzen für den ultimativen glossy Look. HACK: bei feinerem Haar den Sprühnebel auf die Hände sprühen und von der Haarmitte bis zu den Spitzen verteilen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-spruehkleber-freeze-haarlack",
+      "name": "got2b SPRÜH KLEBER Freeze Haarlack",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional targeted application to individual strands after whole-hair instruction"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig aus 30 cm Entfernung auf das Haar sprühen; gezielt auf einzelne Strähnen möglich. Fixiert bis zur nächsten Haarwäsche.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "got2b-styling-mattpaste-strand-matte",
+      "name": "got2b (Schwarzkopf) Styling Mattpaste Strand Matte",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf trockenem oder feuchtem Haar. In den Handflächen verteilen und nach Belieben einzelne Partien zerzausen, zwirbeln oder plätten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-styling-paste-istyler-texture-clay",
+      "name": "got2b (Schwarzkopf) Styling Paste iStyler Texture Clay",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Verreibe die Clay-Paste zwischen deinen Handflächen und arbeite sie ins trockene Haar ein.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-styling-puder-volumen-powderfull",
+      "name": "got2b Styling Puder Volumen Powderfull",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Puder in deine Handflächen streuen und gut verreiben, bis es unsichtbar wird. Dann im trockenen Haar, vom Ansatz bis in die Spitzen verteilen. Für sofortiges Volumen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "got2b-trockenshampoo-extra-volumen",
+      "name": "got2b Trocken SHAMPOO Extra Volumen",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Bürste dein Haar gut durch und lege ein Handtuch um deine Schultern. Dose vor jedem Sprühen kräftig schütteln. Das Haar in Partien einteilen und aus einer Entfernung von 20 cm auf das trockene Haar sprühen und kurz trocknen lassen. Mit den Fingern oder einem Handtuch einarbeiten und eventuelle Rückstände einfach ausbürsten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "guhl-foehn-spray-langzeit-volumen",
+      "name": "GUHL Föhn-Spray Langzeit Volumen (Föhn-Aktiv Styling Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "ANWENDUNG: Vor dem Föhnen aufsprühen. Nicht ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "guhl-locken-pflege-und-styling-3in1",
+      "name": "GUHL LOCKEN PFLEGE & STYLING 3in1 LOCKENCREME, KUR & SPÜLUNG",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C1 promise: Mit wenig Aufwand zu definierten Locken & Wellen"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "3in1 ANWENDUNG: 1 - Spülung: In die nassen Längen und Spitzen geben, kurz einwirken lassen. Gründlich ausspülen. 2 - Kur: In die nassen Längen & Spitzen geben, 3-5 min einwirken lassen. Gründlich ausspülen. 3 - Lockencreme: Ins handtuchtrockene oder trockene Haar einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220°C.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "Mit wenig Aufwand zu definierten Locken & Wellen"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "guhl-styling-spray-locken-pflege-und-styling-2in1",
+      "name": "GUHL LOCKEN PFLEGE & STYLING 2in1 STYLING-SPRAY",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "2in1 ANWENDUNG für Pflege & Styling: Im nassen oder trockenen Haar anwenden. In die Längen sprühen & einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220°C. Ideal auch zur Reaktivierung der Locken.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "hask-lockencreme-curl-care",
+      "name": "HASK curls defining cream",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Tragen Sie es auf das handtuchtrockene Haar auf. Nicht ausspülen. Frisieren Sie das Haar wie gewohnt.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "isana-professional-styling-creme-locken-traum",
+      "name": "ISANA PROFESSIONAL Styling Creme Locken Traum",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "missing",
+      "directions": null,
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "jean-und-len-sea-salt-spray",
+      "name": "Jean&Len Sea Salt Spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch guuut schütteln, dann einen Spritzer ins feuchte oder trockene Haar geben. Für einen intensiveren Beach Look Haare kneten und an der Luft trocknen lassen. Du willst mehr Volumen? Dann einfach Deine Haare trocken föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "john-frieda-frizz-ease-3-tage-glatt-styling-spray",
+      "name": "John Frieda Frizz Ease 3-Tage-Glatt Styling-Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Frizz Ease 3-Tage-Glatt Styling-Spray"
+        }
+      ],
+      "formula_screen": {
+        "reachable": false,
+        "evidence": "Polysilicone-9 r3 is SI-4/FX-U hair-fixing, not a settled SI-1 smoothing coat; no formula-readable heat-activated smoothing-film finding; still included for brand-line screening"
+      },
+      "directions_status": "verbatim",
+      "directions": "1. Gleichmäßig auf das feuchte Haar sprühen. Bei feinem Haar sparsam verwenden.\n2. Durchkämmen, um eine gleichmäßige Verteilung zu gewährleisten.\n3. Glatt föhnen und anschließend mit einem Glätteisen fixieren für langanhaltende Geschmeidigkeit.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "john-frieda-frizz-ease-traumlocken-lockencreme",
+      "name": "John Frieda Lockencreme Traumlocken (Frizz Ease Traumlocken Definierende Locken-Creme)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Lockencreme Traumlocken (Frizz Ease Traumlocken Definierende Locken-Creme)"
+        },
+        {
+          "class": "T1-directions",
+          "evidence": "optional day-2 application to particularly unruly curls"
+        },
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C1 flexibility: definierte, flexible Locken / C1 humidity: Verhindert Frizz für definierte, flexible Locken"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Anwendung: Sparsam verwenden. Eine erbsengroße Menge der Creme in den Handflächen verreiben und gleichmäßig vom Ansatz bis in die Spitzen im feuchten Haar verteilen. Je nach Haarlänge und -struktur eine größere oder kleinere Menge des Produkts verwenden. Wie gewohnt Stylen. Styling Tipp: Zum Auffrischen am 2.Tag eine erbsengroße Menge auf besonders widerspenstige Locken geben.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C1",
+          "type": "flexibility",
+          "text": "definierte, flexible Locken"
+        },
+        {
+          "tier": "C1",
+          "type": "humidity",
+          "text": "Verhindert Frizz für definierte, flexible Locken"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "john-frieda-frizz-ease-unendlich-smooth-blow-out-spray",
+      "name": "John Frieda Frizz Ease Unendlich Smooth Salon Blow-Out Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-owner",
+          "evidence": "aqueous pump spray; Polysilicone-29 r3; Sodium Benzoate r7; oils r13/r14 and conditioning quats r18/r21/r22 after it; no FX; owner named"
+        },
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Frizz Ease Unendlich Smooth Salon Blow-Out Spray"
+        }
+      ],
+      "formula_screen": {
+        "reachable": true,
+        "evidence": "aqueous pump spray; Polysilicone-29 r3; Sodium Benzoate r7; oils r13/r14 and conditioning quats r18/r21/r22 after it; no FX; owner named"
+      },
+      "directions_status": "verbatim",
+      "directions": "1. Großzügig in Abschnitten auf das handtuchtrockene Haar sprühen.\n2. Für eine gleichmäßige Verteilung durchkämmen.\n3. Mit einem Föhn und etwas Spannung die Haare stylen, um ein seidiges Finish wie frisch vom Friseur zu erzielen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "john-frieda-frizz-ease-zauberformel-seiden-finish-creme",
+      "name": "John Frieda Frizz Ease Zauberformel Seiden-Finish Creme",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Frizz Ease Zauberformel Seiden-Finish Creme"
+        },
+        {
+          "class": "T1-directions",
+          "evidence": "optional anytime reapplication as needed"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "1. Eine kleine Menge zwischen den Handflächen verreiben.\n2. Im trockenen Haar verteilen und dabei besonders auf abstehende Härchen und ungleichmäßige Spitzen achten.\n3. Einfach in die Handtasche stecken und jederzeit bei Bedarf anwenden.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "john-frieda-haarserum-frizz-ease-der-baendiger",
+      "name": "John Frieda Frizz Ease DER BÄNDIGER EXTRA STRONG SERUM",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: Frizz Ease DER BÄNDIGER EXTRA STRONG SERUM"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Für die Anwendung auf nassem Haar: Sparsam verwenden, 1 Pumpstoß des Serums in die Handfläche geben und verreiben. Gleichmäßig im feuchten Haar verteilen, den Ansatz aussparen. Je nach Haarlänge und -dicke mehr oder weniger verwenden. Nicht ausspülen. Für die Anwendung auf trockenem Haar: Eine kleine Menge auf gezielte Haarpartien auftragen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "john-frieda-traumlocken-belebender-wellenauffrischer",
+      "name": "John Frieda Traumlocken Belebender Wellenauffrischer",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "1. Gut schütteln.\n2. Großzügig abschnittsweise auf das trockene Haar sprühen.\n3. Locken kneten, um sie aufzufrischen und zu definieren.\n4. Lufttrocknen lassen oder mit einem Diffusor föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "john-frieda-volume-lift-ansatz-booster",
+      "name": "John Frieda Volume Lift Ansatz-Booster",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein.\n2. Anschließend trocken föhnen und wie gewohnt stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "john-frieda-volume-lift-pushed-up-dry-texture-spray",
+      "name": "John Frieda Spray Volume Lift Pushed-up Dry Texture",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Anwendung: Den farbigen Teil des Sprühkopfes zum Öffnen und Schließen drehen. Vor und während der Anwendung gut schütteln. Auf trockenem Haar anwenden. Strähnen anheben und vom Ansatz her ins Haar sprühen. Mit den Fingern stylen und zerzausen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "kerastase-curl-manifesto-refresh-absolu",
+      "name": "Kérastase CURL MANIFESTO REFRESH ABSOLU Second day curl refreshing spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "zwischen den Haarwäschen täglich morgens aufsprühen und mit den Fingern Locken definieren",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "kevin-murphy-killer-curls",
+      "name": "Kevin.Murphy Killer.Curls (Leave-in Anti-Frizz Creme)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Ins handtuchtrockene oder feuchte Haar geben und einkneten, um die Locken in Form zu bringen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "kevin-murphy-powder-puff-volume",
+      "name": "Kevin.Murphy Powder.Puff Volume",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "POWDER.PUFF Schütteln, stylen und staunen! Für sofortiges Volumen und Struktur einfach etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "kms-thermashape-2-in-1-spray",
+      "name": "KMS Thermashape 2-in-1 Spray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": {
+        "reachable": false,
+        "evidence": "non-aqueous propellant-led aerosol; corroborated Acrylates Copolymer FX-2 r3 leads before Polysilicone-9 r8; fails aqueous/no-FX limbs"
+      },
+      "directions_status": "verbatim",
+      "directions": "Auf das trockene Haar sprühen, bevor Hot Tools verwendet werden. Für beste Ergebnisse Strähne für Strähne einsprühen. Als letzten Schritt erneut aufsprühen, um den Style zu fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "kms-thermashape-straightening-creme",
+      "name": "KMS Thermashape Straightening Creme",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf das handtuchtrockene Haar auftragen. Durchkämmen und föhnen. Mit Hitze-Tools stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "langhaarmaedchen-lockenspray-halt-sprungkraft",
+      "name": "LANGHAARMÄDCHEN LOCKENHALT SPRAY Halt & Sprungkraft",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra post-styling application for hold"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor dem Lockenstyling gut schütteln und ins handtuchtrockene oder trockene Haar sprühen, anschließend stylen. Kann auch nach dem Styling aufs Haar gesprüht werden, um Halt zu verleihen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "langhaarmaedchen-lockenspray-natur-lockenwunder",
+      "name": "LANGHAARMÄDCHEN Lockenspray Natur Lockenwunder",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional dry-hair fresh-kick between main wet-hair uses"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Nach dem Waschen ins nasse Haar sprühen und sanft einkneten. Für den Frischekick zwischendurch kurz auf das trockenen Haar aufsprühen und durchkneten - fertig.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "living-proof-full-dry-volume-texture-spray",
+      "name": "Living Proof Full Dry Volume & Texture Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "repeat as needed; final-style application; optional lengths application in Tips"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "- Vor jedem Sprühstoß die Dose gut schütteln.\n- Halten Sie die Dose fünf bis zehn Zentimeter vom trockenen Haar entfernt. Eine Haarpartie anheben und von der Wurzel bis zu den Spitzen auftragen.\n- Das Haar mit den Fingern zerzausen. Wiederholen Sie den Vorgang, bis die gewünschte Frisur erreicht ist, und schütteln Sie die Dose zwischen den einzelnen Sprühstößen.\n- Sprühen Sie die fertige Frisur für zusätzliche Textur und Halt ein.\nTipps und Tricks: Drehen Sie den Kopf zur Seite oder auf den Kopf und sprühen Sie das Produkt in kleinen Stößen in die Längen, um mehr Textur zu erhalten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "loreal-elvital-haaroel-oel-magique-alle-haartypen",
+      "name": "L'ORÉAL PARiS ELVITAL ÖL MAGIQUE VEREDELNDES HAARÖL",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "loreal-men-expert-barber-club-styling-pomade",
+      "name": "L'Oréal Men Expert Barber Club Styling Pomade Bart & Haar mit ätherischem Zedernholzöl",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge zwischen den Händen verreiben und auf den trockenen oder feuchten Bart und/oder das Haar auftragen. Nutze einen Kamm für ein perfektes Styling.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "loreal-paris-elnett-haarspray-extra-starker-halt",
+      "name": "L'ORÉAL PARiS Elnett Haarspray Extra Starker Halt",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Schutzlasche von der Kappe entfernen. Elnett-Haarspray aus ca. 30cm Entfernung aufsprühen. Sollte der Sprühkopf verkleben, bitte unter warmem Wasser abspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+      "name": "L'ORÉAL PARiS Elnett Stylingspray Hitzeschutz 3 Tage Glatt",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Die Entfernung vom Sprühkopf zum Haar sollte bei der Anwendung etwa 30 cm betragen. Sprühen Sie es am besten direkt nach der Haarwäsche auf das handtuchtrockene Haar auf. Kämmen Sie diese anschließend gut durch und föhnen Sie sie trocken. Für eine ultraglattes und seidiges Styling können Sie das trockene Haar anschließend noch mit einem Glätteisen glätten. Achten Sie dabei darauf, jede Haarpartie einzeln und so kurz wie möglich der Hitze auszusetzen. So verhindern Sie das Austrocknen und Brechen Ihrer Haare.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "loreal-paris-elvital-big-hair-day-erfrischendes-volumenspray",
+      "name": "L'ORÉAL PARiS ELVITAL Volumenspray Big Hair Day (Erfrischendes Volumen Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Volumen Spray auf trockenem Haar anwenden. Zunächst schütteln, dann auf den Ansatz aus 15cm Entfernung sprühen und mit den Fingern einmassieren. Anschließend Haar über Kopf, das Spray erneut am Ansatz aufsprühen für mehr Volumen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "maria-nila-curlicue-cream",
+      "name": "Maria Nila Curlicue Cream (Stylingcreme)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 finish: Betont und definiert Locken"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Für ein optimales Ergebnis die Curlicue Cream im feuchten Haar anwenden. Das Haar in einzelne Partien abteilen und die Haar-Creme einarbeiten.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "finish",
+          "text": "Betont und definiert Locken"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "moroccanoil-anti-frizz-schild-spray",
+      "name": "Moroccanoil Anti-Frizz Schild-Spray (Frizz Shield Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": {
+        "reachable": false,
+        "evidence": "Polysilicone-29 r3 but Silicone Quaternium-18 r4 and argan oil r5 precede first preservative Phenoxyethanol r39; fails trace-care limb"
+      },
+      "directions_status": "verbatim",
+      "directions": "In das saubere, feuchte Haar sprühen. Für eine gleichmäßige Verteilung kämmen und zur Aktivierung abschnittsweise föhnen. Anschließend ein Glätteisen verwenden, um die Anti-Frizz-Wirkung zu verstärken.\nFrizz Shield Spray sollte das letzte Produkt vor dem Föhnen sein, um eine optimale Wärmeaktivierung zu erzielen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "moroccanoil-dry-texture-spray",
+      "name": "Moroccanoil Trockenes Texturspray (Dry Texture Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gut schütteln. Ins trockene Haar sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "moroccanoil-glaettende-creme-smoothing-lotion",
+      "name": "Moroccanoil Glättende Creme (Smoothing Lotion)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra-effect combination: treatment and mousse with lotion"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Moroccanoil® Glättende Lotion ins feuchte Haar geben. Wie gewünscht föhnen. Kann als Leave-in-Kur verwendet werden, die das Haar länger frisch aussehen lässt. TIPP: Für einen glatten Look mit großem Volumen 1-2 Pumpstöße Moroccanoil® Behandlung mit 1-2 Pumpstößen Moroccanoil Glättende Lotion und einer golfballgroßen Menge Moroccanoil® Volumenschaum vermischen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "moroccanoil-root-boost",
+      "name": "Moroccanoil Root Boost",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra-effect combination: Volumenschaum before blow-drying"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Flasche gut Schütteln. Moroccanoil® Root Boost großzügig auf die Haaransätze des handtuchtrockenen Haares sprühen. Haare scheitelweise mit einer Rundbürste föhnen und diese von der Kopfhaut wegführen.\nTIPP: Moroccanoil® Volumenschaum für zusätzliche Fülle, Bewegung und Halt vor dem Föhnen mit Moroccanoil® Root Boost kombinieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "moroccanoil-textur-und-volumenpuder",
+      "name": "Moroccanoil Textur- & Volumenpuder fürs Haar (Texture & Volume Hair Powder)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conditional additional pump applications to increase volume"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Haare in Abschnitte unterteilen. Die Flasche 4–6 cm von den trockenen Wurzeln entfernt halten. Sanft auf die Pumpe, um das Produkt zu verteilen. Mit einem Pumpenstoß beginnen und je nach Bedarf weitere hinzugeben, um das Volumen zu erhöhen. Mit den Fingern stylen, bis das gewünschte Ergebnis erreicht ist. Das Haar zerzausen, um das Volumen über den Tag hinweg zu reaktivieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "moroccanoil-volumizing-spray",
+      "name": "Moroccanoil Volumizing Spray (Volumizing Mist)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Sprühen Sie das Produkt großzügig vom Ansatz bis zu den Spitzen auf feuchtes, handtuchtrockenes Haar auf.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "neqi-diamond-glass-styling-spray-all",
+      "name": "NEQI Diamond Glass Styling Spray All",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-owner",
+          "evidence": "aqueous pump spray; Polysilicone-29 r7; T_LI Ethylhexylglycerin r8; Silicone Quaternium-18 r10; no FX; heat-activation C2 lines; owner named"
+        }
+      ],
+      "formula_screen": {
+        "reachable": true,
+        "evidence": "aqueous pump spray; Polysilicone-29 r7; T_LI Ethylhexylglycerin r8; Silicone Quaternium-18 r10; no FX; heat-activation C2 lines; owner named"
+      },
+      "directions_status": "verbatim",
+      "directions": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "neqi-diamond-glass-ultimate-styling-spray",
+      "name": "NEQI Diamond Glass Ultimate Styling Spray",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-owner",
+          "evidence": "OWNER inclusion: Polysilicone-29 r7; T_LI Ethylhexylglycerin r9; Silicone Quaternium-18 r11; frozen FX-1 VP/Methacrylamide/Vinyl Imidazole Copolymer r8 remains; explicit owner outcome overrides the generic no-FX predicate, not its ingredient membership"
+        }
+      ],
+      "formula_screen": {
+        "reachable": true,
+        "evidence": "OWNER inclusion: Polysilicone-29 r7; T_LI Ethylhexylglycerin r9; Silicone Quaternium-18 r11; frozen FX-1 VP/Methacrylamide/Vinyl Imidazole Copolymer r8 remains; explicit owner outcome overrides the generic no-FX predicate, not its ingredient membership"
+      },
+      "directions_status": "verbatim",
+      "directions": "1. Das Haar in Abschnitte unterteilen.\n2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen.\n3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "nivea-men-styling-cream-active-craft-stylers",
+      "name": "NIVEA MEN Styling Cream Active",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional re-styling with an additional dab"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "1 Vorbereiten\nEine Fingerspitze voll NIVEA MEN Styling Cream aufnehmen und zwischen den Handflächen verreiben.\n2 Anwenden\nDie Cream mit den Händen im handtuchfeuchten oder trockenen Haar einarbeiten und dann mit den Fingern den gewünschten Look stylen.\n3 Nachstylen\nMit einem Tupfer NIVEA MEN Styling Cream kann man schnell und unkompliziert noch einmal nachstylen – ohne dass die Hände oder Haare verkleben oder der Look unnatürlich wirkt.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "osis-dust-it",
+      "name": "Schwarzkopf Professional OSiS Dust It",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative required multi-site screen: whole dry hair, then named roots and lengths for extra volume/updo hold"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Das Volumenpuder vor der Anwendung vorsichtig schütteln und mit den Fingern in das trockene Haar einarbeiten. Auf den Haaransatz und die Längen auftragen, um mehr Volumen zu erhalten und um Zöpfen und Hochsteckfrisuren zusätzlichen Halt zu verleihen, sowie Haarnadeln an ihrem Platz zu halten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "osis-flatliner",
+      "name": "Schwarzkopf Professional OSiS Flatliner",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative optional extra-effect use: can also serve as fixing spray before blow-drying for more volume"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Mit seinem leichten Halt kann OSiS Flatliner auch als Fixierspray verwendet werden, bevor die Haare geföhnt werden, um mehr Volumen im Haar zu erzeugen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "osis-sparkler",
+      "name": "Schwarzkopf Professional OSiS Sparkler",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Mit einem Abstand von 30cm auf das trockene Haar sprühen. In mehreren kurzen Sprühstößen anwenden. Die Haare nach Bedarf stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "osis-super-shield",
+      "name": "Schwarzkopf Professional OSiS Super Shield",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor dem Föhnen, mit ca. 30cm Abstand, in kurzen Sprühstößen verwenden oder auf trockenem Haar anwenden.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+      "name": "Redken One United All-in-One Multi-Benefit Treatment",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative combination screen: conditioner/leave-in/styling application variants"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "1. Variante: Nach der Haarwäsche ins handtuchtrockene Haar einarbeiten. Nicht ausspülen. Danach die Haare wie gewohnt stylen\n2. Variante: Nach dem Shampoonieren mit einem Conditioner mischen und ins Haar einarbeiten. Anschliessend gründlich wieder ausspülen.\n3. Variante: Nach der Haarwäsche mit einer Leave-In Pflege vermischen und ins Haar einarbeiten. Nicht ausspülen\n4. Variante: Mit einem Stylingprodukt vermischen und ins Haar einarbeiten, um ein perfektes Finish zu erzielen.\nBei Kontakt mit den Augen diese sofort gründlich ausspülen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "redken-powder-grip-03",
+      "name": "Redken Powder Grip (03 Mattifying Hair Powder)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "extra application for mattifying/structuring finish"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Schritt 1: Das Produkt schütteln. Schritt 2: Das Produkt über das Haar streuen. Schritt 3: Mit den Fingern durch das Haar kneten. Schritt 4: Für ein mattierendes und strukturierendes Finish etwas mehr Produkt auftragen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "redken-refreshing-curl-mist",
+      "name": "Redken Refreshing Curl Mist",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative optional other-product application screen: recommended care/styling series"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In die trockenen Längen und Spitzen sprühen und sanft einkneten. Anschließend entweder lufttrocknen lassen oder föhnen. Für optimale Ergebnisse wird die Anwendung der Acidic Bonding Curls Lockenpflege-Serie sowie der Curls Stylers von Redken empfohlen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "redken-root-tease",
+      "name": "Redken Root Tease",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-T2-directions",
+          "evidence": "OWNER T2: required roots, then whole-hair application"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Schritt 1: Auf den Ansatz sprühen, um Volumen zu erhalten. Schritt 2 Anschliessend toupieren und auf das gesamte Haar sprühen, um die Frisur zu fixieren und ihr ein modernes, mattes Finish zu verleihen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "redken-styling-beach-spray",
+      "name": "Redken BEACH SPRAY BEACHY TEXTURE SPRAY",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional dry-hair re-spray during the day (captured paraphrase, never promoted to verbatim)"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "paraphrase",
+      "directions": "Auf das feuchte Haar auftragen, dann trockenföhnen oder an der Luft trocknen lassen; für definiertere Welle mit Lockenstab stylen. Pack image: spray into wet hair, air-dry; re-spray on dry hair during the day.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "redken-wax-spray",
+      "name": "Redken Wax Spray (Redken Spray Wax)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Schritt 1: Gut schütteln. Schritt 2: Auf das feuchte oder trockene Haar sprühen. Schritt 3: Mit den Händen die gewünschte Frisur formen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-professional-osis-curl-retouch",
+      "name": "Schwarzkopf Professional OSiS+ CURL RETOUCH CURL ENHANCING SPRAY",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra dry-hair refresh after damp main use"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch schütteln.\nDas Curl Spray auf handtuchtrockenes Haar sprühen, durchkämmen und Locken und Wellen mit den Fingern formen, für natürlich definierte Locken. Lufttrocknen lassen.\nZum Auffrischen das Lockenspray aus ca. 20 cm Entfernung auf das trockene Haar sprühen. Anschließend das Haar sanft durchkämmen, um geschmeidige Locken zu erhalten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-foehn-spray-volumen-halt-3",
+      "name": "Schwarzkopf taft Föhn-Spray VOLUMEN Halt 3",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig in das handtuchtrockene Haar sprühen, Haare trocken föhnen und stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-gel-wax-glanz-halt-2",
+      "name": "Schwarzkopf Taft Gel Wax Glanz (Strahlender Glanz)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: TAFT Glanz Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Glanz Haarspray fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-haarpuder-volumen",
+      "name": "Schwarzkopf taft Haarpuder VOLUMEN",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra volume tip: direct dry-hair powder application"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge Puder in die Handflächen geben und gut verreiben. Anschließend auf das trockene Haar auftragen, vom Ansatz bis in die Spitzen verteilen und nach Wunsch stylen. Tipp: Für einen extra Volumen-Boost das Puder direkt auf das trockene Haar streuen. Das Puder anschließend mit den Fingerspitzen einmassieren und nach Wunsch stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-haarspray-classic-halt-3",
+      "name": "Schwarzkopf taft Haarspray CLASSIC Halt 3",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Aus 30 cm Abstand sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-haarspray-glanz-halt-4",
+      "name": "Schwarzkopf taft Haarspray GLANZ Halt 4",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Aus 30 cm Abstand sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-haarspray-power-halt-5",
+      "name": "Schwarzkopf taft Haarspray POWER Halt 5",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Aus 30 cm Abstand sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-matt-wax-halt-5",
+      "name": "Schwarzkopf Taft Haargel MATT WAX Halt 5",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: TAFT Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Haarspray fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-power-haargel-halt-5",
+      "name": "Schwarzkopf taft Haargel POWER Halt 5",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: TAFT Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Haarspray fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar",
+      "name": "Schwarzkopf taft Schaumfestiger Volumen Halt 4, für feines Haar",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gut schütteln und Ventil nach unten richten. Schaum entnehmen und im feuchten Haar verteilen. Nicht ausspülen! Föhnhitze verstärkt den Volumen-Effekt.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-styling-balm-locken-halt-3",
+      "name": "Schwarzkopf taft Styling Balm LOCKEN Halt 3",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: TAFT Haarspray"
+        },
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 promise: Dieser Haarstyling-Balsam definiert Locken voller Elastizität. / C2 finish: definierte Locken, Anti-Frizz-Effekt"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In trockenes oder handtuchtrockenes Haar einarbeiten und Locken nach Wunsch modellieren. Für beste Ergebnisse, mit TAFT Haarspray fixieren.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "promise",
+          "text": "Dieser Haarstyling-Balsam definiert Locken voller Elastizität."
+        },
+        {
+          "tier": "C2",
+          "type": "finish",
+          "text": "definierte Locken, Anti-Frizz-Effekt"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "schwarzkopf-taft-texturspray-aloe-boost",
+      "name": "Schwarzkopf taft Texturspray Aloe Boost",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gut schütteln. Mit kurzen Sprühstößen aus 30cm Abstand auf das trockene Haar sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "schwarzkopf-taft-x-gliss-silky-shine-shine-coat",
+      "name": "Schwarzkopf taft (taft x GLISS) Glanz-Spray taft x Gliss Silky Shine",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: holding me strongly Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Für optimalen Hitzeschutz vor dem Stylen aus 30 cm Abstand ins handtuchtrockene Haar sprühen und wie gewohnt föhnen. Für beste Ergebnisse mit taft x GLISS holding me strongly Haarspray fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-curl-cream-gel-3in1",
+      "name": "syoss Curl Cream Gel",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra application of Curl Schaumfestiger for definition"
+        },
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 hold: Bis zu 48 h definierte Locken / C2 finish: definierte Locken; nicht klebend & ohne Rückstände / C2 duration: Bis zu 48 h definierte Locken"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Für die „Curly Girl Methode\" eine kleine Menge in den Handflächen verteilen und das Gel gleichmäßig von unten nach oben in das nasse Haar einkneten. Für ein natürlicheres Ergebnis und weniger Frizz, die Locken nach dem Trocknen in ein Seidentuch wickeln und sanft kneten, damit sich der Film lösen kann. Für mehr Definition kann zusätzlich der SYOSS Curl Schaumfestiger verwendet werden.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "hold",
+          "text": "Bis zu 48 h definierte Locken"
+        },
+        {
+          "tier": "C2",
+          "type": "finish",
+          "text": "definierte Locken; nicht klebend & ohne Rückstände"
+        },
+        {
+          "tier": "C2",
+          "type": "duration",
+          "text": "Bis zu 48 h definierte Locken"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-glaze-glanz-und-schutz-primer",
+      "name": "Syoss Glaze Glanz & Schutz Primer",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra-effect combination with Glaze Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig ins feuchte Haar sprühen und anschließend föhnen - für Hitzeschutz und einen glanzvollen Glaze-Look.\nFür ein optimales Glanz-Ergebnis in Kombination mit Syoss Glaze Haarspray verwenden. Nicht in die Augen sprühen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-glaze-topcoat",
+      "name": "Syoss Glaze Topcoat",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative extra-effect application screen: before hot tools, then post-styling Glaze reinforcement"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf trockenem Haar wie folgt anwenden:\nVor dem Styling mit Glätteisen oder Lockenstab – Mit Hitzeschutz für ein intensiv glänzendes Ergebnis\nNach dem Styling – Zur Verstärkung des Glaze-Effekts für mehrschichtigen Glanz",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-haarspray-max-hold",
+      "name": "syoss Haarspray Max Hold",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative extra-effect applications: whole-hair finish and individual strands from roots for shaping"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf trockenem Haar verwenden. Als Finish: Aus 30 cm Abstand aufsprühen. Zum Stylen einzelner Haarpartien: Haarsträhne vom Ansatz an besprühen und in Form bringen. Sollte die Düse verklebt sein, bitte mit warmem Wasser reinigen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-hitzeschutzspray-keratin-heat",
+      "name": "syoss KERATIN Heat HITZESCHUTZ-SPRAY",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative optional other-product screen: Keratin Haarspray supplement"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Feuchtes Haar: gleichmäßig aufs ganze Haar sprühen, vor Glätteisen/Lockenstab föhnen. Trockenes Haar: Strähnen abteilen, direkt vor dem Glätten/Locken einsprühen, kurz antrocknen lassen. Syoss nennt Keratin Haarspray als Ergänzung.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-professional-performance-max-hold-power-wax",
+      "name": "Syoss Max Hold Wax",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "conservative dose/repeat screen: take more Wax if needed"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Eine kleine Menge entnehmen und in den Handflächen verreiben\nAuf trockenem Haar anwenden, um den gewünschten Look zu erzielen\nBei Bedarf etwas mehr Wax nehmen",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "syoss-schaumfestiger-volume",
+      "name": "Syoss Schaumfestiger Volume",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch gut schütteln und Ventil nach unten halten. Eine Handvoll Schaum entnehmen und im feuchten Haar verteilen. Anschließend das Haar wie gewohnt stylen. Nicht auswaschen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "taft-styling-paste-forming-halt-5plus",
+      "name": "Schwarzkopf taft FORMING STYLING PASTE",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional extra other-product finish: TAFT Haarspray"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Kleine Menge zwischen den Handflächen verreiben, ins trockene oder feuchte Haar einarbeiten, nach Belieben stylen; einzelne Strähnen mit Fingerspitzen definieren; neu stylbar; für beste Ergebnisse mit TAFT Haarspray fixieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "taft-x-gliss-hitzeschutzspray-lovely-long",
+      "name": "Schwarzkopf taft taft x GLISS Lovely Long MULTITASKING HITZESCHUTZ-SPRAY",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T1-directions",
+          "evidence": "optional additional dry-hair use after damp main use"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gut schütteln. Aus einem Abstand von 15-20 cm auf das handtuchtrockene Haar sprühen und wie gewöhnt föhnen. Kann auch auf trockenem Haar verwendet werden, aber Produkt vor Nutzung heißer Stylinggeräte trocknen lassen oder kurz anföhnen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "wella-eimi-glam-mist-shine-spray",
+      "name": "Wella Professionals EIMI Glam Mist Shinespray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Sprühe das Glanzspray gleichmäßig auf dein Haar, um deinen Look mit schönem Glanz zu vollenden.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-eimi-nutricurls-curl-shaper",
+      "name": "Wella Professionals EIMI Nutricurls Curl Shaper (Defining Gel Cream)",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: EIMI Nutricurls Curl Shaper (Defining Gel Cream)"
+        },
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C2 finish: definierte, federleichte Locken / C2 other: Das Styling-Gel sorgt für definierte Locken, Kontrolle und Sprungkraft"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gleichmäßig auf die feuchten Locken auftragen. An der Luft trocknen lassen oder den Diffusor verwenden.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C2",
+          "type": "finish",
+          "text": "definierte, federleichte Locken"
+        },
+        {
+          "tier": "C2",
+          "type": "other",
+          "text": "Das Styling-Gel sorgt für definierte Locken, Kontrolle und Sprungkraft"
+        }
+      ],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "wella-eimi-nutricurls-fresh-up",
+      "name": "Wella Professionals EIMI Nutricurls Fresh Up",
+      "included": true,
+      "reasons": [
+        {
+          "class": "Q1-brand-line",
+          "evidence": "confirmed name contains barred brand-line words: EIMI Nutricurls Fresh Up"
+        },
+        {
+          "class": "T1-directions",
+          "evidence": "optional reapplication throughout the day to reactivate curls"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf feuchtes oder trockenes Haar aufsprühen. Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": null
+    },
+    {
+      "source_slug": "wella-eimi-smooth-perfect-me",
+      "name": "Wella Professionals EIMI Smooth Perfect Me (Balsam-Lotion)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Verteile eine kleine Menge des Produkts auf feuchtem oder trockenem Haar in den mittleren Längen und Spitzen für ein luxuriöses Gefühl. Nach Belieben stylen.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-eimi-smooth-thermal-image",
+      "name": "Wella Professionals EIMI Smooth Thermal Image (2-Phasen-Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Gut schütteln und vor dem Hitzestyling abschnittsweise auf das trockene Haar sprühen",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-eimi-sugar-lift",
+      "name": "Wella Professionals EIMI Volume Sugar Lift Volumenspray",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Auf das feuchte Haar auftragen, um eine großartige Textur und Volumen zu kreieren. Oder auf trockenes Haar auftragen, um einen gleichmäßigeren Style zu erhalten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-eimi-texture-ocean-spritz",
+      "name": "Wella Professionals EIMI Texture Ocean Spritz (Texturizing Salt Spray)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "In das trockene oder leicht feuchte Haar sprühen, dann mit den Fingern die Frisur in Form bringen. Für eine noch grobere Textur das Haar nach dem Formen föhnen",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-eimi-volume-dry-me",
+      "name": "Wella Professionals EIMI Volume Dry Me (Trockenshampoo)",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Schüttel mich, sprüh mich, style mich. Gleichmäßig auf das trockene Haar auftragen, einwirken lassen und durchbürsten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wella-professionals-eimi-flowing-form",
+      "name": "Wella Professionals EIMI Flowing Form (Smooth Flowing Form) Glättungscreme / Anti-Frizz Smoothing Balm",
+      "included": false,
+      "reasons": [],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "2-5 Pumpstöße auftragen und gründlich in die mittleren Längen und Spitzen einarbeiten. Mit einer Bürste trockenföhnen. Für besonders glatte Ergebnisse mit einem Glätteisen nacharbeiten.",
+      "definition_lines_c1_c2": [],
+      "excluded_reason": "No owner/film/brand-line reach, no C1/C2 definiert stem, and no optional extra application or required sequential multi-site in manual directions reading. Equipment-only tips, nozzle cleaning, single-use alternatives and required same-site repeats do not qualify."
+    },
+    {
+      "source_slug": "wellaflex-schaumfestiger-locken-und-wellen-starker-halt",
+      "name": "wellaflex Schaumfestiger Locken & Wellen, Starker Halt",
+      "included": true,
+      "reasons": [
+        {
+          "class": "T3-result-phrase",
+          "evidence": "C1 promise: Genieße schwungvolle, definierte Locken für bis zu 24 Stunden"
+        }
+      ],
+      "formula_screen": null,
+      "directions_status": "verbatim",
+      "directions": "Vor Gebrauch gut schütteln und bei der Anwendung Flasche kopfüber halten. Verwende eine apfelgroße Menge für mittellanges Haar und verteilen sie gleichmäßig im nassen Haar. Föhne Deine Haare, oder lass sie natürlich trocknen.",
+      "definition_lines_c1_c2": [
+        {
+          "tier": "C1",
+          "type": "promise",
+          "text": "Genieße schwungvolle, definierte Locken für bis zu 24 Stunden"
+        }
+      ],
+      "excluded_reason": null
+    }
+  ]
+}

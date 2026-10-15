@@ -1,0 +1,384 @@
+[
+  {
+    "sample_id": "kms-thermashape-straightening-creme",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "KMS",
+    "product_name": "Thermashape Straightening Creme",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "kmshair.com/de-DE",
+      "lookfantastic.de (older listing, sold out)"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Water/Aqua/Eau, Isoamyl Laurate, Tri-heptanoin, Propanediol, VP/VA Copolymer, Sodium Polyacryloyldimethyl Taurate, Hydrogenated Polydecene, Sorbitan Caprylate, Citric Acid, Gly-cerin, Trideceth-10, Sodium Hydroxide, Laurtrimonium Chloride, Sodium Bisulfite, Punica Granatum Peel Extract, Benzoic Acid, Fragrance/Parfum.",
+    "inci_source_url": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Verwandelt kräftiges oder widerspenstiges Haar in vielseitige, glatte Styles, die bis zur nächsten Haarwäsche halten. Bietet Hitzeschutz.",
+      "Formt das Haar mit Hitze-Tools zu gewünschten Styles – für glatte Looks und Blow-Outs.",
+      "Glättet das Haar bei regelmäßiger Anwendung in Kombination mit einem Glätteisen.",
+      "Sorgt für lang anhaltende Formgebung und verbesserte Kämmbarkeit.",
+      "Sorgt sofort für bessere Kämmbarkeit, pflegt intensiv und glättet krauses, widerspenstiges Haar.",
+      "Bietet Schutz vor Luftfeuchtigkeit für bis zu 72 Stunden.",
+      "Reduziert Frizz und fliegende Haare für bis zu 72 Stunden.",
+      "Hitzeschutz bis zu 230 °C und weniger Haarbruch.",
+      "ZUR GLÄTTUNG VON LOCKEN MIT GLÄTTEISEN ODER FÖHN"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true,
+      "tier": null,
+      "source": null
+    },
+    "finish_claim": "glatte Styles / glatte Looks und Blow-Outs, Ultimativer Glanz (raw: 'Verwandelt kräftiges oder widerspenstiges Haar in vielseitige, glatte Styles, die bis zur nächsten Haarwäsche halten.')",
+    "humidity_claim": "Bietet Schutz vor Luftfeuchtigkeit für bis zu 72 Stunden.",
+    "heat_claim": "Hitzeschutz bis zu 230 °C und weniger Haarbruch.",
+    "hair_type_claims": [
+      "FÜR ALLE HAARSTRUKTUREN. IDEAL FÜR MITTELSTARKES BIS KRÄFTIGES HAAR"
+    ],
+    "free_from_claims": [
+      "Formuliert ohne Mineralöle, Silikone, Farbstoffe oder PEGs.",
+      "Vegane formulierung¹ (¹ Keine Inhaltsstoffe tierischen Ursprungs.)"
+    ],
+    "directions": "Auf das handtuchtrockene Haar auftragen. Durchkämmen und föhnen. Mit Hitze-Tools stylen.",
+    "application_moment": "handtuchtrockenes Haar, vor Föhn/Hitze-Tools",
+    "formula_observations": "INCI contains VP/VA Copolymer (styling polymer) and Sodium Polyacryloyldimethyl Taurate; page says 'ohne ... Silikone' (observation as printed, not classified).",
+    "notes": "German-language manufacturer page (kmshair.com/de-DE), Art. No. 106003. INCI copied exactly as printed incl. page hyphenation artifacts ('Tri-heptanoin', 'Gly-cerin') - true names Triheptanoin / Glycerin; 'Laurtrimonium Chloride' as printed. Page also lists the fragrance components (voluntary) after the INCI; not part of the INCI above. 150 ml from the pack render ('150 mL / 5.0 FL.OZ') and the page image file name. Page tags the product 'FORMGEBUNG / GLANZ / SCHUTZ'; no hold number or level is printed. Pack render (C2 manufacturer image, not a photo; text clipped at the tube edge) reads: 'STRAIGHTENING CRÈME / CRÈME LISSANTE / HEAT-ACTIVATED SMOOTHING AND SHAPING / LISSAGE ET FORME ACTIVÉS PAR LA CHALEUR / GLÄTTUNG UND FORM DURCH WÄRME-AKTIVIERUNG'. Older formulation seen on a sold-out lookfantastic.de listing had a different INCI (starts Water, Dimethicone, Propylene Glycol; Polysilicone-9; Alcohol Denat.) - not captured; the page here is the current 'upcycled pomegranate' version. Not in dm/Rossmann.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "bis zu 72 Stunden Luftfeuchtigkeitsschutz / Frizz; 'glatte Styles, die bis zur nächsten Haarwäsche halten'",
+    "directions_verbatim": "Auf das handtuchtrockene Haar auftragen. Durchkämmen und föhnen. Mit Hitze-Tools stylen.",
+    "directions_source_url": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Verwandelt kräftiges oder widerspenstiges Haar in vielseitige, glatte Styles, die bis zur nächsten Haarwäsche halten. Bietet Hitzeschutz.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Formt das Haar mit Hitze-Tools zu gewünschten Styles – für glatte Looks und Blow-Outs.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Glättet das Haar bei regelmäßiger Anwendung in Kombination mit einem Glätteisen.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "ZUR GLÄTTUNG VON LOCKEN MIT GLÄTTEISEN ODER FÖHN",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "GLÄTTUNG UND FORM DURCH WÄRME-AKTIVIERUNG (pack render, German line; text clipped at tube edge)",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-straightening-creme/",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "real pack photo not captured (manufacturer render only); INCI is the manufacturer page",
+      "older formulation INCI (lookfantastic.de) differs, not captured",
+      "no hold level stated anywhere"
+    ],
+    "passes_three_evidence_items": true,
+    "why_smoothing_styler": "Lead promise line (C2): 'Verwandelt kräftiges oder widerspenstiges Haar in vielseitige, glatte Styles, die bis zur nächsten Haarwäsche halten. Bietet Hitzeschutz.' - heat-activated straightening cream, styling polymer in INCI, heat protection stated second."
+  },
+  {
+    "sample_id": "kms-thermashape-2-in-1-spray",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "KMS",
+    "product_name": "Thermashape 2-in-1 Spray",
+    "size": "200 ml",
+    "format": "aerosol_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "kmshair.com/de-DE"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Alcohol Denat., Dimethyl Ether, Acrylates Copolymer, Aminomethyl Propanol, Propylene Glycol, Polysorbate 80, Alcohol, Polysilicone-9, Water/Aqua/Eau, Glycerin, Punica Granatum Peel Extract, Citric Acid, Fragrance/Parfum.",
+    "inci_source_url": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Hitzereaktives Spray für schnelles, einfaches und lang anhaltendes Styling auf trockenem Haar. Ideal zum Glätten und für Lockenstylings mit Hot Tools. Reduziert Hitzeschädigungen und Haarbruch. Verleiht zusätzlichen Halt und Glanz als Finish-Spray.",
+      "Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.",
+      "Ideal zum Reaktivieren von Styles am zweiten Tag.",
+      "Sorgt für extra Halt und Styles, die bis zu 72 Stunden halten.",
+      "Bietet Schutz vor Luftfeuchtigkeit für bis zu 72 Stunden.",
+      "Reduziert Frizz und fliegende Haare für bis zu 72 Stunden.",
+      "Verleiht Glanz und reduziert fliegende Haare bei Anwendung als Finish-Spray.",
+      "Hitzeschutz bis zu 230 °C."
+    ],
+    "hold_claim": {
+      "raw": "Sorgt für extra Halt und Styles, die bis zu 72 Stunden halten.",
+      "number": null,
+      "scale_max": null,
+      "words": "extra Halt",
+      "none_stated": false,
+      "tier": "C2",
+      "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/"
+    },
+    "finish_claim": "Looks von glatt bis lockig; Glanz als Finish-Spray (raw: 'Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.')",
+    "humidity_claim": "Bietet Schutz vor Luftfeuchtigkeit für bis zu 72 Stunden.",
+    "heat_claim": "Hitzeschutz bis zu 230 °C.",
+    "hair_type_claims": [
+      "FÜR ALLE HAARSTRUKTUREN. IDEAL FÜR MITTELSTARKES BIS KRÄFTIGES HAAR"
+    ],
+    "free_from_claims": [
+      "Formuliert ohne Mineralöle und PEGs."
+    ],
+    "directions": "Auf das trockene Haar sprühen, bevor Hot Tools verwendet werden. Für beste Ergebnisse Strähne für Strähne einsprühen. Als letzten Schritt erneut aufsprühen, um den Style zu fixieren.",
+    "application_moment": "trockenes Haar, vor Hot Tools; zusätzlich als Finish-Spray",
+    "formula_observations": "INCI contains Acrylates Copolymer and Polysilicone-9 (as printed); alcohol-based aerosol (Dimethyl Ether).",
+    "notes": "German-language manufacturer page (kmshair.com/de-DE), Art. No. 106004. INCI as printed; the page ends the list with a double period ('Fragrance/Parfum..'), no truncation signs otherwise. 200 ml from pack render ('200 mL / 172 g / NET WT. 6.0 OZ', front: '2-IN-1 SPRAY ... DRY SHAPING & HOLD' in several languages). Not a smoothing-only product: the lead line covers 'Glätten und ... Lockenstylings' and a finish-spray use; hold wording is 'extra Halt' with no number. Flagged boundary candidate.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": "Styles, die bis zu 72 Stunden halten; Frizz/Luftfeuchtigkeit bis zu 72 Stunden",
+    "directions_verbatim": "Auf das trockene Haar sprühen, bevor Hot Tools verwendet werden. Für beste Ergebnisse Strähne für Strähne einsprühen. Als letzten Schritt erneut aufsprühen, um den Style zu fixieren.",
+    "directions_source_url": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Hitzereaktives Spray für schnelles, einfaches und lang anhaltendes Styling auf trockenem Haar. Ideal zum Glätten und für Lockenstylings mit Hot Tools. Reduziert Hitzeschädigungen und Haarbruch. Verleiht zusätzlichen Halt und Glanz als Finish-Spray.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Sorgt für extra Halt und Styles, die bis zu 72 Stunden halten.",
+        "tier": "C2",
+        "source": "https://www.kmshair.com/de-DE/products/thermashape-collection/thermashape-2-in-1-spray/",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "real pack photo not captured (manufacturer render only)"
+    ],
+    "passes_three_evidence_items": true,
+    "why_smoothing_styler": "WEAK/boundary. Lead promise line (C2): 'Hitzereaktives Spray ... Ideal zum Glätten und für Lockenstylings mit Hot Tools.' - style/shape-led with hold, but covers straight AND curly and doubles as finish spray."
+  },
+  {
+    "sample_id": "got2b-anti-frizz-lotion-schmusekatze",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "got2b",
+    "product_name": "Anti-Frizz Lotion Schmusekatze",
+    "size": "200 ml",
+    "format": "pump_lotion",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm.de",
+      "got2b.de"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/1218970",
+    "ean": "4015100894103",
+    "inci": "Aqua (Water, Eau), Dicaprylyl Carbonate, Dicaprylyl Ether, Polyquaternium-37, Distearoylethyl Hydroxyethylmonium Methosulfate, Butyrospermum Parkii (Shea) Butter, Cetearyl Alcohol, Parfum (Fragrance), Sodium Benzoate, Quaternium-91, Cetrimonium Methosulfate, Isopropyl Alcohol, Linalool, Citrus Limon (Lemon) Peel Oil, Linalyl Acetate, Limonene, Citric Acid, Pinene, Citronellol, Terpineol, Benzyl Alcohol",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1218970",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C1",
+    "claim_tier": "C1",
+    "claims_verbatim": [
+      "für ein sleekes Finish & ein weiches Haargefühl",
+      "Bis zu 72 h Anti-Frizz-Kontrolle",
+      "FRIZZ-CONTROL? NO PROBLEM!",
+      "Die got2b Schmusekatze Anti-Frizz Lotion bändigt Frizz und sorgt für seidig weiches Haar. Gib deinem Haar die Pflege, die es verdient!",
+      "Seidenweiches und geschmeidiges Finish (dm product image graphic)",
+      "Style geschmeidige Strähnen, sleeke Locken oder schwereloses Haar (dm product image graphic)",
+      "got2b Schmusekatze Anti-Frizz-Lotion bändigt bis zu 72h Frizz",
+      "Für ein glattes Finish und Frizz-Kontrolle (dm bullet)"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true,
+      "tier": null,
+      "source": null
+    },
+    "finish_claim": "sleekes Finish (raw: 'für ein sleekes Finish & ein weiches Haargefühl')",
+    "humidity_claim": null,
+    "heat_claim": "Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "VEGANE Formel* (*Frei von Inhaltsstoffen tierischen Ursprungs.)",
+      "ohne Ammoniak, ohne Silikone, vegan (dm Produkteigenschaften)"
+    ],
+    "directions": "Verteile die Lotion gleichmäßig im handtuchtrockenen oder trockenen Haar und style es, wie es dir gefällt. HACK: Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+    "application_moment": "handtuchtrockenes oder trockenes Haar",
+    "formula_observations": "No hold polymer in INCI beyond Polyquaternium-37 (conditioning polymer); as printed, not classified.",
+    "notes": "Pack front/back read by eye on dm photos; pack INCI, dm INCI and got2b.de INCI agree. Pack barcode reads 4015100894103 = dm GTIN. dm size 200 ml. got2b.de wording differs slightly: 'In die Hand geben und gleichmäßig im handtuchtrockenen oder trockenen Haar verteilen und einarbeiten.' + 'Hacks: Kann auch als Schutz vor Hitzeschäden verwendet werden.' + steps 'Auf das feuchte Haar auftragen' / 'Gestalte es mit der üblichen Technik'; got2b.de lead is 'bändigt bis zu 72h Frizz' and 'Schützt auch vor Schäden durch hitzeaktivierte Stylinggeräte (bis zu 230 °C).' (not on pack). dm 'Wirkung': 'Anti-Frizz, Glättung'. No hold stated on pack, dm or got2b.de. dm page bullet 'Bietet Schutz vor Föhnhitze'. Care wording present ('Gib deinem Haar die Pflege, die es verdient!'): likely care/anti-frizz-led, flagged boundary.",
+    "dm_dan": "1218970",
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": "Bis zu 72 h Anti-Frizz-Kontrolle",
+    "directions_verbatim": "Verteile die Lotion gleichmäßig im handtuchtrockenen oder trockenen Haar und style es, wie es dir gefällt. HACK: Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+    "directions_source_url": "dm pack photo (front/back), https://products.dm.de/product/products/detail/DE/dan/1218970",
+    "directions_tier": "C1",
+    "promise_lines": [
+      {
+        "raw": "für ein sleekes Finish & ein weiches Haargefühl",
+        "tier": "C1",
+        "source": "dm pack photo (front/back), https://products.dm.de/product/products/detail/DE/dan/1218970",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bis zu 72 h Anti-Frizz-Kontrolle",
+        "tier": "C1",
+        "source": "dm pack photo (front/back), https://products.dm.de/product/products/detail/DE/dan/1218970",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Die got2b Schmusekatze Anti-Frizz Lotion bändigt Frizz und sorgt für seidig weiches Haar. Gib deinem Haar die Pflege, die es verdient!",
+        "tier": "C1",
+        "source": "dm pack photo (front/back), https://products.dm.de/product/products/detail/DE/dan/1218970",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "got2b Schmusekatze Anti-Frizz-Lotion bändigt bis zu 72h Frizz",
+        "tier": "C2",
+        "source": "https://www.got2b.de/haarstyling/produkt/settings/schmusekatze-lotion.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für ein glattes Finish und Frizz-Kontrolle",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1218970",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "price is dm shelf price from product page",
+      "dm marketing graphics (not pack) quoted as secondary lines"
+    ],
+    "passes_three_evidence_items": true,
+    "why_smoothing_styler": "WEAK/boundary. Lead pack line (C1): 'Anti-Frizz Lotion für ein sleekes Finish & ein weiches Haargefühl' - sleek style result, but no hold, anti-frizz/care wording and heat-protection hack."
+  },
+  {
+    "sample_id": "balea-haarwachs-glow-wax",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Balea",
+    "product_name": "Styling Glow Wax (dm: Haarwachs Glow Wax)",
+    "size": "75 ml",
+    "format": "wax_jar",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm.de"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3065746",
+    "ean": "4067796173642",
+    "inci": "AQUA, CETEARETH-20, PROPYLENE GLYCOL, POLYSORBATE 80, MICA, PEG-7 GLYCERYL COCOATE, PHENOXYETHANOL, HYDROXYACETOPHENONE, PARFUM, SYNTHETIC FLUORPHLOGOPITE, DICAPRYLYL ETHER, LINALOOL, CI 77491, HEXYL CINNAMAL, LIMONENE, CITRONELLOL, LINALYL ACETATE, GERANYL ACETATE, GERANIOL, SODIUM HYDROXIDE, TOCOPHEROL",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3065746",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C2_house_brand",
+    "claim_tier": "C1",
+    "claims_verbatim": [
+      "zart schimmerndes Finish und Halt",
+      "Ideal für Sleek-Looks",
+      "2in1 Stylingwax: Glänzendes Finish und flexibler Halt",
+      "zarter Schimmer und flexibler Halt",
+      "für alle Haarfarben geeignet",
+      "ohne Silikone"
+    ],
+    "hold_claim": {
+      "raw": "flexibler Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "flexibler Halt",
+      "none_stated": false,
+      "tier": "C1",
+      "source": "dm pack photo (front, back, side), https://products.dm.de/product/products/detail/DE/dan/3065746"
+    },
+    "finish_claim": "zart schimmerndes / glänzendes Finish (raw: '2in1 Stylingwax: Glänzendes Finish und flexibler Halt')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "für alle Haarfarben geeignet"
+    ],
+    "free_from_claims": [
+      "ohne Silikone",
+      "Vegan (pack icon text)",
+      "vegan, Auf Ölbasis (dm Produkteigenschaften)"
+    ],
+    "directions": "Eine kleine Menge auf dem trockenen Haar verteilen und wie gewohnt stylen.",
+    "application_moment": "trockenes Haar",
+    "formula_observations": "INCI contains MICA, CI 77491 and Synthetic Fluorphlogopite (shimmer pigments); dm lists 'Auf Ölbasis' although INCI is water-first (as printed).",
+    "notes": "Pack front/side/back read by eye on dm photos; pack INCI matches dm INCI (checked in full on back label); pack barcode reads 4067796173642 = dm GTIN. Pack: 'Styling GLOW WAX', size 75 ml (dm list title also '75 ml', dm Grundpreis uses 0,075 l). dm Wirkung/Halt attribute absent. Lead wording is shine+hold with 'Sleek-Looks' as intended use, not a smoothing claim as such: flagged boundary (shine-led wax; similar to cohort Balea Haarwachs Styling Stick).",
+    "dm_dan": "3065746",
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "Eine kleine Menge auf dem trockenen Haar verteilen und wie gewohnt stylen.",
+    "directions_source_url": "dm pack photo (front, back, side), https://products.dm.de/product/products/detail/DE/dan/3065746",
+    "directions_tier": "C1",
+    "promise_lines": [
+      {
+        "raw": "zart schimmerndes Finish und Halt",
+        "tier": "C1",
+        "source": "dm pack photo (front, back, side), https://products.dm.de/product/products/detail/DE/dan/3065746",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Ideal für Sleek-Looks",
+        "tier": "C1",
+        "source": "dm pack photo (front, back, side), https://products.dm.de/product/products/detail/DE/dan/3065746",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "2in1 Stylingwax: Glänzendes Finish und flexibler Halt",
+        "tier": "C1",
+        "source": "dm pack photo (front, back, side), https://products.dm.de/product/products/detail/DE/dan/3065746",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Glänzendes Finish und flexibler Halt",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3065746",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Ideal für Sleek-Looks",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3065746",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "no manufacturer page (house brand: dm is the C2 source)"
+    ],
+    "passes_three_evidence_items": true,
+    "why_smoothing_styler": "WEAK/boundary. Lead pack line (C1): 'zart schimmerndes Finish und Halt' + 'Ideal für Sleek-Looks' - sleek-look wax with 'flexibler Halt', but gloss/shimmer is the headline and no smoothing/anti-frizz claim."
+  }
+]

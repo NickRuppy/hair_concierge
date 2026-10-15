@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-88ff0a5589",
+  "brand": "HASK",
+  "confirmed_name": "curls defining cream",
+  "confirmed_name_tier": "C1",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Pflegende Lockencreme",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für alle Arten von Locken geeignet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Wirkt intensiv feuchtigkeitsspendend",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Arganöl, Cocosöl und Vitamin E",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "MOISTURIZES & CONTROLS FRIZZ",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "unknown",
+      "flags": [
+        "non_german_wording"
+      ]
+    },
+    {
+      "type": "finish",
+      "text": "Lässt das Haar hinreißend glänzen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

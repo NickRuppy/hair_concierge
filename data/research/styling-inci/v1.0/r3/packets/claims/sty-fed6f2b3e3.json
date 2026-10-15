@@ -1,0 +1,78 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-fed6f2b3e3",
+  "brand": "Gard",
+  "confirmed_name": "Haarspray extrastark (Pumpspray, ohne Treibgas)",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "haarspray",
+  "scale_info": {
+    "number": 5,
+    "scale_as_written": "HALTEGRAD 5 - EXTRASTARKER HALT (scale 1 2 3 4 5 6 printed above it)",
+    "scale_max": 6,
+    "scale_max_stated": true,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "verleiht dem Haar kraftvollen und zuverlässigen Halt - ohne zu beschweren",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "HALTEGRAD 5 - EXTRASTARKER HALT",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "number": 5,
+      "scale_as_written": "HALTEGRAD 5 - EXTRASTARKER HALT (scale 1 2 3 4 5 6 printed above it)",
+      "scale_max": 6,
+      "scale_max_stated": true,
+      "words": "extrastarker Halt"
+    },
+    {
+      "type": "hold",
+      "text": "extrastark",
+      "tier": "C1",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "flexibility",
+      "text": "kein Verkleben",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "leichtes Ausbürsten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "macht es geschmeidig",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

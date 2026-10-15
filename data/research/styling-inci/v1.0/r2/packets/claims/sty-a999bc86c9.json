@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-a999bc86c9",
+  "brand": "Balea MEN",
+  "format": "powder_shaker",
+  "product_type_word": "powder",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Stylingpuder für Männer",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Matt-Effekt ohne sichtbare Rückstände",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für Volumen & Textur",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Das Balea MEN Styling Powder verleiht dem Haar Volumen und einen matten Effekt. Es sorgt für extra Fülle und Textur, ideal für ein perfektes Ansatzvolumen und voluminöse Looks. Die leichte Formel hinterlässt ein mattes Finish ohne sichtbare Rückstände und beschwert das Haar nicht. Für ein individuelles und flexibles Styling kann das Styling Powder einfach im trockenen Haar verteilt und nach Wunsch modelliert werden.",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "Halt: starker Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker Halt",
+      "attribute": "Halt"
+    },
+    {
+      "type": "finish",
+      "text": "Matt-Effekt ohne sichtbare Rückstände",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

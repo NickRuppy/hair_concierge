@@ -1,0 +1,200 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-72c03a9dc5",
+  "product": {
+    "confirmed_name": "Volumenspray Big Hair Day (Erfrischendes Volumen Spray)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "L'ORÉAL PARiS ELVITAL",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "CELLULOSE"
+      },
+      {
+        "rank": 4,
+        "inci": "PERLITE"
+      },
+      {
+        "rank": 5,
+        "inci": "SODIUM LACTATE"
+      },
+      {
+        "rank": 6,
+        "inci": "STEARALKONIUM HECTORITE"
+      },
+      {
+        "rank": 7,
+        "inci": "POLYSORBATE 20"
+      },
+      {
+        "rank": 8,
+        "inci": "PALMITOYL TRIPEPTIDE-1"
+      },
+      {
+        "rank": 9,
+        "inci": "PALMITOYL TETRAPEPTIDE-7"
+      },
+      {
+        "rank": 10,
+        "inci": "DIMETHYL PHENETHYL ACETATE"
+      },
+      {
+        "rank": 11,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 14,
+        "inci": "ISOPROPYL MYRISTATE"
+      },
+      {
+        "rank": 15,
+        "inci": "PROPYLENE CARBONATE"
+      },
+      {
+        "rank": 16,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 18,
+        "inci": "CARVONE"
+      },
+      {
+        "rank": 19,
+        "inci": "CARBOMER"
+      },
+      {
+        "rank": 20,
+        "inci": "BUTYLENE GLYCOL"
+      },
+      {
+        "rank": 21,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 22,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 23,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 24,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 25,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 26,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 27,
+        "inci": "ORYZA SATIVA STARCH / RICE STARCH"
+      },
+      {
+        "rank": 28,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 29,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Volumen Spray auf trockenem Haar anwenden. Zunächst schütteln, dann auf den Ansatz aus 15cm Entfernung sprühen und mit den Fingern einmassieren. Anschließend Haar über Kopf, das Spray erneut am Ansatz aufsprühen für mehr Volumen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "BIG HAIR DAY",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "ERFRISCHENDES VOLUMEN SPRAY",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "[MIT KOLLAGEN-AS-FRAGMENTEN]",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mehr Volumen in 3 Sekunden",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Bis zu 48h frischeres Haargefühl*",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "FEINES, PLATTES HAAR",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

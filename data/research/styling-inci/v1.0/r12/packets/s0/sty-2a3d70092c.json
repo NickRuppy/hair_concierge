@@ -1,0 +1,212 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-2a3d70092c",
+  "product": {
+    "confirmed_name": "Volumizing Spray (Volumizing Mist)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Moroccanoil",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 42,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "SD ALCOHOL 40-B"
+      },
+      {
+        "rank": 2,
+        "inci": "WATER/ AQUA"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 5,
+        "inci": "POLYSORBATE 20"
+      },
+      {
+        "rank": 6,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 7,
+        "inci": "LAVANDULA ANGUSTIFOLIA (LAVENDER) FLOWER EXTRACT"
+      },
+      {
+        "rank": 8,
+        "inci": "CAMELLIA SINENSIS (GREEN TEA) LEAF EXTRACT"
+      },
+      {
+        "rank": 9,
+        "inci": "ACACIA SENEGAL GUM"
+      },
+      {
+        "rank": 10,
+        "inci": "HYDROLYZED QUINOA"
+      },
+      {
+        "rank": 11,
+        "inci": "RICE AMINO ACIDS"
+      },
+      {
+        "rank": 12,
+        "inci": "WHEAT AMINO ACIDS"
+      },
+      {
+        "rank": 13,
+        "inci": "SOY AMINO ACIDS"
+      },
+      {
+        "rank": 14,
+        "inci": "ARGININE HCL"
+      },
+      {
+        "rank": 15,
+        "inci": "SERINE"
+      },
+      {
+        "rank": 16,
+        "inci": "THREONINE"
+      },
+      {
+        "rank": 17,
+        "inci": "ALGIN"
+      },
+      {
+        "rank": 18,
+        "inci": "CHITOSAN"
+      },
+      {
+        "rank": 19,
+        "inci": "PULLULAN"
+      },
+      {
+        "rank": 20,
+        "inci": "TREHALOSE"
+      },
+      {
+        "rank": 21,
+        "inci": "XYLITYLGLUCOSIDE"
+      },
+      {
+        "rank": 22,
+        "inci": "ANHYDROXYLITOL"
+      },
+      {
+        "rank": 23,
+        "inci": "XYLITOL"
+      },
+      {
+        "rank": 24,
+        "inci": "SORBITOL"
+      },
+      {
+        "rank": 25,
+        "inci": "GLUCOSE"
+      },
+      {
+        "rank": 26,
+        "inci": "SEA SALT/ MARIS SAL"
+      },
+      {
+        "rank": 27,
+        "inci": "GALACTOARABINAN"
+      },
+      {
+        "rank": 28,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 29,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 30,
+        "inci": "POLYQUATERNIUM-11"
+      },
+      {
+        "rank": 31,
+        "inci": "POLYQUATERNIUM-16"
+      },
+      {
+        "rank": 32,
+        "inci": "C12-13 PARETH-9"
+      },
+      {
+        "rank": 33,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 34,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 35,
+        "inci": "PROPANEDIOL"
+      },
+      {
+        "rank": 36,
+        "inci": "FRAGRANCE"
+      },
+      {
+        "rank": 37,
+        "inci": "CINNAMIDOPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 38,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 39,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 40,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 41,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 42,
+        "inci": "PHENOXYETHANOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sprühen Sie das Produkt großzügig vom Ansatz bis zu den Spitzen auf feuchtes, handtuchtrockenes Haar auf.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Bringen Sie Leben in feines, stumpfes Haare mit dem Volumizing Spray. Dieser schwerelose, körperbildende Nebel hebt die Haare für einen Look, der bis zu 50% voller ist, während er Bewegung und spürbaren Halt vom Ansatz bis zur Spitze aufrecht erhält. Die Arganöl-infundierte Formel enthält Reis-Aminosäuren, um das Haar zu stärken, sowie Totes Meersalz, um Volumen mit sprungkräftiger Textur aufzubauen. Anhaltendes Volumen bis zu 72 Stunden.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,53 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-a908e271a9",
+  "brand": "Balea",
+  "confirmed_name": "Styling Locken Lotion",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "cream",
+  "product_type_word": "lotion",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Stylinglotion für lockiges Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Anti-Frizz-Effekt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Pflegende Formulierung mit Panthenol",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "finish",
+      "text": "Verleiht einen seidigen Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Für definierte Locken & flexible Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

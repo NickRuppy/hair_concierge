@@ -1,0 +1,107 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-cb9a88cfbb",
+  "brand": "Schwarzkopf taft",
+  "format": "paste",
+  "product_type_word": "paste",
+  "scale_info": {
+    "number": 5,
+    "scale_as_written": "5+",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Styling Paste",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal für verformbare und texturierte Haarstyles",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Sanft zu Haar & Kopfhaut",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "FORMING STYLING PASTE",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "Verformbare Styles",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "5+",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "number": 5,
+      "scale_as_written": "5+",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "5+ gedruckt auf der Packung; Pack-Front zeigt eine 4-Punkte-Skala plus eingekreiste '5+'"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 5",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "number": 5,
+      "scale_as_written": "Haltegrad: 5",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "sehr starker Halt (dm-Produktmerkmal); starker Halt bis zu 24h; Rossmann: Haltegrad 5+"
+    },
+    {
+      "type": "finish",
+      "text": "matt: 'Mit mattem Finish'",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "perfekt für jede Wetterlage geeignet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Bis zu 24h starker Halt und Kontrolle",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

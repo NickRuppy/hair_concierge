@@ -1,0 +1,94 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-5e04447717",
+  "brand": "Balea",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Formgebende Haarcreme",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "leicht auswaschbar und hinterlässt keine Rückstände",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Für flexiblen Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "flexibler Halt; langanhaltender, aber dennoch flexibler Halt"
+    },
+    {
+      "type": "finish",
+      "text": "natürlich: 'natürlich aussehendes Finish'",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Zum Modellieren & Fixieren von Frisuren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Kein Verkleben oder Beschweren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Power",
+      "tier": "C2_house_brand",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier_basis": "name tier = record best_tier (name confirmation not captured separately)"
+    },
+    {
+      "type": "hold",
+      "text": "Flex",
+      "tier": "C2_house_brand",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier_basis": "name tier = record best_tier (name confirmation not captured separately)"
+    }
+  ]
+}

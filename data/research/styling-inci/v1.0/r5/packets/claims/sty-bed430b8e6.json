@@ -1,0 +1,100 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-bed430b8e6",
+  "brand": "Balea PROFESSIONAL",
+  "confirmed_name": "Haarserum Glow & Shine",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "serum",
+  "product_type_word": "serum",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Mit Anti-Frizz-Effekt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Formel mit Glykolsäure und Keratin",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal zur intensiven Pflege der Haarspitzen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein strahlendes Finish - ideal auch zur intensiven Spitzenpflege",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "stumpfes und glanzloses Haar",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "ANTI-FRIZZ-EFFEKT",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Glossing-Technologie mit Glykolsäure und Keratin",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "strahlendes Finish; Glossing-Technologie",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Haarserum für stumpfes und glanzloses Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Verleiht ein strahlendes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

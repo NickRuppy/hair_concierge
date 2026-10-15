@@ -1,0 +1,92 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-fa9454f7bd",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Dipropylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Polysilicone-29"
+      },
+      {
+        "rank": 4,
+        "inci": "DMDM Hydantoin"
+      },
+      {
+        "rank": 5,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 7,
+        "inci": "Silicone Quaternium-18"
+      },
+      {
+        "rank": 8,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 9,
+        "inci": "Iodopropynyl butylcarbamate"
+      },
+      {
+        "rank": 10,
+        "inci": "Trideceth-7"
+      },
+      {
+        "rank": 11,
+        "inci": "Trideceth-12"
+      },
+      {
+        "rank": 12,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 13,
+        "inci": "Chamomilla Recutita (Matricaria) Flower Extract"
+      },
+      {
+        "rank": 14,
+        "inci": "Calendula Officinalis Flower Extract"
+      },
+      {
+        "rank": 15,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 16,
+        "inci": "Potassium Benzoate"
+      },
+      {
+        "rank": 17,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Teilen Sie das handtuchtrockene Haar in Abschnitte und sprühen Sie das Spray großzügig und gleichmäßig auf das feuchte Haar. Föhnen Sie jeden Abschnitt unter Spannung. Zusätzliche Styling-Produkte erst auf trockenem Haar verwenden.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "douglas.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

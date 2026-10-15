@@ -1,0 +1,82 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-df5ef29f88",
+  "brand": "got2b",
+  "confirmed_name": "Anti-Frizz Lotion Schmusekatze",
+  "confirmed_name_tier": "C1",
+  "format": "pump_lotion",
+  "product_type_word": "lotion",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "für ein sleekes Finish & ein weiches Haargefühl",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 72 h Anti-Frizz-Kontrolle",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Die got2b Schmusekatze Anti-Frizz Lotion bändigt Frizz und sorgt für seidig weiches Haar. Gib deinem Haar die Pflege, die es verdient!",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "got2b Schmusekatze Anti-Frizz-Lotion bändigt bis zu 72h Frizz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein glattes Finish und Frizz-Kontrolle",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "für ein sleekes Finish & ein weiches Haargefühl",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 72 h Anti-Frizz-Kontrolle",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

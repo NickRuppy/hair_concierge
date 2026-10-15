@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-05f65bec0c",
+  "brand": "ALCINA",
+  "confirmed_name": "Ansatz Volumen Spray Aerosol",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": {
+    "number": 6,
+    "scale_as_written": "Hold-Faktor 6 (Skala 1-10; Alt-Text: Hold Faktor 6 von 10)",
+    "scale_max": 10,
+    "scale_max_stated": true,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "verleiht vor allem feinem Haar sofortiges Volumen und Halt am Ansatz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Hold-Faktor 6",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09",
+      "number": 6,
+      "scale_as_written": "Hold-Faktor 6 (Skala 1-10; Alt-Text: Hold Faktor 6 von 10)",
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": null
+    },
+    {
+      "type": "flexibility",
+      "text": "Flex-Faktor 6 von 10",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "Spannkraft & Langzeit-Volumen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "Spannkraft & Langzeit-Volumen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

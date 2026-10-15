@@ -1,0 +1,136 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-f185e1f864",
+  "format": "cream",
+  "inci": {
+    "inci_item_count": 28,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 4,
+        "inci": "Ricinus Communis (Castor) Seed Oil"
+      },
+      {
+        "rank": 5,
+        "inci": "Oleyl Alcohol"
+      },
+      {
+        "rank": 6,
+        "inci": "Polybutene"
+      },
+      {
+        "rank": 7,
+        "inci": "Cetyl Acetate"
+      },
+      {
+        "rank": 8,
+        "inci": "Cetyl Alcohol"
+      },
+      {
+        "rank": 9,
+        "inci": "Rosmarinus Officinalis (Rosemary) Leaf Extract"
+      },
+      {
+        "rank": 10,
+        "inci": "Salvia Officinalis (Sage) Leaf Extract"
+      },
+      {
+        "rank": 11,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "PEG-40 Castor Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 14,
+        "inci": "Acetylated Lanolin Alcohol"
+      },
+      {
+        "rank": 15,
+        "inci": "Arachidyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Myristyl Alcohol"
+      },
+      {
+        "rank": 17,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 18,
+        "inci": "Tetrasodium EDTA"
+      },
+      {
+        "rank": 19,
+        "inci": "Benzophenone-4"
+      },
+      {
+        "rank": 20,
+        "inci": "Fragrance (Parfum)"
+      },
+      {
+        "rank": 21,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 22,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 23,
+        "inci": "Hydroxycitronellal"
+      },
+      {
+        "rank": 24,
+        "inci": "Benzyl Benzoate"
+      },
+      {
+        "rank": 25,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 26,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 27,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 28,
+        "inci": "Phenoxyethanol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge verwenden und bei Bedarf aufbauen; im feuchten oder trockenen Haar verwenden. Die Finger für einen verwuschelten Look verwenden, einen Kamm für glatte Looks.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "douglas.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-43e3fd8905",
+  "product": {
+    "confirmed_name": "SPRÜH [CLAIM] Haarlack",
+    "confirmed_name_redacted": true,
+    "brand": "got2b",
+    "format": "aerosol"
+  },
+  "identity": {
+    "inci_flags": [
+      {
+        "flag": "capture_item_count_8_vs_split_7",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 7,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 4,
+        "inci": "Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Benzoic Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gleichmäßig aus 30 cm Entfernung auf das Haar sprühen; gezielt auf einzelne Strähnen möglich. Fixiert bis zur nächsten Haarwäsche.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "für bis zu 72h ultrastarke Styles",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "sanft zur Kopfhaut",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "für alle Haartypen",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "[CLAIM] Halt",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

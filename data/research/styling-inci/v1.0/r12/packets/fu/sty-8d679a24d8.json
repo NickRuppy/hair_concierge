@@ -1,0 +1,96 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-8d679a24d8",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Distarch Phosphate"
+      },
+      {
+        "rank": 5,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 6,
+        "inci": "Polyquaternium-11"
+      },
+      {
+        "rank": 7,
+        "inci": "Cellulose"
+      },
+      {
+        "rank": 8,
+        "inci": "Tapioca Starch"
+      },
+      {
+        "rank": 9,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 10,
+        "inci": "Aloe Barbadensis Leaf Juice"
+      },
+      {
+        "rank": 11,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 12,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 17,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 18,
+        "inci": "Sodium Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gut schütteln. Mit kurzen Sprühstößen aus 30cm Abstand auf das trockene Haar sprühen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

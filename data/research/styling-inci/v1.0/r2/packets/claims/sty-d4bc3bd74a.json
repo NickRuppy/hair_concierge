@@ -1,0 +1,115 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-d4bc3bd74a",
+  "brand": "L'ORÉAL PARiS ELVITAL",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "BIG HAIR DAY",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "ERFRISCHENDES VOLUMEN SPRAY",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "[MIT KOLLAGEN-AS-FRAGMENTEN]",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mehr Volumen in 3 Sekunden",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 48h frischeres Haargefühl*",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "FEINES, PLATTES HAAR",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Erfrischendes Volumen-Spray für den Haaransatz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit fruchtig-blumigem Duft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für sofortiges Volumen ab dem Ansatz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Hält das Haar bis zu 48 Stunden frisch",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für sofortiges Volumen und einen langanhaltenden Frische-Effekt sorgt das Elvital Collagen Lifter Big Hair Day Erfrischendes Volumenspray von L'ORÉAL PARiS. Dank der innovativen Tri-Düse lässt sich das Spray gezielt am Haaransatz anwenden, um diesen in Sekundenschnelle anzuheben. Die leichte Formel spendet Feuchtigkeit, ohne klebrige Rückstände zu hinterlassen oder das Haar zu beschweren. Es verleiht dem Haar ein sauberes und frisches Gefühl, das bis zu 48 Stunden anhält. Eine Komposition aus Birne, Zitrusfrüchten und Rosenduft verwöhnt dabei die Sinne.",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "Hält das Haar bis zu 48 Stunden frisch",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 48h frischeres Haargefühl*",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

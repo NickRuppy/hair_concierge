@@ -1,0 +1,72 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-94007ae73b",
+  "brand": "John Frieda",
+  "confirmed_name": "Frizz Ease 3-Tage-Glatt Styling-Spray",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Schützt vor Frizz und sorgt für 72 Stunden glattes Haar.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "glatterem Haar, das bis zu 3 Tage* hält",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt Frizz ohne zu beschweren.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "geschmeidigerem, glatterem Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "bis zu 3 Tage* (*oder bis zur nächsten Haarwäsche, falls weniger als 3 Tage); 72 Stunden",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "Schützt vor Feuchtigkeit und Hitze. / integrierter Feuchtigkeitsschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "schützt vor Hitze bis zu 230 °C.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-4bda8e022c",
+  "brand": "BALI CURLS",
+  "confirmed_name": "Volumizing Curl Spray",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Das vegane VOLUMIZING CURL SPRAY mit Reisprotein und Ylang-Ylang-Extrakt erfrischt deine Locken und verleiht einen wundervollen und voluminösen Beachlook. Der einzigartige Duft bringt dir das Sommergefühl aus Bali direkt nach Hause in dein Badezimmer.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Curly Method konform",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit natürlichen & pflegenden Inhaltsstoffen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für Locken, Wellen & alle Haartypen geeignet",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "wundervollen und voluminösen Beachlook",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

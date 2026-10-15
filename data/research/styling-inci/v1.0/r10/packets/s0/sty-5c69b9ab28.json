@@ -1,0 +1,104 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-5c69b9ab28",
+  "product": {
+    "confirmed_name": "Föhn-Spray VOLUMEN Halt [CLAIM]",
+    "confirmed_name_redacted": true,
+    "confirmed_name_tier": "C2",
+    "brand": "Schwarzkopf taft",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 5,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 8,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 9,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 10,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 11,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 12,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 13,
+        "inci": "Dimethyl Phenethyl Acetate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gleichmäßig in das handtuchtrockene Haar sprühen, Haare trocken föhnen und stylen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "verleiht Volumen und einen natürlichen Haarschwung und eignet sich für alle Haartypen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "hilft dabei, das Haar vor Sprödigkeit und Haarbruch zu schützen, die durch das Föhnen entstehen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ]
+}

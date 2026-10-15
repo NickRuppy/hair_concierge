@@ -1,0 +1,72 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-374bb95302",
+  "brand": "Living Proof",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "sofortiges und lang anhaltendes Volumen, Textur und weichen Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "weichen Halt / aufbaubaren, grifffreien Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "weicher, aufbaubarer, grifffreier Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "weich",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "flexibility",
+      "text": "aufbaubar",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "flexibility",
+      "text": "grifffrei",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "lang anhaltendes Volumen und Textur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 410 F / 210 C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

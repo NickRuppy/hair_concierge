@@ -1,0 +1,84 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-7ae099c08c",
+  "format": "two_phase_spray",
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 2,
+        "inci": "Water/Eau"
+      },
+      {
+        "rank": 3,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 4,
+        "inci": "Disiloxane"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Vp/Va Copolymer"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Polyquaternium-16"
+      },
+      {
+        "rank": 9,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 10,
+        "inci": "Fragrance/ Parfum"
+      },
+      {
+        "rank": 11,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 13,
+        "inci": "Dimethiconol"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 15,
+        "inci": "Violet 2"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gut schütteln und vor dem Hitzestyling abschnittsweise auf das trockene Haar sprühen",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

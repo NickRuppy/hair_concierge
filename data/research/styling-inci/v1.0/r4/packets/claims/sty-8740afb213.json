@@ -1,0 +1,42 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-8740afb213",
+  "brand": "Moroccanoil",
+  "confirmed_name": "Volumizing Spray (Volumizing Mist)",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Bringen Sie Leben in feines, stumpfes Haare mit dem Volumizing Spray. Dieser schwerelose, körperbildende Nebel hebt die Haare für einen Look, der bis zu 50% voller ist, während er Bewegung und spürbaren Halt vom Ansatz bis zur Spitze aufrecht erhält. Die Arganöl-infundierte Formel enthält Reis-Aminosäuren, um das Haar zu stärken, sowie Totes Meersalz, um Volumen mit sprungkräftiger Textur aufzubauen. Anhaltendes Volumen bis zu 72 Stunden.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "spürbaren Halt vom Ansatz bis zur Spitze",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "spürbaren Halt"
+    },
+    {
+      "type": "duration",
+      "text": "Anhaltendes Volumen bis zu 72 Stunden.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

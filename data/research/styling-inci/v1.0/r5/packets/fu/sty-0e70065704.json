@@ -1,0 +1,164 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-0e70065704",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 35,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Aloe Barbadensis Leaf Juice"
+      },
+      {
+        "rank": 3,
+        "inci": "Propanediol"
+      },
+      {
+        "rank": 4,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 5,
+        "inci": "Caprylyl/Capryl Glucoside"
+      },
+      {
+        "rank": 6,
+        "inci": "Levulinic Acid"
+      },
+      {
+        "rank": 7,
+        "inci": "Lauryl Glucoside"
+      },
+      {
+        "rank": 8,
+        "inci": "Glyceryl Undecylenate"
+      },
+      {
+        "rank": 9,
+        "inci": "Sodium Levulinate"
+      },
+      {
+        "rank": 10,
+        "inci": "Betaine"
+      },
+      {
+        "rank": 11,
+        "inci": "Sodium PCA"
+      },
+      {
+        "rank": 12,
+        "inci": "Helianthus Annuus Hybrid Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 14,
+        "inci": "PCA Glyceryl Oleate"
+      },
+      {
+        "rank": 15,
+        "inci": "Arginine"
+      },
+      {
+        "rank": 16,
+        "inci": "Isoamyl Laurate"
+      },
+      {
+        "rank": 17,
+        "inci": "Brassicyl Isoleucinate Esylate"
+      },
+      {
+        "rank": 18,
+        "inci": "Hydrolyzed Corn Protein"
+      },
+      {
+        "rank": 19,
+        "inci": "Hydrolyzed Wheat Protein"
+      },
+      {
+        "rank": 20,
+        "inci": "Hydrolyzed Soy Protein"
+      },
+      {
+        "rank": 21,
+        "inci": "Brassica Alcohol"
+      },
+      {
+        "rank": 22,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 23,
+        "inci": "Lactobacillus Ferment"
+      },
+      {
+        "rank": 24,
+        "inci": "Vitis Vinifera Seed Extract"
+      },
+      {
+        "rank": 25,
+        "inci": "Linum Usitatissimum Seed Extract"
+      },
+      {
+        "rank": 26,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 27,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 28,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 29,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 30,
+        "inci": "Pinene"
+      },
+      {
+        "rank": 31,
+        "inci": "Benzaldehyde"
+      },
+      {
+        "rank": 32,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 33,
+        "inci": "Menthol"
+      },
+      {
+        "rank": 34,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 35,
+        "inci": "Carvone"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Vor Gebrauch bitte gut schütteln. Strähne für Strähne auf trockenes oder feuchtes Haar sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

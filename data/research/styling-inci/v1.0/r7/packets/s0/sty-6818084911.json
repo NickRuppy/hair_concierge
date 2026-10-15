@@ -1,0 +1,168 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-6818084911",
+  "product": {
+    "confirmed_name": "Styling Cream Active",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "NIVEA MEN",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 31,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Sorbitol"
+      },
+      {
+        "rank": 3,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 4,
+        "inci": "Cetyl Alcohol"
+      },
+      {
+        "rank": 5,
+        "inci": "Myristyl Alcohol"
+      },
+      {
+        "rank": 6,
+        "inci": "Sorbitan Stearate"
+      },
+      {
+        "rank": 7,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 8,
+        "inci": "PVP"
+      },
+      {
+        "rank": 9,
+        "inci": "Trilaureth-4 Phosphate"
+      },
+      {
+        "rank": 10,
+        "inci": "Isopropyl Palmitate"
+      },
+      {
+        "rank": 11,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 12,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 13,
+        "inci": "Pantolactone"
+      },
+      {
+        "rank": 14,
+        "inci": "Silica"
+      },
+      {
+        "rank": 15,
+        "inci": "Cera Microcristallina"
+      },
+      {
+        "rank": 16,
+        "inci": "Paraffinum Liquidum"
+      },
+      {
+        "rank": 17,
+        "inci": "PEG-90 M"
+      },
+      {
+        "rank": 18,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 19,
+        "inci": "Tocopheryl Acetate"
+      },
+      {
+        "rank": 20,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 21,
+        "inci": "Benzethonium Chloride"
+      },
+      {
+        "rank": 22,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 23,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 24,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 25,
+        "inci": "Lavandula Oil/Extract"
+      },
+      {
+        "rank": 26,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 27,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 28,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 29,
+        "inci": "BHT"
+      },
+      {
+        "rank": 30,
+        "inci": "Rose Ketones"
+      },
+      {
+        "rank": 31,
+        "inci": "Parfum"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1 Vorbereiten\nEine Fingerspitze voll NIVEA MEN Styling Cream aufnehmen und zwischen den Handflächen verreiben.\n2 Anwenden\nDie Cream mit den Händen im handtuchfeuchten oder trockenen Haar einarbeiten und dann mit den Fingern den gewünschten Look stylen.\n3 Nachstylen\nMit einem Tupfer NIVEA MEN Styling Cream kann man schnell und unkompliziert noch einmal nachstylen – ohne dass die Hände oder Haare verkleben oder der Look unnatürlich wirkt.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "nivea.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "[CLAIM] Halt – ohne zu verkleben oder zu [CLAIM]",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

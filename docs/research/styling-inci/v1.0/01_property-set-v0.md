@@ -1,0 +1,626 @@
+# Styling v1.0 property set (v0 — Phase 2, pre-calibration)
+
+Status: **lock re-instatement pending the independent review (R12-L)**.
+**Version note (2026-10-12, updated in place).** This file keeps its name and section numbers; the round-1 rulings change §2.2 (shine_finish job, R1-Q2), §2.3 (particulate count corrected to 11), §2.4 (PQ-69, R1-T), §2.10 („Kleber", name-derived words; RG-14, P-2), §2.11 (RG-10), §2.12 (RG-11, RG-12), §2.13 (RG-2, RG-8), §2.14 (RG-9), §2.15 (R1-Q4), §5.2–§5.4 and §5.6 (R1-Q1, RG-13, RG-19, P-1) and add §9 items 16–20. The standard v0.2 changelog lists every change with its ruling id; where this file and the standard differ, the standard's executable reading governs below the ledger.
+**Amendment (2026-10-13, Codex review; text only, no version bump).** Leftover text that contradicted R3-H2 (Flowing Form ⇒ held `smoothing_styler`), R3-H5 (Wella EIMI „Haltegrad"/„Haltestufe" is a 1–4 scale), R4-Q4 (thin-care fixative-led smoothing sprays), R4-H (§13.4 resolved) and R3-L / R4-L (agreement means resolved, not identical) is aligned in §2.1, §5.3, §5.6, §7 and §9 items 25, 32, 33. Next: the round-6 final confirmation round (`r6/`; round 5 aborted, never scored).
+**Amendment (2026-10-13, R6).** R6-Q1 replaces D3/R2-Q4 for the named NEQI products: both are held Styling `smoothing_styler`; the general route covers heat-activated smoothing-film blow-out sprays/lotion with trace-only care and no fixative, while Ultimate remains an explicit owner-named exception because it retains FX-1 r8. R6-T reads `target_zone` from the main required application and requires an explicit curl/wave define-or-shape promise for `definition` in descriptive sentences; R7-Q2 adds the product-name rule below. The historical targeted `r7/` re-check did not close the lock; lock re-instatement pending the independent review (R12-L).
+**Version note v0.5 (2026-10-13, updated in place).** The round-4 rulings act on §2.1 (R4-Q1 a one-job C1/C2 name meets the promise input of the evidence gate; R4-Q2 „Beach Waves" = salt-spray look, „Glaze"/„Topcoat"/„Gloss" = shine words; R4-Q3 care verbs and nouns only; R4-Q4 straightening limb for fixative-led smoothing sprays; R4-Q5 registry D6/D7 rows keep ruling; R4-Q6; R4-Q7 product noun vs qualifier), §2.2 (R4-Q4, RG4-13) and §2.12 (RG4-10, RG4-12, RG4-17) through the standard v0.5 (§4.1–§4.6, §5, §6.10), whose executable reading governs below the ledger; this file is edited in §2.3 (lexicon v0.5), §2.8 (RG4-15, RG4-27), §2.15 (RG4-18), §7 (R4-L lock scope, the RG4-18 crossing, the P4-1…P4-3 packet fields) and §9 items 29–32. The standard v0.5 changelog lists every change with its ruling id; the lock scope is in standard §14.1 and charter §15 P1.
+**Version note v0.4 (2026-10-13, updated in place).** The round-3 rulings change §2.1 (R3-Q2 shop-title fallback, R3-Q3 one-job name, R3-Q4 D7 straightening extension, RG3-1, RG3-4, RG3-12, RG3-19), §2.2 (R3-Q4, RG3-18), §2.3 (lexicon v0.4), §2.9 and §5.2 step 7 (R3-H replaces PH1-8's pack-vs-page `null`), §5.2 step 2 and §5.3 (Taft Paste re-read closed, RG3-10; Balea 1–7 words only, RG3-23), §5.4 („extra Halt", RG3-9), §5.6 (round-3 rows), §6 (negated hold claim, RG3-11), §7 (R3-L lock reading, P3-1) and add §9 items 25–28. The standard v0.4 changelog lists every change with its ruling id; the lock criteria with R3-L and R3-Q1 are in standard §14.1 and charter §15 P1.
+**Version note v0.3 (2026-10-12, updated in place).** The round-2 rulings change §2.1 (R2-Q1, R2-Q2, R2-Q4, RG2-19, RG2-20, RG2-24), §2.2 (RG2-13, RG2-14, RG2-15), §2.3 (lexicon v0.3; natural_film 10), §2.9 (Taft Balm „Halt 3" closed by capture), §2.10 (RG2-12, RG2-6), §2.11 (RG2-11), §2.12 (RG2-4…RG2-7, RG2-16), §2.13 (RG2-8, RG2-9), §2.14 (RG2-10), §2.15 (RG2-26), §5.4 and §5.6 (RG2-18), §6 (RG2-22), §7 (R2-Q3, RG2-24, RG2-26) and add §9 items 21–24. The standard v0.3 changelog lists every change with its ruling id.
+Charter: `00_category_charter.md` (its former proposals are cited as charter P1–P4, now ruled as PH1-11, PH1-7, PH1-8, PH1-9). Governing order: `plans/styling-concept/02-rulings.md` (SD1–SD5, D1–D8b, PH1-1…PH1-16, PH2-1…PH2-12, R1-Q1…R1-Q4, R1-T, R1-H1…R1-H3, R2-Q1…R2-Q4, R2-T, R2-H1…R2-H6, R3-L, R3-Q1…R3-Q4, R3-H, R3-T, R3-H2…R3-H4, R4-L, R4-Q1…R4-Q7, R4-T, R4-H, R6-Q1, R6-T, LOCK-1-S, R7-F, R7-Q1…R7-Q3, R8-Q1, R8-Q2, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, R10-Q1, R10-Q2, R11-Q1, R11-Q2, R12-L) > charter > `plans/styling-concept/01-styling-concept.md` Rev. 2.
+Inherited method: Leave-In Standard v1.0 (cited "LI §x"); Mask Standard (cited "Mask §x").
+Evidence: `data/research/styling-inci/concept-v0/calibration-set-r2.json` (70 Styling records) with the raw INCI, claims and directions in `samples/*.json` and `round2/`. Every example names a real `sample_id`, re-read from the raw record on 2026-10-09. Counts marked **dry run** come from one scratch pass of the v0 rules over the 70 records. That pass is not committed; Phase 3 reproduces it under the versioned lexicon.
+Stop condition: research artifact only (charter §16). No catalog, Supabase, intake or matcher change.
+
+### Amendment (R12, 2026-10-14)
+
+Source: R12-L in the governing ledger. Current engine: `styling-inci-v0.5-r12amend` (amended through R12, 2026-10-14); formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. LOCK-1-S remains in force; lock re-instatement pending the independent review (R12-L). Frozen rounds remain provenance; this amendment does not issue LOCK-2.
+
+| Amendment | Ruling / date | Consuming procedure |
+|---|---|---|
+| Secondary jobs are a SOFT signal with known judgement tolerance. Differences in which job fills a secondary slot never block the lock; all other user-facing fields still do. Matching may use secondary jobs only as a light extra signal, never for eligibility, exclusion or ranking floors. | R12, 2026-10-14 — R12-L | standard §6.10 / §14.1; property set §2.12 / §7; Personal Plan allocation |
+
+### Amendment (R11, 2026-10-14)
+
+Source: R11-Q1 and R11-Q2 in the governing ledger. The final re-check `r12/` uses `styling-inci-v0.5-r11amend`; formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. LOCK-1-S remains in force; frozen rounds remain provenance. Scorers pin the exact standard/ledger git revision (R9-P).
+
+| Amendment | Ruling / date | Consuming procedure |
+|---|---|---|
+| Volume words are STRONG only when volume itself is promised („für mehr Volumen“, „Fülle am Ansatz“). Curl-quality descriptions („Locken voller Sprungkraft“, bare „Sprungkraft“ on a curl product) are WEAK, even alongside a promise of defined curls. Balea Pro Styling Cream Traumlocken and Taft Styling Balm Locken supply volume only to a free secondary slot after STRONG jobs and the formula gate. | R11, 2026-10-14 — R11-Q1 | standard §6.10; property set §2.12 |
+| A form word (Gel, Cream, Creme, Gelee, Lotion, Spray, Schaum) inside a compound name that already names the job is the form, not a second job. Wella EIMI Nutricurls „Curl Shaper (Defining Gel Cream)“ and „Curl Cream Gel“ each name one job, primary `definition`. Earlier qualifier, tie, authority and formula rules remain in force. | R11, 2026-10-14 — R11-Q2 | standard §4.2 step 1; §6.10 name-signal collection |
+
+### Amendment (R10, 2026-10-14)
+
+Source: R10-Q1 and R10-Q2 in the governing ledger. The final re-check `r11/` uses `styling-inci-v0.5-r10amend`; formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. Frozen rounds remain provenance. Scorers pin the exact standard/ledger git revision and read rule quotes from that revision (R9-P).
+
+| Change | Ruling | Where |
+|---|---|---|
+| Collect every eligible job signal from the confirmed name and all C1/C2 claim types; fill secondary slots with STRONG signals in source order before WEAK signals, excluding the primary and duplicate jobs and retaining the formula gate. A bare hold mention is WEAK; RG3-16 strength/number evidence defines a STRONG hold signal. Primary selection and hold-level mapping stay unchanged. | R10, 2026-10-14 — R10-Q1 | standard §6.10; property set §2.12 |
+| Add „Struktur“ / „strukturiert“ to the texture vocabulary. A structured-look description is a WEAK texture signal; Bali Gents Haarpuder supplies it at C2. | R10, 2026-10-14 — R10-Q2 | standard §6.10; property set §2.12 |
+
+### Amendment (R9, 2026-10-14)
+
+| Change | Ruling | Where |
+|---|---|---|
+| Secondary jobs may come from any C1/C2 claim line (including `promise`, `finish` and `other`) for every product; pure feel-only lines without a result never count. | R9, 2026-10-14 — R9-Q1 | §2.12; standard §6.10 |
+| Several result adjectives: the one matching the named look/subtype leads; otherwise the first. `sleek` means a smooth/straight overall look (shape); `shine` means gloss (surface). NEQI Diamond Glass All ⇒ primary `sleek`, secondary `shine`. | R9, 2026-10-14 — R9-Q2 | §2.12; standard §6.10 |
+
+### Amendment (R8, 2026-10-14)
+
+| Change | Ruling | Where |
+|---|---|---|
+| Refresh between washes in the Dry Shampoo sense alongside volume/texture triggers the Dry Shampoo tie even with a volume-first name; L'Oréal Elvital Big Hair Day ⇒ `dry_shampoo`. | R8, 2026-10-14 — R8-Q1 | standard §4.2 / §4.6 |
+| Puder/Powder names `volume`; promised texture/grip is an eligible secondary. Redken Powder Grip is a two-job name and falls to its lead line. | R8, 2026-10-14 — R8-Q2 | standard §4.2 / §6.10; property set §2.12 |
+| Moroccanoil Glättende Creme has no care + curl-definition tie under R7-Q2; the border rules route it to `leave_in`. Current status: lock re-instatement pending the independent review (R12-L). | R8, 2026-10-14 — R8-H | standard §4.2 / §4.6; header |
+
+### Amendment (R7 rulings, 2026-10-13)
+
+| Change | Ruling | Where |
+|---|---|---|
+| A no-job lead falls through to the next eligible C1/C2 promise line's first vocabulary job; if none has a job, `primary_job: null` + internal `primary_job_unresolved`. A promise need not name a vocabulary job, and the one-job C1/C2 name may meet the gate without a promise line. | R7-F, M3 | §1 row 12, §2.12 |
+| An adjective before a job phrase supplies no separate job (Wellaflex ⇒ `definition`); curl/wave words in the product's own name supply definition, while descriptive sentences need an explicit define/shape-curls-or-waves promise. Non-curl „Definition“/„Define“ supplies none (Bali Gents; Balea Sea Salt Care & Define). | R7-Q1, R7-Q2 | §2.12; standard §4.2 / §6.10 |
+| All brand line / collection names are excluded from job words (Frizz Ease, Traumlocken, Volume Lift, Diamond Sleek, Glow & Shine, Nutricurls …); the product's own name words decide. | R7-Q3 | §2.12 |
+| Status is lock re-instatement pending the independent review (R12-L); worked examples are corrected in the standard, without changing historical classifications. | LOCK-1-S, L2, M2 | header; standard §11.3 / §11.8 / §11.9 |
+
+## 0. Conventions for every property
+
+| Topic | Rule |
+|---|---|
+| Source kinds | **R** routing (S0 output) · **F** formula-blind (frozen INCI only) · **U** usage (frozen directions transcription) · **C** claim (C1/C2 only, LI §2.4.1) · **D** derived echo. |
+| Evidence level | LI §3.1 ladder: identity facts and directions transcriptions are E1; any value read from the formula is E2; claims are E0 (charter §11). |
+| Tail marker | "Above the tail" means strictly before the marker. **Ruled — PH1-1 (PS1):** for Styling's own properties the marker is Mask's `tail_index` (Mask §3.1), in the ledger's words "the first preservative or perfume, whichever comes first". Mask's marker classes are fragrance, declared allergen, preservative, booster-in-a-pair and chelator; **PH2-9 confirms the full Mask rule** (§9 item 11). The S0 / LI G0 border check keeps LI's own marker unchanged, and the D6 care test uses the first preservative and its own dose yardstick (PH1-13, charter §5). A load-bearing member at `tail_index − 1` still counts, but caps confidence at `moderate` (Mask E1). The plausibility tests (LI T16/T17, Mask E2) apply, with "establishing species" = the members that establish `result_mechanisms` and `weight`. Example: `loreal-paris-elnett-haarspray-extra-starker-halt` has Hydroxycitronellal r4 as its first tail-class member while Parfum is r28. Under Mask E2 that marker is `unresolved` ⇒ review. No value moves, because the fixative sits at r3 either way. |
+| Conservative failure | LI §1.1. Every rule fails toward review or toward the anchor's conservative value, never toward a more favourable value. |
+| Separation | Subtype, product name and format **never set an F value** (LI G9 parity). F never sets a C value, and C never sets an F value. The only permitted crossings are listed in §7. |
+| Confidence | `high` / `moderate` / `low` per the category template §7. **Internal only, never user-facing.** |
+| Format | `gel · spray_gel · jelly · cream · foam · pump_spray · aerosol · wax · paste · pomade · powder` is identity data (LI G1), not a researched property. |
+| Presence vs architecture | `ingredient_flags` read the whole list. Every other F property reads only above the tail. |
+
+## 1. Overview
+
+| # | Property | Values (+ unknown state) | Kind | Decision | Main consumers |
+|---|---|---|---|---|---|
+| 1 | `route` | styling · leave_in · oil · heat_protectant · dry_shampoo · provisional_boundary | R | gated sequence (S0) | category assignment |
+| 2 | `styling_subtype` | 12 keys | R | structured judgment | Stage-5 role, subtype choice |
+| 3 | `result_mechanisms` | fixative_film · natural_film · wax_lipid · particulate · salt · silicone_coat · humectant_only · none | F | deterministic (lexicon) | subtype extras, D8b, job gate, cautions |
+| 4 | `hold_route` | present · absent · ambiguous | F | deterministic | neutral fact, D6 border, D8b |
+| 5 | `weight` | light · medium · rich · unknown | F | structured judgment (PH1-2, PH1-4) | thickness fit, buildup note |
+| 6 | `alcohol_note` | fires · does_not_fire | F | deterministic (PH1-3) | the reused Leave-in alcohol note |
+| 7 | *(removed: `washability`, PH1-4)* | — | — | — | replaced by the reused Leave-in buildup note (§4) |
+| 8 | `ingredient_flags` | silicones · oils · fragrance · salt · propellant + `fixative_family[]` | F | deterministic presence | filters, neutral fact |
+| 9 | `chaarlie_hold_level` | 0–4 · null („keine Herstellerangabe") · `review` | C | deterministic normalisation (§5) | hold band ranking in 6 subtypes |
+| 10 | `flexibility` | beweglich · fest · unbekannt | C | lexicon (PH1-5) | flexibility preference |
+| 11 | `finish` | matt · natürlich · glänzend · unbekannt | C + F sanity | lexicon (PH1-5) | finish preference |
+| 12 | `primary_job` + `secondary_jobs` (≤ 2) | definition · volume · texture · sleek · hold_fix · shine · frizz_control · refresh; `primary_job: null` when no eligible vocabulary job exists | C + F gate | structured judgment | goal/problem matching |
+| 13 | `application_moment` | damp_before_drying · before_heat · dry_finish · dry_restyle · second_day · unresolved | U | transcription with anchors | routine compiler slot |
+| 14 | `target_zone` | all · roots · lengths · surface · hairline | U | transcription with anchors | root lift, edge branch, caution |
+| 15 | `heat_activated` | yes · no · unresolved | U (+ C raise) | transcription | routine order |
+| 16 | `captured_claims` | typed verbatim list | C | capture only | **nothing**: never selection |
+| 17 | `provides_heat_protection` | true · false | C + F (L9 check) | deterministic (PH1-15, Leave-in HEAT rule) | Personal-Plan heat-protection step |
+
+Subtype extras are in §3 and derived echo fields and notes in §4. Section numbers stay stable: §2.7 is kept as a removal stub, and the new property is §2.17.
+
+## 2. Base properties
+
+### 2.1 `route`
+
+| Field | Definition |
+|---|---|
+| Values | `styling` · `leave_in` · `oil` · `heat_protectant` · `dry_shampoo` · `provisional_boundary` |
+| Consumer meaning | Which engine profiles the product. `styling` receives the rest of this set; so does a record **held** under PH1-16 (`provisional_boundary`, reason `pending_leave_in_addendum`, lean route `styling`): **PH2-2** gives it the **complete** Styling profile, marked `provisional`, counted separately toward "≥ 5 per subtype" and **not matchable or recommendable** until the Leave-in addendum is approved. Every other `provisional_boundary` gets no Styling profile. |
+| Source | R: the S0 gate (charter §5) reads the C1/C2 promise class, the directions and the LI G0 formula halves. Not blind. |
+| Decision | Ordered gates. LI G0 is a structured judgment; D2 and D7 are the only name rules. |
+| Counter-signals | A missing input, a C1/C2 conflict, a `mixed` promise, or a same-market formula conflict (LI T18) ⇒ `provisional_boundary`; the product stays in its current category. **Exception (PH1-12):** the D7 middle-band test runs before the `mixed` stop, so a middle-band curl/styling cream or balm is `styling` (`curl_cream`) even with a mixed promise (`balea-professional-styling-cream-traumlocken`); since **R3-Q4** the same holds for a middle-band straightening/smoothing styler ⇒ `smoothing_styler`, held (`kms-thermashape-straightening-creme`; **Wella Flowing Form likewise ⇒ held `smoothing_styler`, R3-H2**, which withdrew R3-Q4's „Flowing Form ⇒ review"); since **R4-Q4** the straightening limb needs only the fixative above T_S, whatever the conditioning reads (`balea-glattspray-anti-frizz` ⇒ held `smoothing_styler`). **R6-Q1** also runs before the mixed stop: a heat-activated smoothing-film spray/lotion with trace-only care and no fixative ⇒ held `smoothing_styler`; the owner-named NEQI Ultimate override retains FX-1 r8 (standard §4.3/§4.6). A refresh + volume/texture co-lead never reaches the stop: tie precedence assigns it the `refresh` class (tie ⇒ Dry Shampoo; standard §4.2). A product both engines could claim is held as `provisional_boundary` until the Leave-in addendum (PH1-16). **Hold scope ruled — PH2-2:** the hold covers every Styling route the unchanged Leave-in letter would also claim (all D6 and D7 moves, R6-Q1 smoothing-film routes and the owner-named routes); held records carry the complete Styling profile marked `provisional` (see Consumer meaning). *Superseded:* "scope open, charter §15.2" (Phase 1 text). |
+| Claim boundary | The promise picks the boundary. Names route only under D2 („Öl"/„Serum" ⇒ Oil, **only for shine / finish / anti-frizz / smoothing-finish promises**; a protection-first „Serum" reaches the Heat Protectant rule) and D7 (middle band: curl/styling creams and balms; since R3-Q4 also straightening/smoothing stylers). Otherwise a name never routes on its own and never stands in for a formula value; its job word is promise evidence for the lead promise (standard §4.2 step 1, RG2-21, R2-H3). **Round 3:** a one-job name wins over a lead line that joins that job with care (R3-Q3: taft Texturspray Aloe Boost ⇒ `texture_spray`); when no pack or brand-page name exists, the retailer title's product-type noun serves for step 1 and D2, review `name_from_retailer_title` (R3-Q2: syoss Hitzeschutzspray ⇒ `heat_protectant`); curl/wave nouns, salt nouns and compound form nouns are read as RG3-1 says; the lead is the first sentence of the chosen line (RG3-4); a care product noun in a C2 descriptor line is not a care job, moisture-locking is (RG3-12); `li_function` reads the lead only (RG3-19). |
+| Confidence | Inherited from LI G0. |
+| Fit consumers | Category assignment. The Stage-5 role comes via the subtype family. |
+| Calibration | `maria-nila-curlicue-cream` ⇒ styling (T15 `excluded_styling_first`, PVP r4). `neqi-diamond-glass-ultimate-styling-spray` ⇒ held Styling `smoothing_styler` (R6-Q1 replaces D3/T15 outcome). `balea-locken-revitalizing-spray` ⇒ styling (D6). `bali-curls-leave-in-spray-curl-defining` ⇒ provisional_boundary (two INCIs under one GTIN; only two captures, so LI T18 tier-1 convergence is not reachable ⇒ `formula_conflict` until a C1 pack capture; standard §2.2 A2). `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` ⇒ styling `smoothing_styler` (PH1-14). Ruled, not yet applied to the calibration file: `alverde-locken-refresh-spray` ⇒ styling `refresher` with a review flag (PH1-13); `syoss-curl-control-hydrating-spray` ⇒ leave_in, still identity-blocked (PH1-13); `balea-professional-definier-spray-traumlocken` ⇒ leave_in (PH1-10). **Round 2 (v0.3):** the care half of a care + curl-definition `mixed` reading is a promised care job, and curl revival is refresh (R2-Q1): `redken-refreshing-curl-mist` ⇒ D6 ⇒ held `refresher`; `wella-eimi-nutricurls-fresh-up`: its promise lines are C2 on wella.com DE and „Detangling" is C3 retailer text only, so it is not a care + definition tie; D6/T15 decide in round 3 (expected leave_in; R2-H1, standard §11.14). The water-based-serum exception reads the cationic the D6 way (R2-Q2): `balea-haarserum-anti-frizz-glatt-und-glossy` ⇒ leave_in. `neqi-diamond-glass-styling-spray-all` ⇒ held Styling `smoothing_styler` (R6-Q1 replaces R2-Q4/D3 outcome); its INCI is complete, so no block (R2-H4). `guhl-locken-pflege-und-styling-3in1` is a care product and stays in its current category (R2-H2). `balea-haarwachs-styling-stick` ⇒ styling `molding` by the name step (R2-H3). Claim host rule: a manufacturer's German-language storefront for the German market is C2 whatever its domain (R2-H6). A protection lead naming heat among other protections ⇒ heat_protectant (`osis-super-shield`, RG2-19). Leave-on + rinse-out directions: the first-named use decides (RG2-20). An INCI defect confined to the tail does not block (RG2-24). |
+
+**R6 override to the historical calibration row above.** `neqi-diamond-glass-ultimate-styling-spray` and `neqi-diamond-glass-styling-spray-all` are held Styling `smoothing_styler` under R6-Q1, replacing the D3/R2-Q4 Leave-in outcomes. Ultimate remains the explicit owner-named exception because it retains FX-1 r8; All has no fixative. The standard §4.6 is the executable registry.
+
+### 2.2 `styling_subtype`
+
+| Field | Definition |
+|---|---|
+| Values | `gel` Haargel · `curl_cream` Lockencreme · `mousse` Schaumfestiger · `blowdry_lotion` Föhnlotion & Föhnspray · `smoothing_styler` Glättungsstyler · `hairspray` Haarspray & Haarlack · `shine_finish` Glanz- & Anti-Frizz-Finish · `salt_spray` Salz- & Beach-Spray · `texture_spray` Texturspray · `hair_powder` Haarpuder · `molding` Wachs, Paste & Pomade · `refresher` Locken-Refresh. `null` unless `route = styling`. |
+| Consumer meaning | How and when the product is used. The family maps to the Stage-5 role: `hairspray` and `shine_finish` ⇒ `finish`; all others ⇒ `styling`. |
+| Source | R: the job and moment led by the C1/C2 promise and the directions (charter §3). |
+| Decision | Structured judgment against the charter's core-job anchors. Where the job reading leaves two subtypes open, the product's form may break the tie: `balea-styling-creme-power-flex` is sold as „Styling Creme" but is a hydroalcoholic PVP/carbomer gel used damp or dry ⇒ `gel` (concept §2). **Form = what the product is as applied; the capture format field alone never breaks the tie (RG2-14):** `syoss-curl-cream-gel-3in1` ⇒ `gel`. **The moment breaks a tie only between subtypes the job leaves open; a shine lead stays `shine_finish` whatever the moment, and `smoothing_styler` needs a sleek/straight job (RG2-15).** Heatless overnight setting sprays/lotions ⇒ `gel` (RG2-13). **Round 3:** a product the D7 straightening limb routes is `smoothing_styler` (R3-Q4); damp volume sprays are `blowdry_lotion` whether or not a blow-dry is named, and a wax or paste in spray form is `texture_spray` (RG3-18). |
+| Counter-signals | A name never decides: Taft „Gel Wax" and got2b „Texture Clay" are both `molding`. |
+| Claim boundary | D2 and D7 only. |
+| Confidence | `high` when promise and directions agree; `moderate` when the form breaks a tie. |
+| Fit consumers | Subtype choice (concept §5.2), D5 plan composition, routine slot. **Never an input to any F property.** |
+| Calibration | `color-wow-dream-coat-supernatural-spray` ⇒ `smoothing_styler` (damp, before blow-drying; not „Öl"/„Serum"). `langhaarmaedchen-lockenspray-halt-sprungkraft` ⇒ `gel` (liquid curl-hold spray, spray-gel format). `bali-curls-sleek-stick-brows-and-edges` ⇒ `gel` with `target_zone: hairline` (D1); its brow use is recorded only (RG2-27). Round 2 (v0.3): `balea-overnight-wellenspray` ⇒ `gel` (RG2-13); `got2b-gotgloss-glanz-spray` and `schwarzkopf-taft-x-gliss-silky-shine-shine-coat` ⇒ `shine_finish` although applied before heat (RG2-15). **R1-Q2:** anti-frizz / flyaway control on dry, finished hair (by the main directions) is the `shine_finish` job, `li_function` no, recommendable now: `balea-professional-glow-und-shine-finishing-spray` and `feschi-smooth-and-shine-anti-frizz-spray-glanzspray` ⇒ `shine_finish`, not held (Feschi once its evidence gate passes); anti-frizz for damp hair or sold as care keeps the Leave-in check (standard §4.2). |
+
+### 2.3 `result_mechanisms`
+
+| Field | Definition |
+|---|---|
+| Values | A set of 1–n values, each carrying its members `[{inci, rank}]`:<br>• `fixative_film`: a fixative-class polymer (§2.4 list, PH1-6/PH1-16) above the tail.<br>• `natural_film`: hydrolysed or modified starch (Hydrolyzed Corn Starch, Hydroxypropyl Starch, Distarch Phosphate), chitosan, gum arabic/Acacia Senegal gum, in a water-based formula. **Unsettled members** (carrageenan, gellan, unmodified potato/corn/tapioca starch, flax extract) are credited with a `natural_film_unsettled` review note. This is where concept §3.1's "ambiguous" gel/starch cases now live (§9 item 1).<br>• `wax_lipid`: a non-volatile lipid system: waxes, hydrocarbons (petrolatum, paraffin, mineral oil, microcrystalline wax), butters, plant oils, non-volatile esters, lanolin, and fatty acids (stearic/palmitic as soap structure). Members are tagged `structuring` when they are a wax, a solid hydrocarbon, tribehenin or a fatty acid (used by §6).<br>• `particulate`: silica / silica silylate, kaolin and other clays, zeolite, calcium sodium borosilicate, nylon-12, cellulose powder (lexicon PT-1, T4), and starch powders in a non-aqueous formula (lexicon §0.3: water only in the tail; lexicon PT-2).<br>• `salt`: Maris Sal, Sea Salt or Magnesium Sulfate. **Sodium Chloride is excluded** as a rheology/process salt, mirroring the L5 rheology exclusion.<br>• `silicone_coat`: persistent silicones (Dimethicone, Dimethiconol, Amodimethicone, Phenyl Trimethicone, Polysilicone-29, Silicone Quaternium-18, Trimethylsiloxyphenyl Dimethicone). PEG/PPG-modified silicones are excluded (LI §7.6 `volatile_or_water_soluble`).<br>• `humectant_only`: none of the above, but at least one humectant above the tail.<br>• `none`: nothing above the tail. |
+| Never a mechanism | The L5 rheology exclusions (carbomer, xanthan, guar, cellulose ethers, acrylates crosspolymers such as Acrylates/C10-30 Alkyl Acrylate Crosspolymer; Acrylates Crosspolymer-3 is the one unsettled exception, §2.4); volatile carriers (water, ethanol/IPA, propellants, isododecane, C11–13 isoparaffin, undecane/tridecane); emulsifiers and solubilisers (PEG-x, ceteth/oleth/laureth/steareth, polyglyceryl esters); cationic conditioners (they feed `weight` and the curl-cream co-load instead). |
+| Consumer meaning | *How* the product makes its result. Feeds the gel film type, the shine base, the smoothing coating type, the refresher type and real salt vs salt-free (§3). |
+| Source | F |
+| Decision | Deterministic lexicon membership. The member list lives in `02_evidence_lexicon.v0.5.md` (v0.4, v0.3, v0.2 and v0.1 kept as the round-4, round-3, round-2 and round-1 versions; v0.4 placed the RG3-17 species — none of them moved a Styling value in the round-3 cohort; v0.5 places the RG4-24 species — they move no route or user-facing value in the round-4 cohort, and `moroccanoil-volumizing-spray` gains `natural_film` from Algin and Pullulan, NF-U). Lexicon v0.3 reads a formula with water below a leading propellant as non-aqueous (RG2-23), which decides NF vs PT-2 for starches. |
+| Counter-signals | A load-bearing member at `tail_index − 1` ⇒ confidence `moderate`. An unsettled member, or a marker that is `none_visible`/`unresolved` ⇒ review. |
+| Claim boundary | Claims never add or remove a mechanism. `got2b-styling-paste-istyler-texture-clay` („Clay") ⇒ `fixative_film` (VP/VA r3) + `wax_lipid` (Japan wax r2), with no `particulate`. |
+| Confidence | `high`: plausible marker, decisive members clearly above it. `moderate`: boundary-position member, or `none_visible` marker. `low`: INCI source conflict (e.g. `wella-professionals-eimi-flowing-form`, INCI from a non-DE page). |
+| Fit consumers | Subtype extras (§3), the D8b flag (§6), the job gate (§2.12), the salt and white-residue cautions (§4). |
+| Calibration | `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` ⇒ `natural_film` (Potato Starch r2, unsettled ⇒ review); no synthetic polymer. `wella-eimi-sugar-lift` ⇒ `natural_film` (Hydrolyzed Corn Starch r2) + `fixative_film` (VP/VA r4, PVP r5). `balea-men-pomade-haar-bart-2in1` ⇒ `wax_lipid` (structuring: Petrolatum r2, Microcrystalline Wax r3, Paraffin r4) + `particulate` (Silica r7). `color-wow-dream-coat-supernatural-spray` ⇒ `silicone_coat` (Polysilicone-29 r3; Silicone Quaternium-18 r7 sits below the DMDM Hydantoin r4 marker). **Dry run (70 records):** fixative_film 39 (38 under the lexicon FX-2c condition; see §2.4) · wax_lipid 28 · natural_film 11 · **particulate 11** · silicone_coat 6 · salt 5 · humectant_only 3. *Corrected 2026-10-12 (node recount over the raw INCI):* this line said particulate **10**, because the v0 member list above has no cellulose; the lexicon (v0.1 and v0.2) places Cellulose in PT-1 (a T4 placement), which adds `schwarzkopf-taft-texturspray-aloe-boost` (Cellulose r7, above Parfum r13). The standard's 11 was right; this file was stale. The 11: Balea Volumenpuder Spray, Taft Texturspray Aloe Boost, Living Proof Full Dry Volume, Taft Haarpuder, got2b Powderfull, Balea Haarpuder, Kevin.Murphy Powder Puff, Balea MEN Pomade, NIVEA MEN Styling Cream, Moroccanoil Dry Texture, John Frieda Pushed-up Dry Texture (standard §6.1). *v0.3 (node, 2026-10-12):* under the lexicon v0.3 propellant reading `schwarzkopf-taft-texturspray-aloe-boost` (Dimethyl Ether r1 above Aqua r5) is non-aqueous, so Distarch Phosphate r4 is no longer credited as natural film and Tapioca Starch r8 reads PT-2 ⇒ **natural_film 10** of 70; particulate stays 11. |
+
+### 2.4 `hold_route`
+
+| Field | Definition |
+|---|---|
+| Values | `present` · `absent` · `ambiguous` |
+| Consumer meaning | Whether a **fixative-class polymer film** is part of the formula. This is the D6 "real hold" sense (LI L5 / HOLD). It is **not a strength**. |
+| Source | F |
+| Decision | Deterministic. **Fixative-class list (ruled — PS2 → PH1-6, PH1-16):** the LI L5 list **plus** the four vinyl families LI L5 lacks: VA/Crotonates/Vinyl Neodecanoate, VP/DMAEMA, VCap/VP/DMAEMA and PVM/MA esters. The four families live in the **Styling standard's own list** until the Leave-in addendum after the Styling lock; LI L5 is not changed now (PH1-16).<br>• `present`: at least one fixative-class member above the tail.<br>• `absent`: none. Starch, salt, particles, waxes and silicones never count; Polysilicone-29 alone is HOLD `none` (LI L5 placement). A fixative found only at or below the tail ⇒ `absent` with a `fixative_below_tail` trace note.<br>• `ambiguous`: the only candidate is an unsettled synthetic polymer (Acrylates Crosspolymer-3, Polyacrylamide (LI §17.19), Sodium Polystyrene Sulfonate), or **PQ-11/-16/-46 — and, from v0.2, PQ-69 (R1-T, RG-16) — with no other fixative-class polymer** (PH1-6: hold_route review, not real hold), or a **generic `Acrylates Copolymer` without corroboration** (LI L5 lists acrylates copolymers only when "used as fixatives"; the same INCI name covers rheology modifiers — lexicon FX-2c), or a fixative's above-tail status rests on an `unresolved`/implausible marker ⇒ review. |
+| Counter-signals | The L5 rheology exclusion. The LI anionic/cationic pairing check (an identity check only). |
+| Claim boundary | Claims never set it. A captured hold level never moves it (LI T7). |
+| Confidence | As `result_mechanisms`. |
+| Fit consumers | The neutral fact „Enthält Stylingpolymere" (PH1-9), the D6 border reading, gel film type, refresher and shine extras, D8b (§6), the job gate. |
+| Calibration | `present`: `schwarzkopf-taft-power-haargel-halt-5` (PVP r3). `absent`: `balea-locken-crunchgel` (Hydrolyzed Corn Starch r3 only ⇒ `natural_film`). `ambiguous`: `alcina-styling-mousse-aerosol` (PQ-11 r5 is its only film former). Trace: `got2b-lockenspray-refresher-curlz` (VCap/VP/DMAEMA r8 behind Parfum r7 ⇒ `absent` under PH1-1). **Dry run:** present 39 · ambiguous 1 · absent 30 (v0 reading). **Under the lexicon FX-2c condition (node, 2026-10-11):** present 38 · ambiguous 2 · absent 30 — `john-frieda-frizz-ease-traumlocken-lockencreme` (generic Acrylates Copolymer r2 in an aqueous HEC/NaOH cream, its only fixative candidate) moves to `ambiguous` + review; its D7 route is owner-named and unchanged. Three of the present records rest only on the four-family extension: `loreal-paris-elnett-haarspray-extra-starker-halt`, `loreal-men-expert-barber-club-styling-pomade`, `schwarzkopf-taft-x-gliss-silky-shine-shine-coat` (§8, PS2). |
+
+### 2.5 `weight`
+
+| Field | Definition |
+|---|---|
+| Values | `light` · `medium` · `rich` · `unknown`. This is the shared production scale (`CANONICAL_WEIGHTS` in `src/lib/recommendation-engine/contracts.ts`); the research trace uses LI's `low` · `moderate` · `high` (PH1-4). |
+| Consumer meaning | The tendency to weigh down or coat. It drives the fine-hair downshift and the buildup note (§4). |
+| Source | F |
+| Decision | **Ruled — PH1-2 (PS3) and PH1-4:** judged from the ingredients with the **Leave-in WT rule** (LI §7.5), never from product form. v0 reading of that rule for Styling: persistent families above the tail are (a) oils and non-volatile esters; (b) waxes, hydrocarbons, butters, lanolin; (c) fatty alcohols; (d) persistent silicones; (e) polymeric cationic conditioners (non-fixative PQ-x, guar HPTC, Silicone Quaternium-18). Fixatives, natural films, particles, salts, humectants, monomeric quats and volatile carriers are not families (LI WT lists only the cationic-polymer film).<br>• `light` (LI `low`): no persistent family.<br>• `medium` (LI `moderate`): one family, or two or more with no rich member (the multi-family counter-signal is mandatory).<br>• `rich` (LI `high`): two or more families including at least one **rich** member (petrolatum, paraffin, mineral oil, microcrystalline wax, natural waxes, lanolin/lanolin wax, butters, castor/coconut/olive/avocado oil), or an **LGN pair** (a monomeric cationic and a fatty alcohol both above the tail, LI §7.5 `high` row).<br>• `unknown`: incomplete or conflicting INCI.<br>**Ruled — PH2-8:** the exact Leave-in WT rule, including the LGN-pair route to `high`/`rich`; the earlier "anhydrous base with a rich member" route is dropped (§9 item 12). **Ruled — PH2-12:** the rich-member list above (incl. waxes, paraffin, microcrystalline wax, lanolin) is adopted for Styling. |
+| Counter-signals | A rich member at `tail_index − 1` ⇒ confidence `moderate`. A weight claim („ohne zu beschweren", „für feines Haar") against `medium`/`rich` ⇒ `weight_claim_conflict` tag + review (LI §10.1.2 parity); the value stays. |
+| Claim boundary | Claims never move it. **Format and subtype never set it** (LI G9). |
+| Confidence | `high`: plausible marker, families clearly above it. `moderate`: multi-family row, or a boundary member. |
+| Fit consumers | `thickness_fit` echo (§4); the reused Leave-in buildup note (§4). |
+| Calibration | `schwarzkopf-taft-power-haargel-halt-5` ⇒ light. `balea-professional-styling-cream-traumlocken` ⇒ **rich** (PH2-8): the LGN pair Cetearyl Alcohol r2 + Cetrimonium Chloride r9, both above the Sodium Benzoate r10 marker (families a, c, e: esters r4–r6, Cetearyl Alcohol r2, PQ-37 r8). *Superseded:* the v0 dry run read it `medium` ("no rich member") because it omitted LI's LGN row. `schwarzkopf-taft-styling-balm-locken-halt-3` ⇒ rich (esters r2/r3, PQ-37 r5, Shea r7 = rich at `tail_index − 1` ⇒ `moderate`). `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` ⇒ medium (Guar HPTC r6), with a weight-claim conflict tag against its pack name „für feines Haar". **Current rule (PH2-8 + PH2-12; node recount over the raw INCI of the 70 Styling records, 2026-10-11):** light 32 · medium 23 · rich 15 (`molding` 10 of 11 rich; `john-frieda-frizz-ease-traumlocken-lockencreme` is the other LGN-pair `rich`). **Historical v0 dry run (2026-10-09, v0 reading: anhydrous route, no LGN row):** light 36 · medium 21 · rich 13 — superseded, kept for the record. |
+
+### 2.6 `alcohol_note` (replaces `drying_alcohol_load`)
+
+| Field | Definition |
+|---|---|
+| Values | `fires` · `does_not_fire`, with the triggering member and its rank recorded |
+| Consumer meaning | **Ruled — PH1-3 (PS4):** the Leave-in alcohol note is reused unchanged: „Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.“ (LI §7.12 EXPO note, §18 string). **A note only, never an exclusion**: no „ohne Alkohol" filter, no ranking penalty. Never "damages hair" (charter §10). |
+| Source | F |
+| Decision | Deterministic. Members: Alcohol, Alcohol Denat., SD Alcohol (any number), Ethanol, **Isopropyl Alcohol**. Never members: fatty alcohols (cetyl, cetearyl, stearyl, behenyl, myristyl, lauryl, oleyl, arachidyl) and Benzyl Alcohol (preservative/fragrance). Other short-chain solvent alcohols (n-Butyl Alcohol) are recorded as observations.<br>• `fires`: a member among the **first 3** ingredients, counting every declared ingredient, water and propellants included.<br>• `does_not_fire`: otherwise. A member at rank 4 or later is recorded as an observation and triggers nothing. |
+| Counter-signals | None move the value. |
+| Claim boundary | Free-from claims and retailer filters never override it: `alverde-beach-waves-spray-seaside-balance` is filtered „ohne Alkohol" on dm, but has Alcohol denat. r3 ⇒ `fires`. |
+| Confidence | `high` for any complete INCI; `low` on an INCI source conflict. |
+| Fit consumers | The alcohol note (§4). Nothing else. |
+| Calibration | `john-frieda-volume-lift-ansatz-booster` ⇒ fires (Alcohol Denat. r1). `schwarzkopf-taft-styling-balm-locken-halt-3` ⇒ does not fire (Isopropyl Alcohol r14, recorded). `american-crew-fiber` ⇒ does not fire (Alcohol Denat. r8, recorded). `balea-locken-crunchgel` ⇒ does not fire. **Count (node recount over the raw INCI of the 70 Styling records, 2026-10-11, origin marks `*`/`**` stripped per lexicon §0.4):** fires on **28**; **5** more carry a member at rank 4 or later (Balea Volumenpuder Alcohol denat. r4, American Crew Fiber r8, American Crew Pomade r9, Taft Styling Balm Isopropyl Alcohol r14, Elnett Stylingspray 3 Tage Glatt Isopropyl Alcohol r14); **37** carry none. `alverde-beach-waves-spray-seaside-balance` („Alcohol* denat." r3) fires once the origin mark is stripped. *Superseded:* the 2026-10-09 re-run reported 27 / 5 / 38 and said it superseded the v0 dry run's 28; that re-run missed the starred token, and 28 is correct. |
+
+### 2.7 *(removed: `washability`)*
+
+**Ruled — PH1-4 (PS5):** there is **no** „hard to wash" field. Instead (1) `weight` uses the shared light · medium · rich scale and the Leave-in WT rule (§2.5), and (2) the **Leave-in buildup note** (LI §8.5, Hinweise; §18 copy „Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.") is reused **unchanged, as a note, not a score** (§4). (3) Whether a `rich` Styling product used weekly adds +1 to the Deep-Cleansing reset load is **deferred to the Personal-Plan decision**; today Styling is not an input to it. The washability-specific worked examples (`balea-men-pomade-haar-bart-2in1`, `syoss-professional-performance-max-hold-power-wax`, `american-crew-fiber`) are retired with the field.
+
+### 2.8 `ingredient_flags`
+
+| Field | Definition |
+|---|---|
+| Values | `silicones` · `oils` · `fragrance` · `salt` · `propellant`, plus `fixative_family[]` ⊂ {`pvp_vp`, `acrylate`, `polyurethane`, `vinyl_acetate`, `pvm_ma`, `natural_film`} |
+| Consumer meaning | Presence statements for preference filters (silikonfrei, parfumfrei, „lieber Pumpspray") and for naming the neutral fact („z. B. PVP"). They never predict tolerance (LI L8). |
+| Source | F |
+| Decision | Deterministic presence on the **full** normalised list, following the existing production pattern (`deriveConditionerIngredientFlags`).<br>• `silicones`: any silicone, including PEG-modified ones and tail members.<br>• `oils`: plant or mineral oil or butter, excluding fragrance oils (peel/leaf/wood oils) and ethoxylated derivatives (PEG-40 Hydrogenated Castor Oil).<br>• `fragrance`: Parfum / Fragrance / Aroma.<br>• `salt`: Maris Sal, Sea Salt, Magnesium Sulfate, **or Sodium Chloride**, anywhere. This matches the consumer meaning of „ohne Salz"; contrast the narrower `salt` mechanism.<br>• `propellant`: Butane, Propane, Isobutane, Dimethyl Ether, Nitrogen.<br>• `fixative_family[]`: the families of the fixative-class and natural-film members above the tail. |
+| Counter-signals | None. |
+| Claim boundary | Free-from claims never override a flag: `color-wow-dream-coat-supernatural-spray` is filtered „silikonfrei" on Douglas (C3), but Polysilicone-29 r3 ⇒ `silicones`. |
+| Confidence | `high` for a complete INCI. |
+| Fit consumers | Preference filters, the sensitive-scalp filter, the neutral fact. |
+| Calibration | **v0.5:** a token that may hide a flag sets that flag to `unknown`, never `false` (RG4-15: `balea-locken-revitalizing-spray` „CITRONELLOL SODIUM CHLORIDE" ⇒ `salt: unknown`); NF-U members set `fixative_family: natural_film` like NF-1 (RG4-27). `got2b-styling-puder-volumen-powderfull` ⇒ no flags (Aqua, Silica Silylate, Sodium Benzoate, Citric Acid). `bali-curls-strong-hold-flaxseed-gel` ⇒ `salt` flag (Sodium Chloride r7) but no `salt` mechanism. `balea-ansatzvolumen-booster` ⇒ `fixative_family: [pvm_ma, pvp_vp]`. |
+
+### 2.9 `chaarlie_hold_level`
+
+| Field | Definition |
+|---|---|
+| Values | `0` Kein Halt · `1` Leichter Halt · `2` Mittlerer Halt · `3` Starker Halt · `4` Sehr starker Halt · `null` = „Halt: keine Herstellerangabe" · `review` (an unranked step on a brand ladder, §5.3). `0` only on an explicit „kein Halt" claim (D8). Conflicting C1/C2 strengths — pack vs manufacturer page, or two statements on one source — ⇒ **the middle level, rounded up; never empty** (R3-H, replacing PH1-8's `null`), with both claims kept in the trace and an internal `hold_claim_conflict` review. `null` stays for a product with no C1/C2 strength statement (D8). |
+| Consumer meaning | The manufacturer-stated strength on one ladder: „laut Hersteller: Starker Halt". |
+| Source | C: C1/C2 only, including house-brand C2 and `C2_cross_market_verified` (LI §2.4.1 rules 6–7). The record keeps the raw text, the scale as written, the tier, the source and the date. |
+| Decision | Deterministic normalisation (§5). **Claim-only: never derived from formula, never borrowed from a similar formula** (D8, LI T7). |
+| Counter-signals | D8b flags (§6). They **never change a level**. |
+| Claim boundary | This property *is* a claim. C3 chips and C5 pages are traces and never assign. |
+| Confidence | `high`: a number on a known scale, or an unambiguous strength word. `moderate`: house-brand C2 (ownership is confirmed in review), a mid-ladder step, or cross-market C2. |
+| Fit consumers | The hold-band rank, **only** in `gel`, `curl_cream`, `mousse`, `blowdry_lotion`, `hairspray` and `molding` (D8). In the other six subtypes it is stored and not used. |
+| Calibration | §5.6. Coverage: 34 of 70 records carry a level (1:4 · 2:9 · 3:11 · 4:10), 36 are null. In the hold-relevant subtypes, 30 of 44: gel 3/9 · curl_cream 3/5 · mousse 4/5 · blowdry_lotion 5/8 · hairspray 6/6 · molding 9/11. These are the calibration-file levels (2026-10-09). Round-1 rulings that touch them: R1-Q1 moves `schwarzkopf-taft-styling-balm-locken-halt-3` from 3 to 2 (the tier of its „Halt 3" was open in v0.2; the round-2 capture carries a C1 pack „HALT 3", both round-2 lanes 2); `schwarzkopf-taft-gel-wax-glanz-halt-2` already reads 1; `balea-styling-creme-power-flex` stays null (RG-13) until its dm attribute is captured. Re-derived in round 2. |
+
+### 2.10 `flexibility`
+
+| Field | Definition |
+|---|---|
+| Values | `beweglich` · `fest` · `unbekannt` |
+| Consumer meaning | Movable/restylable vs set/stiff. For example, the concept's "flexible hairspray for fine hair" (concept §5.2, row 8). |
+| Source | C: C1/C2 text only. |
+| Decision | Lexicon. **Ruled — PH1-5 (PS6):** „ohne zu verkleben" is not a flexibility word; brand flex numbers are recorded and the words decide.<br>• `beweglich`: a flexibility word (flexibel, beweglich, elastisch, formbar, neu formbar/nachstylbar, variabel; **verformbar, Elastizität, wieder stylen / neu stylen** as a restyling sequence such as „Stylen, Ausbürsten, wieder Stylen" — RG2-12, RG2-6) or a negated rigidity word („ohne zu verhärten", „ohne steif zu wirken"). „ausbürstbar" alone stays outside (PH2-11).<br>• `fest`: a rigidity word (Kleber, Freeze, betonhart, steif). **„Kleber" is a rigidity word only, never a strength word (RG-14).**<br>• Both ⇒ `unbekannt` + review. Neither ⇒ `unbekannt`.<br>• **Name words count (P-2):** a rigidity or flexibility word in the full confirmed pack name becomes a flexibility claim with `from_product_name: true` (standard §2.2 A3). |
+| Counter-signals | None from formula. |
+| Claim boundary | Flexibility words are never strength words, and vice versa (§5.5). Brand flex numbers (Alcina Flex-Faktor x/10) are recorded; words decide. |
+| Confidence | `high` on an explicit C1/C2 word. |
+| Fit consumers | Flexibility preference ranking. |
+| Calibration | `nivea-men-styling-cream-active-craft-stylers` ⇒ beweglich (C1 „Flexible Hold", „ohne zu verhärten"). `wella-eimi-sugar-lift` ⇒ beweglich alongside level 3 („starker, dennoch beweglicher Halt"). `schwarzkopf-taft-power-haargel-halt-5` ⇒ unbekannt („ohne zu verkleben" only; PH1-5). `alcina-ansatz-volumen-spray-aerosol` ⇒ unbekannt (Flex-Faktor 6/10 and no word). No C1/C2 `fest` claim existed in the 70-record cohort. Round 1: `got2b-spruehkleber-freeze-haarlack` (unseen; pack „SPRÜH KLEBER Freeze Haarlack") ⇒ `fest` once the name words are captured (P-2). |
+
+### 2.11 `finish`
+
+| Field | Definition |
+|---|---|
+| Values | `matt` · `natürlich` · `glänzend` · `unbekannt` |
+| Consumer meaning | The look: matt, natural or shiny. |
+| Source | C: C1/C2 text, including the pack name once confirmed („Matt Wax", „Gel Wax Glanz"). The F sanity check runs afterwards. |
+| Decision | Lexicon (**ruled — PH1-5**: „natürlicher Glanz" = `natürlich`; brand shine numbers are recorded and the words decide).<br>• `matt`: matt, mattierend, „kein Glanz", halbmatt, seidenmatt (RG2-11).<br>• `glänzend`: Glanz, glänzend, Shine, Gloss, Brillanz, Wet Look.<br>• `natürlich`: „natürliches Finish", „Natural Look", „natürlicher Glanz", „natürlich aussehendes Finish", „natürlich wirkender Look" (RG2-11).<br>Brand shine numbers (Taft Glanzstufe, American Crew Glanzfaktor) are recorded; words decide unless a scale maximum is published. **Unclaimed ⇒ `unbekannt`, never formula-derived.**<br>• **RG-10:** matt + natürlich ⇒ `matt`; glänzend + natürlich ⇒ `natürlich`. „natürlich" is a finish word only with Finish, Look or Glanz next to it; natürlich + a verb or another noun („natürlich gestylt aussehen", „natürlich strukturierter Look", „natürliches Haargefühl") ⇒ `unbekannt`. |
+| Counter-signals | The F sanity check (concept §3): `matt` claimed on an oil/silicone-led formula with no particulate, wax or fatty-acid soap, or `glänzend` claimed on a particulate-led dry powder ⇒ `finish_formula_conflict` review. **The value never changes.** |
+| Claim boundary | Claims set it; formula only flags it. |
+| Confidence | `high` on an explicit C1/C2 word. |
+| Fit consumers | Finish preference, asked only when `molding` or `texture_spray` is in play (concept §5.3). |
+| Calibration | `schwarzkopf-taft-matt-wax-halt-5` ⇒ matt (C2 „mattes, nicht glänzendes Finish"; consistent with its wax/fatty-acid chassis). `american-crew-pomade` ⇒ glänzend (cross-market C2 „Mittlerer Halt – viel Glanz", Glanzfaktor 9). `schwarzkopf-taft-haarspray-classic-halt-3` ⇒ unbekannt (no finish claim; the calibration set currently says „natürlich", §9 item 4). |
+
+### 2.12 `primary_job` + `secondary_jobs`
+
+**Secondary jobs `[R12-L]` are a SOFT signal with known judgement tolerance. Matching may use them only as a light extra signal, never for eligibility, exclusion or ranking floors. Differences in which job fills a secondary slot never block the lock; all other user-facing fields still do.**
+
+#### R12-L adjudicated examples (verbatim from the owner ledger)
+
+These four examples are **product-specific owner-adjudicated outcomes (R12-L), not a general strong/weak rule**.
+
+- Bali Curls Volumizing Curl Spray ⇒ [volume, texture] (curl revival is refresh, not definition — lane A right)
+- Balea Locken Crunchgel ⇒ [frizz_control, texture] („Das Haar erhält eine flexible Struktur" = stated result ⇒ strong texture; curl Sprungkraft weak)
+- Balea Pro Styling Cream Traumlocken ⇒ [frizz_control, hold_fix] (graded hold = strong; „natürlicher Glanz" = finish description ⇒ weak)
+- Balea Finishing Spray Glow & Care ⇒ [frizz_control, sleek] („bleibt … glatt" weak, slot free)
+
+| Field | Definition |
+|---|---|
+| Values | One primary (or `null` under the no-vocabulary-job rule below) and ≤ 2 secondaries from `definition · volume · texture · sleek · hold_fix · shine · frizz_control · refresh` |
+| No vocabulary job (R7-F, 2026-10-13) | If the lead has no vocabulary job but a later eligible C1/C2 promise line does, that line's first job is primary in standard §4.2 order. When the eligible C1/C2 lead and the other C1/C2 promise lines supply no job from the primary-job vocabulary, emit `primary_job: null` (no main job is shown; display copy is decided at integration) plus the internal review trigger `primary_job_unresolved`. Never infer a primary from subtype, formula, or typed finish/other lines. The owner-ruled route stands, and eligible secondaries are scored independently under the R10 strength-first candidate order and unchanged formula gate (standard §6.10). **Example:** NEQI Diamond Glass Ultimate remains held `smoothing_styler`; its promise lines state styling + heat protection + heat-activated polymers + water repellence, with no vocabulary job ⇒ `primary_job: null` + `primary_job_unresolved`. |
+| Consumer meaning | Ties the product to the user's goals (`shape_definition`, `volume_balance`, `manageability_styling`, plus the new `texture`/`sleek` look goals). |
+| Source | C: the eligible C1/C2 lead and other C1/C2 promise lines, supporting claims and confirmed name under standard §4.2 / §6.10. A C1/C2 promise need not supply a vocabulary job; a one-job C1/C2 name can meet S0 input 1 without a promise line (R4-Q1). |
+| Decision | Structured judgment. Primary = the job the C1/C2 promise leads with under standard §4.2. **R8-Q2:** the product noun Puder/Powder names `volume`; Redken „Powder Grip“ names volume + texture and falls to the lead line. **R9-Q2:** where several result adjectives stand together, the adjective matching the named look/subtype leads; otherwise the first. `sleek` means the smooth/straight overall look (shape), `shine` gloss (surface): NEQI Diamond Glass All ⇒ primary `sleek`, secondary `shine`. **R7-Q1:** an adjective before a job phrase is not its own job (Wellaflex „für schwungvolle, definierte Locken“ ⇒ primary `definition`). **R7-Q2 / R6-T (3):** a curl/wave word in the product's own confirmed name supplies `definition` („Killer.Curls“, „Curl Cream“, „Lockencreme“, „Locken & Wellen“), preserving the Beach Waves texture exception and explicit curl-revival `refresh` reading. Descriptive sentences require an explicit promise to define or shape curls/waves; „Definition“/„Define“ for a non-curl look does not count (Bali Gents Sea Salt Spray; Balea Leave-in Spray Sea Salt Care & Define), nor does „definierter Look“ (alverde Beach Waves). **R7-Q3:** every brand line / collection name is excluded from jobs (Frizz Ease, Traumlocken, Volume Lift, Diamond Sleek, Glow & Shine, Nutricurls …); the product's own name words decide. **Primary (RG-11 / RG2-4):** first job-bearing phrase in standard §4.2 order; product nouns and qualifying strength phrases do not lead unless nothing else is job-bearing, while hold as the lead subject does. Shaping/forming ⇒ `hold_fix`; a curl/wave noun with shaping/setting ⇒ `definition` (RG2-5). Schwung, Sprungkraft, Spannkraft, Fülle ⇒ `volume` (RG2-6); flyaway/Babyhaare ⇒ `frizz_control`, whole-style smoothness ⇒ `sleek` (RG2-7). **R10-Q2:** Struktur/strukturiert ⇒ `texture`, with look descriptions WEAK. Follow the procedure below for secondary strength/order, refining RG-12 / RG2-16 / RG3-16 / RG4-17 / R4-H (5). |
+| Formula compatibility | **Formula compatibility gate** (v0 convention; template §12, "claims cannot override incompatible input evidence"): each job needs one of these:<br>• `hold_fix` ⇒ the §6 hold-mechanism set;<br>• `volume` ⇒ fixative_film / natural_film / particulate / salt;<br>• `texture` ⇒ particulate / salt / structuring wax_lipid / a film;<br>• `sleek` ⇒ silicone_coat / wax_lipid / fixative_film;<br>• `shine` ⇒ wax_lipid / silicone_coat;<br>• `frizz_control` ⇒ silicone_coat / wax_lipid / a film;<br>• `definition` ⇒ any mechanism except humectant_only/none;<br>• `refresh` ⇒ any mechanism.<br>A failing **secondary** is dropped and recorded. A failing **primary** is kept and tagged `job_formula_conflict` ⇒ review.<br> |
+| Worked example (R9-Q1) | Balea Styling Spray Volumenpuder Pure Styling ⇒ primary `volume`, secondary `texture`: the C1/C2 line „griffige Textur direkt am Ansatz“, typed `other` in the claims packet, promises a texture result and therefore counts. |
+| Counter-signals | The gate above. |
+| Claim boundary | Pure duration and humidity wording without a result makes no job; it goes to `captured_claims`. Every eligible job signal in any C1/C2 claim line is assessed under R9-Q1 / R10-Q1; a refresh-between-washes promise counts for the R8-Q1 refresh + volume tie even when typed `duration`. R2-H5 excludes feel-only text from the care half, not this owner-ruled refresh promise. |
+| Confidence | `high` when the promise names one job; `moderate` when the order of jobs is a judgment. |
+| Fit consumers | Goal/problem matching; subtype choice. |
+| Calibration | `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` ⇒ volume (C2 „sorgt für mehr Volumen und natürliche Bewegung") + hold_fix (C2 Haltegrad 4). `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray` ⇒ sleek + shine + frizz_control (C2 „Glättungsspray für bis zu 100H brillanten Glanz. Anti-Frizz."); the „100H" goes to `captured_claims`. `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` ⇒ sleek. Its C1 „Starker Halt" fails the `hold_fix` gate (silicone_coat only) ⇒ dropped + review, the same product the D8b flag catches (its level 3 stays, PH1-14). |
+
+#### Signal collection and selection procedure (R10-Q1 / R10-Q2, refined by R11-Q1 / R11-Q2)
+
+1. **Collect every job signal.** Read the confirmed product's own name (apply standard §4.2 step 1 / R11-Q2: a form inside a job-bearing compound supplies no second name job), then **all C1/C2 claim lines** in packet order and each line in text order: `promise`, `finish`, `other`, `hold`, `flexibility`, `humidity`, `duration` and every other captured type are eligible. A field's type does not hide a job word: „Sprungkraft“ in a `flexibility` line is a `volume` signal (Taft Styling Balm Locken). Exclude pure feel-only lines without a result, ingredient/technology callouts, brand/collection names and words that fail this section’s vocabulary rules. Apply the existing authority/name-fallback rules; C3/C4 retailer copy never gains claim authority. Record the quoted signal, job, tier, source position and strength for the classification trace.
+2. **Classify each signal, not the whole line.** **STRONG** = an explicit job promise, a strength word or brand number attached to the job, or an eligible job word in the confirmed product name. **WEAK** = a passing job mention without strength/emphasis, or a look description. A look description remains WEAK when merely describing a result; an explicit emphasized job promise is STRONG. A line may contain both classes. **Volume-specific strength `[R11-Q1]`: volume words (Volumen, Fülle, Schwung, Sprungkraft, Spannkraft) are STRONG only when volume itself is promised**, such as „für mehr Volumen“ or „Fülle am Ansatz“. A curl-quality description („Locken voller Sprungkraft“, or bare „Sprungkraft“ on a curl product) is WEAK even when another job in the same line is explicitly promised or emphasized. „für definierte Locken voller Sprungkraft“ therefore gives STRONG definition but WEAK volume; the verb „verleiht“ or the word „für“ alone cannot upgrade curl-quality wording to STRONG volume. Earlier R7-Q1 exclusions still apply: an adjective before a definition phrase supplies no separate job. Balea Pro Styling Cream Traumlocken and Taft Styling Balm Locken may fill only a free secondary slot with this WEAK volume signal, after compatible STRONG jobs. Duration or flexibility alone does not provide hold strength. **RG3-16's “hold_fix needs a strength word or number” now defines a STRONG hold signal; a bare hold mention is a WEAK hold signal**, rather than being excluded. An explicit fixing promise still supplies STRONG `hold_fix` without a grade (RG4-12). A masked strength/number still identifies a hold job, but determine its strength from the unmasked C claim packet; a generic mask is not itself strength evidence. Signal strength is an ordering label, never a hold level: no qualifying hold strength/number still gives `chaarlie_hold_level: null` under standard §7.2.
+3. **Select primary by standard §4.2 / R9-Q2 as before.** The name/lead precedence (with R11-Q2 form-compound counting), R7 no-job fallback and R7-Q1/Q2 exclusions remain in force. Where several result adjectives stand together, the one matching the named look/subtype leads; otherwise the first. `sleek` means smooth/straight overall shape and `shine` surface gloss. Do not rank primary by signal strength and do not promote a typed finish/other line to the primary fallback.
+4. **Fill at most two secondary slots.** Exclude the primary's job. Stable-partition the collected signals into STRONG first, then WEAK: within STRONG, confirmed-name jobs retain name order before claim signals; within each strength class, claim order means packet order and then text order within a line (RG4-17). Walk all STRONG candidates before any WEAK candidate, deduplicating jobs as they are considered (a later STRONG mention therefore takes precedence over an earlier WEAK mention of the same job). Apply the unchanged formula gate to every candidate; drop and record failures, and continue to refill from the next candidate. Only when fewer than two compatible STRONG jobs remain may WEAK jobs fill free slots, in their original order. A primary formula conflict retains the primary and flags review. No third secondary is emitted.
+
+The following quoted German wording illustrates signal classification; it is research evidence/examples, not UI copy. A bare look/feel word outside the job vocabulary supplies no signal at all. In particular „definierter Look“ remains excluded by R7-Q2; R10-Q2 admits „Struktur“ / „strukturiert“ only as `texture` wording for the hair result, never a description of the product's physical consistency.
+
+| STRONG wording (7 examples) | Job and reason |
+|---|---|
+| „Für sichtbar volleres Haar“ | `volume`: explicit result promise (got2b Powderfull). |
+| „für Volumen & Textur“ | `volume`, `texture`: explicit job promises (R10-Q1 wording). |
+| „reduziert Frizz“ | `frizz_control`: explicit job promise (NEQI Diamond Glass All). |
+| „starker Halt“ | `hold_fix`: strength word (R10-Q1 wording). |
+| „Halt 3“ | `hold_fix`: brand number (Taft Styling Balm Locken). |
+| „Volumenpuder“ | `volume`: eligible job word/product noun in the confirmed name (R8-Q2). |
+| „um Volumen mit sprungkräftiger Textur aufzubauen“ | `volume`, `texture`: explicit build-up promise (Moroccanoil Volumizing Spray); the adjective adds no separate job (R7-Q1). |
+
+| WEAK wording (8 examples) | Job and reason |
+|---|---|
+| „Locken voller Sprungkraft“ | `volume`: curl-quality description, WEAK under R11-Q1 (Balea Pro Styling Cream Traumlocken); any explicit definition promise is assessed separately. |
+| „Sprungkraft“ | `volume`: curl-quality mention on Taft Styling Balm Locken, including its C2 `flexibility` line; only a free secondary slot after STRONG signals (R11-Q1). |
+| „mit natürlichem Halt“ | `hold_fix`: incidental mention, no strength (got2b Powderfull). |
+| „spürbaren Halt vom Ansatz bis zur Spitze“ | `hold_fix`: passing mention, no strength (Moroccanoil Volumizing Spray). |
+| „Halt für bis zu 24 Stunden“ | `hold_fix`: hold mention with duration, no strength (Taft Haarpuder Volumen). |
+| „einen natürlich strukturierten Look“ | `texture`: look description (Bali Gents Haarpuder; R10-Q2). |
+| „glatte und glänzende, langanhaltende Looks“ | `sleek`, `shine`: look descriptions following the leading hold promise (Syoss Max Hold Power Wax). |
+| „glatte Looks und Blow-Outs“ | `sleek`: look description (KMS Thermashape Straightening Creme). |
+
+#### Worked R10 examples (frozen r6 C1/C2 evidence)
+
+| Product | Collected signals and outcome |
+|---|---|
+| got2b Puder Volumen Powderfull | Name/Puder and C2 „Für sichtbar volleres Haar“ give STRONG `volume`; „mit natürlichem Halt“ (also captured as typed `hold`) gives WEAK `hold_fix`. Primary `volume`; no other STRONG job remains, so secondary `[hold_fix]` fills a free slot. Silica Silylate r2 gives particulate above the tail, passing both gates. No hold strength is stated, so the hold level remains `null`. |
+| Moroccanoil Volumizing Spray | Name gives STRONG `volume` and the lead still selects primary `volume`. C2 „spürbaren Halt vom Ansatz bis zur Spitze“ is WEAK `hold_fix`, appearing before „um Volumen mit sprungkräftiger Textur aufzubauen“, a STRONG `texture` promise. Fill `[texture, hold_fix]`: STRONG texture first, then WEAK hold in the free slot, even though hold appears earlier in the paragraph. VP/VA Copolymer r3 supplies fixative_film above the tail, passing both gates. No hold strength is stated, so the hold level remains `null`. |
+| Bali Gents Haarpuder (VOLUMIZING STYLING POWDER) | Name/Powder and C2 „maximales Volumen“ / „sofortige Fülle“ give STRONG `volume`; „einen natürlich strukturierten Look“ gives WEAK `texture`. Primary `volume`; secondary `[texture]` fills a free slot, with Silica Silylate r2 particulate above the tail passing the gate. The C3 grip/finish lines do not enter. R10-Q2 does not change the finish rule: „natürlich strukturierten Look“ still gives no `natürlich` finish under RG-10. |
+
+### 2.13 `application_moment`
+
+| Field | Definition |
+|---|---|
+| Values | `damp_before_drying` · `before_heat` · `dry_finish` · `dry_restyle` · `second_day` · `unresolved`. The primary value is the lead instruction; other permitted moments go in `also[]`. |
+| Consumer meaning | The routine-compiler slot (the anchors `dry_pre_heat`, `heat_tool` and `dry_finish` exist) and the D5 day-2 instruction. |
+| Source | U: the verbatim directions, sourced as LI T12 `application_stage`. The directions come from the G1 source hierarchy with their tier recorded. They are **not claim-gated**. |
+| Decision | Transcription against anchors:<br>• `damp_before_drying`: wet or towel-dried hair, then any drying (air-dry allowed).<br>• `before_heat`: the directions make a heat step part of the application (blow-dry or iron named as the next step, not optional), or apply to dry hair before a hot tool.<br>• `dry_finish`: applied over the finished style, with no further shaping.<br>• `dry_restyle`: applied to dry hair, then shaped by hand or comb.<br>• `second_day`: the directions lead with refreshing styled hair between washes.<br>**RG-2:** spray-only directions (distance, evenness, optional strands; no moisture state, drying, heat or shaping step) ⇒ `dry_finish`, confidence `moderate`; missing or copied directions stay `unresolved`.<br>**RG-8:** equal alternatives („feucht oder trocken") ⇒ the first-named moment is primary, the others go to `also[]`.<br>**RG2-8:** `dry_restyle` needs a named shaping act (kneten, einkneten, formen, stylen, in Form bringen, toupieren); spraying or distributing on dry hair without one ⇒ `dry_finish` (a curl revival spray sprayed strand by strand is `dry_finish`).<br>**RG2-9:** a shaping step with no moisture state, drying or heat step ⇒ `dry_restyle`, confidence `moderate`. |
+| Counter-signals | Missing, conflicting or ambiguous directions ⇒ `unresolved` + review (LI G5). The value is never taken from the formula or the name. |
+| Claim boundary | None. Marketing copy is not directions. |
+| Confidence | `high` on manufacturer/pack directions; `moderate` on retailer-only directions. |
+| Fit consumers | Routine slot and order; the D5 refresh instruction. |
+| Calibration | `balea-foehnlotion-volume-effect` ⇒ before_heat („vor dem Föhnen … auf trockenem Haar vor Glätteisen"). `wellaflex-schaumfestiger-locken-und-wellen-starker-halt` ⇒ damp_before_drying („Föhnen oder an der Luft trocknen lassen"). `syoss-haarspray-max-hold` ⇒ dry_finish. `got2b-styling-mattpaste-strand-matte` ⇒ dry_restyle. `balea-locken-crunchgel` ⇒ damp_before_drying, also second_day („am Folgetag … auffrischen"). `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` was `unresolved` until its manufacturer directions were captured, then before_heat. |
+
+### 2.14 `target_zone`
+
+| Field | Definition |
+|---|---|
+| Values | `all` · `roots` · `lengths` · `surface` · `hairline` |
+| Consumer meaning | Root lift (absorbs the old root-lift subtype, D1), the edge-control branch (concept §5.2, row 2), and the alcohol + roots caution. |
+| Source | U, sourced as §2.13. |
+| Decision | Transcription:<br>• `roots`: the directions lead with Ansatz/roots — the Ansatz is the only required site, or the first-named required site within one equal alternative (RG-9); an optional later site does not widen it (R6-T (1)). A later optional Ansatz step with a required whole-hair application leaves `all`.<br>• `lengths`: mid-lengths and ends only.<br>• `surface`: the outer layer or flyaways of a finished style only.<br>• `hairline`: edges, baby hair, brows.<br>• `all`: whole hair, or „ins Haar" with no zone; also a full-length range („vom Ansatz bis in die Spitzen", either direction) and an emphasis inside a whole-hair instruction („besonders auf …") (RG2-10). `surface`, `lengths` and `roots` need the zone to be the only required application site. Optional/conditional extras do not widen it (Balea Volumenpuder Spray ⇒ `roots`); required sequential roots then whole-hair applications ⇒ `all` (Redken Root Tease; R6-T (1)–(2)).<br>No directions ⇒ empty + review; never guessed. |
+| Counter-signals | As §2.13. |
+| Claim boundary | None. |
+| Confidence | As §2.13. |
+| Fit consumers | Subtype choice (roots ⇒ blowdry_lotion), edge branch, caution. |
+| Calibration | `alcina-ansatz-volumen-spray-aerosol` ⇒ roots („Ansatznah … sprühen"). `feschi-smooth-and-shine-anti-frizz-spray-glanzspray` ⇒ lengths („in die trockenen Haarlängen"). `bali-curls-sleek-stick-brows-and-edges` ⇒ hairline. `gard-haarspray-extrastark-pumpspray` ⇒ all, also roots. No cohort product leads with `surface` yet. Round 2: `balea-styling-finishing-stick` and `balea-haarwachs-styling-stick` ⇒ `surface` (both lanes). |
+
+### 2.15 `heat_activated`
+
+| Field | Definition |
+|---|---|
+| Values | `yes` · `no` · `unresolved` |
+| Consumer meaning | Heat makes or strengthens the result, so the product goes before the heat step. **This is not heat protection**; that is `provides_heat_protection` (§2.17). |
+| Source | U (directions), raised by a C1/C2 activation statement in a claim or in the confirmed name (§7 crossing 1). **Since v0.5 (RG4-18) the record carries the raised value and the lanes apply the raise themselves** (they see the claims packet): C1/C2 activation ⇒ `yes`, activation only at C3/C5 ⇒ `unresolved`. *Superseded:* RG2-26's blind-only reading. |
+| Decision | • `yes`: **only when the product's own text says it is heat-activated or that heat makes it work** (R1-Q4) — „hitzeaktiviert", „aktiviert durch Wärme", „Föhnhitze verstärkt den Volumen-Effekt". A directions tip to blow-dry, even „für mehr Volumen", is an `application_moment` step and gives `no` (`balea-styling-spray-ultra-volumen`, `jean-und-len-sea-salt-spray`).<br>• `no`: directions exist and give heat no such role (heat optional or absent).<br>• `unresolved`: no directions, or activation stated only at C3/C5. |
+| Counter-signals | None. |
+| Claim boundary | Heat-protection claims go to `captured_claims` and are never read here; only §2.17 reads them. |
+| Confidence | As §2.13. |
+| Fit consumers | Routine order. |
+| Calibration | `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` ⇒ yes (directions: „Föhnhitze verstärkt den Volumen-Effekt"). `guhl-foehn-spray-langzeit-volumen` ⇒ yes (C1 „aktiviert durch die Föhnhitze"; in the round-2 capture the activation word is the confirmed-name „Föhn-Aktiv", so the blind value is `no` and it is raised after unblinding — RG2-26, E2-10). `wellaflex-schaumfestiger-locken-und-wellen-starker-halt` ⇒ no. `color-wow-dream-coat-supernatural-spray` ⇒ unresolved („wärmeaktiviertes Polymer" appears only on Douglas, C3). |
+
+### 2.16 `captured_claims`
+
+| Field | Definition |
+|---|---|
+| Values | A list of `{type: heat · humidity · duration · hair_type · free_from · other, raw (verbatim DE), tier, source, date}` |
+| Consumer meaning | **No direct use for selection, ranking or copy.** Eligible job signals in these same C1/C2 lines are independently extracted under §2.12 (R9-Q1 / R10-Q1); the raw capture itself is not a selection field. Humidity follows LI T9. A heat claim acts only through `provides_heat_protection` (§2.17, PH1-15); a temperature („bis 230 °C") is never used. „bis zu 48 h" is never shown. Hair-type claims never set fit. Free-from claims never override flags. |
+| Source | C: all tiers are recorded with their tier. |
+| Decision | Capture only. |
+| Fit consumers | None. Audit and future research only. |
+| Calibration | `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray`: heat „Hitzeschutz bis zu 230 °C"; humidity/duration „bis zu 72 Stunden gegen Frizz, selbst bei hoher Luftfeuchtigkeit". `guhl-foehn-spray-langzeit-volumen`: duration „48h Halt", which is also why it has no hold level. `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar`: hair type „für feines Haar". |
+
+### 2.17 `provides_heat_protection` (new, PH1-15)
+
+| Field | Definition |
+|---|---|
+| Values | `true` · `false`. The research trace keeps the LI §13.2 state (`not_claimed` / `claim_only` / `formula_plausible` / `product_tested`). |
+| Consumer meaning | Whether this Styling product may fill the **Personal-Plan heat-protection step** (e.g. a Föhnspray covering both jobs). It reports what the product is sold as, gated by a formula check; it never grades efficacy (LI §13.3). |
+| Source | C + F: a C1/C2 heat-protection claim (LI §2.4.1, incl. `C2_cross_market_verified`) **and** the Leave-in heat check (LI HEAT §7.8, §13): a member of the closed **L9 list** (LI §5 L9) above the tail. |
+| Decision | **Ruled — PH1-15**, the same rule as Leave-in:<br>• `true` only when the C1/C2 heat claim exists **and** an L9 member sits above the tail (trace `formula_plausible`).<br>• Otherwise `false`. A C1/C2 claim without the L9 pass is still **shown** („Hitzeschutz laut Hersteller“) but never fills the role. Retailer-only heat text (C3/C4) and C5 pages create no claim (LI §2.4.1).<br>• Generic silicone, generic protein, panthenol and oils never pass the L9 check (LI §13.3). No temperature, grade or percentage is ever used. |
+| Counter-signals | The LI L9 tail-member rule: an L9 member at or below the tail earns nothing. |
+| Claim boundary | The claim is necessary, never sufficient; the formula never manufactures a claim. |
+| Confidence | As LI §13. |
+| Fit consumers | The Personal-Plan heat-protection step only. **This amends `docs/personal-plan/categories/heat-protectant/decision.md`** (Styling was excluded from the heat role in V1) and supersedes the concept Rev. 2 line "Styling never fills the heat role"; the decision doc is amended in the Personal-Plan phase. |
+| Calibration | Not yet calibrated. Most heat claims in the cohort come without an L9 member, e.g. `balea-foehnlotion-volume-effect` („Mit integriertem Hitzeschutz bis 200°C“) ⇒ `false`, shown as „Hitzeschutz laut Hersteller“ once the claim is confirmed at C1/C2. `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray` („Mit Hitzeschutz bis zu 230 °C“) has Hydrolyzed Wheat Protein r12, an L9 member above both marker candidates (Caprylyl Glycol r13, Phenoxyethanol r17). It would read `true` once the claim is confirmed at C1/C2, but its marker is `unresolved` (§9 item 6) ⇒ review, and the LI L9 study-context limitation for hydrolyzed wheat protein applies. **Ruled — PH2-4:** the check reads Styling's own tail marker T_S (the Mask rule), the stricter side. `john-frieda-volume-lift-ansatz-booster` (heat polymer after Parfum) ⇒ `false`, claim still shown. LI `product_tested` without an L9 member stays `false` until ruled (§9 item 13). |
+
+## 3. Subtype extras (only where they discriminate)
+
+Most extras are **views of base properties**, not new fields. Four are new: three subtype fields (`cast_expected`, `conditioning_co_load`, `base`) and one identity label (`form_label`).
+
+| Subtype | Extra | Carried by | Values / rule | Calibration |
+|---|---|---|---|---|
+| `gel` | film type | view of `hold_route` + `result_mechanisms` | `synthetic` (hold_route present) · `natural` (natural_film, no fixative) · `mixed` | `schwarzkopf-taft-power-haargel-halt-5` synthetic · `balea-locken-crunchgel` natural · `bali-curls-strong-hold-flaxseed-gel` natural (carrageenan, unsettled ⇒ review) |
+| `gel` | crunch/cast expected | **new** `cast_expected` (C) | `yes` · `unbekannt`. Yes when C1/C2 text or the confirmed pack name promises a cast („Crunch", „Cast", „knusprig"). Usage guidance (knead out the cast), not strength; „Crunch" = a cast to knead out, never `fest` (PH1-5). | `balea-locken-crunchgel` yes (house-brand name „Crunchgel") |
+| `curl_cream` | conditioning co-load | **new** `conditioning_co_load` (F) | `light` · `rich`. An echo of the LI G0 conditioning read used at S0: rich = substantive conditioning architecture (LI COND moderate/high); light = thin or absent. | `balea-professional-styling-cream-traumlocken` rich (D7 band) · `schwarzkopf-taft-styling-balm-locken-halt-3` rich (D7) · `maria-nila-curlicue-cream` light (T15) · `kevin-murphy-killer-curls` light (no cationic) |
+| `mousse` | target zone, silicone flag | base §2.14, §2.8 | — | `balea-ansatzvolumen-booster` roots · `wellaflex-schaumfestiger-locken-und-wellen-starker-halt` `silicones` |
+| `blowdry_lotion` | target zone, heat_activated | base §2.14, §2.15 | — | `alcina-ansatz-volumen-spray-aerosol` roots · `guhl-foehn-spray-langzeit-volumen` heat yes |
+| `smoothing_styler` | coating type | view of `result_mechanisms` | silicone_coat · fixative_film · wax_lipid | `color-wow-dream-coat-supernatural-spray` silicone (Polysilicone-29 r3) · `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` silicone (Dimethicone r2) · `wella-professionals-eimi-flowing-form` polymer (PVP r2) + lipid |
+| `hairspray` | aerosol vs pump; flexibility; shine | identity `format`; §2.10; §2.11 | — | `gard-haarspray-extrastark-pumpspray` pump · `schwarzkopf-taft-haarspray-glanz-halt-4` aerosol, glänzend (C2 „Glänzendes Finish") |
+| `shine_finish` | base; fixative present | views: `wax_lipid` vs `silicone_coat`; `hold_route` | — | `got2b-gotgloss-glanz-spray` ester base (CCT r4, Dicaprylyl Carbonate r5) · `feschi-smooth-and-shine-anti-frizz-spray-glanzspray` silicone (Phenyl Trimethicone r6) · `balea-professional-glow-und-shine-finishing-spray` fixative (PU-14 r11) |
+| `salt_spray` | real salt vs salt-free; alcohol note | view: `salt` mechanism; §2.6 | — | all 5 cohort salt sprays carry real salt; **no salt-free sample yet** · `jean-und-len-sea-salt-spray` alcohol note fires (r2) |
+| `texture_spray` | particle type; fixative present | view: `particulate` members; `hold_route` | — | `living-proof-full-dry-volume-texture-spray` borosilicate + zeolite, VP/VA · `balea-pure-styling-volumenpuder-spray` starch powders + silica, no fixative |
+| `hair_powder` | particle type; white-residue caution | view; caution in §4 | — | silica silylate in all 4 · `kevin-murphy-powder-puff-volume` adds VP/VA r3 |
+| `molding` | form label | **new** identity `form_label` | `wax · paste · clay · fiber · pomade · cream`, from the confirmed pack name. Display only: never routes, never sets an F value. | `got2b-styling-paste-istyler-texture-clay` label „clay", no clay in the formula |
+| `molding` | base | **new** `base` (F) | `anhydrous` (no water declared) · `water_based` | `balea-men-pomade-haar-bart-2in1` anhydrous, the only one of 11 |
+| `molding` | shine | §2.11 | — | `schwarzkopf-taft-gel-wax-glanz-halt-2` glänzend (C2) |
+| `refresher` | humectant-only vs light hold | view: `humectant_only` vs `hold_route: present` | — | `balea-locken-revitalizing-spray` humectant_only · `got2b-lockenspray-refresher-curlz` neither under PH1-1 (fixative in the tail; ester lipid) |
+
+## 4. Derived echo fields (annotations, not reviewed per product)
+
+These follow LI T8 / Mask R9: computed last, shown as annotations, never independently researched. Matching policy owns the final tables (charter §14). The mappings below are drafts; where they read `weight` they use the ruled light · medium · rich scale (PH1-2, PH1-4).
+
+| Field | Draft rule |
+|---|---|
+| `thickness_fit` | From `weight`: light ⇒ fine · normal · coarse; medium ⇒ normal · coarse, fine ranked lower; rich ⇒ coarse, normal lower, fine last. **A ranking signal only, never an exclusion.** |
+| `texture_fit` | `curl_cream`, `refresher` and products with primary `definition` ⇒ wavy · curly · coily. `salt_spray` ⇒ straight · wavy. Everything else ⇒ all. |
+| `length_fit` | `molding` ⇒ very short · short (concept §5.2, row 1). Everything else ⇒ all. |
+| Hold display | A level ⇒ „laut Hersteller: Starker Halt". Null ⇒ „Halt: keine Herstellerangabe", plus „Enthält Stylingpolymere (z. B. PVP)" when `hold_route = present` (PH1-9). |
+
+**Notes reused from Leave-in (ruled; copy unchanged).**
+
+| Note | Trigger | Copy (LI §18) |
+|---|---|---|
+| Alcohol note (PH1-3) | `alcohol_note = fires` (§2.6). A note only, never an exclusion. | „Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.“ |
+| Buildup note (PH1-4, LI §8.5) | LI §8.5 limb 2 as Styling can read it: `weight = rich` (which always has a persistent non-volatile family above the tail). **Limb 1 is reused literally (PH2-5):** permanently charged cationics are read internally from the LI §7.6 persistence enumeration only to feed the note; Styling stores no PERS field (§9 item 14). A note, not a score. | „Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.“ |
+
+Whether a `rich` Styling product used weekly adds +1 to the Deep-Cleansing reset load is **deferred to the Personal-Plan decision** (PH1-4).
+
+**Cautions.** Cosmetic and medically adjacent cautions are separate layers (charter §10). The copy below is a draft; final wording belongs to the decision doc.
+
+| Trigger | Layer | Draft copy |
+|---|---|---|
+| `salt` mechanism + profile bleached or highly damaged | cosmetic | „Bei blondiertem oder stark strapaziertem Haar sparsam verwenden." |
+| `particulate` + dry application (`hair_powder`, `texture_spray`) | cosmetic | „Gut einarbeiten – auf dunklem Haar können Reste sichtbar bleiben." The profile has no hair-colour field today, so this is shown to everyone. |
+| `molding` with weight `rich` or base `anhydrous`; or `wax_lipid` + `target_zone: hairline` | medically adjacent (pomade acne) | „Nicht direkt am Haaransatz oder auf der Stirn auftragen." |
+
+## 5. Hold normalisation (`chaarlie_hold_level`)
+
+### 5.1 Where hold is used (D8)
+
+| Subtypes | Role of the level |
+|---|---|
+| `gel`, `curl_cream`, `mousse`, `blowdry_lotion`, `hairspray`, `molding` | A stated, fitting level ranks first. **No level ⇒ still eligible**, ranked after, shown as „Halt: keine Herstellerangabe". Never excluded. |
+| `salt_spray`, `texture_spray`, `hair_powder`, `shine_finish`, `smoothing_styler`, `refresher` | Captured and stored; **no part in selection**. Finish, weight and application decide. |
+
+### 5.2 Assignment order
+
+1. **Only C1/C2 counts.** That includes house-brand C2 (dm ↔ Balea/alverde, Rossmann ↔ Isana) and `C2_cross_market_verified`. Retailer copy, retailer filter chips (dm „Halt", Douglas „Haltgrad") and C5 pages are tier-stamped traces and **never assign a level**.
+2. **Brand number on a known scale ⇒ table §5.3.** An illegible or self-contradicting number is not used: words decide, confidence `moderate`, review `hold_number_unreadable`, pack queued for re-capture (RG-19). *Closed (RG3-10):* Taft Styling Paste Forming was re-read 2026-10-12 (recapture-r4 P-8) — a five-mark Henkel display whose fifth mark reads 5+ ⇒ x/5 ⇒ 4.
+3. **The number beats the word** on the same pack or page.
+4. **Brand word ladders** (Elnett). A mid-ladder step gets confidence `moderate`.
+5. **Strength words ⇒ lexicon §5.4.** Look and flexibility words are not strength words (§5.5).
+6. **No strength claim ⇒ `null`** („keine Herstellerangabe"). Never `0` (D8), never derived from formula, never borrowed from a similar formula (Balea Haarpuder keeps its own „starker Halt"). The gap is queued for pack-photo fill.
+7. **Conflicting C1/C2 strengths ⇒ the middle level, rounded up; never empty** (R3-H; replaces PH1-8's „keine Herstellerangabe"). Applies to pack (C1) vs manufacturer page (C2) and to two statements on one source that map to different levels (2 vs 4 ⇒ 3; 3 vs 4 ⇒ 4; `bali-curls-strong-hold-flaxseed-gel` „Strong Hold" 3 vs „Extra-starker Halt" 4 ⇒ 4). Both claims stay in the trace; review `hold_claim_conflict` is internal. C3 never enters; step 3 still settles a number against a word on the same source first (standard §13.3 item 2).
+
+### 5.3 Normalisation tables (brand × format)
+
+These match `TABLES` in `build-calibration-r2.js`. The tables grow per brand.
+
+| Brand scale (formats) | ⇒ 1 | ⇒ 2 | ⇒ 3 | ⇒ 4 | Note |
+|---|---|---|---|---|---|
+| Henkel Haltegrad x/5 — Taft, Syoss, got2b: **every Henkel leave-on format except Taft gels** (R1-Q1: incl. pastes, waxes, balms) | 1–2 | 3 | 4 | 5 / 5+ („5+" = 5) | Numbers are shared across Henkel brands; the number wins over inflated words (Syoss calls 3 „starker Halt"). Taft Paste: a five-mark display whose fifth mark reads 5+ ⇒ 4 (RG3-10). |
+| Wellaflex dots x/5; Maria Nila x/5 | 1–2 | 3 | 4 | 5 / 5+ | |
+| Printed 1–6 — NIVEA MEN, Gard, Taft 6 | 1–2 | 3 | 4 | 5–6 | |
+| Balea printed 1–7 display | — | — | — | — | No legend ⇒ words only (RG3-23). |
+| Alcina Hold-Faktor x/10 | 1–2 | 3–5 | 6–7 | 8–10 | The Flex-Faktor is recorded separately (§2.10). |
+| Taft **gels** (scale 4–14, no legend) | — | — | — | — | The number is not comparable. Words only („maximal" ⇒ 4); no word ⇒ `null`. |
+| Elnett word ladder | — | Normal | Stark | Extra stark | „Sehr stark" is unranked ⇒ `review`. |
+| **Wella Professionals EIMI** „Haltegrad" / „Haltestufe" x/4 (+ „4+") (R3-H5) | 1–2 | — | 3 | 4 / 4+ | Translated by Wella's own words („Mistify Me Light" = 2, „leichtem Halt" with 2; „Strong" = 3; „extrastarker Halt mit Haltegrad 4"); level 2 is not used. „Haltestufe" = „Haltegrad". Replaces the earlier „no stated maximum ⇒ words decide" row. |
+| American Crew Haltfaktor (no maximum stated) | — | — | — | — | Words decide; the number is recorded. |
+
+### 5.4 Strength-word lexicon
+
+| Words | Level |
+|---|---|
+| leicht, sanft, soft, weich | 1 |
+| mittel, normal | 2 |
+| stark | 3 |
+| sehr / extra / ultra / mega / extrem stark, maximal, Max, Power; extra Halt / Extra Hold / Max Hold (RG3-9) | 4 |
+
+**Round-3 addition (RG3-9):** „extra Halt" in a claim line reads like „Extra Hold" in a name (extra, ultra, mega qualifying Halt directly) ⇒ 4 (`kms-thermashape-2-in-1-spray`, stored only).
+
+**Round-2 additions (RG2-18):** „Kontrolle" with a strength word reads as „Halt" („mittlere Kontrolle" ⇒ 2); „krass" ⇒ 3; „ultra krass" / „krasser Halt" at the top of a got2b display ⇒ 4.
+
+„Kleber" was removed from this list (RG-14): it is a rigidity word only (§2.10). **Name words (RG-13):** a strength word in the product name counts only when it qualifies hold or the product as a whole (Taft POWER Haargel, „Extra Hold", „Max Hold"), never when it qualifies another result noun („Ultra Volumen", „Power Flex").
+
+„Power" is in concept §4 and in the build-script `TABLES` word list (standard §7.4). *Superseded:* the earlier note that it was missing from the build script and needed aligning in Phase 3 — it has since been added; no task remains.
+
+### 5.5 Not strength (⇒ `null` when nothing else is stated)
+
+- **Flexibility words:** flexibel, elastisch, beweglich, variabel. These feed §2.10.
+- **Look words:** natürlich, natürlich aussehend.
+- **Unquantified words:** langanhaltend, perfekt.
+- **Duration:** „bis zu 48 h". This goes to `captured_claims`.
+
+### 5.6 Worked examples (all verified against `calibration-set-r2.json`)
+
+| `sample_id` | Claim (tier) | Rule | Level |
+|---|---|---|---|
+| `schwarzkopf-taft-haarspray-glanz-halt-4` | Haltegrad 4 (C2); dm „Ultra starker Halt" (C3) | number beats word; chip is a trace | 3 |
+| `syoss-schaumfestiger-volume` | „extra starken Halt (Haltegrad 4)" (C2) | number beats word | 3 |
+| `wellaflex-schaumfestiger-locken-und-wellen-starker-halt` | 3 of 5 dots; name „Starker Halt" (C1) | number beats word | 2 |
+| `alcina-ansatz-volumen-spray-aerosol` | Hold-Faktor 6/10 (C2) | Alcina table | 3 |
+| `nivea-men-styling-cream-active-craft-stylers` | 4 on printed 1–6 (C1) | x/6 table | 3 |
+| `schwarzkopf-taft-power-haargel-halt-5` | „maximalen Halt von Taft" (C2) | gel number not comparable ⇒ word | 4 |
+| `wella-eimi-sugar-lift` | „Haltegrad: 3" (C2) | Wella x/4 (R3-H5): 3 ⇒ 3; the round-4 freeze dropped „starker, dennoch beweglicher Halt" (no C1/C2 line of its own, P3-2), so the number alone decides | 3 |
+| `wella-professionals-eimi-flowing-form` | „Haltegrad: 2" (C2); „flexibler Halt" (C2, a flexibility line) | Wella x/4 (R3-H5): 2 ⇒ 1; no recaptured strength word is needed (*superseded: before R3-H5 the level read `null` here, because the round-4 freeze dropped „leichter, flexibler Halt" and Wella counted as „no stated maximum ⇒ words decide"*) | 1 |
+| `loreal-paris-elnett-haarspray-extra-starker-halt` | „Extra Starker Halt" (C1) | Elnett ladder | 4 |
+| `got2b-styling-paste-istyler-texture-clay` | „ultra krassem Halt" (C2) | „ultra krass" ⇒ 4 (RG2-18) | 4 |
+| `american-crew-pomade` | „Mittlerer Halt" (C2 cross-market; Haltfaktor 7) | words | 2 |
+| `balea-styling-spray-ultra-volumen` | dm attribute „sehr starker Halt" (house-brand C2) | house-brand rule; „Ultra" in the name qualifies „Volumen" and is never a hold claim (RG-13). Round 1's packet lacked the attribute, so it is re-captured (P-1) | 4 |
+| `guhl-foehn-spray-langzeit-volumen` | „48h Halt" (C1) | duration only | null |
+| `got2b-styling-puder-volumen-powderfull` | „natürlichem Halt" (C2) | look word | null |
+| `loreal-men-expert-barber-club-styling-pomade` | „perfekten Halt" (C2); Douglas „starker Halt" (C3) | no strength; chip is a trace | null |
+| `american-crew-fiber` | Haltfaktor 9 (C3 only) | C3 never assigns | null |
+| `syoss-curl-cream-gel-3in1` | „hold 5" only on syoss.net (C5) | C5 never assigns | null |
+| `bali-curls-strong-hold-flaxseed-gel` | name „Strong Hold" (C2) and „Extra-starker Halt" (C2), one source | R3-H: middle level, rounded up (3 vs 4) | 4 |
+| `taft-styling-paste-forming-halt-5plus` | five-mark display, fifth mark „5+" (C1 pack) | Henkel x/5, re-read closed (RG3-10) | 4 |
+| `osis-sparkler` | „Kein Halt" (C2) | explicit „kein Halt" (D8); not a hold claim for D8b rule 1 (RG3-11) | 0 |
+
+## 6. D8b plausibility flag and neutral fact (pins charter §13, item 2)
+
+**Hold-mechanism set** (the flag's "hold mechanism above the tail"): `hold_route` is `present` or `ambiguous`, **or** `result_mechanisms` contains `natural_film`, `particulate` or `salt`, **or** `wax_lipid` with at least one `structuring` member. Non-structuring oils, butters and esters, silicone coats and humectants are not hold mechanisms. Concept §3.1's broad `hold_route` is therefore retired, and its breadth lives here.
+
+**Which claims the flag reads.** C1/C2 claims, plus hold words in the product name at any tier, because a confirmed pack name is a C1 claim (round-2 brief). **Never retailer filter chips.** This follows T7 and the D8b wording ("today this catches Cantu", whose „Extra Hold" is its product name).
+
+**Flag (internal; never changes a level):**
+1. A strength of ≥ „stark" claimed, or any hold claim on a `shine_finish`, `smoothing_styler` or `refresher` product, with **no** member of the hold-mechanism set ⇒ `claim_formula_conflict` review.
+2. Same brand + identical INCI + different stated level ⇒ `d8b_identical_inci_sibling`: verify against the pack.
+
+Rule 1 never changes the level and never restores a `hold_fix` secondary the §2.12 gate dropped (RG2-22; `wella-eimi-glam-mist-shine-spray`). A negated hold claim („kein Halt", „ohne Halt") is not a hold claim for rule 1 (RG3-11; `osis-sparkler`).
+
+**Dry-run hits:**
+- `cantu-shea-butter-extra-hold-edge-stay-gel`: name „Extra Hold"; only Shea r7 (non-structuring lipid). No level (C3).
+- `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt`: C1 „Starker Halt"; silicone_coat only. Level 3 kept, flag carried (PH1-14).
+- Sibling rule: `schwarzkopf-taft-haarspray-classic-halt-3` (2) vs `schwarzkopf-taft-haarspray-glanz-halt-4` (3), with character-identical INCI.
+- No flag for `color-wow-dream-coat-supernatural-spray` or `bumble-and-bumble-brilliantine`: they only have retailer chips.
+
+**Neutral fact.** „Enthält Stylingpolymere (z. B. ‹first fixative-class member›)" is shown iff the product is in one of the six hold-relevant subtypes (standard §7.1, where a hold line is displayed at all), the level is `null` **and** `hold_route = present` (PH1-9 trigger, with the §2.4 fixative-class list). Dry run: 9 hold-relevant products qualified under the v0 reading; **8 under the lexicon FX-2c condition** (`john-frieda-frizz-ease-traumlocken-lockencreme` drops out: `hold_route: ambiguous`; standard §7.6), e.g. `balea-haargel-hair-jelly` (PVP r6) and `john-frieda-volume-lift-ansatz-booster` (PVP r3). Natural-film-only products with no level (`balea-locken-crunchgel`, `guhl-foehn-spray-langzeit-volumen`, `langhaarmaedchen-lockenspray-halt-sprungkraft`) show „Halt: keine Herstellerangabe" alone. D8b ruled only the polymer sentence; whether a „pflanzliche Filmbildner" variant is wanted stays open (`round2/hold-research-ingredients.md` §3.3) and is not proposed here.
+
+**Comparability.** Levels compare only within a hold family: film (gel, curl_cream, mousse, blowdry_lotion, hairspray, salt and texture sprays), molding, or powder. The app never compares hold across families.
+
+## 7. Blind classification packet (Phase 4)
+
+This mirrors Mask §13 and LI §19.3: capture is kept separate from classification, two sealed blind lanes run, and the reference key is never shown to them.
+
+**Two sealed packets per product (ruled — PH2-6; standard §10.2).** Both are frozen and hashed before unblinding.
+
+1. **S0 packet (separate, sealed).** The normalised complete INCI with ranks, capture tier and date — split tokens re-joined and renumbered by the freeze, with `identity.inci_flags` (RG2-24, P2-3, P2-4); identity `format`; the verbatim directions; the **confirmed product name**; the **C1/C2 promise and heat-protection claims with their tiers**. It **removes** prior routes and subtypes, hold levels, retailer chips, prior calibration labels and price. **Masking refined by R2-Q3 (2026-10-12):** job-naming nouns stay visible in promise lines, the name and the directions (such as Glanz-Spray, Glanz, Shine, Gloss, Finish/Finishing, Haarspray, Wachs, Puder, Gel, Schaum, Paste); only grading words are masked — hold strengths and hold words with numbers or scales („starker Halt", „Halt 5", Haltegrad, dots), flexibility words (flexibel, fest, Kleber …) and finish grades (matt, seidig-glänzend, natürlich …). Only affected records are re-frozen and re-run (standard §10.2). **Each lane runs S0 itself from this packet** — promise class, Leave-in function tag, pair rule, D6/D7 readings, `route`, `boundary_reason` and (lean) `styling_subtype`. **No lane receives an existing S0 output** (no reference key, no calibration-file route, no other lane's route).
+2. **F/U packet (sealed).** The normalised complete INCI with ranks, capture tier and date; identity `format`; the verbatim directions with brand, product name and strength/look adjectives replaced by `[CLAIM]`; and **the lane's own S0 output** from step 1. It **removes** brand, product name, all `claims[]`, retailer chips, prior calibration labels and price.
+
+*Superseded (Phase 1 text):* a single packet that carried "the S0 outputs `route` and `styling_subtype` (just as the Mask packet carries the category)" — i.e. pre-computed S0 outputs handed to the lanes. PH2-6 replaced it: lanes never receive S0 outputs; each derives its own.
+
+**Cohort independence.** The cohort must be disjoint from the products named as worked examples in this file. Any named product that is reused is reported as confirmation-grade only. This is the Mask round-1 lesson: blind independence broke on standard-named products.
+
+| Classified by | Properties |
+|---|---|
+| **Two blind lanes (F + U), from the sealed F/U packet plus each lane's own S0 output** | `result_mechanisms` (with members, ranks and marker), `hold_route`, `weight`, `alcohol_note`, `ingredient_flags`, the L9-above-tail half of `provides_heat_protection`, molding `base`, curl-cream `conditioning_co_load`, `application_moment`, `target_zone`, `heat_activated` (directions half) |
+| **Two blind lanes (S0), from the sealed S0 packet (PH2-6)** | promise class, `li_function`, pair rule, D6/D7 readings, `route`, `boundary_reason`, lean `styling_subtype`. Promise classification is part of each lane's own S0 run; it is **not** taken from claim capture or from any existing S0 output |
+| **Authoritative claim capture (C; not blind; F-lane pattern of round 2), from the frozen `claims[]` plus the unmasked confirmed name (R2-Q3)** | `chaarlie_hold_level` (raw, scale, tier, normalisation basis), `flexibility`, `finish`, `primary_job`/`secondary_jobs`, gel `cast_expected`, molding `form_label`, `captured_claims`, C1/C2 heat-activation statements, the C1/C2 heat-protection claim (claim half of `provides_heat_protection`) |
+| **Derived last (D)** | `thickness_fit`, `texture_fit`, `length_fit`, the alcohol and buildup notes, cautions, hold display, neutral fact, `provides_heat_protection` (claim half AND L9 half) |
+
+**Permitted crossings after unblinding (the complete list):**
+1. A C1/C2 heat-activation statement — in a claim or in the confirmed name — raises `heat_activated` from `no` to `yes`; since v0.5 the lanes apply it themselves and the record carries the raised value (RG4-18; RG2-26's blind-only reading is superseded).
+2. The job gate may drop an unsupported secondary job and tag a primary.
+3. The D8b flag, the finish sanity check and the weight-claim conflict tag fire as review notes; **none moves a value**.
+
+Every blind-to-final change is recorded with its reason.
+
+**Agreement.**
+- Report exact agreement per property.
+- Deterministic F properties: every A/B disagreement is **resolved, not necessarily identical** (R3-L, R4-L) — a lane error proven against a clear rule, or a rule or lexicon gap that is closed in the text (fixed in the lexicon, never per product). Only differences in user-facing fields block the lock; calculation-log differences are fixed in the text without a further round (standard §14.1). *Superseded:* „must reach 100 %; any disagreement is a lexicon defect".
+- U properties report agreement with coded causes (source ambiguity, rule ambiguity, legitimate uncertainty).
+- Two independent claim normalisations of the hold level (PH1-11, charter §15 P1 criterion c): every mismatch is resolved by a proven lane error or a closed rule gap (R3-H4 (c)); literal identity is not required.
+- **Lock reading (R3-L):** for criterion (b), „the lanes agree" means **resolved, not identical** — every remaining A/B disagreement is a lane error proven against a clear rule or traces to a closed rule gap, and a final confirmation round shows only lane errors and no new rule gaps (standard §14.1). It also governs criterion (c), hold levels (R3-H4 (c), standard §14.1 (c)). `smoothing_styler` may lock below 5 as a market-size exception (R3-Q1).
+- **S0 packet (P3-1):** `identity.identity_status` (and `identity.inci_alt` next to it) ships in every S0 packet, verified records included.
+- **Lock scope (R4-L, R12-L):** only differences in **user-facing fields** block the lock — route and recommendability (incl. held vs committed and the evidence gate), subtype, `chaarlie_hold_level`, `weight`, `finish`, `flexibility`, `target_zone`, `application_moment`, `primary_job`, `provides_heat_protection`, and the user-shown notes (alcohol and buildup notes, neutral fact, „Hitzeschutz laut Hersteller", hold display). **`secondary_jobs` is a SOFT field `[R12-L]`: differences in which job fills a secondary slot never block the lock. All other user-facing fields listed here still block the lock.** Differences confined to the **calculation log** — reason code, rule path, internal review triggers, confidence, internal flags, lexicon placements that move no value — do not block: they are fixed in the text and documented, without a further round (standard §14.1).
+- **Packet fields since round 5 (P4-1…P4-3):** directions only from a G1 tier (a C5 page ships as `missing`); a heat sentence inside a C1/C2 promise line also ships as its own heat-protection claim; every promise line carries `position` (`pack_front` · `headline` · `bullet` · `body` · `unknown`).
+
+## 8. Phase 1 rulings on PS1–PS6 (2026-10-09)
+
+Nick ruled the six former proposals in the PH1 bundle ("for now"). Where a ruling differs from the proposal, the ruling is encoded and the difference is stated.
+
+| ID | Proposal (short) | Ruling | Encoded in |
+|---|---|---|---|
+| **PS1** | Tail marker: LI's preservative list (A) or Mask's `tail_index` (B) | **PH1-1 — B**, for Styling's own properties: "the first preservative or perfume, whichever comes first" (Mask rule). The LI G0 border check keeps its own rule. Evidence: under A, 14 of the 70 records had no readable marker; under B, 1 of 70 (`balea-pure-styling-volumenpuder-spray`). | §0 |
+| **PS2** | Fixative-class list: (a) four vinyl families missing from LI L5; (b) PQ-11/-16/-46 alone | (a) **Adopted into the Styling list now. Not added to LI L5 now:** PH1-16 replaces the proposal's "add them to LI L5 in the D6/D7 overlay". The Leave-in addendum written right after the Styling lock carries them. Without (a), `loreal-paris-elnett-haarspray-extra-starker-halt` (VA/Crotonates only, r3) would read as "no styling polymer". (b) **PH1-6:** PQ-11/-16/-46 with no other fixative-class polymer ⇒ hold_route review, not real hold (`alcina-styling-mousse-aerosol`, PQ-11 only, gets no „Stylingpolymere" fact until reviewed). | §2.4 |
+| **PS3** | Weight anchors from LI's weight rule; form never decides | **PH1-2:** judged from the ingredients the way Leave-in does it, never from product form. **PH1-4:** the shared production scale light · medium · rich (`CANONICAL_WEIGHTS`; research `low/moderate/high`) via the LI WT rule; the proposal's `heavy` is renamed `rich`. | §2.5, §4 |
+| **PS4** | Alcohol load `high` / `present` / `none` | **PH1-3 — differs from the proposal:** no three-level load. The Leave-in alcohol note is reused („Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.“), triggered by Alcohol / Alcohol Denat. / SD Alcohol / Ethanol / Isopropyl Alcohol among the first 3 ingredients. Fatty alcohols and benzyl alcohol never count. A note only, never an exclusion: the `present` level, the „ohne Alkohol" preference filter and the separate alcohol + roots caution are dropped. | §2.6, §4 |
+| **PS5** | „Schwer auswaschbar" field | **PH1-4 — differs from the proposal:** no new field. `weight` on the shared scale; the Leave-in buildup note (LI §8.5, „Bleibt lange im Haar …") reused unchanged as a note, not a score. Whether a `rich` Styling product used weekly adds +1 to the Deep-Cleansing reset load is **deferred to the Personal-Plan decision**. | §2.7, §4 |
+| **PS6** | Look-word lexicon | **PH1-5:** „ohne zu verkleben" is not a flexibility word; „Crunch" = a cast to knead out (`cast_expected`, never `fest`); „natürlicher Glanz" = `natürlich` finish; brand flex/shine numbers are recorded and the words decide. Consequence: `bali-curls-strong-hold-flaxseed-gel` („schenkt natürlichen Glanz") is `natürlich`, not the `glänzend` the calibration set shows today. | §2.10, §2.11, §3 |
+
+Two further Phase 1 rulings act on this file: **PH1-15** adds `provides_heat_protection` (§2.17), and **PH1-14** keeps Elnett Stylingspray „3 Tage Glatt" in Styling `smoothing_styler` at level 3 with the D8b flag (§2.1, §6).
+
+## 9. Conflicts, gaps and open items
+
+1. **`hold_route` breadth — resolved.** Concept §3.1 (3b) counts natural film, wax, particulate and salt as a hold route. The D6 clarification and the ruled property set say fixative-class only. The broad sense lives in `result_mechanisms` and the §6 hold-mechanism set. Concept 3b's "ambiguous" cases (carrageenan/gellan gels, unmodified-starch products) surface as `natural_film_unsettled` review notes.
+2. **Weight from form — resolved (PH1-2).** Concept §3 reads weight from "form + non-volatile load"; the ruling and LI G9 forbid form setting weight.
+3. **Flexibility words — resolved (PH1-5).** Concept §3 lists „ohne zu verkleben" as a flexibility word; the ruling says it is not.
+4. **Calibration data drift (open, data).** In `calibration-set-r2.json`, `proposed_finish` is not tier-gated: `schwarzkopf-taft-haarspray-classic-halt-3` reads „natürlich" from a "no finish claim" note, and `bali-curls-strong-hold-flaxseed-gel` still reads `glänzend` (PH1-5 says `natürlich`). The round-1 lane labels for `application_moment` predate the §2.13 anchors and are inconsistent: `alcina-foehn-lotion` is `damp_before_drying` while `balea-foehnlotion-volume-effect` is `before_heat`, although both directions say "spray into damp hair, then blow-dry". The border outcomes of PH1-10 and PH1-13 (charter §3) are not applied either. Re-label in the blind round; do not hand-edit frozen records.
+5. **D8b reach.** The ruling says "today this catches Cantu". Under these rules it also catches Elnett Stylingspray 3 Tage Glatt, which concept §4 already lists and PH1-14 confirms. Not a contradiction; recorded so the count is not a surprise.
+6. **Marker edge (open, product review).** `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray` lists the booster Caprylyl Glycol (r13) above its preservative Phenoxyethanol (r17). Under PH1-1, Mask's booster limb makes that marker `unresolved` ⇒ review. Polysilicone-29 (r15) is not credited until a reviewer decides. PH2-1 routes this product to Leave-in (smoothing promise overlaps LI §2.1), so the Styling marker question is informational only.
+7. **Untested values.** The cohort has no salt-free salt spray, no `target_zone: surface` product and no C1/C2 `fest` claim, and `provides_heat_protection` has not been run over the cohort. These values are ruled but uncalibrated. *Round 2:* `surface` was exercised on two finishing sticks (both lanes agree); the salt-free salt spray is still missing (standard §13.2 item 1).
+8. **No hair-colour field** in the profile, so the white-residue caution cannot target dark hair.
+9. **Lexicon edge.** Acrylates Crosspolymer-3 (`bali-curls-sleek-stick-brows-and-edges`, r2) is marketed as a film former, while the L5 rheology exclusion names acrylates crosspolymers. v0 treats it as unsettled (§2.4). It moves nothing today, because PVP r3 is present.
+10. **S0 promise check for Elnett 3 Tage Glatt — resolved (PH1-14).** Its frozen C2 promise leads with heat protection, but the pack front leads with the styling result („Hitze Styling-Spray, glatt 3 Tage, starker Halt"), so it is Styling `smoothing_styler`.
+11. **Resolved — PH2-9 (tail-marker wording, PH1-1).** The full Mask rule applies (preservative, perfume, declared allergens/aroma chemicals, boosters in a pair, chelators), as approved under PH1-1. Original note: The ledger's short form names only "the first preservative or perfume", while Mask's `tail_index` (which the ruling cites as "Mask rule") also counts declared allergens, boosters in a pair and chelators. This file follows the full Mask rule. The two readings differed on `loreal-paris-elnett-haarspray-extra-starker-halt` (allergen Hydroxycitronellal r4) and on item 6 (booster Caprylyl Glycol r13). Confirmed by PH2-9.
+12. **Resolved in part — PH2-8 (weight reading vs LI §7.5; PH1-2, PH1-4).** PH2-8: weight = the exact Leave-in WT rule, including the LGN-pair route to `high`/`rich`; no extra anhydrous route (points (a) and (c) below are settled; two curl creams move to `rich`). Point (b), the rich-member list, is **ruled by PH2-12** (waxes, paraffin, microcrystalline wax, lanolin count as rich for Styling). Original note: Three points of the v0 reading in §2.5 go beyond LI §7.5's literal text: (a) the "anhydrous base with a rich member" route to `rich`; (b) the rich-member list adds paraffin, microcrystalline wax, natural waxes and lanolin to LI's L3 rich band (coconut/olive/castor/avocado oil, shea/mango/cocoa butter, petrolatum, heavy mineral oil); (c) LI's LGN-pair route to `high` is not listed. The dry-run counts in §2.5 use the v0 reading. To settle in the Phase-3 lexicon or by a ruling.
+13. **Resolved in part — PH2-4 (heat check details, PH1-15).** (a) is ruled: the check reads Styling's own T_S (the Mask rule). (b) follows PH1-15's explicit text (claim **and** L9 pass). **Still open:** (c), LI `product_tested` without an L9 member stays `false` until ruled. Original note: (a) Which tail marker the L9 check reads: LI's (the ruling says "the same rule as Leave-in") or the PH1-1 Mask marker used for Styling's own properties. (b) LI §13.3 sets `true` on a C1/C2 claim alone (trace `claim_only`, review); PH1-15 makes `true` require the L9 pass. This file follows PH1-15's explicit text. (c) PH1-15 does not address LI's `product_tested` state (claim + exact-product test, no L9 member).
+14. **Resolved — PH2-5 (buildup-note limb 1, PH1-4).** Limb 1 is reused literally, read internally from the LI §7.6 persistence enumeration only to feed the note; Styling still stores no PERS field. Original note: LI §8.5 fires on either `weight_potential: high` with a persistent family (limb 2, readable here as `weight = rich`) or PERS `permanent_cationic` (limb 1). Styling does not compute PERS, so limb 1 cannot fire as written.
+15. **Resolved — PH2-11 (housekeeping): „ausbürstbar" stays a v0 convention, not a flexibility word.** PS6 also listed „ausbürstbar" as not a flexibility word; PH1-5 does not name it. It stays a v0 convention (confirmed by PH2-11).
+16. **Round 1 — particulate count corrected (2026-10-12).** §2.3 said 10, the standard 11. Node recount over the raw INCI of the 70 records: **11**, the extra record being `schwarzkopf-taft-texturspray-aloe-boost` (Cellulose r7), which this file's v0 member list missed and the lexicon's PT-1 includes. This file was wrong; both now read 11.
+17. **Round 1 — R1-Q1, R1-Q2, R1-Q3, R1-Q4 encoded** in §5.3, §2.2, the standard §4.2 and §2.15. R1-Q3 (care + curl definition ⇒ `mixed`, whatever the name) acts on `route` (§2.1 counter-signals: a `mixed` promise ⇒ `provisional_boundary`); PH1-12 still runs first.
+18. **Round 1 — RG-16 (lexicon v0.2):** PQ-69 joins PQ-11/-16/-46 for `hold_route: ambiguous` (§2.4); Malic Acid is a PH-1 yardstick; Polysilicone-9 is SI-4 (no `silicone_coat`, no care). Polysilicone-9 (CosIng: hair fixing) is also FX-U: `hold_route` ambiguous + review, D6 hold limb unresolved (R1-H3; standard §13.2 item 3).
+19. **Round 1 — packet rules (P-2, P-4, P-6):** name-derived flexibility words are flexibility claims (`from_product_name: true`); the house-brand stamp follows standard §2.2 A5; editor annotations are never claim text. The data re-captures themselves (P-1…P-8) are outside this file.
+20. **Open after round 1:** see standard v0.2 §13.2, superseded by item 24 (items 1–3 resolved by R1-H1…R1-H3; open: RG-20 untested values — salt-free salt spray, `surface` zone and others remain uncalibrated, item 7 above; the tier of Taft Balm „Halt 3").
+21. **Round 2 — R2-Q1…R2-Q4 encoded** in §2.1 and the standard §4.2, §4.3 3.1, §4.6: the care half of a `mixed` care + curl-definition reading is a promised care job (a result adjective, a feel line or an ingredient call-out is not), curl revival is refresh (R2-Q1, narrowing R1-H2); the water-based-serum exception reads the cationic down to the PH1-13 yardstick (R2-Q2); blind S0 masking keeps job nouns (R2-Q3, §7); historical NEQI Diamond Glass All ⇒ leave_in (R2-Q4; replaced by R6-Q1 held `smoothing_styler`).
+22. **Round 2 — R2-T technical bundle (RG2-4…RG2-27, P2-1…P2-6)** encoded in §2.2, §2.10–§2.15, §5.4, §5.6, §6, §7 and the standard; RG2-16 is ruled „open" (§2.12). Lexicon v0.3 places the RG2-23 species and reads propellant-led aerosols as non-aqueous (§2.3).
+23. **Round 2 — capture facts:** Taft Styling Balm Locken carries a C1 pack „HALT 3" (§2.9; closes the item-20 tier question); Balea Finishing Stick has C1 pack directions (its evidence gate passes).
+24. **Open after round 2 — items 2–6 resolved 2026-10-12 by R2-H1…R2-H5** (NEQI All INCI complete, R2-H4; Fresh Up has no C1/C2 care job, R2-H1; GUHL 3in1 is care, R2-H2; the Haarwachs Stick name decides ⇒ `molding`, R2-H3; feel lines never count as care, R2-H5); the untested gaps stay open. Original text: see standard §13.2 (untested gaps: salt-free salt spray, FX-2c on a deciding case, LI COND with T_LI `none_visible`, „gel-type shaping product"; NEQI All block vs RG2-24; Nutricurls Fresh Up's „Definition" line; GUHL 3in1's rinse-out first use; the Haarwachs Stick name vs RG2-17; „Verbesserte Geschmeidigkeit" in §11.2). `smoothing_styler` coverage: 0 committed and 1 held agreed in round 2; a targeted capture is approved (R2-T).
+25. **Round 3 — R3-Q1…R3-Q4, R3-H encoded** in §2.1, §2.2, §2.9, §5.2 and the standard §4.2, §4.3, §4.6, §7.2: the shop-title fallback (R3-Q2), the one-job name (R3-Q3), the D7 straightening extension (R3-Q4: KMS Straightening Creme ⇒ held `smoothing_styler`; its „Wella Flowing Form unchanged" was withdrawn by R3-H2 ⇒ held `smoothing_styler`, item 28), the middle-level hold rule (R3-H, replacing PH1-8's outcome). `smoothing_styler` may lock below 5 (R3-Q1); „lanes agree" means resolved, not identical (R3-L).
+26. **Round 3 — R3-T technical bundle (RG3-1…RG3-24, P3-1…P3-7)** encoded in §2.1, §2.2, §5.2–§5.4, §5.6, §6, §7 and the standard; RG3-2 = R3-Q3, RG3-3 = R3-Q2, RG3-5 superseded by R3-Q4, RG3-8 replaced by R3-H. Lexicon v0.4 places the RG3-17 species (§2.3).
+27. **Round 3 — capture and data work approved by R3-T:** the real pack names of the products whose confirmed name is retailer-title only (29 in round 3); the German directions of Elnett 3 Tage Glatt (then a held `smoothing_styler`); the data fixes P3-1…P3-6. Then the confirmation round 4 under R3-L, then the Leave-in addendum draft (it must carry the R3-Q4 extension).
+28. **Resolved after round 3 (R3-H2…R3-H4, 2026-10-13):** standard §13.3 items 1–6 (Flowing Form ⇒ held `smoothing_styler`; number-vs-word keeps number beats word; three or more statements ⇒ median rounded up; „resolved, not identical" for criterion (c); agreeing type nouns for the shop-title fallback; D7 limbs read T_S and LI COND). Also R3-H3 (Elnett directions from the brand article) and R3-H4 (f) (retailer-hosted pack photos as C1). The RG-20 untested gaps stay open (standard §13.2 item 1).
+29. **Round 4 — R4-Q1…R4-Q7 encoded** in §2.1, §2.2, §2.12 and the standard §4.1, §4.2, §4.3, §4.5, §4.6, §5, §6.10, §7.5: the name as the C1/C2 promise when it names exactly one job (R4-Q1; never a retailer title; claim-keyed values stay no-claim), „Beach Waves" as the salt-spray look and „Glaze"/„Topcoat"/„Gloss" as shine words (R4-Q2), the closed care-half list (R4-Q3), the straightening limb for fixative-led smoothing sprays (R4-Q4: Balea Glattspray ⇒ held `smoothing_styler`), the registry override (d) for named D6/D7 rows (R4-Q5), the three text fixes (R4-Q6), product noun vs qualifier (R4-Q7).
+30. **Round 4 — R4-T register (RG4-1…RG4-27, P4-1…P4-4)** encoded in §2.3, §2.8, §2.12, §2.15, §7 and the standard; I-3 items are calculation-log fixes under R4-L. Lexicon v0.5 places the RG4-24 species and lets NF-U set `fixative_family: natural_film` (RG4-27).
+31. **Lock scope — R4-L.** Only user-facing field differences block the lock; calculation-log differences are fixed in the text without a further round (§7; standard §14.1). The final confirmation round is round 6 (`r6/`); round 5 was aborted before scoring (S0 hold-grade leaks found by the Codex review).
+32. **After round 4 — resolved by R4-H (2026-10-13):** standard §13.4 items 1–5 (no opaque `registry_row` pointer — rows match by brand + pack name; the Taft Gel Wax Glanz D8b flag is internal and follows §7.5 as written; a promise line with no recorded position is read in packet order; Bumble and bumble „brilliantine" is a one-job C1 name under R4-Q1 (shine), consistent with its registry row; typed hold lines become secondary-job candidates only through the §6.10 `hold_fix` rule). The RG-20 untested gaps stay open (standard §13.2 item 1).
+33. **Codex review alignment (2026-10-13, text only):** §2.1 (Flowing Form, R3-H2; Glattspray, R4-Q4), §5.3 (Wella x/4, R3-H5), §5.6 (Sugar Lift, Flowing Form), §7 (resolved-not-identical agreement, R3-L / R3-H4 (c) / R4-L), item 25 and item 32 (R4-H). No value of the frozen records changes; the round-5 cohort was superseded by round 6 (`r6/`) for packet defects, not for these texts.

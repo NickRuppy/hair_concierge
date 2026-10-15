@@ -1,0 +1,2961 @@
+[
+  {
+    "sample_id": "john-frieda-frizz-ease-zauberformel-seiden-finish-creme",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "John Frieda",
+    "product_name": "Frizz Ease Zauberformel Seiden-Finish Creme",
+    "size": "100 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "johnfrieda.com/de-de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Aqua, Propylene Glycol, PerseaGratissima Oil, Phenyl Trimethicone, Glycerin, C12-15 Alkyl Benzoate, Glyceryl Stearate, IsostearylPalmitate, PVP, Ethylhexyl Methoxycinnamate,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Triethanolamine, Parfum, Sorbitan Oleate,Cocamidopropyl PG-Dimonium Chloride Phosphate,Caprylhydroxamic Acid, Methylpropanediol,Steardimonium Hydroxypropyl Hydrolyzed WheatProtein, BHT, Ethylhexylglycerin, Phenoxyethanol,Citrus Aurantium Peel Oil, Citrus Limon Peel Oil,Hexamethylindanopyran, Hexyl Cinnamal, Limonene,Linalool, Linalyl Acetate, TetramethylAcetyloctahydronaphthalenes",
+    "inci_source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Glättet abstehende Haare, verleiht Glanz und bändigt Frizz.",
+      "Diese Seiden-Finish-Creme bändigt abstehende Härchen und Frizz und verleiht dem Haar Glanz und natürliche Bewegung.",
+      "Seidenweiches, geschmeidiges Haar in Sekunden.",
+      "Für müheloses Styling unterwegs."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "Glanz und natürliche Bewegung (raw: 'verleiht dem Haar Glanz und natürliche Bewegung')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Vegane Formel",
+      "Frei von tierischen Inhaltsstoffen"
+    ],
+    "directions": "1. Eine kleine Menge zwischen den Handflächen verreiben.\n2. Im trockenen Haar verteilen und dabei besonders auf abstehende Härchen und ungleichmäßige Spitzen achten.\n3. Einfach in die Handtasche stecken und jederzeit bei Bedarf anwenden.",
+    "application_moment": "trockenes Haar",
+    "formula_observations": null,
+    "notes": "Targets flyaways/ends explicitly (\"besonders auf abstehende Härchen und ungleichmäßige Spitzen achten\") - also a surface-zone cue. INCI as printed on the page (some missing spaces after commas/line breaks, e.g. \"PerseaGratissima\", \"TetramethylAcetyloctahydronaphthalenes\", list may be cut at the end). Not found at dm search 2026-10-12; no GTIN on manufacturer page.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "1. Eine kleine Menge zwischen den Handflächen verreiben.\n2. Im trockenen Haar verteilen und dabei besonders auf abstehende Härchen und ungleichmäßige Spitzen achten.\n3. Einfach in die Handtasche stecken und jederzeit bei Bedarf anwenden.",
+    "directions_source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Glättet abstehende Haare, verleiht Glanz und bändigt Frizz.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Diese Seiden-Finish-Creme bändigt abstehende Härchen und Frizz und verleiht dem Haar Glanz und natürliche Bewegung.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Seidenweiches, geschmeidiges Haar in Sekunden.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für müheloses Styling unterwegs.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/frizz-stylers/zauberformel-seiden-finish-creme/",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "pack photo not captured (INCI is manufacturer page, not pack)"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "john-frieda-frizz-ease-unendlich-smooth-blow-out-spray",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "John Frieda",
+    "product_name": "Frizz Ease Unendlich Smooth Salon Blow-Out Spray",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "johnfrieda.com/de-de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Water/Aqua/Eau, Dipropylene Glycol, Polysilicone-29, Fragrance/Parfum, PPG-26-Buteth-26, PEG-40 Hydrogenated Castor Oil, Sodium Benzoate, Ethylhexylglycerin, Argan Oil GLycereth-8 Esters, Potassium Sorbate, Hydrolyzed Keratin, Glycerin, Argania Spinosa Kernel Oil, Sclerocarya Birrea Seed Oil, Peg-40/PPG-8 Methylaminopropyl/Hydroxypropyl Dimethicone Copolymer, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Phenoxyethanol, Cetrimonium Chloride, Sodium Phytate, Citric Acid, Hydroxypropyltrimonium Hyaluronate, Silicone Quaternium-18, Butylene Glycol, Trideceth-6, Trideceth-12, Sclerocarya Birrea Seed Oil, Hexyl Cinnamal, Citronellol, Tetramethyl Acetyloctahydronaaphthalene, Vanillin.",
+    "inci_source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Salon Blow-Out Spray",
+      "Styling-Spray mit Schutz vor Hitze und Luftfeuchtigkeit für den perfekten Blow-Out.",
+      "Dieses Styling-Spray verwandelt Frizz in seidig-glattes, hochglänzendes Haar – ganz ohne zu beschweren. Mit Hitzeschutz bis 230 °C bilden Keratin und unser Humidity Shield Complex einen leichten Schutzfilm um jede einzelne Haarsträhne, der Feuchtigkeit abhält und dein Styling bis zu drei Haarwäschen lang geschmeidig hält. Das Ergebnis: ein glänzender, müheloser Blowout, wie frisch aus dem Salon.",
+      "Schützt das Haar vor Feuchtigkiet und Umwelteinflüssen.",
+      "Bändigt Frizz und verleiht Glanz.",
+      "Die schwerelose Formel hinterlässt keine Spuren."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "seidig-glattes, hochglänzendes Haar (raw: 'verwandelt Frizz in seidig-glattes, hochglänzendes Haar')",
+    "humidity_claim": "Schützt das Haar vor Feuchtigkiet und Umwelteinflüssen. (sic, as printed)",
+    "heat_claim": "Mit Hitzeschutz bis 230 °C",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "1. Großzügig in Abschnitten auf das handtuchtrockene Haar sprühen.\n2. Für eine gleichmäßige Verteilung durchkämmen.\n3. Mit einem Föhn und etwas Spannung die Haare stylen, um ein seidiges Finish wie frisch vom Friseur zu erzielen.",
+    "application_moment": "handtuchtrockenes Haar, vor dem Föhnen",
+    "formula_observations": null,
+    "notes": "Format (pump vs trigger) not stated on page; \"pump_spray\" is an assumption - verify on pack. INCI as printed; page INCI block repeats \"Sclerocarya Birrea Seed Oil\" twice and ends with \"Tetramethyl Acetyloctahydronaaphthalene, Vanillin.\" (page typo \"naaphthalene\"). Claims: \"dein Styling bis zu drei Haarwäschen lang geschmeidig hält\" appears in the intro text.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "dein Styling bis zu drei Haarwäschen lang geschmeidig hält",
+    "directions_verbatim": "1. Großzügig in Abschnitten auf das handtuchtrockene Haar sprühen.\n2. Für eine gleichmäßige Verteilung durchkämmen.\n3. Mit einem Föhn und etwas Spannung die Haare stylen, um ein seidiges Finish wie frisch vom Friseur zu erzielen.",
+    "directions_source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Salon Blow-Out Spray",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Styling-Spray mit Schutz vor Hitze und Luftfeuchtigkeit für den perfekten Blow-Out.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Dieses Styling-Spray verwandelt Frizz in seidig-glattes, hochglänzendes Haar – ganz ohne zu beschweren. Mit Hitzeschutz bis 230 °C bilden Keratin und unser Humidity Shield Complex einen leichten Schutzfilm um jede einzelne Haarsträhne, der Feuchtigkeit abhält und dein Styling bis zu drei Haarwäschen lang geschmeidig hält. Das Ergebnis: ein glänzender, müheloser Blowout, wie frisch aus dem Salon.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Schützt das Haar vor Feuchtigkiet und Umwelteinflüssen.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bändigt Frizz und verleiht Glanz.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Die schwerelose Formel hinterlässt keine Spuren.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/unendlich-smooth/blow-out-spray/",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "format not stated",
+      "no pack photo"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "john-frieda-traumlocken-belebender-wellenauffrischer",
+    "subtype_candidate": "refresher",
+    "brand": "John Frieda",
+    "product_name": "Traumlocken Belebender Wellenauffrischer (dm: Sprühkur Frizz Ease Traumlocken)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "johnfrieda.com/de-de",
+      "dm"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+    "ean": "5037156298192",
+    "inci": "Water/Aqua/Eau, Propylene Glycol, Magnesium Sulfate, Polyglycerin-3, PEG-60 Hydrogenated Castor Oil, Polyquaternium-68, VP/VA Copolymer, Sea Salt/Maris Sal/Sel marin, Ethylhexylglycerin, Cetrimonium Chloride, Moringa Oleifera Seed Oil, Phenoxyethanol, Fragrance/Parfum, Citrus Aurantium Amara (Bitter Orange) Peel Oil, Hexyl Cinnamal, Limonene, Linalyl Acetate, Pogostemon Cablin Oil, Rose Ketones, Tetramethyl Acetyloctahydronaphthalenes",
+    "inci_source_url": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Spendet Feuchtigkeit und frischt Wellen zwischen den Haarwäschen auf.",
+      "Refresh für Curls & Waves.",
+      "Dieses revitalisierende Spray haucht Wellen und Locken am zweiten Tag neues Leben ein. Angereichert mit leichtem Moringaöl und unserer lockenverstärkenden Technologie, sorgt die feuchtigkeitsspendende Formel mit nur wenigen Sprühstößen für neue Definition und Sprungkraft.",
+      "Spendet Feuchtigkeit. Schützt vor Frizz.",
+      "Frische Wellen zwischen den Haarwäschen auf.",
+      "Keine Hitze, kein Shampoo, kein Wasser nötig.",
+      "Mit AuraBoost, unserem stimmungsaufhellenden Duft.",
+      "Wellenauffrischer für lockiges Haar",
+      "Belebend",
+      "Frischt Locken und Wellen auf",
+      "Spendet Feuchtigkeit und Glanz",
+      "Für mehr Sprungkraft und Definition"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Für natürlich gewelltes und lockiges Haar."
+    ],
+    "free_from_claims": [
+      "Vegane Formel ohne Silikone, Sulfate (SLS/SLES) oder Ethanol. Verpackung aus 100 % Recyclingmaterial (nur Flasche)."
+    ],
+    "directions": "1. Gut schütteln.\n2. Großzügig abschnittsweise auf das trockene Haar sprühen.\n3. Locken kneten, um sie aufzufrischen und zu definieren.\n4. Lufttrocknen lassen oder mit einem Diffusor föhnen.",
+    "application_moment": "trockenes Haar, zweiter Tag",
+    "formula_observations": null,
+    "notes": "Same INCI on dm.de (Moringa Oleifera Seed Oil present; dm list ends with a period). dm lists it under \"Haarkur & Haarmaske\" as \"Sprühkur Frizz Ease Traumlocken\" with bullet \"Wellenauffrischer für lockiges Haar\". dm directions text: \"Anwendung: Direkt auf das trockene oder feuchte Haar sprühen, dabei den Ansatz aussparen. Mit einer kleinen Menge beginnen und bei Bedarf mehr sprühen. Anschließend das Haar in Form kneten und drehen. An der Luft trocknen lassen oder einen Diffusor verwenden.\" (differs in wording: \"dabei den Ansatz aussparen\"). Format \"pump_spray\" is an assumption.",
+    "dm_dan": 3123439,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "1. Gut schütteln.\n2. Großzügig abschnittsweise auf das trockene Haar sprühen.\n3. Locken kneten, um sie aufzufrischen und zu definieren.\n4. Lufttrocknen lassen oder mit einem Diffusor föhnen.",
+    "directions_source_url": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Spendet Feuchtigkeit und frischt Wellen zwischen den Haarwäschen auf.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Refresh für Curls & Waves.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Dieses revitalisierende Spray haucht Wellen und Locken am zweiten Tag neues Leben ein. Angereichert mit leichtem Moringaöl und unserer lockenverstärkenden Technologie, sorgt die feuchtigkeitsspendende Formel mit nur wenigen Sprühstößen für neue Definition und Sprungkraft.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Spendet Feuchtigkeit. Schützt vor Frizz.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Frische Wellen zwischen den Haarwäschen auf.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Keine Hitze, kein Shampoo, kein Wasser nötig.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit AuraBoost, unserem stimmungsaufhellenden Duft.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-belebender-wellenauffrischer/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Wellenauffrischer für lockiges Haar",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Belebend",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Frischt Locken und Wellen auf",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Spendet Feuchtigkeit und Glanz",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für mehr Sprungkraft und Definition",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3123439",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "format not stated on page (pump assumed)",
+      "no pack photo read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "john-frieda-volume-lift-ansatz-booster",
+    "subtype_candidate": "texture_spray",
+    "brand": "John Frieda",
+    "product_name": "Volume Lift Ansatz-Booster (dm: Leave-In Spray Volume Lift Ansatz-Booster)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "johnfrieda.com/de-de",
+      "dm"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+    "ean": "5037156299137",
+    "inci": "Aqua, Alcohol Denat., Polyquaternium-16, Polysorbate 20, Polyquaternium-68, Parfum, Panthenol, Ethylhexylglycerin, Cetrimonium Chloride, Hydrolyzed Rice Protein, Glycerin, Alcohol, Lecithin, Tocopherol, Caffeine, Hyaluronic Acid, Tocopheryl Acetate, Biotin, Phenoxyethanol, Sodium Benzoate, Alpha-Isomethyl Ionone, Benzyl Salicylate, Geraniol, Hexyl Cinnamal, Limonene, Linalool.",
+    "inci_source_url": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Dieses Pre-Styling-Spray sorgt ab dem ersten Sprühstoß für sofortiges Volumen am Ansatz. Die leichte Formel mit Peptiden verleiht dem Haar griffige Textur und schützt es gleichzeitig vor Hitze bis zu 220 °C – für ein langanhaltendes, voluminöses Styling.",
+      "Mehr Volumen in nur einer Anwendung.",
+      "Leichte, schwerelose Formel."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": "schützt es gleichzeitig vor Hitze bis zu 220 °C",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Vegane, silikonfreie Formel."
+    ],
+    "directions": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein.\n2. Anschließend trocken föhnen und wie gewohnt stylen.",
+    "application_moment": "handtuchtrockenes Haar am Ansatz, vor dem Föhnen",
+    "formula_observations": null,
+    "notes": "INCI CONFLICT between sources: manufacturer page (C2, used above, 25 ml + 150 ml listed) = \"Aqua, Alcohol Denat., Polyquaternium-16, Polysorbate 20, Polyquaternium-68, Parfum, Panthenol, Ethylhexylglycerin, Cetrimonium Chloride, Hydrolyzed Rice Protein, Glycerin, Alcohol, Lecithin, Tocopherol, Caffeine, Hyaluronic Acid, Tocopheryl Acetate, Biotin, Phenoxyethanol, Sodium Benzoate, Alpha-Isomethyl Ionone, Benzyl Salicylate, Geraniol, Hexyl Cinnamal, Limonene, Linalool.\" vs dm.de (C3, DAN 3122357, GTIN 5037156299137) = \"ALCOHOL DENAT., WATER/AQUA/EAU, PVP, VP/VA COPOLYMER, POLYSORBATE 20, SEA SALT/MARIS SAL/SEL MARIN, HYDROLYZED VEGETABLE PROTEIN, VP/DMAPA ACRYLATES COPOLYMER, BENZALKONIUM CHLORIDE, SODIUM BENZOATE, FRAGRANCE/PARFUM, CITRONELLOL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE.\" (dm list contains SEA SALT/MARIS SAL, PVP, VP/VA COPOLYMER, no peptides). dm calls it \"Leave-In Spray ... Ansatz-Booster\", the manufacturer page \"Pre-Styling-Spray\". dm directions: \"Anwendung: Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein. Anschließend trocken föhnen und wie gewohnt stylen.\". Either different formulations or dm text is stale; resolve by pack/GTIN. dm category: Haarpflege > Haarkur & Haarmaske.",
+    "dm_dan": 3122357,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein.\n2. Anschließend trocken föhnen und wie gewohnt stylen.",
+    "directions_source_url": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Dieses Pre-Styling-Spray sorgt ab dem ersten Sprühstoß für sofortiges Volumen am Ansatz. Die leichte Formel mit Peptiden verleiht dem Haar griffige Textur und schützt es gleichzeitig vor Hitze bis zu 220 °C – für ein langanhaltendes, voluminöses Styling.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mehr Volumen in nur einer Anwendung.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Leichte, schwerelose Formel.",
+        "tier": "C2",
+        "source": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Volumengebendes Leave-in-Spray",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit angenehmem Duft",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für feines und plattes Haar",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Vegan",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Ohne Silikone",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "two conflicting INCI lists (C2 page vs C3 dm); pack not read",
+      "GTIN from dm only"
+    ],
+    "passes_three_evidence_items": false
+  },
+  {
+    "sample_id": "wella-eimi-smooth-thermal-image",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Smooth Thermal Image (2-Phasen-Spray)",
+    "size": "size not on page",
+    "format": "two_phase_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "wella.com/professional/de-DE"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Alcohol Denat., Water/Eau, Isododecane, Disiloxane, Glycerin, Vp/Va Copolymer, Panthenol, Polyquaternium-16, Dimethicone, Fragrance/ Parfum, Lactic Acid, Ethylhexyl Methoxycinnamate, Dimethiconol, Sodium Hydroxide, Violet 2.",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Unser EIMI Thermal Image 2-Phasen-Spray schützt Ihr Haar bei der Verwendung von heißen Geräten. Phase 1 pflegt das Haar und schützt es vor Hitze bis zu 220°C. Phase 2 glättet Ihr Haar für ein makelloses, glänzendes Ergebnis. Haltegrad: 2",
+      "Professionelles Haarspray mit leichtem Halt",
+      "Hitzeschutz bis zu 220°C",
+      "Sorgt für ein glattes und glänzendes Ergebnis",
+      "Schützt das Haar während des Stylings vor Hitze"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad: 2",
+      "number": 2,
+      "scale_max": null,
+      "words": "leichtem Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glatt und glänzend (raw: 'Phase 2 glättet Dein Haar für ein makelloses, glänzendes Ergebnis')",
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis zu 220°C",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Gut schütteln und vor dem Hitzestyling abschnittsweise auf das trockene Haar sprühen",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "The hero line says \"Unser EIMI Thermal Image 2-Phasen-Spray schützt Ihr Haar...\" and the detail says \"...schützt Dein Haar...\". Hold stated as \"Haltegrad: 2\" (no scale max printed) and \"Professionelles Haarspray mit leichtem Halt\". INCI on page ends with \"Violet 2.\"",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Gut schütteln und vor dem Hitzestyling abschnittsweise auf das trockene Haar sprühen",
+    "directions_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Unser EIMI Thermal Image 2-Phasen-Spray schützt Ihr Haar bei der Verwendung von heißen Geräten. Phase 1 pflegt das Haar und schützt es vor Hitze bis zu 220°C. Phase 2 glättet Ihr Haar für ein makelloses, glänzendes Ergebnis. Haltegrad: 2",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Professionelles Haarspray mit leichtem Halt",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Hitzeschutz bis zu 220°C",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Sorgt für ein glattes und glänzendes Ergebnis",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Schützt das Haar während des Stylings vor Hitze",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-thermal-image",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "wella-eimi-glam-mist-shine-spray",
+    "subtype_candidate": "shine_finish",
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Glam Mist Shinespray",
+    "size": "200 ml (per page FAQ)",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "wella.com/professional/de-DE"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Butane, Disiloxane,Cyclopentasiloxane, Isobutane, Alcohol Denat.,Dimethicone, Propane, Parfum, Panthenol, HexylCinnamal, Linalool, Ethylhexyl Methoxycinnamate,Limonene, Aqua, Citronellol",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Vollende deinen glamourösen Style mit diesem Glanzspray. Entwickelt auch zum Schutz des Haares vor Auswirkung von Feuchtigkeit und UV-Strahlen. Haltegrad 1",
+      "Professionelle Glanzpomade für ein glattes und glänzendes Finish",
+      "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+      "HALTEGRAD 1"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 1",
+      "number": 1,
+      "scale_max": null,
+      "words": "leichten Halt",
+      "none_stated": false
+    },
+    "finish_claim": "strahlender / glamouröser Glanz",
+    "humidity_claim": "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Sprühe das Glanzspray gleichmäßig auf dein Haar, um deinen Look mit schönem Glanz zu vollenden.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Page also says \"Professionelle Glanzpomade für ein glattes und glänzendes Finish\" in the Vorteile bullet (sic - it is a spray; wording as printed). INCI list as printed has missing spaces (\"Disiloxane,Cyclopentasiloxane\", \"Alcohol Denat.,Dimethicone\", \"HexylCinnamal\"). Size from FAQ text (\"200-ml-Spraydose\"). Hero line: \"Entwickelt auch zum Schutz des Haares vor Auswirkung von Feuchtigkeit und UV-Strahlen. Haltegrad 1\".",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Sprühe das Glanzspray gleichmäßig auf dein Haar, um deinen Look mit schönem Glanz zu vollenden.",
+    "directions_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Vollende deinen glamourösen Style mit diesem Glanzspray. Entwickelt auch zum Schutz des Haares vor Auswirkung von Feuchtigkeit und UV-Strahlen. Haltegrad 1",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Professionelle Glanzpomade für ein glattes und glänzendes Finish",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "HALTEGRAD 1",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-shine/eimi-glam-mist-shine-spray",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "wella-eimi-texture-ocean-spritz",
+    "subtype_candidate": "salt_spray",
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Texture Ocean Spritz (Texturizing Salt Spray)",
+    "size": "size not on page",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "wella.com/professional/de-DE"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Water/Eau, Alcohol Denat., Sodium Chloride, Magnesium Sulfate, Sorbitol, Peg-40 Hydrogenated Castor Oil, Panthenol, Pvp, Fragrance/Parfum, Citric Acid.",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Kreiere mit EIMI Ocean Spritz, einem natürlichen Mineralsalzspray, das das Haar vor Austrocknung und UV-Schäden schützt, eine lockere, strandähnliche Textur. Haltegrad: 2",
+      "Professionelles Styling-Salzspray mit leichtem Halt",
+      "Mit natürlichem Mineralsalz für die Strandfrisur",
+      "Schutz vor Austrocknung und UV-Schäden",
+      "Beachy-Look"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad: 2",
+      "number": 2,
+      "scale_max": null,
+      "words": "leichtem Halt",
+      "none_stated": false
+    },
+    "finish_claim": "lockere, strandähnliche Textur (raw: 'eine lockere, strandähnliche Textur')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "In das trockene oder leicht feuchte Haar sprühen, dann mit den Fingern die Frisur in Form bringen. Für eine noch grobere Textur das Haar nach dem Formen föhnen",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Contains Sodium Chloride and Magnesium Sulfate (INCI ranks 3-4). Hold stated \"Haltegrad: 2\" and \"Professionelles Styling-Salzspray mit leichtem Halt\". Format (pump) is an assumption; page does not state it.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "In das trockene oder leicht feuchte Haar sprühen, dann mit den Fingern die Frisur in Form bringen. Für eine noch grobere Textur das Haar nach dem Formen föhnen",
+    "directions_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Kreiere mit EIMI Ocean Spritz, einem natürlichen Mineralsalzspray, das das Haar vor Austrocknung und UV-Schäden schützt, eine lockere, strandähnliche Textur. Haltegrad: 2",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Professionelles Styling-Salzspray mit leichtem Halt",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit natürlichem Mineralsalz für die Strandfrisur",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Schutz vor Austrocknung und UV-Schäden",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Beachy-Look",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-texture/eimi-texture-ocean-spritz",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "wella-eimi-volume-dry-me",
+    "subtype_candidate": "texture_spray",
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Volume Dry Me (Trockenshampoo)",
+    "size": "180 ml (per page FAQ)",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "wella.com/professional/de-DE"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Alcohol Denat., Butane, Propane, Isobutane, Tapioca Starch, Water, Silica, Polymethylsilsesquioxane, Fragrance.",
+    "inci_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Erreiche Deinen Look mit Dry Me, einem Trockenshampoo, das Volumen und eine handhabbare, matte Textur schafft. Die Formel des Trockenshampoos mit Tapiokastärke erfrischt Ihr Haar und absorbiert Öl. Haltegrad: 1",
+      "Professionelles volumengebendes Trockenshampoo für eine matte Textur",
+      "Mit Tapiokastärke für frisches Haar",
+      "Volumen",
+      "Erfrischtes, voluminöses Haar"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad: 1",
+      "number": 1,
+      "scale_max": null,
+      "words": null,
+      "none_stated": false
+    },
+    "finish_claim": "matte, handhabbare Textur",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Schüttel mich, sprüh mich, style mich. Gleichmäßig auf das trockene Haar auftragen, einwirken lassen und durchbürsten.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "BOUNDARY: sold by Wella as \"Trockenshampoo\" but the promise line is \"schafft Volumen und eine handhabbare, matte Textur\". Directions: the second line on the page is a section heading (\"VERSCHAFFE DEINEM HAAR VOLUMEN\") and was NOT included.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "Schüttel mich, sprüh mich, style mich. Gleichmäßig auf das trockene Haar auftragen, einwirken lassen und durchbürsten.",
+    "directions_source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Erreiche Deinen Look mit Dry Me, einem Trockenshampoo, das Volumen und eine handhabbare, matte Textur schafft. Die Formel des Trockenshampoos mit Tapiokastärke erfrischt Ihr Haar und absorbiert Öl. Haltegrad: 1",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Professionelles volumengebendes Trockenshampoo für eine matte Textur",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Tapiokastärke für frisches Haar",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Volumen",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Erfrischtes, voluminöses Haar",
+        "tier": "C2",
+        "source": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-dry-me",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on manufacturer page",
+      "price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "moroccanoil-anti-frizz-schild-spray",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Moroccanoil",
+    "product_name": "Anti-Frizz Schild-Spray (Frizz Shield Spray)",
+    "size": "160ml, 50ml",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "de.moroccanoil.com"
+    ],
+    "price_eur": 32,
+    "price_source_url": "https://de.moroccanoil.com/products/frizz-shield-spray",
+    "ean": null,
+    "inci": "WATER/AQUA, DIPROPYLENE GLYCOL, POLYSILICONE-29, SILICONE QUATERNIUM-18, ARGANIA SPINOSA (ARGAN) KERNEL OIL, ARTOCARPUS HETEROPHYLLUS FRUIT EXTRACT, AMARANTHUS CAUDATUS SEED EXTRACT, FRAGRANCE (PERFUM), POLYSORBATE 20, TRIDECETH-12, METHYLPROPANEDIOL, TRIDECETH-6, CAPRYLYL GLYCOL, GLYCOLIC ACID, POLYQUATERNIUM-80, CITRIC ACID, C12-13 PARETH-9, HYDROLYZED QUINOA, SODIUM PCA, SODIUM LACTATE, DIDECYLDIMONIUM CHLORIDE, ARGININE, ASPARTIC ACID, POTASSIUM HYDROXIDE, PCA, LACTOBACILLUS FERMENT, GLYCINE, ALANINE, ALGIN, CAPRYLIC/CAPRIC TRIGLYCERIDE, CHITOSAN, SERINE, VALINE, ISOLEUCINE, PROLINE, THREONINE, HISTIDINE, PHENYLALANINE, PHENOXYETHANOL, SODIUM BENZOATE, POTASSIUM SORBATE, BENZYL ALCOHOL, LINALOOL , ALPHA-ISOMETHYL IONONE",
+    "inci_source_url": "https://de.moroccanoil.com/products/frizz-shield-spray",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Dieses hitzeaktivierte Spray erleichtert den Stylingprozess und bietet gleichzeitig einen Schutzschild für langanhaltende Kontrolle von Frizz, statischer Aufladung und widerspenstigem Haar. Die schwerelose Formel schützt vor Hitzeschäden und enthält antioxidativ wirkendes Arganöl und andere natürliche und aufbereitete Inhaltsstoffe, die das Haar von innen heraus pflegen und es seidig, weich, glatt und glasig werden lassen – ohne klebriges Finish oder Film.",
+      "Unterstützt durch die HydroResist-Technologie, die die Strähnen mit einem hydrophoben Pflegeschleier umhüllt, der Feuchtigkeit und andere Umwelteinflüsse abweist, für perfekt gestyltes Haar, das tagelang hält.",
+      "• Schützt vor bis zu 90 % Luftfeuchtigkeit*",
+      "• 94 % gaben an, dass es das beste Anti-Frizz-Produkt ist**",
+      "• 98 % gaben an, dass das Haar glänzend und glatt ist**",
+      "• 99 % gaben an, dass das Haar weich ist**",
+      "• 96 % sagen, dass das Produkt salontaugliche Ergebnisse liefert**",
+      "Duftet nach dem charakteristischen Duft von Moroccanoil, einer mediterran inspirierten Mischung aus würzigem Bernstein und süßen Blumennoten."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "seidig, weich, glatt und glasig (raw: 'es seidig, weich, glatt und glasig werden lassen')",
+    "humidity_claim": "Schützt vor bis zu 90 % Luftfeuchtigkeit*",
+    "heat_claim": "Dieses hitzeaktivierte Spray ... schützt vor Hitzeschäden",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "In das saubere, feuchte Haar sprühen. Für eine gleichmäßige Verteilung kämmen und zur Aktivierung abschnittsweise föhnen. Anschließend ein Glätteisen verwenden, um die Anti-Frizz-Wirkung zu verstärken.\nFrizz Shield Spray sollte das letzte Produkt vor dem Föhnen sein, um eine optimale Wärmeaktivierung zu erzielen.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Format not stated in the text; \"Pumpspray\" assumed (160 ml/50 ml variants) - verify. Claims list excludes the *-footnotes. Price = first variant on de.moroccanoil.com (products.json) 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "In das saubere, feuchte Haar sprühen. Für eine gleichmäßige Verteilung kämmen und zur Aktivierung abschnittsweise föhnen. Anschließend ein Glätteisen verwenden, um die Anti-Frizz-Wirkung zu verstärken.\nFrizz Shield Spray sollte das letzte Produkt vor dem Föhnen sein, um eine optimale Wärmeaktivierung zu erzielen.",
+    "directions_source_url": "https://de.moroccanoil.com/products/frizz-shield-spray",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Dieses hitzeaktivierte Spray erleichtert den Stylingprozess und bietet gleichzeitig einen Schutzschild für langanhaltende Kontrolle von Frizz, statischer Aufladung und widerspenstigem Haar. Die schwerelose Formel schützt vor Hitzeschäden und enthält antioxidativ wirkendes Arganöl und andere natürliche und aufbereitete Inhaltsstoffe, die das Haar von innen heraus pflegen und es seidig, weich, glatt und glasig werden lassen – ohne klebriges Finish oder Film.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Unterstützt durch die HydroResist-Technologie, die die Strähnen mit einem hydrophoben Pflegeschleier umhüllt, der Feuchtigkeit und andere Umwelteinflüsse abweist, für perfekt gestyltes Haar, das tagelang hält.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Schützt vor bis zu 90 % Luftfeuchtigkeit*",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 94 % gaben an, dass es das beste Anti-Frizz-Produkt ist**",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 98 % gaben an, dass das Haar glänzend und glatt ist**",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 99 % gaben an, dass das Haar weich ist**",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 96 % sagen, dass das Produkt salontaugliche Ergebnisse liefert**",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Duftet nach dem charakteristischen Duft von Moroccanoil, einer mediterran inspirierten Mischung aus würzigem Bernstein und süßen Blumennoten.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/frizz-shield-spray",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page (barcode field empty)",
+      "pack not read; INCI is manufacturer shop page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "moroccanoil-glaettende-creme-smoothing-lotion",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Moroccanoil",
+    "product_name": "Glättende Creme (Smoothing Lotion)",
+    "size": "300 ml, 75 ml",
+    "format": "pump_bottle_lotion",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "de.moroccanoil.com"
+    ],
+    "price_eur": 38,
+    "price_source_url": "https://de.moroccanoil.com/products/smoothing-lotion",
+    "ean": null,
+    "inci": "WATER/AQUA, CYCLOMETHICONE, DIMETHICONE, CETEARYL ALCOHOL, GLYCERIN, FRAGRANCE, BEHENTRIMONIUM CHLORIDE, POLYQUATERNIUM-70, POLYQUATERNIUM-11, STEARETH-2, ARGANIA SPINOSA (ARGAN) KERNEL OIL, HYDROGENATED VEGETABLE OIL, TILIA TOMENTOSA BUD EXTRACT, CAPRYLYL GLYCOL, DIPROPYLENE GLYCOL , ISOPROPYL ALCOHOL, GLYCERYL STEARATE, CITRIC ACID, OLETH-10, CHLORPHENESIN, PHENOXYETHANOL , POTASSIUM SORBATE, SODIUM BENZOATE, D&C RED NO. 17 (CI 26100), D&C YELLOW NO.11 (CI 47000), ALPHA-ISOMETHYL IONONE, LINALOOL, HYDROXYCITRONELLAL, BENZYL BENZOATE",
+    "inci_source_url": "https://de.moroccanoil.com/products/smoothing-lotion",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Diese pflegende und dennoch leichte Stylingcreme bändigt krauses und widerspenstiges Haar und verleiht ihm den ganzen Tag lang Geschmeidigkeit und Definition. Sie ist mit Arganöl, Arganbutter, Vitamin E und essentiellen Fettsäuren angereichert, um trockenes Haar zu pflegen und es fühlbar weich und spürbar glatt zu machen. Ideal für lockiges, mittelstarkes und grobes Haar.",
+      "• Macht das Haar um 58% glatter*",
+      "• Reduziert Bruch um 72 %.*",
+      "Parfümiert mit dem typischen Moroccanoil-Duft, einer mediterran inspirierten Mischung aus würzigem Amber und süßen Blumennoten."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Ideal für lockiges, mittelstarkes und grobes Haar."
+    ],
+    "free_from_claims": [],
+    "directions": "Eine kleine Menge Moroccanoil® Glättende Lotion ins feuchte Haar geben. Wie gewünscht föhnen. Kann als Leave-in-Kur verwendet werden, die das Haar länger frisch aussehen lässt. TIPP: Für einen glatten Look mit großem Volumen 1-2 Pumpstöße Moroccanoil® Behandlung mit 1-2 Pumpstößen Moroccanoil Glättende Lotion und einer golfballgroßen Menge Moroccanoil® Volumenschaum vermischen.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Shop title \"Glättende Creme\", handle smoothing-lotion, directions call it \"Glättende Lotion\". INCI contains D&C colorants (CI 26100, CI 47000). Format assumed pump bottle (directions mention Pumpstöße). Price = first variant on de.moroccanoil.com (products.json) 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Eine kleine Menge Moroccanoil® Glättende Lotion ins feuchte Haar geben. Wie gewünscht föhnen. Kann als Leave-in-Kur verwendet werden, die das Haar länger frisch aussehen lässt. TIPP: Für einen glatten Look mit großem Volumen 1-2 Pumpstöße Moroccanoil® Behandlung mit 1-2 Pumpstößen Moroccanoil Glättende Lotion und einer golfballgroßen Menge Moroccanoil® Volumenschaum vermischen.",
+    "directions_source_url": "https://de.moroccanoil.com/products/smoothing-lotion",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Diese pflegende und dennoch leichte Stylingcreme bändigt krauses und widerspenstiges Haar und verleiht ihm den ganzen Tag lang Geschmeidigkeit und Definition. Sie ist mit Arganöl, Arganbutter, Vitamin E und essentiellen Fettsäuren angereichert, um trockenes Haar zu pflegen und es fühlbar weich und spürbar glatt zu machen. Ideal für lockiges, mittelstarkes und grobes Haar.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/smoothing-lotion",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Macht das Haar um 58% glatter*",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/smoothing-lotion",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Reduziert Bruch um 72 %.*",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/smoothing-lotion",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Parfümiert mit dem typischen Moroccanoil-Duft, einer mediterran inspirierten Mischung aus würzigem Amber und süßen Blumennoten.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/smoothing-lotion",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page (barcode field empty)",
+      "pack not read; INCI is manufacturer shop page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "moroccanoil-root-boost",
+    "subtype_candidate": "texture_spray",
+    "brand": "Moroccanoil",
+    "product_name": "Root Boost",
+    "size": "250 ml, 75 ml",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "de.moroccanoil.com"
+    ],
+    "price_eur": 32,
+    "price_source_url": "https://de.moroccanoil.com/products/root-boost-spray",
+    "ean": null,
+    "inci": "WATER/AQUA, DIMETHYL ETHER, VP/VA COPOLYMER, PVP, ARGANIA SPINOSA KERNEL OIL, FRAGRANCE, CARBOMER, PEG-45 KERNEL GLYCERIDES, PPG-5-CETETH-20, AMINOMETHYL PROPANOL, TETRASODIUM EDTA, POLYQUATERNIUM-7, POLYSORBATE 20, BENZOPHENONE-4, PHENOXYETHANOL, POTASSIUM SORBATE",
+    "inci_source_url": "https://de.moroccanoil.com/products/root-boost-spray",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Großes Volumen dank Fülle vom Ansatz an: Vor dem Föhnstyling sorgt Moroccanoil® Root Boost für eine starke Textur an den Haaransätzen und erzeugt so mühelos großes Volumen. Angereichert mit antioxidantienreichem Arganöl, verleiht dieser Ansatz-Booster normalem bis feinem Haar lang anhaltende Textur, Fülle und Bewegung. Unsere hochwirksame Formel kontrolliert statische Aufladung und sorgt für ein natürlich aussehendes Finish."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "natürlich aussehendes Finish",
+    "humidity_claim": "kontrolliert statische Aufladung",
+    "heat_claim": null,
+    "hair_type_claims": [
+      "normalem bis feinem Haar"
+    ],
+    "free_from_claims": [],
+    "directions": "Flasche gut Schütteln. Moroccanoil® Root Boost großzügig auf die Haaransätze des handtuchtrockenen Haares sprühen. Haare scheitelweise mit einer Rundbürste föhnen und diese von der Kopfhaut wegführen.\nTIPP: Moroccanoil® Volumenschaum für zusätzliche Fülle, Bewegung und Halt vor dem Föhnen mit Moroccanoil® Root Boost kombinieren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Aerosol assumed from INCI (Dimethyl Ether); product page text only says \"Root Boost\". Pre-blow-dry volumizing product (\"vor dem Föhnstyling ... starke Textur an den Haaransätzen\"). Price = first variant on de.moroccanoil.com (products.json) 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "Flasche gut Schütteln. Moroccanoil® Root Boost großzügig auf die Haaransätze des handtuchtrockenen Haares sprühen. Haare scheitelweise mit einer Rundbürste föhnen und diese von der Kopfhaut wegführen.\nTIPP: Moroccanoil® Volumenschaum für zusätzliche Fülle, Bewegung und Halt vor dem Föhnen mit Moroccanoil® Root Boost kombinieren.",
+    "directions_source_url": "https://de.moroccanoil.com/products/root-boost-spray",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Großes Volumen dank Fülle vom Ansatz an: Vor dem Föhnstyling sorgt Moroccanoil® Root Boost für eine starke Textur an den Haaransätzen und erzeugt so mühelos großes Volumen. Angereichert mit antioxidantienreichem Arganöl, verleiht dieser Ansatz-Booster normalem bis feinem Haar lang anhaltende Textur, Fülle und Bewegung. Unsere hochwirksame Formel kontrolliert statische Aufladung und sorgt für ein natürlich aussehendes Finish.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/root-boost-spray",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page (barcode field empty)",
+      "pack not read; INCI is manufacturer shop page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "moroccanoil-volumizing-spray",
+    "subtype_candidate": "texture_spray",
+    "brand": "Moroccanoil",
+    "product_name": "Volumizing Spray (Volumizing Mist)",
+    "size": "160 ml, 50 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "de.moroccanoil.com"
+    ],
+    "price_eur": 32,
+    "price_source_url": "https://de.moroccanoil.com/products/volumizing-mist",
+    "ean": null,
+    "inci": "SD ALCOHOL 40-B, WATER/ AQUA, VP/VA COPOLYMER, ISOPROPYL ALCOHOL, POLYSORBATE 20, ARGANIA SPINOSA (ARGAN) KERNEL OIL, LAVANDULA ANGUSTIFOLIA (LAVENDER) FLOWER EXTRACT, CAMELLIA SINENSIS (GREEN TEA) LEAF EXTRACT, ACACIA SENEGAL GUM, HYDROLYZED QUINOA, RICE AMINO ACIDS, WHEAT AMINO ACIDS, SOY AMINO ACIDS, ARGININE HCL, SERINE, THREONINE, ALGIN, CHITOSAN, PULLULAN, TREHALOSE, XYLITYLGLUCOSIDE, ANHYDROXYLITOL, XYLITOL, SORBITOL, GLUCOSE, SEA SALT/ MARIS SAL, GALACTOARABINAN, GLYCERIN, PANTHENOL, POLYQUATERNIUM-11, POLYQUATERNIUM-16, C12-13 PARETH-9, CITRIC ACID, CAPRYLIC/CAPRIC TRIGLYCERIDE, PROPANEDIOL, FRAGRANCE, CINNAMIDOPROPYLTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, SODIUM BENZOATE, POTASSIUM SORBATE, BENZYL ALCOHOL, PHENOXYETHANOL",
+    "inci_source_url": "https://de.moroccanoil.com/products/volumizing-mist",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Bringen Sie Leben in feines, stumpfes Haare mit dem Volumizing Spray. Dieser schwerelose, körperbildende Nebel hebt die Haare für einen Look, der bis zu 50% voller ist, während er Bewegung und spürbaren Halt vom Ansatz bis zur Spitze aufrecht erhält. Die Arganöl-infundierte Formel enthält Reis-Aminosäuren, um das Haar zu stärken, sowie Totes Meersalz, um Volumen mit sprungkräftiger Textur aufzubauen. Anhaltendes Volumen bis zu 72 Stunden."
+    ],
+    "hold_claim": {
+      "raw": "spürbaren Halt vom Ansatz bis zur Spitze",
+      "number": null,
+      "scale_max": null,
+      "words": "spürbaren Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "feines, stumpfes Haare (sic)"
+    ],
+    "free_from_claims": [],
+    "directions": "Sprühen Sie das Produkt großzügig vom Ansatz bis zu den Spitzen auf feuchtes, handtuchtrockenes Haar auf.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Contains SEA SALT/ MARIS SAL (rank ~38, \"Totes Meersalz\" promised in text). Sold as \"Volumizing Spray\"/\"Volumizing Mist\" (handle volumizing-mist). Hold claim wording: \"Bewegung und spürbaren Halt vom Ansatz bis zur Spitze aufrecht erhält\". Format assumed pump. Price = first variant on de.moroccanoil.com (products.json) 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": "Anhaltendes Volumen bis zu 72 Stunden.",
+    "directions_verbatim": "Sprühen Sie das Produkt großzügig vom Ansatz bis zu den Spitzen auf feuchtes, handtuchtrockenes Haar auf.",
+    "directions_source_url": "https://de.moroccanoil.com/products/volumizing-mist",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Bringen Sie Leben in feines, stumpfes Haare mit dem Volumizing Spray. Dieser schwerelose, körperbildende Nebel hebt die Haare für einen Look, der bis zu 50% voller ist, während er Bewegung und spürbaren Halt vom Ansatz bis zur Spitze aufrecht erhält. Die Arganöl-infundierte Formel enthält Reis-Aminosäuren, um das Haar zu stärken, sowie Totes Meersalz, um Volumen mit sprungkräftiger Textur aufzubauen. Anhaltendes Volumen bis zu 72 Stunden.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/volumizing-mist",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page (barcode field empty)",
+      "pack not read; INCI is manufacturer shop page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "moroccanoil-textur-und-volumenpuder",
+    "subtype_candidate": "hair_powder",
+    "brand": "Moroccanoil",
+    "product_name": "Textur- & Volumenpuder fürs Haar (Texture & Volume Hair Powder)",
+    "size": "8gr.",
+    "format": "powder_pump_bottle",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "de.moroccanoil.com"
+    ],
+    "price_eur": 31,
+    "price_source_url": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+    "ean": null,
+    "inci": "AQUA/WATER/EAU, GLYCERIN, SILICA SILYLATE, ARGANIA SPINOSA (ARGAN) KERNEL OIL, PARFUM/FRAGRANCE, CITRIC ACID, SODIUM BENZOATE, LINALOOL, ALPHA-ISOMETHYL IONONE, HEXAMETHYLINDANOPYRAN, LINALYL ACETATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, VANILLIN, LAVANDULA (LAVENDER) OIL/EXTRACT, ISOEUGENYL ACETATE. MOT&VP01",
+    "inci_source_url": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Das Moroccanoil Textur- & Volumenpuder sorgt für sofortiges Volumen, hebt die Strähnen an und verbessert jeden Style am Ansatz. Dieser leistungsstarke Puder verleiht Grip und Textur für müheloses Styling, maximales, konzentriertes Volumen und lang anhaltenden, flexiblen Halt.",
+      "Um die Vorteile des Volumens während des Tages zu reaktivieren, kannst du das Haar einfach zerzausen. Dadurch bleibt das Haar auch nach der ersten Anwendung des Produkts den ganzen Tag über voluminös und sieht toll aus. Es beschwert das Haar nicht und hinterlässt kein klebriges Gefühl, was es zu einem idealen Produkt für feines, dünnes oder plattes Haar macht.",
+      "• Leichte Formel für fühlbare Ergebnisse",
+      "• Natürlich aussehendes, halbmattes Finish",
+      "• Aufbauende Ergebnisse",
+      "• Haare zur Reaktivierung zerzausen",
+      "• Desodorier, hinterlässt den typischen Moroccanoil-Duft",
+      "Die Ergebnisse basieren auf Verbraucher- und Instrumententests nach einmaliger Anwendung:",
+      "• 48 Stunden lang anhaltender Lift1",
+      "• 98 % stimmen zu, dass das Haar sofort mehr Fülle und Volumen an der Haarwurzel erhält²",
+      "• 98 % stimmen zu, dass sich das Haar nicht klebrig, spröde oder steif anfühlt²",
+      "• 93 % stimmen zu, dass dieses Produkt kraftloses und plattes Haar wiederbelebt²"
+    ],
+    "hold_claim": {
+      "raw": "lang anhaltenden, flexiblen Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "lang anhaltenden, flexiblen Halt",
+      "none_stated": false
+    },
+    "finish_claim": "Natürlich aussehendes, halbmattes Finish",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "feines, dünnes oder plattes Haar"
+    ],
+    "free_from_claims": [
+      "Desodorier, hinterlässt den typischen Moroccanoil-Duft (sic)"
+    ],
+    "directions": "Haare in Abschnitte unterteilen. Die Flasche 4–6 cm von den trockenen Wurzeln entfernt halten. Sanft auf die Pumpe, um das Produkt zu verteilen. Mit einem Pumpenstoß beginnen und je nach Bedarf weitere hinzugeben, um das Volumen zu erhöhen. Mit den Fingern stylen, bis das gewünschte Ergebnis erreicht ist. Das Haar zerzausen, um das Volumen über den Tag hinweg zu reaktivieren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Powder in a pump bottle per directions (\"Sanft auf die Pumpe\"). INCI first items AQUA, GLYCERIN, SILICA SILYLATE, i.e. water-containing powder. INCI line ends with a batch code \"MOT&VP01\" on the page. Price = first variant on de.moroccanoil.com (products.json) 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "48 Stunden lang anhaltender Lift1 (footnote 1: unabhängige Laborstudie)",
+    "directions_verbatim": "Haare in Abschnitte unterteilen. Die Flasche 4–6 cm von den trockenen Wurzeln entfernt halten. Sanft auf die Pumpe, um das Produkt zu verteilen. Mit einem Pumpenstoß beginnen und je nach Bedarf weitere hinzugeben, um das Volumen zu erhöhen. Mit den Fingern stylen, bis das gewünschte Ergebnis erreicht ist. Das Haar zerzausen, um das Volumen über den Tag hinweg zu reaktivieren.",
+    "directions_source_url": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Das Moroccanoil Textur- & Volumenpuder sorgt für sofortiges Volumen, hebt die Strähnen an und verbessert jeden Style am Ansatz. Dieser leistungsstarke Puder verleiht Grip und Textur für müheloses Styling, maximales, konzentriertes Volumen und lang anhaltenden, flexiblen Halt.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Um die Vorteile des Volumens während des Tages zu reaktivieren, kannst du das Haar einfach zerzausen. Dadurch bleibt das Haar auch nach der ersten Anwendung des Produkts den ganzen Tag über voluminös und sieht toll aus. Es beschwert das Haar nicht und hinterlässt kein klebriges Gefühl, was es zu einem idealen Produkt für feines, dünnes oder plattes Haar macht.",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Leichte Formel für fühlbare Ergebnisse",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Natürlich aussehendes, halbmattes Finish",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Aufbauende Ergebnisse",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Haare zur Reaktivierung zerzausen",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• Desodorier, hinterlässt den typischen Moroccanoil-Duft",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Die Ergebnisse basieren auf Verbraucher- und Instrumententests nach einmaliger Anwendung:",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 48 Stunden lang anhaltender Lift1",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 98 % stimmen zu, dass das Haar sofort mehr Fülle und Volumen an der Haarwurzel erhält²",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 98 % stimmen zu, dass sich das Haar nicht klebrig, spröde oder steif anfühlt²",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "• 93 % stimmen zu, dass dieses Produkt kraftloses und plattes Haar wiederbelebt²",
+        "tier": "C2",
+        "source": "https://de.moroccanoil.com/products/texture-volume-hair-powder",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page (barcode field empty)",
+      "pack not read; INCI is manufacturer shop page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "syoss-glaze-topcoat",
+    "subtype_candidate": "shine_finish",
+    "brand": "Syoss",
+    "product_name": "Glaze Topcoat",
+    "size": "size not on page",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "syoss.de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Panthenol, Niacinamide, Parfum (Fragrance), Aqua (Water, Eau), Terpineol",
+    "inci_source_url": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+      "3in1 Style, Care, Shine",
+      "Mit Laminierungs-Effekt",
+      "Bis zu 230°C Hitzeschutz",
+      "Mit Vitamin-Komplex und Gloss Boost für ein intensiv glänzendes Finish",
+      "Reduziert Frizz bis zu 24h für seidig glattes Haar und schützt das Haar vor Luftfeuchtigkeit",
+      "Umhüllt das Haar mit einem intensiv glänzenden Finish, ohne sichtbare Rückstände oder fettigen Effekt",
+      "Bändigt abstehende Haare und verleiht eine reflektierende Oberfläche für mehrschichtigen Glanz",
+      "Vegange Formel*"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "intensiv glänzendes Finish (raw: 'Mit Vitamin-Komplex und Gloss Boost für ein intensiv glänzendes Finish')",
+    "humidity_claim": "schützt das Haar vor Luftfeuchtigkeit",
+    "heat_claim": "Bis zu 230°C Hitzeschutz",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Vegange Formel* (sic)",
+      "* Frei von Inhaltsstoffen tierischen Ursprungs"
+    ],
+    "directions": "Auf trockenem Haar wie folgt anwenden:\nVor dem Styling mit Glätteisen oder Lockenstab – Mit Hitzeschutz für ein intensiv glänzendes Ergebnis\nNach dem Styling – Zur Verstärkung des Glaze-Effekts für mehrschichtigen Glanz",
+    "application_moment": "trockenes Haar, vor oder nach dem Styling",
+    "formula_observations": null,
+    "notes": "Directions are two alternative uses (\"Vor dem Styling mit Glätteisen oder Lockenstab ...\" / \"Nach dem Styling - ...\"). Aerosol inferred from INCI (Butane, Isobutane first). Page category: Haarstyling > Specialties. Not checked at dm in this pass.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "Reduziert Frizz bis zu 24h",
+    "directions_verbatim": "Auf trockenem Haar wie folgt anwenden:\nVor dem Styling mit Glätteisen oder Lockenstab – Mit Hitzeschutz für ein intensiv glänzendes Ergebnis\nNach dem Styling – Zur Verstärkung des Glaze-Effekts für mehrschichtigen Glanz",
+    "directions_source_url": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "3in1 Style, Care, Shine",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Laminierungs-Effekt",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bis zu 230°C Hitzeschutz",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Vitamin-Komplex und Gloss Boost für ein intensiv glänzendes Finish",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Reduziert Frizz bis zu 24h für seidig glattes Haar und schützt das Haar vor Luftfeuchtigkeit",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Umhüllt das Haar mit einem intensiv glänzenden Finish, ohne sichtbare Rückstände oder fettigen Effekt",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bändigt abstehende Haare und verleiht eine reflektierende Oberfläche für mehrschichtigen Glanz",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Vegange Formel*",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/specialties/syoss-glaze-topcoat.html",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "syoss-glaze-glanz-und-schutz-primer",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Syoss",
+    "product_name": "Glaze Glanz & Schutz Primer",
+    "size": "size not on page",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "syoss.de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Aqua (Water, Eau)· Polyglyceryl-3 Betainate Acetate · Propylene Glycol · PEG-60 Hydrogenated Castor Oil · Fructose · Sodium Benzoate · Triethyl Citrate · Panthenol · Niacinamide · Parfum (Fragrance) · Caprylic/ Capric Triglyceride · Pentylene Glycol · Glycerin · Lactic Acid · Sodium Citrate · Sodium Hyaluronate · Terpineol · Polyporus Umbellatus (Mushroom) Extract",
+    "inci_source_url": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+      "3in1 Style, Care, Shine",
+      "Mit Laminierungs-Effekt",
+      "Bis zu 230°C Hitzeschutz",
+      "Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish",
+      "Reduziert Frizz bis zu 24h und schützt das Haar vor Luftfeuchtigkeit",
+      "Bereitet das Haar auf das Styling vor und sorgt für eine geschmeidige, glänzende Grundlage",
+      "Bändigt abstehende Haare, ohne zu beschweren",
+      "Vegange Formel*"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzende Grundlage / Glaze-Look",
+    "humidity_claim": "schützt das Haar vor Luftfeuchtigkeit",
+    "heat_claim": "Bis zu 230°C Hitzeschutz",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Vegange Formel* (sic)",
+      "* Frei von Inhaltsstoffen tierischen Ursprungs"
+    ],
+    "directions": "Gleichmäßig ins feuchte Haar sprühen und anschließend föhnen - für Hitzeschutz und einen glanzvollen Glaze-Look.\nFür ein optimales Glanz-Ergebnis in Kombination mit Syoss Glaze Haarspray verwenden. Nicht in die Augen sprühen.",
+    "application_moment": "feuchtes Haar, vor dem Föhnen",
+    "formula_observations": null,
+    "notes": "Pre-blow-dry primer; \"Bändigt abstehende Haare, ohne zu beschweren\" in the bullets. Format (pump) assumed - INCI has no propellants. Not checked at dm in this pass.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "Reduziert Frizz bis zu 24h",
+    "directions_verbatim": "Gleichmäßig ins feuchte Haar sprühen und anschließend föhnen - für Hitzeschutz und einen glanzvollen Glaze-Look.\nFür ein optimales Glanz-Ergebnis in Kombination mit Syoss Glaze Haarspray verwenden. Nicht in die Augen sprühen.",
+    "directions_source_url": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "3in1 Style, Care, Shine",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Laminierungs-Effekt",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bis zu 230°C Hitzeschutz",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Reduziert Frizz bis zu 24h und schützt das Haar vor Luftfeuchtigkeit",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bereitet das Haar auf das Styling vor und sorgt für eine geschmeidige, glänzende Grundlage",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bändigt abstehende Haare, ohne zu beschweren",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Vegange Formel*",
+        "tier": "C2",
+        "source": "https://www.syoss.de/haarstyling/primer/syoss-glaze-primer.html",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page",
+      "format not stated"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "osis-super-shield",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Schwarzkopf Professional",
+    "product_name": "OSiS Super Shield",
+    "size": "size not captured",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "schwarzkopf-professional.com/de/de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Dimethyl Ether, Alcohol denat., C12-15 Alkyl Benzoate, Hydrogenated Ethylhexyl Olivate, Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer, Parfum (Fragrance), Hydrogenated Olive Oil Unsaponifiables, C12-15 Alcohols, Aqua (Water, Eau), Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Eucalyptus Globulus Oil",
+    "inci_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/super-shield.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "OSiS Super Shield ist ein wahrer Allrounder, ein multifunktionales Schutzspray, das speziell für langes Haar formuliert wurde, um es vor Umweltbelastungen, Hitze und Feuchtigkeit zu schützen. Es bekämpft Frizz, während es das Haar entwirrt, und gibt stumpfem Haar einen dringend benötigten Glanzschub!",
+      "PERFEKT FÜR SMOOTH GLANZ ANTI LUFTFEUCHTIGKEIT",
+      "Wir sind der Meinung, dass umwerfendes Haar um jeden Preis geschützt werden sollte! Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C."
+    ],
+    "hold_claim": {
+      "raw": "Kein Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "Kein Halt",
+      "none_stated": false,
+      "tier": "C2",
+      "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/super-shield.html",
+      "date": "2026-10-12",
+      "note": "Produktmerkmale bullet; added after Codex review 2026-10-12, verified by WebFetch"
+    },
+    "finish_claim": "Glanzschub",
+    "humidity_claim": "vor Umweltbelastungen, Hitze und Feuchtigkeit schützen",
+    "heat_claim": "Hitze (Technisches Handbuch: bis zu 230 °C)",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Vor dem Föhnen, mit ca. 30cm Abstand, in kurzen Sprühstößen verwenden oder auf trockenem Haar anwenden.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Technical manual (C2 PDF, dm.henkel-dam.com DE_OSiS_0526_TechnicalManual) adds: \"Hitze bis zu 230 °C\", \"hydriertem Olivenöl\". Page form label before INCI: \"Haarspray, Aerosol\". INCI taken from the page block \"Was ist im Produkt enthalten?\".",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Vor dem Föhnen, mit ca. 30cm Abstand, in kurzen Sprühstößen verwenden oder auf trockenem Haar anwenden.",
+    "directions_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/super-shield.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "OSiS Super Shield ist ein wahrer Allrounder, ein multifunktionales Schutzspray, das speziell für langes Haar formuliert wurde, um es vor Umweltbelastungen, Hitze und Feuchtigkeit zu schützen. Es bekämpft Frizz, während es das Haar entwirrt, und gibt stumpfem Haar einen dringend benötigten Glanzschub!",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/super-shield.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "PERFEKT FÜR SMOOTH GLANZ ANTI LUFTFEUCHTIGKEIT",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/super-shield.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Wir sind der Meinung, dass umwerfendes Haar um jeden Preis geschützt werden sollte! Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C.",
+        "tier": "C2",
+        "source": "technical manual PDF (dm.henkel-dam.com, DE_OSiS_0526_TechnicalManual)",
+        "date": "2026-10-12",
+        "source_class": "manufacturer_pdf"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "osis-sparkler",
+    "subtype_candidate": "shine_finish",
+    "brand": "Schwarzkopf Professional",
+    "product_name": "OSiS Sparkler",
+    "size": "size not captured",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "schwarzkopf-professional.com/de/de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Parfum (Fragrance), Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes",
+    "inci_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/sparkler.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "OSiS Sparkler ist ein Glanz-Spray für sofort glamouröses glänzendes Haar. Es verleiht dem Haar ein sofortiges, leichtes Finish, ohne zu beschweren. Der leichte Pflegeeffekt verbessert die Kämmbarkeit.",
+      "Bring den Glamour zum Vorschein! Dieses silikonfreie Glanzspray sorgt für einen leichten Pflegeeffekt und ein herrlich glänzendes Finish nach dem Föhnen. Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt."
+    ],
+    "hold_claim": {
+      "raw": "Kein Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "Kein Halt",
+      "none_stated": false,
+      "tier": "C2",
+      "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/sparkler.html",
+      "date": "2026-10-12",
+      "note": "Produktmerkmale bullet; added after Codex review 2026-10-12, verified by WebFetch"
+    },
+    "finish_claim": "glamouröses glänzendes Haar / leichtes Finish",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Mit einem Abstand von 30cm auf das trockene Haar sprühen. In mehreren kurzen Sprühstößen anwenden. Die Haare nach Bedarf stylen.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Technical manual (C2 PDF) wording: \"Dieses silikonfreie Glanzspray sorgt für einen leichten Pflegeeffekt und ein herrlich glänzendes Finish nach dem Föhnen. Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt.\" Page form label before INCI: \"Haarspray, Aerosol\". INCI taken from the page block \"Was ist im Produkt enthalten?\". Expert tip on page: \"Um dickes, widerspenstiges Haar zu entwirren, auf das feuchte Haar sprühen.\"",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Mit einem Abstand von 30cm auf das trockene Haar sprühen. In mehreren kurzen Sprühstößen anwenden. Die Haare nach Bedarf stylen.",
+    "directions_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/sparkler.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "OSiS Sparkler ist ein Glanz-Spray für sofort glamouröses glänzendes Haar. Es verleiht dem Haar ein sofortiges, leichtes Finish, ohne zu beschweren. Der leichte Pflegeeffekt verbessert die Kämmbarkeit.",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/sparkler.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bring den Glamour zum Vorschein! Dieses silikonfreie Glanzspray sorgt für einen leichten Pflegeeffekt und ein herrlich glänzendes Finish nach dem Föhnen. Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt.",
+        "tier": "C2",
+        "source": "technical manual PDF (dm.henkel-dam.com, DE_OSiS_0526_TechnicalManual)",
+        "date": "2026-10-12",
+        "source_class": "manufacturer_pdf"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "osis-dust-it",
+    "subtype_candidate": "hair_powder",
+    "brand": "Schwarzkopf Professional",
+    "product_name": "OSiS Dust It",
+    "size": "size not captured",
+    "format": "powder_shaker",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "schwarzkopf-professional.com/de/de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Aqua (Water, Eau), Silica Silylate, Sodium Benzoate, Citric Acid",
+    "inci_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/texture/dust-it.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "OSiS Dust It ist ein mattierendes Volumenpuder für unglaubliches Volumen, starken Halt und intensive Griffigkeit.",
+      "PERFEKT FÜR TEXTUR VOLUMEN ANSATZVOLUMEN"
+    ],
+    "hold_claim": {
+      "raw": "starken Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "starken Halt",
+      "none_stated": false
+    },
+    "finish_claim": "mattierend (Mattes Finish)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Das Volumenpuder vor der Anwendung vorsichtig schütteln und mit den Fingern in das trockene Haar einarbeiten. Auf den Haaransatz und die Längen auftragen, um mehr Volumen zu erhalten und um Zöpfen und Hochsteckfrisuren zusätzlichen Halt zu verleihen, sowie Haarnadeln an ihrem Platz zu halten.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Page benefit tags: \"Griffigkeit der Haare\", \"Mattes Finish\", \"Kräftige Haartextur\". Applied with a shaker per the FAQ (\"Dust It ist ein Haarpuder und wird mit einem Shaker aufgetragen\"). INCI has only 4 items. Page form label before INCI: \"Styling Puder\". INCI taken from the page block \"Was ist im Produkt enthalten?\". Expert tip on page: \"Als Hilfsmittel bei Hochsteckfrisuren auf frisch gewaschenem, seidigem Haar verwenden - für mehr Frisierbarkeit und Griffigkeit!\"",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Das Volumenpuder vor der Anwendung vorsichtig schütteln und mit den Fingern in das trockene Haar einarbeiten. Auf den Haaransatz und die Längen auftragen, um mehr Volumen zu erhalten und um Zöpfen und Hochsteckfrisuren zusätzlichen Halt zu verleihen, sowie Haarnadeln an ihrem Platz zu halten.",
+    "directions_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/texture/dust-it.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "OSiS Dust It ist ein mattierendes Volumenpuder für unglaubliches Volumen, starken Halt und intensive Griffigkeit.",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/texture/dust-it.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "PERFEKT FÜR TEXTUR VOLUMEN ANSATZVOLUMEN",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/texture/dust-it.html",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "osis-flatliner",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "Schwarzkopf Professional",
+    "product_name": "OSiS Flatliner",
+    "size": "size not captured",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "schwarzkopf-professional.com/de/de"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "Aqua (Water, Eau), Polyglyceryl-3 Betainate Acetate, Panthenol, Propylene Glycol, Fructose, Sodium Benzoate, Triethyl Citrate, PEG-60 Hydrogenated Castor Oil, Parfum (Fragrance), Pentylene Glycol, Glycerin, Lactic Acid, Sodium Citrate, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Hydrolyzed Keratin, Eucalyptus Globulus Oil",
+    "inci_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/flatliner.html",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "OSiS Flatliner bietet Hitzeschutz bis zu 230 °C und wurde speziell für die tägliche Anwendung mit heißen Stylingtools entwickelt. Es reduziert Frizz für geschmeidiges, gesund aussehendes Haar.",
+      "PERFEKT FÜR SMOOTH GLANZ HITZESCHUTZ"
+    ],
+    "hold_claim": {
+      "raw": "leichten Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "leichten Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis zu 230 °C",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Mit seinem leichten Halt kann OSiS Flatliner auch als Fixierspray verwendet werden, bevor die Haare geföhnt werden, um mehr Volumen im Haar zu erzeugen.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "The only \"Verwendung\" text on the page is the secondary use as a fixative before blow-drying - there is NO primary directions text on the page (the manual says \"ideal auch als Föhnspray\"). Format non_aerosol spray per page label (pump assumed). Page form label before INCI: \"Haarfestiger, Spray non-Aerosol\". INCI taken from the page block \"Was ist im Produkt enthalten?\".",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Mit seinem leichten Halt kann OSiS Flatliner auch als Fixierspray verwendet werden, bevor die Haare geföhnt werden, um mehr Volumen im Haar zu erzeugen.",
+    "directions_source_url": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/flatliner.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "OSiS Flatliner bietet Hitzeschutz bis zu 230 °C und wurde speziell für die tägliche Anwendung mit heißen Stylingtools entwickelt. Es reduziert Frizz für geschmeidiges, gesund aussehendes Haar.",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/flatliner.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "PERFEKT FÜR SMOOTH GLANZ HITZESCHUTZ",
+        "tier": "C2",
+        "source": "https://www.schwarzkopf-professional.com/de/de/styling/osis/smooth-shine/flatliner.html",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "no primary directions text on the page (only the secondary fixative use)",
+      "GTIN/size/price not captured",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": false
+  },
+  {
+    "sample_id": "redken-wax-spray",
+    "subtype_candidate": "texture_spray",
+    "brand": "Redken",
+    "product_name": "Wax Spray (Redken Spray Wax)",
+    "size": "size not on page",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "redken.eu/de-de (Redken Germany)"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "ALCOHOL DENAT., DIMETHYL ETHER, GLYCERIN, VA/CROTONATES/VINYL NEODECANOATE COPOLYMER, PROPYLENE GLYCOL, AMINOMETHYL PROPANOL, BENZYL SALICYLATE, LINALOOL, BENZYL ALCOHOL, OCTYLDODECANOL, LIMONENE, GLYCINE SOJA OIL / SOYBEAN OIL, TOCOPHEROL, GERANIOL, ISOEUGENOL, COUMARIN, CITRONELLOL, PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.redken.eu/de-de/produkte/styling/gele-pomaden-wachse-und-cremes/wax-spray-keri-malliwn-se-sprei",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "REDKEN WAX SPRAY Texturierendes Sprühwachs.",
+      "SPRAY WAX ist ein fixierender Haarspray mit mittlerer Kontrolle, der dem Haar Volumen und Körper gibt. Erreiche ein seidig-mattes Finish und eine perfekte Struktur. Die Microwax-Technologie kombiniert eine einfache Anwendung und die Leichtigkeit eines Sprays mit dem Finish eines Wachses."
+    ],
+    "hold_claim": {
+      "raw": "fixierender Haarspray mit mittlerer Kontrolle",
+      "number": null,
+      "scale_max": null,
+      "words": "mittlerer Kontrolle",
+      "none_stated": false
+    },
+    "finish_claim": "seidig-mattes Finish und eine perfekte Struktur",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Schritt 1: Gut schütteln. Schritt 2: Auf das feuchte oder trockene Haar sprühen. Schritt 3: Mit den Händen die gewünschte Frisur formen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Page headline is \"REDKEN WAX SPRAY\"; the description text calls it \"SPRAY WAX\". Hold wording: \"mittlerer Kontrolle\" (not \"Halt\"). Dimethyl Ether = aerosol propellant. INCI items on the page are separated by \" • \" (converted to \", \" here). Page is redken.eu/de-de (German-language EMEA site, footer \"Redken Germany\"); accordion text read from the DOM 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "Schritt 1: Gut schütteln. Schritt 2: Auf das feuchte oder trockene Haar sprühen. Schritt 3: Mit den Händen die gewünschte Frisur formen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "directions_source_url": "https://www.redken.eu/de-de/produkte/styling/gele-pomaden-wachse-und-cremes/wax-spray-keri-malliwn-se-sprei",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "REDKEN WAX SPRAY Texturierendes Sprühwachs.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/gele-pomaden-wachse-und-cremes/wax-spray-keri-malliwn-se-sprei",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "SPRAY WAX ist ein fixierender Haarspray mit mittlerer Kontrolle, der dem Haar Volumen und Körper gibt. Erreiche ein seidig-mattes Finish und eine perfekte Struktur. Die Microwax-Technologie kombiniert eine einfache Anwendung und die Leichtigkeit eines Sprays mit dem Finish eines Wachses.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/gele-pomaden-wachse-und-cremes/wax-spray-keri-malliwn-se-sprei",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "redken-root-tease",
+    "subtype_candidate": "texture_spray",
+    "brand": "Redken",
+    "product_name": "Root Tease",
+    "size": "size not on page",
+    "format": "aerosol",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "redken.eu/de-de (Redken Germany)"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "DIMETHYL ETHER, ALCOHOL DENAT., VA/CROTONATES/VINYL NEODECANOATE COPOLYMER, AMINOMETHYL PROPANOL, PVP, SODIUM SACCHARIN, LINALOOL, LIMONENE, AQUA / WATER, COUMARIN, PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.redken.eu/de-de/produkte/styling/haarsprays/root-tease",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "REDKEN ROOT TEASE Volumen-Haarspray für Toupier-Effekt mit mattem Finish.",
+      "ROOT TEASE ist ein Haarspray mit drei Vorteilen in einer Flasche: Volumen, Textur und Kontrolle. Dieses Spray hebt die Haarwurzel an für mehr Volumen und sorgt für einen Toupier-Effekt mit mattem Finish."
+    ],
+    "hold_claim": {
+      "raw": "Volumen, Textur und Kontrolle",
+      "number": null,
+      "scale_max": null,
+      "words": "Kontrolle",
+      "none_stated": false
+    },
+    "finish_claim": "mattes Finish",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Schritt 1: Auf den Ansatz sprühen, um Volumen zu erhalten. Schritt 2 Anschliessend toupieren und auf das gesamte Haar sprühen, um die Frisur zu fixieren und ihr ein modernes, mattes Finish zu verleihen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Sold in the page category \"Haarsprays\" (url .../haarsprays/root-tease); hairspray-like INCI (aerosol). Included as a texture/volume-spray candidate because the text names \"Volumen, Textur und Kontrolle\" - hold function present (fixing step 2). INCI items on the page are separated by \" • \" (converted to \", \" here). Page is redken.eu/de-de (German-language EMEA site, footer \"Redken Germany\"); accordion text read from the DOM 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "Schritt 1: Auf den Ansatz sprühen, um Volumen zu erhalten. Schritt 2 Anschliessend toupieren und auf das gesamte Haar sprühen, um die Frisur zu fixieren und ihr ein modernes, mattes Finish zu verleihen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "directions_source_url": "https://www.redken.eu/de-de/produkte/styling/haarsprays/root-tease",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "REDKEN ROOT TEASE Volumen-Haarspray für Toupier-Effekt mit mattem Finish.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/haarsprays/root-tease",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "ROOT TEASE ist ein Haarspray mit drei Vorteilen in einer Flasche: Volumen, Textur und Kontrolle. Dieses Spray hebt die Haarwurzel an für mehr Volumen und sorgt für einen Toupier-Effekt mit mattem Finish.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/haarsprays/root-tease",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "redken-powder-grip-03",
+    "subtype_candidate": "hair_powder",
+    "brand": "Redken",
+    "product_name": "Powder Grip (03 Mattifying Hair Powder)",
+    "size": "size not on page",
+    "format": "powder_shaker",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "redken.eu/de-de (Redken Germany)"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "SILICA SILYLATE [NANO] / SILICA SILYLATE, AQUA / WATER, GLYCERIN, ALCOHOL DENAT., VP/VA COPOLYMER, CITRIC ACID, SODIUM BENZOATE, POTASSIUM SORBATE",
+    "inci_source_url": "https://www.redken.eu/de-de/produkte/styling/texturizantes/powder-grip-03-mattifying-hair-powder",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "REDKEN POWDER GRIP HAARPUDER FÜR MEHR GRIFFIGKEIT. (NEW)",
+      "POWDER GRIP ist ein mattierendes Haarpuder, das für mehr Griffigkeit sorgt, um Frisuren wie z. B. Hochsteckfrisuren zu erleichtern. Es verleiht dem Haar Fülle und Volumen, insbesondere am Ansatz und in den Längen, mit einem ultra-matten Finish. Das Haar fühlt sich sofort dichter und flexibler an. Für alle Haartypen geeignet."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "ultra-mattes Finish",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Schritt 1: Das Produkt schütteln. Schritt 2: Das Produkt über das Haar streuen. Schritt 3: Mit den Fingern durch das Haar kneten. Schritt 4: Für ein mattierendes und strukturierendes Finish etwas mehr Produkt auftragen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Page flag \"NEW\". The word \"Hold\"/\"Halt\" is absent from the description. \"[NANO]\" is part of the printed first INCI item. INCI items on the page are separated by \" • \" (converted to \", \" here). Page is redken.eu/de-de (German-language EMEA site, footer \"Redken Germany\"); accordion text read from the DOM 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Schritt 1: Das Produkt schütteln. Schritt 2: Das Produkt über das Haar streuen. Schritt 3: Mit den Fingern durch das Haar kneten. Schritt 4: Für ein mattierendes und strukturierendes Finish etwas mehr Produkt auftragen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "directions_source_url": "https://www.redken.eu/de-de/produkte/styling/texturizantes/powder-grip-03-mattifying-hair-powder",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "REDKEN POWDER GRIP HAARPUDER FÜR MEHR GRIFFIGKEIT. (NEW)",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/texturizantes/powder-grip-03-mattifying-hair-powder",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "POWDER GRIP ist ein mattierendes Haarpuder, das für mehr Griffigkeit sorgt, um Frisuren wie z. B. Hochsteckfrisuren zu erleichtern. Es verleiht dem Haar Fülle und Volumen, insbesondere am Ansatz und in den Längen, mit einem ultra-matten Finish. Das Haar fühlt sich sofort dichter und flexibler an. Für alle Haartypen geeignet.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/texturizantes/powder-grip-03-mattifying-hair-powder",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "redken-refreshing-curl-mist",
+    "subtype_candidate": "refresher",
+    "brand": "Redken",
+    "product_name": "Refreshing Curl Mist",
+    "size": "size not on page",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "redken.eu/de-de (Redken Germany)"
+    ],
+    "price_eur": null,
+    "price_source_url": null,
+    "ean": null,
+    "inci": "AQUA / WATER, PROPYLENE GLYCOL, GLYCERIN, PHENOXYETHANOL, CITRIC ACID, OLETH-20, POLYQUATERNIUM-6, PARFUM / FRAGRANCE, ETHYLHEXYLGLYCERIN, TRISODIUM ETHYLENEDIAMINE DISUCCINATE, SIMMONDSIA CHINENSIS SEED OIL / JOJOBA SEED OIL, SQUALANE, HEXYL CINNAMAL, LIMONENE, ALPHA-ISOMETHYL IONONE, CITRONELLOL, GERANIOL, BENZYL ALCOHOL, TETRASODIUM EDTA, TOCOPHEROL (F.I.L. Z70032843/1)",
+    "inci_source_url": "https://www.redken.eu/de-de/produkte/styling/styling-for-curls/refreshing-curl-mist",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "REDKEN REFRESHING CURL MIST LOCKEN REVITALISIERT UND REAKTIVIERT LOCKEN (NEU)",
+      "Das silikonfreie Refreshing Curl Mist von Redken sorgt für eine sofortige Revitalisierung von Locken bis zum 7. Tag, ohne Haarwäsche. Das mit Squalan und Jojoba-Öl angereicherte Lockenspray stellt die Lockenstruktur, die Sprungkraft und die natürliche Bewegung von Locken wieder her. Für langanhaltend gestylte und gepflegte Locken."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "silikonfrei (raw: 'Das silikonfreie Refreshing Curl Mist')"
+    ],
+    "directions": "In die trockenen Längen und Spitzen sprühen und sanft einkneten. Anschließend entweder lufttrocknen lassen oder föhnen. Für optimale Ergebnisse wird die Anwendung der Acidic Bonding Curls Lockenpflege-Serie sowie der Curls Stylers von Redken empfohlen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Page flag \"NEU\" (new product). INCI block on the page starts with an article code \"1218396RK11 - INGREDIENTS:\" (stripped) and ends with \"(F.I.L. Z70032843/1)\". Format (pump) assumed. Claim: \"Revitalisierung von Locken bis zum 7. Tag, ohne Haarwäsche\". INCI items on the page are separated by \" • \" (converted to \", \" here). Page is redken.eu/de-de (German-language EMEA site, footer \"Redken Germany\"); accordion text read from the DOM 2026-10-12.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": "bis zum 7. Tag, ohne Haarwäsche",
+    "directions_verbatim": "In die trockenen Längen und Spitzen sprühen und sanft einkneten. Anschließend entweder lufttrocknen lassen oder föhnen. Für optimale Ergebnisse wird die Anwendung der Acidic Bonding Curls Lockenpflege-Serie sowie der Curls Stylers von Redken empfohlen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "directions_source_url": "https://www.redken.eu/de-de/produkte/styling/styling-for-curls/refreshing-curl-mist",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "REDKEN REFRESHING CURL MIST LOCKEN REVITALISIERT UND REAKTIVIERT LOCKEN (NEU)",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/styling-for-curls/refreshing-curl-mist",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Das silikonfreie Refreshing Curl Mist von Redken sorgt für eine sofortige Revitalisierung von Locken bis zum 7. Tag, ohne Haarwäsche. Das mit Squalan und Jojoba-Öl angereicherte Lockenspray stellt die Lockenstruktur, die Sprungkraft und die natürliche Bewegung von Locken wieder her. Für langanhaltend gestylte und gepflegte Locken.",
+        "tier": "C2",
+        "source": "https://www.redken.eu/de-de/produkte/styling/styling-for-curls/refreshing-curl-mist",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN/size/price not on page",
+      "pack not read; INCI is manufacturer page"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "balea-men-styling-powder",
+    "subtype_candidate": "hair_powder",
+    "brand": "Balea MEN",
+    "product_name": "Styling Powder",
+    "size": "10 g",
+    "format": "powder_shaker",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.25,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+    "ean": "4066447974522",
+    "inci": "Glycerin, Silica Silylate, Aqua, Carrageenan, Undecane, Potassium Sorbate, Parfum, Citric Acid, Tridecane, Tocopherol, Linalyl Acetate, Acetyl Cedrene, Tetramethyl Acetyloctahydronaphthalenes, Pinene.",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C2_house_brand",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Stylingpuder für Männer",
+      "Mit Matt-Effekt ohne sichtbare Rückstände",
+      "Für Volumen & Textur",
+      "Vegan",
+      "Das Balea MEN Styling Powder verleiht dem Haar Volumen und einen matten Effekt. Es sorgt für extra Fülle und Textur, ideal für ein perfektes Ansatzvolumen und voluminöse Looks. Die leichte Formel hinterlässt ein mattes Finish ohne sichtbare Rückstände und beschwert das Haar nicht. Für ein individuelles und flexibles Styling kann das Styling Powder einfach im trockenen Haar verteilt und nach Wunsch modelliert werden.",
+      "GTIN: 4066447974522",
+      "dm attribute \"Halt\": starker Halt"
+    ],
+    "hold_claim": {
+      "raw": "Halt: starker Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": "Matt-Effekt ohne sichtbare Rückstände",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Haartyp: alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol, vegan"
+    ],
+    "directions": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+    "application_moment": "trockenes Haar, Ansatz",
+    "formula_observations": null,
+    "notes": "dm house brand (Balea MEN). dm attribute block: Textur \"Pulver\", Wirkung \"Styling, Volumen\", Halt \"starker Halt\". INCI on the dm text field is prefixed \"Ingredients:\" (stripped). Hergestellt in Schweiz. Page category Haarprodukte für Männer > Haarstyling. DM search listing GTIN matches detail page.",
+    "dm_dan": 3080307,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+    "directions_source_url": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+    "directions_tier": "C2_house_brand",
+    "promise_lines": [
+      {
+        "raw": "Stylingpuder für Männer",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit Matt-Effekt ohne sichtbare Rückstände",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für Volumen & Textur",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Vegan",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Das Balea MEN Styling Powder verleiht dem Haar Volumen und einen matten Effekt. Es sorgt für extra Fülle und Textur, ideal für ein perfektes Ansatzvolumen und voluminöse Looks. Die leichte Formel hinterlässt ein mattes Finish ohne sichtbare Rückstände und beschwert das Haar nicht. Für ein individuelles und flexibles Styling kann das Styling Powder einfach im trockenen Haar verteilt und nach Wunsch modelliert werden.",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "GTIN: 4066447974522",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Halt: starker Halt",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3080307",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "pack photo not read (INCI is dm text field)"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "balea-haarwachs-styling-stick",
+    "subtype_candidate": "hairline_edge_stick",
+    "brand": "Balea",
+    "product_name": "Haarwachs Styling Stick",
+    "size": "25 g",
+    "format": "stick",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 2.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "ean": "4067796173666",
+    "inci": "PRUNUS AMYGDALUS DULCIS OIL, MANGIFERA INDICA SEED BUTTER, STEARYL ALCOHOL, COCOS NUCIFERA OIL, BUTYROSPERMUM PARKII BUTTER, COPERNICIA CERIFERA CERA, HYDROGENATED RAPESEED OIL, HYDROGENATED PALM OIL, PARFUM, PERSEA GRATISSIMA OIL, TOCOPHEROL, LINALOOL.",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C2_house_brand",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Haarwachs-Stift für trendige Styles",
+      "Praktische Anwendung",
+      "Für ein glattes & glänzendes Finish",
+      "Bändigt abstehende Babyhaare",
+      "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und glänzendes Finish, das den ganzen Tag hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+      "GTIN: 4067796173666"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glattes & glänzendes Finish",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+    "application_moment": "trockenes Haar",
+    "formula_observations": null,
+    "notes": "Hairline/flyaway target stated in directions (\"abstehende Härchen fixieren\") and bullets (\"Bändigt abstehende Babyhaare\"). Wax stick with INCI beginning with oils (Prunus Amygdalus Dulcis Oil, Mangifera Indica Seed Butter). INCI text field prefix \"INGREDIENTS:\" stripped; dm directions begin with the heading word \"ANWENDUNG\" (kept as printed). Different product from cohort \"balea-styling-finishing-stick\" (DAN 1569189, GTIN 4066447991796).",
+    "dm_dan": 1712343,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+    "directions_source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "directions_tier": "C2_house_brand",
+    "promise_lines": [
+      {
+        "raw": "Haarwachs-Stift für trendige Styles",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Praktische Anwendung",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für ein glattes & glänzendes Finish",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bändigt abstehende Babyhaare",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und glänzendes Finish, das den ganzen Tag hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "GTIN: 4067796173666",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "pack photo not read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "got2b-kleber-4-brows-and-edges-2in1-stylinggel",
+    "subtype_candidate": "hairline_edge_gel",
+    "brand": "got2b",
+    "product_name": "Kleber 4 Brows & Edges 2in1 Stylinggel (dm: Stylinggel Kleber 4 Brows & Edges 2in1)",
+    "size": "16 ml",
+    "format": "gel_tube_with_brush",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "got2b.de",
+      "dm"
+    ],
+    "price_eur": 6.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+    "ean": "4015100863208",
+    "inci": "Aqua (Water, Eau), PVP, Acrylates/Hydroxyesters Acrylates Copolymer, Acrylates/Steareth-20 Methacrylate Crosspolymer, Phenoxyethanol, Aminomethyl Propanol, PEG-40 Hydrogenated Castor Oil, Caprylyl Glycol, Glycerin, Parfum (Fragrance), 1,2-Hexanediol,  Ethylhexylglycerin, Panthenol, Sodium Benzoate, Benzyl Alcohol, Limonene, Citrus Aurantium Peel Oil, Vanillin",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C3",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Perfekte Augenbrauen und Haarkonturen! got2b 2in1 Stylinggel Kleber 4 Brows & Edges ist der absolute Allrounder für deine Augenbrauen und Haarkonturen. Das schnell trocknende, nicht klebende, transparente Stylinggel sorgt für starken und langanhaltenden Halt für unterwegs. Das Gel ist sanft zur Haut und für alle Haartypen geeignet.",
+      "got2b Kleber 4 Brows & Edges 2in1 Stylinggel kannst du für Augenbrauen und Haarkonturen verwenden. Mit dem transparenten Gel bleiben deine Brauen und Konturen in Form. Vor dir liegt ein langer Tag? Keine Sorge, deine Brauen und Haarkonturen lassen dich nicht im Stich.",
+      "Kleber ist für alle Haartypen – egal ob glattes, welliges, lockiges oder coily Haar, es funktioniert einfach! Keber-Produkte performen bei jedem Style und sind gleichzeitig sanft zu deiner Haut & Kopfhaut – dermatologisch getestet.",
+      "Brauen- und Haar Gel",
+      "Transparente Formel",
+      "Zweiseitige Bürste",
+      "Frei von tierischen Inhaltsstoffen",
+      "Dermatologisch getestet"
+    ],
+    "hold_claim": {
+      "raw": "starken und langanhaltenden Halt für unterwegs",
+      "number": null,
+      "scale_max": null,
+      "words": "starken und langanhaltenden Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "für alle Haartypen geeignet"
+    ],
+    "free_from_claims": [
+      "Frei von tierischen Inhaltsstoffen",
+      "Dermatologisch getestet"
+    ],
+    "directions": "Die vielseitige Faserbürste ermöglicht ein einfaches und präzises Auftragen und Stylen. Verwende die breite Seite, um das Produkt auf die Augenbrauen und die Haare am Haaransatz aufzutragen. Verwende die flache Seite, um die Augenbrauen und Kanten zu stylen und zu fixieren. Nicht auf den Wimpern anwenden. Entferne das Produkt mit warmem Wasser und einer milden Seife von den Augenbrauen und Kanten.",
+    "application_moment": null,
+    "formula_observations": null,
+    "notes": "Edges/hairline + brows product: directions say \"...um das Produkt auf die Augenbrauen und die Haare am Haaransatz aufzutragen... Augenbrauen und Kanten zu stylen\". INCI from dm (standard English INCI, C3); got2b.de lists the same ingredients with German names (INCI \"PEG[1]40 hydriertes Rizinusöl\" typo on page) - C2 agreement. dm Verwendungshinweise (C3) is only: \"HACK: Überschüssiges Gel vor dem Auftragen von der Bürste entfernen.\" (a hack line). dm description: \"Das Gel verklebt nicht und schützt die Augenbrauen vor dem Austrocknen\". Not a cohort item (cohort has got2b Brow Lift? no; check: not present).",
+    "dm_dan": 1616416,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Die vielseitige Faserbürste ermöglicht ein einfaches und präzises Auftragen und Stylen. Verwende die breite Seite, um das Produkt auf die Augenbrauen und die Haare am Haaransatz aufzutragen. Verwende die flache Seite, um die Augenbrauen und Kanten zu stylen und zu fixieren. Nicht auf den Wimpern anwenden. Entferne das Produkt mit warmem Wasser und einer milden Seife von den Augenbrauen und Kanten.",
+    "directions_source_url": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/kleber-4-brows-and-edges.html",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Perfekte Augenbrauen und Haarkonturen! got2b 2in1 Stylinggel Kleber 4 Brows & Edges ist der absolute Allrounder für deine Augenbrauen und Haarkonturen. Das schnell trocknende, nicht klebende, transparente Stylinggel sorgt für starken und langanhaltenden Halt für unterwegs. Das Gel ist sanft zur Haut und für alle Haartypen geeignet.",
+        "tier": "C2",
+        "source": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/kleber-4-brows-and-edges.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "got2b Kleber 4 Brows & Edges 2in1 Stylinggel kannst du für Augenbrauen und Haarkonturen verwenden. Mit dem transparenten Gel bleiben deine Brauen und Konturen in Form. Vor dir liegt ein langer Tag? Keine Sorge, deine Brauen und Haarkonturen lassen dich nicht im Stich.",
+        "tier": "C2",
+        "source": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/kleber-4-brows-and-edges.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Kleber ist für alle Haartypen – egal ob glattes, welliges, lockiges oder coily Haar, es funktioniert einfach! Keber-Produkte performen bei jedem Style und sind gleichzeitig sanft zu deiner Haut & Kopfhaut – dermatologisch getestet.",
+        "tier": "C2",
+        "source": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/kleber-4-brows-and-edges.html",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Brauen- und Haar Gel",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Transparente Formel",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Zweiseitige Bürste",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Frei von tierischen Inhaltsstoffen",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Dermatologisch getestet",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1616416",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "pack photo not read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "bali-gents-sea-salt-spray",
+    "subtype_candidate": "salt_spray",
+    "brand": "BALI GENTS",
+    "product_name": "Sea Salt Spray",
+    "size": "175 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "bali-care.com/de-de",
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+    "ean": "4262391993545",
+    "inci": "AQUA, MAGNESIUM SULFATE, POLYGLYCERYL-6 CAPRYLATE, POLYGLYCERYL-4 CAPRATE, PHENOXYETHANOL, SODIUM BENZOATE, PARFUM, GLYCERIN, HYDROLYZED RICE PROTEIN, MARIS SAL, PANTHENOL, POTASSIUM SORBATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, LACTIC ACID, HEXYL CINNAMAL, LINALYL ACETATE, LIMONENE, LINALOOL, ETHYL BENZOATE",
+    "inci_source_url": "https://www.bali-care.com/de-de/products/sea-salt-spray",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Für natürliche Beach Waves, mehr Struktur und den perfekten Undone Look. Das Bali Gents Sea Salt Spray verleiht dem Haar spürbare Griffigkeit und Definition, ohne es zu verkleben oder unnötig auszutrocknen.",
+      "Die spezielle Formulierung mit Meersalz sorgt für ein authentisches Beach-Hair-Finish und unterstützt natürliche Wellen, Locken und Textur. Gleichzeitig helfen Panthenol, Glycerin und hydrolysiertes Reisprotein dabei, das Haar geschmeidig zu halten und ihm ein gepflegtes Gefühl zu verleihen.",
+      "Texturierendes Meersalzspray",
+      "Mit einem exklusiven Premium-Duft",
+      "Verleiht dem Haar Griffigkeit und Volumen",
+      "Für natürliche Beachwaves und Undone-Looks",
+      "Ohne zu verkleben oder auszutrocknen"
+    ],
+    "hold_claim": {
+      "raw": "Halt: mittlerer Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "mittlerer Halt",
+      "none_stated": false,
+      "tier": "C3",
+      "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+      "source_class": "retailer_attribute",
+      "note": "dm attribute (non-house brand) = C3; never assigns a level"
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Sea Salt Spray: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.",
+    "application_moment": "nasses oder handtuchtrockenes Haar",
+    "formula_observations": null,
+    "notes": "INCI identical on bali-care.com/de-de (C2) and dm text field (C3); contains MAGNESIUM SULFATE (rank 2) and MARIS SAL (rank 9). Hold: dm attribute \"Halt: mittlerer Halt\" (C3, dm attribute). bali-care.com directions are prefixed \"Sea Salt Spray:\"; dm directions \"(DE) ANWENDUNG: Sea Salt Spray: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.\" Format (pump) assumed from dm \"Spray\".",
+    "dm_dan": 3144255,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Sea Salt Spray: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.",
+    "directions_source_url": "https://www.bali-care.com/de-de/products/sea-salt-spray",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Für natürliche Beach Waves, mehr Struktur und den perfekten Undone Look. Das Bali Gents Sea Salt Spray verleiht dem Haar spürbare Griffigkeit und Definition, ohne es zu verkleben oder unnötig auszutrocknen.",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/sea-salt-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Die spezielle Formulierung mit Meersalz sorgt für ein authentisches Beach-Hair-Finish und unterstützt natürliche Wellen, Locken und Textur. Gleichzeitig helfen Panthenol, Glycerin und hydrolysiertes Reisprotein dabei, das Haar geschmeidig zu halten und ihm ein gepflegtes Gefühl zu verleihen.",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/sea-salt-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Texturierendes Meersalzspray",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit einem exklusiven Premium-Duft",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Verleiht dem Haar Griffigkeit und Volumen",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für natürliche Beachwaves und Undone-Looks",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Ohne zu verkleben oder auszutrocknen",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3144255",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "pack photo not read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "bali-curls-volumizing-curl-spray-refreshing",
+    "subtype_candidate": "refresher",
+    "brand": "BALI CURLS",
+    "product_name": "Volumizing Curl Spray (URL/directions: \"Refreshing Curl Spray\")",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "bali-care.com/de-de"
+    ],
+    "price_eur": 12.9,
+    "price_source_url": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+    "ean": null,
+    "inci": "AQUA, MAGNESIUM SULFATE, POLYGLYCERYL-6 CAPRYLATE, POLYGLYCERYL-4 CAPRATE, GLYCERIN, PHENOXYETHANOL, SODIUM BENZOATE, PARFUM, HYDROLYZED RICE PROTEIN, MARIS SAL, PANTHENOL, POTASSIUM SORBATE, LACTIC ACID, LINALOOL, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, GERANIOL, GERANYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, VANILLIN, METHYL BENZOATE",
+    "inci_source_url": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+    "inci_source_tier": "manufacturer_page",
+    "inci_source_evidence_tier": "C2",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Das vegane VOLUMIZING CURL SPRAY mit Reisprotein und Ylang-Ylang-Extrakt erfrischt deine Locken und verleiht einen wundervollen und voluminösen Beachlook. Der einzigartige Duft bringt dir das Sommergefühl aus Bali direkt nach Hause in dein Badezimmer.",
+      "Curly Method konform",
+      "Vegan und tierversuchsfrei",
+      "Mit natürlichen & pflegenden Inhaltsstoffen",
+      "Für Locken, Wellen & alle Haartypen geeignet"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "wundervollen und voluminösen Beachlook",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Für Locken, Wellen & alle Haartypen geeignet"
+    ],
+    "free_from_claims": [
+      "Vegan und tierversuchsfrei"
+    ],
+    "directions": "Das Refreshing Curl Spray kann täglich auf nassem oder trockenem Haar angewendet werden, um die Wellen/Locken zu erfrischen und zu revitalisieren. Sprühe den Spray gleichmäßig in das feucht oder nasse Haar, beginnend an den Spitzen, und arbeite dich zum Ansatz vor. Bei dickerem Haar kann es hilfreich sein das Haar in Abschnitten aufzuteilen. Unser Tipp: Style deine Haar im nassen Zustand, dies reduziert Frizz und verleiht deinem Haar mehr Definition. Nutze Im Anschluss bei Bedarf nochmal eine kleine Menge des Curl Defining Gel.",
+    "application_moment": "nasses oder feuchtes Haar (täglich)",
+    "formula_observations": null,
+    "notes": "Contains MAGNESIUM SULFATE (rank 2) and MARIS SAL. Product title on the shop is \"VOLUMIZING CURL SPRAY\", URL handle and directions say \"Refreshing Curl Spray\"; promise: \"erfrischt deine Locken und verleiht einen wundervollen und voluminösen Beachlook\". INCI as printed has the page typo \"LIMONE NE\" (corrected to LIMONENE here). Not found at dm search 2026-10-12. Price = 150 ml variant 12.90 on bali-care.com.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Das Refreshing Curl Spray kann täglich auf nassem oder trockenem Haar angewendet werden, um die Wellen/Locken zu erfrischen und zu revitalisieren. Sprühe den Spray gleichmäßig in das feucht oder nasse Haar, beginnend an den Spitzen, und arbeite dich zum Ansatz vor. Bei dickerem Haar kann es hilfreich sein das Haar in Abschnitten aufzuteilen. Unser Tipp: Style deine Haar im nassen Zustand, dies reduziert Frizz und verleiht deinem Haar mehr Definition. Nutze Im Anschluss bei Bedarf nochmal eine kleine Menge des Curl Defining Gel.",
+    "directions_source_url": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+    "directions_tier": "C2",
+    "promise_lines": [
+      {
+        "raw": "Das vegane VOLUMIZING CURL SPRAY mit Reisprotein und Ylang-Ylang-Extrakt erfrischt deine Locken und verleiht einen wundervollen und voluminösen Beachlook. Der einzigartige Duft bringt dir das Sommergefühl aus Bali direkt nach Hause in dein Badezimmer.",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Curly Method konform",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Vegan und tierversuchsfrei",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit natürlichen & pflegenden Inhaltsstoffen",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für Locken, Wellen & alle Haartypen geeignet",
+        "tier": "C2",
+        "source": "https://www.bali-care.com/de-de/products/refreshing-curl-spray",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "GTIN not on shop page",
+      "pack photo not read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "balea-overnight-wellenspray",
+    "subtype_candidate": "salt_spray",
+    "brand": "Balea",
+    "product_name": "Overnight Wellenspray",
+    "size": "150 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+    "ean": "4070765016598",
+    "inci": "ALCOHOL DENAT., BUTANE, PROPANE, PROPYLENE GLYCOL, VP/VA COPOLYMER, LAURTRIMONIUM CHLORIDE, SODIUM BISULFITE, PANTHENOL, AQUA, GLYCERIN, LAVANDULA ANGUSTIFOLIA FLOWER EXTRACT, CITRIC ACID, POTASSIUM SORBATE, SODIUM BENZOATE, OENOTHERA BIENNIS FLOWER/LEAF/STEM EXTRACT, PARFUM, CITRUS AURANTIUM PEEL OIL, LINALOOL, LIMONENE, HEXYL CINNAMAL, GERANIOL, LINALYL ACETATE",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C2_house_brand",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Styling-Spray für Locken über Nacht",
+      "Schonendes Styling ohne Hitze",
+      "Flexibler Halt",
+      "Für ein Styling, das im Schlaf gelingt, ist das Balea Overnight Wellenspray die ideale Wahl. Es verleiht Wellen und Locken eine tolle Sprungkraft und fixiert die Frisur zuverlässig über Nacht. Die leichte Formulierung beschwert das Haar nicht und verhindert ein Verkleben. In Kombination mit Lockentools lässt sich so ganz ohne Hitze ein beeindruckendes Ergebnis erzielen. Das Balea Overnight Wellenspray unterstützt ein unkompliziertes Styling für einen Look, der am Morgen begeistert und den ganzen Tag hält.",
+      "GTIN: 4070765016598"
+    ],
+    "hold_claim": {
+      "raw": "Flexibler Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "Flexibler Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Haartyp: alle Haartypen"
+    ],
+    "free_from_claims": [
+      "ohne Farbstoffe, ölfrei / fettfrei, vegan"
+    ],
+    "directions": "In das feuchte oder trockene Haar sprühen. Für Locken das Haar mit einem Lockenband oder Papilotten eindrehen. Für Wellen die Haare vom Ansatz an flechten. Über die Nacht eingedreht lassen. Falls Ventil verstopft, den Schaumkopf hochklappen und unter warmem Wasser ausspülen.",
+    "application_moment": "feuchtes oder trockenes Haar, über Nacht",
+    "formula_observations": null,
+    "notes": "WAVE spray with NO salt in the INCI (no Sodium Chloride / Magnesium Sulfate / Maris Sal); overnight heatless curl/wave setter, not a beach/texture spray (dm bullets: \"Styling-Spray für Locken über Nacht\", \"Schonendes Styling ohne Hitze\"). INCI has a page junk prefix \"INGREDIENTSSASTOJCIСЪСТАВКИ:\" (stripped) and uses \" · \" separators (converted). Aerosol per INCI (Butane, Propane) and warning text. dm directions end with a valve-cleaning hint: \"sen. Falls Ventil verstopft, den Schaumkopf hochklappen und unter warmem Wasser ausspülen.\".",
+    "dm_dan": 1711238,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "In das feuchte oder trockene Haar sprühen. Für Locken das Haar mit einem Lockenband oder Papilotten eindrehen. Für Wellen die Haare vom Ansatz an flechten. Über die Nacht eingedreht lassen. Falls Ventil verstopft, den Schaumkopf hochklappen und unter warmem Wasser ausspülen.",
+    "directions_source_url": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+    "directions_tier": "C2_house_brand",
+    "promise_lines": [
+      {
+        "raw": "Styling-Spray für Locken über Nacht",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Schonendes Styling ohne Hitze",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Flexibler Halt",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für ein Styling, das im Schlaf gelingt, ist das Balea Overnight Wellenspray die ideale Wahl. Es verleiht Wellen und Locken eine tolle Sprungkraft und fixiert die Frisur zuverlässig über Nacht. Die leichte Formulierung beschwert das Haar nicht und verhindert ein Verkleben. In Kombination mit Lockentools lässt sich so ganz ohne Hitze ein beeindruckendes Ergebnis erzielen. Das Balea Overnight Wellenspray unterstützt ein unkompliziertes Styling für einen Look, der am Morgen begeistert und den ganzen Tag hält.",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "GTIN: 4070765016598",
+        "tier": "C2_house_brand",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1711238",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "pack photo not read; INCI from dm text field"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "neqi-diamond-glass-styling-spray-all",
+    "subtype_candidate": "smoothing_styler",
+    "brand": "NEQI",
+    "product_name": "Diamond Glass Styling Spray All (dm: Leave-In Spray Diamond Glass)",
+    "size": "180 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "neqi-hair.com"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+    "ean": "4063528078469",
+    "inci": "Aqua [Water], Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Pentylene glycol,  Dipropylene glycol, Polysilicone-29, Ethylhexylglycerin, Hydroxyacetophenone, Silicone quaternium-18, Trideceth-12, Trideceth-6, Propylene glycol, Glycerin",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C3",
+    "claim_tier": "C2",
+    "claims_verbatim": [
+      "Das NEQI Diamond Glass All Styling Spray verleiht dem Haar einen intensiv glänzenden, glatten „Glass Hair“-Effekt. Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren. Es ist also perfekt geeignet, für alle die ein minimalistisches Styling-Setup bevorzugen.",
+      "Die hitzeaktivierten Polymere schaffen maximale Geschmeidigkeit und seidig glatte Haare. Feuchtigkeit? Kein Problem! Das Produkt bildet ein Schutzschild vor Feuchtigkeit und schützt deine Haare über mehrere Haarwäschen hinweg.",
+      "Mit unserem DIAMOND GLASS Styling Spray ist der Glass-Hair-Haartrend ganz einfach nachzustylen, denn Wasser perlt nach der Anwendung an deinem spiegelglatten Haar einfach so ab.",
+      "Styling + Hitzeschutz in einem",
+      "Leichte, aktivierbare Textur",
+      "Glättung + Versiegelung",
+      "Wasserabweisender Effekt",
+      "Verbesserte Kämmbarkeit",
+      "Anti-Frizz Versiegelung",
+      "Glättet die Haarstruktur",
+      "Mit hitzeaktivierten Polymeren",
+      "Ultimativer Feuchtigkeitsschutz",
+      "Sofort seidige und glatte Haarstruktur"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "intensiv glänzenden, glatten „Glass Hair\"-Effekt",
+    "humidity_claim": "schützt das Haar vor Feuchtigkeit",
+    "heat_claim": "Hitzeschutz / hitzeaktivierte Polymere",
+    "hair_type_claims": [
+      "Personen mit stumpfem, glanzlosem Haar",
+      "Frizz-anfälliges oder krauses Haar",
+      "Glattes oder welliges Haar, das einen polierten Look erhalten soll",
+      "Coloriertes oder chemisch behandeltes Haar",
+      "Styling mit Föhn oder Glätteisen"
+    ],
+    "free_from_claims": [],
+    "directions": "Handtuchtrockenes Haar in Abschnitte unterteilen. Großzügig und gleichmäßig auf das Haar sprühen. Jeden Abschnitt unter Hitze und Spannung föhnen, um den leistungsstarken Feuchtigkeitsschutz für spiegelglatte Haare zu aktivieren und die besten Ergebnisse zu erzielen.",
+    "application_moment": "handtuchtrockenes Haar, mit Hitze und Spannung föhnen",
+    "formula_observations": null,
+    "notes": "Different product from cohort \"neqi-diamond-glass-ultimate-styling-spray\" (GTIN 4063528094575): this one is GTIN 4063528078469 (180 ml, NEQI sku NQ-FF-DA-201 \"Diamond Glass Styling Spray All\" on neqi-hair.com, price 9.95). dm INCI list appears SHORT (13 items, ends \"Propylene glycol, Glycerin\") - likely incomplete/truncated; verify on pack. C2 promise lines are from the neqi-hair.com product description (products.json body); neqi-hair.com Anwendung/INCI accordions were not readable.",
+    "dm_dan": 1455212,
+    "capture_date": "2026-10-12",
+    "boundary_probe": false,
+    "duration_claim": null,
+    "directions_verbatim": "Handtuchtrockenes Haar in Abschnitte unterteilen. Großzügig und gleichmäßig auf das Haar sprühen. Jeden Abschnitt unter Hitze und Spannung föhnen, um den leistungsstarken Feuchtigkeitsschutz für spiegelglatte Haare zu aktivieren und die besten Ergebnisse zu erzielen.",
+    "directions_source_url": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+    "directions_tier": "C3",
+    "promise_lines": [
+      {
+        "raw": "Das NEQI Diamond Glass All Styling Spray verleiht dem Haar einen intensiv glänzenden, glatten „Glass Hair“-Effekt. Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren. Es ist also perfekt geeignet, für alle die ein minimalistisches Styling-Setup bevorzugen.",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Die hitzeaktivierten Polymere schaffen maximale Geschmeidigkeit und seidig glatte Haare. Feuchtigkeit? Kein Problem! Das Produkt bildet ein Schutzschild vor Feuchtigkeit und schützt deine Haare über mehrere Haarwäschen hinweg.",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit unserem DIAMOND GLASS Styling Spray ist der Glass-Hair-Haartrend ganz einfach nachzustylen, denn Wasser perlt nach der Anwendung an deinem spiegelglatten Haar einfach so ab.",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Styling + Hitzeschutz in einem",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Leichte, aktivierbare Textur",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Glättung + Versiegelung",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Wasserabweisender Effekt",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Verbesserte Kämmbarkeit",
+        "tier": "C2",
+        "source": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Anti-Frizz Versiegelung",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Glättet die Haarstruktur",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit hitzeaktivierten Polymeren",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Ultimativer Feuchtigkeitsschutz",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Sofort seidige und glatte Haarstruktur",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "INCI likely incomplete (dm text field, 13 items)",
+      "neqi-hair.com INCI/Anwendung not readable",
+      "pack not read"
+    ],
+    "passes_three_evidence_items": false
+  },
+  {
+    "sample_id": "loreal-paris-elvital-big-hair-day-erfrischendes-volumenspray",
+    "subtype_candidate": "texture_spray",
+    "brand": "L'ORÉAL PARiS ELVITAL",
+    "product_name": "Volumenspray Big Hair Day (Erfrischendes Volumen Spray)",
+    "size": "200 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 8.95,
+    "price_source_url": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+    "ean": "3600524250140",
+    "inci": "DIMETHYL ETHER, ALCOHOL DENAT., CELLULOSE, PERLITE, SODIUM LACTATE, STEARALKONIUM HECTORITE, POLYSORBATE 20, PALMITOYL TRIPEPTIDE-1, PALMITOYL TETRAPEPTIDE-7, DIMETHYL PHENETHYL ACETATE, LIMONENE, LINALOOL, BENZYL ALCOHOL, ISOPROPYL MYRISTATE, PROPYLENE CARBONATE, GERANYL ACETATE, GERANIOL, CARVONE, CARBOMER, BUTYLENE GLYCOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, CETRIMONIUM CHLORIDE, AQUA / WATER, COUMARIN, HEXYL CINNAMAL, ORYZA SATIVA STARCH / RICE STARCH, GLYCERIN, PARFUM / FRAGRANCE",
+    "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C3",
+    "claim_tier": "C1",
+    "claims_verbatim": [
+      "BIG HAIR DAY",
+      "ERFRISCHENDES VOLUMEN SPRAY",
+      "[MIT KOLLAGEN-AS-FRAGMENTEN]",
+      "Mehr Volumen in 3 Sekunden",
+      "Bis zu 48h frischeres Haargefühl*",
+      "FEINES, PLATTES HAAR",
+      "Erfrischendes Volumen-Spray für den Haaransatz",
+      "Mit fruchtig-blumigem Duft",
+      "Für sofortiges Volumen ab dem Ansatz",
+      "Hält das Haar bis zu 48 Stunden frisch",
+      "Für sofortiges Volumen und einen langanhaltenden Frische-Effekt sorgt das Elvital Collagen Lifter Big Hair Day Erfrischendes Volumenspray von L'ORÉAL PARiS. Dank der innovativen Tri-Düse lässt sich das Spray gezielt am Haaransatz anwenden, um diesen in Sekundenschnelle anzuheben. Die leichte Formel spendet Feuchtigkeit, ohne klebrige Rückstände zu hinterlassen oder das Haar zu beschweren. Es verleiht dem Haar ein sauberes und frisches Gefühl, das bis zu 48 Stunden anhält. Eine Komposition aus Birne, Zitrusfrüchten und Rosenduft verwöhnt dabei die Sinne.",
+      "GTIN: 3600524250140"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "FEINES, PLATTES HAAR (pack front)",
+      "Haartyp: alle Haartypen (dm attribute)"
+    ],
+    "free_from_claims": [],
+    "directions": "Das Volumen Spray auf trockenem Haar anwenden. Zunächst schütteln, dann auf den Ansatz aus 15cm Entfernung sprühen und mit den Fingern einmassieren. Anschließend Haar über Kopf, das Spray erneut am Ansatz aufsprühen für mehr Volumen.",
+    "application_moment": "trockenes Haar, Ansatz",
+    "formula_observations": null,
+    "notes": "BOUNDARY: \"erfrischendes Volumenspray\" (root volume + freshness, 48 h) with a dry-shampoo-like INCI (cellulose, perlite, rice starch). dm category Haarstyling > Styling Spray & Creme. Pack front text read from the dm pack photo (C1): L'ORÉAL PARIS ELVITAL / BIG HAIR DAY / ERFRISCHENDES VOLUMEN SPRAY / [MIT KOLLAGEN-AS-FRAGMENTEN] / Mehr Volumen in 3 Sekunden / Bis zu 48h frischeres Haargefühl* / FEINES, PLATTES HAAR. INCI separators \"•\" converted to \", \".",
+    "dm_dan": 3116040,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": "Hält das Haar bis zu 48 Stunden frisch (dm bullet); pack: Bis zu 48h frischeres Haargefühl*",
+    "directions_verbatim": "Das Volumen Spray auf trockenem Haar anwenden. Zunächst schütteln, dann auf den Ansatz aus 15cm Entfernung sprühen und mit den Fingern einmassieren. Anschließend Haar über Kopf, das Spray erneut am Ansatz aufsprühen für mehr Volumen.",
+    "directions_source_url": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+    "directions_tier": "C3",
+    "promise_lines": [
+      {
+        "raw": "BIG HAIR DAY",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "ERFRISCHENDES VOLUMEN SPRAY",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "[MIT KOLLAGEN-AS-FRAGMENTEN]",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mehr Volumen in 3 Sekunden",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Bis zu 48h frischeres Haargefühl*",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "FEINES, PLATTES HAAR",
+        "tier": "C1",
+        "source": "dm pack photo, image 1 of products.dm.de DAN 3116040 (https://products.dm.de/product/products/detail/DE/dan/3116040)",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Erfrischendes Volumen-Spray für den Haaransatz",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Mit fruchtig-blumigem Duft",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für sofortiges Volumen ab dem Ansatz",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Hält das Haar bis zu 48 Stunden frisch",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "Für sofortiges Volumen und einen langanhaltenden Frische-Effekt sorgt das Elvital Collagen Lifter Big Hair Day Erfrischendes Volumenspray von L'ORÉAL PARiS. Dank der innovativen Tri-Düse lässt sich das Spray gezielt am Haaransatz anwenden, um diesen in Sekundenschnelle anzuheben. Die leichte Formel spendet Feuchtigkeit, ohne klebrige Rückstände zu hinterlassen oder das Haar zu beschweren. Es verleiht dem Haar ein sauberes und frisches Gefühl, das bis zu 48 Stunden anhält. Eine Komposition aus Birne, Zitrusfrüchten und Rosenduft verwöhnt dabei die Sinne.",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      },
+      {
+        "raw": "GTIN: 3600524250140",
+        "tier": "C3",
+        "source": "https://products.dm.de/product/products/detail/DE/dan/3116040",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "INCI from dm text field, pack back not read"
+    ],
+    "passes_three_evidence_items": true
+  },
+  {
+    "sample_id": "kerastase-curl-manifesto-refresh-absolu",
+    "subtype_candidate": "refresher",
+    "brand": "Kérastase",
+    "product_name": "Curl Manifesto Refresh Absolu",
+    "size": "190 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_premium",
+    "retailers_seen": [
+      "easycosmetic.de"
+    ],
+    "price_eur": null,
+    "price_source_url": "https://www.easycosmetic.de/kerastase/curl-manifesto/kerastase-curl-manifesto-refresh-absolu.aspx",
+    "ean": null,
+    "inci": "aqua, cocos nucifera oil, amodimethicone, polyquaternium-37, phenoxyethanol, propylene glycol dicaprylate/dicaprate, sodium hydroxide, dimethicone peg-7 phosphate, ppg-1 trideceth-6, benzyl salicylate, trideceth-6, behentrimonium chloride, xylose, linalool, ethylhexylglycerin, benzyl alcohol, glycerin, sorbitan oleate, isopropyl alcohol, cetrimonium chloride, hydrolyzed vegetable protein pg-propyl silanetriol, mel extract, 2-oleamido-1,3-octadecanediol, sodium benzoate, potassium sorbate, tocopherol, citric acid, parfum",
+    "inci_source_url": "https://www.easycosmetic.de/kerastase/curl-manifesto/kerastase-curl-manifesto-refresh-absolu.aspx",
+    "inci_source_tier": "retailer_product_page",
+    "inci_source_evidence_tier": "C3",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Kérastase Curl Manifesto Refresh Absolu ist die optimale Wahl, wenn Haarwäsche einmal schnell gehen soll. Das Trockenshampoo für lockiges und krauses Haar wird auf Haaransatz und die Haare aufgetragen und einmassiert. Anschließend lässt es sich leicht auskämmen. Zurück bleiben ein feiner Duft und ein Gefühl der Erfrischung."
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges und krauses Haar (per retailer text)"
+    ],
+    "free_from_claims": [],
+    "directions": "zwischen den Haarwäschen täglich morgens aufsprühen und mit den Fingern Locken definieren",
+    "application_moment": "zwischen den Haarwäschen, morgens",
+    "formula_observations": null,
+    "notes": "C3-ONLY RECORD (no C1/C2 promise line captured): kerastase.de returned HTTP 403 to the fetcher (not bypassed). The easycosmetic.de description wrongly calls it a \"Trockenshampoo\" while its Anwendung says \"aufsprühen und mit den Fingern Locken definieren\"; web search 2026-10-12 found other retailer texts describing it as a curl refreshing spray (not re-read). INCI is lowercased as printed by the retailer. Retailer advises checking the pack.",
+    "dm_dan": null,
+    "capture_date": "2026-10-12",
+    "boundary_probe": true,
+    "duration_claim": null,
+    "directions_verbatim": "zwischen den Haarwäschen täglich morgens aufsprühen und mit den Fingern Locken definieren",
+    "directions_source_url": "https://www.easycosmetic.de/kerastase/curl-manifesto/kerastase-curl-manifesto-refresh-absolu.aspx",
+    "directions_tier": "C3",
+    "promise_lines": [
+      {
+        "raw": "Kérastase Curl Manifesto Refresh Absolu ist die optimale Wahl, wenn Haarwäsche einmal schnell gehen soll. Das Trockenshampoo für lockiges und krauses Haar wird auf Haaransatz und die Haare aufgetragen und einmassiert. Anschließend lässt es sich leicht auskämmen. Zurück bleiben ein feiner Duft und ein Gefühl der Erfrischung.",
+        "tier": "C3",
+        "source": "https://www.easycosmetic.de/kerastase/curl-manifesto/kerastase-curl-manifesto-refresh-absolu.aspx",
+        "date": "2026-10-12"
+      }
+    ],
+    "capture_gaps": [
+      "no C1/C2 promise line",
+      "INCI/directions C3 only",
+      "kerastase.de blocked (403)",
+      "GTIN not captured"
+    ],
+    "passes_three_evidence_items": false
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-15c2678882",
+  "brand": "Balea",
+  "confirmed_name": "Ansatzvolumen Booster",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "foam",
+  "product_type_word": "foam",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Volumen-Boost für den Haaransatz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für feines und plattes Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Schwerelose Mousse-Textur",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Push-Up-Effekt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Bis zu 24 Stunden Volumen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    }
+  ]
+}

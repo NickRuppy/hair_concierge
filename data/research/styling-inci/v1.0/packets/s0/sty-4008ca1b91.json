@@ -1,0 +1,154 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-4008ca1b91",
+  "product": {
+    "confirmed_name": "Frizz Ease 3-Tage-Glatt Styling-Spray",
+    "brand": "John Frieda",
+    "format": "pump_spray"
+  },
+  "inci": {
+    "inci_item_count": 24,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol"
+      },
+      {
+        "rank": 3,
+        "inci": "Polysilicone-9"
+      },
+      {
+        "rank": 4,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 5,
+        "inci": "Dipropylene Glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 7,
+        "inci": "Malic Acid"
+      },
+      {
+        "rank": 8,
+        "inci": "Steartrimonium Chloride"
+      },
+      {
+        "rank": 9,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Disodium EDTA"
+      },
+      {
+        "rank": 11,
+        "inci": "Isopropyl Alcohol"
+      },
+      {
+        "rank": 12,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 13,
+        "inci": "Hydrolyzed Keratin"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 15,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 16,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 17,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 18,
+        "inci": "Citrus Limon Peel Oil"
+      },
+      {
+        "rank": 19,
+        "inci": "Hexamethylindanopyran"
+      },
+      {
+        "rank": 20,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 21,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 22,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 23,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 24,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Gleichmäßig auf das feuchte Haar sprühen. Bei feinem Haar sparsam verwenden.\n2. Durchkämmen, um eine gleichmäßige Verteilung zu gewährleisten.\n3. Glatt föhnen und anschließend mit einem Glätteisen fixieren für langanhaltende Geschmeidigkeit.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Schützt vor Frizz und sorgt für [CLAIM] glattes Haar.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "glatterem Haar, das [CLAIM] hält",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    },
+    {
+      "text": "Bändigt Frizz ohne zu beschweren.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "schützt vor Hitze bis zu 230 °C.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    }
+  ]
+}

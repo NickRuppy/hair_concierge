@@ -1,0 +1,89 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-ddc6c58a05",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Volume Sugar Lift Volumenspray",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": {
+    "number": 3,
+    "scale_as_written": "Haltegrad: 3",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "ein reichhaltiges, flexibles Spray mit Zucker, das für Lift, Glanz und eine griffige Textur sorgt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 3",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09",
+      "number": 3,
+      "scale_as_written": "Haltegrad: 3",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibel",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "beweglich",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "Styles bleiben formstabil, ohne steif zu wirken",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "lässt sich neu formen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "leuchtender Glanz das Finish veredelt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "lang anhaltendes Volumen, das den ganzen Tag hält",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

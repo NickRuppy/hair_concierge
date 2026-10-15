@@ -1,0 +1,83 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-9f145100ee",
+  "brand": "Redken",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Leave-in-Pflege mit Mehrfachwirkung",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "verbessert die Kämmbarkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "schützt vor Hitzeschäden & Umwelteinflüssen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "bereitet optimal auf Styling & Haarschnitt vor",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "antistatisches Ergebnis ohne Frizz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "25 benefits",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Leave-in-Pflege für allen Haartypen. Bietet 25 Vorteile in einem Produkt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "geschmeidig weich und seidig glänzend",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "schützt vor Hitzeschäden (kein Temperaturwert); EN: helping prevent heat damage and split ends",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    }
+  ]
+}

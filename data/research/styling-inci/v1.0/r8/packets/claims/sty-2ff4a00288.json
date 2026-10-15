@@ -1,0 +1,68 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-2ff4a00288",
+  "brand": "cantu",
+  "confirmed_name": "SHEA BUTTER COCONUT CURLING CREAM",
+  "confirmed_name_tier": "C1",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definiert & pflegt Locken",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit reiner Shea-Butter & natürlichen Ölen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Spendet Feuchtigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "defines, softens & moisturises",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "unknown",
+      "flags": [
+        "non_german_wording"
+      ]
+    },
+    {
+      "type": "other",
+      "text": "Unterstützt die natürliche Locken-Sprungkraft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "für ein leichtes und langanhaltendes Stylingergebnis",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

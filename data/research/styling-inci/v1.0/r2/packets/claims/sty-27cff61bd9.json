@@ -1,0 +1,52 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-27cff61bd9",
+  "brand": "EVO",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Darüber hinaus wirkt die Multifunktionscreme auch als UV- und Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Reduziert Frizz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "heat protection, uv protection, reduces frizz, improves condition, improves styling",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "finish",
+      "text": "Glätte/Weichheit, Frizz- und Flyaway-Kontrolle",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "UV- und Hitzeschutz; heat protection",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "evohair.com",
+      "date": null,
+      "mixed_source": true
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-613df471e3",
+  "product": {
+    "confirmed_name": "Overnight Wellenspray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 2,
+        "inci": "BUTANE"
+      },
+      {
+        "rank": 3,
+        "inci": "PROPANE"
+      },
+      {
+        "rank": 4,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 6,
+        "inci": "LAURTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 7,
+        "inci": "SODIUM BISULFITE"
+      },
+      {
+        "rank": 8,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 9,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 10,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 11,
+        "inci": "LAVANDULA ANGUSTIFOLIA FLOWER EXTRACT"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 13,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 14,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 15,
+        "inci": "OENOTHERA BIENNIS FLOWER/LEAF/STEM EXTRACT"
+      },
+      {
+        "rank": 16,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 18,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 19,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 20,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 21,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 22,
+        "inci": "LINALYL ACETATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das feuchte oder trockene Haar sprühen. Für Locken das Haar mit einem Lockenband oder Papilotten eindrehen. Für Wellen die Haare vom Ansatz an flechten. Über die Nacht eingedreht lassen. Falls Ventil verstopft, den Schaumkopf hochklappen und unter warmem Wasser ausspülen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Styling-Spray für Locken über Nacht",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Schonendes Styling ohne Hitze",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "[CLAIM] Halt",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Für ein Styling, das im Schlaf gelingt, ist das Balea Overnight Wellenspray die ideale Wahl. Es verleiht Wellen und Locken eine tolle Sprungkraft und fixiert die Frisur zuverlässig über Nacht. Die leichte Formulierung beschwert das Haar nicht und verhindert ein Verkleben. In Kombination mit Lockentools lässt sich so ganz ohne Hitze ein beeindruckendes Ergebnis erzielen. Das Balea Overnight Wellenspray unterstützt ein unkompliziertes Styling für einen Look, der am Morgen begeistert und den ganzen Tag hält.",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

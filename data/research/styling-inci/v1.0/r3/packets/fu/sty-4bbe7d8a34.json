@@ -1,0 +1,84 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-4bbe7d8a34",
+  "format": "powder_pump_bottle",
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA/WATER/EAU"
+      },
+      {
+        "rank": 2,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 3,
+        "inci": "SILICA SILYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM/FRAGRANCE"
+      },
+      {
+        "rank": 6,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 7,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 8,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 9,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 10,
+        "inci": "HEXAMETHYLINDANOPYRAN"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 12,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 13,
+        "inci": "VANILLIN"
+      },
+      {
+        "rank": 14,
+        "inci": "LAVANDULA (LAVENDER) OIL/EXTRACT"
+      },
+      {
+        "rank": 15,
+        "inci": "ISOEUGENYL ACETATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Haare in Abschnitte unterteilen. Die Flasche 4–6 cm von den trockenen Wurzeln entfernt halten. Sanft auf die Pumpe, um das Produkt zu verteilen. Mit einem Pumpenstoß beginnen und je nach Bedarf weitere hinzugeben, um das Volumen zu erhöhen. Mit den Fingern stylen, bis das gewünschte Ergebnis erreicht ist. Das Haar zerzausen, um das Volumen über den Tag hinweg zu reaktivieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

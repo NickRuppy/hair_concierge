@@ -1,0 +1,178 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-b1277e831b",
+  "product": {
+    "confirmed_name": "EIMI Nutricurls Fresh Up",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "Wella Professionals",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "formula_source_page_error: the manufacturer's German page prints another product's INCI (wax/pomade list) under a formula text naming wheat bran extract and jojoba oil; this list (retailer capture, matching that text) is the formula of record until a pack INCI is captured",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 4,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 5,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 6,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum/Fragrance"
+      },
+      {
+        "rank": 8,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 9,
+        "inci": "PVP"
+      },
+      {
+        "rank": 10,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 11,
+        "inci": "AMP-Acrylates/Allyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Polyquaternium-10"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 16,
+        "inci": "Trisodium Ethylenediamine Disuccinate"
+      },
+      {
+        "rank": 17,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 18,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 19,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 20,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 21,
+        "inci": "Polyquaternium-72"
+      },
+      {
+        "rank": 22,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 23,
+        "inci": "Cetearyl Nonanoate"
+      },
+      {
+        "rank": 24,
+        "inci": "Ethylhexyl Isononanoate"
+      },
+      {
+        "rank": 25,
+        "inci": "Triticum Vulgare (Wheat) Germ Oil"
+      },
+      {
+        "rank": 26,
+        "inci": "Triticum Vulgare (Wheat) Bran Extract"
+      },
+      {
+        "rank": 27,
+        "inci": "Linoleic Acid"
+      },
+      {
+        "rank": 28,
+        "inci": "Camellia Oleifera Seed Oil"
+      },
+      {
+        "rank": 29,
+        "inci": "Tocopherol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf feuchtes oder trockenes Haar aufsprühen. Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Anti-Frizz-Effekt bis zum 72 Stunden",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

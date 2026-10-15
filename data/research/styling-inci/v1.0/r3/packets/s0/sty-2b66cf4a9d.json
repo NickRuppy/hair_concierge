@@ -1,0 +1,233 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-2b66cf4a9d",
+  "product": {
+    "confirmed_name": "Volume Lift Ansatz-Booster",
+    "confirmed_name_redacted": false,
+    "brand": "John Frieda",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 26,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Polyquaternium-16"
+      },
+      {
+        "rank": 4,
+        "inci": "Polysorbate 20"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyquaternium-68"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 10,
+        "inci": "Hydrolyzed Rice Protein"
+      },
+      {
+        "rank": 11,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "Alcohol"
+      },
+      {
+        "rank": 13,
+        "inci": "Lecithin"
+      },
+      {
+        "rank": 14,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 15,
+        "inci": "Caffeine"
+      },
+      {
+        "rank": 16,
+        "inci": "Hyaluronic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Tocopheryl Acetate"
+      },
+      {
+        "rank": 18,
+        "inci": "Biotin"
+      },
+      {
+        "rank": 19,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 20,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 21,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 22,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 23,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 24,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 25,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 26,
+        "inci": "Linalool"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein.\n2. Anschließend trocken föhnen und wie gewohnt stylen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Dieses Pre-Styling-Spray sorgt ab dem ersten Sprühstoß für sofortiges Volumen am Ansatz. Die leichte Formel mit Peptiden verleiht dem Haar griffige Textur und schützt es gleichzeitig vor Hitze bis zu 220 °C – für ein langanhaltendes, voluminöses Styling.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Mehr Volumen in nur einer Anwendung.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Leichte, schwerelose Formel.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "schützt es gleichzeitig vor Hitze bis zu 220 °C",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "identity_status": "inci_conflict",
+  "inci_alt": {
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 2,
+        "inci": "WATER/AQUA/EAU"
+      },
+      {
+        "rank": 3,
+        "inci": "PVP"
+      },
+      {
+        "rank": 4,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "POLYSORBATE 20"
+      },
+      {
+        "rank": 6,
+        "inci": "SEA SALT/MARIS SAL/SEL MARIN"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROLYZED VEGETABLE PROTEIN"
+      },
+      {
+        "rank": 8,
+        "inci": "VP/DMAPA ACRYLATES COPOLYMER"
+      },
+      {
+        "rank": 9,
+        "inci": "BENZALKONIUM CHLORIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 11,
+        "inci": "FRAGRANCE/PARFUM"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 13,
+        "inci": "CITRUS LIMON (LEMON) PEEL OIL"
+      },
+      {
+        "rank": 14,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 15,
+        "inci": "LIMONENE"
+      }
+    ],
+    "note": "second capture of the same product with a different list; the list in 'inci' is the one read from the newer/higher-tier source"
+  }
+}

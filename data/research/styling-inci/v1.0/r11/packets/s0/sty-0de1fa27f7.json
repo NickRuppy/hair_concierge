@@ -1,0 +1,112 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-0de1fa27f7",
+  "product": {
+    "confirmed_name": "Glanz Spray got Gloss (gotGloss Glanz Spray)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "got2b (Schwarzkopf/Henkel)",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified_with_minor_source_difference",
+    "identity_note": "two captures of this product differ only in the fragrance/allergen block after Parfum; the list in 'inci' is the formula of record (not a set conflict)",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 5,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 8,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 9,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 10,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 11,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 12,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 13,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 14,
+        "inci": "Benzyl Alcohol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Das GOT2B gotGloss Glanz Spray auf trockenes Haar auftragen und kurz einwirken lassen. Haare im Anschluss Glätten um den Glanz zu verstärken. Bei Bedarf das Spray noch einmal als Finisch aufsprühen. Styling Hack: Für die ultimative \"Glass Hair\" Routine, zuerst den gotGloss Glanz Primer im handtuchtrockenen Haar verteilen und die Haare föhnen. Im Anschluss das gotGloss Glanz Spray auf das trockene Haar sprühen und die Haare glätten. Das Ergebnis: [CLAIM], glattes \"Glass Hair\" Haar!",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "redacted_with": "[CLAIM]"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Bis zu 48h [CLAIM] Haar",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Bis zu 230 C Hitzeschutz",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    }
+  ],
+  "identity_status": "verified_with_minor_source_difference",
+  "identity_note": "two captures of this product differ only in the fragrance/allergen block after Parfum; the list in 'inci' is the formula of record (not a set conflict)"
+}

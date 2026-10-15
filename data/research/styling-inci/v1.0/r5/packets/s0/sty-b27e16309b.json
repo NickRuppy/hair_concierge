@@ -1,0 +1,160 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-b27e16309b",
+  "product": {
+    "confirmed_name": "Anti-Frizz Lotion Schmusekatze",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "got2b",
+    "format": "pump_lotion"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 3,
+        "inci": "Dicaprylyl Ether"
+      },
+      {
+        "rank": 4,
+        "inci": "Polyquaternium-37"
+      },
+      {
+        "rank": 5,
+        "inci": "Distearoylethyl Hydroxyethylmonium Methosulfate"
+      },
+      {
+        "rank": 6,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 7,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 9,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 10,
+        "inci": "Quaternium-91"
+      },
+      {
+        "rank": 11,
+        "inci": "Cetrimonium Methosulfate"
+      },
+      {
+        "rank": 12,
+        "inci": "Isopropyl Alcohol"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 14,
+        "inci": "Citrus Limon (Lemon) Peel Oil"
+      },
+      {
+        "rank": 15,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 18,
+        "inci": "Pinene"
+      },
+      {
+        "rank": 19,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 20,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 21,
+        "inci": "Benzyl Alcohol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Verteile die Lotion gleichmäßig im handtuchtrockenen oder trockenen Haar und style es, wie es dir gefällt. HACK: Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "für ein sleekes Finish & ein weiches Haargefühl",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Bis zu 72 h Anti-Frizz-Kontrolle",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Die got2b Schmusekatze Anti-Frizz Lotion bändigt Frizz und sorgt für seidig weiches Haar. Gib deinem Haar die Pflege, die es verdient!",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "got2b Schmusekatze Anti-Frizz-Lotion bändigt bis zu 72h Frizz",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Kann auch zum Schutz vor Schäden durch Föhnen oder andere hitzeaktive Stylinggeräte verwendet werden.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12"
+    }
+  ]
+}

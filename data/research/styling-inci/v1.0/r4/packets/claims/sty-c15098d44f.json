@@ -1,0 +1,109 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-c15098d44f",
+  "brand": "John Frieda",
+  "confirmed_name": "Traumlocken Belebender Wellenauffrischer",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Spendet Feuchtigkeit und frischt Wellen zwischen den Haarwäschen auf.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Refresh für Curls & Waves.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Dieses revitalisierende Spray haucht Wellen und Locken am zweiten Tag neues Leben ein. Angereichert mit leichtem Moringaöl und unserer lockenverstärkenden Technologie, sorgt die feuchtigkeitsspendende Formel mit nur wenigen Sprühstößen für neue Definition und Sprungkraft.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Spendet Feuchtigkeit. Schützt vor Frizz.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Frische Wellen zwischen den Haarwäschen auf.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Keine Hitze, kein Shampoo, kein Wasser nötig.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit AuraBoost, unserem stimmungsaufhellenden Duft.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Wellenauffrischer für lockiges Haar",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Belebend",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Frischt Locken und Wellen auf",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Spendet Feuchtigkeit und Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für mehr Sprungkraft und Definition",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

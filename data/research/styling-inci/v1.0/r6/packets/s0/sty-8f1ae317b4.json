@@ -1,0 +1,161 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-8f1ae317b4",
+  "product": {
+    "confirmed_name": "Thermashape Straightening Creme",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "KMS",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_hyphenation_artifact: 'Tri-heptanoin' -> 'Triheptanoin'",
+        "defect_rank": null
+      },
+      {
+        "flag": "repaired_hyphenation_artifact: 'Gly-cerin' -> 'Glycerin'",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Isoamyl Laurate"
+      },
+      {
+        "rank": 3,
+        "inci": "Triheptanoin"
+      },
+      {
+        "rank": 4,
+        "inci": "Propanediol"
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "Sodium Polyacryloyldimethyl Taurate"
+      },
+      {
+        "rank": 7,
+        "inci": "Hydrogenated Polydecene"
+      },
+      {
+        "rank": 8,
+        "inci": "Sorbitan Caprylate"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 11,
+        "inci": "Trideceth-10"
+      },
+      {
+        "rank": 12,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 13,
+        "inci": "Laurtrimonium Chloride"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Bisulfite"
+      },
+      {
+        "rank": 15,
+        "inci": "Punica Granatum Peel Extract"
+      },
+      {
+        "rank": 16,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Fragrance/Parfum"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf das handtuchtrockene Haar auftragen. Durchkämmen und föhnen. Mit Hitze-Tools stylen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "kmshair.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Verwandelt kräftiges oder widerspenstiges Haar in vielseitige, glatte Styles, die bis zur nächsten Haarwäsche halten. Bietet Hitzeschutz.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Formt das Haar mit Hitze-Tools zu gewünschten Styles – für glatte Looks und Blow-Outs.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Glättet das Haar bei regelmäßiger Anwendung in Kombination mit einem Glätteisen.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "ZUR GLÄTTUNG VON LOCKEN MIT GLÄTTEISEN ODER FÖHN",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "GLÄTTUNG UND FORM DURCH WÄRME-AKTIVIERUNG",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Bietet Hitzeschutz.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ]
+}

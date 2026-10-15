@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-83a26d5332",
+  "brand": "KMS",
+  "confirmed_name": "Thermashape 2-in-1 Spray",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Hitzereaktives Spray für schnelles, einfaches und lang anhaltendes Styling auf trockenem Haar. Ideal zum Glätten und für Lockenstylings mit Hot Tools. Reduziert Hitzeschädigungen und Haarbruch. Verleiht zusätzlichen Halt und Glanz als Finish-Spray.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Sorgt für extra Halt und Styles, die bis zu 72 Stunden halten.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Sorgt für extra Halt und Styles, die bis zu 72 Stunden halten.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "extra Halt"
+    },
+    {
+      "type": "finish",
+      "text": "Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Reduziert Hitzeschädigungen und Haarbruch.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kmshair.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

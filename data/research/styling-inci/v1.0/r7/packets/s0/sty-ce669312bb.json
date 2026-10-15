@@ -1,0 +1,156 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-ce669312bb",
+  "product": {
+    "confirmed_name": "Glanz-Spray taft x Gliss Silky Shine",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Schwarzkopf taft (taft x GLISS)",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 4,
+        "inci": "Hydrogenated Ethylhexyl Olivate"
+      },
+      {
+        "rank": 5,
+        "inci": "Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "AMP-Isostearoyl Wheat/Corn/Soy Amino Acids"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Hydrogenated Olive Oil Unsaponifiables"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 11,
+        "inci": "C12-15 Alcohols"
+      },
+      {
+        "rank": 12,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 14,
+        "inci": "Acetyl Cedrene"
+      },
+      {
+        "rank": 15,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 17,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 18,
+        "inci": "Juniperus Virginiana Oil"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Für optimalen Hitzeschutz vor dem Stylen aus 30 cm Abstand ins handtuchtrockene Haar sprühen und wie gewohnt föhnen. Für beste Ergebnisse mit taft x GLISS holding me strongly Haarspray fixieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Mit veganem Keratin, Styling & Pflege in einem",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Bis zu 72 h Anti-Frizz-Effekt",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Hitzeschutz bis 230°C",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Für alle Haartypen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "versiegelt brüchige Spitzen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Hitzeschutz bis zu 230°C (Föhnen, Glätten, Lockenbürste)",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null
+    }
+  ]
+}

@@ -1,0 +1,812 @@
+[
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "german_page_identity",
+    "value_verbatim": "EIMI Fresh Up (page title: \"EIMI Fresh Up | Anti-Frizz Spray | Wella Professionals DE\"; intro: \"Auffrischendes Lockenspray. Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.\")",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "German manufacturer page found (the old de-DE path /hair-styling/eimi-nutricurls/fresh-up redirects here). The German page calls the product 'EIMI Fresh Up'; 'Nutricurls' is the line name in the breadcrumb (Haarstyling > EIMI Nutricurls > EIMI Fresh Up). The words 'Curl Refreshing Detangling Spray' appear only in the retailer title (lookfantastic)."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "promise_line_intro",
+    "value_verbatim": "Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Wella page text, 'Produkt Details'. Contains 'Definition' (with Glanz and Anti-Frizz)."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "promise_line_benefit_1",
+    "value_verbatim": "Anti-Frizz-Effekt bis zum 72 Stunden",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Under 'Vorteile'. Typo 'zum' is as printed on the page."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "promise_line_benefit_2",
+    "value_verbatim": "Definition und Glanz",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Under 'Vorteile'."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "hold",
+    "value_verbatim": "Haltegrad 1",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Shown on the page twice ('HALTEGRAD 1' and 'Haltegrad 1'). FAQ: 'EIMI Fresh Up bietet Haltegrad 1 und damit einen leichten, flexiblen Halt.'"
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "directions",
+    "value_verbatim": "Auf feuchtes oder trockenes Haar aufsprühen. Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Under 'Anwendung'. Identical to the existing cohort directions text. Contains 'Locken reaktivieren'."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "hair_type",
+    "value_verbatim": "EIMI Fresh Up ist ein auffrischendes Lockenspray für Locken und Wellen.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "From the page FAQ ('Für welche Haartypen ist Wella EIMI Fresh Up geeignet?'). Cohort has only 'Locken'; the German page says 'Locken und Wellen'."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "care_line_text",
+    "value_verbatim": "Die Formel mit Weizenkleieextrakt und Jojobaöl pflegt, definiert und macht die Locken weich. Die Formel bändigt Frizz und schließt Feuchtigkeit ein und sorgt für lang anhaltende Definition und Geschmeidigkeit der Locken.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Block 'FORMULIERT MIT NOURISH-IN COMPLEX'. This is line-level (EIMI Nutricurls) text, not a product-specific promise line. It is the only 'pflegt' (Pflege) wording on the page."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "detangling_wording",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "NOT FOUND on the German wella.com page, on the wella.com en-NL page, or on the pack front. Only the retailer text has it (lookfantastic.de, C3): \"ein kräuselndes, lockenauffrischendes, entwirrendes Spray, das Definition, Glanz und Anti-Frizz-Wirkung für bis zu 72 Stunden bietet\"; the product title 'Curl Refreshing Detangling Spray' is also retailer-side."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "pack_front_lines",
+    "value_verbatim": "FRESH UP 72H / NUTRICURLS / EIMI / 72h Anti-Frizz Spray / hold indicator 1 of 4 dots (filled, empty, empty, empty)",
+    "tier": "C1",
+    "source_url": "https://wella.bynder.com/transform/ea142fdd-1ceb-432e-b65e-1df33ddeb80a/Wella-Revamp-Germany-wella-professionals-eimi-nutricurl-fresh-up-150ml-21",
+    "capture_date": "2026-10-12",
+    "note": "Pack FRONT only, read by eye from Wella's own packshot (manufacturer CDN, 'Wella-Revamp-Germany' asset). It is not a dm pack photo and the back panel (INCI, directions) is not shown. No pack back found."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "inci_as_printed_on_wella_de_page",
+    "value_verbatim": "Water/Eau, Ceresin, Petrolatum, Octylacrylamide/Acrylates/ Butylaminoethyl Methacrylate Copolymer, Copernicia Cerifera (Carnauba) Wax/Cire De Carnauba, Pvp, Cetyl Alcohol, Cetearyl Alcohol, Ceteareth-25, Alcohol Denat., Mineral Oil/Huile Minérale, Dicaprylyl Maleate, Phenoxyethanol, Aminomethyl Propanol, Fragrance/Parfum, Carbomer, Panthenol, Methylparaben, Propylparaben, Ethylhexyl Methoxycinnamate, Disodium Edta, Iron Oxides, Mica, Titanium Dioxide.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "CONFLICT. The wella.com DE page shows this wax/pomade-like list (also in the page's JSON-LD). It does not fit a water-based spray with 'wheat bran extract and jojoba oil' (the page's own Nourish-In Complex text) and contains no jojoba or wheat bran. It looks like a wrong INCI block on the manufacturer page. Not usable as the INCI for this product without owner decision."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 1,
+    "field": "inci_as_printed_retailer",
+    "value_verbatim": "Aqua/Water/Eau, Propylene Glycol, PEG-40 Hydrogenated Castor Oil, Glycerin, Alcohol Denat., Phenoxyethanol, Parfum/Fragrance, Caprylyl Glycol, PVP, Panthenol, AMP-Acrylates/Allyl Methacrylate Copolymer, Simmondsia Chinensis (Jojoba) Seed Oil, Polyquaternium-10, Linalool, Hexyl Cinnamal, Trisodium Ethylenediamine Disuccinate, Citric Acid, Limonene, Geraniol, Citronellol, Polyquaternium-72, Sodium Hydroxide, Cetearyl Nonanoate, Ethylhexyl Isononanoate, Triticum Vulgare (Wheat) Germ Oil, Triticum Vulgare (Wheat) Bran Extract, Linoleic Acid, Camellia Oleifera Seed Oil, Tocopherol.",
+    "tier": "C3",
+    "source_url": "https://www.lookfantastic.de/p/wella-professionals-eimi-nutricurls-fresh-up-curl-refreshing-detangling-spray-150ml/12126180",
+    "capture_date": "2026-10-12",
+    "note": "Identical to the cohort INCI (29 items). Same list also on beautyflash.co.uk (UK retailer, C5, fetched today). Fits the 'wheat bran + jojoba' formula text. English wella.com pages (en-NL, en-GB) have an empty Ingredients accordion, so there is no second manufacturer source. No pack back found, so the INCI stays C3."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_badge",
+    "value_verbatim": "MULTIFUNKTIONALE ANWENDUNG",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, dm pack photo #1, read by eye (orange box, top right)."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_headline",
+    "value_verbatim": "LOCKEN PFLEGE & STYLING",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front. Line name in large type under the GUHL logo."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_tagline",
+    "value_verbatim": "Mit wenig Aufwand zu definierten Locken & Wellen¹",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, footnote marker 1 as printed."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_use_band",
+    "value_verbatim": "3in1 | LOCKENCREME, KUR & SPÜLUNG",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front. ORDER ON THE FRONT: Lockencreme first, then Kur, then Spülung."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_claim_band",
+    "value_verbatim": "Tiefenwirksame Pflege & natürlich langanhaltende Definition",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, orange band under the use band."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_active",
+    "value_verbatim": "ALOE VERA + DUO-PFLEGE-STYLE-KOMPLEX MIT LEINSAMENÖL",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_front_free_from",
+    "value_verbatim": "Dermatologisch bestätigt / Ohne Silikone",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452799/assets/pas/images/14913cbb-ef30-418b-b453-668c5c0103b4/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, bottom left."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_back_lead",
+    "value_verbatim": "Formulierungen mit kombinierten Pflege- & Stylingeigenschaften schenken definierte Locken und Wellen mit wenig Aufwand.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452827/assets/pas/images/c6baed4e-a93e-4615-91ca-d4e3859ec4e6/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack back, dm pack photo #2, read by eye."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_back_bullets",
+    "value_verbatim": "Stärkt das Haar tiefenwirksam | Hilft Feuchtigkeit im Haar einzuschließen² - für langanhaltend hydriertes Haar¹ | Bündelt und definiert - für Locken & Wellen voller Sprungkraft | Schenkt unbeschwertes, gesund glänzendes Haar | Mit wohltuendem Duft für gute Laune",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452827/assets/pas/images/c6baed4e-a93e-4615-91ca-d4e3859ec4e6/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack back bullets. Footnotes: ¹ In kombinierter Anwendung mit Locken Pflege & Styling Linie; ² Verwendung als Lockencreme (ohne Auswaschen)."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_back_directions",
+    "value_verbatim": "3in1 ANWENDUNG: 1 - Spülung: In die nassen Längen und Spitzen geben, kurz einwirken lassen. Gründlich ausspülen. 2 - Kur: In die nassen Längen & Spitzen geben, 3-5 min einwirken lassen. Gründlich ausspülen. 3 - Lockencreme: Ins handtuchtrockene oder trockene Haar einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220°C.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452827/assets/pas/images/c6baed4e-a93e-4615-91ca-d4e3859ec4e6/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack back. ORDER IN THE DIRECTIONS: 1 Spülung, 2 Kur, 3 Lockencreme (the reverse of the front band). Heat protection is tied to use 3 (Lockencreme) only. Identical wording on dm 'Verwendungshinweise'."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "pack_back_promise_box",
+    "value_verbatim": "UNSER VERSPRECHEN: Dermatologisch bestätigt | Ohne Inhaltsstoffe tierischen Ursprungs | Inhaltsstoffe zu 97% natürlichen Ursprungs³ | Formuliert ohne Silikone | Tube zu 50% aus recyceltem Material (ohne Verschluss) | Hergestellt in Deutschland",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452827/assets/pas/images/c6baed4e-a93e-4615-91ca-d4e3859ec4e6/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Pack back. ³ gem. ISO 16128, inkl. 89% Wasser. Also PETA APPROVED Vegan logo."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "inci_pack",
+    "value_verbatim": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cocos Nucifera Oil, Dipropylene Glycol, Triheptanoin, Panthenol, Glycerin, Hydrolyzed Corn Starch, Sodium Hydroxide, Glycine, Linum Usitatissimum Seed Oil, Olea Europaea Fruit Oil, Prunus Amygdalus Dulcis Oil, Borago Officinalis Seed Oil, Citric Acid, Tocopherol, Aloe Barbadensis Leaf Extract, Benzoic Acid, Sodium Benzoate, Potassium Sorbate, Parfum, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1786452827/assets/pas/images/c6baed4e-a93e-4615-91ca-d4e3859ec4e6/guhl-haarkur-conditioner-und-lockencreme-pflege-und-styling-3in1",
+    "capture_date": "2026-10-12",
+    "note": "Read by eye from the pack back. Identical to the cohort list (24 items) and to guhl.com. Preservatives declared: Benzoic Acid, Sodium Benzoate, Potassium Sorbate. So the cohort INCI can be re-stamped C1/C2 (it is currently C3 from dm)."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "guhl_de_product_name",
+    "value_verbatim": "Locken Pflege & Styling 3in1 Lockencreme, Kur & Spülung (page H1 area: \"3in1 Lockencreme, Kur & Spülung\"; schema name: \"Guhl Locken Pflege & Styling 3in1 Lockencreme, Kur & Spülung\")",
+    "tier": "C2",
+    "source_url": "https://www.guhl.com/produkt/locken-pflege-styling/locken-pflege-styling-3in1-lockencreme-kur-spuelung/",
+    "capture_date": "2026-10-12",
+    "note": "guhl.com (manufacturer, German). Name order: Lockencreme, Kur, Spülung (same as pack front)."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "guhl_de_uses_sentence",
+    "value_verbatim": "Als Haarspülung ohne Silikone, Haarkur für Locken oder Locken-Styling-Creme stärkt sie das Haar tiefenwirksam, hilft Feuchtigkeit im Haar einzuschließen* und schenkt langanhaltend hydratisiertes Haar**.",
+    "tier": "C2",
+    "source_url": "https://www.guhl.com/produkt/locken-pflege-styling/locken-pflege-styling-3in1-lockencreme-kur-spuelung/",
+    "capture_date": "2026-10-12",
+    "note": "guhl.com. ORDER IN THE DESCRIPTION: Haarspülung, Haarkur, Locken-Styling-Creme (Spülung first). Preceded by 'vereint drei Anwendungen in einem Produkt:'. * = 'Bei Verwendung als Lockencreme ohne Auswaschen.'"
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "guhl_de_category_shelving",
+    "value_verbatim": "Listed on guhl.com/produkte/spuelungen-kuren/ (menu group 'Spülungen, Kuren & Seren'); not listed on /produkte/leave-in-pflege/ or /produkte/styling-auffrischen/",
+    "tier": "C2",
+    "source_url": "https://guhl.com/produkte/spuelungen-kuren/",
+    "capture_date": "2026-10-12",
+    "note": "guhl.com product-category pages fetched 2026-10-12. The leave-in page lists the line's 2in1 Stylingspray and Primer Shampoo but not the 3in1; the styling page lists neither Locken product."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "guhl_de_leave_in_remark",
+    "value_verbatim": "Die reichhaltige Pflege der 3in1 Lockencreme, Kur & Spülung schenkt den Locken Kontrolle und Definition. Der Halt entsteht dabei durch Pflege, nicht durch Fixierung.",
+    "tier": "C2",
+    "source_url": "https://www.guhl.com/produkt/locken-pflege-styling/locken-pflege-styling-3in1-lockencreme-kur-spuelung/",
+    "capture_date": "2026-10-12",
+    "note": "guhl.com routine finder. States hold comes from care, not from fixation. Also: '3in1 Lockencreme, Kur & Spülung als Leave-in ins feuchte Haar geben, anschließend das 2in1 Pflegende Stylingspray verwenden.'"
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "dm_product_name",
+    "value_verbatim": "Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1, 200 ml",
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3153470",
+    "capture_date": "2026-10-12",
+    "note": "dm title (Kur first, Conditioner second, Lockencreme last). dm is a retailer for GUHL, so C3."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "dm_breadcrumb",
+    "value_verbatim": "Haare > Locken Produkte",
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3153470",
+    "capture_date": "2026-10-12",
+    "note": "dm breadcrumb and structured-data category 'Haare > Locken Produkte' (categoryCodes 110800, 110103, 110102). It is NOT under Conditioner/Kur or under Haarstyling > Styling Spray & Creme."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "dm_bullets",
+    "value_verbatim": "Lockencreme, Kur & Spülung in einem | Für definierte Locken & Wellen voller Sprungkraft | Spendet Feuchtigkeit & stärkt das Haar | Formulierung mit Aloe Vera & Duo-Pflege-Style-Komplex | Mit integriertem Hitzeschutz bis 220°C",
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3153470",
+    "capture_date": "2026-10-12",
+    "note": "dm bullets: Lockencreme first. dm description text: 'Es kann als Spülung, Kur oder Lockencreme verwendet werden'."
+  },
+  {
+    "slug": "guhl-locken-pflege-und-styling-3in1",
+    "item": 2,
+    "field": "dm_verwendungshinweise",
+    "value_verbatim": "3in1 ANWENDUNG: 1 - Spülung: In die nassen Längen und Spitzen geben, kurz einwirken lassen. Gründlich ausspülen. 2 - Kur: In die nassen Längen & Spitzen geben, 3-5 min einwirken lassen. Gründlich ausspülen. 3 - Lockencreme: Ins handtuchtrockene oder trockene Haar einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220 °C.",
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/3153470",
+    "capture_date": "2026-10-12",
+    "note": "Same as pack back except '220 °C' spacing. The cohort directions are a paraphrase ('3 uses. Spülung: ...'), not verbatim: the verbatim text above should replace it."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_front_name",
+    "value_verbatim": "Styling WAX STICK",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616684/assets/pas/images/dc6c314f-2a0b-488e-a22a-367cc7510bb1/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, dm pack photo #1, read by eye. 'Styling' in script, 'WAX STICK' in capitals. The pack says Wax Stick; dm's listing name is 'Haarwachs Styling Stick'."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_front_bullets",
+    "value_verbatim": "· einfache Fixierung · glattes, glänzendes Finish",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616684/assets/pas/images/dc6c314f-2a0b-488e-a22a-367cc7510bb1/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Pack front."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_front_badge",
+    "value_verbatim": "Ideal für den Sleek-Look",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616684/assets/pas/images/dc6c314f-2a0b-488e-a22a-367cc7510bb1/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Pack front (pink pill)."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_back_headline",
+    "value_verbatim": "Trendige Styles: schnelle und einfache Fixierung, ohne zu verkleben, auch gegen Babyhaare",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616670/assets/pas/images/7f6360bc-8384-4095-8efd-48f7631a72af/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Pack back label, dm pack photo #4 (label peeled open), read by eye."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_back_directions",
+    "value_verbatim": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616670/assets/pas/images/7f6360bc-8384-4095-8efd-48f7631a72af/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Identical to the dm Verwendungshinweise text."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "pack_back_other",
+    "value_verbatim": "HAUTVERTRÄGLICHKEIT Dermatologisch bestätigt. | HINWEIS Den Wax Stick unter 25 °C lagern.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616670/assets/pas/images/7f6360bc-8384-4095-8efd-48f7631a72af/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "Also 'Vegan' and 'Hergestellt in Polen' on the back panel (photo #2). No statement about hold ('Halt') anywhere on the pack."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "inci_pack",
+    "value_verbatim": "PRUNUS AMYGDALUS DULCIS OIL · MANGIFERA INDICA SEED BUTTER · STEARYL ALCOHOL · COCOS NUCIFERA OIL · BUTYROSPERMUM PARKII BUTTER · COPERNICIA CERIFERA CERA · HYRDOGENATED RAPESEED OIL · HYDROGENATED PALM OIL · PERSEA GRATISSIMA OIL · PARFUM · TOCOPHEROL · LINALOOL · DIMETHYL PHENETHYL ACETATE · VANILLIN.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616670/assets/pas/images/7f6360bc-8384-4095-8efd-48f7631a72af/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "CONTRADICTS the cohort INCI (dm text, 12 items). The pack has 14 items: PERSEA GRATISSIMA OIL stands BEFORE PARFUM (dm has it after), and DIMETHYL PHENETHYL ACETATE and VANILLIN are at the end (missing on dm). 'HYRDOGENATED RAPESEED OIL' is how the pack reads at 1200 px (letters transposed on the pack); read by eye, treat spelling as unverified."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "dm_product_name",
+    "value_verbatim": "Haarwachs Styling Stick, 25 g",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "capture_date": "2026-10-12",
+    "note": "dm title (Balea = dm house brand). Description text calls it 'Wax Styling Stick von Balea'."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "dm_breadcrumb",
+    "value_verbatim": "Haare > Haarstyling > Haarwachs",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "capture_date": "2026-10-12",
+    "note": "dm breadcrumb and structured-data category (categoryCodes 121486). Under Haarwachs, not under a general Styling Spray & Creme node."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "dm_bullets",
+    "value_verbatim": "Haarwachs-Stift für trendige Styles | Praktische Anwendung | Für ein glattes & glänzendes Finish | Bändigt abstehende Babyhaare",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "capture_date": "2026-10-12",
+    "note": "Same as cohort."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "dm_description",
+    "value_verbatim": "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und glänzendes Finish, das den ganzen Tag hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1712343",
+    "capture_date": "2026-10-12",
+    "note": "Same as cohort. 'Sleek-Look' and 'trendige Looks/Styles' appear here and on the pack; Babyhaare appears as 'bändigt' (dm) / 'auch gegen Babyhaare' (pack)."
+  },
+  {
+    "slug": "balea-haarwachs-styling-stick",
+    "item": 3,
+    "field": "hold_statement",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1766616684/assets/pas/images/dc6c314f-2a0b-488e-a22a-367cc7510bb1/balea-haarwachs-styling-stick",
+    "capture_date": "2026-10-12",
+    "note": "NOT FOUND: neither the pack (front, back, label photo) nor the dm page contains 'Halt', 'Haltegrad' or a hold level. The only fixing words are 'einfache Fixierung' / 'schnelle und einfache Fixierung' (pack) and 'abstehende Härchen zu fixieren' (directions). dm attributes list only 'vegan' (no Halt attribute, unlike Traumlocken with 'mittlerer Halt')."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "inci_manufacturer_page",
+    "value_verbatim": "Alle Inhaltsstoffe: Aqua [Water], Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Pentylene glycol, Dipropylene glycol, Polysilicone-29, Ethylhexylglycerin, Hydroxyacetophenone, Silicone quaternium-18, Trideceth-12, Trideceth-6, Propylene glycol, Glycerin",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+    "capture_date": "2026-10-12",
+    "note": "neqi-hair.com tab 'INHALTSSTOFFE' / accordion text (page is German, shop of NEQI / New Flag GmbH, Munich). 14 items, same as dm, ends with Glycerin. The earlier 'not readable' gap came from the Shopify products.json body, which omits the tabs; the tab text is in the page HTML."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "inci_dm",
+    "value_verbatim": "Aqua [Water], Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Pentylene glycol,  Dipropylene glycol, Polysilicone-29, Ethylhexylglycerin, Hydroxyacetophenone, Silicone quaternium-18, Trideceth-12, Trideceth-6, Propylene glycol, Glycerin",
+    "tier": "C3",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1455212",
+    "capture_date": "2026-10-12",
+    "note": "dm 'Inhaltsstoffe' field (no 'INGREDIENTS:' prefix, no final period). Identical to the manufacturer list. The cohort flag 'list_possibly_truncated ... 13 items' is wrong: the list has 14 items and is complete (manufacturer page and pack agree)."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "inci_pack",
+    "value_verbatim": "…ATER [AQUA], GARDENIA TAITENSIS FLOWER EXTRACT, LYCIUM BARB… | …SYLVESTRIS (MALLOW) EXTRACT, PENTYLENE GLYCOL, DIP… | ETHYLHEXYLGLYCERIN, HYDROXYACETOPHENONE, SILICONE… | TRI-DECETH-12, TRIDECETH-6, PROPYLENE GLYCOL, GLYCERIN",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1765838173/assets/pas/images/59d5add9-3a74-4875-9a51-d889ee27c077/neqi-leave-in-spray-diamond-glass",
+    "capture_date": "2026-10-12",
+    "note": "Pack back (dm pack photo #2), read by eye. The bottle is curved, so the start and end of each line are cut off in the photo; '…' marks clipped text, '|' marks line breaks as printed. Every readable fragment matches the 14-item list in the same order, and the list ends with GLYCERIN directly above the address block (New Flag UK / New Flag GmbH). So the pack confirms the dm list is not truncated. Pack prints 'TRI-DECETH-12' (hyphenated) where the web lists print 'Trideceth-12'."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "preservative_declared",
+    "value_verbatim": "NONE of the classic preservatives (Phenoxyethanol, Benzoates, Sorbates, Methylisothiazolinone, etc.) is declared. Possible preservation help: Pentylene glycol, Hydroxyacetophenone, Ethylhexylglycerin (multifunctional ingredients).",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+    "capture_date": "2026-10-12",
+    "note": "Derived by reading the complete list; no source states a preservative. The owner may treat Hydroxyacetophenone + Pentylene glycol + Ethylhexylglycerin as the preservative system."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "pack_front",
+    "value_verbatim": "NEQI professional hair care / signature blend / STYLING SPRAY SPRAY COIFFANT / Diamond Glass / for all hair types / 180ml e 6.1 Fl.Oz.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1765838162/assets/pas/images/90d0bfb1-3035-4a42-a1f0-e3545c60af1b/neqi-leave-in-spray-diamond-glass",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, read by eye. The pack says 'Styling Spray' (no 'Leave-in', no 'All' in the name); dm title is 'Leave-In Spray Diamond Glass'."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "pack_back_claim",
+    "value_verbatim": "Instantly silky, smooth texture with incredible [shine] and heat protection up to 400°F/230°C – for all hair types. / Sofort seidige, glatte Textur mit unglaublichem [Glan]z & Hitzeschutz bis zu 230°C – für alle Haartypen.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1765838173/assets/pas/images/59d5add9-3a74-4875-9a51-d889ee27c077/neqi-leave-in-spray-diamond-glass",
+    "capture_date": "2026-10-12",
+    "note": "Pack back, read by eye; bracketed letters are clipped by the bottle curvature. Heat protection temperature 230 °C is on the pack; not on neqi-hair.com or dm."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "manufacturer_product_type",
+    "value_verbatim": "Leave-in Styling Spray mit Hitzeschutz",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all.js",
+    "capture_date": "2026-10-12",
+    "note": "Shopify 'type' field of the manufacturer product (JSON). Page schema category: 'Styling-Gel, Haarspray & Haarschaum'. Tags: diamond glass, forbidden finish, Styling."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "manufacturer_directions",
+    "value_verbatim": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+    "capture_date": "2026-10-12",
+    "note": "neqi-hair.com tab 'ANWENDUNG'. This is a C2 directions text (the cohort directions are the dm text, C3). dm wording: 'Handtuchtrockenes Haar in Abschnitte unterteilen. Großzügig und gleichmäßig auf das Haar sprühen. Jeden Abschnitt unter Hitze und Spannung föhnen, um den leistungsstarken Feuchtigkeitsschutz für spiegelglatte Haare zu aktivieren und die besten Ergebnisse zu erzielen.'"
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 4,
+    "field": "manufacturer_ideal_fuer",
+    "value_verbatim": "Personen mit stumpfem, glanzlosem Haar | Frizz-anfälliges oder krauses Haar | Glattes oder welliges Haar, das einen polierten Look erhalten soll | Coloriertes oder chemisch behandeltes Haar | Styling mit Föhn oder Glätteisen",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+    "capture_date": "2026-10-12",
+    "note": "Under 'Ideal für:' on neqi-hair.com. The cohort stamps these five hair_type claims with source products.dm.de and tier C2; they are NOT on dm (dm says Haartyp 'alle Haartypen'). Correct source: neqi-hair.com (C2). See item 6."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "dm_bullet_geschmeidigkeit",
+    "value_verbatim": "Verbesserte Geschmeidigkeit",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1536368",
+    "capture_date": "2026-10-12",
+    "note": "Second of four dm 'Produktbeschreibung' bullets (Balea PROFESSIONAL = dm house brand, so C2 holds). dm breadcrumb: Haare > Haarstyling > Styling Spray & Creme."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "dm_bullets",
+    "value_verbatim": "Für definierte lebendige Locken | Verbesserte Geschmeidigkeit | Schützt effektiv vor Frizz | Hitzeschutz bis zu 220 °C",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1536368",
+    "capture_date": "2026-10-12",
+    "note": "All four dm bullets, in order."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "dm_description_lines",
+    "value_verbatim": "Die Anti-Statik-Formel verhindert Frizz und sorgt für ein geschmeidiges Haargefühl. [...] Sie sorgt für perfekt definierte und glänzende Locken, die den ganzen Tag über strahlen.",
+    "tier": "C2_house_brand",
+    "source_url": "https://products.dm.de/product/products/detail/DE/dan/1536368",
+    "capture_date": "2026-10-12",
+    "note": "From the dm description text. Hold: attribute 'Halt: mittlerer Halt' under Produktmerkmale (dm attribute, C2_house_brand)."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "pack_back_geschmeidigkeit",
+    "value_verbatim": "Locken-Forming-System für Geschmeidigkeit und verbesserte Kämmbarkeit.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754995327/assets/pas/images/80a74e4c-4368-4309-9277-3514a225339e/balea-professional-styling-cream-traumlocken",
+    "capture_date": "2026-10-12",
+    "note": "Pack back, dm pack photo #2, read by eye. The phrase 'Verbesserte Geschmeidigkeit' is NOT on the pack. The pack says 'Geschmeidigkeit und verbesserte Kämmbarkeit' ('verbessert' belongs to Kämmbarkeit). The dm bullet is dm's own wording."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "pack_back_other",
+    "value_verbatim": "LEISTUNGSSTARKE FORMEL FÜR DEFINIERTE, LEBENDIGE LOCKEN VOLLER SPRUNGKRAFT UND NATÜRLICHEM GLANZ / SCHWUNGVOLL. DEFINIERT. VERWÖHNT. / Anti-Statik-Formel schützt effektiv vor Frizz, für definierte Locken und gewelltes Haar. / ANWENDUNG Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene oder trockene Haar einarbeiten. Nicht ausspülen.",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754995327/assets/pas/images/80a74e4c-4368-4309-9277-3514a225339e/balea-professional-styling-cream-traumlocken",
+    "capture_date": "2026-10-12",
+    "note": "Pack back. Directions identical to the dm text. No hold wording on the pack."
+  },
+  {
+    "slug": "balea-professional-styling-cream-traumlocken",
+    "item": 5,
+    "field": "pack_front",
+    "value_verbatim": "BIS ZU 24h DEFINIERTE LOCKEN / Balea PROFESSIONAL / TRAUM LOCKEN STYLING CREAM / Perfekt definierte, glänzende Locken und Hitzeschutz bis 220 °C / PFLEGE-FORMEL MIT SHEABUTTER UND KERATIN / lockiges und gewelltes Haar",
+    "tier": "C1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754995325/assets/pas/images/f839a766-75ea-43f1-87c1-82258fb12b5a/balea-professional-styling-cream-traumlocken",
+    "capture_date": "2026-10-12",
+    "note": "Pack front, dm pack photo #1, read by eye. New: 'BIS ZU 24h DEFINIERTE LOCKEN' (duration claim, not in the cohort)."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": "Anti-Frizz-Effekt bis zum 72 Stunden",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Anti-Frizz-Effekt bis zum 72 Stunden\". Found verbatim on wella.com DE under 'Vorteile'. Re-source to wella.com (C2)."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": "Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.\". Found verbatim under 'Anwendung' on wella.com DE. Re-source to wella.com (C2)."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "hold",
+    "value_verbatim": "Haltegrad 1",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Haltegrad 1\". Found on wella.com DE (page header and FAQ) and as the 1-of-4 dot indicator on the pack front."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "finish",
+    "value_verbatim": "Definition und Glanz",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Definition und Glanz\". Found verbatim under 'Vorteile' on wella.com DE."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "other",
+    "value_verbatim": "Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.\". Found verbatim on wella.com DE (intro and 'Produkt Details')."
+  },
+  {
+    "slug": "wella-eimi-nutricurls-fresh-up",
+    "item": 6,
+    "field": "hair_type",
+    "value_verbatim": "EIMI Fresh Up ist ein auffrischendes Lockenspray für Locken und Wellen.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-nutricurls/eimi-fresh-up",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source lookfantastic.de (retailer, should be C3). Cohort text: \"Locken\". Found in the wella.com DE FAQ; wording is 'Locken und Wellen', not 'Locken' alone."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"Leave-in-Pflege mit Mehrfachwirkung\". NOT FOUND on redken.eu DE. Closest German line: 'Leave-in-Pflege für allen Haartypen. Bietet 25 Vorteile in einem Produkt.' (already in the cohort, stamped redken.eu). German product name on the page: 'REDKEN ONE UNITED 25 BENEFITS SPRAY'. Looked at the German page text, JSON-LD and title."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": "verbesserte Kämmbarkeit",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"verbessert die Kämmbarkeit\". German page description: 'Feuchtigkeitsspendend, verbesserte Kämmbarkeit, schützt vor Hitze, Haarbruch und Spliss, gibt Glanz und vieles mehr.'"
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": "schützt vor Hitze, Haarbruch und Spliss",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"schützt vor Hitzeschäden & Umwelteinflüssen\". German page does not mention Umwelteinflüsse (UK list item 16 'Helps shield vs. external aggressors' has no German counterpart on the page). Only the heat/Haarbruch/Spliss part is found."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"bereitet optimal auf Styling & Haarschnitt vor\". NOT FOUND on redken.eu DE (UK list items 9 'Primes hair for styling' and 8 'Ideal cutting lotion' are English-only)."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"antistatisches Ergebnis ohne Frizz\". NOT FOUND on redken.eu DE (UK list items 20-21 'Helps control frizz', 'Anti-static' are English-only)."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "promise",
+    "value_verbatim": "Bietet 25 Vorteile in einem Produkt.",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"25 benefits\". German page says '25 Vorteile' but has no itemised list; the list of 25 exists only on the UK page (C5)."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "finish",
+    "value_verbatim": "gibt Glanz",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"geschmeidig weich und seidig glänzend\". Only 'gibt Glanz' is on the German page; 'silky touch / smoothness' (UK list items 17-18) are English-only."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "heat_protection",
+    "value_verbatim": "schützt vor Hitze, Haarbruch und Spliss",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"schützt vor Hitzeschäden; helping prevent heat damage and split ends\". German page covers heat, Haarbruch and Spliss; no temperature given."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "hair_type",
+    "value_verbatim": "Leave-in-Pflege für allen Haartypen. [...] allen Haartypen und Haarstrukturen",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"für alle Haarzustände\". German page says Haartypen/Haarstrukturen, not 'Haarzustände'."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "hair_type",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort claim stamped C2 with source redken.co.uk (UK English page, should be C5); the German texts in the cohort are translations of the English UK list ('25 Benefits'). Cohort text: \"auch farbbehandeltes und ombre-gefärbtes Haar\". NOT FOUND on redken.eu DE (UK list items 11 and 15 'Safe for colour-treated hair', 'Safe for ombré hair' are English-only)."
+  },
+  {
+    "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "item": 6,
+    "field": "inci",
+    "value_verbatim": "AQUA / WATER • COCOS NUCIFERA OIL / COCONUT OIL • AMODIMETHICONE • POLYQUATERNIUM-37 • PHENOXYETHANOL • PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE • PARFUM / FRAGRANCE • ACETAMIDE MEA • LACTAMIDE MEA • DIMETHICONE PEG-7 PHOSPHATE • PPG-1 TRIDECETH-6 • TRIDECETH-6 • BEHENTRIMONIUM CHLORIDE • XYLOSE • LACTIC ACID • ETHYLHEXYLGLYCERIN • CETRIMONIUM CHLORIDE • HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL • CITRONELLOL • GERANIOL • LINALOOL • ALPHA-ISOMETHYL IONONE • VIOLA ODORATA EXTRACT - VIOLA ODORATA FLOWER/LEAF EXTRACT • SODIUM HYDROXIDE .",
+    "tier": "C2",
+    "source_url": "https://www.redken.eu/de-de/produkte/haarpflege/one-united/one-united",
+    "capture_date": "2026-10-12",
+    "note": "Cohort INCI source is redken.co.uk (stamped C2). The German redken.eu page carries the identical list (same order). Directions on the German page also match the cohort text verbatim (4 Varianten). Re-source INCI to redken.eu (C2)."
+  },
+  {
+    "slug": "kevin-murphy-powder-puff-volume",
+    "item": 6,
+    "field": "promise_hold_duration",
+    "value_verbatim": "Ein Volumenwunder im Döschen! [...] Einfach sanft klopfen, etwas Puder auf das Haar geben und es verwandelt sich in ein Fixierprodukt mit langanhaltendem Halt. Sorgt mühelos für Fülle und eignet sich für jeden Haartyp.",
+    "tier": "C2",
+    "source_url": "https://kevinmurphy.com.au/de/de/products/by-benefit/volume/POWDER-PUFF.html",
+    "capture_date": "2026-10-12",
+    "note": "Cohort stamps this C2 with source kevinmurphy.com.au (.au domain). The page is the German-language storefront (/de/de, EUR prices, 'Made in U.S.A. ... Available Globally' / 'Made in EU - Available Globally'). https://kevinmurphy.de and https://www.kevinmurphy.de both redirect to https://kevinmurphy.com.au/de/de/km, i.e. the manufacturer's own German-market site lives on the .com.au domain; no German-domain product page exists. Not a mis-stamp if the owner accepts the manufacturer's German storefront as C2; it is a host-rule question for the owner. Verified today. Vorteile on the page: 'Mehr Textur / Volumengebend / Sanfter Halt'. Directions are not on the page ('Vollständige Anleitung erhalten' link only); the cohort directions come from flaconi.de (C3)."
+  },
+  {
+    "slug": "kevin-murphy-killer-curls",
+    "item": 6,
+    "field": "promise_hold_flexibility",
+    "value_verbatim": "KILLER.CURLS, unsere Anti-Frizz-Creme voller Antioxidantien [...] KILLER.CURLS die ideale Balance zwischen starkem Halt und Flexibilität für das Haar bietet.",
+    "tier": "C2",
+    "source_url": "https://kevinmurphy.com.au/de/de/products/by-benefit/curl/KILLER-CURLS.html",
+    "capture_date": "2026-10-12",
+    "note": "Cohort stamps this C2 with source kevinmurphy.com.au (.au domain). The page is the German-language storefront (/de/de, EUR prices, 'Made in U.S.A. ... Available Globally' / 'Made in EU - Available Globally'). https://kevinmurphy.de and https://www.kevinmurphy.de both redirect to https://kevinmurphy.com.au/de/de/km, i.e. the manufacturer's own German-market site lives on the .com.au domain; no German-domain product page exists. Not a mis-stamp if the owner accepts the manufacturer's German storefront as C2; it is a host-rule question for the owner. Verified today. Vorteile on the page: 'Anti-Frizz / Lockendefinierend / Flexibler Halt / Natürliches Haargefühl'. Directions not on the page (link only); cohort directions come from flaconi.de (C3)."
+  },
+  {
+    "slug": "neqi-diamond-glass-styling-spray-all",
+    "item": 6,
+    "field": "hair_type_x5",
+    "value_verbatim": "Personen mit stumpfem, glanzlosem Haar | Frizz-anfälliges oder krauses Haar | Glattes oder welliges Haar, das einen polierten Look erhalten soll | Coloriertes oder chemisch behandeltes Haar | Styling mit Föhn oder Glätteisen",
+    "tier": "C2",
+    "source_url": "https://www.neqi-hair.com/products/treatment-treasure-diamond-glass-all",
+    "capture_date": "2026-10-12",
+    "note": "Cohort stamps these five claims C2 with source products.dm.de (dm is a retailer for NEQI: would be C3). They are not on dm (dm: Haartyp 'alle Haartypen'). The text is on the NEQI manufacturer page under 'Ideal für:' (C2). Fix = change the source to neqi-hair.com; the tier C2 is then correct."
+  },
+  {
+    "slug": "evo-head-mistress-cuticle-sealer",
+    "item": 6,
+    "field": "all_claims_and_inci",
+    "value_verbatim": null,
+    "tier": null,
+    "source_url": "https://www.evohair.com/us/hair-styling/styling-format/cream/evo-head-mistress-cuticle-sealer-150ml-39268/",
+    "capture_date": "2026-10-12",
+    "note": "Cohort stamps 6 claims and the INCI C2 with source evohair.com/us (US English page, should be C5); the German-looking cohort texts ('Darüber hinaus wirkt die Multifunktionscreme auch als UV- und Hitzeschutz') have no German source I could find. Looked at: the cited URL (now 404), evohair.com/en-au product link, evohair.com/de redirect (goes to en-au), evohair.de (HTTP 403 bot wall, not bypassed), web search for the German phrase (only English evohair.com US/AU/GB and thehaircaregroup.com pages). Result: no German manufacturer page or German pack text found."
+  },
+  {
+    "slug": "wella-professionals-eimi-flowing-form",
+    "item": 6,
+    "field": "inci",
+    "value_verbatim": "Water/Eau, Pvp, Polyquaternium-37, Propylene Glycol Dicaprylate/ Dicaprate, Behentrimonium Chloride, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Polyquaternium-4, Fragrance/Parfum, Phenoxyethanol, Cetearyl Alcohol, Panthenol, Ppg-1 Trideceth-6, Glyoxylic Acid, Disodium Edta, Simmondsia Chinensis (Jojoba) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Peg-20 Stearate, Ethylhexyl Methoxycinnamate, Cetyl Alcohol, Sorbitan Oleate.",
+    "tier": "C2",
+    "source_url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-flowing-form",
+    "capture_date": "2026-10-12",
+    "note": "Cohort INCI source is wella.com en-SE (English Swedish page, stamped C2). The German de-DE page carries the identical list, so only the source URL needs changing. Its claims already cite de-DE."
+  }
+]

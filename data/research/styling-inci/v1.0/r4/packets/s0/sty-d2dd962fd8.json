@@ -1,0 +1,208 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-d2dd962fd8",
+  "product": {
+    "confirmed_name": "Frizz Ease Zauberformel Seiden-Finish Creme",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "John Frieda",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "missing_spaces_as_printed: 'PerseaGratissima', 'IsostearylPalmitate', 'TetramethylAcetyloctahydronaphthalenes' (repaired by the round-4 freeze, P3-3)",
+        "defect_rank": null
+      },
+      {
+        "flag": "possible_truncation_unconfirmed: capture note says the list 'may be cut at the end'; it ends in the fragrance block (non-blocking, review)",
+        "defect_rank": 30
+      },
+      {
+        "flag": "repaired_missing_space (P3-3, rank 3): 'PerseaGratissima Oil' -> 'Persea Gratissima Oil'",
+        "defect_rank": 3,
+        "status": "resolved_by_freeze"
+      },
+      {
+        "flag": "repaired_missing_space (P3-3, rank 8): 'IsostearylPalmitate' -> 'Isostearyl Palmitate'",
+        "defect_rank": 8,
+        "status": "resolved_by_freeze"
+      },
+      {
+        "flag": "missing_space_as_printed (P3-3, rank 18): 'Steardimonium Hydroxypropyl Hydrolyzed WheatProtein' — the spaced reading 'Steardimonium Hydroxypropyl Hydrolyzed Wheat Protein' is not an INCI name of another record or of lexicon v0.4, so it is not repaired; one item either way (no separator missing)",
+        "defect_rank": 18
+      },
+      {
+        "flag": "repaired_missing_space (P3-3, rank 29): 'TetramethylAcetyloctahydronaphthalenes' -> 'Tetramethyl Acetyloctahydronaphthalenes'",
+        "defect_rank": 29,
+        "status": "resolved_by_freeze"
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Persea Gratissima Oil"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenyl Trimethicone"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 7,
+        "inci": "Glyceryl Stearate"
+      },
+      {
+        "rank": 8,
+        "inci": "Isostearyl Palmitate"
+      },
+      {
+        "rank": 9,
+        "inci": "PVP"
+      },
+      {
+        "rank": 10,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 11,
+        "inci": "Acrylates/C10-30 Alkyl Acrylate Crosspolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Triethanolamine"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 14,
+        "inci": "Sorbitan Oleate"
+      },
+      {
+        "rank": 15,
+        "inci": "Cocamidopropyl PG-Dimonium Chloride Phosphate"
+      },
+      {
+        "rank": 16,
+        "inci": "Caprylhydroxamic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Methylpropanediol"
+      },
+      {
+        "rank": 18,
+        "inci": "Steardimonium Hydroxypropyl Hydrolyzed WheatProtein"
+      },
+      {
+        "rank": 19,
+        "inci": "BHT"
+      },
+      {
+        "rank": 20,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 21,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 22,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 23,
+        "inci": "Citrus Limon Peel Oil"
+      },
+      {
+        "rank": 24,
+        "inci": "Hexamethylindanopyran"
+      },
+      {
+        "rank": 25,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 26,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 27,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 28,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 29,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Eine kleine Menge zwischen den Handflächen verreiben.\n2. Im trockenen Haar verteilen und dabei besonders auf abstehende Härchen und ungleichmäßige Spitzen achten.\n3. Einfach in die Handtasche stecken und jederzeit bei Bedarf anwenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Glättet abstehende Haare, verleiht Glanz und bändigt Frizz.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Diese Seiden-Finish-Creme bändigt abstehende Härchen und Frizz und verleiht dem Haar Glanz und natürliche Bewegung.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Seidenweiches, geschmeidiges Haar in Sekunden.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Für müheloses Styling unterwegs.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

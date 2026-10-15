@@ -1,0 +1,70 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-173fb7a29c",
+  "brand": "ALCINA",
+  "format": "pump_spray",
+  "product_type_word": "lotion",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Hold-Faktor 2 (Skala 1-10; Alt-Text: Hold Faktor 2 von 10 für natürlichen Halt)",
+    "scale_max": 10,
+    "scale_max_stated": true,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Sorgt für mehr Schwung & Elastizität im Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "Hold-Faktor 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09",
+      "number": 2,
+      "scale_as_written": "Hold-Faktor 2 (Skala 1-10; Alt-Text: Hold Faktor 2 von 10 für natürlichen Halt)",
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": "natürlicher Halt (leicht)"
+    },
+    {
+      "type": "flexibility",
+      "text": "Elastizität",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "Sprungkraft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "verleiht Volumen und Elastizität (kein Glanz-Claim)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Schützt wirksam vor Föhnhitze",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

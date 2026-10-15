@@ -1,0 +1,577 @@
+[
+  {
+    "sample_id": "loreal-paris-elnett-haarspray-extra-starker-halt",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.loreal-paris.de/elnett/haarspray/extra-starker-halt",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer product page (75 ml GTIN 7610099050058; 300 ml option listed)"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.loreal-paris.de/tipps-und-trends/haarpflege/haarspray-pflege-halt-volumen",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer article: strengths + full Elnett hairspray list"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747416378/assets/pas/images/3fe61209-cfa7-4a2d-80e0-b3e7e5f37961/l-oreal-paris-elnett-haarspray-extra-starker-halt",
+        "retrieved": "2026-10-09",
+        "what": "pack front image (dm listing 1713489)"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747416505/assets/pas/images/4f281408-d1ab-4228-9af0-c375e2d4df03/l-oreal-paris-elnett-haarspray-extra-starker-halt",
+        "retrieved": "2026-10-09",
+        "what": "range lineup image: pack hold words Normaler / Starker / Sehr starker Halt"
+      },
+      {
+        "tier": "C3",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/1713489",
+        "retrieved": "2026-10-09",
+        "what": "dm JSON, GTIN 3600524164614, attribute Halt = sehr starker Halt"
+      }
+    ],
+    "primary_promise_raw": "Das einzigartige Elnett Ultra-Fine Haarspray verleiht deinem Styling den legendären perfekten Halt",
+    "hold": {
+      "raw": "EXTRA STARKER HALT (pack) / Extra Starker Halt (product name)",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "extra starker Halt",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "ausbürstbar",
+      "Stylen, Ausbürsten, wieder Stylen",
+      "ohne zu beschweren",
+      "spielend leichtes Ausbürsten"
+    ],
+    "finish": {
+      "raw": "Für einen natürlichen Haarschwung, mehr Glanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Remove cap tab, spray from about 30 cm. Manufacturer text does NOT say dry vs damp hair or before/after styling (round-1 'onto dry hair' was inferred). Sibling Elnett page FAQ: spray over the already styled hair.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "bis zu 72H schwereloses Volumen",
+    "conflicts_with_round1": "Hold word confirmed (Extra Starker Halt, no number, no scale). New manufacturer wording on page: 'Unsere neue Formel für starken Halt, schützt dein Haar vor Frizz und äußeren Einflüssen' and up to 72H volume claim; round 1 only had dm's 'extra langem Halt'. 'sehr starker Halt' is dm's attribute label (C3), not an L'Oréal tier name for this SKU. Page <title> says 'Mit Ceramid' but INCI has no ceramide. loreal-paris.de GTIN shown is the 75 ml (7610099050058), round 1 had the 300 ml (3600524164614) from dm.",
+    "inci_changed": false,
+    "notes": "HOLD LADDER AS STATED BY L'ORÉAL DE (names on loreal-paris.de + pack lineup): core ultra-fine spray = Normaler Halt < Starker Halt < Extra Starker Halt (page URLs normaler-halt / starker-halt / extra-starker-halt; article: 'verschiedenen Stärken ... Extra Starker Halt noch intensiver'). 'Sehr starker Halt' is printed on the packs of the sub-lines Pflege (trockenes Haar) and Parfümfrei and is used in the Anti-Gelbstich text; L'Oréal never ranks 'sehr stark' against 'extra stark'. No numeric scale anywhere. INCI on loreal-paris.de is IDENTICAL for Normaler, Starker and Extra Starker Halt (alcohol denat., DME, VA/Crotonates/Vinyl Neodecanoate Copolymer, PEG/PPG-4/12 Dimethicone, ...): the ladder is label-only, not a formula difference. Starker Halt page adds '24 Stunden' hold and 'Schutz vor Luftfeuchtigkeit'; the Extra page does not carry a humidity claim (round-1 humidity_claim null stays null)."
+  },
+  {
+    "sample_id": "loreal-men-expert-barber-club-styling-pomade",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.loreal-paris.de/barber-club/bart-und-haar-styling-pomade",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer product page (GTIN 3600523528738)"
+      }
+    ],
+    "primary_promise_raw": "speziell entwickelt für das optimale Styling von Bart und Haar",
+    "hold": {
+      "raw": "perfekten Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "perfekter Halt (no strength word)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "leicht",
+      "nicht klebend"
+    ],
+    "finish": {
+      "raw": "verleiht sie dem Haar natürlichen Glanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Rub a small amount between the hands, apply to dry OR damp beard and/or hair, style with a comb.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langanhaltende Bartkontrolle",
+    "conflicts_with_round1": "'starker Halt' and 'bis zu 24 Stunden Halt' are NOT on the manufacturer page; they come from the Douglas retailer text (C3). Manufacturer says only 'perfekten Halt ... Kontrolle über Bart und Haar'. Round-1 directions (clean + rough-shape first, warm between hands) came from Douglas; manufacturer directions are shorter and allow damp hair.",
+    "inci_changed": false,
+    "notes": "INCI on loreal-paris.de matches round 1 (Aqua, Paraffinum Liquidum, PEG-100 Stearate, Glyceryl Stearate, Cetearyl Alcohol, Phenyl Trimethicone, Microcrystalline Wax, VP/Dimethylaminoethylmethacrylate Copolymer ...). Manufacturer headline is beard first ('Bart & Haar'); page lists no hold grade, no matt/shine grade. Only one 2-star review on the page calls it more hair than beard styling."
+  },
+  {
+    "sample_id": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747412980/assets/pas/images/9b8aa423-6960-43aa-b94e-cb4554e86671/l-oreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+        "retrieved": "2026-10-09",
+        "what": "pack front image (dm listing 1353305; old 'Elnett de Luxe' artwork)"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.loreal-paris.de/tipps-und-trends/haarpflege/haar-dauerhaft-glaetten",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer article with the REAL usage sequence + 3-day / humidity / 230 degree claims"
+      },
+      {
+        "tier": "C2",
+        "url": "https://web.archive.org/web/20221127154946/https://www.loreal-paris.de/elnett/hitzeschutz/stylingspray-3-tage-glatt",
+        "retrieved": "2026-10-09",
+        "what": "archived (2022-11-27) manufacturer product page; live URL now redirects to the Elnett hub"
+      },
+      {
+        "tier": "C3",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/1353305",
+        "retrieved": "2026-10-09",
+        "what": "dm JSON (GTIN 3600522280774, attribute Halt = starker Halt)"
+      }
+    ],
+    "primary_promise_raw": "Die 230° Hitzeschutz-Technologie ist speziell für das Stylen mit heißem Fön und Glätteisen entwickelt",
+    "hold": {
+      "raw": "Starker Halt (pack front line)",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker Halt; dm: 'Perfekter Halt ohne zu verkleben'",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "ohne zu verkleben",
+      "spielend leichtes Ausbürsten",
+      "geschmeidig"
+    ],
+    "finish": {
+      "raw": "hält selbst widerspenstiges Haar bis zu drei Tage lang seidig glatt",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "REAL DIRECTIONS (L'Oréal article): after washing, spray from about 30 cm generously onto TOWEL-DRIED hair, comb through, blow-dry dry; optional flat iron on the dry hair afterwards, each section exposed as briefly as possible. So: damp, before blow-dry, optionally before the iron. The product-page 'Anwendung' (2022 archive) and dm 'Verwendungshinweise' are copy-pasted hairspray text (30 cm / '3 cm' distance, lift top hair for volume) and should not be used.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "230°C HITZE STYLING-SPRAY / Hitze-Schutz-Technologie (pack); schützt das Haar bis zu 230 Grad (dm)",
+    "humidity_claim_raw": "Schutz vor Frizz & Feuchtigkeit (pack front)",
+    "duration_claim_raw": "GLATT 3 TAGE (pack front); bis zu drei Tage lang seidig glatt (article)",
+    "conflicts_with_round1": "Directions: round 1 (dm) = hairspray text with no pre-heat step; now captured from L'Oréal's own article: towel-dried hair, before blow-dry, optional iron afterwards (spray to be applied before the heat). Hold: round 1 'Halt (no grade)' -> pack prints 'Starker Halt' (word only, no number). 'Stylingspray' naming is a pack/art wording; formula still has no film-forming fixative. PRODUCT STATUS: loreal-paris.de/elnett/hitzeschutz/stylingspray-3-tage-glatt now redirects to the Elnett hub (checked 2026-10-09), the Elnett DE hairspray list and the brand article still name it; last archived live product page 2022-11-27 (GTIN there 4037900006098, dm GTIN 3600522280774); dm still sells it with old artwork. Treat as possibly delisted/legacy at the manufacturer.",
+    "inci_changed": false,
+    "notes": "INCI on the 2022 loreal-paris.de page equals dm's current INCI (Aqua, Dimethicone, Stearyl Alcohol, Hydrolyzed Conchiolin Protein, ... Xylose, Amodimethicone, Isopropyl Alcohol ...). The 2022 page bullets: '230°C Hitze-Schutz-Technologie', 'Anti-Frizz dank des optimalen Schutzes vor Feuchtigkeit'. A sibling 'Elnett Hitzeschutz Styling-Spray 3 Tage Volumen' exists in older L'Oréal lounge URLs; not this SKU. The 3-day claim has no stated test basis on any source."
+  },
+  {
+    "sample_id": "wellaflex-schaumfestiger-locken-und-wellen-starker-halt",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/de/produkte/schaumfestiger/wellaflex-locken-wellen-schaumfestiger-200ml",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer page; title 'Halt:3/5', GTIN 4064666847887"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/de/produkte/schaumfestiger",
+        "retrieved": "2026-10-09",
+        "what": "range page: Halt filter labels 2 / 3 / 4 / 5 / 5+"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781129476/assets/pas/images/46f65a7c-8a54-46d2-a1a1-3a12a6cf3e42/wellaflex-schaumfestiger-locken-und-wellen-starker-halt",
+        "retrieved": "2026-10-09",
+        "what": "pack front: 5-dot scale with level 3, 'STARKER HALT'"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747474783/assets/pas/images/3ddf692b-7c13-4d2b-a554-00489998c1e3/wellaflex-schaumfestiger-locken-und-wellen-starker-halt",
+        "retrieved": "2026-10-09",
+        "what": "pack back text + directions"
+      }
+    ],
+    "primary_promise_raw": "Genieße schwungvolle, definierte Locken für bis zu 24 Stunden",
+    "hold": {
+      "raw": "Halt:3/5 (wella.com title); pack front: 5 dots, level 3, STARKER HALT",
+      "number": 3,
+      "scale_max": 5,
+      "scale_max_stated": true,
+      "words": "starker Halt",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "natürliches Haargefühl",
+      "kein Verkleben",
+      "Locken mit Sprungkraft",
+      "lässt sich leicht ausbürsten"
+    ],
+    "finish": {
+      "raw": "lockiges Haar natürlich gestylt aussehen lässt",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Shake well, hold bottle upside down, apple-sized amount for medium-length hair, distribute evenly in WET hair, blow-dry with diffuser or air-dry (pack: 'Im feuchten Haar verteilen. Föhnen oder an der Luft trocknen lassen').",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Sanft zur Kopfhaut, dermatologisch getestete Formel, die bis zu 24 Stunden hält",
+    "conflicts_with_round1": "Hold now numeric: level 3 of 5 (pack dots + 'Halt:3/5'), word 'Starker Halt'. dm's attribute 'leichter Halt' is wrong against pack and manufacturer. Current pack heading reads 'PROTECTION Locken & Wellen' (UV claim: 'UV-Schutz vor Sonneneinstrahlung', 'schützt Haar vor UV-Strahlung'). Brand page adds diffuser option. GTIN 4064666847887 and INCI order unchanged.",
+    "inci_changed": false,
+    "notes": "WELLAFLEX HOLD SCALE (wella.com/de range filter): Flexibler Halt (2), Starker Halt (3), Extra Starker Halt (4), Ultra Starker Halt (5), Mega Starker Halt (5+). Product pages write 'Halt:x/5' and Haltegrad 3/4/5; the Mega tier is '5+' (above the printed 5-dot scale), so 'scale max 5' is stated per pack/title but the range has a 5+ tier. Pack scale = 5 dots. Brand page names the line 'Wellaflex Locken & Wellen Schaumfestiger'; the 'Protection' name only appears on the pack."
+  },
+  {
+    "sample_id": "wella-eimi-sugar-lift",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-volume/eimi-volume-sugar-lift",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer DE page: Haltegrad 3, FAQ, INCI"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/professional/de-DE/products/collections/haar-styling/eimi-volume",
+        "retrieved": "2026-10-09",
+        "what": "EIMI Volume collection hold levels"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/professional/de-DE/products/collections/haar-styling/eimi-texture",
+        "retrieved": "2026-10-09",
+        "what": "EIMI Texture collection hold levels 2-4"
+      }
+    ],
+    "primary_promise_raw": "ein reichhaltiges, flexibles Spray mit Zucker, das für Lift, Glanz und eine griffige Textur sorgt",
+    "hold": {
+      "raw": "Haltegrad: 3",
+      "number": 3,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker, dennoch beweglicher Halt (FAQ); 'mit starkem Halt' (Vorteile)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "flexibel",
+      "beweglich",
+      "Styles bleiben formstabil, ohne steif zu wirken",
+      "lässt sich neu formen"
+    ],
+    "finish": {
+      "raw": "leuchtender Glanz das Finish veredelt",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Spray on DAMP hair and distribute through lengths and roots, then blow-dry or air-dry (texture + volume); or lightly mist on DRY hair for a more even finish. Page also says to use it while blow-drying within the EIMI Volume routine.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "lang anhaltendes Volumen, das den ganzen Tag hält (EIMI Volume collection text, not product-specific)",
+    "conflicts_with_round1": "Round 1 had only Douglas ('Haltgrad stark') and a Swedish Wella page. DE manufacturer page now gives Haltegrad 3 and 'stark, aber beweglich'. Directions confirm damp OR dry use (round 1 same). Size 150 ml and INCI list identical to round 1 (Water, Hydrolyzed Corn Starch, Propylene Glycol, VP/VA, PVP, Sorbitol, Panthenol, Methylparaben, ...). Douglas AI-summary 'Textur und starkes Halt' second listing remains unread.",
+    "inci_changed": false,
+    "notes": "EIMI HOLD LEVELS FOR DE (wella.com/professional/de-DE, all 'Haltegrad'): 1 = Dry Me, Perfect Me; 2 = Flowing Form, Body Crafter, Perfect Setting, Root Shoot, Thermal Image, Ocean Spritz, Shape Me, Shape Shift; 3 = Sugar Lift, Extra Volume, Pearl Styler, Grip Cream, Rugged Texture; 4 = Sculpt Force (highest seen). No page states the scale maximum, so 4 might be the top or 5 exists elsewhere. Sugar Lift = 3 = 'starker Halt' per Wella wording; Wella's own copy treats 3 as strong, though it sits below Sculpt Force 4. Formula (PVP + VP/VA, starch) is a lotion-type polymer system with a label of 'Zuckerspray'."
+  },
+  {
+    "sample_id": "wella-professionals-eimi-flowing-form",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.wella.com/professional/de-DE/products/haar-styling/eimi-smooth/eimi-smooth-flowing-form",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer DE page: Haltegrad 2, directions, FAQ, DE INCI"
+      }
+    ],
+    "primary_promise_raw": "ein glättender Haarbalsam, der luxuriöse Geschmeidigkeit mit flexibler Kontrolle schafft",
+    "hold": {
+      "raw": "Haltegrad: 2 (page also shows 'HOLD LEVEL 2')",
+      "number": 2,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "leichter, flexibler Halt (FAQ)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "flexible Kontrolle",
+      "flexibler Halt",
+      "natürliche Beweglichkeit",
+      "ohne steif zu wirken"
+    ],
+    "finish": {
+      "raw": "Hinterlässt das Haar luxuriös glatt",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "2-5 pumps into TOWEL-DRIED hair (FAQ wording; Vorteile text only says apply), work thoroughly through mid-lengths and ends, blow-dry with a brush; for extra smooth results finish with a flat iron. FAQ: apply before blow-drying for protection.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "vor dem Austrocknen bei der Verwendung von heißen Geräten zu schützen",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Hold level 2 confirmed on the DE page (round 1 had it from wella.com en-SE plus Flaconi). New: DE page benefit line 'Bietet Schutz vor Hitze und Austrocknung' (no temperature); directions now say towel-dried hair (round 1 did not specify). DE name is 'EIMI Smooth Flowing Form', described as 'glättender Haarbalsam' / 'Anti-Frizz-Haarbalsam', not Glättungscreme. DE INCI list matches the Swedish list round 1 used.",
+    "inci_changed": false,
+    "notes": "Manufacturer DE wording of the page title is 'Anti-Frizz Balm'. EIMI Smooth siblings on the same page: Perfect Me Haltegrad 1, Thermal Image Haltegrad 2 ('Hitze bis zu 220°C', 2-phase spray). Collection text: 'ideal für lange und schulterlange Frisuren'; no humidity claim anywhere on the page. Scale max not stated."
+  },
+  {
+    "sample_id": "guhl-foehn-spray-langzeit-volumen",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.guhl.com/produkt/langzeit-volumen/langzeit-volumen-foehn-aktiv-styling-spray/",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer page (guhl.com is the DE-market site); FAQ checked 2026-08-06"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1758753800/assets/pas/images/d9d80c08-8570-4bf0-aa21-a0824512dd37/guhl-foehn-spray-langzeit-volumen",
+        "retrieved": "2026-10-09",
+        "what": "pack back: claims, 'Anwendung', INCI"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1758753824/assets/pas/images/edefcd01-369f-4e83-b647-05307a2f3ab3/guhl-foehn-spray-langzeit-volumen",
+        "retrieved": "2026-10-09",
+        "what": "pack front"
+      }
+    ],
+    "primary_promise_raw": "Natürliches Volumen und 48h Halt zauberst du ganz leicht",
+    "hold": {
+      "raw": "48h Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "48h Halt (duration only, no strength grade)",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "bleibt dabei flexibel",
+      "natürliches Haargefühl",
+      "ohne zu beschweren"
+    ],
+    "finish": {
+      "raw": "lebendiges Volumen",
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Pack: 'Vor dem Föhnen aufsprühen. Nicht ausspülen.' Manufacturer FAQ repeats it (applied before blow-drying, not rinsed out, fine mist distributed evenly). Damp vs dry not stated on the pack.",
+    "directions_tier": "C1",
+    "heat_claim_raw": "hinterlässt einen Hitzeschutz bis 230°",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Verleiht 48h Halt und lebendiges Volumen",
+    "conflicts_with_round1": "NEW heat claim: guhl.com says 'Hitzeschutz bis 230°' (FAQ: 'einziges Guhl-Produkt mit Temperaturangabe'); round 1 recorded 'kein Hitzeschutz-Claim' and the dm text/pack back I read do NOT carry it, so it is a manufacturer-web-only claim (tier C2, not C1). Natural-origin share: pack and guhl.com 98 % (ISO 16128, incl. 88 % water), dm text 89 %. INCI unchanged. Round-1 hold 'bis zu 48 h' confirmed (no grade).",
+    "inci_changed": false,
+    "notes": "Pack front: 'LANGZEIT VOLUMEN / FÖHN-AKTIV STYLING SPRAY / für feines, kraftloses oder plattes Haar / ohne Silikone / dermatologisch bestätigt'. The word 'aktiviert durch die Föhnhitze' appears only in dm text. Piroctone Olamine (scalp-adjacent active) remains in the INCI. Format pump spray, 150 ml."
+  },
+  {
+    "sample_id": "john-frieda-volume-lift-ansatz-booster",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/ansatz-booster/",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer German-market page (.com/de-de), new formula, sizes 25 ml and 150 ml"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1770880569/assets/pas/images/c38b4620-e7fc-49eb-9f03-3830b884b21f/john-frieda-leave-in-spray-volume-lift-ansatz-booster",
+        "retrieved": "2026-10-09",
+        "what": "current dm 150 ml pack front ('Original Ansatz-Booster', Volumenformel mit Peptiden)"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1770880578/assets/pas/images/e611b723-e308-432f-ad52-901566a61587/john-frieda-leave-in-spray-volume-lift-ansatz-booster",
+        "retrieved": "2026-10-09",
+        "what": "current dm 150 ml pack back + INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/3122357",
+        "retrieved": "2026-10-09",
+        "what": "dm JSON, GTIN 5037156299137"
+      },
+      {
+        "tier": "C3",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/1462632",
+        "retrieved": "2026-10-09",
+        "what": "dm JSON of the ROUND-1 SKU (125 ml, GTIN 50002993)"
+      }
+    ],
+    "primary_promise_raw": "Polstert den Haaransatz auf - für extra Volumen.",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "leichte, schwerelose Formel",
+      "ohne zu beschweren"
+    ],
+    "finish": {
+      "raw": "verleiht dem Haar griffige Textur",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Spray generously on the roots of TOWEL-DRIED hair, cover roots and underlying layers fully, then blow-dry and style (pre-styling spray). Brand routine adds: comb through, then blow-dry. Same wording on dm and the new pack.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "schützt es gleichzeitig vor Hitze bis zu 220 °C",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "für ein langanhaltendes, voluminöses Styling",
+    "conflicts_with_round1": "PRODUCT HAS BEEN RELAUNCHED. Round-1 SKU = dm 1462632, 125 ml, GTIN 50002993, 'Seiden-Sauerstoff Technologie'. Current dm SKU 3122357, 150 ml, GTIN 5037156299137, named 'Leave-In Spray Volume Lift Ansatz-Booster', 'mit Peptiden', vegan, ohne Silikone. INCI on the new dm pack still alcohol-first with PVP / VP/VA / sea salt / VP/DMAPA Acrylates but PEG-75 Lanolin, wheat protein and BHT are gone (hydrolyzed vegetable protein, sodium benzoate instead). The manufacturer page lists a THIRD formula: Aqua first, Alcohol Denat. second, Polyquaternium-16, Polyquaternium-68, caffeine, hyaluronic acid, biotin, NO PVP, NO VP/VA, NO sea salt, plus a new heat protection claim (220 °C). Still no hold claim of any kind.",
+    "inci_changed": true,
+    "notes": "Three label generations in the market: (1) 125 ml 'Seiden-Sauerstoff' (round-1 INCI), (2) 150 ml dm pack (INCI above, Peptiden), (3) johnfrieda.com/de-de page INCI (Aqua, Alcohol Denat., Polyquaternium-16, Polysorbate 20, Polyquaternium-68, Parfum, Panthenol, Ethylhexylglycerin, Cetrimonium Chloride, Hydrolyzed Rice Protein, Glycerin ... Hyaluronic Acid, Biotin ...) with a brand disclaimer that formulations may change. The 220 °C claim is only on the brand page, not on the dm text or the 150 ml pack front/back. Any engine data for this SKU must be re-keyed to the formula actually sold; do not reuse the round-1 PVP/VP-VA + salt reading for generation 3. Pack back with INCI also shows 'WARNUNG: Entzündlich' (alcohol-based)."
+  },
+  {
+    "sample_id": "nivea-men-styling-cream-active-craft-stylers",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.nivea.de/produkte/craft-stylers-natural-look-styling-cream-150ml-40060002771890001.html",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer page: Haltestufe 4, directions, INCI (GTIN 4006000277189)"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1780100724/assets/pas/images/ea9b0a47-435c-49a2-a5f7-4587e5e0ec2b/nivea-men-styling-cream-active",
+        "retrieved": "2026-10-09",
+        "what": "jar front: '4 / NON-STICKY FINISH / FLEXIBLE HOLD / 1 2 3 4 5 6'"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1780100733/assets/pas/images/04348850-4080-46ab-97aa-0861e0d8d2c3/nivea-men-styling-cream-active",
+        "retrieved": "2026-10-09",
+        "what": "jar back: INCI only, no directions"
+      }
+    ],
+    "primary_promise_raw": "Starker Halt – ohne zu verkleben oder zu verhärten",
+    "hold": {
+      "raw": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6 (pack); 'Haltestufe 4' (nivea.de)",
+      "number": 4,
+      "scale_max": 6,
+      "scale_max_stated": true,
+      "words": "Starker Halt; Flexible Hold",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "Flexible Hold",
+      "flexibles Styling",
+      "formbarer Halt",
+      "ohne zu verhärten",
+      "kann nachgestylt werden"
+    ],
+    "finish": {
+      "raw": "NON-STICKY FINISH / Natural Look",
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Take a fingertip amount, rub between the palms, work into towel-damp or dry hair, shape with fingers; can be restyled with a small dab without sticking. Not printed on the jar.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Hold now numeric: 4 on a printed 1-6 scale (pack front, scale max stated on pack only; nivea.de says only 'Haltestufe 4'). Round 1 had words only. Directions were 'not stated' in round 1; nivea.de now supplies them (damp or dry hair). Name: pack 'Active Craft Stylers Natural Look Styling Cream'; nivea.de 'Craft Stylers Natural Look Styling Cream 150ml' (same GTIN as dm 'Styling Cream Active').",
+    "inci_changed": false,
+    "notes": "nivea.de INCI order matches round 1 (Aqua, Sorbitol, Glycerin, Cetyl Alcohol, Myristyl Alcohol, Sorbitan Stearate, Dimethicone, PVP, ...). Page text: 'Dank der Formulierung von Polymeren in einer Emulsion ... sehr flexibles Styling und gleichzeitig starken Halt'. Customer note on page: short hair only recommended (not a brand claim)."
+  },
+  {
+    "sample_id": "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/diamond-sleek/shine-coat-glaettungsspray",
+        "retrieved": "2026-10-09",
+        "what": "manufacturer page 'Fructis Diamond Sleek Shine-Coat Glättungsspray'"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1765201490/assets/pas/images/5b3f5f23-eb70-4a8b-8918-c3a5841b2909/garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+        "retrieved": "2026-10-09",
+        "what": "pack front: 100H Glanz, Föhn benutzen, bis zu 230 °C Hitzeschutz"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1777594084/assets/pas/images/5cfd4917-f3d4-4ef2-9d30-3b0f375d7d6b/garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+        "retrieved": "2026-10-09",
+        "what": "pack back: 100H / 72H / 230 °C, directions, INCI"
+      }
+    ],
+    "primary_promise_raw": "Glättungsspray für bis zu 100H brillanten Glanz. Anti-Frizz.",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "ohne zu beschweren, zu fetten oder zu kleben"
+    ],
+    "finish": {
+      "raw": "diamantähnlichen Glanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "After washing/conditioning, spray generously onto TOWEL-DRIED hair, blow-dry strand by strand with a brush (tension activates the formula), optionally seal the sleek look with a flat iron. Pack front icon: 'Föhn benutzen'.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "Bietet Hitzeschutz bis 230° C",
+    "humidity_claim_raw": "Reduziert Frizz auch bei sehr hoher Luftfeuchtigkeit bis zu 72 Stunden",
+    "duration_claim_raw": "Anti-Frizz bis zu 72H; brillanter Glanz bis zu 100H (instrumental test footnote)",
+    "conflicts_with_round1": "Round 1 had the 72 h frizz claim and 230 °C; pack adds '100H brillanter Glanz' (shine, not frizz) with an instrumental-test footnote. Manufacturer name is 'Fructis Diamond Sleek Shine-Coat Glättungsspray'; dm/pack-listing name is 'Leave-In Spray Diamond Sleek Glättungsspray'. No hold claim on any tier.",
+    "inci_changed": false,
+    "notes": "garnier.de INCI = round 1 (Aqua, Glycerin, Dipropylene Glycol, PEG-60 Hydrogenated Castor Oil, Laureth-4, Argania Spinosa Kernel Oil, ... Polysilicone-29 15th). Garnier FAQ explains the mechanism as a thin protective film that slows moisture ingress. Pack: 'Instrumenteller Test'. 'Vegane Formel' on the pack back."
+  },
+  {
+    "sample_id": "gard-haarspray-extrastark-pumpspray",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1753144412/assets/pas/images/71f3112a-b46a-41b1-9642-1762f86bd1a1/gard-haarspray-extrastark",
+        "retrieved": "2026-10-09",
+        "what": "pack front: 'HALTEGRAD 5 - EXTRASTARKER HALT' above a 1-6 scale"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1752184487/assets/pas/images/efa98e27-2f84-40bc-8010-cbee2bdd5eac/gard-haarspray-extrastark",
+        "retrieved": "2026-10-09",
+        "what": "pack back: claims, directions, INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/1607390",
+        "retrieved": "2026-10-09",
+        "what": "dm JSON (GTIN 4013162030934), maker fit GmbH Zittau"
+      }
+    ],
+    "primary_promise_raw": "verleiht dem Haar kraftvollen und zuverlässigen Halt - ohne zu beschweren",
+    "hold": {
+      "raw": "HALTEGRAD 5 - EXTRASTARKER HALT (scale 1 2 3 4 5 6 printed above it)",
+      "number": 5,
+      "scale_max": 6,
+      "scale_max_stated": true,
+      "words": "extrastarker Halt",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "kein Verkleben",
+      "leichtes Ausbürsten",
+      "macht es geschmeidig"
+    ],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Finishing: spray evenly from about 25 cm. Styling: spray single strands and shape with fingers. More volume: spray upside down or directly into the roots (pack gives no distance; dm adds 15 cm). Applies to dry/finished hair; no damp or before-heat step.",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "SCALE MAX CORRECTION: round 1 recorded scale_max 5; the pack shows a six-step scale (1-6) with level 5 highlighted, so Gard 5 is NOT the top of its own scale. Number 5 and 'extrastarker Halt' confirmed. 'bleibt flexibel / flexibel, strahlend und geschmeidig' are dm text (C3), not on the pack; pack says 'macht es geschmeidig'. dm attribute 'sehr starker Halt' is a retailer label.",
+    "inci_changed": false,
+    "notes": "No manufacturer product page found: gard.de has no product pages (only brand, shop link, contact) and shop.fit.de/marken/gard was not readable. So pack image (C1) is the best tier; dm page is C3 for third-party brand. Pack front: 'Für feines Haar', 'ohne Treibgase', 'ohne Silikon', vegan seal, 'Mit Bambus-Extrakt'; back: '90,6 % naturbasierte Inhaltsstoffe', 'kein Verkleben | leichtes Ausbürsten | ohne Silikone'. INCI on pack = round 1 (Alcohol Denat., Aqua, VP/VA Copolymer, Acrylates Copolymer ...). Other Gard items on Rossmann carry 'Haltegrad 4' (Festigerspray Volumen) and 'Haltegrad 5' (Kurfestiger extrastark), consistent with a numeric grade system."
+  }
+]

@@ -1,0 +1,86 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-bc164f4f56",
+  "brand": "NIVEA MEN",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 4,
+    "scale_as_written": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6 (pack); 'Haltestufe 4' (nivea.de)",
+    "scale_max": 6,
+    "scale_max_stated": true,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Starker Halt – ohne zu verkleben oder zu verhärten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6; 'Haltestufe 4' (nivea.de)",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "number": 4,
+      "scale_as_written": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6 (pack); 'Haltestufe 4' (nivea.de)",
+      "scale_max": 6,
+      "scale_max_stated": true,
+      "words": "Starker Halt; Flexible Hold"
+    },
+    {
+      "type": "flexibility",
+      "text": "Flexible Hold",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibles Styling",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "formbarer Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "ohne zu verhärten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "kann nachgestylt werden",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "NON-STICKY FINISH / Natural Look",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

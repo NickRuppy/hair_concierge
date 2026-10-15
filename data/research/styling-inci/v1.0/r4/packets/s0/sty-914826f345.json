@@ -1,0 +1,113 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-914826f345",
+  "product": {
+    "confirmed_name": "OSiS Super Shield",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Schwarzkopf Professional",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 12,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 4,
+        "inci": "Hydrogenated Ethylhexyl Olivate"
+      },
+      {
+        "rank": 5,
+        "inci": "Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Hydrogenated Olive Oil Unsaponifiables"
+      },
+      {
+        "rank": 8,
+        "inci": "C12-15 Alcohols"
+      },
+      {
+        "rank": 9,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 10,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 11,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 12,
+        "inci": "Eucalyptus Globulus Oil"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor dem Föhnen, mit ca. 30cm Abstand, in kurzen Sprühstößen verwenden oder auf trockenem Haar anwenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "OSiS Super Shield ist ein wahrer Allrounder, ein multifunktionales Schutzspray, das speziell für langes Haar formuliert wurde, um es vor Umweltbelastungen, Hitze und Feuchtigkeit zu schützen. Es bekämpft Frizz, während es das Haar entwirrt, und gibt stumpfem Haar einen dringend benötigten Glanzschub!",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "PERFEKT FÜR SMOOTH GLANZ ANTI LUFTFEUCHTIGKEIT",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Wir sind der Meinung, dass umwerfendes Haar um jeden Preis geschützt werden sollte! Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_pdf",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-a20a48c1f1",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Flowing Form (Smooth Flowing Form) Glättungscreme / Anti-Frizz Smoothing Balm",
+  "confirmed_name_tier": "C2",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Haltegrad: 2 (page also shows 'HOLD LEVEL 2')",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "ein glättender Haarbalsam, der luxuriöse Geschmeidigkeit mit flexibler Kontrolle schafft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09",
+      "number": 2,
+      "scale_as_written": "Haltegrad: 2 (page also shows 'HOLD LEVEL 2')",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "flexibility",
+      "text": "flexible Kontrolle",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibler Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "natürliche Beweglichkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "ohne steif zu wirken",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "Hinterlässt das Haar luxuriös glatt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_protection",
+      "text": "vor dem Austrocknen bei der Verwendung von heißen Geräten zu schützen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

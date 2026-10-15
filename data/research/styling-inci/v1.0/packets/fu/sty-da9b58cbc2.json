@@ -1,0 +1,112 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-da9b58cbc2",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Hydrolyzed Keratin"
+      },
+      {
+        "rank": 4,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 5,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 6,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 7,
+        "inci": "Polyurethane-48"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 9,
+        "inci": "PEG-60 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 10,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 11,
+        "inci": "Bis-Isobutyl PEG/PPG-20/35/Amodimethicone Copolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Cetyl Ethylhexanoate"
+      },
+      {
+        "rank": 13,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 14,
+        "inci": "Polysorbate 80"
+      },
+      {
+        "rank": 15,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 16,
+        "inci": "Gluconolactone"
+      },
+      {
+        "rank": 17,
+        "inci": "Methylpropanediol"
+      },
+      {
+        "rank": 18,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 19,
+        "inci": "Trimethylcyclopentenyl Methylisopentenol"
+      },
+      {
+        "rank": 20,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 21,
+        "inci": "Dimethyl Phenethyl Acetate"
+      },
+      {
+        "rank": 22,
+        "inci": "Terpineol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Feuchtes Haar: gleichmäßig aufs ganze Haar sprühen, vor Glätteisen/Lockenstab föhnen. Trockenes Haar: Strähnen abteilen, direkt vor dem Glätten/Locken einsprühen, kurz antrocknen lassen. [CLAIM] nennt [CLAIM] Haarspray als Ergänzung.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11",
+    "masked_with": "[CLAIM]"
+  }
+}

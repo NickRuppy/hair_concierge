@@ -1,0 +1,133 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-581c4d8a64",
+  "product": {
+    "confirmed_name": "EIMI Flowing Form (Smooth Flowing Form) Glättungscreme / Anti-Frizz Smoothing Balm",
+    "confirmed_name_redacted": false,
+    "brand": "Wella Professionals",
+    "format": "cream"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Pvp"
+      },
+      {
+        "rank": 3,
+        "inci": "Polyquaternium-37"
+      },
+      {
+        "rank": 4,
+        "inci": "Propylene Glycol Dicaprylate/ Dicaprate"
+      },
+      {
+        "rank": 5,
+        "inci": "Behentrimonium Chloride"
+      },
+      {
+        "rank": 6,
+        "inci": "Guar Hydroxypropyltrimonium Chloride"
+      },
+      {
+        "rank": 7,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 8,
+        "inci": "Polyquaternium-4"
+      },
+      {
+        "rank": 9,
+        "inci": "Fragrance/Parfum"
+      },
+      {
+        "rank": 10,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 11,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 12,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 13,
+        "inci": "Ppg-1 Trideceth-6"
+      },
+      {
+        "rank": 14,
+        "inci": "Glyoxylic Acid"
+      },
+      {
+        "rank": 15,
+        "inci": "Disodium Edta"
+      },
+      {
+        "rank": 16,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 17,
+        "inci": "Prunus Amygdalus Dulcis (Sweet Almond) Oil"
+      },
+      {
+        "rank": 18,
+        "inci": "Peg-20 Stearate"
+      },
+      {
+        "rank": 19,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 20,
+        "inci": "Cetyl Alcohol"
+      },
+      {
+        "rank": 21,
+        "inci": "Sorbitan Oleate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "2-5 Pumpstöße auftragen und gründlich in die mittleren Längen und Spitzen einarbeiten. Mit einer Bürste trockenföhnen. Für besonders glatte Ergebnisse mit einem Glätteisen nacharbeiten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "ein glättender Haarbalsam, der luxuriöse Geschmeidigkeit mit [CLAIM] Kontrolle schafft",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "vor dem Austrocknen bei der Verwendung von heißen Geräten zu schützen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ]
+}

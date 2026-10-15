@@ -1,0 +1,112 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-d0eb164a6b",
+  "format": "gel",
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Carrageenan"
+      },
+      {
+        "rank": 4,
+        "inci": "Xylitol"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyglyceryl-6 Caprylate"
+      },
+      {
+        "rank": 6,
+        "inci": "Polyglyceryl-4 Caprate"
+      },
+      {
+        "rank": 7,
+        "inci": "Sodium Chloride"
+      },
+      {
+        "rank": 8,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 9,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 10,
+        "inci": "Hydroxyacetophenone"
+      },
+      {
+        "rank": 11,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 12,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 13,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 14,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 15,
+        "inci": "Amyl Salicylate"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 17,
+        "inci": "Cananga Odorata Flower Extract"
+      },
+      {
+        "rank": 18,
+        "inci": "Linum Usitatissimum Seed Extract"
+      },
+      {
+        "rank": 19,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 20,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 21,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 22,
+        "inci": "Methyl Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Gel in die nassen oder feuchten Locken einarbeiten. Zum Definieren die Scrunch-Technik anwenden, indem das Gel von unten nach oben in die Locken eingeknetet wird. An der Luft trocknen lassen oder mit einem Diffusor stylen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

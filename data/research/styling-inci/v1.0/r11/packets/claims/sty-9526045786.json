@@ -1,0 +1,56 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-9526045786",
+  "brand": "Balea",
+  "confirmed_name": "Föhnlotion Volume Effect",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "pump_spray",
+  "product_type_word": "lotion",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Stylinglotion für Volumen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für mehr Fülle und Volumen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Spezielle Collagen-Formel",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "natürlichen Glanz sowie spürbare Geschmeidigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Mit integriertem Hitzeschutz bis 200°C",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

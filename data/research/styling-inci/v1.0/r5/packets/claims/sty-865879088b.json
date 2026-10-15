@@ -1,0 +1,63 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-865879088b",
+  "brand": "Balea",
+  "confirmed_name": "Haarserum Anti-Frizz Glatt & Glossy",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "serum",
+  "product_type_word": "serum",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Mit Anti-Frizz-Effekt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Formel mit Cashmere-Protein & Kollagen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "seidigen Glanz; glattes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Haarserum für ein glattes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "geschmeidig glattes und glänzendes Haargefühl",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "bändigt widerspenstiges Haar und verleiht ihm einen seidigen Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

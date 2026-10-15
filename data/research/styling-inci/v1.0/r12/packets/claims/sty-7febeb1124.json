@@ -1,0 +1,35 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-7febeb1124",
+  "brand": "Jean&Len",
+  "confirmed_name": "Sea Salt Spray",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "verleiht unser Meer in der Flasche Fülle sowie Griffigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Griffigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Griffigkeit"
+    }
+  ]
+}

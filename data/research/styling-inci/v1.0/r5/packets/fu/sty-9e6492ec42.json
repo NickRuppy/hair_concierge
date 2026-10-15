@@ -1,0 +1,60 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-9e6492ec42",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Propane"
+      },
+      {
+        "rank": 3,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 4,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 5,
+        "inci": "Aluminum starch octenylsuccinate"
+      },
+      {
+        "rank": 6,
+        "inci": "Corn starch modified"
+      },
+      {
+        "rank": 7,
+        "inci": "Silica"
+      },
+      {
+        "rank": 8,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 9,
+        "inci": "Tocopheryl acetate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Dose vor jedem Gebraucht kräftig schütteln, um ein Verstopfen der Düse zu vermeiden. Auf trockenen Haaransatz sprühen und wie gewohnt stylen. Für mehr Textur und Griffigkeit sparsam in die Haarlängen sprühen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

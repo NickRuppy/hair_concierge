@@ -1,0 +1,171 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-fa394b5aef",
+  "product": {
+    "confirmed_name": "Diamond Glass Styling Spray All",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "NEQI",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua [Water]"
+      },
+      {
+        "rank": 2,
+        "inci": "Gardenia taitensis flower extract"
+      },
+      {
+        "rank": 3,
+        "inci": "Lycium barbarum fruit extract"
+      },
+      {
+        "rank": 4,
+        "inci": "Malva sylvestris (Mallow) extract"
+      },
+      {
+        "rank": 5,
+        "inci": "Pentylene glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Dipropylene glycol"
+      },
+      {
+        "rank": 7,
+        "inci": "Polysilicone-29"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Hydroxyacetophenone"
+      },
+      {
+        "rank": 10,
+        "inci": "Silicone quaternium-18"
+      },
+      {
+        "rank": 11,
+        "inci": "Trideceth-12"
+      },
+      {
+        "rank": 12,
+        "inci": "Trideceth-6"
+      },
+      {
+        "rank": 13,
+        "inci": "Propylene glycol"
+      },
+      {
+        "rank": 14,
+        "inci": "Glycerin"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "neqi-hair.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Das NEQI Diamond Glass All Styling Spray verleiht dem Haar einen [CLAIM] glatten „Glass Hair“-Effekt. Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren. Es ist also perfekt geeignet, für alle die ein minimalistisches Styling-Setup bevorzugen.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Die hitzeaktivierten Polymere schaffen maximale Geschmeidigkeit und seidig glatte Haare. Feuchtigkeit? Kein Problem! Das Produkt bildet ein Schutzschild vor Feuchtigkeit und schützt deine Haare über mehrere Haarwäschen hinweg.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit unserem DIAMOND GLASS Styling Spray ist der Glass-Hair-Haartrend ganz einfach nachzustylen, denn Wasser perlt nach der Anwendung an deinem spiegelglatten Haar einfach so ab.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Styling + Hitzeschutz in einem",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Leichte, aktivierbare Textur",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Glättung + Versiegelung",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Wasserabweisender Effekt",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Verbesserte Kämmbarkeit",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Sofort seidige, glatte Textur mit unglaublichem Glanz & Hitzeschutz bis zu 230°C – für alle Haartypen.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12"
+    }
+  ]
+}

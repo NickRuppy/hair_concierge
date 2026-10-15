@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-1924a110fa",
+  "brand": "John Frieda",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "perfekte Balance aus 24-Stunden Halt und Geschmeidigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "24-Stunden Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltender Halt, bis zu 24 Stunden (Pack/dm); Hersteller-Web: 'langanhaltende, spürbare Definition', 'Definition - den ganzen Tag'"
+    },
+    {
+      "type": "flexibility",
+      "text": "definierte, flexible Locken",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "flexibility",
+      "text": "Geschmeidigkeit",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "24-Stunden Halt; manufacturer web page drops the 24 h number",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "Verhindert Frizz für definierte, flexible Locken",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

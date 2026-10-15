@@ -1,0 +1,136 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-60765117e9",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 28,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 3,
+        "inci": "VA/CROTONATES/VINYL NEODECANOATE COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "HYDROXYCITRONELLAL"
+      },
+      {
+        "rank": 5,
+        "inci": "PEG/PPG-4/12 DIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 7,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 8,
+        "inci": "DIMETHYL PHENETHYL ACETATE"
+      },
+      {
+        "rank": 9,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 10,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 13,
+        "inci": "BENZYL BENZOATE"
+      },
+      {
+        "rank": 14,
+        "inci": "PINENE"
+      },
+      {
+        "rank": 15,
+        "inci": "CANANGA ODORATA OIL/EXTRACT"
+      },
+      {
+        "rank": 16,
+        "inci": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+      },
+      {
+        "rank": 17,
+        "inci": "ALPHA- ISOMETHYL IONONE"
+      },
+      {
+        "rank": 18,
+        "inci": "CARVONE"
+      },
+      {
+        "rank": 19,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 20,
+        "inci": "TERPINEOL"
+      },
+      {
+        "rank": 21,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 22,
+        "inci": "CITRUS AURANTIUM FLOWER OIL"
+      },
+      {
+        "rank": 23,
+        "inci": "CITRUS AURANTIUM BERGAMIA PEEL OIL"
+      },
+      {
+        "rank": 24,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 25,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 26,
+        "inci": "HEXAMETHYLINDANOPYRAN"
+      },
+      {
+        "rank": 27,
+        "inci": "AMYL CINNAMAL"
+      },
+      {
+        "rank": 28,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Schutzlasche von der Kappe entfernen. [CLAIM]-Haarspray aus ca. 30cm Entfernung aufsprühen. Sollte der Sprühkopf verkleben, bitte unter warmem Wasser abspülen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

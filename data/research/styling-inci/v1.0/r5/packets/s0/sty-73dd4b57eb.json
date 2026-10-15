@@ -1,0 +1,112 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-73dd4b57eb",
+  "product": {
+    "confirmed_name": "EIMI Volume Dry Me (Trockenshampoo)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Wella Professionals",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 2,
+        "inci": "Butane"
+      },
+      {
+        "rank": 3,
+        "inci": "Propane"
+      },
+      {
+        "rank": 4,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 5,
+        "inci": "Tapioca Starch"
+      },
+      {
+        "rank": 6,
+        "inci": "Water"
+      },
+      {
+        "rank": 7,
+        "inci": "Silica"
+      },
+      {
+        "rank": 8,
+        "inci": "Polymethylsilsesquioxane"
+      },
+      {
+        "rank": 9,
+        "inci": "Fragrance"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Schüttel mich, sprüh mich, style mich. Gleichmäßig auf das trockene Haar auftragen, einwirken lassen und durchbürsten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Erreiche Deinen Look mit Dry Me, einem Trockenshampoo, das Volumen und eine handhabbare, [CLAIM] Textur schafft. Die Formel des Trockenshampoos mit Tapiokastärke erfrischt Ihr Haar und absorbiert Öl. [CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Professionelles volumengebendes Trockenshampoo für eine [CLAIM] Textur",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit Tapiokastärke für frisches Haar",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Volumen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Erfrischtes, voluminöses Haar",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

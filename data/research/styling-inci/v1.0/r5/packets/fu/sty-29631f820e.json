@@ -1,0 +1,60 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-29631f820e",
+  "format": "powder",
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water (Aqua) (Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Zinc Myristate"
+      },
+      {
+        "rank": 6,
+        "inci": "Undaria Pinnatifida Extract"
+      },
+      {
+        "rank": 7,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "POWDER.PUFF Schütteln, stylen und staunen! Für sofortiges Volumen und Struktur einfach etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

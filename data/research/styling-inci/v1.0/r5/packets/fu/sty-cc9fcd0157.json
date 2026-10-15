@@ -1,0 +1,112 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-cc9fcd0157",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 3,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "HYDROLYZED CONCHIOLIN PROTEIN"
+      },
+      {
+        "rank": 5,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PPG-5-CETETH-20"
+      },
+      {
+        "rank": 7,
+        "inci": "BEHENTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 8,
+        "inci": "TRIDECETH-6"
+      },
+      {
+        "rank": 9,
+        "inci": "SALICYLIC ACID"
+      },
+      {
+        "rank": 10,
+        "inci": "XYLOSE"
+      },
+      {
+        "rank": 11,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "AMODIMETHICONE"
+      },
+      {
+        "rank": 14,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 15,
+        "inci": "ALPHA- ISOMETHYL IONONE"
+      },
+      {
+        "rank": 16,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "inci": "BUTYLENE GLYCOL"
+      },
+      {
+        "rank": 19,
+        "inci": "LAURETH-23"
+      },
+      {
+        "rank": 20,
+        "inci": "LAURETH-4"
+      },
+      {
+        "rank": 21,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 22,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Die Entfernung vom Sprühkopf zum Haar sollte bei der Anwendung etwa 30 cm betragen. Sprühen Sie es am besten direkt nach der Haarwäsche auf das handtuchtrockene Haar auf. Kämmen Sie diese anschließend gut durch und föhnen Sie sie trocken. Für eine [CLAIM] und seidiges Styling können Sie das trockene Haar anschließend noch mit einem Glätteisen glätten. Achten Sie dabei darauf, jede Haarpartie einzeln und so kurz wie möglich der Hitze auszusetzen. So verhindern Sie das Austrocknen und Brechen Ihrer Haare.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "loreal-paris.de",
+    "date": "2026-10-13",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-a99ae33a23",
+  "brand": "EVO",
+  "confirmed_name": "Head Mistress Cuticle Sealer",
+  "confirmed_name_tier": "C5",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Darüber hinaus wirkt die Multifunktionscreme auch als UV- und Hitzeschutz",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Reduziert Frizz",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "heat protection, uv protection, reduces frizz, improves condition, improves styling",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "finish",
+      "text": "Glätte/Weichheit, Frizz- und Flyaway-Kontrolle",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "evohair.com",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "UV- und Hitzeschutz; heat protection",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "evohair.com",
+      "date": null,
+      "mixed_source": true
+    }
+  ]
+}

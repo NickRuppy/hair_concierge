@@ -1,0 +1,79 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-2b4a849cb4",
+  "brand": "Schwarzkopf taft",
+  "confirmed_name": "Föhn-Spray VOLUMEN Halt 3",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": {
+    "number": 3,
+    "scale_as_written": "Haltegrad 3",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "verleiht Volumen und einen natürlichen Haarschwung und eignet sich für alle Haartypen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad 3",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09",
+      "number": 3,
+      "scale_as_written": "Haltegrad 3",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "hold",
+      "text": "Halt 3",
+      "tier": "C2",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": 3,
+      "scale_as_written": "Halt 3",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "finish",
+      "text": "natürlicher Haarschwung",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "humidity",
+      "text": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_protection",
+      "text": "hilft dabei, das Haar vor Sprödigkeit und Haarbruch zu schützen, die durch das Föhnen entstehen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

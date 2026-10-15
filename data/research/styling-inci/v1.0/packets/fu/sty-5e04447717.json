@@ -1,0 +1,120 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-5e04447717",
+  "format": "cream",
+  "inci": {
+    "inci_item_count": 24,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "PVP"
+      },
+      {
+        "rank": 4,
+        "inci": "CARBOMER"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 6,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 7,
+        "inci": "POLYQUATERNIUM-11"
+      },
+      {
+        "rank": 8,
+        "inci": "VP/DIMETHYLAMINOETHYLMETHACRYLATE COPOLYMER"
+      },
+      {
+        "rank": 9,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "CI 77891"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 13,
+        "inci": "TERPINEOL"
+      },
+      {
+        "rank": 14,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 15,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 16,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 19,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 20,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 21,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 22,
+        "inci": "CITRAL"
+      },
+      {
+        "rank": 23,
+        "inci": "POGOSTEMON CABLIN OIL"
+      },
+      {
+        "rank": 24,
+        "inci": "SODIUM BICARBONATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

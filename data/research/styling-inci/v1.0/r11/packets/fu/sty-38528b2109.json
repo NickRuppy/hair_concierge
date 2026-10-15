@@ -1,0 +1,108 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-38528b2109",
+  "format": "wax",
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Ceteth-20"
+      },
+      {
+        "rank": 4,
+        "inci": "Oleth-5"
+      },
+      {
+        "rank": 5,
+        "inci": "Paraffinum Liquidum (Mineral Oil, Huile Minérale)"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 8,
+        "inci": "Sorbitol"
+      },
+      {
+        "rank": 9,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 10,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 11,
+        "inci": "Methylpropanediol"
+      },
+      {
+        "rank": 12,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 13,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 14,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 15,
+        "inci": "Caprylhydroxamic Acid"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 17,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 18,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 19,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 20,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 21,
+        "inci": "Methyl Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit [CLAIM] Haarspray fixieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

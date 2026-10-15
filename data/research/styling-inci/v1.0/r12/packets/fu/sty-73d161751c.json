@@ -1,0 +1,132 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-73d161751c",
+  "format": "wax",
+  "inci": {
+    "inci_item_count": 27,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Oryza Sativa (Rice) Bran Wax"
+      },
+      {
+        "rank": 4,
+        "inci": "Stearic Acid"
+      },
+      {
+        "rank": 5,
+        "inci": "Palmitic Acid"
+      },
+      {
+        "rank": 6,
+        "inci": "Pentaerythrityl Tetraisostearate"
+      },
+      {
+        "rank": 7,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 8,
+        "inci": "Ricinus Communis (Castor) Seed Oil"
+      },
+      {
+        "rank": 9,
+        "inci": "Hydrogenated Coconut Oil"
+      },
+      {
+        "rank": 10,
+        "inci": "Sucrose Distearate"
+      },
+      {
+        "rank": 11,
+        "inci": "Sucrose Stearate"
+      },
+      {
+        "rank": 12,
+        "inci": "Hydroxystearic Acid"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 14,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 15,
+        "inci": "Acrylates/C10-30 Alkyl Acrylate Crosspolymer"
+      },
+      {
+        "rank": 16,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 17,
+        "inci": "Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 18,
+        "inci": "Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba)"
+      },
+      {
+        "rank": 19,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 20,
+        "inci": "C12-15 Alcohols"
+      },
+      {
+        "rank": 21,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 22,
+        "inci": "Sucrose"
+      },
+      {
+        "rank": 23,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 24,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 25,
+        "inci": "Tropolone"
+      },
+      {
+        "rank": 26,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 27,
+        "inci": "Rose Ketones"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit [CLAIM] Haarspray fixieren.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

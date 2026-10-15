@@ -1,0 +1,86 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-21cbc67d35",
+  "brand": "Redken",
+  "confirmed_name": "One United All-in-One Multi-Benefit Treatment",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Leave-in-Pflege mit Mehrfachwirkung",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "verbesserte Kämmbarkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "schützt vor Hitze, Haarbruch und Spliss",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "bereitet optimal auf Styling & Haarschnitt vor",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "antistatisches Ergebnis ohne Frizz",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "25 benefits",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "redken.co.uk",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Leave-in-Pflege für allen Haartypen. Bietet 25 Vorteile in einem Produkt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "gibt Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "schützt vor Hitze, Haarbruch und Spliss",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12",
+      "mixed_source": true
+    }
+  ]
+}

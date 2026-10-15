@@ -1,0 +1,136 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-deedde6e62",
+  "product": {
+    "confirmed_name": "Definier Spray Traumlocken (Traum Locken Definierende Spray)",
+    "confirmed_name_redacted": false,
+    "brand": "Balea PROFESSIONAL",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: 'ALPHA' + 'ISOMETHYL IONONE' -> 'ALPHA-ISOMETHYL IONONE'",
+        "defect_rank": 17
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "PEG-40 HYDROGENATED CASTOR OIL"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "TRITICUM VULGARE GERM OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "CAMELLIA OLEIFERA SEED OIL"
+      },
+      {
+        "rank": 6,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 7,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 8,
+        "inci": "CETEARYL NONANOATE"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED KERATIN"
+      },
+      {
+        "rank": 10,
+        "inci": "TRITICUM VULGARE BRAN EXTRACT"
+      },
+      {
+        "rank": 11,
+        "inci": "TRITICUM VULGARE GERM EXTRACT"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 13,
+        "inci": "LINOLEIC ACID"
+      },
+      {
+        "rank": 14,
+        "inci": "TOCOPHERYL ACETATE"
+      },
+      {
+        "rank": 15,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 16,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 17,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 18,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 19,
+        "inci": "SODIUM BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Großzügig und gleichmäßig ins feuchte Haar sprühen. Anschließend die Locken in Form kneten. Nicht auswaschen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Definierendes Spray für Locken & Wellen",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null
+    },
+    {
+      "text": "Für bis zu 24 Stunden definierte Locken",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null
+    },
+    {
+      "text": "optimal zum Auffrischen von Naturlocken und dauergewelltem Haar",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

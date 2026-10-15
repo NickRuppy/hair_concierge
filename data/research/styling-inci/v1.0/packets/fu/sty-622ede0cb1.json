@@ -1,0 +1,140 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-622ede0cb1",
+  "format": "foam",
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 4,
+        "inci": "BUTANE"
+      },
+      {
+        "rank": 5,
+        "inci": "BUTYL ESTER OF PVM/MA COPOLYMER"
+      },
+      {
+        "rank": 6,
+        "inci": "PROPANE"
+      },
+      {
+        "rank": 7,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 8,
+        "inci": "ETHYL ESTER OF PVM/MA COPOLYMER"
+      },
+      {
+        "rank": 9,
+        "inci": "N-BUTYL ALCOHOL"
+      },
+      {
+        "rank": 10,
+        "inci": "COCO-GLUCOSIDE"
+      },
+      {
+        "rank": 11,
+        "inci": "VP/METHACRYLAMIDE/ VINYL IMIDAZOLE COPOLYMER"
+      },
+      {
+        "rank": 12,
+        "inci": "PHENYLPROPANOL"
+      },
+      {
+        "rank": 13,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 14,
+        "inci": "PROPANEDIOL"
+      },
+      {
+        "rank": 15,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 16,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 17,
+        "inci": "ROSMARINUS OFFICINALIS WATER"
+      },
+      {
+        "rank": 18,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 19,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 20,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 21,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 22,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 23,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 24,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 25,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 26,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 27,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 28,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 29,
+        "inci": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Produkt vor der Anwendung gut schütteln. Zur Dosierung senkrecht halten. 1. Eine tennisballgroße Menge des Schaums im Ansatz verteilen. 2. Trocken föhnen, über Nacht einwirken lassen oder lufttrocknen lassen. 3. Sofortige Frische für Haar und Kopfhaut und frisch gestyltes Haar.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-256bc21940",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 31,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Hydroxypropyl Starch"
+      },
+      {
+        "rank": 3,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Stearamidopropyl Dimethylamine"
+      },
+      {
+        "rank": 7,
+        "inci": "Behentrimonium Chloride"
+      },
+      {
+        "rank": 8,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Isopropyl Myristate"
+      },
+      {
+        "rank": 11,
+        "inci": "Distearoylethyl Hydroxyethylmonium Methosulfate"
+      },
+      {
+        "rank": 12,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 14,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 15,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 16,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 17,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 18,
+        "inci": "Isopropyl Alcohol"
+      },
+      {
+        "rank": 19,
+        "inci": "Guar Hydroxypropyltrimonium Chloride"
+      },
+      {
+        "rank": 20,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 21,
+        "inci": "Ethoxydiglycol"
+      },
+      {
+        "rank": 22,
+        "inci": "Hydrolyzed Wheat Protein"
+      },
+      {
+        "rank": 23,
+        "inci": "Ceteareth-20"
+      },
+      {
+        "rank": 24,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 25,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 26,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 27,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 28,
+        "inci": "Althaea Officinalis Root Extract"
+      },
+      {
+        "rank": 29,
+        "inci": "Hydrolyzed Corn Starch"
+      },
+      {
+        "rank": 30,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 31,
+        "inci": "Potassium Sorbate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor Gebrauch schütteln. Das Curl Spray auf handtuchtrockenes Haar sprühen, durchkämmen und Locken und Wellen mit den Fingern formen, für [CLAIM] definierte Locken. Lufttrocknen lassen. Zum Auffrischen das Lockenspray aus ca. 20 cm Entfernung auf das trockene Haar sprühen. Anschließend das Haar sanft durchkämmen, um geschmeidige Locken zu erhalten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

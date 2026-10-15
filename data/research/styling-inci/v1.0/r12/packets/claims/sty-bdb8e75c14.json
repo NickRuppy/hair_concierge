@@ -1,0 +1,49 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r11amend",
+  "sample_id": "sty-bdb8e75c14",
+  "brand": "Maria Nila",
+  "confirmed_name": "Curlicue Cream (Stylingcreme)",
+  "confirmed_name_tier": "C2",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 3,
+    "scale_as_written": "Halt 3/5",
+    "scale_max": 5,
+    "scale_max_stated": true,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definierende Pflegecreme, die natürlich lockigem und welligem Haar lebendige Sprungkraft verleiht.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "marianila.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Halt 3/5",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "marianila.de",
+      "date": "2026-10-09",
+      "number": 3,
+      "scale_as_written": "Halt 3/5",
+      "scale_max": 5,
+      "scale_max_stated": true,
+      "words": null
+    },
+    {
+      "type": "finish",
+      "text": "Betont und definiert Locken",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "marianila.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

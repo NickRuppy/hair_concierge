@@ -1,0 +1,57 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-08b22daaa8",
+  "brand": "got2b",
+  "confirmed_name": "Trocken SHAMPOO Extra Volumen",
+  "confirmed_name_tier": "C1",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Hinterlässt kein Rückstände",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 48 Stunden Frische",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "sofortigen Volumen Boost",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "got2b Trockenwäsche Extra Volumen – Trockenshampoo für sofortigen Volumen-Boost & 48 h frischen Duft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "other",
+      "text": "Für extra Volumen und eine schnelle Reinigung",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}
