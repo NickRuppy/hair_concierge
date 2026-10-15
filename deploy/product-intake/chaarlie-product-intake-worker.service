@@ -1,0 +1,32 @@
+# Install only with the migration, override and rollback checks in the runbook.
+[Unit]
+Description=Chaarlie Product Intake Research and Image Worker
+After=network-online.target docker.service
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=nick
+Group=nick
+UMask=0027
+WorkingDirectory=/opt/chaarlie/product-intake/current
+EnvironmentFile=/opt/chaarlie/product-intake/shared/worker.env
+EnvironmentFile=/opt/chaarlie/product-intake/shared/release.env
+Environment=PRODUCT_INTAKE_CODEX_CONCURRENCY=1
+Environment=PRODUCT_INTAKE_CODEX_WORKER_POLL_MS=5000
+Environment=PRODUCT_INTAKE_REMBG_ENABLED=true
+Environment=PRODUCT_INTAKE_REMBG_MODEL_DIR=/opt/chaarlie/product-intake/shared/rembg
+Environment=PRODUCT_INTAKE_REMBG_TIMEOUT_MS=180000
+Environment=PRODUCT_INTAKE_FINALIZED_IMAGE_DIR=/opt/chaarlie/product-intake/shared/finalized-images
+Environment=PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED=true
+ExecStart=/usr/bin/node --conditions=react-server --import tsx scripts/product-intake/codex-research-worker.ts --execute-codex --watch --concurrency=1 --poll-ms=5000
+Restart=always
+RestartSec=15
+Nice=10
+MemoryHigh=1280M
+MemoryMax=1536M
+
+[Install]
+WantedBy=multi-user.target

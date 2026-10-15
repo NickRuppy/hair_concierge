@@ -26,7 +26,7 @@ const envelopeFormula = {
   formulaFingerprintSha256: "engine-fingerprint",
 }
 
-for (const source of ["conditioner", "leave_in", "bondbuilder"] as const) {
+for (const source of ["conditioner", "leave_in", "bondbuilder", "mask"] as const) {
   test(`${source} envelope keeps its ordered ingredients and engine fingerprint`, () => {
     const formula =
       source === "bondbuilder"
@@ -107,7 +107,7 @@ for (const category of ["conditioner", "leave_in", "bondbuilder", "shampoo", "ma
         { inciRetryAttempted: retry },
       )
       const inciBlockers = result.blockers.filter((reason) => reason.startsWith("inci_"))
-      if (["conditioner", "leave_in", "bondbuilder"].includes(category)) {
+      if (["conditioner", "leave_in", "bondbuilder", "mask"].includes(category)) {
         assert.equal(inciBlockers.length, 1)
         assert.ok(
           inciBlockers[0]!.startsWith(retry ? "inci_unavailable:" : "inci_missing_first_pass:"),

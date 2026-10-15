@@ -10,7 +10,6 @@ import {
   DEEP_CLEANSING_RESET_FOCUSES,
   DEEP_CLEANSING_RESET_INTENSITIES,
 } from "@/lib/deep-cleansing-shampoo/constants"
-import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
 import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
 import {
   DRY_SHAMPOO_FORMATS,
@@ -32,6 +31,12 @@ import { applyConditionerResearchAdapter } from "./conditioner-research-adapter"
 import { conditionerResearchPromptContract } from "./conditioner-research-prompt-contract"
 import { applyLeaveInResearchAdapter } from "./leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "./leave-in-research-prompt-contract"
+import { applyMaskResearchAdapter } from "./mask-research-adapter"
+import { maskResearchPromptContract } from "./mask-research-prompt-contract"
+import {
+  MASK_PRODUCTION_ADAPTER_RESEARCH_METHOD,
+  MASK_PRODUCTION_ADAPTER_VERSION,
+} from "@/lib/mask-research/production-adapter"
 import { applyBondbuilderResearchAdapterForWorker } from "./bondbuilder-research-adapter"
 import { bondbuilderResearchPromptContract } from "./bondbuilder-research-prompt-contract"
 import {
@@ -170,7 +175,14 @@ export const CATEGORY_RESEARCH_REGISTRY: Readonly<
     promptContract: shampooApprovalContract,
     apply: () => ({ blockers: [], warnings: [] }),
   },
-  mask: unavailable(maskApprovalContract),
+  mask: {
+    state: "active",
+    engineId: "mask-standard",
+    methodology: MASK_PRODUCTION_ADAPTER_RESEARCH_METHOD.modelVersion.replace("mask-inci-", ""),
+    adapter: MASK_PRODUCTION_ADAPTER_VERSION,
+    promptContract: maskApprovalContract,
+    apply: applyMaskResearchAdapter,
+  },
   oil: unavailable(oilApprovalContract),
   dry_shampoo: unavailable(dryShampooApprovalContract),
   deep_cleansing_shampoo: unavailable(deepCleansingShampooApprovalContract),
@@ -242,21 +254,11 @@ function maskApprovalContract(): JsonRecord {
     category_key: "mask",
     canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
-      "Research and emit only mask approval specs under researched_payload.final.category_specs.",
+      "Complete the locked Mask Standard v1.0 research first. Emit exactly one property_synthesis artifact with sibling mask_research_envelope and mask_research_record keys. The deterministic adapter produces the catalog fields; research sourced draft.protocol slots separately.",
+    mask_research: maskResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.mask],
-    product_mask_specs: {
-      weight: [...MASK_WEIGHTS],
-      concentration: [...MASK_CONCENTRATIONS],
-      balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-      ingredient_flags: [...MASK_INGREDIENT_FLAGS],
-      repair_support_level: ["low", "medium", "high"],
-      functional_benefits: [
-        "smoothing_frizz_control",
-        "detangling_slip",
-        "shine",
-        "moisture_softness",
-      ],
-    },
+    required_category_specs_note:
+      "Chaarlie stamps product_application_protocols from researched_payload.draft.protocol after research; never emit model-written protocol rows.",
     protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }

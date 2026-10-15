@@ -1,17 +1,17 @@
 # Mask Production Adapter v1
 
-Status: implemented local research adapter — not a production write or matching-engine change. Not yet wired into the Product Intake worker (see "Product Intake handoff" below).
+Status: implemented local research adapter — not a production write or matching-engine change. Worker integration is prepared (see "Product Intake handoff" below); production deployment and cohort proof remain separate.
 
 Use this workflow for a previously unknown German/EU rinse-out intensive mask (Haarkur/Maske). The researcher performs the complete Mask Standard v1.0 analysis once. The adapter then projects only the smaller set of properties supported by the current Product Intake database contract (`product_mask_specs` plus `suitable_thicknesses`).
 
 ## Authority stack
 
-| Layer | Authority | Responsibility |
-| --- | --- | --- |
-| Full ingredient research | `docs/research/mask-inci/v1.0/` (Mask Standard v1.0, frozen 2026-10-06) | G0 boundary, exact formula analysis and the complete nine-field comparison profile |
-| Intake serialization | `mask-research-envelope-v1.0` | Projection inputs: identity, G0 outcome, formula provenance, profile values with their reasoning |
-| Current projection | `src/lib/mask-research/production-adapter.ts` | Pure one-way conversion into current Mask fields |
-| Product handoff | `docs/product-intake-research-ops.md` | Identity, image, price/link, exact TPL-MASK protocol, review, and guarded publish |
+| Layer                    | Authority                                                               | Responsibility                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Full ingredient research | `docs/research/mask-inci/v1.0/` (Mask Standard v1.0, frozen 2026-10-06) | G0 boundary, exact formula analysis and the complete nine-field comparison profile               |
+| Intake serialization     | `mask-research-envelope-v1.0`                                           | Projection inputs: identity, G0 outcome, formula provenance, profile values with their reasoning |
+| Current projection       | `src/lib/mask-research/production-adapter.ts`                           | Pure one-way conversion into current Mask fields                                                 |
+| Product handoff          | `docs/product-intake-research-ops.md`                                   | Identity, image, price/link, exact TPL-MASK protocol, review, and guarded publish                |
 
 The full research record is the source of truth. The production projection is deliberately lossy and must never be used to reconstruct or overwrite the research profile.
 
@@ -20,7 +20,7 @@ Research method pins (checked by the envelope's `researchMethod` fields):
 - `policySha256`: `d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0` (`mask-classification-standard.md`, Standard v1.0)
 - `lexiconSha256`: `3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada` (`02_evidence_lexicon.v0.1.md`)
 
-The leave-in adapter pins its runbook in the second slot. The mask engine has no runbook yet (the standard names it a separate Phase-4 artifact), so the evidence lexicon — the other normative input both calibration lanes classified against — is pinned instead. An envelope whose `researchMethod` does not match these pins fails the strict schema parse and the record stays `needs_research`. `tests/mask-production-adapter.test.ts` fails if either pinned file drifts, and also re-verifies every frozen corpus hash in `data/research/mask-inci/v1.0/artifact-manifest.json`.
+The Mask envelope retains its historical evidence-lexicon pin in the second slot. The operational [runbook](research/mask-inci/v1.0/runbook.md) now exists, but is a separate workflow guide; adding it does not change the frozen standard, lexicon or historical envelope pins. An envelope whose `researchMethod` does not match these pins fails the strict schema parse and the record stays `needs_research`. `tests/mask-production-adapter.test.ts` fails if either pinned file drifts, and also re-verifies every frozen corpus hash in `data/research/mask-inci/v1.0/artifact-manifest.json`.
 
 ## What Product Intake hands the engine
 
@@ -28,13 +28,13 @@ One exact market product: brand, exact product name, pack size, GTIN where one e
 
 ## What comes back
 
-| Engine outcome | Envelope | Adapter status | Meaning |
-| --- | --- | --- | --- |
-| G0 `in_category`, identity and formula settled | full envelope | `projection_ready` | `product_mask_specs` + `suitable_thicknesses` + `required_protocol_roles: ["intensive_conditioning_mask"]` |
-| G0 `excluded_product_form` (charter exclusion) | identity block only, `categoryBoundaryStatus: "excluded_product_form"`, `exclusionReason` | `routed_out_of_scope` | Not a mask for this engine; route to the correct category workflow. Kept as boundary evidence. |
-| G0 `insufficient_information` (evidence stop) | identity block only, `identityStatus: "insufficient_information"` | `needs_research` | No profile by rule. Route to a fresh exact-pack capture, **never** to a boundary ruling. |
-| Unresolved identity or formula conflict | full envelope | `needs_research` | Resolve the conflict first (fail-closed identity gate, leave-in precedent). |
-| Any projected field `unknown` | full envelope | `needs_research` | No `unknown` is committed to the catalog (AD-2, leave-in precedent). |
+| Engine outcome                                 | Envelope                                                                                  | Adapter status        | Meaning                                                                                                    |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| G0 `in_category`, identity and formula settled | full envelope                                                                             | `projection_ready`    | `product_mask_specs` + `suitable_thicknesses` + `required_protocol_roles: ["intensive_conditioning_mask"]` |
+| G0 `excluded_product_form` (charter exclusion) | identity block only, `categoryBoundaryStatus: "excluded_product_form"`, `exclusionReason` | `routed_out_of_scope` | Not a mask for this engine; route to the correct category workflow. Kept as boundary evidence.             |
+| G0 `insufficient_information` (evidence stop)  | identity block only, `identityStatus: "insufficient_information"`                         | `needs_research`      | No profile by rule. Route to a fresh exact-pack capture, **never** to a boundary ruling.                   |
+| Unresolved identity or formula conflict        | full envelope                                                                             | `needs_research`      | Resolve the conflict first (fail-closed identity gate, leave-in precedent).                                |
+| Any projected field `unknown`                  | full envelope                                                                             | `needs_research`      | No `unknown` is committed to the catalog (AD-2, leave-in precedent).                                       |
 
 Charter exclusions seen in calibration: pre-shampoo-only and Olaplex-style bondbuilder protocols (`excluded_pre_shampoo_bondbuilder_protocol` — #13 Olaplex N°3, u5 Olaplex N°.3PLUS) and colour-depositing masks (`excluded_color_depositing` — u6 Balea Silberglanz, CI 60730). Formula-level exclusions are mode-independent (E17): a pigment- or bond-builder-protocol formula is excluded in every mode. The G0 stop case is q3 Syoss Intense Repair: no rinse text anywhere in the exact-product source, so the engine refused to infer one from "einwirken lassen".
 
@@ -75,11 +75,22 @@ The `property_synthesis` artifact must carry:
       "sourceIds": ["<source id>"]
     },
     "profile": {
-      "conditioningLevel": { "value": "high", "confidence": "moderate", "rationale": "...", "evidenceSignals": ["..."], "derivation": "...", "thresholdReasoning": ["...", "..."], "limitations": ["..."] },
+      "conditioningLevel": {
+        "value": "high",
+        "confidence": "moderate",
+        "rationale": "...",
+        "evidenceSignals": ["..."],
+        "derivation": "...",
+        "thresholdReasoning": ["...", "..."],
+        "limitations": ["..."]
+      },
       "weightPotential": { "value": "moderate", "...": "same evidence object" },
       "careDirection": { "value": "moisture", "...": "same evidence object" },
       "repairSupportLevel": { "value": "low", "...": "same evidence object" },
-      "focus": { "value": { "primary": "smoothing", "secondary": [] }, "...": "same evidence object" },
+      "focus": {
+        "value": { "primary": "smoothing", "secondary": [] },
+        "...": "same evidence object"
+      },
       "bondRoute": { "value": "none", "...": "same evidence object" },
       "hairThicknessFit": { "value": ["fine", "normal", "coarse"], "...": "same evidence object" },
       "damageFit": { "value": ["healthy", "moderately_damaged"], "...": "same evidence object" },
@@ -97,18 +108,18 @@ Formula integrity is checked exactly as in the leave-in adapter: `rawInciSha256`
 
 ## Deterministic projection
 
-| Research property | Current database property | Authority |
-| --- | --- | --- |
-| `weightPotential` low/moderate/high | `product_mask_specs.weight` light/medium/rich | property set field 2 |
-| `conditioningLevel` low/moderate/high | `concentration` low/medium/high | D1 (`concentration` is the conditioning-level twin) |
-| `careDirection` protein/moisture/balanced | `balance_direction` (same value; never `null` from this adapter) | D6 |
-| `repairSupportLevel` low/medium/high | `repair_support_level` (same value) | property set field 4 |
-| `focus` primary + secondary | `functional_benefits`: smoothing → `smoothing_frizz_control`, detangling → `detangling_slip`, shine → `shine` | D2 |
-| `careDirection` moisture, or `moisture` focus, or general primary focus | adds `moisture_softness` (exists since migration `20261007120000`) | MAD-1, ruled 2026-10-07 |
-| `conditioningLevel` moderate/high | additionally adds `detangling_slip` | MAD-1 baseline, ruled 2026-10-07 |
-| no member from the rows above | falls back to `moisture_softness` | MAD-1, ruled 2026-10-07 |
-| normalized complete INCI | presence-only `ingredient_flags` (rules shared with the leave-in adapter) | property set |
-| `hairThicknessFit` (echo of `weight_potential`) | `suitable_thicknesses` | property set field 7 |
+| Research property                                                       | Current database property                                                                                     | Authority                                           |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `weightPotential` low/moderate/high                                     | `product_mask_specs.weight` light/medium/rich                                                                 | property set field 2                                |
+| `conditioningLevel` low/moderate/high                                   | `concentration` low/medium/high                                                                               | D1 (`concentration` is the conditioning-level twin) |
+| `careDirection` protein/moisture/balanced                               | `balance_direction` (same value; never `null` from this adapter)                                              | D6                                                  |
+| `repairSupportLevel` low/medium/high                                    | `repair_support_level` (same value)                                                                           | property set field 4                                |
+| `focus` primary + secondary                                             | `functional_benefits`: smoothing → `smoothing_frizz_control`, detangling → `detangling_slip`, shine → `shine` | D2                                                  |
+| `careDirection` moisture, or `moisture` focus, or general primary focus | adds `moisture_softness` (exists since migration `20261007120000`)                                            | MAD-1, ruled 2026-10-07                             |
+| `conditioningLevel` moderate/high                                       | additionally adds `detangling_slip`                                                                           | MAD-1 baseline, ruled 2026-10-07                    |
+| no member from the rows above                                           | falls back to `moisture_softness`                                                                             | MAD-1, ruled 2026-10-07                             |
+| normalized complete INCI                                                | presence-only `ingredient_flags` (rules shared with the leave-in adapter)                                     | property set                                        |
+| `hairThicknessFit` (echo of `weight_potential`)                         | `suitable_thicknesses`                                                                                        | property set field 7                                |
 
 `repair`, `curl_support` and `color_care` focus values have no `functional_benefits` counterpart (fixed vocabulary); the moisture identity reaches production through `balance_direction` and, since the 2026-10-07 MAD-1 ruling, also through `moisture_softness`. `functional_benefits` is required non-empty by the intake validator; when focus, care direction and baseline produce no member, the adapter falls back to `moisture_softness`. Emptiness never causes a refusal.
 
@@ -122,7 +133,28 @@ The adapter returns only the required role name, `["intensive_conditioning_mask"
 
 ## Product Intake handoff
 
-The leave-in engine is additionally wired into the Product Intake worker (`src/lib/product-intake/leave-in-research-adapter.ts`, `leave-in-research-prompt-contract.ts`, and the `leave_in` branch of `scripts/product-intake/codex-research-worker.ts`). The mask equivalent is **not built**: wiring it would change how every mask submission is researched today (the envelope would become required), which is an activation decision outside this port. Until it is wired, use the local replay below.
+Mask integration uses `src/lib/product-intake/mask-research-adapter.ts`,
+`mask-research-prompt-contract.ts`, the Mask registry entry and canonical-INCI
+extraction. It replaces the legacy instruction to hand-author catalog specs.
+The strict `mask_research_envelope` and complete `mask_research_record` are
+**sibling keys** in exactly one `property_synthesis` artifact. The complete record
+uses the existing Mask record vocabulary described in the runbook; it is never
+inserted into the strict envelope or reconstructed from catalog rows.
+
+Before any final-value mutation, the wrapper requires the expected submission
+ID, current method/formula integrity, complete carrier sections and matching
+identity/formula/comparison values. Competing category envelopes are refused.
+Carrier shape/binding validation does not establish factual truth or replace
+§4 evidence review. The complete record and envelope remain unchanged; only
+adapter-owned catalog fields/rationales and derived projection metadata change.
+A refused pass clears untrusted old Mask projection receipts. Missing research
+or protocol evidence stays blocked; there is no fallback claiming engine work.
+
+The registry records `mask-standard`, methodology `v1.0`, adapter
+`mask-production-adapter-v1`. Worker provenance comes from the pure projection's
+`research_input_sha256` and `projection_sha256`. This is integrated code, not a
+receipt of production deployment, automatic retries, catalog writes or matching
+activation. Release/cohort gates and Nick's exact final publication remain.
 
 ## Local replay
 

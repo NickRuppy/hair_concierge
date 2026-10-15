@@ -1,54 +1,12 @@
 import assert from "node:assert/strict"
-import { readFile } from "node:fs/promises"
 import test from "node:test"
 
-import { PGlite } from "@electric-sql/pglite"
+import type { PGlite } from "@electric-sql/pglite"
 
-const ROOT = new URL("../", import.meta.url)
-const MIGRATIONS = [
-  "20260612130000_product_intake_submissions.sql",
-  "20260630120000_product_intake_research_jobs.sql",
-  "20260630130000_product_intake_research_artifacts_decisions.sql",
-  "20260701090000_product_intake_rework_resets_attempts.sql",
-  "20260701100000_product_intake_auto_enqueue.sql",
-  "20261006112322_product_intake_job_attempt_hygiene.sql",
-  "20261006112337_product_intake_worker_heartbeats.sql",
-  "20261006141653_product_intake_job_engine_binding.sql",
-  "20261007062729_product_intake_stage_artifact_kinds.sql",
-] as const
+import { createAdminAlertTestDatabase } from "../scripts/product-intake/admin-alert-test-database"
+
 const USER = "11111111-1111-4111-8111-111111111111"
 const PRODUCT = "22222222-2222-4222-8222-222222222222"
-
-// Only prerequisites are stubbed; submission constraints, queue functions and
-// triggers come from the real migrations.
-const PREREQUISITES = `
-  CREATE ROLE anon;
-  CREATE ROLE authenticated;
-  CREATE ROLE service_role BYPASSRLS;
-  CREATE SCHEMA auth;
-  CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT NULL::uuid $$;
-  CREATE FUNCTION auth.role() RETURNS text LANGUAGE sql STABLE AS $$ SELECT 'service_role'::text $$;
-  CREATE SCHEMA storage;
-  CREATE TABLE storage.buckets (
-    id text PRIMARY KEY, name text, public boolean,
-    file_size_limit bigint, allowed_mime_types text[]
-  );
-  CREATE TABLE storage.objects (id uuid PRIMARY KEY, bucket_id text);
-  CREATE TABLE public.profiles (id uuid PRIMARY KEY, is_admin boolean DEFAULT false);
-  CREATE TABLE public.product_categories (key text PRIMARY KEY, is_intake_supported boolean);
-  CREATE TABLE public.products (id uuid PRIMARY KEY, category_key text);
-  CREATE TABLE public.conversations (id uuid PRIMARY KEY, user_id uuid, UNIQUE (id, user_id));
-  CREATE TABLE public.user_product_usage (
-    id uuid PRIMARY KEY, user_id uuid, category text,
-    frequency_range text, product_name text, UNIQUE (user_id, category)
-  );
-  CREATE FUNCTION public.update_updated_at_column() RETURNS trigger LANGUAGE plpgsql AS $$
-  BEGIN NEW.updated_at = now(); RETURN NEW; END;
-  $$;
-  INSERT INTO public.profiles (id) VALUES ('${USER}');
-  INSERT INTO public.product_categories VALUES ('conditioner', true);
-  INSERT INTO public.products VALUES ('${PRODUCT}', 'conditioner');
-`
 
 type Job = {
   id: string
@@ -66,15 +24,8 @@ type Job = {
 }
 
 async function migratedDatabase(t: { after: (fn: () => Promise<void>) => void }) {
-  const pg = new PGlite()
+  const pg = await createAdminAlertTestDatabase()
   t.after(() => pg.close())
-  await pg.exec(PREREQUISITES)
-  for (const migration of MIGRATIONS) {
-    await pg.exec(await readFile(new URL(`supabase/migrations/${migration}`, ROOT), "utf8"))
-  }
-  // Reapplying the replacement migration must remain safe.
-  await pg.exec(await readFile(new URL(`supabase/migrations/${MIGRATIONS.at(-1)}`, ROOT), "utf8"))
-  await pg.exec("SET ROLE service_role")
   return pg
 }
 
@@ -108,6 +59,44 @@ async function storedJob(pg: PGlite, id: string) {
     [id],
   )
   return rows[0]!
+}
+
+function notificationPayload(submissionId: string) {
+  return {
+    product_name: "Test Conditioner",
+    category_label: "Conditioner",
+    outcome_label: "Bereit zur Prüfung",
+    question_1: "",
+    question_2: "",
+    question_3: "",
+    review_url: `https://chaarlie.de/admin/produkt-intake/${submissionId}`,
+    is_test: false,
+  }
+}
+
+async function commitPass(
+  pg: PGlite,
+  job: Job,
+  outcome: "continue" | "ready_for_review" | "needs_nick" = "ready_for_review",
+  decisionIds: string[] = [],
+) {
+  const status = outcome === "continue" ? "queued" : "waiting_for_review"
+  const stage = outcome === "continue" ? "image_judging" : "preview_build"
+  return pg.query<Job>(
+    "SELECT * FROM public.product_intake_commit_research_pass($1, $2, $3, $4, $5, $6, NULL, $7, $8, $9, $10)",
+    [
+      job.id,
+      job.locked_by,
+      job.locked_at,
+      status,
+      stage,
+      { source: "test" },
+      { identity: "test" },
+      decisionIds,
+      outcome,
+      outcome === "continue" ? null : notificationPayload(job.submission_id),
+    ],
+  )
 }
 
 test("claim fails exhausted queued, rework and stale-running jobs instead of hiding them", async (t) => {
@@ -508,6 +497,312 @@ test("engine binding rejects invalid tuples, stale leases, closed jobs, and unpr
     await pg.exec(`RESET ROLE; SET ROLE ${role}`)
     await assert.rejects(
       bind("engine", "v1", claimed!.locked_by, claimed!.locked_at),
+      /permission denied/,
+    )
+  }
+})
+
+test("research completion atomically writes a review outcome once and preserves uncaptured decisions", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const [claimed] = await claim(pg)
+  const decisions = await pg.query<{ id: string }>(
+    `INSERT INTO public.product_intake_review_decisions
+      (submission_id, job_id, field_path, decision, reviewed_by)
+     VALUES ($1, $2, 'identity.name', 'change_requested', 'nick'),
+            ($1, $2, 'properties.slip', 'change_requested', 'nick') RETURNING id`,
+    [job.submission_id, job.id],
+  )
+  await pg.query("UPDATE public.product_intake_research_jobs SET progress = $2 WHERE id = $1", [
+    job.id,
+    { stale_readiness: true, stale_rework: true },
+  ])
+  const completed = (await commitPass(pg, claimed!, "ready_for_review", [decisions.rows[0]!.id]))
+    .rows[0]!
+  assert.equal(completed.status, "waiting_for_review")
+  assert.equal(completed.locked_at, null)
+  assert.equal(completed.progress.review_outcome, "ready_for_review")
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    1,
+  )
+  const resolved = await pg.query<{ id: string; resolved_at: Date | null }>(
+    "SELECT id, resolved_at FROM public.product_intake_review_decisions WHERE id = ANY($1)",
+    [decisions.rows.map((decision) => decision.id)],
+  )
+  const resolvedById = new Map(resolved.rows.map((decision) => [decision.id, decision.resolved_at]))
+  assert.ok(resolvedById.get(decisions.rows[0]!.id))
+  assert.equal(resolvedById.get(decisions.rows[1]!.id), null)
+  assert.equal(completed.progress.stale_readiness, undefined)
+  assert.equal(completed.progress.stale_rework, undefined)
+  assert.equal(
+    (
+      await pg.query<{ status: string }>(
+        "SELECT status FROM public.product_submissions WHERE id = $1",
+        [job.submission_id],
+      )
+    ).rows[0]!.status,
+    "ready_for_review",
+  )
+
+  await pg.exec("SET TIMEZONE TO 'Europe/Berlin'")
+  const replay = (await commitPass(pg, claimed!, "ready_for_review", [decisions.rows[0]!.id]))
+    .rows[0]!
+  assert.deepEqual(replay, completed)
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    1,
+  )
+})
+
+test("completion rejects invalid snapshots or stale owners without partial writes and continue creates no event", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const [claimed] = await claim(pg)
+  for (const invalidSnapshot of [
+    { ...notificationPayload(job.submission_id), is_test: true },
+    { ...notificationPayload(job.submission_id), product_name: "x".repeat(181) },
+    { ...notificationPayload(job.submission_id), question_1: "x".repeat(181) },
+    { ...notificationPayload(job.submission_id), outcome_label: "Entscheidung nötig" },
+  ]) {
+    await assert.rejects(
+      pg.query(
+        "SELECT * FROM public.product_intake_commit_research_pass($1, $2, $3, 'waiting_for_review', 'preview_build', '{}'::jsonb, NULL, '{}'::jsonb, '{}', 'ready_for_review', $4)",
+        [job.id, claimed!.locked_by, claimed!.locked_at, invalidSnapshot],
+      ),
+      /invalid admin notification payload/,
+    )
+  }
+  assert.equal((await storedJob(pg, job.id)).status, "running")
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    0,
+  )
+  await assert.rejects(
+    commitPass(pg, { ...claimed!, locked_by: "wrong-worker" }),
+    /lock no longer matches/,
+  )
+  const continued = (await commitPass(pg, claimed!, "continue")).rows[0]!
+  assert.equal(continued.status, "queued")
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    0,
+  )
+  const [reclaimed] = await claim(pg, "worker-b")
+  await assert.rejects(commitPass(pg, claimed!, "continue"), /lock no longer matches/)
+  assert.equal(reclaimed!.status, "running")
+})
+
+test("completion rolls back preview, decisions, and job handoff if the outbox insert fails", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const [claimed] = await claim(pg)
+  const decision = await pg.query<{ id: string }>(
+    `INSERT INTO public.product_intake_review_decisions
+      (submission_id, job_id, field_path, decision, reviewed_by)
+     VALUES ($1, $2, 'identity.name', 'change_requested', 'nick') RETURNING id`,
+    [job.submission_id, job.id],
+  )
+  await pg.exec(`
+    RESET ROLE;
+    CREATE FUNCTION public.fail_admin_notification_insert() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION 'deliberate outbox fault'; END;
+    $$;
+    CREATE TRIGGER fail_admin_notification_insert
+      BEFORE INSERT ON public.product_intake_admin_notifications
+      FOR EACH ROW EXECUTE FUNCTION public.fail_admin_notification_insert();
+    SET ROLE service_role;
+  `)
+  await assert.rejects(
+    commitPass(pg, claimed!, "ready_for_review", [decision.rows[0]!.id]),
+    /deliberate outbox fault/,
+  )
+  await pg.exec(
+    "RESET ROLE; DROP TRIGGER fail_admin_notification_insert ON public.product_intake_admin_notifications; SET ROLE service_role",
+  )
+  assert.equal((await storedJob(pg, job.id)).status, "running")
+  assert.equal(
+    (
+      await pg.query<{ status: string }>(
+        "SELECT status FROM public.product_submissions WHERE id = $1",
+        [job.submission_id],
+      )
+    ).rows[0]!.status,
+    "pending_review",
+  )
+  assert.equal(
+    (
+      await pg.query<{ resolved_at: Date | null }>(
+        "SELECT resolved_at FROM public.product_intake_review_decisions WHERE id = $1",
+        [decision.rows[0]!.id],
+      )
+    ).rows[0]!.resolved_at,
+    null,
+  )
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    0,
+  )
+  assert.equal(
+    (await commitPass(pg, claimed!, "ready_for_review", [decision.rows[0]!.id])).rows[0]!.status,
+    "waiting_for_review",
+  )
+})
+
+test("admin notifications hold uncertain delivery, preserve fences and bound definite retries", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const [claimed] = await claim(pg)
+  await commitPass(pg, claimed!)
+  const first = (
+    await pg.query<{ id: string; lease_token: string; attempts: number }>(
+      "SELECT * FROM public.product_intake_claim_admin_notification()",
+    )
+  ).rows[0]!
+  assert.equal(first.attempts, 1)
+  assert.equal(
+    (
+      await pg.query<{ product_intake_settle_admin_notification: boolean }>(
+        "SELECT public.product_intake_settle_admin_notification($1, $2, 'definite_transient', NULL, NULL, 'provider_http_429')",
+        [first.id, first.lease_token],
+      )
+    ).rows[0]!.product_intake_settle_admin_notification,
+    true,
+  )
+  assert.deepEqual(
+    (await pg.query("SELECT * FROM public.product_intake_claim_admin_notification()")).rows,
+    [],
+  )
+  await pg.query(
+    "UPDATE public.product_intake_admin_notifications SET next_attempt_at = now() - interval '1 second' WHERE id = $1",
+    [first.id],
+  )
+  const second = (
+    await pg.query<{ lease_token: string; attempts: number }>(
+      "SELECT * FROM public.product_intake_claim_admin_notification()",
+    )
+  ).rows[0]!
+  assert.equal(second.attempts, 2)
+  assert.equal(
+    (
+      await pg.query<{ product_intake_settle_admin_notification: boolean }>(
+        "SELECT public.product_intake_settle_admin_notification($1, $2, 'sent', 'd', 'q')",
+        [first.id, first.lease_token],
+      )
+    ).rows[0]!.product_intake_settle_admin_notification,
+    false,
+  )
+  await pg.query<{ product_intake_settle_admin_notification: boolean }>(
+    "SELECT public.product_intake_settle_admin_notification($1, $2, 'ambiguous', NULL, NULL, 'timeout')",
+    [first.id, second.lease_token],
+  )
+  const afterAmbiguous = await pg.query<{ status: string; attempts: number }>(
+    "SELECT status, attempts FROM public.product_intake_admin_notifications WHERE id = $1",
+    [first.id],
+  )
+  assert.deepEqual(afterAmbiguous.rows[0], { status: "needs_reconciliation", attempts: 2 })
+  assert.deepEqual(
+    (await pg.query("SELECT * FROM public.product_intake_claim_admin_notification()")).rows,
+    [],
+  )
+
+  // A crash can lose a successful provider receipt on the very first attempt.
+  // An expired lease must be quarantined without resending or blocking later work.
+  const laterJob = await queuedJob(pg)
+  const [laterClaim] = await claim(pg)
+  await commitPass(pg, laterClaim!)
+  const expiredToken = "33333333-3333-4333-8333-333333333333"
+  await pg.query(
+    `UPDATE public.product_intake_admin_notifications
+     SET status = 'sending', attempts = 1,
+         lease_token = $2, locked_at = now() - interval '6 minutes',
+         created_at = now() - interval '1 day'
+     WHERE id = $1`,
+    [first.id, expiredToken],
+  )
+  const laterNotification = (
+    await pg.query<{ id: string; job_id: string; lease_token: string; attempts: number }>(
+      "SELECT * FROM public.product_intake_claim_admin_notification()",
+    )
+  ).rows[0]!
+  assert.equal(laterNotification.job_id, laterJob.id)
+  assert.equal(laterNotification.attempts, 1)
+  assert.deepEqual(
+    (
+      await pg.query(
+        "SELECT status, attempts, error, lease_token, locked_at FROM public.product_intake_admin_notifications WHERE id = $1",
+        [first.id],
+      )
+    ).rows[0],
+    {
+      status: "needs_reconciliation",
+      attempts: 1,
+      error: "delivery_lease_expired",
+      lease_token: null,
+      locked_at: null,
+    },
+  )
+  assert.equal(
+    (
+      await pg.query<{ product_intake_settle_admin_notification: boolean }>(
+        "SELECT public.product_intake_settle_admin_notification($1, $2, 'sent', 'late-receipt', 'q')",
+        [first.id, expiredToken],
+      )
+    ).rows[0]!.product_intake_settle_admin_notification,
+    false,
+  )
+
+  // Definite rejections still retry, but the fifth attempt is terminal.
+  let pending = laterNotification
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    assert.equal(pending.attempts, attempt)
+    await pg.query(
+      "SELECT public.product_intake_settle_admin_notification($1, $2, 'definite_transient', NULL, NULL, 'provider_http_429')",
+      [pending.id, pending.lease_token],
+    )
+    if (attempt < 5) {
+      await pg.query(
+        "UPDATE public.product_intake_admin_notifications SET next_attempt_at = now() - interval '1 second' WHERE id = $1",
+        [pending.id],
+      )
+      pending = (
+        await pg.query<typeof laterNotification>(
+          "SELECT * FROM public.product_intake_claim_admin_notification()",
+        )
+      ).rows[0]!
+    }
+  }
+  assert.deepEqual(
+    (
+      await pg.query(
+        "SELECT status, attempts FROM public.product_intake_admin_notifications WHERE id = $1",
+        [laterNotification.id],
+      )
+    ).rows[0],
+    { status: "failed", attempts: 5 },
+  )
+  assert.deepEqual(
+    (await pg.query("SELECT * FROM public.product_intake_claim_admin_notification()")).rows,
+    [],
+  )
+})
+
+test("admin notification storage and RPCs are inaccessible to anon and authenticated roles", async (t) => {
+  const pg = await migratedDatabase(t)
+  for (const role of ["anon", "authenticated"]) {
+    await pg.exec(`RESET ROLE; SET ROLE ${role}`)
+    await assert.rejects(
+      pg.query("SELECT * FROM public.product_intake_admin_notifications"),
+      /permission denied/,
+    )
+    await assert.rejects(
+      pg.query("SELECT * FROM public.product_intake_claim_admin_notification()"),
+      /permission denied/,
+    )
+    await assert.rejects(
+      pg.query<{ product_intake_settle_admin_notification: boolean }>(
+        "SELECT public.product_intake_settle_admin_notification(NULL, NULL, 'sent')",
+      ),
       /permission denied/,
     )
   }

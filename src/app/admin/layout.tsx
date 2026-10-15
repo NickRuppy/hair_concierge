@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Sparkles,
   PhoneCall,
+  ClipboardCheck,
 } from "lucide-react"
 import { AppRouteProviders } from "@/providers/route-providers"
 
@@ -20,6 +21,7 @@ const adminNav = [
   { href: "/admin/quotes", label: "Zitate", icon: Quote },
   { href: "/admin/articles", label: "Artikel", icon: FileText },
   { href: "/admin/products", label: "Produkte", icon: Package },
+  { href: "/admin/produkt-intake", label: "Produktprüfung", icon: ClipboardCheck },
   { href: "/admin/users", label: "Nutzer", icon: Users },
   { href: "/admin/partner-access", label: "Partnerzugänge", icon: Sparkles },
   { href: "/admin/beratung", label: "Beratungen", icon: PhoneCall },
@@ -48,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="contents print:hidden">
         <Header />
       </div>
-      <div className="flex min-h-[calc(100vh-3.5rem)] print:block print:min-h-0">
+      <div className="flex min-h-[calc(100vh-3.5rem)] flex-col md:flex-row print:block print:min-h-0">
         <div className="contents print:hidden">
           {/* Sidebar */}
           <aside className="hidden w-56 shrink-0 border-r bg-sidebar p-4 md:block">
@@ -105,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Content */}
-        <main className="flex-1 p-6 print:p-0">{children}</main>
+        <main className="min-w-0 flex-1 p-4 sm:p-6 print:p-0">{children}</main>
       </div>
     </AppRouteProviders>
   )

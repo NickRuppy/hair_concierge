@@ -1,0 +1,57 @@
+{
+  "project": "pqdkhefxsxkyeqelqegq",
+  "date": "2026-10-15",
+  "automatic_alerts": false,
+  "old_worker_unchanged": true,
+  "rows": 0,
+  "functions": [
+    {
+      "args": "",
+      "name": "product_intake_claim_admin_notification",
+      "search_path": ["search_path=public"],
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "args": "target_job_id uuid, expected_locked_by text, expected_locked_at timestamp with time zone, next_status text, next_stage text, next_progress jsonb, next_last_error text, researched_payload jsonb, resolve_decision_ids uuid[], review_outcome text, notification_payload jsonb",
+      "name": "product_intake_commit_research_pass",
+      "search_path": ["search_path=public"],
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "args": "target_id uuid, expected_lease_token uuid, result text, delivery_id text, queued_at text, error_code text",
+      "name": "product_intake_settle_admin_notification",
+      "search_path": ["search_path=public"],
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": false
+    }
+  ],
+  "migration": [
+    {
+      "name": "product_intake_admin_notifications",
+      "version": "20261015200636"
+    }
+  ],
+  "rls_enabled": true,
+  "table_access": {
+    "anon": false,
+    "service_role": true,
+    "authenticated": false
+  },
+  "table_exists": true,
+  "sql_sha256": "0c75500de827ae3c267f4124814edc76ad31ce119d21381686f3679604b07406",
+  "repository_filename": "supabase/migrations/20261015200636_product_intake_admin_notifications.sql",
+  "advisor": {
+    "name": "rls_enabled_no_policy",
+    "level": "INFO",
+    "disposition": "intentional service-role-only outbox: RLS enabled, anon/authenticated table and RPC access denied; no client policies required",
+    "reference": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+  }
+}

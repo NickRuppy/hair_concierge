@@ -202,7 +202,7 @@ test("draft engine markers are provenance, while strict final markers and protoc
 function job(stage: ProductIntakeResearchJob["stage"]): ProductIntakeResearchJob {
   return {
     id: "job-readiness",
-    submission_id: "submission-readiness",
+    submission_id: "50000000-0000-4000-8000-000000000001",
     status: "running",
     stage,
     priority: 0,
@@ -275,7 +275,7 @@ async function finish(
       return query
     },
     rpc: async (name: string, args: JsonRecord) => {
-      assert.equal(name, "product_intake_update_research_job")
+      assert.equal(name, "product_intake_commit_research_pass")
       jobWrites.push(args)
       return {
         data: {
@@ -305,21 +305,22 @@ async function finish(
     researchModel: "fixture",
     executeCodex: true,
     autoPrepareImages: options.autoPrepareImages ?? false,
-    ...(options.refreshDuringEvaluation
-      ? {
-          beforeCompletion: async () => {
-            initialJob.progress.message = "Lease refreshed after optional evaluation"
-            return {
-              job: initialJob,
-              modelEvaluation: {
-                status: "disabled" as const,
-                successfulJudgments: 0,
-                targetSuccessfulJudgments: 0,
-              },
-            }
-          },
-        }
-      : {}),
+    beforeCompletion: async () => {
+      assert.equal(submissionWrites.length, 0, "preview must wait for atomic final handoff")
+      assert.equal(jobWrites.length, 0, "final outcome must wait for evaluation")
+      if (options.refreshDuringEvaluation) {
+        initialJob.progress.message = "Lease refreshed after optional evaluation"
+        initialJob.locked_at = "2026-10-05T12:01:00Z"
+      }
+      return {
+        job: initialJob,
+        modelEvaluation: {
+          status: "disabled" as const,
+          successfulJudgments: 0,
+          targetSuccessfulJudgments: 0,
+        },
+      }
+    },
   })
   return { output, submissionWrites, jobWrites }
 }
@@ -328,7 +329,7 @@ test("research and rework with empty specs block the job and keep the submission
   for (const stage of ["property_research", "rework"] as const) {
     const payload = completePayload()
     payload.final.category_specs = { product_mask_specs: [], product_application_protocols: [] }
-    const { output, submissionWrites, jobWrites } = await finish(payload, { stage })
+    const { output, jobWrites } = await finish(payload, { stage })
     assert.equal(output.status, "blocked", stage)
     assert.equal(
       output.last_error,
@@ -339,8 +340,8 @@ test("research and rework with empty specs block the job and keep the submission
       "final.category_specs.product_mask_specs",
       "final.category_specs.product_application_protocols",
     ])
-    assert.equal(submissionWrites[0]!.status, "researching")
-    assert.deepEqual(submissionWrites[0]!.researched_payload, payload)
+    assert.equal(jobWrites[0]!.review_outcome, "needs_nick")
+    assert.deepEqual(jobWrites[0]!.researched_payload, payload)
     assert.equal(jobWrites[0]!.expected_locked_by, "worker-readiness")
     assert.equal(jobWrites[0]!.expected_locked_at, "2026-10-05T12:00:00Z")
     assert.equal(output.progress?.engine_key, "preserved")
@@ -348,25 +349,25 @@ test("research and rework with empty specs block the job and keep the submission
 })
 
 test("complete research proceeds to review with passed readiness and clears stale gaps", async () => {
-  const { output, submissionWrites } = await finish(completePayload())
+  const { output, jobWrites } = await finish(completePayload())
   assert.equal(output.status, "waiting_for_review")
   assert.equal(output.last_error, null)
   assert.equal(output.progress?.readiness_check, "passed")
   assert.deepEqual(output.progress?.readiness_missing_fields, [])
-  assert.equal(submissionWrites[0]!.status, "ready_for_review")
+  assert.equal(jobWrites[0]!.review_outcome, "ready_for_review")
 })
 
 test("model blockers keep their existing error and status without a readiness verdict", async () => {
   const payload = completePayload()
   payload.final.category_specs = {}
-  const { output, submissionWrites } = await finish(payload, {
+  const { output, jobWrites } = await finish(payload, {
     blockers: ["Quellen widersprechen sich."],
   })
   assert.equal(output.status, "blocked")
   assert.equal(output.last_error, "Quellen widersprechen sich.")
   assert.equal(output.progress?.readiness_check, undefined)
   assert.equal(output.progress?.readiness_missing_fields, undefined)
-  assert.equal(submissionWrites[0]!.status, "researching")
+  assert.equal(jobWrites[0]!.review_outcome, "needs_nick")
 })
 
 function ownerBondbuilderPayload(): JsonRecord {
@@ -441,9 +442,9 @@ test("owner-held Bondbuilder readiness uses stored ownership and agrees with the
     assert.equal(selfCheck.ok, true, selfCheck.researchGaps.join(", "))
     assert.ok(selfCheck.humanGateFields.includes("final.review.manual_reviewed"))
     assert.deepEqual(payload, before)
-    const { output, submissionWrites } = await finish(payload, { submission })
+    const { output, jobWrites } = await finish(payload, { submission })
     assert.equal(output.status, "waiting_for_review")
-    assert.equal(submissionWrites[0]!.status, "ready_for_review")
+    assert.equal(jobWrites[0]!.review_outcome, "ready_for_review")
     for (const denied of [
       { ...submission, user_id: null },
       { ...submission, user_id: "not-an-owner-uuid" },
@@ -472,8 +473,8 @@ const brandContext: BrandResolutionPromptContext = {
   rules: [],
 }
 
-test("persisted pending-lock Shampoo and unavailable Mask payloads pass the strict review entry point", async () => {
-  for (const category of ["shampoo", "mask"] as const) {
+test("persisted pending-lock Shampoo payload passes the strict review entry point", async () => {
+  for (const category of ["shampoo"] as const) {
     const payload = completePayload()
     Object.assign(payload.final.product, {
       category_key: category,
@@ -569,18 +570,18 @@ test("persisted pending-lock Shampoo and unavailable Mask payloads pass the stri
       category,
       brandContext,
       [],
-      "submission-readiness",
+      "50000000-0000-4000-8000-000000000001",
     )
     assert.deepEqual(normalized.blockers, [])
     const submission = {
-      id: "submission-readiness",
+      id: "50000000-0000-4000-8000-000000000001",
       user_id: null,
       source: "admin",
       status: "researching",
       category,
     }
-    const { submissionWrites } = await finish(normalized.researched_payload!, { submission })
-    const persisted = structuredClone(submissionWrites[0]!.researched_payload) as JsonRecord
+    const { jobWrites } = await finish(normalized.researched_payload!, { submission })
+    const persisted = structuredClone(jobWrites[0]!.researched_payload) as JsonRecord
     Object.assign((persisted.final as JsonRecord).review as JsonRecord, { manual_reviewed: true })
     const reviewed = dryRunProductIntakeReadyForReview({
       ...submission,
@@ -618,12 +619,13 @@ test("completed rework receipts keep the consumed reviewer message across a leas
     rework_type: "property",
     message: "Fix source evidence",
   }
-  const { output } = await finish(completePayload(), {
+  const { output, jobWrites } = await finish(completePayload(), {
     stage: "rework",
     progress: request,
     refreshDuringEvaluation: true,
   })
   assert.deepEqual(output.progress?.last_rework_request, request)
+  assert.equal(jobWrites[0]!.expected_locked_at, "2026-10-05T12:01:00Z")
 })
 
 test("catalog gaps block auto image preparation; complete research still queues images", async () => {
@@ -632,7 +634,9 @@ test("catalog gaps block auto image preparation; complete research still queues 
   assert.equal((await finish(payload, { autoPrepareImages: true })).output.status, "blocked")
   Object.assign(payload.final.product, { image_url: "https://example.test/packshot.jpg" })
   payload.final.category_specs = completePayload().final.category_specs
-  const { output } = await finish(payload, { autoPrepareImages: true })
+  const { output, jobWrites } = await finish(payload, { autoPrepareImages: true })
+  assert.equal(jobWrites[0]!.review_outcome, "continue")
+  assert.equal(jobWrites[0]!.notification_payload, null)
   assert.equal(output.status, "queued")
   assert.equal(output.stage, "image_judging")
   assert.equal(output.progress?.readiness_check, "passed")

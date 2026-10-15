@@ -18,10 +18,9 @@ export const MASK_PRODUCTION_ADAPTER_VERSION = "mask-production-adapter-v1" as c
 /**
  * Pinned research method. `policySha256` is the frozen normative Mask Standard
  * v1.0; `lexiconSha256` is the frozen evidence lexicon the standard consumes.
- * (The leave-in adapter pins a runbook in the second slot; the mask engine has
- * no runbook — the standard names it a separate, not-yet-written Phase-4
- * artifact — so the lexicon, the other normative input both calibration lanes
- * classified against, is pinned instead.)
+ * The operational Mask runbook is a separate workflow guide. Preserve these
+ * original standard/lexicon pins so adding worker wiring does not invalidate
+ * historical envelopes or rewrite the frozen calibration corpus.
  */
 export const MASK_PRODUCTION_ADAPTER_RESEARCH_METHOD = {
   policyId: "mask-classification-v1.0",
