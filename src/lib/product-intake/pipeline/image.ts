@@ -5,12 +5,13 @@ import sharp from "sharp"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type {
   appendResearchArtifact,
-  updateResearchJob,
+  commitResearchPass,
   JsonRecord,
   ProductIntakeResearchJob,
   ProductIntakeSubmissionDetail,
 } from "@chaarlie/product-intake-core"
 
+import { buildAdminReviewSnapshot } from "../admin-review-email"
 import { finalizeProductImageAsset } from "../../../../scripts/product-intake/finalize-package-image"
 import { finalizedImageOutputRoot, runAutomaticBackgroundRemoval } from "./image-background"
 import {
@@ -35,7 +36,7 @@ export * from "./image-quality"
 
 export type ImageStageDeps = ImageQualityJudgeDeps & {
   appendResearchArtifact: typeof appendResearchArtifact
-  updateResearchJob: typeof updateResearchJob
+  commitResearchPass: typeof commitResearchPass
   measureModelRun: (
     lane: "image_judge",
     runtimeConfig: ImageQualityJudgeRuntimeConfig,
@@ -68,7 +69,7 @@ export async function processApprovedImageForReview(
 ) {
   const {
     appendResearchArtifact,
-    updateResearchJob,
+    commitResearchPass,
     measureModelRun,
     refreshModelRunLease,
     captureOptionalTelemetryFailure,
@@ -144,8 +145,16 @@ export async function processApprovedImageForReview(
       promptVersion: "product_intake_image_finalization_v1",
     })
 
-    return updateResearchJob(params.supabase, {
+    return commitResearchPass(params.supabase, {
       jobId: params.job.id,
+      reviewOutcome: "needs_nick",
+      notificationPayload: buildAdminReviewSnapshot({
+        submissionId: params.job.submission_id,
+        category: params.detail?.category,
+        researchedPayload: params.detail?.payload,
+        outcome: "needs_nick",
+        questionCodes: ["image_review"],
+      }),
       status: "waiting_for_review",
       stage: "preview_build",
       progress: {
@@ -322,8 +331,22 @@ export async function processApprovedImageForReview(
     promptVersion: "product_intake_image_finalization_v1",
   })
 
-  return updateResearchJob(params.supabase, {
+  // An image-only/manual pass cannot upgrade unverified research to ready.
+  const researchReady = params.job.progress.readiness_check === "passed"
+  const packageReady = finalImageReady && researchReady
+  return commitResearchPass(params.supabase, {
     jobId: params.job.id,
+    reviewOutcome: packageReady ? "ready_for_review" : "needs_nick",
+    notificationPayload: buildAdminReviewSnapshot({
+      submissionId: params.job.submission_id,
+      category: params.detail?.category,
+      researchedPayload: params.detail?.payload,
+      outcome: packageReady ? "ready_for_review" : "needs_nick",
+      questionCodes: [
+        ...(!researchReady ? ["research_gaps" as const] : []),
+        ...(!finalImageReady ? ["image_review" as const] : []),
+      ],
+    }),
     status: "waiting_for_review",
     stage: "preview_build",
     progress: {

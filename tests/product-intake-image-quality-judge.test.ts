@@ -1,8 +1,11 @@
 import assert from "node:assert/strict"
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { randomUUID } from "node:crypto"
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
+import sharp from "sharp"
+import type { ProductIntakeResearchJob } from "@chaarlie/product-intake-core"
 
 import {
   buildImageQualityJudgePrompt,
@@ -14,6 +17,7 @@ import {
   normalizeImageQualityVerdict,
   shouldAutoPrepareImage,
 } from "../scripts/product-intake/codex-research-worker"
+import { processApprovedImageForReview } from "../src/lib/product-intake/pipeline/image"
 
 test("Codex image judge attaches current images and retained references in stable order", () => {
   const args = codexResearchExecArgs({
@@ -261,4 +265,202 @@ test("image-processing failure uses the latest refreshed lease for its failed up
     /onLeaseRefresh: \(refreshedJob\) => \{\s*imageLeasedJob = refreshedJob/,
   )
   assert.match(workerSource, /job: imageLeasedJob,\s*error,/)
+})
+
+test("transparent image completion commits the ready notification snapshot with the worker lease", async () => {
+  const submissionId = randomUUID()
+  const incompleteSubmissionId = randomUUID()
+  const outputRoot = mkdtempSync(join(tmpdir(), "product-intake-finalized-test-"))
+  const workRoot = join(process.cwd(), "tmp", "product-intake-image-processing", submissionId)
+  const originalFetch = globalThis.fetch
+  const originalEnv = {
+    finalized: process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR,
+    visualJudge: process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED,
+    rembg: process.env.PRODUCT_INTAKE_REMBG_ENABLED,
+  }
+  const source = await sharp({
+    create: { width: 320, height: 400, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .composite([
+      {
+        input: Buffer.from(
+          '<svg width="320" height="400" xmlns="http://www.w3.org/2000/svg"><rect x="105" y="50" width="110" height="260" rx="18" fill="#8a5b3d"/><rect x="122" y="85" width="76" height="105" rx="8" fill="#f5ead6"/><rect x="128" y="98" width="64" height="14" fill="#342119"/></svg>',
+        ),
+      },
+    ])
+    .png()
+    .toBuffer()
+  const commits: Array<Record<string, unknown>> = []
+  const artifacts: Array<Record<string, unknown>> = []
+  const job: ProductIntakeResearchJob = {
+    id: "image-job-1",
+    submission_id: submissionId,
+    status: "running",
+    stage: "image_judging",
+    priority: 0,
+    attempt_count: 0,
+    max_attempts: 3,
+    locked_by: "codex-image-worker",
+    locked_at: "2026-10-15T12:00:00.000Z",
+    started_at: "2026-10-15T11:59:00.000Z",
+    completed_at: null,
+    next_run_at: "2026-10-15T12:00:00.000Z",
+    last_error: null,
+    progress: { readiness_check: "passed" },
+    created_at: "2026-10-15T11:50:00.000Z",
+    updated_at: "2026-10-15T12:00:00.000Z",
+  }
+
+  process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR = outputRoot
+  process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED = "false"
+  process.env.PRODUCT_INTAKE_REMBG_ENABLED = "false"
+  globalThis.fetch = (async (url: string | URL | Request) => {
+    assert.equal(String(url), "https://images.example.test/transparent-product.png")
+    return new Response(source, { headers: { "content-type": "image/png" } })
+  }) as typeof fetch
+  const deps = {
+    appendResearchArtifact: async (_client: unknown, params: Record<string, unknown>) => {
+      artifacts.push(params)
+      return { id: `processed-image-artifact-${artifacts.length}` } as never
+    },
+    commitResearchPass: async (_client: unknown, params: Record<string, unknown>) => {
+      commits.push(params)
+      return { ...job, status: params.status, stage: params.stage } as never
+    },
+    measureModelRun: async () => {
+      throw new Error("visual judge must remain disabled")
+    },
+    refreshModelRunLease: async () => {
+      throw new Error("visual judge lease refresh must remain unused")
+    },
+    captureOptionalTelemetryFailure: async () => null,
+    runCodexJson: async () => {
+      throw new Error("Codex image judge must remain disabled")
+    },
+    outputPathForModelLane: () => "/tmp/unreachable.json",
+  }
+
+  try {
+    await processApprovedImageForReview(
+      {
+        supabase: {} as never,
+        job,
+        detail: {
+          id: submissionId,
+          status: "researching",
+          category: "mask",
+          brand: "Chaarlie",
+          product_name: "Test Mask",
+          source: "catalog_scan",
+          payload: {
+            final: {
+              product: {
+                canonical_brand: "Chaarlie",
+                clean_name: "Test Mask",
+                image_url: "https://images.example.test/transparent-product.png",
+              },
+            },
+          },
+          created_at: job.created_at,
+          updated_at: job.updated_at,
+          job,
+          artifacts: [],
+          decisions: [],
+        },
+        workerId: "codex-image-worker",
+        promptPacketPath: "/tmp/product-intake-image-stage.json",
+        executeCodex: false,
+      },
+      deps as never,
+    )
+
+    assert.equal(artifacts.length, 1)
+    assert.equal(artifacts[0]?.kind, "processed_image")
+    assert.equal((artifacts[0]?.payload as Record<string, unknown>).final_image_ready, true)
+    const finalFile = String((artifacts[0]?.payload as Record<string, unknown>).final_file)
+    assert.ok(finalFile.startsWith(join(outputRoot, submissionId)))
+    assert.ok(existsSync(finalFile))
+
+    assert.equal(commits.length, 1)
+    const commit = commits[0]!
+    assert.equal(commit.reviewOutcome, "ready_for_review")
+    assert.equal(commit.status, "waiting_for_review")
+    assert.equal(commit.expectedLockedBy, job.locked_by)
+    assert.equal(commit.expectedLockedAt, job.locked_at)
+    assert.equal("researchedPayload" in commit, false)
+    assert.deepEqual(commit.notificationPayload, {
+      product_name: "Chaarlie Test Mask",
+      category_label: "Haarmaske",
+      outcome_label: "Bereit zur Prüfung",
+      question_1: "",
+      question_2: "",
+      question_3: "",
+      review_url: `https://chaarlie.de/admin/produkt-intake/${submissionId}`,
+      is_test: false,
+    })
+
+    const incompleteJob = {
+      ...job,
+      id: "image-job-2",
+      submission_id: incompleteSubmissionId,
+      progress: {},
+    }
+    await processApprovedImageForReview(
+      {
+        supabase: {} as never,
+        job: incompleteJob,
+        detail: {
+          id: incompleteSubmissionId,
+          status: "researching",
+          category: "mask",
+          brand: "Chaarlie",
+          product_name: "Test Mask",
+          source: "catalog_scan",
+          payload: {
+            final: {
+              product: {
+                canonical_brand: "Chaarlie",
+                clean_name: "Test Mask",
+                image_url: "https://images.example.test/transparent-product.png",
+              },
+            },
+          },
+          created_at: incompleteJob.created_at,
+          updated_at: incompleteJob.updated_at,
+          job: incompleteJob,
+          artifacts: [],
+          decisions: [],
+        },
+        workerId: "codex-image-worker",
+        promptPacketPath: "/tmp/product-intake-image-stage-missing-readiness.json",
+        executeCodex: false,
+      },
+      deps as never,
+    )
+    const missingReadinessCommit = commits[1]!
+    assert.equal(missingReadinessCommit.reviewOutcome, "needs_nick")
+    assert.deepEqual(
+      (missingReadinessCommit.notificationPayload as Record<string, unknown>).question_1,
+      "Bitte prüfe die noch fehlenden Rechercheangaben.",
+    )
+    assert.equal(
+      (missingReadinessCommit.notificationPayload as Record<string, unknown>).outcome_label,
+      "Entscheidung nötig",
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+    if (originalEnv.finalized === undefined) delete process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR
+    else process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR = originalEnv.finalized
+    if (originalEnv.visualJudge === undefined)
+      delete process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED
+    else process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED = originalEnv.visualJudge
+    if (originalEnv.rembg === undefined) delete process.env.PRODUCT_INTAKE_REMBG_ENABLED
+    else process.env.PRODUCT_INTAKE_REMBG_ENABLED = originalEnv.rembg
+    rmSync(outputRoot, { recursive: true, force: true })
+    rmSync(workRoot, { recursive: true, force: true })
+    rmSync(join(process.cwd(), "tmp", "product-intake-image-processing", incompleteSubmissionId), {
+      recursive: true,
+      force: true,
+    })
+  }
 })

@@ -1,0 +1,63 @@
+{
+  "performed_at": "2026-10-15T15:14:21.775148+00:00",
+  "host": "ubuntu-4gb-nbg1-1",
+  "authorization": "Nick explicitly requested current + one verified rollback, cleanup older copies, preserve research/images/configuration.",
+  "active_release": "20261007-92bfe95862eb",
+  "rollback_release": "20261006-880a07c46cff",
+  "rollback_checks": [
+    "worker import under native react-server condition passed without main loop",
+    "temporary loopback review startup; health, root and read-only queue returned HTTP 200",
+    "worker source and package-lock hashes matched Git commit 880a07c46cff"
+  ],
+  "removed_release_folders": [
+    "20260925-381964fb6afd",
+    "20260925-795248ea3030",
+    "20261005-bf6c74c74fc6",
+    "20261006-0d3a3aa5b803",
+    "20261007-96dd4b820bd6"
+  ],
+  "preservation_archives": [
+    {
+      "release": "20260925-381964fb6afd",
+      "sha256": "a67b61a69aa72172465fda3b2492303ec0e64ce2bb4b3cbffd8ccb880a11f374",
+      "bytes": 128780331,
+      "preserved_entries": 7540
+    },
+    {
+      "release": "20260925-795248ea3030",
+      "sha256": "2be35a04b061e5da9f0a474165188f5e7839c3c0682ec0ce7b345e64185ec396",
+      "bytes": 132092098,
+      "preserved_entries": 7700
+    },
+    {
+      "release": "20261005-bf6c74c74fc6",
+      "sha256": "9be41bea3cd1c88b81840c9846338c7fccd1e69a609c71a97c92099f8776377b",
+      "bytes": 306475596,
+      "preserved_entries": 8970
+    },
+    {
+      "release": "20261006-0d3a3aa5b803",
+      "sha256": "8c0e36e1365db7050d675928d3bfc68a47092719f94b68b5524460cc954c65ad",
+      "bytes": 144621913,
+      "preserved_entries": 9268
+    },
+    {
+      "release": "20261007-96dd4b820bd6",
+      "sha256": "d335ef48bc280f652027886d41faa3f85ad1f5f13bda4b40bdeb39a583db42f6",
+      "bytes": 144514578,
+      "preserved_entries": 9267
+    }
+  ],
+  "private_archive_directory": "/opt/chaarlie/product-intake/shared/retained-release-data/20261015",
+  "excluded_rebuildable_paths": ["node_modules", "apps/product-intake-review/.next"],
+  "preservation_verification": "Every retained archive member/hash/mode or symlink target matched the source before deletion. Current/rollback non-generated files, shared finalized images, rembg model and worker.env remained unchanged.",
+  "disk_before": "38G total, 29G used, 7.5G available, df 80%",
+  "disk_after": "38G total, 20G used, 16G available, df 56%",
+  "removed_release_bytes": 9976598528,
+  "live_services": "Worker PID 530273 and review PID 213282 remained active with unchanged start timestamps; live review health HTTP 200.",
+  "limitations": [
+    "Rollback verification covers startup, source integrity and DB read compatibility, not a claimed research or publication job.",
+    "Preservation archives are retained private data, not extra installed runnable releases.",
+    "Future release pruning must preserve the current release plus one verified rollback and unique data; no automatic pruner was installed by this operation."
+  ]
+}

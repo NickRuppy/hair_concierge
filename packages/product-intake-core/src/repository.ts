@@ -128,6 +128,37 @@ export async function updateResearchJob(
   return data as ProductIntakeResearchJob
 }
 
+export type CommitResearchPassParams = UpdateResearchJobParams & {
+  researchedPayload?: JsonRecord | null
+  resolveDecisionIds?: string[]
+  reviewOutcome: "continue" | "ready_for_review" | "needs_nick"
+  notificationPayload?: JsonRecord | null
+}
+
+/** Final preview, job outcome and notification snapshot share one database transaction. */
+export async function commitResearchPass(
+  client: RpcClient,
+  params: CommitResearchPassParams,
+): Promise<ProductIntakeResearchJob> {
+  if (!params.expectedLockedBy || !params.expectedLockedAt)
+    throw new Error("Final research handoff requires a current worker lease")
+  const { data, error } = await client.rpc("product_intake_commit_research_pass", {
+    target_job_id: params.jobId,
+    expected_locked_by: params.expectedLockedBy,
+    expected_locked_at: params.expectedLockedAt,
+    next_status: params.status,
+    next_stage: params.stage,
+    next_progress: params.progress ?? {},
+    next_last_error: params.lastError ?? null,
+    researched_payload: params.researchedPayload ?? null,
+    resolve_decision_ids: params.resolveDecisionIds ?? [],
+    review_outcome: params.reviewOutcome,
+    notification_payload: params.notificationPayload ?? null,
+  })
+  if (error) throw error
+  return data as ProductIntakeResearchJob
+}
+
 export async function retryResearchJob(
   client: RpcClient,
   jobId: string,

@@ -1,0 +1,19 @@
+{% if trigger.is_test %}TESTNACHRICHT — fiktives Produkt. Automatische Hinweise sind weiterhin ausgeschaltet. Der Link führt zur Admin-Startseite; die neue Produktprüfung ist noch nicht live.
+
+{% endif %}Ein Produkt wartet auf deine Prüfung.
+
+{{ trigger.product_name }}
+{{ trigger.category_label }} · {{ trigger.outcome_label }}
+{% if trigger.question_1 != blank %}
+Noch zu klären:
+- {{ trigger.question_1 }}
+{% if trigger.question_2 != blank %}- {{ trigger.question_2 }}
+{% endif %}{% if trigger.question_3 != blank %}- {{ trigger.question_3 }}
+{% endif %}{% endif %}
+Produktprüfung öffnen:
+{{ trigger.review_url }}
+
+Prüfe die recherchierten Werte und Bilder in Admin. Eine Veröffentlichung braucht weiterhin deine ausdrückliche Freigabe.
+
+Interne Benachrichtigung für die Produktprüfung.
+Chaarlie · https://chaarlie.de/impressum · https://chaarlie.de/datenschutz

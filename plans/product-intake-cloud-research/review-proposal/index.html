@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="de">
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Produktprüfung — Vorschlag</title>
+  <style>
+    :root {
+      --bg: hsl(30 27% 98%);
+      --ink: hsl(15 6% 22%);
+      --purple: hsl(262 34% 47%);
+      --side: hsl(262 40% 97%);
+      --muted: hsl(20 5% 39%);
+      --line: hsl(30 10% 89%);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font:
+        14px/1.5 Arial,
+        sans-serif;
+    }
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+    a {
+      color: var(--purple);
+    }
+    button,
+    a,
+    input {
+      outline-offset: 4px;
+    }
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--ink);
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+    header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+    .brand {
+      font:
+        26px Georgia,
+        serif;
+      letter-spacing: 1px;
+    }
+    .demo {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .shell {
+      display: flex;
+      min-height: calc(100vh - 56px);
+    }
+    aside {
+      background: var(--side);
+      width: 224px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--line);
+      padding: 24px 16px;
+    }
+    aside strong {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.4px;
+      color: var(--muted);
+      margin: 0 12px 15px;
+    }
+    nav a {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      padding: 10px 12px;
+      margin-bottom: 3px;
+      border-radius: 8px;
+    }
+    nav a.selected {
+      background: hsl(262 40% 92%);
+      font-weight: 600;
+    }
+    main {
+      padding: 32px;
+      max-width: 1350px;
+      width: 100%;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 28px;
+      letter-spacing: -0.6px;
+      margin: 0 0 5px;
+    }
+    h2 {
+      font-size: 19px;
+      letter-spacing: -0.2px;
+      margin: 0 0 14px;
+    }
+    h3 {
+      font-size: 15px;
+      margin: 0 0 7px;
+    }
+    p {
+      margin: 0 0 14px;
+    }
+    .muted,
+    small {
+      color: var(--muted);
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .count {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 24px 0 14px;
+    }
+    .pill {
+      font-size: 12px;
+      border-radius: 20px;
+      padding: 5px 10px;
+      display: inline-block;
+      background: #efedf5;
+    }
+    .green {
+      color: #216448;
+      background: #e7f2eb;
+    }
+    .amber {
+      color: #825214;
+      background: #fff0d5;
+    }
+    .red {
+      color: #963a3a;
+      background: #fbeaea;
+    }
+    .queue,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+    .queue {
+      margin-bottom: 34px;
+      overflow: hidden;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: minmax(160px, 1.6fr) minmax(110px, 1fr) 110px 75px;
+      gap: 12px;
+      padding: 16px 20px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .row:last-child {
+      border-bottom: 0;
+    }
+    .row.head {
+      background: #faf9fb;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .row.active {
+      background: #faf7ff;
+      border-left: 3px solid var(--purple);
+      padding-left: 17px;
+    }
+    .row b {
+      display: block;
+    }
+    .row small {
+      font-size: 12px;
+    }
+    .row a {
+      text-align: right;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .detail-head {
+      margin-bottom: 18px;
+    }
+    .detail-head h2 {
+      font-size: 23px;
+      margin: 5px 0;
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+      gap: 20px;
+    }
+    .stack {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+    .card {
+      padding: 22px;
+    }
+    .label {
+      font-size: 11px;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .facts b {
+      display: block;
+      margin-top: 3px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+    }
+    th,
+    td {
+      text-align: left;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      font-weight: 400;
+      color: var(--muted);
+    }
+    td:last-child {
+      text-align: right;
+    }
+    code {
+      font-size: 12px;
+      background: #f5f3f8;
+      padding: 3px 5px;
+      border-radius: 4px;
+    }
+    .note {
+      padding: 12px 14px;
+      background: #f7f4fc;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 15px;
+    }
+    .images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 16px 0;
+    }
+    .image {
+      height: 155px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f4f1ee;
+      border-radius: 8px;
+      outline: 1px solid rgb(0 0 0 / 0.1);
+      gap: 12px;
+    }
+    .image.qa {
+      background: #f19de4;
+    }
+    .bottle {
+      height: 80px;
+      width: 35px;
+      background: #e4c29c;
+      border-radius: 7px 7px 10px 10px;
+      position: relative;
+      box-shadow: inset -7px 0 0 rgb(0 0 0 / 0.06);
+    }
+    .bottle:before {
+      content: "";
+      position: absolute;
+      top: -9px;
+      left: 6px;
+      width: 23px;
+      height: 12px;
+      border-radius: 3px;
+      background: #342b2b;
+    }
+    .bottle:after {
+      content: "CARE";
+      font-size: 7px;
+      position: absolute;
+      top: 30px;
+      left: 0;
+      text-align: center;
+      width: 100%;
+      color: #473b34;
+    }
+    .image small {
+      font-size: 11px;
+      color: #544550;
+    }
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 0;
+    }
+    .check input {
+      margin-top: 4px;
+      accent-color: var(--purple);
+      width: 16px;
+      height: 16px;
+    }
+    .primary {
+      background: var(--purple);
+      color: white;
+      border-color: var(--purple);
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .full {
+      width: 100%;
+      margin-top: 12px;
+    }
+    .divider {
+      border-top: 1px solid var(--line);
+      margin: 16px 0;
+    }
+    .alert {
+      padding: 14px;
+      border-radius: 8px;
+      background: #fff3e3;
+      color: #77531f;
+      margin: 14px 0;
+    }
+    .states {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .states .card {
+      background: #fcfbfe;
+    }
+    .states p {
+      font-size: 13px;
+    }
+    .states button {
+      font-size: 13px;
+    }
+    textarea {
+      width: 100%;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: white;
+      margin: 8px 0;
+    }
+    .footnote {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .mobile-nav {
+      display: none;
+    }
+    .toast {
+      margin: 12px 0;
+      padding: 12px;
+      background: #e7f2eb;
+      color: #216448;
+      border-radius: 8px;
+    }
+    details summary {
+      cursor: pointer;
+      color: var(--purple);
+      padding: 8px 0;
+    }
+    @media (max-width: 760px) {
+      header {
+        padding: 0 18px;
+      }
+      .demo {
+        max-width: 175px;
+        text-align: right;
+        font-size: 10px;
+      }
+      aside {
+        display: none;
+      }
+      .shell {
+        display: block;
+      }
+      .mobile-nav {
+        display: flex;
+        overflow: auto;
+        gap: 8px;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 16px;
+        background: white;
+      }
+      .mobile-nav span {
+        padding: 6px 9px;
+        white-space: nowrap;
+        font-size: 12px;
+      }
+      .mobile-nav .selected {
+        background: var(--purple);
+        color: white;
+        border-radius: 7px;
+      }
+      main {
+        padding: 24px 16px;
+      }
+      .top {
+        display: block;
+      }
+      .top button {
+        margin-top: 10px;
+      }
+      h1 {
+        font-size: 25px;
+      }
+      .row {
+        grid-template-columns: minmax(0, 1fr) 86px;
+        padding: 14px;
+        gap: 6px;
+      }
+      .row.head {
+        display: none;
+      }
+      .row .category {
+        display: none;
+      }
+      .row.active {
+        padding-left: 11px;
+      }
+      .row .status {
+        grid-column: 1;
+      }
+      .row a {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+      .columns,
+      .states {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 18px;
+      }
+      .detail-head h2 {
+        font-size: 21px;
+      }
+      .facts {
+        font-size: 12px;
+      }
+      .image {
+        height: 140px;
+      }
+      .count {
+        margin-top: 20px;
+      }
+    }
+  </style>
+  <header>
+    <span class="brand">chaarlie</span
+    ><span class="demo">Entwurf · Beispieldaten · keine echten Freigaben</span>
+  </header>
+  <div class="shell">
+    <aside>
+      <strong>ADMIN</strong>
+      <nav>
+        <a href="#">Dashboard</a><a href="#">Zitate</a><a href="#">Artikel</a
+        ><a href="#">Produkte</a><a class="selected" href="#queue">Produktprüfung</a
+        ><a href="#">Nutzer</a><a href="#">Partnerzugänge</a><a href="#">Beratungen</a
+        ><a href="#">Chats</a>
+      </nav>
+    </aside>
+    <div class="mobile-nav">
+      <span>Produkte</span><span class="selected">Produktprüfung</span><span>Beratungen</span>
+    </div>
+    <main>
+      <div class="top">
+        <div>
+          <h1>Produktprüfung</h1>
+          <p class="muted">Hier braucht die Recherche deine Entscheidung.</p>
+        </div>
+        <button
+          type="button"
+          onclick="document.getElementById('mail').hidden = !document.getElementById('mail').hidden"
+        >
+          E-Mail-Vorschau
+        </button>
+      </div>
+      <div id="mail" class="note" hidden>
+        <b>Betreff: Ein Produkt ist bereit für deine Prüfung</b>
+        <p>
+          CARE Conditioner · Recherche und Bild vorbereitet. Öffne die Produktprüfung, um die Werte
+          und das Bild zu prüfen. Es wurde noch nichts veröffentlicht.
+        </p>
+        <a href="#detail">Zur Produktprüfung</a>
+      </div>
+      <div class="count" id="queue">
+        <span class="pill green">Bereit zur Prüfung · 12</span
+        ><span class="pill amber">Entscheidung nötig · 113</span
+        ><span class="pill red">Technischer Fehler · 16</span>
+      </div>
+      <div class="queue">
+        <div class="row head">
+          <span>Produkt</span><span>Kategorie</span><span>Status</span><span></span>
+        </div>
+        <div class="row active">
+          <div><b>CARE Conditioner</b><small>300 ml · dm · Beispiel</small></div>
+          <span class="category">Conditioner</span
+          ><span class="status"><span class="pill green">Bereit</span></span
+          ><a href="#detail">Prüfen →</a>
+        </div>
+        <div class="row">
+          <div><b>Botanical Hair Mask</b><small>Marke noch nicht eindeutig</small></div>
+          <span class="category">Maske</span
+          ><span class="status"><span class="pill amber">1 Frage</span></span
+          ><a href="#blocked">Klären →</a>
+        </div>
+        <div class="row">
+          <div><b>Daily Shampoo</b><small>Recherche nach Zeitlimit beendet</small></div>
+          <span class="category">Shampoo</span
+          ><span class="status"><span class="pill red">Fehler</span></span
+          ><a href="#failed">Ansehen →</a>
+        </div>
+      </div>
+      <div class="detail-head" id="detail">
+        <span class="label">Produktprüfung / Conditioner</span>
+        <h2>CARE Conditioner <span class="pill green">Bereit zur Prüfung</span></h2>
+        <p class="muted">Rechercheversion 3 · Conditioner v1.6 · keine offenen Fragen</p>
+      </div>
+      <div class="columns">
+        <div class="stack">
+          <section class="card">
+            <h2>Produkt &amp; Quellen</h2>
+            <div class="facts">
+              <div><span class="label">Marke</span><b>CARE</b></div>
+              <div><span class="label">Produktname</span><b>Conditioner</b></div>
+              <div><span class="label">Kaufgröße &amp; Preis</span><b>300 ml · 4,95 €</b></div>
+              <div><span class="label">EAN</span><b>Im echten Fall geprüft</b></div>
+            </div>
+            <div class="divider"></div>
+            <a href="#sources">Hersteller: Formel und Anwendung ↗</a><br /><a href="#sources"
+              >dm: genaue Variante und Kaufpreis ↗</a
+            >
+            <p class="footnote">
+              Diese Produktdaten sind erfunden. Im fertigen Tool führen die Quellen direkt zur
+              geprüften Seite.
+            </p>
+          </section>
+          <section class="card">
+            <h2>Werte für den Katalog</h2>
+            <p class="muted">Die Werte, die bei deiner Freigabe gespeichert werden.</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Eigenschaft</th>
+                  <th>Exakter Wert</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Pflegewirkung</td>
+                  <td><code>high</code></td>
+                </tr>
+                <tr>
+                  <td>Gewicht</td>
+                  <td><code>medium</code></td>
+                </tr>
+                <tr>
+                  <td>Pflegeausrichtung</td>
+                  <td><code>moisture</code></td>
+                </tr>
+                <tr>
+                  <td>Reparaturunterstützung</td>
+                  <td><code>low</code></td>
+                </tr>
+                <tr>
+                  <td>Haardicken</td>
+                  <td><code>fine, normal, coarse</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <details>
+              <summary>Begründungen und technische Feldnamen</summary>
+              <p>
+                Jeder Wert bekommt seine Quellen, die Herleitung und Grenzen der Aussage.
+                Formelgestützte Pflegewirkung ist kein Wirksamkeitsnachweis des fertigen Produkts.
+              </p>
+              <code>product_conditioner_specs</code>
+            </details>
+            <label class="check"
+              ><input type="checkbox" id="facts" onchange="refresh()" /><span
+                ><b>Produktdaten und Anwendung geprüft</b><br /><small
+                  >Gilt für diese Rechercheversion.</small
+                ></span
+              ></label
+            >
+          </section>
+          <section class="card">
+            <h2>Anwendung</h2>
+            <p>
+              Nach dem Shampoo in die feuchten Längen geben, 2 Minuten einwirken lassen und
+              gründlich ausspülen.
+            </p>
+            <small
+              >Beispiel für die Darstellung. Die echte Anleitung stammt aus den
+              Herstellerangaben.</small
+            >
+          </section>
+        </div>
+        <div class="stack">
+          <section class="card">
+            <h2>Bild prüfen</h2>
+            <p class="muted">Rohbild, Freistellung und fertiges Katalogbild im Vergleich.</p>
+            <div class="images">
+              <div class="image"><span class="bottle"></span><small>Rohbild</small></div>
+              <div class="image qa"><span class="bottle"></span><small>Magenta-Prüfung</small></div>
+              <div class="image"><span class="bottle"></span><small>Katalogbild</small></div>
+            </div>
+            <span class="pill green">Automatische Bildprüfung bestanden</span
+            ><label class="check"
+              ><input type="checkbox" id="image" onchange="refresh()" /><span
+                ><b>Fertiges Bild freigeben</b><br /><small
+                  >Du bestätigst das genaue Bild dieser Version.</small
+                ></span
+              ></label
+            >
+          </section>
+          <section class="card">
+            <h2>Abschließen</h2>
+            <p>
+              Mit deiner Freigabe wird das Produkt in den Katalog aufgenommen, der Person zugeordnet
+              und die Person im Chat benachrichtigt.
+            </p>
+            <div class="note">
+              Es wird dadurch <b>nicht automatisch eine allgemeine Chaarlie-Empfehlung</b>.
+            </div>
+            <button
+              class="primary full"
+              id="publish"
+              disabled
+              onclick="document.getElementById('confirm').hidden = false"
+            >
+              Zur Veröffentlichungsfreigabe</button
+            ><small id="remaining">Bitte zuerst Produktdaten und fertiges Bild prüfen.</small>
+            <div class="divider"></div>
+            <label for="rework"><b>Etwas stimmt noch nicht?</b></label
+            ><textarea
+              id="rework"
+              rows="3"
+              placeholder="Was soll noch einmal recherchiert oder korrigiert werden?"
+            ></textarea
+            ><button class="full" onclick="document.getElementById('rework-note').hidden = false">
+              Zur Überarbeitung schicken
+            </button>
+            <p id="rework-note" class="note" hidden>
+              Vorschau: Die Freigaben dieser Version werden ungültig. Du erhältst eine E-Mail, wenn
+              die neue Version deine Prüfung braucht.
+            </p>
+            <div id="confirm" class="alert" hidden>
+              <b>CARE Conditioner veröffentlichen?</b>
+              <p>
+                Rechercheversion 3 und das freigegebene Bild werden verwendet. Zuordnung und
+                Chat-Nachricht folgen dieser Freigabe.
+              </p>
+              <button class="primary" onclick="document.getElementById('result').hidden = false">
+                Veröffentlichung bestätigen
+              </button>
+              <p id="result" class="toast" hidden>Nur Vorschau — es wurde nichts veröffentlicht.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+      <section class="states">
+        <article class="card" id="blocked">
+          <span class="pill amber">Entscheidung nötig</span>
+          <h3>Eine Frage statt einer langen Fehlerliste</h3>
+          <p>
+            Für „Botanical Hair Mask“ ist die Marke nicht eindeutig. Vorhandene Marke auswählen oder
+            eine neue Marke ausdrücklich bestätigen.
+          </p>
+          <button disabled>Marke auswählen</button>
+          <p class="footnote">
+            Danach wird die Recherche fortgesetzt. Keine stillschweigende neue Marke.
+          </p>
+        </article>
+        <article class="card" id="failed">
+          <span class="pill red">Technischer Fehler</span>
+          <h3>Verständliche Wiederaufnahme</h3>
+          <p>
+            Die Recherche wurde nach dem Zeitlimit beendet. Bereits gespeicherte Quellen bleiben
+            erhalten.
+          </p>
+          <button disabled>Erneut recherchieren</button>
+          <p class="footnote">
+            Ist das Produkt schon veröffentlicht, aber die Nachricht fehlgeschlagen, wird nur die
+            Nachricht erneut versucht.
+          </p>
+        </article>
+        <article class="card">
+          <span class="pill amber">Neue Version vorhanden</span>
+          <h3>Veraltete Freigaben werden nicht übernommen</h3>
+          <p>
+            „Dieses Produkt wurde inzwischen überarbeitet. Bitte prüfe die neue Version.“
+            Veröffentlichung bleibt gesperrt, bis Werte und Bild erneut geprüft sind.
+          </p>
+          <button disabled>Neue Version öffnen</button>
+        </article>
+        <article class="card">
+          <span class="pill green">Veröffentlicht · Nachricht offen</span>
+          <h3>Ein Fehler erzeugt kein zweites Produkt</h3>
+          <p>
+            Katalogeintrag und Zuordnung sind abgeschlossen. Die Chat-Nachricht konnte noch nicht
+            zugestellt werden.
+          </p>
+          <button disabled>Nachricht erneut zustellen</button>
+        </article>
+      </section>
+      <p class="footnote">
+        Vorschlag im bestehenden Admin-Rahmen. Keine Produktionsdaten, keine API-Aufrufe, keine
+        echte Veröffentlichung. <a href="mobile.html">Mobile Vorschau</a>.
+      </p>
+    </main>
+  </div>
+  <script>
+    function refresh() {
+      var ready =
+        document.getElementById("facts").checked && document.getElementById("image").checked
+      document.getElementById("publish").disabled = !ready
+      document.getElementById("remaining").textContent = ready
+        ? "Werte und Bild dieser Version sind geprüft."
+        : "Bitte zuerst Produktdaten und fertiges Bild prüfen."
+      document.getElementById("confirm").hidden = true
+    }
+  </script>
+</html>

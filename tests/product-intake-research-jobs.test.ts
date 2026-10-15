@@ -873,12 +873,12 @@ test("shampoo approval specs require explicit scalp routes", () => {
   ])
 })
 
+const imageStageSource = readFileSync("src/lib/product-intake/pipeline/image.ts", "utf8")
+
 test("codex worker can run preview-only or explicit codex cli mode and persists review output", () => {
   assert.match(workerScript, /createSupabaseClientFromEnv/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_CONCURRENCY/)
   assert.match(workerScript, /appendResearchArtifact/)
-  assert.match(workerScript, /saveSubmissionResearchPreview/)
-  assert.match(workerScript, /resolveReviewDecisionsForSubmission/)
   assert.match(workerScript, /flagBool\(args, "watch"\)/)
   assert.match(workerScript, /flagInt\(args, "poll-ms"/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_WORKER_POLL_MS/)
@@ -897,11 +897,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /model_judgment/)
   assert.match(workerScript, /challenger_medium/)
   assert.match(workerScript, /preferred_lane/)
-  assert.ok(
-    workerScript.indexOf("const progress = await persistResearchOutput") <
-      workerScript.indexOf("const evaluationRun = await runNonFatalModelEvaluation"),
-    "production research must persist before optional shadow evaluation",
-  )
   assert.match(workerScript, /currentJob: \(\) => leasedJob/)
   assert.match(workerScript, /onLeaseRefresh: \(refreshedJob\) => \{\s*leasedJob = refreshedJob/)
   assert.match(workerScript, /--execute-codex/)
@@ -1014,8 +1009,7 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /product_conditioner_rerank_specs/)
   assert.match(workerScript, /product_mask_specs/)
   assert.match(workerScript, /suitable_thicknesses/)
-  assert.match(workerScript, /repair_support_level/)
-  assert.match(workerScript, /functional_benefits/)
+  // Mask production properties are exercised by product-intake-mask-worker.test.ts.
   assert.match(workerScript, /product_oil_eligibility/)
   assert.match(
     workerScript,
@@ -1028,15 +1022,15 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /sanitizeCategorySpecs/)
   assert.match(workerScript, /normalizeCategorySpecTableShapes/)
   assert.match(workerScript, /ARRAY_CATEGORY_SPEC_TABLES/)
-  assert.match(workerScript, /source_transparent_background_detected/)
-  assert.match(workerScript, /source_already_transparent/)
-  assert.match(workerScript, /background_removal_required/)
-  assert.match(workerScript, /final_image_ready/)
-  assert.match(workerScript, /final_review_url/)
-  assert.match(workerScript, /qa_review_url/)
-  assert.match(workerScript, /chaarlie_neutral_background/)
+  assert.match(imageStageSource, /source_transparent_background_detected/)
+  assert.match(imageStageSource, /source_already_transparent/)
+  assert.match(imageStageSource, /background_removal_required/)
+  assert.match(imageStageSource, /final_image_ready/)
+  assert.match(imageStageSource, /final_review_url/)
+  assert.match(imageStageSource, /qa_review_url/)
+  assert.match(imageStageSource, /chaarlie_neutral_background/)
   assert.doesNotMatch(workerScript, /image\/avif,image\/webp,image\/png,image\/jpeg/)
-  assert.match(workerScript, /finalizeProductImageAsset/)
+  assert.match(imageStageSource, /finalizeProductImageAsset/)
   assert.match(workerScript, /Codex CLI research was not executed/)
   assert.match(workerScript, /expectedLockedBy: job\.locked_by/)
   assert.match(workerScript, /expectedLockedAt: job\.locked_at/)

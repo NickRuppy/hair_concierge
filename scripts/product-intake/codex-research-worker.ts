@@ -47,6 +47,8 @@ import {
   checkResearchReadiness,
   type ResearchReadinessSelfCheck,
 } from "@/lib/product-intake/research-readiness-self-check"
+import { buildAdminReviewSnapshot } from "@/lib/product-intake/admin-review-email"
+import { drainAdminReviewOutbox } from "@/lib/product-intake/admin-review-outbox"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
 import {
   appendResearchArtifact as coreAppendResearchArtifact,
@@ -54,8 +56,7 @@ import {
   countResearchArtifacts,
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
-  resolveReviewDecisionsForSubmission,
-  saveSubmissionResearchPreview,
+  commitResearchPass as coreCommitResearchPass,
   updateResearchJob as coreUpdateResearchJob,
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_JOB_STAGES,
@@ -194,6 +195,19 @@ function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateRese
     // All call-chain aliases share this object, including optional model lanes.
     if (lease) Object.assign(lease.job, updated)
     if (updated.status !== "running") workerLeases.delete(params.jobId)
+    return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  })
+}
+
+function commitResearchPass(...[client, params]: Parameters<typeof coreCommitResearchPass>) {
+  return withJobLease(params.jobId, async () => {
+    const lease = workerLeases.get(params.jobId)
+    const updated = await coreCommitResearchPass(client, {
+      ...params,
+      expectedLockedAt: lease?.job.locked_at ?? params.expectedLockedAt,
+    })
+    if (lease) Object.assign(lease.job, updated)
+    workerLeases.delete(params.jobId)
     return lease ? (lease.job as ProductIntakeResearchJob) : updated
   })
 }
@@ -573,6 +587,19 @@ async function main() {
     if (watch) await cleanupStaleRembgContainers()
     do {
       printWorkerResult(await runWorkerBatch(options), options)
+      try {
+        const delivery = await drainAdminReviewOutbox(options.supabase)
+        if (delivery.status !== "disabled" && delivery.status !== "empty")
+          console.log(JSON.stringify({ admin_review_alert: delivery }))
+        if (delivery.status === "failed")
+          Sentry.captureMessage("product_intake_admin_alert_delivery_failed", "error")
+        if (delivery.status === "needs_reconciliation")
+          Sentry.captureMessage("product_intake_admin_alert_needs_reconciliation", "warning")
+      } catch {
+        // Delivery trouble must never requeue an already committed product pass.
+        Sentry.captureMessage("product_intake_admin_alert_dispatch_failed", "error")
+        console.error("product_intake_admin_alert_dispatch_failed")
+      }
       if (watch) await sleep(pollMs)
     } while (watch)
   } finally {
@@ -580,13 +607,14 @@ async function main() {
   }
 }
 
-/** Persist the production result before optional evaluation, then release it for review. */
+/** Persist artifacts before optional evaluation; release the preview/outcome/outbox atomically. */
 export async function completeResearchPass(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
   category: string | null | undefined
   submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
   reworkRequest?: JsonRecord | null
+  resolveDecisionIds?: string[]
   workerId: string
   promptPacketPath: string
   researchOutput: CodexResearchOutput
@@ -659,8 +687,29 @@ export async function completeResearchPass(params: {
     for (const key of ["requested_by", "requested_at", "rework_type", "message"])
       delete previousProgress[key]
   }
-  const updated = await updateResearchJob(params.supabase, {
+  const reviewOutcome = autoPrepareImage
+    ? "continue"
+    : nextStatus === "waiting_for_review"
+      ? "ready_for_review"
+      : "needs_nick"
+  const updated = await commitResearchPass(params.supabase, {
     jobId: leasedJob.id,
+    reviewOutcome,
+    researchedPayload: hasFinalPayload ? researchOutput.researched_payload : null,
+    resolveDecisionIds: reworkRequest && hasFinalPayload ? (params.resolveDecisionIds ?? []) : [],
+    notificationPayload:
+      reviewOutcome === "continue"
+        ? null
+        : buildAdminReviewSnapshot({
+            submissionId: leasedJob.submission_id,
+            category: params.category,
+            researchedPayload: researchOutput.researched_payload,
+            outcome: reviewOutcome,
+            questionCodes:
+              reviewOutcome === "needs_nick"
+                ? [readiness && !readiness.ok ? "research_gaps" : "research_blockers"]
+                : [],
+          }),
     status: nextStatus,
     stage: nextStage,
     progress: {
@@ -791,7 +840,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               },
               {
                 appendResearchArtifact,
-                updateResearchJob,
+                commitResearchPass,
                 measureModelRun,
                 refreshModelRunLease,
                 captureOptionalTelemetryFailure,
@@ -882,6 +931,15 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             category: detail?.category,
             submission: detail,
             reworkRequest,
+            resolveDecisionIds:
+              job.stage === "rework"
+                ? (detail?.decisions ?? [])
+                    .filter(
+                      (decision) =>
+                        decision.decision === "change_requested" && !decision.resolved_at,
+                    )
+                    .map((decision) => decision.id)
+                : [],
             workerId: options.workerId,
             promptPacketPath,
             researchOutput,
@@ -1415,32 +1473,11 @@ async function persistResearchOutput(params: {
     created.push(row.id)
   }
 
-  let savedSubmissionStatus: string | null = null
-  let resolvedDecisionCount = 0
-  const researchedPayload = params.researchOutput.researched_payload
-  if (hasFinalResearchPayload(researchedPayload)) {
-    const updated = await withJobLease(params.job.id, () =>
-      saveSubmissionResearchPreview(params.supabase, {
-        submissionId: params.job.submission_id,
-        researchedPayload,
-        status: params.readiness?.ok === true ? "ready_for_review" : "researching",
-      }),
-    )
-    savedSubmissionStatus = updated.status
-    if (params.job.stage === "rework") {
-      resolvedDecisionCount = await withJobLease(params.job.id, () =>
-        resolveReviewDecisionsForSubmission(params.supabase, params.job.submission_id),
-      )
-    }
-  }
-
   return {
     summary: params.researchOutput.summary,
     artifact_ids: created,
     artifacts_created: created.length,
     blockers: params.researchOutput.blockers,
-    saved_submission_status: savedSubmissionStatus,
-    resolved_review_decisions: resolvedDecisionCount,
   }
 }
 

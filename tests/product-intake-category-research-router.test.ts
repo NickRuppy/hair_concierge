@@ -60,6 +60,7 @@ for (const [category, id, methodology, adapter] of [
   ["conditioner", "conditioner-standard", "v1.6", "conditioner-production-adapter-v1"],
   ["leave_in", "leave-in-standard", "v1.2", "leave-in-production-adapter-v1"],
   ["bondbuilder", "bondbuilder-inci", "v0.5", "bondbuilder-production-adapter-v1"],
+  ["mask", "mask-standard", "v1.0", "mask-production-adapter-v1"],
 ]) {
   test(`${category} records server-owned provenance even when its envelope needs research`, () => {
     const result = normalized(category!)
@@ -92,8 +93,8 @@ test("shampoo keeps its current research path and records the pending v1.6 lock"
   )
 })
 
-test("templated conditioner and leave-in prompts reserve protocol rows for Chaarlie", () => {
-  for (const category of ["conditioner", "leave_in"] as const) {
+test("templated engine prompts reserve protocol rows for Chaarlie", () => {
+  for (const category of ["conditioner", "leave_in", "mask"] as const) {
     const contract = categoryApprovalContract(category)
     assert.ok(
       (contract.required_category_specs as string[]).includes("product_application_protocols"),
@@ -108,7 +109,11 @@ test("templated conditioner and leave-in prompts reserve protocol rows for Chaar
     )
 
     const researchContract =
-      category === "conditioner" ? contract.conditioner_research : contract.leave_in_research
+      category === "conditioner"
+        ? contract.conditioner_research
+        : category === "mask"
+          ? contract.mask_research
+          : contract.leave_in_research
     assert.match(
       String((researchContract as { adapter: { protocol_rule: string } }).adapter.protocol_rule),
       /draft\.protocol.*never write.*product_application_protocols.*Chaarlie stamps/i,
@@ -126,7 +131,6 @@ test("oil prompt treats heat protection as a leave-on capability", () => {
 })
 
 for (const category of [
-  "mask",
   "oil",
   "dry_shampoo",
   "deep_cleansing_shampoo",
@@ -191,7 +195,10 @@ test("mixed-version rework is refused unless progress explicitly authorizes an u
   )
   assert.equal(researchEngineBindingMismatch({ progress: {} }, engine), null)
   assert.equal(researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.shampoo), null)
-  assert.equal(researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.mask), null)
+  assert.equal(
+    researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.mask),
+    "engine_key_mismatch: leave-in-standard != mask-standard",
+  )
   assert.equal(
     researchEngineBindingMismatch({ ...job, engine_key: "conditioner-standard" }, engine),
     "engine_key_mismatch: conditioner-standard != leave-in-standard",
@@ -332,7 +339,7 @@ test("categories without an active engine do not bind or contact the RPC", async
     },
   }
   const job = researchJob()
-  for (const category of ["shampoo", "mask", "unrecognized", null]) {
+  for (const category of ["shampoo", "oil", "unrecognized", null]) {
     assert.equal(await bindResearchJobEngine(client, job, category), job)
   }
 })

@@ -12,6 +12,8 @@ export interface CustomerIoTransactionalEmailPayload {
   to: string
   transactionalMessageId: string | number
   messageData: CustomerIoMessageData
+  /** Optional per-send tracking override, also for provider-template content. */
+  tracked?: boolean
   /** Filename to base64-encoded content, sent in the same API request. */
   attachments?: Record<string, string>
   /** Optional complete API-owned content. Existing template-only callers are unchanged. */
@@ -112,6 +114,7 @@ export function buildCustomerIoTransactionalEmailRequest(
               : {}),
           }
         : {}),
+      ...(payload.tracked !== undefined ? { tracked: payload.tracked } : {}),
     },
   }
 }

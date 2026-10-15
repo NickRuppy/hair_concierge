@@ -6,6 +6,7 @@ type InciSource =
   | "conditioner_envelope"
   | "leave_in_envelope"
   | "bondbuilder_envelope"
+  | "mask_envelope"
   | "model_formula"
   | "retailer_packet"
 export type CanonicalInci = {
@@ -58,7 +59,7 @@ export function extractCanonicalInci(
 ): CanonicalInci {
   for (const artifact of artifacts) {
     if (artifact.kind !== "property_synthesis") continue
-    for (const category of ["conditioner", "leave_in", "bondbuilder"] as const) {
+    for (const category of ["conditioner", "leave_in", "bondbuilder", "mask"] as const) {
       const envelope = record(artifact.payload[`${category}_research_envelope`])
       const formula = record(
         category === "bondbuilder" ? record(envelope?.profile)?.formula : envelope?.formula,
