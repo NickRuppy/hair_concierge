@@ -126,7 +126,7 @@
     "products:intake:review-cockpit:lint": "python3 scripts/verification/run.py -- npm run lint --workspace @chaarlie/product-intake-review",
     "products:intake:review-cockpit:verify": "npm run products:intake:review-cockpit:typecheck && npm run products:intake:review-cockpit:lint && npm run products:intake:review-cockpit:build",
     "products:intake:core:typecheck": "python3 scripts/verification/run.py -- npm run typecheck --workspace @chaarlie/product-intake-core",
-    "products:intake:codex-worker": "node --import ./tests/server-only-register.cjs --import tsx scripts/product-intake/codex-research-worker.ts",
+    "products:intake:codex-worker": "node --conditions=react-server --import tsx scripts/product-intake/codex-research-worker.ts",
     "products:intake:review-center": "tsx scripts/product-intake/review-center-launcher.ts",
     "test:catalog-enrichment:heat": "python3 scripts/verification/run.py --node-tests tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts",
     "test:catalog-enrichment:scalp": "python3 scripts/verification/run.py --node-tests tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts tests/product-intake-catalog-enrichment-scalp.test.ts",
@@ -204,7 +204,8 @@
     "test:focused": "python3 scripts/verification/run.py --node-tests",
     "test:verification-runner": "python3 scripts/verification/run.py -- python3 -m unittest discover -s scripts/verification -p test_*.py",
     "verification:install": "python3 scripts/verification/install-local.py",
-    "test:remote:focused": "python3 scripts/verification/remote.py"
+    "test:remote:focused": "python3 scripts/verification/remote.py",
+    "verification:plan": "node scripts/verification/plan.mjs"
   },
   "dependencies": {
     "@apple/app-store-server-library": "^3.1.0",

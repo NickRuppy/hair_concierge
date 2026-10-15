@@ -304,10 +304,6 @@ test("workspace wiring keeps review cockpit separate from root app checks", () =
     packageJson.scripts["products:intake:review-cockpit:verify"],
     "npm run products:intake:review-cockpit:typecheck && npm run products:intake:review-cockpit:lint && npm run products:intake:review-cockpit:build",
   )
-  assert.equal(
-    packageJson.scripts["products:intake:codex-worker"],
-    "node --import ./tests/server-only-register.cjs --import tsx scripts/product-intake/codex-research-worker.ts",
-  )
   assert.ok(rootTsconfig.exclude?.includes("apps"))
   assert.ok(rootTsconfig.exclude?.includes("packages"))
   assert.match(eslintConfig, /"apps\/\*\*"/)
@@ -1120,15 +1116,23 @@ test("queue overview keeps active and completed submissions filterable", () => {
 test("codex worker npm script loads the worker graph outside Next (server-only modules)", () => {
   // The worker transitively imports `server-only` modules (dm MCP client); the plain
   // `tsx` entry crashed the Hetzner worker on start. Load the module with the exact
-  // node flags of the npm script, without running its main loop.
+  // flags of the npm script, without running its main loop. Use a fresh process
+  // without the test runner's NODE_OPTIONS so its preload cannot mask the bug.
   const script = packageJson.scripts["products:intake:codex-worker"]!
   const [runner, ...rest] = script.split(" ")
-  assert.equal(runner, "node")
   const entry = rest.pop()!
   const result = spawnSync(
-    process.execPath,
-    [...rest, "--input-type=module", "-e", `await import(${JSON.stringify(`./${entry}`)})`],
-    { encoding: "utf8", timeout: 120_000 },
+    runner === "node" ? process.execPath : runner,
+    [...rest, "--input-type=module", "-e", `import(${JSON.stringify(`./${entry}`)})`],
+    {
+      encoding: "utf8",
+      timeout: 120_000,
+      env: {
+        ...process.env,
+        NODE_OPTIONS: "",
+        PATH: `${process.cwd()}/node_modules/.bin:${process.env.PATH ?? ""}`,
+      },
+    },
   )
-  assert.equal(result.status, 0, result.stderr)
+  assert.equal(result.status, 0, result.stderr || result.error?.message)
 })

@@ -3,6 +3,7 @@
 
 import fcntl
 import math
+import json
 import os
 from pathlib import Path
 import shutil
@@ -10,6 +11,51 @@ import signal
 import subprocess
 import sys
 import time
+
+
+def lock_directory():
+    return Path(os.environ.get("CODING_VERIFY_LOCK_DIR", Path.home() / ".cache/coding-verification"))
+
+
+def slot_status():
+    """Probe the kernel lock; sidecar data only describes an actual lock owner."""
+    directory = lock_directory()
+    try:
+        with (directory / "slot.lock").open("r") as lock:
+            try:
+                # Status readers may coexist; real jobs hold an exclusive lock.
+                fcntl.flock(lock, fcntl.LOCK_SH | fcntl.LOCK_NB)
+                return {"state": "idle"}
+            except BlockingIOError:
+                result = {"state": "running"}
+                try:
+                    with (directory / "current.json").open() as metadata:
+                        owner = json.loads(metadata.read(4096))
+                    if isinstance(owner, dict):
+                        for name in ("pid", "cwd", "command", "started_at"):
+                            if name in owner:
+                                result[name] = owner[name]
+                except (OSError, ValueError):
+                    pass
+                if "pid" not in result:
+                    result["owner"] = "unavailable"
+                return result
+    except FileNotFoundError:
+        return {"state": "idle"}
+
+
+def record_owner(directory, command):
+    temporary = directory / f"current.{os.getpid()}.json"
+    try:
+        temporary.write_text(json.dumps({
+            "pid": os.getpid(),
+            "cwd": str(Path.cwd()),
+            "command": Path(command[0]).name,
+            "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }))
+        temporary.replace(directory / "current.json")
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def seconds(name, default, allow_zero=False):
@@ -73,6 +119,9 @@ def stop_group(child):
 
 
 def main():
+    if sys.argv[1:] == ["--status"]:
+        print(json.dumps(slot_status(), indent=2))
+        return 0
     if os.environ.get("CODING_VERIFY_ACTIVE"):
         raise ValueError("Nested verification launcher: run the gated leaf directly; do not wrap gated npm scripts")
     command = command_for(sys.argv[1:])
@@ -86,7 +135,7 @@ def main():
     for signum in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
         signal.signal(signum, cancel)
 
-    lock_dir = Path(os.environ.get("CODING_VERIFY_LOCK_DIR", Path.home() / ".cache/coding-verification"))
+    lock_dir = lock_directory()
     lock_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
     # Never unlink this file: a second inode would create a second independent slot.
     fd = os.open(lock_dir / "slot.lock", os.O_CREAT | os.O_RDWR, 0o600)
@@ -117,9 +166,12 @@ def main():
         print(f"[verification] Running {Path(command[0]).name} in {Path.cwd()}", file=sys.stderr, flush=True)
         env = dict(os.environ, CODING_VERIFY_ACTIVE="1")
         # The direct job also owns the lock descriptor if this supervisor is killed.
-        child = subprocess.Popen(command, env=env, start_new_session=True, pass_fds=(lock.fileno(),))
-        deadline = time.monotonic() + timeout
+        child = None
+        if not bypass:
+            record_owner(lock_dir, command)
         try:
+            child = subprocess.Popen(command, env=env, start_new_session=True, pass_fds=(lock.fileno(),))
+            deadline = time.monotonic() + timeout
             while child.poll() is None:
                 if cancelled:
                     return 128 + cancelled[0]
@@ -129,8 +181,12 @@ def main():
                 time.sleep(0.05)
             return child.returncode if child.returncode >= 0 else 128 - child.returncode
         finally:
-            if group_exists(child.pid):
-                stop_group(child)
+            try:
+                if child is not None and group_exists(child.pid):
+                    stop_group(child)
+            finally:
+                if not bypass:
+                    (lock_dir / "current.json").unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
