@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { spawnSync } from "node:child_process"
 import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
@@ -302,10 +303,6 @@ test("workspace wiring keeps review cockpit separate from root app checks", () =
   assert.equal(
     packageJson.scripts["products:intake:review-cockpit:verify"],
     "npm run products:intake:review-cockpit:typecheck && npm run products:intake:review-cockpit:lint && npm run products:intake:review-cockpit:build",
-  )
-  assert.equal(
-    packageJson.scripts["products:intake:codex-worker"],
-    "tsx scripts/product-intake/codex-research-worker.ts",
   )
   assert.ok(rootTsconfig.exclude?.includes("apps"))
   assert.ok(rootTsconfig.exclude?.includes("packages"))
@@ -1114,4 +1111,28 @@ test("queue overview keeps active and completed submissions filterable", () => {
   assert.doesNotMatch(queuePageSource, /queue\.rows\.map/)
   assert.match(reviewCockpitCss, /queueFilters/)
   assert.match(reviewCockpitCss, /filterButton-active/)
+})
+
+test("codex worker npm script loads the worker graph outside Next (server-only modules)", () => {
+  // The worker transitively imports `server-only` modules (dm MCP client); the plain
+  // `tsx` entry crashed the Hetzner worker on start. Load the module with the exact
+  // flags of the npm script, without running its main loop. Use a fresh process
+  // without the test runner's NODE_OPTIONS so its preload cannot mask the bug.
+  const script = packageJson.scripts["products:intake:codex-worker"]!
+  const [runner, ...rest] = script.split(" ")
+  const entry = rest.pop()!
+  const result = spawnSync(
+    runner === "node" ? process.execPath : runner,
+    [...rest, "--input-type=module", "-e", `import(${JSON.stringify(`./${entry}`)})`],
+    {
+      encoding: "utf8",
+      timeout: 120_000,
+      env: {
+        ...process.env,
+        NODE_OPTIONS: "",
+        PATH: `${process.cwd()}/node_modules/.bin:${process.env.PATH ?? ""}`,
+      },
+    },
+  )
+  assert.equal(result.status, 0, result.stderr || result.error?.message)
 })

@@ -126,7 +126,7 @@
     "products:intake:review-cockpit:lint": "python3 scripts/verification/run.py -- npm run lint --workspace @chaarlie/product-intake-review",
     "products:intake:review-cockpit:verify": "npm run products:intake:review-cockpit:typecheck && npm run products:intake:review-cockpit:lint && npm run products:intake:review-cockpit:build",
     "products:intake:core:typecheck": "python3 scripts/verification/run.py -- npm run typecheck --workspace @chaarlie/product-intake-core",
-    "products:intake:codex-worker": "tsx scripts/product-intake/codex-research-worker.ts",
+    "products:intake:codex-worker": "node --conditions=react-server --import tsx scripts/product-intake/codex-research-worker.ts",
     "products:intake:review-center": "tsx scripts/product-intake/review-center-launcher.ts",
     "test:catalog-enrichment:heat": "python3 scripts/verification/run.py --node-tests tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts",
     "test:catalog-enrichment:scalp": "python3 scripts/verification/run.py --node-tests tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts tests/product-intake-catalog-enrichment-scalp.test.ts",
