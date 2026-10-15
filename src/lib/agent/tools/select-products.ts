@@ -54,7 +54,7 @@ import {
   CONDITIONER_REPAIR_LEVEL_LABELS,
   CONDITIONER_WEIGHT_LABELS,
 } from "@/lib/conditioner/constants"
-import { OIL_PURPOSE_LABELS, OIL_SUBTYPE_LABELS } from "@/lib/oil/constants"
+import { OIL_FIBRE_ROLE_LABELS, OIL_PURPOSE_LABELS, OIL_WEIGHT_LABELS } from "@/lib/oil/constants"
 import {
   applyChatBudgetOrdering,
   createChatBudgetEngineOrder,
@@ -156,6 +156,7 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "care_benefit",
   "oil_purpose",
   "oil_subtype",
+  "oil_role",
   "reset_focus",
   "reset_intensity",
   "primary_effect",
@@ -765,32 +766,18 @@ function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<strin
   const factRows = products.map((product) => {
     const meta = product.recommendation_meta as OilRecommendationMetadata
     const candidates: Array<ComparisonFactCandidate | null> = [
-      meta.use_mode
+      meta.product_weight
         ? {
-            key: "oil_purpose",
-            value: meta.use_mode,
-            text: `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}`,
+            key: "weight",
+            value: meta.product_weight,
+            text: `Gewicht: ${OIL_WEIGHT_LABELS[meta.product_weight]}`,
           }
         : null,
-      meta.matched_subtype
+      meta.selected_role
         ? {
-            key: "oil_subtype",
-            value: meta.matched_subtype,
-            text: `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`,
-          }
-        : null,
-      meta.purpose_fit
-        ? {
-            key: "purpose_fit",
-            value: meta.purpose_fit,
-            text: `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollständig"}`,
-          }
-        : null,
-      typeof product.price_eur === "number"
-        ? {
-            key: "price",
-            value: String(product.price_eur),
-            text: `Preis: ${product.price_eur.toFixed(2)} EUR`,
+            key: "oil_role",
+            value: meta.selected_role,
+            text: `Rolle: ${OIL_FIBRE_ROLE_LABELS[meta.selected_role]}`,
           }
         : null,
     ]
@@ -814,8 +801,13 @@ function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<strin
       if (facts.length >= 2) break
     }
 
-    result[row.product.id] =
-      facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
+    for (const candidate of row.candidates) {
+      if (facts.length >= 2) break
+      if (facts.includes(candidate.text)) continue
+      facts.push(candidate.text)
+    }
+
+    result[row.product.id] = facts
   }
 
   return result
@@ -1232,16 +1224,9 @@ function buildOilDisplayableFitReason(meta: OilRecommendationMetadata): string {
     ? (OIL_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
     : "Treffer"
   const purpose = meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null
-  const subtype = meta.matched_subtype
-    ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`
-    : null
-  const fit =
-    meta.purpose_fit === "bridge"
-      ? "Fit: angrenzende Finish-Rolle"
-      : meta.purpose_fit === "exact"
-        ? "Fit: exakt"
-        : null
-  const details = uniqueNonEmpty([purpose, subtype, fit])
+  const weight = meta.product_weight ? `Gewicht: ${OIL_WEIGHT_LABELS[meta.product_weight]}` : null
+  const role = meta.selected_role ? `Rolle: ${OIL_FIBRE_ROLE_LABELS[meta.selected_role]}` : null
+  const details = uniqueNonEmpty([purpose, weight, role])
 
   return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
 }
@@ -1266,7 +1251,7 @@ function buildProductComparisonFacts(product: MatchedProduct): string[] {
   }
 
   if (meta?.category === "oil") {
-    return buildOilComparisonFacts(product, meta)
+    return buildOilComparisonFacts(meta)
   }
 
   if (meta?.category === "bondbuilder") {
@@ -1359,18 +1344,10 @@ function buildMaskComparisonFacts(
   ]).slice(0, 3)
 }
 
-function buildOilComparisonFacts(
-  product: MatchedProduct,
-  meta: OilRecommendationMetadata,
-): string[] {
+function buildOilComparisonFacts(meta: OilRecommendationMetadata): string[] {
   return uniqueNonEmpty([
-    meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
-    meta.matched_subtype ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}` : null,
-    meta.purpose_fit
-      ? `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollständig"}`
-      : null,
-    meta.density_weight_caution ? "Caveat: sparsam dosieren" : null,
-    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+    meta.product_weight ? `Gewicht: ${OIL_WEIGHT_LABELS[meta.product_weight]}` : null,
+    meta.selected_role ? `Rolle: ${OIL_FIBRE_ROLE_LABELS[meta.selected_role]}` : null,
   ]).slice(0, 2)
 }
 
@@ -1782,14 +1759,17 @@ function buildOilSupportedProductClaims(meta: OilRecommendationMetadata): Suppor
     buildClaim(
       "oil_purpose",
       meta.use_mode,
-      "product_spec",
+      "category_decision",
       meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
     ),
     buildClaim(
-      "oil_subtype",
-      meta.matched_subtype,
+      "weight",
+      meta.product_weight,
       "product_spec",
-      meta.matched_subtype ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}` : null,
+      meta.product_weight ? `Gewicht: ${OIL_WEIGHT_LABELS[meta.product_weight]}` : null,
+    ),
+    ...(meta.product_roles ?? []).map((role) =>
+      buildClaim("oil_role", role, "product_spec", `Rolle: ${OIL_FIBRE_ROLE_LABELS[role]}`),
     ),
     buildClaim(
       "fit_status",
