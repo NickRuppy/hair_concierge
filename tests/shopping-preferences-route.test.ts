@@ -305,10 +305,19 @@ test("on PGlite: the real door stores the budget, bumps the revision once and ch
     saveUserFacts,
     now: () => NOW,
   }
-  const first = await saveShoppingPreferences(deps, user, { budget: CAPPED })
-  assert.deepEqual(first, { budget: CAPPED, revision: 1 })
-  const second = await saveShoppingPreferences(deps, user, { budget: { kind: "uncapped" } })
-  assert.deepEqual(second, { budget: { kind: "uncapped" }, revision: 2 })
+  const budgets = [
+    { kind: "capped", limitEur: 5, allowExceptions: false },
+    { kind: "capped", limitEur: 5, allowExceptions: true },
+    { kind: "capped", limitEur: 15, allowExceptions: false },
+    CAPPED,
+    { kind: "uncapped" },
+  ] as const
+  for (const [index, budget] of budgets.entries()) {
+    const saved = await saveShoppingPreferences(deps, user, { budget })
+    assert.deepEqual(saved, { budget, revision: index + 1 })
+    const stored = await loadUserFacts(pgliteAdminClient(pg) as never, user)
+    assert.deepEqual(stored?.shoppingPreferences, { budget })
+  }
 
   const row = (await readHairProfile(pg, user))!
   assert.equal(before, null)
@@ -317,5 +326,5 @@ test("on PGlite: the real door stores the budget, bumps the revision once and ch
   assert.equal(row.care_habits, null)
   assert.equal(row.quiz_context, null)
   assert.equal(row.hair_texture, null)
-  assert.equal(row.facts_revision, 2)
+  assert.equal(row.facts_revision, budgets.length)
 })

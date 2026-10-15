@@ -267,6 +267,8 @@ export function isDiscoveryParticipant(user: { app_metadata?: Record<string, unk
  * else. `/api/scan` is on the list because the checklist reuses the Produkt-Scan
  * identify endpoints; the gate returns before the subscription paywall, so those
  * stay reachable for an account with no subscription and the freemium flag off.
+ * The checklist's budget question also needs the exact member preference endpoint;
+ * other profile routes remain outside participant access.
  */
 const DISCOVERY_PARTICIPANT_ROUTE_PREFIXES = [
   "/beratung",
@@ -277,8 +279,9 @@ const DISCOVERY_PARTICIPANT_ROUTE_PREFIXES = [
 ]
 
 export function isDiscoveryParticipantAllowedPath(pathname: string) {
-  return DISCOVERY_PARTICIPANT_ROUTE_PREFIXES.some((prefix) =>
-    pathMatchesRoutePrefix(pathname, prefix),
+  return (
+    pathname === "/api/profile/shopping-preferences" ||
+    DISCOVERY_PARTICIPANT_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
   )
 }
 

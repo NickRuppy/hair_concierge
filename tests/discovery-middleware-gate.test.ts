@@ -136,7 +136,7 @@ test("only a fully stamped account is a participant", () => {
   }
 })
 
-test("the allow-list is exactly invite, intake, quiz and scan", () => {
+test("the participant route allow-list stays narrowly scoped", () => {
   for (const pathname of [
     "/beratung",
     "/beratung/produkte",
@@ -189,6 +189,21 @@ test("a participant reaches every checklist-called path with no subscription and
   assert.equal(billingCalls.count, 0)
 })
 
+test("a participant's budget POST reaches its handler without a checklist redirect or paid access", async () => {
+  const billingCalls = { count: 0 }
+  const middleware = createMiddleware({ billingCalls })
+  const response = await middleware(
+    new NextRequest("https://chaarlie.de/api/profile/shopping-preferences", {
+      method: "POST",
+      headers: { Origin: "https://chaarlie.de", "Content-Type": "application/json" },
+      body: JSON.stringify({ budget: { kind: "uncapped" } }),
+    }),
+  )
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+  assert.equal(billingCalls.count, 0)
+})
+
 test("a participant on a member route lands on the checklist, and the checklist is terminal", async () => {
   const middleware = createMiddleware()
   for (const pathname of [
@@ -196,6 +211,10 @@ test("a participant on a member route lands on the checklist, and the checklist 
     "/anwendung",
     "/routine",
     "/profile",
+    "/api/profile",
+    "/api/profile/hair-profile",
+    "/api/profile/shopping-preferences/other",
+    "/api/profile/shopping-preferences-extra",
     "/scan",
     "/tracker",
     // The routes that would otherwise claim a participant on the way out of the
