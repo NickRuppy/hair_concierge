@@ -77,16 +77,19 @@ for (const [category, id, methodology, adapter] of [
   })
 }
 
-test("shampoo keeps its current research path and records the pending v1.6 lock", () => {
+test("shampoo uses the locked v1.6.2 engine and blocks research without a sealed stage proof", () => {
   const result = normalized("shampoo")
   assert.equal((result.researched_payload?.final as Record<string, unknown>).engine, undefined)
-  assert.deepEqual((result.researched_payload?.draft as Record<string, unknown>).engine, {
-    state: "pending_lock",
+  assert.equal((result.researched_payload?.draft as Record<string, unknown>).engine, undefined)
+  assert.deepEqual(result.artifacts[0]!.payload.engine, {
+    state: "active",
     id: "shampoo-standard",
-    target: "v1.6",
+    methodology: "v1.6.2",
+    adapter: "shampoo-production-light-v1",
+    input_hash: null,
+    projection_hash: null,
   })
-  assert.equal(result.artifacts[0]!.payload.engine, undefined)
-  assert.ok(!result.blockers.some((reason) => reason.includes("research adapter:")))
+  assert.ok(result.blockers.some((reason) => reason.includes("shampoo research adapter:")))
   assert.equal(
     (result.researched_payload?.draft as Record<string, unknown>).notes,
     "Keep the research scratchpad",
@@ -194,7 +197,10 @@ test("mixed-version rework is refused unless progress explicitly authorizes an u
     null,
   )
   assert.equal(researchEngineBindingMismatch({ progress: {} }, engine), null)
-  assert.equal(researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.shampoo), null)
+  assert.equal(
+    researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.shampoo),
+    "engine_key_mismatch: leave-in-standard != shampoo-standard",
+  )
   assert.equal(
     researchEngineBindingMismatch(job, CATEGORY_RESEARCH_REGISTRY.mask),
     "engine_key_mismatch: leave-in-standard != mask-standard",
@@ -339,7 +345,7 @@ test("categories without an active engine do not bind or contact the RPC", async
     },
   }
   const job = researchJob()
-  for (const category of ["shampoo", "oil", "unrecognized", null]) {
+  for (const category of ["oil", "unrecognized", null]) {
     assert.equal(await bindResearchJobEngine(client, job, category), job)
   }
 })

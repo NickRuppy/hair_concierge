@@ -57,12 +57,14 @@ type PreparedMember = {
   relativeInputPath?: string
   inputSha256: string
   outcome: ShampooProductionLightOutcome
+  researchModelVersion: string
 }
 
 type SingleResult = {
   kind: "single"
   status: ShampooProductionLightOutcome["status"]
   inputSha256: string
+  researchModelVersion?: string
 }
 type BatchResult = {
   kind: "batch"
@@ -141,11 +143,13 @@ function prepareSingle(inputPath: string): PreparedMember {
   const parsed = shampooProductionLightInputSchema.parse(input)
   return {
     productId: parsed.identity.productId,
-    exactProductName: parsed.identity.exactProductName,
+    exactProductName:
+      "directProperties" in parsed ? parsed.identity.productName : parsed.identity.exactProductName,
     gtinAliases: parsed.identity.gtinAliases,
     inputPath,
     inputSha256,
     outcome,
+    researchModelVersion: parsed.researchMethod.modelVersion,
   }
 }
 
@@ -218,7 +222,7 @@ function renderBatchSummary(
   const rows = members
     .map(
       (member) =>
-        `| ${member.productId} | ${member.outcome.status} | ${member.productId}/production-light-summary.md |`,
+        `| ${member.productId} | ${member.outcome.status}${member.researchModelVersion === "shampoo-inci-v1.6.2" ? ` (${member.researchModelVersion})` : ""} | ${member.productId}/production-light-summary.md |`,
     )
     .join("\n")
   return `# Shampoo Production Light v1 batch summary\n\n- Property lane ready: ${counts.ready}\n- Routed deep cleansing: ${counts.routed}\n- Needs research: ${counts.needsResearch}\n- Total: ${members.length}\n\n| Product ID | Outcome | Review artifact |\n| --- | --- | --- |\n${rows}\n`
@@ -312,7 +316,14 @@ export function runProductionLightCli(args: ProductionLightCliArgs): SingleResul
     writeAtomically(args.output, args.overwrite, (staging) =>
       writeArtifact(staging, member.outcome),
     )
-    return { kind: "single", status: member.outcome.status, inputSha256: member.inputSha256 }
+    return {
+      kind: "single",
+      status: member.outcome.status,
+      inputSha256: member.inputSha256,
+      ...(member.researchModelVersion === "shampoo-inci-v1.6.2"
+        ? { researchModelVersion: member.researchModelVersion }
+        : {}),
+    }
   }
 
   const members = prepareBatch(path.resolve(args.manifest!))
@@ -329,6 +340,9 @@ export function runProductionLightCli(args: ProductionLightCliArgs): SingleResul
       artifactDirectory: member.productId,
       input: member.relativeInputPath,
       inputSha256: member.inputSha256,
+      ...(member.researchModelVersion === "shampoo-inci-v1.6.2"
+        ? { researchModelVersion: member.researchModelVersion }
+        : {}),
     }))
     writeFileSync(
       path.join(staging, "batch-summary.json"),

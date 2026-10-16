@@ -7,6 +7,7 @@ type InciSource =
   | "leave_in_envelope"
   | "bondbuilder_envelope"
   | "mask_envelope"
+  | "shampoo_stages"
   | "model_formula"
   | "retailer_packet"
 export type CanonicalInci = {
@@ -72,6 +73,8 @@ export function extractCanonicalInci(
     if (artifact.kind !== "formula" || artifact.payload.stage === "inci") continue
     const formula = record(artifact.payload.formula) ?? artifact.payload
     const raw = text(formula.raw_inci)
+    if (raw && artifact.payload.stage === "shampoo_research_stages_v1")
+      return present(raw, "shampoo_stages", formula)
     if (raw) return present(raw, "model_formula")
   }
   const raw = text(retailerPacket?.ingredients_text)

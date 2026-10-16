@@ -242,6 +242,9 @@ async function finish(
     judgeProjected?: Parameters<typeof completeResearchPass>[0]["judgeProjected"]
     autoReworkEnabled?: boolean
     artifacts?: Parameters<typeof completeResearchPass>[0]["researchOutput"]["artifacts"]
+    downstreamDecisions?: Parameters<
+      typeof completeResearchPass
+    >[0]["researchOutput"]["downstream_decisions"]
   } = {},
 ) {
   const initialJob = job(options.stage ?? "property_research")
@@ -311,6 +314,7 @@ async function finish(
       artifacts: options.artifacts ?? [],
       blockers: options.blockers ?? [],
       researched_payload: payload,
+      downstream_decisions: options.downstreamDecisions,
     },
     researchModel: "fixture",
     executeCodex: true,
@@ -485,7 +489,7 @@ const brandContext: BrandResolutionPromptContext = {
   rules: [],
 }
 
-test("persisted pending-lock Shampoo payload passes the strict review entry point", async () => {
+test("an already persisted Shampoo package stays readable and an additional-listing decision blocks completion", async () => {
   for (const category of ["shampoo"] as const) {
     const payload = completePayload()
     Object.assign(payload.final.product, {
@@ -572,19 +576,6 @@ test("persisted pending-lock Shampoo payload passes the strict review entry poin
         ],
       },
     }
-    const normalized = normalizeResearchOutputForCategory(
-      {
-        summary: "Recherche fertig",
-        blockers: [],
-        artifacts: [],
-        researched_payload: payload,
-      },
-      category,
-      brandContext,
-      [],
-      "50000000-0000-4000-8000-000000000001",
-    )
-    assert.deepEqual(normalized.blockers, [])
     const submission = {
       id: "50000000-0000-4000-8000-000000000001",
       user_id: null,
@@ -592,7 +583,7 @@ test("persisted pending-lock Shampoo payload passes the strict review entry poin
       status: "researching",
       category,
     }
-    const { jobWrites } = await finish(normalized.researched_payload!, { submission })
+    const { jobWrites } = await finish(payload, { submission })
     const persisted = structuredClone(jobWrites[0]!.researched_payload) as JsonRecord
     Object.assign((persisted.final as JsonRecord).review as JsonRecord, { manual_reviewed: true })
     const reviewed = dryRunProductIntakeReadyForReview({
@@ -600,6 +591,28 @@ test("persisted pending-lock Shampoo payload passes the strict review entry poin
       researched_payload: persisted,
     })
     assert.equal(reviewed.ok, true, `${category}: ${reviewed.missingFields.join(", ")}`)
+    const question =
+      "Auch als Tiefenreiniger anlegen? Die reguläre Shampoo-Recherche bleibt erhalten."
+    const blocked = await finish(payload, {
+      submission,
+      autoReworkEnabled: true,
+      autoPrepareImages: true,
+      judgeProjected: async () => ({ ok: true, defects: [] }),
+      downstreamDecisions: [
+        { code: "separate_deep_cleanser_listing", question, projection_sha256: "a".repeat(64) },
+      ],
+    })
+    const blockedWrite = blocked.jobWrites[0]!
+    assert.equal(blocked.output.status, "blocked")
+    assert.equal(blockedWrite.review_outcome, "needs_nick")
+    assert.equal(blockedWrite.request_auto_rework, false)
+    assert.deepEqual(blockedWrite.researched_payload, payload)
+    assert.equal((blockedWrite.notification_payload as JsonRecord).question_1, question)
+    assert.equal((blockedWrite.next_progress as JsonRecord).readiness_check, "passed")
+    const judgment = (blockedWrite.research_artifacts as JsonRecord[]).find(
+      (a) => a.kind === "model_judgment",
+    )!
+    assert.equal((judgment.payload as JsonRecord).outcome, "blocked_needs_human")
   }
 })
 

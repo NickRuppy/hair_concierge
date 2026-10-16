@@ -65,6 +65,11 @@ import {
 } from "@/lib/product-intake/pipeline/research-judge"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
 import {
+  runShampooResearchStages,
+  SHAMPOO_STAGE_PROOF_KIND,
+} from "@/lib/product-intake/shampoo-research-stages"
+import type { ShampooDownstreamDecision } from "@/lib/product-intake/shampoo-research-adapter"
+import {
   appendResearchArtifact as coreAppendResearchArtifact,
   claimResearchJobs,
   countResearchArtifacts,
@@ -551,6 +556,7 @@ type CodexResearchOutput = {
   artifacts: CodexResearchArtifactOutput[]
   blockers: string[]
   next_stage?: ProductIntakeJobStage
+  downstream_decisions?: ShampooDownstreamDecision[]
 }
 
 export type ProductIntakeModelLane =
@@ -837,6 +843,9 @@ export async function completeResearchPass(params: {
     promptVersion: "product_intake_codex_research_v1",
   }))
   let projectedOutcome: ReturnType<typeof decideProjectedResearchOutcome> | undefined
+  const listingQuestions = [
+    ...new Set((researchOutput.downstream_decisions ?? []).map((decision) => decision.question)),
+  ]
   if (params.judgeProjected) {
     const packet = buildProjectedResearchJudgePacket({
       projectedPayload: { final: normalizeRecord(researchOutput.researched_payload?.final) ?? {} },
@@ -888,6 +897,17 @@ export async function completeResearchPass(params: {
       cycleDeadlineAt: leasedJob.cycle_deadline_at,
       inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
     })
+    if (listingQuestions.length) {
+      projectedOutcome = {
+        ...projectedOutcome,
+        outcome: "blocked_needs_human",
+        status: "blocked",
+        reviewOutcome: "needs_nick",
+        reworkInstruction: null,
+        inciRetryRequested: false,
+        questions: [...new Set([...listingQuestions, ...projectedOutcome.questions])].slice(0, 3),
+      }
+    }
     finalArtifacts.push({
       kind: "model_judgment",
       status: verdict.ok ? "completed" : "failed",
@@ -905,6 +925,16 @@ export async function completeResearchPass(params: {
       promptVersion: "product_intake_projected_research_judge_v1",
     })
   }
+  if (!projectedOutcome && listingQuestions.length)
+    projectedOutcome = {
+      outcome: "blocked_needs_human",
+      status: "blocked",
+      reviewOutcome: "needs_nick",
+      defects: [],
+      questions: listingQuestions.slice(0, 3),
+      reworkInstruction: null,
+      inciRetryRequested: false,
+    }
   const progress = {
     summary: researchOutput.summary,
     blockers: researchOutput.blockers,
@@ -997,6 +1027,7 @@ export async function completeResearchPass(params: {
       image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
       next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
       model_evaluation: evaluation,
+      downstream_decisions: researchOutput.downstream_decisions ?? [],
       ...progress,
       ...(projectedOutcome
         ? {
@@ -1185,25 +1216,79 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
 
           if (options.executeCodex) {
             leasedJob = await bindResearchJobEngine(options.supabase, leasedJob, detail?.category)
-            const productionRun = await measureModelRun(
-              "production_low",
-              researchRuntimeConfig,
-              () =>
-                withResearchModelCycle(reserveModel, () =>
-                  runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
-                ),
-            )
-            leasedJob = await refreshModelRunLease({
-              supabase: options.supabase,
-              job: leasedJob,
-              workerId: options.workerId,
-              promptPacketPath,
-              message: "Luna/low research returned; worker lease refreshed.",
-            })
-            await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
-            if (!productionRun.success) throw new Error(productionRun.error)
+            if (normalizeCategoryKey(detail?.category) === "shampoo") {
+              const prior = (detail?.artifacts ?? [])
+                .filter(
+                  (artifact) =>
+                    artifact.kind === "formula" &&
+                    artifact.job_id === job.id &&
+                    artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND,
+                )
+                .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
+              const stages = await withResearchModelCycle(reserveModel, () =>
+                runShampooResearchStages({
+                  packet: parseJsonObject(readFileSync(promptPacketPath, "utf8")),
+                  submissionId: job.submission_id,
+                  reviewCycleId: leasedJob.review_cycle_id ?? "",
+                  reservedModelRuns: leasedJob.reserved_model_runs ?? 0,
+                  priorProof: prior?.payload.proof,
+                  model: async (request) => {
+                    const run = await measureModelRun("production_low", researchRuntimeConfig, () =>
+                      runCodexJson({ ...request, runtimeConfig: researchRuntimeConfig }),
+                    )
+                    leasedJob = await refreshModelRunLease({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      message: `Shampoo ${request.stage} returned; worker lease refreshed.`,
+                    })
+                    await persistModelRunArtifact(options.supabase, leasedJob, run, request.stage)
+                    if (!run.success) throw new Error(run.error)
+                    return run.output
+                  },
+                }),
+              )
+              rawResearchOutput = normalizeCodexOutput(stages.output)
+              // Models cannot create the protected formula artifact or its proof.
+              // Mirror only the server-produced proof onto the research artifact.
+              for (const artifact of rawResearchOutput.artifacts) {
+                if (artifact.kind !== "property_synthesis") continue
+                delete artifact.payload.shampoo_research_stages
+                if (stages.proof && artifact.payload.shampoo_research_envelope != null)
+                  artifact.payload.shampoo_research_stages = stages.proof
+              }
+              if (stages.proof && stages.formula)
+                rawResearchOutput.artifacts.push({
+                  kind: "formula",
+                  status: "completed",
+                  payload: {
+                    ...stages.formula,
+                    stage: SHAMPOO_STAGE_PROOF_KIND,
+                    proof: stages.proof,
+                  },
+                })
+            } else {
+              const productionRun = await measureModelRun(
+                "production_low",
+                researchRuntimeConfig,
+                () =>
+                  withResearchModelCycle(reserveModel, () =>
+                    runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+                  ),
+              )
+              leasedJob = await refreshModelRunLease({
+                supabase: options.supabase,
+                job: leasedJob,
+                workerId: options.workerId,
+                promptPacketPath,
+                message: "Luna/low research returned; worker lease refreshed.",
+              })
+              await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
+              if (!productionRun.success) throw new Error(productionRun.error)
 
-            rawResearchOutput = productionRun.output
+              rawResearchOutput = productionRun.output
+            }
           } else {
             rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
             leasedJob = await refreshModelRunLease({
@@ -1225,6 +1310,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               retailerPacket: scanIntakeSeed.retailerEnrichment,
               inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
               brandCatalog,
+              expectedReviewCycleId: leasedJob.review_cycle_id,
             },
           )
           // Enabled by default; only the exact env value "false" disables commerce confirmation.
@@ -1295,7 +1381,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                 }
               : undefined,
             beforeCompletion: async () => {
-              if (options.executeCodex) {
+              if (options.executeCodex && normalizeCategoryKey(detail?.category) !== "shampoo") {
                 const evaluationRun = await runNonFatalModelEvaluation({
                   job: leasedJob,
                   currentJob: () => leasedJob,
@@ -1496,7 +1582,9 @@ async function persistModelRunArtifact<T>(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   job: ProductIntakeResearchJob,
   run: MeasuredModelRun<T>,
+  researchStage?: string,
 ) {
+  const isJudge = ["judge", "projected_judge", "image_judge"].includes(run.lane)
   return appendResearchArtifact(supabase, {
     jobId: job.id,
     submissionId: job.submission_id,
@@ -1504,8 +1592,9 @@ async function persistModelRunArtifact<T>(
     status: run.success ? "completed" : "failed",
     payload: {
       lane: run.lane,
+      ...(researchStage ? { research_stage: researchStage } : {}),
       experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
-      role: run.lane === "judge" ? "judge" : "researcher",
+      role: isJudge ? "judge" : "researcher",
       model: run.runtimeConfig.model,
       reasoning_effort: run.runtimeConfig.reasoningEffort,
       service_tier: run.runtimeConfig.serviceTier ?? "standard",
@@ -1516,8 +1605,7 @@ async function persistModelRunArtifact<T>(
       token_usage: null,
     },
     model: run.runtimeConfig.model,
-    promptVersion:
-      run.lane === "judge" ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
+    promptVersion: isJudge ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
   })
 }
 
@@ -2120,7 +2208,10 @@ export function normalizeResearchOutputForCategory(
   brandResolutionContext: BrandResolutionPromptContext,
   reviewDecisions: ProductIntakeReviewDecisionRow[],
   expectedResearchId: string,
-  options: InciStageOptions & { brandCatalog?: BrandResolutionCatalogInput } = {},
+  options: InciStageOptions & {
+    brandCatalog?: BrandResolutionCatalogInput
+    expectedReviewCycleId?: string
+  } = {},
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
   if (!categoryKey) return output
@@ -2129,6 +2220,7 @@ export function normalizeResearchOutputForCategory(
     normalizeCategoryResearchedPayload(output.researched_payload, categoryKey, output.artifacts) ??
     {}
   const artifacts = [...output.artifacts]
+  let downstreamDecisions: ShampooDownstreamDecision[] = []
   let blockers = output.blockers.filter(
     (blocker) => !/^inci_(missing_first_pass|unavailable):/.test(blocker),
   )
@@ -2161,7 +2253,13 @@ export function normalizeResearchOutputForCategory(
       artifact.payload[`${categoryKey}_research_envelope`] != null,
   )
   if (final) {
-    const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
+    const adapterResult = engine.apply({
+      final,
+      artifacts,
+      expectedResearchId,
+      expectedReviewCycleId: options.expectedReviewCycleId,
+    })
+    downstreamDecisions = adapterResult.downstreamDecisions ?? []
     blockers.push(...adapterResult.blockers)
     projected = adapterResult.blockers.length === 0
     // Model-authored provenance cannot override the running server registry.
@@ -2268,15 +2366,21 @@ export function normalizeResearchOutputForCategory(
   })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
   if (missingSpecTables.length > 0) {
-    blockers.push(`missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`,
+    )
   }
   const missingProductFields = missingFinalProductFields(final)
   if (missingProductFields.length > 0) {
-    blockers.push(`missing final.product fields: ${missingProductFields.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing final.product fields: ${missingProductFields.join(", ")}`,
+    )
   }
   const missingFinalSections = missingFinalApprovalSections(final)
   if (missingFinalSections.length > 0) {
-    blockers.push(`missing final payload sections: ${missingFinalSections.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing final payload sections: ${missingFinalSections.join(", ")}`,
+    )
   }
   const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, options)
   if (inciBlocker) blockers.push(inciBlocker)
@@ -2289,6 +2393,7 @@ export function normalizeResearchOutputForCategory(
       payload: normalizeCategoryArtifactPayload(artifact.payload, categoryKey),
     })),
     blockers: dedupeStrings(blockers),
+    downstream_decisions: downstreamDecisions,
   }
 }
 
@@ -2631,6 +2736,7 @@ export async function runCodexJson(
     runtimeConfig: CodexResearchRuntimeConfig
     webSearch?: "disabled" | "live"
     imagePaths?: string[]
+    cwd?: string
   },
   spawn: WorkerSpawn = runWorkerProcess,
 ): Promise<JsonRecord> {
@@ -2644,7 +2750,7 @@ export async function runCodexJson(
   const run = await spawn(
     codexBinary,
     codexResearchExecArgs({
-      cwd: process.cwd(),
+      cwd: params.cwd ?? process.cwd(),
       outputPath: params.outputPath,
       prompt: params.prompt,
       runtimeConfig: params.runtimeConfig,

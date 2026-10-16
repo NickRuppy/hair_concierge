@@ -8,6 +8,7 @@ import { evaluateStage3Authority } from "../src/lib/personal-plan/products/autho
 import {
   projectShampooProductionLight,
   SHAMPOO_PRODUCTION_LIGHT_RESEARCH_METHOD,
+  type ShampooProductionLightV162Input,
 } from "../src/lib/shampoo/production-light-adapter"
 
 const fixtureDirectory = path.resolve("tests/fixtures/shampoo-production-light")
@@ -289,4 +290,123 @@ test("every local evidence reference used by calibration fixtures resolves to a 
 
   for (const member of manifest.products) visit(readJson(path.join(fixtureDirectory, member.input)))
   assert.ok(checkedReferences > 0)
+})
+
+// Independent oracle: the reviewed Track A apply plan, never the adapter's own output.
+// Provenance retains both sealed lane hashes and their pre-adjudication block statuses.
+test("v1.6.2 reviewed run-2 merged records match Track A full-fit storage rows", () => {
+  const root = path.join(fixtureDirectory, "v1.6.2")
+  const fixtures = readJson(path.join(root, "merged-records.json")) as {
+    products: Array<{
+      slot: string
+      productId: string
+      input: string
+      needsResearch: boolean
+      sources: Array<{ path: string; sha256: string }>
+    }>
+  }
+  const apply = readJson("plans/shampoo-v16-rollout/track-a/apply/apply-plan.json") as {
+    target: Record<string, { rows: string[][]; suitable: string[] }>
+  }
+  let ready = 0
+  for (const member of fixtures.products) {
+    for (const source of member.sources)
+      assert.equal(
+        createHash("sha256").update(readFileSync(source.path)).digest("hex"),
+        source.sha256,
+      )
+    const input = readJson(path.join(root, member.input)) as ShampooProductionLightV162Input
+    const lanes = member.sources.map(
+      (source) => readJson(source.path) as ShampooProductionLightV162Input,
+    )
+    const rowKey = (row: ShampooProductionLightV162Input["projection"]["rows"][number]) =>
+      `${row.thickness}/${row.shampoo_bucket}`
+    const laneB = new Map(lanes[1].projection.rows.map((row) => [rowKey(row), row]))
+    const weightOrder = ["light", "moderate", "heavy"] as const
+    const tierOrder = ["not_suited", "acceptable", "ideal"] as const
+    const mergedRows = lanes[0].projection.rows
+      .filter((row) => laneB.has(rowKey(row)))
+      .map((row) => {
+        const other = laneB.get(rowKey(row))!
+        assert.equal(
+          row.cleansing_intensity,
+          other.cleansing_intensity,
+          `${member.slot}: unresolved lane intensity split`,
+        )
+        return {
+          ...row,
+          weight:
+            weightOrder[
+              Math.max(weightOrder.indexOf(row.weight), weightOrder.indexOf(other.weight))
+            ],
+          tier: tierOrder[Math.min(tierOrder.indexOf(row.tier), tierOrder.indexOf(other.tier))],
+        }
+      })
+      .sort((a, b) => rowKey(a).localeCompare(rowKey(b)))
+    assert.deepEqual(
+      [...input.projection.rows].sort((a, b) => rowKey(a).localeCompare(rowKey(b))),
+      mergedRows,
+      `${member.slot}: independently consolidated lane rows`,
+    )
+    const outcome = projectShampooProductionLight(input)
+    if (member.needsResearch) {
+      assert.equal(outcome.status, "needs_research", member.slot)
+      assert.equal("payload" in outcome, false)
+      continue
+    }
+    assert.equal(
+      outcome.status,
+      "property_lane_ready",
+      `${member.slot}: ${JSON.stringify(outcome)}`,
+    )
+    if (outcome.status !== "property_lane_ready") continue
+    const rows = outcome.payload.category_specs.product_shampoo_specs.map((row) => [
+      row.thickness,
+      row.shampoo_bucket,
+      row.scalp_route,
+      row.cleansing_intensity,
+    ])
+    assert.deepEqual(rows, apply.target[member.productId].rows, member.slot)
+    assert.deepEqual(
+      outcome.payload.suitable_thicknesses,
+      apply.target[member.productId].suitable,
+      member.slot,
+    )
+    const buckets = rows.map((row) => row[1])
+    assert.deepEqual(outcome.payload.required_protocol_roles, [
+      ...new Set(
+        buckets.map((bucket) => (bucket === "schuppen" ? "shampoo_dandruff" : "shampoo_everyday")),
+      ),
+    ])
+    ready++
+  }
+  assert.ok(ready >= 8)
+})
+
+test("the v1.6.2 adapter pins match the immutable standard, runbook, manifest and lock receipt", async () => {
+  const { SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD: pins } =
+    await import("../src/lib/shampoo/production-light-adapter")
+  const manifest = readJson("data/research/shampoo-inci/v1.6.2/artifact-manifest.json") as {
+    policy_id: string
+    model_version: string
+    normative_source: { path: string; sha256: string }
+    runbook: { path: string; sha256: string }
+  }
+  const receipt = readJson("data/research/shampoo-inci/v1.6.2/v1.6.2-logic-lock-receipt.json") as {
+    policy_id: string
+    model_version: string
+    normative_standard: { sha256: string }
+  }
+  assert.equal(pins.policyId, manifest.policy_id)
+  assert.equal(pins.modelVersion, manifest.model_version)
+  assert.equal(pins.policyId, receipt.policy_id)
+  assert.equal(pins.modelVersion, receipt.model_version)
+  assert.equal(pins.policySha256, receipt.normative_standard.sha256)
+  for (const [pin, artifact] of [
+    [pins.policySha256, manifest.normative_source],
+    [pins.runbookSha256, manifest.runbook],
+  ] as const) {
+    assert.equal(pin, artifact.sha256)
+    assert.equal(pin, createHash("sha256").update(readFileSync(artifact.path)).digest("hex"))
+  }
 })

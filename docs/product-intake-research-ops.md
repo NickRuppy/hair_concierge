@@ -356,9 +356,19 @@ Shampoo-specific rule:
 For new regular Shampoo property research where the operator wants the full
 ingredient methodology but only the current production Shampoo fields as output,
 use [Shampoo Production Light v1](./product-intake-shampoo-production-light.md).
-That workflow keeps Shampoo v1.4 as the complete research authority and projects
-only the reviewed property lane. Its `property_lane_ready` status is not catalog
+That workflow uses locked Shampoo v1.6.2 for new research (v1.4 is historical
+replay only) and projects only the reviewed property lane. Its
+`property_lane_ready` status is not catalog
 intake readiness, global recommendation readiness, or publish approval.
+Routine worker intake uses one isolated blind/reveal lane, followed by the shared
+Sol judge and Nick's approval. Validation batches retain two independent lanes.
+The server owns source/blind/final proof, formula and cycle bindings; model-authored
+proofs or approval flags cannot establish readiness. A correction reuses the frozen
+assessment only with the same formula/cycle and budget for repair plus judge.
+All launches share the six-run/45-minute cap. D2 retains regular Shampoo research
+and asks Nick about the extra listing in “Entscheidung nötig”; no second product
+is created automatically. This integration is local until separately deployed;
+automatic email/image/rework switches remain disabled during setup.
 
 Conditioner-specific rule:
 

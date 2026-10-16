@@ -1,0 +1,376 @@
+{
+  "blindId": "W104",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Garnier Wahre Schätze",
+    "productName": "Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze",
+    "packSize": "400 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "6aadaef99413633a8a0903229d33fda87aac541b8f86ad7a1d4123f0e19c921a",
+    "normalization": "Slash synonyms ('Aqua/Water', 'Mel/Honey', 'Mel Extract/Honey Extract', 'Parfum/Fragrance') are single entries; no split entries; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3ProminenceCutoff": "Parfum/Fragrance @30, listed last (prominent = positions 1-29)",
+    "productId": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+    "gtinAliases": [
+      "3600542461030",
+      "3600542462228",
+      "3600542461511",
+      "3600542499231"
+    ]
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Lauryl Sulfate @2 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Cocamidopropyl Betaine @3 (amphoteric)",
+        "Coco-Betaine @14 (amphoteric)",
+        "Coco-Glucoside @15 (nonionic glucoside)",
+        "Lauroyl/Myristoyl Methyl Glucamide @19 (nonionic sugar amide; assigned nonionic co-surfactant by chemistry; does not change the value)"
+      ],
+      "notCleansing": [
+        "Carbomer @7 (acrylate thickener)"
+      ]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17 (prominent only because fragrance is listed last)"
+      ],
+      "weak_refatter": [
+        "Glyceryl Oleate @9",
+        "Lecithin @12",
+        "Hydrogenated Palm Glycerides Citrate @16",
+        "Ascorbyl Palmitate @21"
+      ],
+      "pearlizingFattyRoute": [
+        "Glycol Distearate @10"
+      ],
+      "payload_lipid": [],
+      "silicone": [],
+      "humectants": [
+        "Mel/Honey @5 (not a C2 list member)",
+        "Mel Extract/Honey Extract @6",
+        "Glycerin @8"
+      ]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum/Fragrance @30 (last); allergens Coumarin @26, Limonene @27, Benzyl Alcohol @28, Benzyl Salicylate @29",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Parfum-last listing makes almost every entry 'prominent' under E3; recorded as a counter-signal on the C5 buffer count"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum/Fragrance @30",
+      "wLine": "Tocopherol @20",
+      "wLineClasses": [
+        "sub1_active"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (longest ascending run 7-11, 5 entries)",
+      "codes": [],
+      "plausibility": "Tocopherol @20: (i) SLS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 21-29",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [
+      "Glycerin @8 (humectant)",
+      "Glyceryl Oleate @9 (humectant/refatting)"
+    ],
+    "mildBase": "not met: prominent strong anionic Sodium Lauryl Sulfate @2"
+  },
+  "unresolvedMaterialIngredients": [],
+  "claimEvidence": [
+    "manufacturer_de (moderate): 'Speziell für die Bedürfnisse von strapaziertem und brüchigem Haar entwickelt, repariert und kräftigt ...', 'wirken Haarschäden wie Spliss, Haarbruch ... entgegen', 'leichter kämmbar' - repair direction.",
+    "Product name 'Reparierendes Shampoo Honig Schätze' (high): repair direction.",
+    "Retailer copy (low, four sources): 'Bienenwachs hat schützende Eigenschaften', 'Mit Akazienhonig und Bienenwachs'.",
+    "ID-3: 'Akazien-/Manuka-/Lavendelhonig' -> Mel/Honey @5, Mel Extract @6 (no conflict). 'Bienenwachs' -> Cera Alba: NOT in the frozen INCI -> conflict; material because a waxy payload lipid could change conditioningLevel and weightPotential.",
+    "No scalp claim; no frequency/reset wording."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C5 alkyl-sulfate chassis (Sodium Lauryl Sulfate @2) with at least two prominent buffers (Cocamidopropyl Betaine @3, Coco-Betaine @14, Coco-Glucoside @15) and no reinforcing strong anionic (C3, C4, C5). Counter-signal: two of the buffers are prominent only because the fragrance is listed last, and SLS is the harsher class; strong is the realistic neighbor.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C5",
+        "E3",
+        "N-ALT"
+      ],
+      "counterSignal": "Two of three buffers prominent only because fragrance is listed last; SLS harsher class.",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "moderate"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "low",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate (formula value unchanged): one late cationic guar @17 plus light routes; C2 not met. Confidence low after reconciliation: four retailer sources claim beeswax ('Bienenwachs'), which maps to Cera Alba and is absent from the frozen INCI (ID-3). A beeswax entry listed before the fragrance (which is last) would be a prominent payload lipid converging with the guar = W-RICH for conditioning (high). Material conflict -> low, needs_research.",
+      "ruleIds": [
+        "Section 5",
+        "C2",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar late; ID-3 conflict: claimed beeswax (Cera Alba) absent from INCI - if present and prominent it would add W-RICH (high).",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "low",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @9",
+          "Lecithin @12",
+          "Hydrogenated Palm Glycerides Citrate @16",
+          "Ascorbyl Palmitate @21"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Lauryl Sulfate @2",
+          "Cocamidopropyl Betaine @3",
+          "Coco-Betaine @14",
+          "Coco-Glucoside @15",
+          "Lauroyl/Myristoyl Methyl Glucamide @19"
+        ],
+        "humectantContext": [
+          "Mel/Honey @5",
+          "Mel Extract/Honey Extract @6",
+          "Glycerin @8"
+        ],
+        "excluded": [
+          "Carbomer @7 (anionic acrylate thickener, 6.4)",
+          "Glycol Distearate @10 (pearlizing wax, 6.4)",
+          "Triethyl Citrate @11 (solvent/deodorant ester, no deposition)",
+          "Tocopherol @20 (antioxidant)",
+          "Caramel @25 (colourant)"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one late guar and weak refatters only",
+      "persistence": "low - no silicone, no payload lipid; refatters weakly retained",
+      "resetCapacity": "moderate - SLS buffered by betaines/glucoside",
+      "counterevidence": "Two families present (cationic polymer + weak refatters); SLS chassis buffered.",
+      "whyThisBand": "Only light deposition (single late guar, weak refatters) against an effective sulfate reset; noticeable residue unlikely.",
+      "whyNotNeighborBand": "Not moderate (W2): besides weak refatters and humectants, the only depositing system is a single guar listed after NaOH @13 and the co-surfactants @14-15, with no silicone, payload lipid or protein to reinforce it, facing a buffered SLS reset.",
+      "confidenceLimitingFactor": "ID-3 material conflict: claimed beeswax (Cera Alba, payload_lipid) not in the frozen INCI; a material beeswax entry would add a converging lipid family.",
+      "rationale": "Low (formula value unchanged): single late guar plus weak refatters against a buffered SLS reset (6.6, W2). Confidence low after reconciliation: retailer copy names beeswax, absent from the INCI (ID-3); if present before the W-line (Tocopherol @20) it would be a material payload_lipid converging with the guar (W-RICH, convergence) and could move the band to moderate. Returns needs_research (6.6 unknowns).",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "ID-3 conflict: claimed beeswax (a waxy payload_lipid) absent; if present before the W-line it would converge with the guar and could reach moderate.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "moderate",
+      "wLineRecord": {
+        "cap": "e3Point Parfum/Fragrance @30",
+        "wLine": "Tocopherol @20",
+        "wLineClasses": [
+          "sub1_active"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none (longest ascending run 7-11, 5 entries)",
+        "codes": [],
+        "plausibility": "Tocopherol @20: (i) SLS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 21-29",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Mel/Honey @5",
+          "Mel Extract/Honey Extract @6",
+          "Glycerin @8"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17",
+          "Glyceryl Oleate @9",
+          "Lecithin @12"
+        ],
+        "limitation": "No protein, silicone or lipid damage-care cluster"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Honey/glycerin cluster supports moisture, but the product is positioned for repair, not moisture.",
+      "decisionTrace": "Primary: claim direction repair (name 'Reparierendes', manufacturer damage wording); formula verdict (recorded blind) moisture_supported, not repair_supported or dual_supported -> repair incompatible (F1); no moisture positioning to use the verdict; decision general.",
+      "rationale": "General: repair claim over a moisture_supported (not repair) formula (F1, 3.2: claims may not override the formula).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "3.2"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default; no distinct secondary positioning.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: default; no moderate/high frequency wording (U2), reset intent (U4), D1 or dandruff claim (U3) in the revealed sources.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 scalp claim unit; CSA half would be met via Glycerin @8, Glyceryl Oleate @9 but positioning is absent.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "conditioningLevel moderate kept; confidence moderate -> low, neighbor low -> high (ID-3 beeswax conflict).",
+    "weightPotential low kept; confidence moderate -> low (ID-3 beeswax conflict); neighbor moderate.",
+    "focusPrimary general confirmed (repair claim incompatible with moisture_supported verdict); low -> moderate.",
+    "usageRole regular confirmed; scalpComfortTarget not_targeted confirmed (low -> high).",
+    "Projection status needs_research (low-confidence direct properties, 13.1/12)."
+  ],
+  "projection": {
+    "status": "needs_research",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "low",
+      "normal": "low",
+      "coarse": "low"
+    },
+    "thicknessRationale": "T1 with W=low (low, neighbor moderate) and C=moderate (low, neighbor high): fine ideal, normal ideal, coarse acceptable; ordinary target, T6 not applicable; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "light",
+    "weightConfidence": "low",
+    "weightRationale": "W-LIVE: weightPotential low -> light, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source present. (Projection blocked: needs_research from low-confidence conditioning/weight.)"
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 False -> regular. I3: neighbor strong; normal expects regular; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "Lauroyl/Myristoyl Methyl Glucamide @19 assigned as nonionic co-surfactant by chemistry; C5 already has two buffers without it.",
+    "Identity confidence moderate in the packet; no conflict visible in stage A.",
+    "ID-3 beeswax: retailer copy is graded low and may describe an older formula; treated as material per P0 because its presence could change conditioning (W-RICH) and weight. Values kept at the frozen-formula reading; projection shown for reference only (needs_research)."
+  ],
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.6.2",
+    "modelVersion": "shampoo-inci-v1.6.2",
+    "policySha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
+    "runbookSha256": "2a6ca1bdd0944aaf295af471818302e21f3b74302cdd8f4eeaf6039473b18a78"
+  }
+}
