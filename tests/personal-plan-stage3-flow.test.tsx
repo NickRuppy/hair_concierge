@@ -539,7 +539,10 @@ function createClientStateHarness(renderComponent: () => ReactElement | null): C
   const previousDispatcher = reactInternals.H
   const hookValues: unknown[] = []
   let cursor = 0
-  let pendingEffects: Array<() => void | (() => void) | Promise<void | (() => void)>> = []
+  let pendingEffects: Array<{
+    effect: () => void | (() => void) | Promise<void | (() => void)>
+    record: EffectRecord
+  }> = []
 
   function depsChanged(previous: unknown[] | undefined, next: unknown[] | undefined): boolean {
     return (
@@ -560,8 +563,9 @@ function createClientStateHarness(renderComponent: () => ReactElement | null): C
       const previous = hookValues[stateIndex] as EffectRecord | undefined
       if (depsChanged(previous?.deps, deps)) {
         previous?.cleanup?.()
-        hookValues[stateIndex] = { deps } satisfies EffectRecord
-        pendingEffects.push(effect)
+        const record: EffectRecord = { deps }
+        hookValues[stateIndex] = record
+        pendingEffects.push({ effect, record })
       }
     },
     useLayoutEffect(
@@ -615,17 +619,9 @@ function createClientStateHarness(renderComponent: () => ReactElement | null): C
         const tree = renderComponent()
         const effects = pendingEffects
         pendingEffects = []
-        for (const effect of effects) {
+        for (const { effect, record } of effects) {
           const cleanup = await effect()
-          if (typeof cleanup === "function") {
-            const effectIndex = hookValues.findIndex((value) => {
-              const record = value as EffectRecord | undefined
-              return record?.cleanup === undefined && record?.deps !== undefined
-            })
-            if (effectIndex >= 0) {
-              ;(hookValues[effectIndex] as EffectRecord).cleanup = cleanup
-            }
-          }
+          if (typeof cleanup === "function") record.cleanup = cleanup
         }
         await Promise.resolve()
         return tree
@@ -6844,6 +6840,44 @@ test("without a budget a pick in one role makes no projection call and keeps oth
   assert.equal(comparison.props.disabled, false)
   assert.equal("defaultProductId" in comparison.props.comparison, false)
   assert.equal(previewCalls.length, 0)
+})
+
+test("Back stays available during a budget projection without enabling stale choices", async () => {
+  const gate = deferred<void>()
+  const { harness, previewCalls, resolveCalls } = twoRoleBudgetFlow({
+    budget: FLEX_15,
+    previewGate: () => gate.promise,
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderSettled(harness)
+  assert.equal(fitComparisonOf(tree)!.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(fitComparisonOf(tree)!.props.disabled, true)
+  const shell = findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)!
+  assert.equal(shell.props.backDisabled, false)
+  await shell.props.onBack!()
+  tree = await renderSettled(harness)
+  assert.equal(fitComparisonOf(tree)!.props.comparison.subjectKey, BUDGET_CONDITIONER_KEY)
+  assert.equal(fitComparisonOf(tree)!.props.disabled, true)
+  assert.equal(previewCalls.length, 1)
+  assert.equal(resolveCalls.length, 0)
+
+  gate.resolve()
+  tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.disabled === false,
+    "current review after Back",
+  )
+  assert.equal(fitComparisonOf(tree)!.props.comparison.subjectKey, BUDGET_CONDITIONER_KEY)
+  assert.equal(previewCalls.length, 1, "Back does not restart the projection")
+  assert.equal(resolveCalls.length, 0, "Back does not submit the incomplete review")
 })
 
 test("budget_required on resolve opens the budget step and keeps every choice", async () => {
