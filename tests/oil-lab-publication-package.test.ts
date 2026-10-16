@@ -14,6 +14,11 @@ test("oil package rejects changed properties and stale DB binding before upload 
   const detail = detailFixture(),
     payload = structuredClone(detail.payload) as any
   payload.final.review.manual_reviewed = true
+  Object.assign(payload.final.product, {
+    image_url: publicationImage.planned_public_url,
+    canonical_image_sha256: publicationImage.asset_sha256,
+    thumbnail_image_url: publicationImage.thumbnail_public_url,
+  })
   const dir = join(root, detail.id)
   await mkdir(dir)
   for (const [name, value] of Object.entries({
@@ -30,7 +35,6 @@ test("oil package rejects changed properties and stale DB binding before upload 
     status: "ready_for_review",
     researched_payload: structuredClone(payload),
   } as ReviewActionSubmission
-  let allowPreflight = false
   const imageDecision = {
     status: "approved_asset",
     storage_bucket: "product-images",
@@ -49,53 +53,30 @@ test("oil package rejects changed properties and stale DB binding before upload 
     user_approved: true,
   }
   await writeFile(join(dir, "image-finalization.json"), JSON.stringify(imageDecision))
+  // Only the current receipt read is permitted before the Oil guard. Other
+  // queries or RPCs would mean this negative control reached another boundary.
   const query: any = {
     select: () => query,
     eq: () => query,
-    order: () => query,
-    limit: () => query,
-    maybeSingle: async () => ({
-      data: {
-        payload: {
-          ...publicationImage,
-          thumbnail_asset_sha256: imageDecision.thumbnail_asset_sha256,
-        },
-      },
-      error: null,
-    }),
+    maybeSingle: async () => ({ data: null, error: null }),
   }
   const deps = {
     createSupabaseClient: () =>
       ({
-        from: () => query,
-        rpc: async (_name: string, args: any) => {
-          calls.push("preflight")
-          if (!allowPreflight)
-            return { data: null, error: new Error("Current oil Lab approval required") }
-          assert.equal(args.p_final_payload.product.image_url, publicationImage.planned_public_url)
-          assert.equal(
-            args.p_final_payload.product.canonical_image_sha256,
-            publicationImage.asset_sha256,
-          )
-          assert.equal(
-            args.p_final_payload.product.thumbnail_image_url,
-            publicationImage.thumbnail_public_url,
-          )
-          return { data: {}, error: null }
+        from: (table: string) => {
+          assert.equal(table, "product_intake_publication_receipts")
+          return query
+        },
+        rpc: async (name: string) => {
+          calls.push(name)
+          assert.equal(name, "product_intake_oil_publication_preflight")
+          return { data: null, error: new Error("Current oil Lab approval required") }
         },
       }) as any,
     loadSubmissionById: async () => submission,
-    uploadFinalImage: async () => {
-      calls.push("upload")
-      return { status: "uploaded" } as any
-    },
     savePayload: async () => {
       calls.push("replace")
-      throw new Error("unexpected replacement")
-    },
-    approveById: async () => {
-      calls.push("approve")
-      return { product_id: "fixture" } as any
+      throw new Error("unexpected payload mutation")
     },
   }
   payload.final.product.price_eur = 11
@@ -125,29 +106,14 @@ test("oil package rejects changed properties and stale DB binding before upload 
     }),
     /Current oil Lab approval required/,
   )
-  assert.deepEqual(calls, ["preflight"])
+  assert.deepEqual(calls, ["product_intake_oil_publication_preflight"])
   calls.length = 0
-  allowPreflight = true
-  const result = await approveResearchPackage({
-    packageDir: dir,
-    reviewedBy: "nick",
-    reviewNotes: null,
-    apply: true,
-    confirm: true,
-    deps,
-  })
-  assert.equal(result.mode, "applied")
-  assert.deepEqual(calls, ["preflight", "upload", "approve"])
-  assert.equal(
-    (submission.researched_payload as any).final.product.image_url,
-    "https://example.com/image.jpg",
-    "publication must not replace the stored payload",
-  )
-  calls.length = 0
-  await writeFile(
-    join(dir, "image-finalization.json"),
-    JSON.stringify({ ...imageDecision, thumbnail_asset_sha256: "c".repeat(64) }),
-  )
+  const current = submission.researched_payload as any
+  const binding = current.draft.oil_research_binding
+  current.draft.oil_research_binding = {
+    ...binding,
+    artifact_id: "00000000-0000-4000-8000-000000000099",
+  }
   await assert.rejects(
     approveResearchPackage({
       packageDir: dir,
@@ -157,10 +123,12 @@ test("oil package rejects changed properties and stale DB binding before upload 
       confirm: true,
       deps,
     }),
-    /image differs/,
+    /package is stale/,
   )
-  assert.deepEqual(calls, [], "changed upload bytes must stop before preflight and upload")
-  await writeFile(join(dir, "image-finalization.json"), JSON.stringify(imageDecision))
+  assert.deepEqual(calls, [])
+  current.draft.oil_research_binding = binding
+  // Generic package tests own byte/image publication success; this owner guards
+  // Oil-specific stale payload/binding rejection before any mutation.
   const originalCurrent = submission.researched_payload
   Reflect.set(submission, "researched_payload", null)
   await assert.rejects(

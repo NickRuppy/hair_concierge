@@ -314,14 +314,44 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
     /start-server-and-test 'NODE_ENV=development CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_QUIZ_V1_ENABLED=true npm run dev -- --hostname 127\.0\.0\.1 --port 3217'/,
   )
   assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
-  assert.match(
-    journeyCommand,
-    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-flow\.spec\.ts tests\/scan-funnel-journey\.spec\.ts tests\/public-contract-declarations\.spec\.ts tests\/profile-trial-membership\.spec\.ts tests\/waitlist-b-quiz-gate\.spec\.ts --project=chromium/,
+  const journeyInvocations = [...journeyCommand.matchAll(/playwright test ([^'&]+)/g)].map(
+    (match) => match[1]!.trim().split(/\s+/),
   )
-  assert.match(
-    journeyCommand,
-    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-funnel-journey\.spec\.ts tests\/public-contract-declarations\.spec\.ts tests\/profile-trial-membership\.spec\.ts --project=webkit-mobile-action/,
-  )
+  // CI coverage depends on project membership, not the order of spec arguments.
+  for (const [project, requiredSpecs] of Object.entries({
+    chromium: [
+      "tests/product-intake-admin-journey.spec.ts",
+      "tests/personal-plan-start.spec.ts",
+      "tests/personal-plan-feinschliff-journey.spec.ts",
+      "tests/personal-plan-stage2-refinement.spec.ts",
+      "tests/personal-plan-stage1-2-3.spec.ts",
+      "tests/personal-plan-application-transition.spec.ts",
+      "tests/personal-plan-routine-editor.spec.ts",
+      "tests/personal-plan-stage3-focus.spec.ts",
+      "tests/personal-plan-preparation-browser.spec.ts",
+      "tests/scan-flow.spec.ts",
+      "tests/scan-funnel-journey.spec.ts",
+      "tests/public-contract-declarations.spec.ts",
+      "tests/profile-trial-membership.spec.ts",
+      "tests/waitlist-b-quiz-gate.spec.ts",
+    ],
+    "webkit-mobile-action": [
+      "tests/personal-plan-stage3-focus.spec.ts",
+      "tests/personal-plan-preparation-browser.spec.ts",
+      "tests/scan-funnel-journey.spec.ts",
+      "tests/public-contract-declarations.spec.ts",
+      "tests/profile-trial-membership.spec.ts",
+    ],
+  })) {
+    const invocations = journeyInvocations.filter((args) => args.includes(`--project=${project}`))
+    assert.ok(invocations.length > 0, `missing ${project} development journey invocation`)
+    for (const spec of requiredSpecs) {
+      assert.ok(
+        invocations.some((args) => args.includes(spec)),
+        `${spec} must run in the ${project} development journey suite`,
+      )
+    }
+  }
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 
   assert.doesNotMatch(
