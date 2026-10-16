@@ -19,7 +19,8 @@
     "tests/product-intake-research-jobs-postgres.test.ts": "f85326f1e85247d0b1aa8334a97a78c10f0fb33106fe150f4a48f2cc77bcf2a7",
     "tests/product-intake-research-readiness-self-check.test.ts": "7bf5cf96c17d53b885598b01b7716124e91453c55e3194cfabd11120285f1d27",
     "tests/product-intake-worker-health.test.py": "f87293791d484c45ae9416a185dbea621e41f792d7d18ea77de391814600de5c",
-    "tests/product-intake-worker-reliability.test.ts": "eb486f3593ba6781d229a52324d50cf64e3d029420516daf8fbe4c1e8935c514"
+    "tests/product-intake-worker-reliability.test.ts": "eb486f3593ba6781d229a52324d50cf64e3d029420516daf8fbe4c1e8935c514",
+    "tests/product-intake-host-controls.test.ts": "28fd2b1ba3f7615657c2f1ec92780c25caddc64a02427312ee099376138e1f8d"
   },
   "verification": {
     "owner_sibling_checks": 119,
@@ -49,7 +50,8 @@
       "product_database_storage_calls": 0
     },
     "host_monitor_read": "healthy,zero reasons,read-only heartbeat",
-    "systemd_unit_validation": "pass; two unrelated existing xfs CPUAccounting deprecation warnings"
+    "systemd_unit_validation": "pass; two unrelated existing xfs CPUAccounting deprecation warnings",
+    "hosted_ci_discovery": "tests/product-intake-host-controls.test.ts runs both actual Python suites through normal Node CI discovery;2 wrapper cases/14 Python checks pass locally"
   },
   "boundaries": {
     "production_release_switched": false,

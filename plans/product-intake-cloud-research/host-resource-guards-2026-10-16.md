@@ -82,6 +82,8 @@ the separate production outbox-error rule is configured for Nick's existing emai
    record calls, elapsed time, cost where available, correction count and review
    links. Nick approves each actual publication separately.
 
+The two Python behavior suites are also invoked by
+`tests/product-intake-host-controls.test.ts` in normal hosted Node discovery.
 Run focused owner tests through the shared launcher, then combined verification
 once on final source, read-only Claude/high plan and whole-branch reviews, and
 hosted CI. Do not repeat unchanged Admin UI tests. Plan/source/sanitized receipts
