@@ -27,7 +27,7 @@ import type { LeadCaptureMode, QuizAnswers } from "../src/lib/quiz/types"
  * is reached — the save itself is never skipped, because the checklist's profile
  * projection is built from it.
  *
- * Batch 8 (plan item 2): „Geschafft" shows the moment the lead step opens; the
+ * Batch 8 (plan item 2): consultation handoff shows the moment the lead step opens; the
  * enrollment check and the save run behind it, the button waits for the save
  * (spinner only after 300 ms), and there is no analysis beat, no fixed wait, no
  * billing-access or result-artifact call for her.
@@ -171,7 +171,7 @@ function createHarness(
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0))
 
-// --- The „Geschafft" ending on its own -------------------------------------------
+// --- The consultation handoff ending on its own -------------------------------------------
 
 function ending(props: Partial<Parameters<typeof QuizDiscoveryLeadSave>[0]>) {
   return {
@@ -191,11 +191,11 @@ function continueButton(tree: ReactNode) {
     .at(-1)!
 }
 
-test("„Geschafft“ at once: one CTA, no name form, no analysis beat, no fixed wait", () => {
+test("consultation handoff at once: one CTA, no name form, no analysis beat, no fixed wait", () => {
   const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...ending({ canSave: false })} />)
-  assert.match(html, /Geschafft — dein Haarprofil steht\./)
-  assert.match(html, /Jetzt noch deine Produkte\. Dauert 5 Minuten\./)
-  assert.match(html, />Weiter zu deinen Produkten</)
+  assert.match(html, /Als Nächstes:/)
+  assert.match(html, /deine Produkte\./)
+  assert.match(html, />Produkte ergänzen</)
   assert.equal((html.match(/<button/g) ?? []).length, 1)
   assert.doesNotMatch(
     html,
@@ -249,7 +249,7 @@ test("Weiter before the save answered waits; a spinner only after 300 ms; on onc
   assert.equal(continued, 0, "nothing to continue to yet")
   assert.equal(continueButton(tree).props["aria-busy"], true)
   assert.equal(ofType(tree, Loader2).length, 0, "no spinner before 300 ms")
-  assert.match(textOf(continueButton(tree)), /^Weiter zu deinen Produkten$/, "label kept")
+  assert.match(textOf(continueButton(tree)), /^Produkte ergänzen$/, "label kept")
 
   t.mock.timers.tick(299)
   tree = harness.render()
@@ -257,7 +257,7 @@ test("Weiter before the save answered waits; a spinner only after 300 ms; on onc
   t.mock.timers.tick(1)
   tree = harness.render()
   assert.equal(ofType(tree, Loader2).length, 1, "spinner after 300 ms")
-  assert.match(textOf(continueButton(tree)), /^Weiter zu deinen Produkten$/, "label still kept")
+  assert.match(textOf(continueButton(tree)), /^Produkte ergänzen$/, "label still kept")
 
   saved = true
   harness.render()
@@ -270,7 +270,7 @@ test("a failed check or save replaces the button with a retry", () => {
   const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...props} />)
   assert.match(html, /role="alert"/)
   assert.match(html, /Etwas ist schiefgelaufen\./)
-  assert.doesNotMatch(html, /Weiter zu deinen Produkten/)
+  assert.doesNotMatch(html, /Produkte ergänzen/)
 
   const tree = createHarness(() => QuizDiscoveryLeadSave(props)).render()
   findAll(tree, (element) => textOf(element) === DISCOVERY_LEAD_SAVE_COPY.retry)
@@ -391,11 +391,11 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
 
 function endingOf(tree: ReactNode) {
   const found = ofType(tree, QuizDiscoveryLeadSave)
-  assert.equal(found.length, 1, "the „Geschafft“ ending is on screen")
+  assert.equal(found.length, 1, "the consultation handoff ending is on screen")
   return found[0]
 }
 
-test("discovery, first visit: „Geschafft“ from the very first render — never the name form", async (t) => {
+test("discovery, first visit: consultation handoff from the very first render — never the name form", async (t) => {
   withBrowser(t)
   const harness = leadStep("discovery")
   // First visit: the store has not been switched to discovery yet.
@@ -430,7 +430,11 @@ test("discovery: the one lead request carries marketingConsent:false; Weiter goe
   assert.equal(browser.requests[0].body.marketingConsent, false)
   assert.equal(browser.requests[0].body.email, "lea@example.test")
   assert.equal(useQuizStore.getState().leadId, "lead-1")
-  assert.equal(useQuizStore.getState().step, 9, "no analysis step — she stays on „Geschafft“")
+  assert.equal(
+    useQuizStore.getState().step,
+    9,
+    "no analysis step — she stays on consultation handoff",
+  )
 
   tree = harness.render()
   assert.equal(endingOf(tree).props.saved, true)
@@ -510,13 +514,13 @@ test("discovery: a lead the server saved as REGULAR never leads to the checklist
   assert.equal(state.leadCaptureMode, "regular", "back on the regular journey")
   assert.equal(state.step, 10, "on to the regular preparation, not the checklist")
   const tree = harness.render()
-  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0, "no „Geschafft“ ending")
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0, "no consultation handoff ending")
   assert.deepEqual(router.pushes, [])
 })
 
 test("discovery: a second visit re-checks the enrollment before the save may run", async (t) => {
   // The store kept `discovery` / `consent` from the first visit; this is a NEW mount
-  // whose context check has not answered yet. „Geschafft“ shows, but the save (whose
+  // whose context check has not answered yet. consultation handoff shows, but the save (whose
   // effect would post the lead) is not allowed until the check answered in THIS mount.
   const browser = withBrowser(t)
   let answer: (value: { ok: boolean; status: number; body: unknown }) => void = () => {}
@@ -615,7 +619,7 @@ test("the regular funnel keeps its commitment screen and analysis beat", () => {
   assert.match(html, /Lena, bereit für den nächsten Schritt mit deinem Haar\?/)
   assert.match(html, />Ja, zeig mir meine Analyse</)
   assert.match(html, />Ich bin neugierig</)
-  assert.doesNotMatch(html, /Geschafft/)
+  assert.doesNotMatch(html, /Als Nächstes:/)
 
   const loading = renderToStaticMarkup(
     <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="loading" />,

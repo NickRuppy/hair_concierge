@@ -1,14 +1,12 @@
 "use client"
 
-import { Loader2 } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
-import { Button } from "@/components/ui/button"
 import { useDelayedLoader } from "@/lib/motion-loader"
 
 /**
- * The end of the quiz for a discovery participant: „Geschafft" the moment the lead step
- * opens (batch 8, plan item 2). Everything that still has to happen runs behind it —
+ * The consultation handoff introduces the remaining products and routine. Background work:
  *
  * - the enrollment check (`/api/beratung/quiz-context`, started on the last question),
  * - the profile save (`/api/quiz/lead` with `marketingConsent: false`; discovery leads
@@ -16,7 +14,7 @@ import { useDelayedLoader } from "@/lib/motion-loader"
  *
  * The save still has to happen — the checklist's profile projection is built from exactly
  * this lead — so a failure is never skipped over: it replaces the button with a retry.
- * „Weiter zu deinen Produkten" waits for the save; only if that wait passes 300 ms does the
+ * „Produkte ergänzen" waits for the save; only if that wait passes 300 ms does the
  * button show a spinner (its label and width stay). No fixed waits, no analysis beat.
  *
  * `saved` also covers the one way back onto this step: Back from the checklist with a lead
@@ -24,9 +22,8 @@ import { useDelayedLoader } from "@/lib/motion-loader"
  */
 
 export const DISCOVERY_LEAD_SAVE_COPY = {
-  heading: "Geschafft — dein Haarprofil steht.",
-  subline: "Jetzt noch deine Produkte. Dauert 5 Minuten.",
-  continue: "Weiter zu deinen Produkten",
+  heading: "Als Nächstes: deine Produkte.",
+  continue: "Produkte ergänzen",
   retry: "Erneut versuchen",
 } as const
 
@@ -71,49 +68,45 @@ export function QuizDiscoveryLeadSave({
   }, [continueRequested, error, onContinue, saved])
 
   return (
-    <div className="mx-auto flex w-full max-w-[26rem] flex-col items-center py-10 text-center sm:py-16">
-      <h2 className="text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
-        {DISCOVERY_LEAD_SAVE_COPY.heading}
-      </h2>
-      <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
-        {DISCOVERY_LEAD_SAVE_COPY.subline}
-      </p>
-      {error ? (
-        <div className="mt-9 flex w-full flex-col items-center" role="alert">
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+    <div className="mx-auto flex w-full max-w-[26rem] flex-1 flex-col text-center">
+      <div className="flex flex-1 items-center justify-center px-4 pb-16 pt-9">
+        <h2 className="max-w-[20rem] text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)]">
+          {DISCOVERY_LEAD_SAVE_COPY.heading}
+        </h2>
+      </div>
+      <div className="w-full px-4 sm:px-0" role={error ? "alert" : undefined}>
+        {error ? (
+          <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
             {error}
           </p>
-          <Button
-            className="mt-4"
-            onClick={() => {
-              setContinueRequested(false)
-              onRetry()
-            }}
-            type="button"
-          >
-            {DISCOVERY_LEAD_SAVE_COPY.retry}
-          </Button>
-        </div>
-      ) : (
+        ) : null}
         <button
           aria-busy={pending || undefined}
           aria-disabled={pending || undefined}
-          className="quiz-btn-primary relative mt-9 min-h-12 w-full rounded-[14px] px-5 py-3 text-base font-bold"
+          className="relative flex min-h-14 w-full items-center justify-center gap-3 rounded-[14px] bg-[var(--brand-coral)] px-4 py-4 text-sm font-bold text-white transition-[background-color,transform] duration-150 hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none"
           onClick={() => {
+            if (error) {
+              setContinueRequested(false)
+              onRetry()
+              return
+            }
             if (pending) return
             setContinueRequested(true)
           }}
           type="button"
         >
-          {DISCOVERY_LEAD_SAVE_COPY.continue}
-          {spinnerVisible ? (
-            <Loader2
-              aria-hidden="true"
-              className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin"
-            />
+          {error ? DISCOVERY_LEAD_SAVE_COPY.retry : DISCOVERY_LEAD_SAVE_COPY.continue}
+          {!error ? (
+            <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center">
+              {spinnerVisible ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowRight className="h-5 w-5" />
+              )}
+            </span>
           ) : null}
         </button>
-      )}
+      </div>
     </div>
   )
 }

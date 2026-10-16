@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { QuizDiscoveryLeadSave } from "./quiz-discovery-lead-save"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Check } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
@@ -560,13 +560,16 @@ export function QuizLeadCapture() {
     if (leadId) router.prefetch(buildDiscoveryChecklistPath(leadId))
   }, [inviteeEnding, leadId, router])
 
-  // A discovery participant never sees the name, e-mail or consent screens: „Geschafft"
+  // A discovery participant never sees the name, e-mail or consent screens: the handoff
   // shows at once, and the enrollment check plus the profile save (`marketingConsent:
   // false` — discovery leads are kept out of every marketing pipeline) run behind it.
   if (inviteeEnding && partnerLookupKey !== "checking") {
     return (
-      <div className="flex flex-col" key="discovery-ending">
-        <div className="mb-4 flex items-center gap-3">
+      <div
+        className="flex min-h-[calc(100dvh-4rem)] flex-col pb-[calc(var(--cookie-consent-clearance,0px)+env(safe-area-inset-bottom))] md:min-h-[calc(100dvh-6rem)]"
+        key="discovery-ending"
+      >
+        <div className="flex items-center gap-2">
           {/* Never dimmed for the background save — a Back tap during it is ignored. */}
           <button
             onClick={requestBack}
@@ -576,9 +579,14 @@ export function QuizLeadCapture() {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <div className="flex-1">
-            <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
-          </div>
+          <ol aria-label="Deine Vorbereitung" className="flex min-w-0 flex-1 gap-2 text-sm">
+            <li className="flex h-9 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2 text-white">
+              Profil fertig <Check aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+            </li>
+            <li className="flex h-9 flex-1 items-center justify-center whitespace-nowrap rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-2 text-[var(--brand-plum-dark)]">
+              Produkte offen
+            </li>
+          </ol>
         </div>
         <QuizDiscoveryLeadSave
           canSave={leadCaptureMode === "discovery" && discoveryContextConfirmed}

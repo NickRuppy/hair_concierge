@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="de">
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chaarlie · Übergang zur Vorbereitung – Entwurf</title>
+  <style>
+    @font-face {
+      font-family: Jakarta;
+      src: url("/public/fonts/PlusJakartaSans-Regular.ttf");
+    }
+    body {
+      margin: 0;
+      background: #eeeaf1;
+      color: #2a1845;
+      font:
+        14px Jakarta,
+        sans-serif;
+    }
+    header {
+      padding: 16px 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header strong {
+      margin-right: auto;
+    }
+    select {
+      font: inherit;
+      padding: 8px;
+      border: 1px solid #c8b8e0;
+      border-radius: 8px;
+      background: white;
+      color: inherit;
+    }
+    iframe {
+      display: block;
+      margin: 0 auto 24px;
+      border: 1px solid #ddd8e1;
+      border-radius: 16px;
+      background: #fbfaf9;
+      box-shadow: 0 12px 40px #2a184512;
+      max-width: 100%;
+    }
+  </style>
+  <header>
+    <strong>Chaarlie · Entwurf: Vorbereitung fortsetzen</strong
+    ><label
+      >Ansicht
+      <select id="size">
+        <option value="390">Mobil · 390 px</option>
+        <option value="320">Schmal · 320 px</option>
+        <option value="960">Desktop · 960 px</option>
+      </select></label
+    ><label
+      >Status
+      <select id="state">
+        <option value="ready">Bereit</option>
+        <option value="pending">Speichert nach Klick</option>
+        <option value="error">Speicherfehler</option>
+      </select></label
+    >
+  </header>
+  <iframe title="Vorschau des Übergangs" width="390" height="740"></iframe>
+  <template id="screen">
+    <!doctype html>
+    <html lang="de">
+      <meta charset="utf-8" /><meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+      /><style>
+        @font-face {
+          font-family: Jakarta;
+          src: url("/public/fonts/PlusJakartaSans-Regular.ttf");
+        }
+        @font-face {
+          font-family: Playfair;
+          src: url("/public/fonts/PlayfairDisplay-Regular.ttf");
+        }
+        * {
+          box-sizing: border-box;
+        }
+        html,
+        body {
+          min-height: 100%;
+          margin: 0;
+        }
+        body {
+          background: #fbfaf9;
+          color: #2a1845;
+          font:
+            16px/1.5 Jakarta,
+            sans-serif;
+        }
+        main {
+          max-width: 640px;
+          margin: auto;
+          min-height: 100dvh;
+          display: flex;
+          flex-direction: column;
+          padding: 16px 20px max(24px, env(safe-area-inset-bottom));
+        }
+        .top {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          min-height: 44px;
+        }
+        .back {
+          width: 44px;
+          height: 44px;
+          flex-shrink: 0;
+          border: 0;
+          background: none;
+          color: #716d6a;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .back svg {
+          width: 24px;
+          height: 24px;
+        }
+        .progress {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .phase {
+          height: 36px;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 8px;
+          border-radius: 999px;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+        .phase.done {
+          background: #6b50a0;
+          color: white;
+        }
+        .phase.open {
+          background: #f2eefa;
+          border: 1px solid #c8b8e0;
+          color: #3d2a62;
+        }
+        .content {
+          width: 100%;
+          max-width: 416px;
+          margin: auto;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 36px 16px 64px;
+          text-align: center;
+        }
+        h1 {
+          font:
+            500 32px/1.2 Playfair,
+            serif;
+          text-wrap: balance;
+          margin: 0;
+        }
+        h1 span {
+          display: block;
+        }
+        .action {
+          width: 100%;
+          max-width: 416px;
+          margin: 0 auto;
+        }
+        .cta {
+          width: 100%;
+          border: 0;
+          border-radius: 14px;
+          min-height: 56px;
+          padding: 16px;
+          background: #d4616a;
+          color: #fff;
+          font:
+            700 14px/1.5 Jakarta,
+            sans-serif;
+          cursor: pointer;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+        .cta svg {
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+        }
+        .feedback {
+          position: fixed;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          border: 0;
+          border-radius: 12px 0 0 12px;
+          background: #d4616a;
+          color: white;
+          padding: 20px 8px;
+          font:
+            600 12px Jakarta,
+            sans-serif;
+          writing-mode: vertical-rl;
+          rotate: 180deg;
+          box-shadow: 6px 0 16px -6px #d96a7673;
+        }
+        .error {
+          font-size: 14px;
+          color: #ad3540;
+          margin: 0 0 16px;
+          text-align: center;
+        }
+        .pending .cta {
+          opacity: 0.8;
+          cursor: wait;
+        }
+        .spinner {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 2px solid #ffffff70;
+          border-top-color: white;
+          border-radius: 50%;
+          vertical-align: middle;
+        }
+        @media (min-width: 640px) {
+          main {
+            min-height: 640px;
+            padding: 32px 24px 48px;
+          }
+          .content {
+            padding: 48px 16px;
+          }
+        }
+      </style>
+      <main>
+        <div class="top">
+          <button class="back" aria-label="Zurück">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="m12 4-8 8 8 8M4 12h16" />
+            </svg>
+          </button>
+          <div
+            class="progress"
+            aria-label="Vorbereitung: 1 von 2 Teilen abgeschlossen. Haarprofil beantwortet, Produkte und Routine noch offen."
+          >
+            <span class="phase done">Profil fertig&nbsp;<span aria-hidden="true">✓</span></span
+            ><span class="phase open">Produkte offen</span>
+          </div>
+        </div>
+        <section class="content">
+          <h1><span>Als Nächstes:</span><span>deine Produkte.</span></h1>
+        </section>
+        <div id="action" class="action">
+          <button class="cta">
+            Produkte ergänzen
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="m12 4 8 8-8 8M4 12h16" />
+            </svg>
+          </button>
+        </div>
+      </main>
+      <button class="feedback" aria-label="Feedback geben">Feedback</button>
+    </html>
+  </template>
+  <script>
+    const frame = document.querySelector("iframe")
+    function render() {
+      frame.width = document.querySelector("#size").value
+      frame.height = frame.width === "320" ? 568 : frame.width === "960" ? 640 : 740
+      const state = document.querySelector("#state").value
+      let html = document.querySelector("#screen").innerHTML
+      if (state === "pending")
+        html = html
+          .replace('<div id="action" class="action">', '<div id="action" class="action pending">')
+          .replace(
+            "Produkte ergänzen <svg",
+            'Produkte ergänzen <span class="spinner" aria-hidden="true"></span><svg style="display:none"',
+          )
+      if (state === "error")
+        html = html
+          .replace(
+            '<div id="action" class="action">',
+            '<div id="action" class="action" role="alert"><p class="error">Speichern fehlgeschlagen. Bitte erneut versuchen.</p>',
+          )
+          .replace("Produkte ergänzen", "Erneut versuchen")
+      frame.srcdoc = html
+    }
+    document.querySelectorAll("select").forEach((s) => s.addEventListener("change", render))
+    render()
+  </script>
+</html>
