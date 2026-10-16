@@ -1,0 +1,91 @@
+{
+  "decision_id": "OE46",
+  "date": "2026-10-05",
+  "status": "human_accepted_product_specific_estimate",
+  "authorization": "Nick yes to Evolve low build-up potential, explicitly estimated with low confidence.",
+  "neutral_id": "D01",
+  "identity": {
+    "brand": "Evolve Organic Beauty",
+    "product": "Nourishing Hair Elixir – Dry Hair Serum",
+    "size_ml": 30,
+    "market": "UK"
+  },
+  "source_id": "D01-maker",
+  "source_url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+  "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.4.md": "36d95689a7007185ee09e8a1853089ac69ab80552be6bcd6430dbfc0b2fcb9b5"
+  },
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "ISOAMYL LAURATE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "COCOS NUCIFERA OIL"
+      }
+    ],
+    "counter_signal": [
+      "The intact oil module can leave conditioning residue despite the leading ester."
+    ],
+    "nearest_alternative": "low",
+    "reason": "The defined ester and oil blend supply emollience, but the dictionary establishes neither a weak-film fluid whole system nor a substantial persistent coating. Low is plausible without a gum/resin, yet absence of those ingredients is insufficient affirmative weak-film evidence.",
+    "unresolved": [
+      "Residual-film load, spreading properties of the actual grades and the extract contribution are unestablished."
+    ]
+  },
+  "approved_property": {
+    "value": "low",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "ISOAMYL LAURATE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "COCOS NUCIFERA OIL"
+      }
+    ],
+    "counter_signal": [
+      "The intact oil module can leave conditioning residue despite the leading ester.",
+      "Residual oil proportions, material grades and repeated shampoo-cycle retention are not known; unknown remains the stronger evidence-strict alternative."
+    ],
+    "nearest_alternative": "unknown",
+    "reason": "OE46 human-approved practical estimate for this exact Evolve declaration: principal mobile ester-led architecture, secondary botanical oils and no obvious substantial gum/resin/wax film system favor low residual-film propensity. The absence of a structurant or the accepted light weight alone is not sufficient; this is a scoped judgment, not measured accumulation or a general classifier anchor.",
+    "unresolved": [
+      "Residual-film load, spreading properties of the actual grades and the extract contribution are unestablished."
+    ]
+  },
+  "unchanged": [
+    "Original trial records, lane judgments, metrics, seals and receipts",
+    "Weight/base/penetration and all other properties",
+    "Fit policies and application directions",
+    "General build-up classification mechanism"
+  ],
+  "next_case": "D02 Biopark Organic Coconut Oil; not adjudicated here."
+}

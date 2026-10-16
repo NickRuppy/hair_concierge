@@ -1,0 +1,3139 @@
+{
+  "version": "oil-adapter-replay-v0.1",
+  "count": 37,
+  "statuses": {
+    "property_projection_ready": 33,
+    "needs_research": 4,
+    "not_applicable": 0
+  },
+  "interpretation": "Serialization, original-authority attribution and projection replay only; no unseen classification, measured sensory result, research method lock or live activation.",
+  "original_files_verified": [
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/combined-profile-inventory.json",
+      "sha256": "7abad99eb94b66ecdd8c0700c25c1955314ecf87026fc87fbb4ca5ecd04d8a87"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/scenario-fit.json",
+      "sha256": "7525fca4f38567180eea8a0820878e775b7ff0541d4233297229b90c9328fa21"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+      "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+      "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+      "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1"
+    },
+    {
+      "kind": "authority",
+      "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+      "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+      "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/input-manifest.json",
+      "sha256": "c30bde4b44fcf6978b001063ffbe5c791abff00a020e4ceb7fe00d309d210a6e"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-packet.json",
+      "sha256": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/method.md",
+      "sha256": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection-schema.json",
+      "sha256": "70916637152b71ddb30ef40a09ee346f37a782e520038073eac4b19fe4e6b451"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/scope-decision.json",
+      "sha256": "306bc288887f60f33dafb9ee667a21ef6048b9aebc96d465ef766250899a8c62"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json",
+      "sha256": "1495771f7790df07b8a8d1f7d35e45b1754b5e0a11003e5939f3ebfb505e6816"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/historical-preservation-final.json",
+      "sha256": "1a7746353c8a5c6ea7c535332712fe25c4ffc17224564d10e0055f3d7620cafe"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-bindings-staged.json",
+      "sha256": "0e728187db91744a8d292deb3d827a9ac675da7977b4782b9cf08b5524444692"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/coverage-inventory.json",
+      "sha256": "d6ad82a2eca7df517054839ef90f38bdc7e0ab91d58c71aa7e7bc783fcadc093"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/blind-packet.json",
+      "sha256": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+      "sha256": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+      "sha256": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+      "sha256": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json",
+      "sha256": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+      "sha256": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json",
+      "sha256": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+      "sha256": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+      "sha256": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+      "sha256": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+      "sha256": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json",
+      "sha256": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+      "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/shared/persistence-pilot-v0.1/function-dictionary.json",
+      "sha256": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/shared/persistence-potential-v0.1.md",
+      "sha256": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/00_category-charter-v0.2.md",
+      "sha256": "c92f36d0294664dc05a9d7e74f4e63beac62f5ee0462b5856f00313e0f2fca72"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/01_property-set-v0.2.md",
+      "sha256": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+      "sha256": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md",
+      "sha256": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md",
+      "sha256": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-stage-seal.json",
+      "sha256": "09fb0b386e37022996535513267d768c4d1c81d166d7d46c0030eca1f548464b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/input-manifest.json",
+      "sha256": "4f20a480ff5990b04626acda494efc08e9e112ac68d4ab4578318738958feac9"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/method.md",
+      "sha256": "79f33e162ccd7d83f846ec1a03d92872074e983d0aca95c3b51d91996963f905"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+      "sha256": "14fc33bc49a68433eed75f5dda15578a4223af31669555fbb95269a2c7955b73"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/source-packet.json",
+      "sha256": "7a29772235f3bb1b07a042c367e49955208aa56778d02f4eab76cc510c44f40b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/cohort.json",
+      "sha256": "1d1026befb941a9efd667a61389aa95a2d62bca0e138bfaa90920e784e7a6ca5"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/normalization-audit.json",
+      "sha256": "62dcf4f8c94ced64a4b5cc2c3365ba81439f5bd8394db41bc72a993b9b238569"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-material-mappings.md",
+      "sha256": "e4d78e020f04d27b7e3cc6f2114b6fc7e956db84d5ae76d7e3c0439963e4b841"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/preflight-receipt.json",
+      "sha256": "abc2666ef7ef36c4d24b025b51a5283ce1d96a3186f0886664776223dd945488"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-stage-seal.json",
+      "sha256": "f5d06234d83ddd02b4aac4bf656cb3fcf59bd88d6c5c913fa015d80f2f177bc8"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+      "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/input-manifest.json",
+      "sha256": "83f4b8b2ba56436bd48e5a39c9dce89c2efd50d7df7e397409af68b7cf923476"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/method.md",
+      "sha256": "d4cb051f53bcd1e9fd46b8d041b10253245c127d5f62d046ef43de4491a1ac72"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet.json",
+      "sha256": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/unblinded-packet.json",
+      "sha256": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-packet.json",
+      "sha256": "802edeb887c93f00a4f9194219e55c7695fb7e89f3ea01e697df93b91060bf48"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/ingredient-lexicon.json",
+      "sha256": "1bbf26030098a89f7974a8edd8b4b0882687da692e88732224b744b931d4477e"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/normalization-audit.json",
+      "sha256": "3da98bf704c87a5a0b1f6f4a600b2f50ca31f4113f1a4963f51795f421d350ce"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/cohort.json",
+      "sha256": "5c5c6f1c91ea78b1a8b43d14ac014732b2062df464a0aec7276150a02732fbd3"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/historical-preservation.json",
+      "sha256": "8308d6873c21c72fe36ea20cc05e2f27ee39e1fb5ed8857a3821d8684d0d2aae"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-stage-seal.json",
+      "sha256": "12b32292260574d81596fe0d7cded389c595662c7c9a8bbd3ac9b9c71bce3ddc"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/seal-bookkeeping-correction.json",
+      "sha256": "19bd53db753b47289381e5cce08a66a4c98245bd0a606aa6320e059eb706fecd"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/unblinded-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "kind": "authority",
+      "path": "plans/oil-inci/research/profile-completion-evidence-v0.1/evidence.json",
+      "sha256": "1c8f8286bf426df7b95a988a7fb819c669e20b6433550c8ce189e6df326e6cac"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/post-seal-source-amendment-v0.1.1.json",
+      "sha256": "db41853814520e6704d17aa8a89f3639f5acbd6d92b06db7b6001afa63fd7e94"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/O08-retained-source-successor.json",
+      "sha256": "c3b1b0f072efc0dbdef39b54bbd5fea56ff219d256b5c007049ab5a87c3bb492"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+      "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-a/stage2-records.json",
+      "sha256": "8be277b3e51cd510f408cb3702c59d17acfd780c7fc55d95382e9317188dd9e8"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/input-manifest.json",
+      "sha256": "8174f6966b6979c33e9e6e614f86d2eefdddebfa834ee6b0573aa4d7c1bb7824"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/method.md",
+      "sha256": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-packet.json",
+      "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+      "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-seal.json",
+      "sha256": "43fd1b95faa2c41b21d8d40cc3992cb2585465717c3b7f0fef1111ecf1b56f6d"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/input-manifest.json",
+      "sha256": "11bd87d1068cca5a6134f5e21e42ab74a4fbad049cafcc14295fcb69bf24649c"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/method.md",
+      "sha256": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-packet.json",
+      "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+      "sha256": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md",
+      "sha256": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391"
+    },
+    {
+      "kind": "authority",
+      "path": "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md",
+      "sha256": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+      "sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-manifest.json",
+      "sha256": "eef52890b4bf24b37e6c6463f1d60043ca7922bf27b7cdbe1e8dc5ae7915760c"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-seal.json",
+      "sha256": "fe60a757ae696fa9c07253fa9e01c9cbe243c601434d443822e6537fe56557ad"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-seal.json",
+      "sha256": "067a71938ab1bfbaa3eac3a2102394baa3f6a5bba48f68937bc8b4e03a6aa9be"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-packet.json",
+      "sha256": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+      "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/input-manifest.json",
+      "sha256": "80f280c3c4c88115dc38da92e1b8840d73dfb47096501ef8cceaf48b105287f6"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/method.md",
+      "sha256": "99515c0c6d3fdf0502dc436254c0ceb8dd02fc3397345ba304089193c49c942b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/material-reference.json",
+      "sha256": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/policy.json",
+      "sha256": "0855642ec7975a710bf30447da7af8f5b39ebb99ee98f5404dd333efe6a524e7"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+      "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/input-manifest.json",
+      "sha256": "2f419dd3fcd1446b2506b92db27dd4d4e80d71114e4eb876d1a2467ad23510e3"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/method.md",
+      "sha256": "c860688c977715c1b468e74ec556a82d707afd49a2ef875ae0f0793b0061b981"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/material-reference.json",
+      "sha256": "fa48a09cf0b1b04262626061266bc7b557bead57a345c40e5c767696ed94d003"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/policy.json",
+      "sha256": "8d26aa5c566456588ba4d2e8eb74d32f9f71795be973d7ab53fa966ea998c06e"
+    },
+    {
+      "kind": "authority",
+      "path": "plans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json",
+      "sha256": "545ad74cc5a2f1d7fe4a039ae76a5d1d38c843449bdbc81a9d8579eee545b91e"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+      "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+      "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/scenario-fit.json",
+      "sha256": "950c33447946727f9f7cf938da7c417803f2a548a426ad18f83c2299f04a8be6"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/persistence-research-trace.json",
+      "sha256": "d39bf1291dc91150969f04238501353ae9f3b974efa7df606fa12c29e1650dc8"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/blind-records.json",
+      "sha256": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/stage2-records.json",
+      "sha256": "bdd9b0f6235b023feffacc17920975218166ff7a7f42d6b128c9009bc1da812a"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/source-packet.json",
+      "sha256": "6fb120c79d58590644dcf18f8eff81d776962975e60b918bcd3b9fa0721eb940"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/input-manifest.json",
+      "sha256": "fd48c425d9b1e1b7ba7f3398e5ab474040f0f60e5f831713197672143e33d07c"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/method.md",
+      "sha256": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/blind-packet.json",
+      "sha256": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+      "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-manifest.json",
+      "sha256": "e67797912926bbce700fca34d501eaf8b4ebedb1d9686583cf2e92af7db7f0ed"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/blind-seal.json",
+      "sha256": "1594f91171bee2c8d10d7838d37f8189973b6ded96cf94c04a7a682a48615ae8"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-seal.json",
+      "sha256": "f13a6b2e07ea9a9a06c45d6f4588a2d40a80c410d86a2f6aed54f9587864d96b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-packet.json",
+      "sha256": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/scenario-fit.json",
+      "sha256": "1fc140b189f72e3957fed37613daafe8f44e61dcc214725f8146ba3fe2670cc2"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/persistence-research-trace.json",
+      "sha256": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+      "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+      "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+      "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/input-manifest.json",
+      "sha256": "8337bf4408d41e3cec0d0f16dcc553ffcbedf3b795c1c3d095663f1934cd673d"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/method.md",
+      "sha256": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-packet.json",
+      "sha256": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+      "sha256": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-manifest.json",
+      "sha256": "fb47122c7dd4239e18f73d70a4748154ecffe889a8c7dedfafae9a8634e3ed5f"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-seal.json",
+      "sha256": "bcf44e0787d8269fd45f6b6b8e3aaeb17e4f9220b4d648b0cc06558816022984"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-seal.json",
+      "sha256": "4d9158dd52500df547afd8dc1d22804c72c685e784a18096871a52c393e59c77"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-packet.json",
+      "sha256": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/persistence-research-trace.json",
+      "sha256": "ab9bac50ed9205797f3c51a25149eeb46c8b5aa2c3daa862c4d668d5f7f80b2b"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/blind-records.json",
+      "sha256": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/lane-a/stage2-records.json",
+      "sha256": "d2ea38f55f0b842aefbc8e51aacbe621016d3905a32136091c45875c281feaf6"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/input-manifest.json",
+      "sha256": "c2afefb64cde50fd01b023c53cddf418586f3b4f3075a287cad6555a26746c26"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/method.md",
+      "sha256": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/blind-packet.json",
+      "sha256": "fe8f733abba22ae94767c6afee84fa0d416324d4233e89961da80d9bfbe2e9bb"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/function-dictionary.json",
+      "sha256": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-manifest.json",
+      "sha256": "294bdd537cc617c5b58e9084565eac8df1b0964bf757a57c9e0fe1ddbc9caf93"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/blind-seal.json",
+      "sha256": "c1a62c0678632d19dcd116ba75f2b37e46850e4d4809e1129e6da8c48954b126"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-seal.json",
+      "sha256": "c65f14cf50712f2846177d65949b903cac48d091762e825c428ea168d1501bb4"
+    },
+    {
+      "kind": "authority",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/correction-v0.2/stage2-packet.json",
+      "sha256": "5b27d15d1537553c059149643645d3c5bb41e4b3707bdc3025049a3df072bdf1"
+    }
+  ],
+  "records": [
+    {
+      "product_key": "oil-persistence-01",
+      "case_id": "O01",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are the union of independently coherent source-bound scenarios, with explicit removal distinguished from retention by stated styling/finishing context. Claims and ingredient flags do not establish uses.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Accepted reviewed exact-product manufacturer/pack heat-protection claim satisfies the heat gate without an ingredient AND requirement."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-03",
+      "case_id": "O03",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The maker direction explicitly covers retained damp-or-dry fibre application, supporting both leave-on conditioning and dry finish. The separate official-partner retained hair direction supports general leave-on conditioning; its unspecified stage is not borrowed from the maker scenario.",
+          "category_specs.product_oil_specs.provides_heat_protection": "The completed exact-product claim review contains no accepted explicit manufacturer hair heat-protection claim; false denotes the claim gate, not tested zero protection."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-04",
+      "case_id": "O04",
+      "expected_status": "needs_research",
+      "expected_reasons": [
+        "historical_formula_ledger_conflict_rank_1"
+      ],
+      "actual_status": "needs_research",
+      "actual_issues": [
+        "input: Unresolved source ID: E01-retailer-de",
+        "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula",
+        "input: Ingredient evidence mismatch at rank 1",
+        "input: Ingredient evidence mismatch at rank 1",
+        "input: Ingredient evidence mismatch at rank 1",
+        "input: Unresolved source ID: E01-retailer-de"
+      ],
+      "weight": "rich",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [
+        {
+          "reason": "historical_formula_ledger_conflict_rank_1",
+          "formula": {
+            "rank": 1,
+            "raw_name": "Cocos Nucifera Fruit Oil",
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          "ledger": {
+            "rank": 1,
+            "raw_name": "Cocos Nucifera Fruit Oil",
+            "canonical_name": "COCOS NUCIFERA FRUIT OIL",
+            "dictionary_roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "formula_role": "principal",
+            "role_reason": "The sole declared ingredient is admitted as intact botanical fixed oil and therefore supplies the entire carrier architecture; scientific transfer remains separate.",
+            "ambiguity": [
+              "Intact fixed-oil function admitted; exact penetration science mapping deliberately withheld."
+            ]
+          },
+          "formula_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+            "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+            "record_key": "O04",
+            "reason": "Attributed research decision"
+          },
+          "ledger_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+            "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+            "record_key": "D02",
+            "reason": "Inherited exact direct research record; historical evidence representation retained."
+          }
+        }
+      ],
+      "outcome": {
+        "issues": [
+          "input: Unresolved source ID: E01-retailer-de",
+          "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula",
+          "input: Ingredient evidence mismatch at rank 1",
+          "input: Ingredient evidence mismatch at rank 1",
+          "input: Ingredient evidence mismatch at rank 1",
+          "input: Unresolved source ID: E01-retailer-de"
+        ],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "needs_research"
+      }
+    },
+    {
+      "product_key": "oil-persistence-05",
+      "case_id": "O05",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "Separate explicit damp-then-styler direction establishes damp leave-on; original separate after-heat-styling direction establishes dry finish. General scenarios retain their unstated facts and no cross-scenario dose/stage transfer occurs.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Completed exact-product claim review supplies no accepted positive heat-protection claim. False is the claim-gate result, not measured zero efficacy."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-06",
+      "case_id": "O06",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are the union of independently coherent source-bound scenarios, with explicit removal distinguished from retention by stated styling/finishing context. Claims and ingredient flags do not establish uses.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Accepted reviewed exact-product manufacturer/pack heat-protection claim satisfies the heat gate without an ingredient AND requirement."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-07",
+      "case_id": "O07",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are the union of independently coherent source-bound scenarios, with explicit removal distinguished from retention by stated styling/finishing context. Claims and ingredient flags do not establish uses.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Accepted reviewed exact-product manufacturer/pack heat-protection claim satisfies the heat gate without an ingredient AND requirement."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-08",
+      "case_id": "O08",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "Two coherent exact-DE retailer leave-on ends alternatives; historical dm context remains incomplete.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Completed exact-product claim review supplies no accepted positive heat-protection claim. False is the claim-gate result, not measured zero efficacy."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-09",
+      "case_id": "O09",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Completed exact page body/directions/ingredients review found no explicit hair heat-protection claim. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-10",
+      "case_id": "O10",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Completed exact DE page review: no explicit heat-protection claim for this oil. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-11",
+      "case_id": "O11",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Completed product detail, benefits, directions, and ingredient review contains no exact product heat-protection claim. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-12",
+      "case_id": "O12",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Exact DE page states Hitzeschutz bis 230 C. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-13",
+      "case_id": "O13",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Complete relevant product review found no finished-product heat-protection claim; towel warmth is treatment context. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-14",
+      "case_id": "O14",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Maker FAQ says treatment helps protect from heat damage. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-15",
+      "case_id": "O15",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The retained damp-or-dry lengths/ends direction supports leave-on fibre conditioning and dry finish. The separately authorized oil bath before shampoo supports fibre prewash. Both scenarios retain their exact no-direct-scalp restrictions. The oil-bath dose and contact time remain unspecified; the 1–2 drops dose is not transferred to that route.",
+          "category_specs.product_oil_specs.provides_heat_protection": "The corrected exact-product manufacturer review includes an accepted explicit hair heat-protection claim. It meets the heat gate without an ingredient requirement; the temperature is retained only within source text."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-16",
+      "case_id": "O16",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "rich",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "rich",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Full product page and front/back label reviewed; no explicit hair heat-protection claim. Hot-oil treatment instructs heating, which is not heat protection. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-17",
+      "case_id": "O17",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Complete description, application, INCI and FAQ/recycling sections reviewed; no explicit heat-protection claim. Warm towel is treatment context. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-18",
+      "case_id": "O18",
+      "expected_status": "needs_research",
+      "expected_reasons": [
+        "historical_formula_ledger_conflict_rank_10"
+      ],
+      "actual_status": "needs_research",
+      "actual_issues": [
+        "formula.ingredients: Raw declaration contains unrepresented ingredients",
+        "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula"
+      ],
+      "weight": "rich",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [
+        {
+          "reason": "historical_formula_ledger_conflict_rank_10",
+          "formula": {
+            "rank": 10,
+            "raw_name": "Helianthus annuus seed oil (Sunflower plant oil",
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          "ledger": {
+            "rank": 10,
+            "raw_name": "Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "dictionary_roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "formula_role": "secondary",
+            "role_reason": "Sunflower is retained as an intact conditioning oil in the inventory even though its declaration describes a tocopherol carrier; no two-function suffix establishes trace.",
+            "ambiguity": []
+          },
+          "formula_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+            "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+            "record_key": "O18",
+            "reason": "Attributed research decision"
+          },
+          "ledger_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+            "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+            "record_key": "D06",
+            "reason": "Inherited exact direct research record; historical evidence representation retained."
+          }
+        }
+      ],
+      "outcome": {
+        "issues": [
+          "formula.ingredients: Raw declaration contains unrepresented ingredients",
+          "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula"
+        ],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "needs_research"
+      }
+    },
+    {
+      "product_key": "oil-persistence-19",
+      "case_id": "O19",
+      "expected_status": "needs_research",
+      "expected_reasons": [
+        "historical_formula_ledger_conflict_rank_4"
+      ],
+      "actual_status": "needs_research",
+      "actual_issues": [
+        "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula",
+        "input: Ingredient evidence mismatch at rank 4",
+        "input: Ingredient evidence mismatch at rank 4",
+        "input: Ingredient evidence mismatch at rank 4",
+        "input: Ingredient evidence mismatch at rank 4"
+      ],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [
+        {
+          "reason": "historical_formula_ledger_conflict_rank_4",
+          "formula": {
+            "rank": 4,
+            "raw_name": "Cocos Nucifera (Coconut) Oil",
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          "ledger": {
+            "rank": 4,
+            "raw_name": "Cocos Nucifera (Coconut) Oil",
+            "canonical_name": "COCOS NUCIFERA OIL",
+            "dictionary_roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "formula_role": "secondary",
+            "role_reason": "Intact coconut oil is part of the supporting oil module; presence alone does not establish the principal penetration mechanism.",
+            "ambiguity": []
+          },
+          "formula_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+            "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+            "record_key": "O19",
+            "reason": "Attributed research decision"
+          },
+          "ledger_authority": {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+            "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+            "record_key": "D01",
+            "reason": "Inherited exact direct research record; historical evidence representation retained."
+          }
+        }
+      ],
+      "outcome": {
+        "issues": [
+          "profile.ingredient_ledger: Mechanism ledger must cover exact ordered formula",
+          "input: Ingredient evidence mismatch at rank 4",
+          "input: Ingredient evidence mismatch at rank 4",
+          "input: Ingredient evidence mismatch at rank 4",
+          "input: Ingredient evidence mismatch at rank 4"
+        ],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "needs_research"
+      }
+    },
+    {
+      "product_key": "oil-persistence-20",
+      "case_id": "O20",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Carried exact accepted/working weight from attributed authority; original confidence ceiling retained.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Exact official indexed product benefits explicitly state heat protection up to230°C; official product FAQ corroborates the finishing oils claim. Temperature is manufacturer claim, not independently measured efficacy. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-21",
+      "case_id": "O21",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B4/B6: the principal hydrocarbon carrier and fluid-emollient routes support a readily distributed lighter system. Jojoba esters have a grade-dependent wax possibility, but the dictionary does not establish a principal wax structure; meadowfoam and moringa medium priors are retained counter-signals rather than automatic upgrades. No affirmative structured remainder outweighs the mobile carrier reading.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Full product details, benefits, clinical results, key/full ingredients, directions and FAQ reviewed; no explicit product heat-protection claim. Heat Protection navigation excluded. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-22",
+      "case_id": "O22",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B2: the sole exact jojoba carrier takes the material reference light estimate at its original low-confidence ceiling. The liquid-wax flow rationale supports easier distribution at modest dose; it does not imply evaporation or negligible residue.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Complete description, hair/skin use and ingredient sections reviewed; no explicit hair heat-protection claim. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-23",
+      "case_id": "O23",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5: a principal silicone/gum system reinforced by a conditioning silicone polymer supplies affirmative intermediate retained film, even with mobile hydrocarbon and derived-emollient distribution. The botanical oils and olive unsaponifiables add nonvolatile counter-signals but do not establish a principal rich structure.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Exact selected maker label explicitly claims heat/UV damage protection. No temperature shown. Nearby450°F claims for primer/cream excluded. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-24",
+      "case_id": "O24",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5: the nonvolatile humectant vehicle combines with phenyl-trimethicone/dimethiconol conditioning films and a rheology-polymer system. This gives an affirmative intermediate residual-system argument; water alone does not choose light. The mobile silicone/glycol distribution routes keep rich from being supported by the polymer name alone.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Product header identifies heat protectant; benefits list heat protection; FAQ explicitly confirms. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-25",
+      "case_id": "O25",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5: two adjacent explicitly volatile principal vehicles provide affirmative mobile distribution, with dimethiconol interpreted as the secondary conditioning-film route. This supports light rather than invoking medium solely from silicone presence. Later rich-prior buriti remains counterevidence, not a one-ingredient rich floor.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Maker FAQ recommends separate true heat protectant; generic styling/environment protection is insufficient. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-26",
+      "case_id": "O26",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5/B6: multiple principal conditioning-silicone routes remain after the mobile vehicle, with secondary elastomer, protein conditioners and lipid esters supplying further retained-film evidence. This supports medium. Rich requires more than these secondary film/rheology ingredients without amounts or grades.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Maker claims450°F/232°C; manufacturer Q&A confirms heat protection. The heat gate is true because an explicit accepted claim is supplied."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-27",
+      "case_id": "O27",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B3/B6: light-leading sunflower and fluid jojoba/safflower are countered by principal medium-prior avocado/argan, rich-prior coconut and supporting seed butter. The combined lipid argument supports intermediate coating rather than a simple light-leading tie-break. Predominantly fluid oil architecture opposes a rich floor from butter presence.",
+          "category_specs.product_oil_specs.role_support": "Each role comes from an independently retained coherent source direction. Sites, stages, doses, contact times, removal and restrictions are copied from that direction without combining scenarios. Styling context may establish retention only where the packet explicitly records it.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded."
+        },
+        "required_protocol_roles": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-persistence-28",
+      "case_id": "O28",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "original_sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate.",
+          "Historical trace gap: Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B2: the sole exact marula seed oil takes the admitted material medium estimate at the original low-confidence ceiling. The prior is an approximate flow/coating tendency with strong grade limits, not an average of conflicting claims.",
+          "category_specs.product_oil_specs.role_support": "The supported-use set is the union of roles explicitly established by all supplied coherent directions. General retained/damp fibre use maps to leave_on_fibre_conditioning; explicitly retained dry styling maps to dry_finish; fibre followed by washing maps to pre_wash_fibre_treatment; explicitly named scalp maps to scalp_application. No extra scenario is synthesized from historical summaries or excluded mixture contexts.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Complete currentproductdetails/highlights/usage reviewed; no explicit hairheat protection claim. The heat gate is false because the completed review supplies no accepted positive claim."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-holdout-h01",
+      "case_id": "H01",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B4: the principal hydrocarbon/ester-emollient architecture supports a lighter distribution/coating hypothesis. The positive retained botanical burden is secondary; it does not outweigh the coherent mobile-emollient reading.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are derived only from each coherent exact-product source direction; explicit wet/dry alternatives support both roles, and distinct damp/finishing directions remain separate.",
+          "category_specs.product_oil_specs.provides_heat_protection": "No explicit heat-protection claim in the reviewed exact product body."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-holdout-h02",
+      "case_id": "H02",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5: the principal silicone carrier/gum architecture supplies an affirmative retained conditioning film, supporting medium as a working sensory-load estimate.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are derived only from each coherent exact-product source direction; explicit wet/dry alternatives support both roles, and distinct damp/finishing directions remain separate.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Accepted explicit exact-product manufacturer heat claim is present."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-holdout-h03",
+      "case_id": "H03",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B4: the single hydrocarbon-emollient carrier supports the lighter fluid-emollient architecture interpretation without a competing structured conditioning system. This is a whole-material working hypothesis, not an inherited botanical prior.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are derived only from each coherent exact-product source direction; explicit wet/dry alternatives support both roles, and distinct damp/finishing directions remain separate.",
+          "category_specs.product_oil_specs.provides_heat_protection": "No explicit heat-protection claim in reviewed exact maker content."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-holdout-h04",
+      "case_id": "H04",
+      "expected_status": "needs_research",
+      "expected_reasons": [
+        "unknown_weight"
+      ],
+      "actual_status": "needs_research",
+      "actual_issues": [
+        "Unknown weight requires research; no fallback is applied"
+      ],
+      "weight": "unknown",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [
+          "Unknown weight requires research; no fallback is applied"
+        ],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "needs_research"
+      }
+    },
+    {
+      "product_key": "oil-holdout-h05",
+      "case_id": "H05",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5 with B4/B6 challenge: a principal dimethicone conditioning branch operates alongside mobile emollients, and secondary butter plus retained botanical lipids reinforce an intermediate conditioning-load interpretation. The argument depends on this coherent retained system, not an early medium oil alone.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are derived only from each coherent exact-product source direction; explicit wet/dry alternatives support both roles, and distinct damp/finishing directions remain separate.",
+          "category_specs.product_oil_specs.provides_heat_protection": "Accepted explicit exact-product manufacturer heat claim is present."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-holdout-h06",
+      "case_id": "H06",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "high",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "original_sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B5: the volatile distribution carrier combined with an affirmative retained gum/dimethicone conditioning system supports medium/low. Secondary elastomer structure adds body without establishing a rich total sensory load.",
+          "category_specs.product_oil_specs.role_support": "Supported roles are derived only from each coherent exact-product source direction; explicit wet/dry alternatives support both roles, and distinct damp/finishing directions remain separate.",
+          "category_specs.product_oil_specs.provides_heat_protection": "No explicit heat-protection claim in reviewed exact maker content."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-targeted-t01",
+      "case_id": "T01",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "original_sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Under B1/B4 the aqueous/alcohol vehicle and distributed synthetic-emollient architecture support a lower sensory-load hypothesis; rapeseed and jojoba have light rough priors. Coconut is a secondary retained contribution, not a rich floor. Medium is credible if retained conditioning dominates; rich lacks an affirmative principal structured-film route.",
+          "category_specs.product_oil_specs.role_support": "The coherent instruction explicitly permits dry or damp hair and establishes retention through sun/swimming protection context, supporting both retained fibre roles. The shake, spray distance, reapplication frequency and face/body restriction stay within this same scenario.",
+          "category_specs.product_oil_specs.provides_heat_protection": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-targeted-t02",
+      "case_id": "T02",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "original_sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "Under B0/B1 and B5, the principal silicone conditioning system plus reinforcing conditioning silicone provides affirmative intermediate retained-film load alongside the hydrocarbon and ester emollients. Light is the closest rival; rich lacks a stronger whole-system structural argument under B6. No botanical material prior matches rank 4 and none is transferred.",
+          "category_specs.product_oil_specs.role_support": "The coherent maker direction specifies misting hair to finish a style. Styling context establishes retention and therefore general leave-on fibre conditioning. It supplies no explicit damp/dry alternative, scalp site or pre-wash removal instruction; dry_finish is not inferred.",
+          "category_specs.product_oil_specs.provides_heat_protection": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-targeted-t04",
+      "case_id": "T04",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "medium",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "original_sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "The positive medium/low peanut material tendency supplies a retained fixed-oil coating hypothesis under B1/B2. Recognized aromatic components do not establish a lighter carrier route, and no affirmative structured-film route supports rich. The extract-function gap prevents exact base completion but does not leave two equally persuasive weight architectures.",
+          "category_specs.product_oil_specs.role_support": "The post-wash damp-or-dry lengths/ends instruction supports both retained fibre roles. The separate pre-wash route explicitly targets scalp and includes its own 1–2 hour contact and thorough washing; it supports scalp_application only and does not establish pre_wash_fibre_treatment.",
+          "category_specs.product_oil_specs.provides_heat_protection": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ]
+      }
+    },
+    {
+      "product_key": "oil-targeted-t06",
+      "case_id": "T06",
+      "expected_status": "property_projection_ready",
+      "expected_reasons": [],
+      "actual_status": "property_projection_ready",
+      "actual_issues": [],
+      "weight": "light",
+      "persistence_potential": "moderate",
+      "original_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "original_sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "conflicts": [],
+      "outcome": {
+        "issues": [],
+        "warnings": [
+          "Legacy matching tags require manual review; they are not derived or approved.",
+          "Executable protocols, catalog approval and publication remain separate."
+        ],
+        "catalog_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false,
+        "manual_review_required": [
+          "product_oil_eligibility",
+          "subtype",
+          "purpose",
+          "legacy_ingredient_family_flags",
+          "product.suitable_thicknesses"
+        ],
+        "retained_only_fields": [
+          "base",
+          "named_oils",
+          "dispenser",
+          "penetration_potential",
+          "provides_uv_protection",
+          "ingredient_flags",
+          "persistence_potential",
+          "persistence_trace",
+          "scenario_fit",
+          "application_scenarios",
+          "supported_uses.scalp_application"
+        ],
+        "status": "property_projection_ready",
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning"
+            ],
+            "provides_heat_protection": false
+          }
+        },
+        "field_rationales": {
+          "category_specs.product_oil_specs.weight": "B1/B4 favor the coherent mobile carrier/ester architecture. The retained botanical and cationic components are meaningful counter-signals, but no affirmative principal cohesive or structured film is established to outweigh this route. Medium remains the closest rival; B6 rich is not justified by secondary castor presence alone.",
+          "category_specs.product_oil_specs.role_support": "The exact instruction establishes hair-fibre use and explicitly permits leaving the product in. Wet/dry stage and dose remain unestablished; neither the product positioning nor spray mechanism supplies dry_finish or a dosing instruction.",
+          "category_specs.product_oil_specs.provides_heat_protection": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection."
+        },
+        "required_protocol_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    }
+  ]
+}

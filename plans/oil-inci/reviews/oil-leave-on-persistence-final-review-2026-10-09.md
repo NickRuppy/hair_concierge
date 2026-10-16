@@ -1,0 +1,11 @@
+# Oil leave-on persistence increment: main final review
+
+2026-10-09. Review-only correctness and structural pass by the integrating main session. Scope: five current oil contract successors, the oil leave-on replay inputs/outputs, its separate verifier, and mutable plan/index/readiness routing. This is not a whole-branch publication review. The prior read-only counterpart plan review is retained; no second counterpart lane or repeated review for a cleaner verdict.
+
+Verdict: no blocking finding within this increment. The user-selected oil-only retained-fibre endpoint is consistently represented. Twenty-seven source-supported formulas have exactly one class; the pre-wash/scalp-only case is explicitly excluded without inventing a low/unknown value. The three-key computational projection is separate from reasons/evidence. Whole-formula judgments do not inherit weight or old binary build-up. No sibling adapter/runtime/fit change.
+
+Root inspected both assessments for every formula and selected intact lane-B records. Hard distinctions received explicit review: Living Proof's vehicle gelling pair, JVN's unspecified ester grade, Aveda's seed fat, NEQI's early conditioning polymer and Moroccanoil's coherent film architecture. Moderate natural lipid coating does not mean medium weight. The agreed 15 moderate/12 high distribution is retained without forcing low examples.
+
+The full verifier independently checks frozen inputs/dependencies, source/rank/context bindings, dictionary coverage, lane seals/read attestations, exact output shape, selection/projection/CSV parity and 428 historical hashes. Unknown class, missing case, broken evidence and injected confidence are rejected. Formula familiarity disclosures remain visible; the plan explicitly limits claims to source-hidden development repeatability. Unseen holdout, low-band coverage, full profiles and intake integration are remaining gates, not hidden completion claims.
+
+Final content fingerprint, verification commands and artifact disposition are recorded in the replay completion receipt. All durable additions are intended for the task branch and remain uncommitted. Temporary generator scripts are discarded; no runtime/browser/DB test is warranted for this docs/data-only increment.

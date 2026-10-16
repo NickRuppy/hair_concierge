@@ -1,0 +1,32 @@
+{
+  "run_id": "oil-weight-application-round-3",
+  "method_revision": "weight-v0.7",
+  "source_reviewed_at": "2026-10-02",
+  "authorization": "OE24: Nick said do it to the complete-list review and small pure-oil/blend application round. Candidate research input only.",
+  "blind_input_files": [
+    "method.md",
+    "material-reference.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "files": {
+    "method.md": "e173afe45712a1afe50bff3d75086464284c7c412b64981e2fb3253b9fcdefa4",
+    "material-reference.json": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068",
+    "role-lexicon.json": "2cd08138a1890f8e61103e6a0c0a36d9ede18c451248dc172e536bf8e74bc09e",
+    "blind-packet.json": "3e28c57931f770791d9fa183f861fc1e2752bbaa72c64be510688d1769f5830c"
+  },
+  "forbidden": [
+    "source-capture.json",
+    "identity-map.json",
+    "display-receipts.json",
+    "complete-list-review.json",
+    "historical-baseline.json",
+    "peer lane",
+    "catalog",
+    "memory",
+    "web"
+  ],
+  "cases": 10,
+  "scientific_validation": false
+}

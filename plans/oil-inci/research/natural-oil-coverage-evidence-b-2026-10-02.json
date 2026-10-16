@@ -1,0 +1,708 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-02",
+  "status": "advisory_research_only",
+  "scope": "16 assigned exact identities; not exhaustive market coverage",
+  "persistence": "Main saved compact evidence worker handback after worker filesystem became inaccessible; no claim that worker validated on-disk JSON.",
+  "weight_definition": "Rough supplier skin/general sensory proxies, no validated hair heaviness.",
+  "sources": {
+    "buriti_o3": {
+      "title": "O&3 Buriti Oil Cold Pressed",
+      "url": "https://www.oand3.com/product/buriti-oil-cold-pressed/",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI; Functionality",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Exact Mauritia Flexuosa Fruit Oil; light low-grease skin wording.",
+      "limits": "Generic repeated copy, no panel. No standardized validated hair-weight class."
+    },
+    "buriti_beraca": {
+      "title": "Beraca presentation",
+      "url": "https://www.redibero.org/wp-content/uploads/2019/09/4_caso_beraca.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "PDF p45",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Fruit-pulp oil with rich soft skin feel; decolorized option.",
+      "limits": "Older supplier-authored PDF, ambiguous grade; hair shine is not weight. No standardized validated hair-weight class."
+    },
+    "buriti_praan": {
+      "title": "Praan Buriti Fruit Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_buriti_fruit_oil.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1 INCI/Properties",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Mauritia Flexuosa (Buriti) Fruit Oil; expeller pressed/refined; emollient.",
+      "limits": "Emollience alone does not rank weight. No standardized validated hair-weight class."
+    },
+    "meadowfoam_praan": {
+      "title": "Praan Meadowfoam Seed Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_meadowfoam_seed_oil.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1 INCI/Properties",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Limnanthes Alba (Meadowfoam) Seed Oil; non-greasy lubricating slip.",
+      "limits": "Medium viscosity stated separately, not medium weight. No standardized validated hair-weight class."
+    },
+    "meadowfoam_npp": {
+      "title": "NPP 20 Reasons Meadowfoam XPR",
+      "url": "https://meadowfoam.com/wp-content/uploads/20_reasons_mso_xpr_LTR_03272022.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Silky sensory descriptor.",
+      "limits": "No controlled heaviness test. No standardized validated hair-weight class."
+    },
+    "meadowfoam_hair": {
+      "title": "NPP Meadowfoam Conditioning Effects on Hair",
+      "url": "https://meadowfoam.com/wp-content/uploads/MSO_assessment_hair_effect_LTR_ENG_03282022.pdf",
+      "kind": "supplier_hair_conditioning_study",
+      "locator": "pp1-2",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "15-person half-head comparison, 5% oil versus 5% 1000cSt dimethicone conditioner; shine/combing/manageability outcomes.",
+      "limits": "No weight/volume/residue endpoint; nonsignificance does not establish equivalence; formulated oil not neat. No standardized validated hair-weight class."
+    },
+    "rose_canina": {
+      "title": "Unifect/ZUPLEX Organic Rosehip Oil",
+      "url": "https://www.unifect.com/products/organic-rosehip-oil/",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/description",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Exact Rosa Canina Fruit Oil; light dry skin finish.",
+      "limits": "No cross-species or plant-part alias. No standardized validated hair-weight class."
+    },
+    "rose_rubiginosa": {
+      "title": "Avena Lab Rosehip TDS",
+      "url": "https://avenalab.com/images/0001DOKUMENTACIJA/TDS/Rose_Hip_Oil_TDS_ENG.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Rosa Rubiginosa (Rose Hip) Seed Oil; cold pressed then RBD; light dry finish.",
+      "limits": "Grade-specific and no cross-species identity inference. No standardized validated hair-weight class."
+    },
+    "rose_moschata": {
+      "title": "Royal Bio Rosehip Moschata",
+      "url": "https://royalbio.com/en/products/rosehip-oil-moschata",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/formulation",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Rosa Moschata Seed Oil cold pressed, light facial texture.",
+      "limits": "No hair-weight test. No standardized validated hair-weight class."
+    },
+    "passion_edulis": {
+      "title": "Praan Organic Maracuja Oil",
+      "url": "https://www.praannaturals.com/product.asp?cat=OrganicOils&product_id=ORGOILPASSFREXPPE664",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/Properties",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Passiflora Edulis (Passionfruit) Seed Oil; filtered raw expeller pressed, light non-greasy.",
+      "limits": "Loose botanical prose; exact INCI is anchor. Growth claim not adopted. No standardized validated hair-weight class."
+    },
+    "passion_excluded": {
+      "title": "Praan deodorized Passionfruit Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_passionfruit_seed_oilv2.pdf",
+      "kind": "excluded_identity_source",
+      "locator": "p1 INCI",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Lists Passiflora Incarnata.",
+      "limits": "Excluded from Edulis weight evidence. No standardized validated hair-weight class."
+    },
+    "prickly": {
+      "title": "Praan Organic Prickly Pear Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_prickly_pear_oil_organic.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Opuntia Ficus Indica (Prickly Pear) Seed Oil; very light skin texture.",
+      "limits": "Separate medium viscosity is not weight. No standardized validated hair-weight class."
+    },
+    "tamanu": {
+      "title": "Bulk Naturals Tamanu",
+      "url": "https://www.bulknaturalswholesale.com/products/tamanu-oil-premium-organic-cold-pressed",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/finish",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Calophyllum Inophyllum Seed Oil; rich finish, blending with lighter oils suggested.",
+      "limits": "Rich estimate based on finish, not thickness alone. No standardized validated hair-weight class."
+    },
+    "tamanu_excluded": {
+      "title": "Praan Tamanu Foraha",
+      "url": "https://www.praannaturals.com/product.asp?product_id=OILTAMANUCPVIRIN728",
+      "kind": "excluded_identity_source",
+      "locator": "INCI/Properties",
+      "access": "Primary search result read by evidence worker 2026-10-02.",
+      "supports": "Calophyllum Tacamahaca Seed Oil; thick non-greasy description.",
+      "limits": "Excluded from Inophyllum scoring; full search result only. No standardized validated hair-weight class."
+    },
+    "brazil": {
+      "title": "Ulrich Brazil Nut Oil",
+      "url": "https://www.ulrichgmbh.de/en/produkte/further-products/brazil-nut-oil/",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "description",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Bertholletia Excelsa Seed Oil light material description.",
+      "limits": "Cold pressed/refined supplier range, no sensory method. No standardized validated hair-weight class."
+    },
+    "brazil_identity": {
+      "title": "Beraca Oils and Butters",
+      "url": "https://www.lucasmeyercosmetics.com/en/AboutUs/Beraca/Oils-and-Butters",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "Brazil Nut section",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Bertholletia Excelsa Seed Oil from seeds.",
+      "limits": "Identity only. No standardized validated hair-weight class."
+    },
+    "kukui": {
+      "title": "CocoJojo Organic Kukui",
+      "url": "https://cocojojo.com/wholesale/product/organic-kukui-nut-oil",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/overview",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Aleurites Moluccanus Seed Oil light fluid spread with limited heaviness.",
+      "limits": "Supplier fatty-acid explanation not adopted. No standardized validated hair-weight class."
+    },
+    "sacha": {
+      "title": "Praan Sacha Inchi",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_sacha_inchi_oil_organic.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1 INCI/Properties",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Plukenetia Volubilis (Sacha Inchi) Seed Oil raw filtered, light texture.",
+      "limits": "No composition or penetration shortcut. No standardized validated hair-weight class."
+    },
+    "plum": {
+      "title": "Praan Virgin Plum",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_plum_oil.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Prunus Domestica (Plum) Seed Oil, light texture.",
+      "limits": "Light/moderate viscosity is a separate endpoint. No standardized validated hair-weight class."
+    },
+    "raspberry": {
+      "title": "Praan Raspberry Seed Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_redraspberryseedoil.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Rubus Idaeus (Raspberry) Seed Oil, non-greasy finish.",
+      "limits": "No explicit light texture; weak light candidate; medium viscosity separate. No standardized validated hair-weight class."
+    },
+    "coffee_green": {
+      "title": "Praan Green Coffee Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_green_coffee_oil.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Coffea Arabica (Coffee) Seed Oil; unroasted, light-to-medium texture.",
+      "limits": "No hair weight or grade comparison. No standardized validated hair-weight class."
+    },
+    "coffee_roasted": {
+      "title": "Praan Roasted Coffee Oil",
+      "url": "https://www.praannaturals.com/product.asp?product_id=OILCOFFRSTDCPBR243",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/Properties",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Coffea Arabica Seed Oil, non-greasy/not overly heavy finish.",
+      "limits": "Roasting is not disclosed by INCI alone; medium viscosity separate. No standardized validated hair-weight class."
+    },
+    "cranberry": {
+      "title": "Praan Organic Cranberry Seed Oil",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_cranberryseedoil_organic.pdf",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "p1",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Vaccinium Macrocarpon (Cranberry) Seed Oil non-greasy.",
+      "limits": "No explicit light texture; weak light candidate; medium viscosity separate. No standardized validated hair-weight class."
+    },
+    "camellia_o3": {
+      "title": "O&3 Camellia Sinensis Refined",
+      "url": "https://www.oand3.com/product/camellia-oil-sinensis-refined/",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "INCI/Functionality",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Camellia Sinensis Seed Oil, light low-grease skin descriptor.",
+      "limits": "Generic reused copy. No standardized validated hair-weight class."
+    },
+    "camellia_gaia": {
+      "title": "Botanica Gaia Green Tea Seed Carrier",
+      "url": "https://botanicagaiawholesale.com/products/botanica-gaia-bio-green-tea-seed-co2-oil-for-skincare-and-haircare",
+      "kind": "supplier_identity_and_sensory",
+      "locator": "Specifications",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "Exact Camellia Sinensis Seed Oil light silky texture.",
+      "limits": "Body says cold pressed while URL says CO2; processing discrepancy retained. No standardized validated hair-weight class."
+    },
+    "camellia_excluded": {
+      "title": "Praan Organic Camellia",
+      "url": "https://www.praannaturals.com/product-literature/NS_info_camellia_organic.pdf",
+      "kind": "excluded_identity_source",
+      "locator": "p1 INCI",
+      "access": "Primary page/PDF read by evidence worker 2026-10-02; saved via root after worker filesystem mismatch.",
+      "supports": "INCI is Oleifera though background also mentions Sinensis.",
+      "limits": "Excluded from Sinensis evidence. No standardized validated hair-weight class."
+    }
+  },
+  "materials": [
+    {
+      "id": "buriti",
+      "exact_inci": "Mauritia Flexuosa Fruit Oil",
+      "aliases": [
+        "Mauritia Flexuosa (Buriti) Fruit Oil"
+      ],
+      "advisory_weight": "medium",
+      "confidence": "low",
+      "alternatives": [
+        "light",
+        "rich",
+        "unknown"
+      ],
+      "why": "Explicit rough compromise across conflicting light/rich supplier skin descriptors; not a measured midpoint.",
+      "evidence": [
+        {
+          "source_id": "buriti_o3",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "buriti_beraca",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "buriti_praan",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Mauritia Flexuosa Seed Oil",
+        "buriti extracts",
+        "finished blends"
+      ],
+      "grade_scope": "Cold-pressed/refined/decolorized grades; conflict unresolved.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "meadowfoam",
+      "exact_inci": "Limnanthes Alba Seed Oil",
+      "aliases": [
+        "Limnanthes Alba (Meadowfoam) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Non-greasy and silky sensory supports weak light prior; hair-conditioning study does not validate weight.",
+      "evidence": [
+        {
+          "source_id": "meadowfoam_praan",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "meadowfoam_npp",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "meadowfoam_hair",
+          "type": "supplier_hair_conditioning_study"
+        }
+      ],
+      "identity_exclusions": [
+        "Hydrogenated Meadowfoam Seed Oil",
+        "meadowfoam estolides",
+        "dimethicone copolyol meadowfoamate",
+        "fermented meadowfoam oils"
+      ],
+      "grade_scope": "Liquid; viscosity and conditioning outcomes separate.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "rosehip_canina_fruit",
+      "exact_inci": "Rosa Canina Fruit Oil",
+      "aliases": [],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Exact fruit-oil source describes dry/light texture, without other rose-species transfer.",
+      "evidence": [
+        {
+          "source_id": "rose_canina",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Rosa Canina Seed Oil",
+        "Rosa Rubiginosa Seed Oil",
+        "Rosa Moschata Seed Oil",
+        "rose essential oil",
+        "rosehip extracts"
+      ],
+      "grade_scope": "Exact supplier grade only.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "rosehip_rubiginosa_seed",
+      "exact_inci": "Rosa Rubiginosa Seed Oil",
+      "aliases": [
+        "Rosa Rubiginosa (Rose Hip) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Separate exact-seed supplier TDS describes light dry finish.",
+      "evidence": [
+        {
+          "source_id": "rose_rubiginosa",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Rosa Canina Fruit Oil",
+        "Rosa Canina Seed Oil",
+        "Rosa Moschata Seed Oil",
+        "rose essential oil"
+      ],
+      "grade_scope": "Cold pressed then refined/bleached/deodorized.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "rosehip_moschata_seed",
+      "exact_inci": "Rosa Moschata Seed Oil",
+      "aliases": [],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Separate exact Moschata source describes light texture.",
+      "evidence": [
+        {
+          "source_id": "rose_moschata",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Rosa Canina Fruit Oil",
+        "Rosa Canina Seed Oil",
+        "Rosa Rubiginosa Seed Oil",
+        "rose essential oil"
+      ],
+      "grade_scope": "Cold-pressed seed grade.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "passionfruit",
+      "exact_inci": "Passiflora Edulis Seed Oil",
+      "aliases": [
+        "Passiflora Edulis (Passionfruit) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Exact Edulis page light/non-greasy texture; Incarnata PDF excluded.",
+      "evidence": [
+        {
+          "source_id": "passion_edulis",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "passion_excluded",
+          "type": "excluded_identity"
+        }
+      ],
+      "identity_exclusions": [
+        "Passiflora Incarnata Seed Oil",
+        "passionflower extracts"
+      ],
+      "grade_scope": "Raw filtered expeller pressed.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "prickly_pear",
+      "exact_inci": "Opuntia Ficus Indica Seed Oil",
+      "aliases": [
+        "Opuntia Ficus Indica (Prickly Pear) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Very-light skin texture supports rough prior; medium viscosity is not a class vote.",
+      "evidence": [
+        {
+          "source_id": "prickly",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Opuntia Ficus-Indica Fruit Extract",
+        "flower macerates",
+        "cactus extracts"
+      ],
+      "grade_scope": "Cold pressed/filtered; no hair heaviness measurement.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "tamanu",
+      "exact_inci": "Calophyllum Inophyllum Seed Oil",
+      "aliases": [],
+      "advisory_weight": "rich",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Rich finish and blending with lighter oils support rich; viscosity only context.",
+      "evidence": [
+        {
+          "source_id": "tamanu",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "tamanu_excluded",
+          "type": "excluded_identity"
+        }
+      ],
+      "identity_exclusions": [
+        "Calophyllum Tacamahaca Seed Oil",
+        "tamanu extracts",
+        "unresolved Calophyllum species"
+      ],
+      "grade_scope": "Unrefined thick liquid grade.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "brazil_nut",
+      "exact_inci": "Bertholletia Excelsa Seed Oil",
+      "aliases": [],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Exact seed identity and general light material descriptor support weak prior.",
+      "evidence": [
+        {
+          "source_id": "brazil",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "brazil_identity",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Brazil nut extracts",
+        "Nut Oil"
+      ],
+      "grade_scope": "Cold pressed/refined supplier range.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "kukui",
+      "exact_inci": "Aleurites Moluccanus Seed Oil",
+      "aliases": [],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Exact supplied identity plus light spread/limited-heaviness descriptor.",
+      "evidence": [
+        {
+          "source_id": "kukui",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Aleurites Moluccana Nut Oil",
+        "Aleurites Moluccana Seed Oil",
+        "kukui extracts"
+      ],
+      "grade_scope": "Related name variants require explicit reconciliation.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "sacha_inchi",
+      "exact_inci": "Plukenetia Volubilis Seed Oil",
+      "aliases": [
+        "Plukenetia Volubilis (Sacha Inchi) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Explicit light texture independently of composition.",
+      "evidence": [
+        {
+          "source_id": "sacha",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "sacha inchi proteins",
+        "Plukenetia Volubilis Seed Extract"
+      ],
+      "grade_scope": "Raw filtered expeller pressed.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "plum",
+      "exact_inci": "Prunus Domestica Seed Oil",
+      "aliases": [
+        "Prunus Domestica (Plum) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Explicit light texture; viscosity not classifier.",
+      "evidence": [
+        {
+          "source_id": "plum",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Prunus Domestica Fruit Extract",
+        "other Prunus oils"
+      ],
+      "grade_scope": "Cold-pressed filtered kernel oil.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "raspberry",
+      "exact_inci": "Rubus Idaeus Seed Oil",
+      "aliases": [
+        "Rubus Idaeus (Raspberry) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Low-grease finish permits weak light estimate, weaker than explicit light-texture evidence.",
+      "evidence": [
+        {
+          "source_id": "raspberry",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Rubus Occidentalis Seed Oil",
+        "Rubus Idaeus Fruit Extract"
+      ],
+      "grade_scope": "Cold-pressed filtered; medium viscosity separately.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "coffee",
+      "exact_inci": "Coffea Arabica Seed Oil",
+      "aliases": [
+        "Coffea Arabica (Coffee) Seed Oil"
+      ],
+      "advisory_weight": "medium",
+      "confidence": "low",
+      "alternatives": [
+        "light",
+        "unknown"
+      ],
+      "why": "Choice within green oil's directly reported light-to-medium range; roasted low-grease finish leaves light plausible.",
+      "evidence": [
+        {
+          "source_id": "coffee_green",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "coffee_roasted",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Coffea Canephora Seed Oil",
+        "Coffea Arabica Seed Extract",
+        "coffee fragrance oils",
+        "coffee macerates"
+      ],
+      "grade_scope": "Green/roasted share INCI; processing unresolved.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "cranberry",
+      "exact_inci": "Vaccinium Macrocarpon Seed Oil",
+      "aliases": [
+        "Vaccinium Macrocarpon (Cranberry) Seed Oil"
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Non-greasy finish permits weak light estimate; no viscosity/composition inference.",
+      "evidence": [
+        {
+          "source_id": "cranberry",
+          "type": "supplier_identity_or_sensory"
+        }
+      ],
+      "identity_exclusions": [
+        "Vaccinium Vitis-Idaea Seed Oil",
+        "Vaccinium Macrocarpon Fruit Extract"
+      ],
+      "grade_scope": "Virgin cold pressed/filtered.",
+      "validated_on_hair": false
+    },
+    {
+      "id": "camellia_sinensis",
+      "exact_inci": "Camellia Sinensis Seed Oil",
+      "aliases": [],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Two exact Sinensis light/silky sources support rough prior; Oleifera PDF excluded.",
+      "evidence": [
+        {
+          "source_id": "camellia_o3",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "camellia_gaia",
+          "type": "supplier_identity_or_sensory"
+        },
+        {
+          "source_id": "camellia_excluded",
+          "type": "excluded_identity"
+        }
+      ],
+      "identity_exclusions": [
+        "Camellia Oleifera Seed Oil",
+        "Camellia Japonica Seed Oil",
+        "Camellia Sinensis Leaf Extract",
+        "tea tree essential oil"
+      ],
+      "grade_scope": "Refined and purported cold-pressed grades; body/URL processing discrepancy.",
+      "validated_on_hair": false
+    }
+  ]
+}

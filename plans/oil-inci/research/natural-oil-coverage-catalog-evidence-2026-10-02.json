@@ -1,0 +1,2121 @@
+{
+  "captured_at": "2026-10-02",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "query": "SELECT p.id AS product_id, p.name, p.brand, p.category_key, p.is_active, f.fact_key, f.source_label, f.source_url, f.source_text, f.fact_value, f.checked_at FROM public.personal_plan_catalog_fact_evidence f JOIN public.products p ON p.id=f.product_id WHERE f.fact_key = 'product.formula.inci' OR f.source_text ~* 'inci|inhaltsstoff|ingredients|seed oil|kernel oil|fruit oil|germ oil' OR f.fact_value::text ~* 'inci|ingredients|seed oil|kernel oil|fruit oil|germ oil' ORDER BY p.category_key, p.name, f.fact_key, f.source_url;",
+  "scope": "Read-only public commercial catalog fact evidence matching ingredient-list signals; not all catalog products have stored full INCI. Sources are untrusted data and not new verified formula authority.",
+  "rows": [
+    {
+      "product_id": "07058418-0a6a-4fda-89a2-4c263f09c5c9",
+      "name": "alverde NATURKOSMETIK Conditioner Feuchtigkeit",
+      "brand": "alverde NATURKOSMETIK",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+      "source_text": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Alcohol**, Brassica Alcohol, Helianthus Annuus Seed Oil**, Decyl Oleate, Inulin, Betaine, Cocos Nucifera Oil**, Brassicyl Isoleucinate Esylate, Simmondsia Chinensis Seed Oil**, Parfum***, Levulinic Acid, Coco-Glucoside, Glyceryl Oleate, Glyceryl Caprylate, Arginine, Sodium PCA, p-Anisic Acid, Sodium Levulinate, Hydrolyzed Wheat Protein, Aloe Barbadensis Leaf Juice Powder**, Benzyl Alcohol***, Citronellol***, Cedrus Atlantica Oil/Extract***, Menthol***, Citric Acid, Sodium Hyaluronate, Vanillin***, Hydrogenated Vegetable Glycerides Citrate.",
+      "fact_value": {
+        "weight": "light",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "838884a1-5586-4c7f-9294-7c9606a4ef1d",
+      "name": "alverde NATURKOSMETIK Conditioner Nutri Care",
+      "brand": "alverde NATURKOSMETIK",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+      "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Prunus Amygdalus Dulcis Oil, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Inulin, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Benzoic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide, Vanillin",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "balanced"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "ee4aab21-5696-4286-aad1-7811b997dd30",
+      "name": "Aussie Conditioner Bouncy Curls",
+      "brand": "Aussie",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3135994/aussie-conditioner-bouncy-curls",
+      "source_text": "Ingredients: Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Glutamic Acid, Oleic Acid, Benzyl Alcohol, Parfum, Sodium Benzoate, Citric Acid, Disodium EDTA, Polysorbate 20, Citrus Aurantium Peel Oil, Dimethyl Phenethyl Acetate, Limonene, Benzyl Salicylate, Hexyl Cinnamal, Linalool, Coumarin, Macadamia Ternifolia Seed Oil, Ricinus Communis Seed Oil",
+      "fact_value": {
+        "weight": "light",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "109acbf6-51c5-42fc-8982-7a55b5ad2200",
+      "name": "Being Bye Bye Frizz Conditioner",
+      "brand": "Being",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+      "source_text": "AQUA/WATER/EAU, CETEARYL ALCOHOL, ISOPROPYL MYRISTATE, BEHENTRIMONIUM CHLORIDE, GLYCERIN, PRUNUS AMYGDALUS DULCIS OIL, SIMMONDSIA CHINENSIS SEED OIL, BUTYROSPERMUM PARKII BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, PHENOXYETHANOL, POLYQUATERNIUM-10, ISOSTEARYL ISOSTEARATE, ISOPROPYL ALCOHOL, POLYQUATERNIUM-37, PEG-100 STEARATE, GLYCERYL STEARATE, PARFUM (FRAGRANCE), PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, SALICYLIC ACID, HYDROXYETHYLCELLULOSE, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, PPG-1 TRIDECETH-6, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, POLYSORBATE 60, DISODIUM PHOSPHATE, SODIUM PHOSPHATE",
+      "fact_value": {
+        "weight": "rich",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "cfeab4b2-fdd6-4348-bf2b-aca58e686869",
+      "name": "Being Curl Power Locken Conditioner",
+      "brand": "Being",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+      "source_text": "AQUA/WATER/EAU, CETEARYL ALCOHOL, ISOPROPYL MYRISTATE, BEHENTRIMONIUM CHLORIDE, GLYCERIN, COCOS NUCIFERA OIL, VITIS VINIFERA SEED OIL, BUTYROSPERMUM PARKII BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, PHENOXYETHANOL, POLYQUATERNIUM-10, ISOSTEARYL ISOSTEARATE, ISOPROPYL ALCOHOL, POLYQUATERNIUM-37, PEG-100 STEARATE, GLYCERYL STEARATE, PARFUM (FRAGRANCE), PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, SALICYLIC ACID, HYDROXYETHYLCELLULOSE, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, PPG-1 TRIDECETH-6, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, POLYSORBATE 60, DISODIUM PHOSPHATE, SODIUM PHOSPHATE",
+      "fact_value": {
+        "weight": "rich",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "262de7f7-71d1-4a60-a5f4-1a91debdbf12",
+      "name": "Garnier Fructis Conditioner Locken Methode Feuchtigkeit",
+      "brand": "Garnier Fructis",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3115735/garnier-fructis-conditioner-locken-methode-feuchtigkeit",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • PARFUM / FRAGRANCE • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • SODIUM CHLORIDE • SODIUM HYALURONATE • CAPRYLYL GLYCOL • TARTARIC ACID • BENZOIC ACID • LINALOOL • LIMONENE • CITRONELLOL • CARVONE • BENZYL ALCOHOL",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "name": "Garnier Wahre Schätze Conditioner Traube Hydraboost",
+      "brand": "Garnier Wahre Schätze",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER • VITIS VINIFERA SEED OIL / GRAPE SEED OIL • ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT • SODIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • TOCOPHEROL • BENZOIC ACID • CI 17200 / RED 33 • LINALOOL • LINALYL ACETATE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "57848cf2-6113-4aa4-af9f-2f980ccc5850",
+      "name": "Herbal Essences Conditioner Fiji mit Kokosnussextrakt",
+      "brand": "Herbal Essences",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3131494/herbal-essences-conditioner-fiji-mit-kokosnussextrakt",
+      "source_text": "Ingredients: Aqua, Stearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Bis-Aminopropyl Dimethicone, Isopropyl Alcohol, Parfum, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Polysorbate 20, Citric Acid, Hexamethylindanopyran, Linalool, Histidine, Linalyl Acetate, Citrus Aurantium Peel Oil, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "240c4e9d-d417-42ce-b8b6-d1cc005eed26",
+      "name": "Herbal Essences Conditioner Limettenduft, Tiefenreinigung & Glanz",
+      "brand": "Herbal Essences",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3115709/herbal-essences-conditioner-limettenduft-tiefenreinigung-und-glanz",
+      "source_text": "Ingredients: Aqua, Stearyl Alcohol, Behentrimonium Methosulfate, Cetyl Alcohol, Parfum, Benzyl Alcohol, Oleic Acid, Dicetyldimonium Chloride, Isopropyl Alcohol, Sodium Benzoate, Limonene, Citrus Aurantium Peel Oil, Polysorbate 20, Propylene Glycol, Disodium EDTA, Hexamethylindanopyran, Citric Acid, Linalool, Dimethyl Phenethyl Acetate, Hexyl Cinnamal, Histidine, Geranyl Acetate",
+      "fact_value": {
+        "weight": "light",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d6cde507-1c34-4dea-8239-abd097d50818",
+      "name": "ISANA PROFESSIONAL Spülung Keratin & Repair",
+      "brand": "ISANA PROFESSIONAL",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+      "source_text": "Aqua, Cetearyl Alcohol, Propylene Glycol, Behentrimonium Chloride, Glyceryl Stearate, Panthenol, Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin, Butyrospermum Parkii Butter, Sclerocarya Birrea Seed Oil, Distearoylethyl Hydroxyethylmonium Methosulfate, Stearamidopropyl Dimethylamine, Isopropyl Alcohol, Quaternium-87, Parfum, Citric Acid, Benzoic Acid, Dehydroacetic Acid, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate.",
+      "fact_value": {
+        "weight": "rich",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "protein"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "90e10088-8226-4e07-b197-3eab6b61d7a2",
+      "name": "ISANA PROFESSIONAL Spülung Locken Traum",
+      "brand": "ISANA PROFESSIONAL",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+      "source_text": "AQUA, CETEARYL ALCOHOL, GLYCERYL STEARATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, TRITICUM VULGARE GERM OIL, TRITICUM VULGARE BRAN EXTRACT, TRITICUM VULGARE GERM EXTRACT, CAMELLIA OLEIFERA SEED OIL, LINOLEIC ACID, CETYL ESTERS, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, STEARAMIDOPROPYL DIMETHYLAMINE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CETEARYL NONANOATE, ISOPROPYL ALCOHOL, LAURYL ALCOHOL, DICAPRYLYL ETHER, CAPRYLIC/CAPRIC TRIGLYCERIDE, QUARTZ POWDER, XANTHAN GUM, LACTIC ACID, CITRIC ACID, TOCOPHERYL ACETATE, TOCOPHEROL, PARFUM, LINALOOL, HEXYL CINNAMAL, LIMONENE, POTASSIUM SORBATE, SODIUM BENZOATE",
+      "fact_value": {
+        "weight": "rich",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "0585c8b1-159b-43d3-8432-a91b9973c7b6",
+      "name": "ISANA Spülung Oil Repair Marulaöl",
+      "brand": "ISANA",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+      "source_text": "Aqua, Cetearyl Alcohol, Glycerin, Glyceryl Stearate SE, Distearoylethyl Hydroxyethylmonium Methosulfate, Behentrimonium Chloride, Phenoxyethanol, Panthenol, Hydrogenated Coconut Oil, C12-15 Alkyl Benzoate, Dipropylene Glycol, Parfum, Cetrimonium Chloride, Niacinamide, Citric Acid, Tetramethyl Acetyloctahydronaphthalenes, Pantolactone, Linalyl Acetate, Sclerocarya Birrea Seed Oil, Sodium Hydroxide",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "0585c8b1-159b-43d3-8432-a91b9973c7b6",
+      "name": "ISANA Spülung Oil Repair Marulaöl",
+      "brand": "ISANA",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product.claims.repair_marketing",
+      "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+      "source_text": "für trockenes & geschädigtestes Haar\nIntensivpflege, repariert bis in die Spitzen",
+      "fact_value": "'Oil Repair' und 'für trockenes & geschädigtestes Haar' sind Marketing-Positionierung ohne belegte Protein-/Bond-Aktivstoffe in der INCI — repair_level bleibt low (ehrlich).",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "fd1792c0-8f8c-40b0-960d-27ac21470bb8",
+      "name": "Jean&Len Conditioner Hydration Pfirsich Chia",
+      "brand": "Jean&Len",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3100946/jean-und-len-conditioner-hydration-pfirsich-chia",
+      "source_text": "Ingredients: aqua, cetearyl alcohol, isopropyl palmitate, distearoylethyl hydroxyethylmonium methosulfate, prunus persica fruit extract, salvia hispanica seed extract, potassium sorbate, behentrimonium chloride, parfum, panthenol, cetrimonium chloride, dicaprylyl ether, phenoxyethanol, isopropyl alcohol, glycerin, linalool, guar hydroxypropyltrimonium chloride, hexyl cinnamal, benzyl alcohol, citrus aurantium peel oil, limonene, citric acid, geranyl acetate, citronellol, geraniol, alpha-isomethyl ionone, sodium hydroxide, sodium benzoate, tocopherol, helianthus annuus seed oil.",
+      "fact_value": {
+        "weight": "light",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "169be6d1-bd8c-4902-ba1d-3db349cb4854",
+      "name": "John Frieda Go Blonder Conditioner",
+      "brand": "John Frieda",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product.claims.care",
+      "source_label": "Rossmann Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-go-blonder-go-blonder-conditioner/p/5037156296204",
+      "source_text": "schenkt Geschmeidigkeit\nverleiht Glanz\nspendet Feuchtigkeit\nnährt das Haar für ein strahlendes, gepflegtes Blond\nformuliert ohne Silikone, frei von tierischen Inhaltsstoffen",
+      "fact_value": "Geschmeidigkeit, Glanz, Feuchtigkeit; ohne Silikone, vegan. Linien-Claim 'sanfte Aufhellung' wird nicht als Produktwirkung übernommen (kein Aufheller in der INCI).",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "f069970e-12fb-48c6-ac8e-51f50dc46c31",
+      "name": "L'Oréal Paris Elvital Conditioner Hydra Hyaluronic, feuchtigkeitsversiegelnd",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3044952/l-oreal-paris-elvital-conditioner-hydra-hyaluronic-feuchtigkeitsversiegelnd",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • DIMETHICONE • GLYCERIN • BEHENTRIMONIUM CHLORIDE • CI 17200 / RED 33 • CI 42090 / BLUE 1 • LACTIC ACID • SODIUM LAURETH SULFATE • SODIUM HYDROXIDE • SODIUM HYALURONATE • PHENOXYETHANOL • DIMETHYL PHENETHYL ACETATE • LIMONENE • AMODIMETHICONE • ISOPROPYL ALCOHOL • CARVONE • CETRIMONIUM CHLORIDE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRUS AURANTIUM PEEL OIL • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "cd00a357-413f-41f4-aa68-2e451661f1dd",
+      "name": "Langhaarmädchen Conditioner Intense Repair",
+      "brand": "Langhaarmädchen",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1539684/langhaarmaedchen-conditioner-intense-repair",
+      "source_text": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Arginine, Serine, Cocos Nucifera Oil, Mauritia Flexuosa Fruit Oil, Parfum, Polyglyceryl-3 Caprate, PCA, Glycine, Histidine, Dimethicone, Silicone Quaternium-22, Isopropyl Alcohol, Dipropylene Glycol, Sodium PCA, Cocamidopropyl Betaine, Aspartic Acid, Palmitamidopropyltrimonium Chloride, Propylene Glycol, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Lactate",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "8686e8b6-3b9b-4770-b0f0-c8d9f5eb3a59",
+      "name": "OGX Conditioner Coconut Miracle Oil",
+      "brand": "OGX",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+      "source_text": "Ingredients: Aqua/Water/Eau, Cetyl Alcohol, Cetearyl Alcohol, Behentrimonium Chloride, Glycerin, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, PPG-3 Benzyl Ether Myristate, Dimethicone, Polyquaternium-47, Steareth-20, Disodium EDTA, Isopropyl Alcohol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Phenoxyethanol, Parfum/Fragrance, Linalool, Benzyl Salicylate.",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "8686e8b6-3b9b-4770-b0f0-c8d9f5eb3a59",
+      "name": "OGX Conditioner Coconut Miracle Oil",
+      "brand": "OGX",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product.claims.repair_marketing",
+      "source_label": "dm.de Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+      "source_text": "nährt, repariert und belebt das Haar ab der ersten Anwendung. Der Conditioner bändigt Frizz und störrisches Haar.",
+      "fact_value": "'nährt, repariert und belebt' ist Marketing-Sprache ohne belegte Protein-/Bond-Aktivstoffe in der INCI — repair_level bleibt low (ehrlich).",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "f7144789-8302-42b1-a5b1-e761402c1b7c",
+      "name": "Pantene Pro-V Conditioner Grow Abundant",
+      "brand": "Pantene Pro-V",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3115707/pantene-pro-v-conditioner-grow-abundant-anti-haarverlust",
+      "source_text": "Ingredients: Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Glutamic Acid, Oleic Acid, Parfum, Benzyl Alcohol, Sodium Benzoate, Menthol, Hexamethylindanopyran, Citric Acid, Disodium EDTA, Panthenol, Polysorbate 20, Histidine, Coumarin, Hexyl Cinnamal, Linalyl Acetate, Citrus Aurantium Peel Oil, Tetramethyl Acetyloctahydronaphthalenes, Benzyl Salicylate, Linalool, Limonene, CI 19140, CI 17200",
+      "fact_value": {
+        "weight": "light",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "humectants"
+        ],
+        "balance_direction": "balanced"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "2781bccb-4a3f-4ffe-aa2f-f32f7b820c03",
+      "name": "Pantene Pro-V Conditioner Repair & Care",
+      "brand": "Pantene Pro-V",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1554190/pantene-pro-v-conditioner-repair-und-care",
+      "source_text": "Ingredients: Aqua, Stearyl Alcohol, Behentrimonium Methosulfate, Bis-Aminopropyl Dimethicone, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Oleic Acid, Sodium Benzoate, Polysorbate 20, Disodium EDTA, Panthenol, Histidine, Citric Acid, Hexyl Cinnamal, Hydroxycitronellal, Limonene",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "balance_direction": "balanced"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "2781bccb-4a3f-4ffe-aa2f-f32f7b820c03",
+      "name": "Pantene Pro-V Conditioner Repair & Care",
+      "brand": "Pantene Pro-V",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product.claims.repair_marketing",
+      "source_label": "dm.de Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1554190/pantene-pro-v-conditioner-repair-und-care",
+      "source_text": "Mit 50% mehr Wirkstoffen im Vergleich zur vorherigen Formel unterstützt die schwerelose Pflegespülung die Regeneration der Haarbindungen und hilft, das Haar von innen zu reparieren. Die einzigartige PRO-V-Formel, angereichert mit PRO-Vitamin B5, stärkenden Lipiden und schützenden Antioxidantien, sorgt für bis zu 100% stärkere Haarstruktur gegen Stylingschäden.",
+      "fact_value": "Regeneration der Haarbindungen / bis zu 100% mehr Stärke — Marketing ohne benannte Bond-/Protein-Aktivstoffe in der INCI.",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "1adb5c17-fca0-4967-a199-756d500b0104",
+      "name": "Schwarzkopf Gliss Conditioner Total Repair",
+      "brand": "Schwarzkopf Gliss",
+      "category_key": "conditioner",
+      "is_active": true,
+      "fact_key": "product_conditioner_rerank_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1430910/schwarzkopf-gliss-conditioner-total-repair",
+      "source_text": "Ingredients: Aqua (Water, Eau), Cetearyl Alcohol, Quaternium-87, Stearamidopropyl Dimethylamine, Dimethicone, Distearoylethyl Hydroxyethylmonium Methosulfate, Isopropyl Myristate, Hydrolyzed Keratin, Combretum Farinosum Flower Nectar, Citric Acid, Propylene Glycol, Parfum (Fragrance), Phenoxyethanol, Sodium Methylparaben, Glycerin, Dimethiconol, Polyquaternium-37, Dicaprylyl Carbonate, Citrus Aurantium Peel Oil, Limonene, Benzyl Alcohol, Potassium Sorbate, Sodium Benzoate",
+      "fact_value": {
+        "weight": "medium",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones",
+          "proteins",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "protein"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+      "name": "Afrolocke Leave-In Haarkur, für lockiges Haar",
+      "brand": "Afrolocke",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+      "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+      "source_text": "Aqua, Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Propanediol, Coco Caprylate/Caprate, Brassica Oleracea Italica Seed Oil* (Brokkolisamenöl), Argania Spinosa Kernel Oil* (Arganöl), Butyrospermum, Parkii Butter* (Shea Butter), Cocos Nucifera Oil* (Kokosöl)",
+      "fact_value": {
+        "format": "cream",
+        "weight": "light",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Propanediol, Coco Caprylate/Caprate, Brassica Oleracea Italica Seed Oil, Argania Spinosa Kernel Oil, Butyrospermum Parkii Butter, Cocos Nucifera Oil, Magnolia Officinalis Bark Extract, Rosmarinus Officinalis Leaf Extract, Helianthus Annuus Seed Oil, Tocopherol (silikonfrei laut Merkmal + INCI, keine Proteine)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d70fdc25-2cdc-4b8a-b005-c4c719d88c33",
+      "name": "alverde NATURKOSMETIK Haarserum Nutri-Care",
+      "brand": "alverde NATURKOSMETIK",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+      "source_text": "Ingredients: Aqua, Glycerin, Helianthus Annuus Hybrid Oil, Arginine, Hydrolyzed Wheat Protein, Betaine, Prunus Amygdalus Dulcis Seed Extract, Olus Oil, Parfum, Sodium Levulinate, Propanediol, Cetearyl Alcohol, Gellan Gum, Sodium Stearoyl Glutamate, Inulin, Lecithin",
+      "fact_value": {
+        "format": "serum",
+        "weight": "medium",
+        "inci_basis": "Aqua, Glycerin, Helianthus Annuus Hybrid Oil, Arginine, Hydrolyzed Wheat Protein, Betaine, Prunus Amygdalus Dulcis Seed Extract, Olus Oil, ..., Propanediol, Cetearyl Alcohol, Gellan Gum (silikonfrei laut Merkmal + INCI)",
+        "care_direction": "protein",
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "76f3611b-2dda-4a90-bd3c-c9b1577ec5aa",
+      "name": "Balea Professional Leave-In Haarmaske Molecular Care",
+      "brand": "Balea Professional",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+      "source_text": "INGREDIENTS: AQUA, CETEARYL ALCOHOL, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, SODIUM BENZOATE, PARFUM, COCO-CAPRYLATE, CETRIMONIUM CHLORIDE, AMODIMETHICONE, COCOS NUCIFERA OIL",
+      "fact_value": {
+        "format": "cream",
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Distearoylethyl Hydroxyethylmonium Methosulfate, ..., Amodimethicone, Cocos Nucifera Oil, ..., Hydrolyzed Wheat Protein, Arginine, Avena Sativa Peptide",
+        "care_direction": "protein",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "proteins",
+          "polymers"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "2a8ae385-17c9-440b-ab89-87fe1e6350a4",
+      "name": "Balea Professional Leave-In Serum Plex Care",
+      "brand": "Balea Professional",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+      "source_text": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Dodecane, Behentrimonium Chloride, Ricinus Communis Seed Oil, Panthenol, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine",
+      "fact_value": {
+        "format": "serum",
+        "weight": "medium",
+        "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Dodecane, Behentrimonium Chloride, Ricinus Communis Seed Oil, Panthenol, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine, ..., Silicone Quaternium-22, ..., Hydrolyzed Vegetable Protein, ..., Hydrolyzed Silk (Protein-/Aminosäuren-Fokus)",
+        "care_direction": "protein",
+        "ingredient_flags": [
+          "proteins",
+          "silicones",
+          "oils",
+          "humectants"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+      "name": "Being Major Moisture Leave-In Conditioner",
+      "brand": "Being",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+      "source_text": "Aqua (Water), Cetearyl Alcohol, Cocos Nucifera (Coconut) Oil, Butyrospermum Parkii (Shea) Butter, Glycerin, Simmondsia Chinensis (Jojoba) Seed Oil, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil",
+      "fact_value": {
+        "format": "cream",
+        "weight": "rich",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Glycerin, Simmondsia Chinensis Seed Oil, Ceteareth-20, Prunus Amygdalus Dulcis Oil, Avena Sativa Extract, Theobroma Cacao Seed Butter, ..., Behentrimonium Methosulfate, Polyquaternium-37, Polyquaternium-10 (silikonfrei)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low",
+        "provides_heat_protection": true
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "b89a5ced-700a-4cdb-be89-c85c212e4eca",
+      "name": "Dejan Garz Leave-In Cream The Foundation",
+      "brand": "Dejan Garz",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+      "source_text": "INGREDIENTS: AQUA, CETEARYL ALCOHOL, GLYCERIN, AMODIMETHICONE, BEHENTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, PANTHENOL, ARGANIA SPINOSA KERNEL OIL, SIMMONDSIA CHINENSIS SEED OIL, RICINUS COMMUNIS SEED OIL",
+      "fact_value": {
+        "format": "cream",
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Glycerin, Amodimethicone, Behentrimonium Chloride, Cetrimonium Chloride, Panthenol, Argania Spinosa Kernel Oil, Simmondsia Chinensis Seed Oil, Ricinus Communis Seed Oil, ..., Phenyl Trimethicone, ..., Sodium Hyaluronate (keine Proteine)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "bf3c797d-680f-44b4-8826-b5c45cf045ae",
+      "name": "Dejan Garz Leave-In Serum The Foundation",
+      "brand": "Dejan Garz",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale 'Textur: Gel')",
+      "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+      "source_text": "INGREDIENTS: AQUA, PEG-40 HYDROGENATED CASTOR OIL, GLYCERIN, BETAINE, AMODIMETHICONE, CETRIMONIUM CHLORIDE, PANTHENOL, HYDROXYPROPYL GUAR, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "fact_value": {
+        "format": "serum",
+        "weight": "light",
+        "inci_basis": "Aqua, PEG-40 Hydrogenated Castor Oil, Glycerin, Betaine, Amodimethicone, Cetrimonium Chloride, Panthenol, Hydroxypropyl Guar, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, ..., Xanthan Gum (wässrige Gel-Basis, keine Proteine, keine freien Öle/Butter)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "a9fc4fb5-0152-40dd-9a01-6ecf0155709f",
+      "name": "Garnier Fructis Leave-In Creme Aloe Air Dry",
+      "brand": "Garnier Fructis",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+      "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+      "source_text": "INGREDIENTS: AQUA / WATER • PROPYLENE GLYCOL • GLYCERIN • ALOE BARBADENSIS LEAF JUICE • SORBITAN OLEATE • PPG-1 TRIDECETH-6 • PEG- 150/DECYL ALCOHOL/SMDI COPOLYMER • SODIUM HYALURONATE",
+      "fact_value": {
+        "format": "cream",
+        "weight": "light",
+        "inci_basis": "Aqua, Propylene Glycol, Glycerin, Aloe Barbadensis Leaf Juice, Sorbitan Oleate, PPG-1 Trideceth-6, PEG-150/Decyl Alcohol/SMDI Copolymer, Sodium Hyaluronate, Propylene Glycol Dicaprylate/Dicaprate, ..., Polyquaternium-37 (ohne Silikone laut Merkmal + INCI; keine Öle/Butter, keine Proteine)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "b3ddfac2-ae06-42dd-9caf-822a2941c6f2",
+      "name": "Garnier Fructis Leave-In Creme Locken Methode Air Dry",
+      "brand": "Garnier Fructis",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+      "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+      "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCERYL STEARATE • SODIUM HYALURONATE • HYDROXYPROPYL GUAR",
+      "fact_value": {
+        "format": "cream",
+        "weight": "light",
+        "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil, Butyrospermum Parkii Butter, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Sodium Hyaluronate, Hydroxypropyl Guar, ... (silikonfrei laut Merkmal + INCI, keine Proteine)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "a8abcd37-f0cc-4b31-91d9-7ec786a6abde",
+      "name": "Herbal Essences Leave-In Spray Blütensanft Rosenduft",
+      "brand": "Herbal Essences",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+      "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, Caprylyl Glycol, 1.2-Hexanediol, Parfum, Oleic Acid, Cetrimonium Chloride",
+      "fact_value": {
+        "format": "spray",
+        "weight": "light",
+        "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, Behentrimonium Chloride, ... (nahezu identische Basis wie das Kamille-Schwesterprodukt; keine Proteine, keine Pflegeöle)",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "958c37a5-7581-4b3a-9fcb-9d086238316e",
+      "name": "Herbal Essences Leave-In Spray Kamille",
+      "brand": "Herbal Essences",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+      "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, Caprylyl Glycol, 1,2-Hexanediol, Oleic Acid, Cetrimonium Chloride",
+      "fact_value": {
+        "format": "spray",
+        "weight": "light",
+        "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, ..., Glycerin, ..., Aloe Barbadensis Leaf Juice, ..., Anthemis Nobilis Flower Extract (keine Proteine, keine Pflegeöle — Zitrusöle sind Duftstoffe)",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "name": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "brand": "Jean&Len",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "source_text": "Ingredients: aqua, alcohol denat., cetearyl alcohol, propanediol, glycerin, behentrimonium chloride, cetyl esters, dicaprylyl ether, lauryl alcohol, coco-glucoside",
+      "fact_value": {
+        "format": "cream",
+        "weight": "medium",
+        "inci_basis": "aqua, alcohol denat., cetearyl alcohol, propanediol, glycerin, behentrimonium chloride, ..., panthenol, caesalpinia spinosa gum, hydrolyzed corn protein, hydrolyzed wheat protein, hydrolyzed soy protein, biotinoyl tripeptide-1, sh-oligopeptide-78 (silikonfrei laut Merkmal + INCI)",
+        "care_direction": "protein",
+        "ingredient_flags": [
+          "proteins",
+          "humectants",
+          "polymers"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "4c4980b7-99e0-4225-90fb-d55082a1f264",
+      "name": "L'Oréal Paris Elvital Leave-In Haarkur Hydra Hyaluron Aufpolsterndes Feuchtigkeitsserum",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+      "source_text": "AQUA / WATER • QUATERNIUM-87 • COCOS NUCIFERA OIL / COCONUT OIL • SODIUM BENZOATE • SODIUM HYALURONATE • STEARYL ALCOHOL • PPG-1 TRIDECETH-6 • BEHENTRIMONIUM CHLORIDE • POLYQUATERNIUM-37",
+      "fact_value": {
+        "format": "spray",
+        "weight": "light",
+        "inci_basis": "Aqua, Quaternium-87, Cocos Nucifera Oil, Sodium Benzoate, Sodium Hyaluronate, Stearyl Alcohol, ..., Behentrimonium Chloride, Polyquaternium-37, Polyquaternium-11, Candelilla Cera, ..., Glycine Soja Oil (silikonfrei, keine Proteine)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "0c80efd5-0462-46fa-ad15-2c736f5ef269",
+      "name": "L'Oréal Paris Elvital Leave-In Haarserum Bond Repair, Anti-Haarschäden",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+      "source_text": "INGREDIENTS: ISODODECANE • DIPROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • ALCOHOL DENAT. • GLYCERIN • DIMETHICONOL • PEG-14 DIMETHICONE • HYDROXYETHYL UREA • PARFUM / FRAGRANCE • CITRIC ACID • SODIUM CITRATE",
+      "fact_value": {
+        "format": "serum",
+        "weight": "light",
+        "inci_basis": "Isododecane, Dipropylene Glycol, Aqua, Dimethicone, Alcohol Denat., Glycerin, Dimethiconol, PEG-14 Dimethicone, Hydroxyethyl Urea, Parfum, Citric Acid, Sodium Citrate, ..., Polyacrylamide (keine Proteine)",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "0ba22032-a5b1-4a0a-a8a2-b49861d00fb8",
+      "name": "L'Oréal Paris Elvital Leave-In Serum Glycolic Gloss",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+      "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+      "source_text": "INGREDIENTS: ISODODECANE • AQUA / WATER • DIPROPYLENE GLYCOL • DIMETHICONE • ALCOHOL DENAT. • DIMETHICONOL • GLYCERIN • PEG-14 DIMETHICONE • HYDROXYETHYL UREA",
+      "fact_value": {
+        "format": "serum",
+        "weight": "light",
+        "inci_basis": "Isododecane, Aqua, Dipropylene Glycol, Dimethicone, Alcohol Denat., Dimethiconol, Glycerin, PEG-14 Dimethicone, Hydroxyethyl Urea, ..., Polyacrylamide, ..., Glycolic Acid (weit hinten), C13-14 Isoalkane",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "404fb3e4-04c4-4089-8120-8c3e92300a3a",
+      "name": "Plantur 39 Leave-In Sprühkur",
+      "brand": "Plantur 39",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+      "source_text": "INGREDIENTS: AQUA, AMODIMETHICONE, PROPYLENE GLYCOL, PANTHENOL, PEG-40 HYDROGENATED CASTOR OIL, CETRIMONIUM CHLORIDE, TRIDECETH-15, TRIDECETH-3, POLYQUATERNIUM-16, VP/VA COPOLYMER, PEG-14 DIMETHICONE",
+      "fact_value": {
+        "format": "spray",
+        "weight": "light",
+        "inci_basis": "Aqua, Amodimethicone, Propylene Glycol, Panthenol, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Trideceth-15, Trideceth-3, Polyquaternium-16, VP/VA Copolymer, PEG-14 Dimethicone (keine Proteine, keine Pflegeöle)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "humectants"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "name": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "brand": "Schwarzkopf Gliss",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+      "source_text": "Ingredients: Aqua (Water, Eau), Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, Laureth-4, Isopropyl Myristate, Hydroxyoctanone, Hydrolyzed Pearl, Betaine, Cetrimonium Chloride, Quaternium-87",
+      "fact_value": {
+        "format": "serum",
+        "weight": "light",
+        "inci_basis": "Aqua, Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, ..., Hydrolyzed Pearl, Betaine, ..., Panthenol, ..., Glycerin",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "proteins",
+          "humectants"
+        ],
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "a67c4125-2195-4cb6-a6d0-8bcd495a74d4",
+      "name": "Schwarzkopf Gliss Sprüh-Conditioner Express-Repair Total Repair",
+      "brand": "Schwarzkopf Gliss",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1430766/schwarzkopf-gliss-sprueh-conditioner-express-repair-total-repair",
+      "source_text": "Ingredients: Aqua (Water, Eau), Trisiloxane, Dimethicone, Prunus Armeniaca (Apricot) Kernel Oil, Phenyl Trimethicone, Hydrolyzed Keratin, Combretum Farinosum Flower Nectar, Dimethiconol, Polyquaternium-16, Parfum (Fragrance), Cetyl PEG/PPG-10/1 Dimethicone, Cetrimonium Chloride, Glycerin, Lactic Acid, Sodium Benzoate, Citrus Aurantium Peel Oil, Limonene, Benzyl Alcohol, Alpha-Isomethyl Ionone, Phenoxyethanol, Potassium Sorbate, Vanillin, Rose Ketones, CI 15985 (Yellow 6), CI 17200 (Red 33)",
+      "fact_value": {
+        "format": "spray",
+        "weight": "light",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "proteins",
+          "polymers",
+          "oils"
+        ],
+        "repair_support_level": "medium",
+        "heat_protection_max_c": 230,
+        "provides_heat_protection": true
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d2936db6-6865-4375-8060-95995b96b804",
+      "name": "Wahre Schätze Haarserum Honig reparierend",
+      "brand": "Wahre Schätze",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Verwendungshinweise)",
+      "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+      "source_text": "INGREDIENTS: PROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • PHENYL TRIMETHICONE • GLYCERIN • ISODODECANE • DIMETHICONOL • AMODIMETHICONE • PHENOXYETHANOL • TRIDECETH-5 • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "format": "serum",
+        "weight": "light",
+        "inci_basis": "Propylene Glycol, Aqua, Dimethicone, Phenyl Trimethicone, Glycerin, Isododecane, Dimethiconol, Amodimethicone, ..., Polyacrylate Crosspolymer-6, ..., Mel/Honey (wasserbasierte Serum-Emulsion, keine Pflanzenöle)",
+        "care_direction": "balanced",
+        "ingredient_flags": [
+          "silicones",
+          "humectants",
+          "polymers"
+        ],
+        "repair_support_level": "low",
+        "heat_protection_max_c": 230,
+        "provides_heat_protection": true
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "d2936db6-6865-4375-8060-95995b96b804",
+      "name": "Wahre Schätze Haarserum Honig reparierend",
+      "brand": "Wahre Schätze",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product.claims.manufacturer_corroboration",
+      "source_label": "garnier.de Produktseite (Wahre Schätze Haar Honig Reparierendes Haarserum)",
+      "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/reparierendes-haarserum",
+      "source_text": "Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült und die Haare nach kurzer Einwirkzeit wie gewohnt frisiert werden. Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze und sorgt für einen glänzenden, geschmeidigen Look.",
+      "fact_value": "Garnier bestätigt: Anwendung auf feuchtem oder trockenem Haar, Längen und Spitzen, insbesondere vor dem Föhnen oder Glätten; Hitzeschutz bis 230 °C; Leave-in ohne Ausspülen; Zielgruppe geschädigte Spitzen und splissiges Haar; identische INCI (Propylene Glycol, Aqua, Dimethicone, ...).",
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "name": "Wahre Schätze Leave-In Haarkur Avocado",
+      "brand": "Wahre Schätze",
+      "category_key": "leave_in",
+      "is_active": true,
+      "fact_key": "product_leave_in_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+      "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • PERSEA GRATISSIMA OIL / AVOCADO OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCERYL STEARATE • HYDROXYPROPYL GUAR",
+      "fact_value": {
+        "format": "cream",
+        "weight": "medium",
+        "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil, Persea Gratissima Oil, Butyrospermum Parkii Butter, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Hydroxypropyl Guar, ... (silikonfrei laut Merkmal + INCI; keine Proteine; gleiche Basis wie die Garnier-Locken-Methode-Creme)",
+        "care_direction": "moisture",
+        "ingredient_flags": [
+          "oils",
+          "humectants",
+          "polymers"
+        ],
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "brand": "alverde NATURKOSMETIK",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+      "source_text": "Aqua, Alcohol* denat., Cetearyl Alcohol, Sodium Cetearyl Sulfate, Glycerin, Isoamyl Laurate, Levulinic Acid, Caesalpinia Spinosa Gum, Brassicyl Isoleucinate Esylate, PCA Glyceryl Oleate, Sodium Levulinate, Butyrospermum Parkii Butter*, Theobroma Cacao Seed Butter*, Persea Gratissima Oil*, Hydrolyzed Corn Protein, Brassica Alcohol, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Sodium Anisate, Lactobacillus Ferment, Parfum**, ... / * ingredients from certified organic agriculture ** from natural essential oils",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Alcohol denat., Cetearyl Alcohol, Sodium Cetearyl Sulfate, Glycerin, ..., Butyrospermum Parkii Butter*, Theobroma Cacao Seed Butter*, Persea Gratissima Oil*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, ...; *Bio-Zertifizierung; keine Silikone",
+        "ingredient_flags": [
+          "proteins",
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "protein",
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "brand": "alverde NATURKOSMETIK",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+      "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Glycerin, Alcohol*, Brassica Alcohol, Glycine Soja Oil*, Simmondsia Chinensis Seed Oil*, Cocos Nucifera Oil*, Inulin, Betaine, Brassicyl Isoleucinate Esylate, Levulinic Acid, Coco-Glucoside, Glyceryl Oleate, Parfum**, Glyceryl Caprylate, Sodium Levulinate, Arginine, Sodium PCA, Butyrospermum Parkii Butter*, p-Anisic Acid, Aloe Barbadensis Leaf Juice Powder*, Benzyl Alcohol**, Citronellol**, Cedrus Atlantica Oil/Extract**, Citric Acid, Sodium Hyaluronate, Tocopherol, Hydrogenated Vegetable Glycerides Citrate. / *ingredients from certified organic agriculture **from natural essential oils",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Glycerin, Alcohol*, Brassica Alcohol, Glycine Soja Oil*, Simmondsia Chinensis Seed Oil*, Cocos Nucifera Oil*, Inulin, Betaine, ..., Butyrospermum Parkii Butter*, Aloe Barbadensis Leaf Juice Powder*, ..., Sodium Hyaluronate, Tocopherol; *Bio-Zertifizierung; keine Silikone, keine Proteine",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "e75b6978-d9ca-4601-b40a-8eb8cc974b45",
+      "name": "Balea Haarkur Feuchtigkeit",
+      "brand": "Balea",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+      "source_text": "INGREDIENTS: AQUA, GLYCERIN, CETEARYL ALCOHOL, CAPRYLIC/CAPRIC TRIGLYCERIDE, CETRIMONIUM CHLORIDE, PANTHENOL, PARFUM, DICAPRYLYL ETHER, SODIUM BENZOATE, LAURYL ALCOHOL, SODIUM STEAROYL GLUTAMATE, NIACINAMIDE, POTASSIUM SORBATE, CITRIC ACID, SODIUM CHLORIDE, TOCOPHEROL",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Caprylic/Capric Triglyceride, Cetrimonium Chloride, Panthenol, Parfum, Dicaprylyl Ether, Sodium Benzoate, Lauryl Alcohol, Sodium Stearoyl Glutamate, Niacinamide, ...; ohne Silikone, ohne Mikroplastik",
+        "ingredient_flags": [
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "1bf36485-3fe8-4fe0-9a03-b2bf7b451f0c",
+      "name": "Being (by ZURU) Mega Moisture Haarmaske",
+      "brand": "Being (by ZURU)",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "beinghaircare.com Produktseite (Markenhersteller, Inhaltsstoffe)",
+      "source_url": "https://beinghaircare.com/blog/product/mega-moisture-mask-moisturizing-hair-mask/",
+      "source_text": "Aqua (Water), Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Avena Sativa (Oat) Flower/Leaf/Stem Extract, Theobroma Cacao (Cocoa) Seed Butter, Butyrospermum Parkii (Shea) Butter, Tetrasodium Glutamate Diacetate, Behentrimonium Methosulfate, Polyquaternium-37, Polyquaternium-10, Hydroxyethylcellulose, PPG-1 Trideceth-6, Propylene Glycol Dicaprylate/Dicaprate, Acrylates/Stearyl Methacrylate Copolymer, Phenoxyethanol, Chlorphenesin, Citric Acid, Sorbitan Oleate, Pentylene Glycol, Butylene Glycol, Disodium Phosphate, Polysorbate 60, Sodium Phosphate, Parfum (Fragrance).",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Avena Sativa (Oat) Extract, Theobroma Cacao (Cocoa) Seed Butter, Butyrospermum Parkii (Shea) Butter, ..., Polyquaternium-37, Polyquaternium-10, Hydroxyethylcellulose, Acrylates/Stearyl Methacrylate Copolymer, ...; keine Silikone, keine Proteine",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "106aaea7-cbdf-400c-bf3c-7cf7ce268577",
+      "name": "Being (by ZURU) Mega Shine Haarmaske",
+      "brand": "Being (by ZURU)",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+      "source_text": "Aqua (Water), Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Aloe Barbadensis Leaf Juice, Acrylates/Stearyl Methacrylate Copolymer, Tetrasodium Glutamate Diacetate, Polyquaternium-37, Polyquaternium-10, Behentrimonium Methosulfate, Propylene Glycol Dicaprylate/Dicaprate, Phenoxyethanol, Chlorphenesin, Hydroxyethylcellulose, PPG-1 Trideceth-6, Citric Acid, Sorbitan Oleate, Disodium Phosphate, Polysorbate 60, Sodium Phosphate, Trehalose, Ethylhexylglycerin, Parfum (Fragrance).",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Aloe Barbadensis Leaf Juice, Acrylates/Stearyl Methacrylate Copolymer, ..., Polyquaternium-37, Polyquaternium-10, ...; keine Silikone, keine Proteine",
+        "ingredient_flags": [
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "4a7b5b38-ff8b-4e0a-aaa2-4f5031797ee3",
+      "name": "Garnier Fructis Haarkur Banana Hair Food 3in1 Maske",
+      "brand": "Garnier Fructis",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • MUSA PARADISIACA FRUIT JUICE / BANANA FRUIT JUICE • GLYCINE SOJA OIL / SOYBEAN OIL",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, Isopropyl Myristate, Cetyl Esters, Sunflower Seed Oil, Banana Fruit Juice, Soybean Oil, Shea Butter, Glycerin, ... (silikonfrei)",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "488685e8-4718-4cb5-a826-9bcb75014b34",
+      "name": "Garnier Fructis Haarmaske Keratin Sleek, Anti-Frizz Kur",
+      "brand": "Garnier Fructis",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • ARGANIA SPINOSA KERNEL OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • HYDROLYZED WHEAT PROTEIN • CAPRYLYL GLYCOL • CITRIC ACID • TARTARIC ACID • PHENOXYETHANOL • BENZOIC ACID • LINALOOL • AMYL CINNAMAL • HEXYL CINNAMAL • BENZYL ALCOHOL • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sonnenblumen-/Arganöl, Sheabutter, Hydrolyzed Corn/Soy/Wheat Protein (silikonfrei, kein Glycerin)",
+        "ingredient_flags": [
+          "proteins",
+          "oils"
+        ],
+        "balance_direction": "protein",
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "82a0d0bd-784f-4be0-aa6e-2d929b088912",
+      "name": "Guhl Haarkur 30_sek Reparatur",
+      "brand": "Guhl",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+      "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cetyl Esters, Dipropylene Glycol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Ethylhexylglycerin, Pyrus Communis Fruit Extract, Persea Gratissima Oil, Tocopherol, Phenoxyethanol, Parfum.",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, ..., Glycerin, Panthenol, ..., Pyrus Communis Fruit Extract, Persea Gratissima Oil (silikonfrei, keine Proteine)",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "82a0d0bd-784f-4be0-aa6e-2d929b088912",
+      "name": "Guhl Haarkur 30_sek Reparatur",
+      "brand": "Guhl",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product.claims.manufacturer_corroboration",
+      "source_label": "guhl.com Produktseite",
+      "source_url": "https://www.guhl.com/produkt/30sek-intensiv-kuren/30sek-intensiv-kur-reparatur/",
+      "source_text": "Guhl 30sek Reparatur Intensiv Kur (100 ml) mit Birnenextrakt und Avocadoöl für strapaziertes und geschädigtes Haar; 30 Sekunden Einwirkzeit, ohne Silikone, Inhaltsstoffe zu 97 % natürlichen Ursprungs.",
+      "fact_value": "30 Sekunden Einwirkzeit, Birnenextrakt + Avocadoöl, ohne Silikone, 97 % natürlichen Ursprungs.",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "brand": "Herbal Essences",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+      "source_text": "Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Glutamic Acid, Parfum, Benzyl Alcohol, Sodium Benzoate, Citric Acid, Disodium EDTA, Polysorbate 20, Histidine, Hexyl Cinnamal, CI 17200",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Glutamic Acid, ..., Histidine (keine Öle/Butter, kein Glycerin)",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "25359379-8a85-4f2f-a338-2a7361b747a7",
+      "name": "Isana Professional Haarmaske Locken Traum",
+      "brand": "Isana Professional",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+      "source_text": "AQUA| CETEARYL ALCOHOL| COCO-CAPRYLATE| BEHENTRIMONIUM CHLORIDE| TRITICUM VULGARE BRAN EXTRACT| TRITICUM VULGARE GERM EXTRACT| TRITICUM VULGARE GERM OIL| CAMELLIA OLEIFERA SEED OIL| GLYCERIN| PANTHENOL| STEARAMIDOPROPYL DIMETHYLAMINE| COCOS NUCIFERA OIL| BUTYROSPERMUM PARKII BUTTER| LINOLEIC ACID| ISOPROPYL ALCOHOL| LAURYL ALCOHOL| DICAPRYLYL ETHER| CETEARYL NONANOATE| CAPRYLIC/CAPRIC TRIGLYCERIDE| QUARTZ POWDER| XANTHAN GUM| LACTIC ACID| CITRIC ACID| PARFUM| LINALOOL| HEXYL CINNAMAL| LIMONENE| BENZYL ALCOHOL| TOCOPHEROL| TOCOPHERYL ACETATE| POTASSIUM SORBATE| SODIUM BENZOATE.",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Coco-Caprylate, Behentrimonium Chloride, Triticum Vulgare Bran/Germ Extract, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil, Glycerin, Panthenol, Stearamidopropyl Dimethylamine, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Linoleic Acid, ...; keine Proteine, keine Silikone",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "27fafbbd-9a89-4335-aed0-5cf5a081ef5c",
+      "name": "Isana Professional Plex Maske",
+      "brand": "Isana Professional",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+      "source_text": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Niacinamide, Oryza Sativa Seed Protein, Phytic Acid, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Parfum, Calcium Gluconate, Distearoylethyl Hydroxyethylmonium Methosulfate, Isopropyl Alcohol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Sodium Benzoate, Potassium Sorbate, Citric Acid, Gluconolactone, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Niacinamide, Oryza Sativa Seed Protein, Phytic Acid, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, ..., Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, ...; silikonfrei",
+        "ingredient_flags": [
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "protein",
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "b1712c80-75a9-4d85-89c3-e12421f208e8",
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+      "brand": "John Frieda",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+      "source_text": "WATER/AQUA/EAU, CETEARYL ALCOHOL, DIMETHICONE, BEHENTRIMONIUM CHLORIDE, BEHENYL ALCOHOL, DIPROPYLENE GLYCOL, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE, DIMETHICONOL, PEG-45M, TETRASODIUM GLUTAMATE DIACETATE, MALIC ACID, COCOS NUCIFERA (COCONUT) OIL, OLEA EUROPAEA (OLIVE) FRUIT OIL, RICINUS COMMUNIS (CASTOR) SEED OIL, SODIUM HYDROXIDE, SILICA, CERAMIDE NG, CERAMIDE NP, TOCOPHEROL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, FRAGRANCE/PARFUM, HEXYL CINNAMAL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Dimethicone, Behentrimonium Chloride, ..., Kokos-/Oliven-/Rizinusöl, Ceramide NG/NP (Spurenbereich); keine Proteine",
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ],
+        "balance_direction": "balanced",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "b1712c80-75a9-4d85-89c3-e12421f208e8",
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+      "brand": "John Frieda",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product.claims.frizz_repair",
+      "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+      "source_text": "86% weniger Frizz mit 1 Anwendung bei Verwendung der Wunder-Reparatur Serie – repariert tiefenwirksam und pflegt intensiv […] formuliert mit Ceramiden sowie Kokos-, Oliven- und Rizinusöl für gestärktes Haar […] vegane Formel, frei von tierischen Inhaltsstoffen",
+      "fact_value": "86% weniger Frizz mit 1 Anwendung (bei Verwendung der Serie); Ceramide + Kokos-/Oliven-/Rizinusöl; vegan; für widerspenstiges, geschädigtes Haar.",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "13a1acb9-c824-4410-b4b6-ed358be30c37",
+      "name": "L'Oréal Paris Elvital Haarkur Glycolic Gloss, 5 Minuten Haar-Laminierung",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+      "source_text": "AQUA / WATER • CETEARYL ALCOHOL • COCAMIDOPROPYL BETAINE • BEHENTRIMONIUM CHLORIDE • PROPYLENE GLYCOL • AMODIMETHICONE • CI 17200 / RED 33 • CI 19140 / YELLOW 5 • COCOS NUCIFERA OIL / COCONUT OIL • SODIUM CHLORIDE • HYDROXYPROPYL GUAR • HYDROXYCITRONELLAL • PHENOXYETHANOL • PPG-1 TRIDECETH-6 • ETHANOLAMINE • TRIDECETH-6 • POLYQUATERNIUM-37",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Cocamidopropyl Betaine, Behentrimonium Chloride, Propylene Glycol, Amodimethicone, ..., Cocos Nucifera Oil, Hydroxypropyl Guar, ..., Polyquaternium-37, ..., Acrylates/Stearyl Methacrylate Copolymer",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "balanced",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "5122791e-6572-4ed0-b4c4-a7183912b7cf",
+      "name": "OGX Coconut Miracle Oil Haarmaske",
+      "brand": "OGX",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+      "source_text": "Aqua/Water/Eau, Cetearyl Alcohol, Cetyl Alcohol, Behentrimonium Chloride, Glycerin, PPG-3 Benzyl Ether Myristate, Amodimethicone, Steareth-20, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, Polyquaternium-47, Polyquaternium-37, PPG-1 Trideceth-6, Sorbitan Oleate, Glycol Distearate, Propylene Glycol Dicaprylate/Dicaprate, Isopropyl Alcohol, Citric Acid, Sodium Hydroxide, Disodium EDTA, Sodium Benzoate, Phenoxyethanol, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Parfum/Fragrance, Linalool, Benzyl Salicylate",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Aqua/Water/Eau, Cetearyl Alcohol, Cetyl Alcohol, Behentrimonium Chloride, Glycerin, PPG-3 Benzyl Ether Myristate, Amodimethicone, Steareth-20, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, Polyquaternium-47, Polyquaternium-37, ...; keine Proteine",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "polymers",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "3f75e6f8-7659-42ce-bcd9-3c21af5d2de4",
+      "name": "Pantene Pro-V Moisture BOOST Keratin Protect Haarmaske",
+      "brand": "Pantene Pro-V",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe); dm.de und mueller.de zeigen dieselbe INCI wortgleich",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+      "source_text": "Aqua, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Behentrimonium Chloride, Cetyl Alcohol, Oleic Acid, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Hexamethylindanopyran, Panthenol, Polysorbate 20, Dimethyl Phenethyl Acetate, Citric Acid, Histidine, Hexyl Cinnamal, Tetramethyl Acetyloctahydronaphthalenes, Vanillin, Hydroxycitronellal, Limonene, Rose Ketones, CI 17200",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Behentrimonium Chloride, ..., Panthenol, Histidine; KEIN Keratin trotz Produktname, keine Öle/Butter",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d46c16fa-1ca6-45dd-bab4-af96217c5480",
+      "name": "Pantene Pro-V Pantene Pro-V Serum Shot mit Collagen Peptiden",
+      "brand": "Pantene Pro-V",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-INCI wortgleich",
+      "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+      "source_text": "Ingredients: Aqua, Bis-Aminopropyl Dimethicone, Stearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Disodium EDTA, Panthenol, Panthenyl Ethyl Ether, Histidine, Citric Acid, Hexyl Cinnamal, Hydroxycitronellal, Magnesium Nitrate, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Bis-Aminopropyl Dimethicone (Pos. 2), Stearyl Alcohol, Behentrimonium Chloride, ..., Panthenol, Panthenyl Ethyl Ether, Histidine; keine Proteine, keine Öle",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "balance_direction": "balanced",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "d46c16fa-1ca6-45dd-bab4-af96217c5480",
+      "name": "Pantene Pro-V Pantene Pro-V Serum Shot mit Collagen Peptiden",
+      "brand": "Pantene Pro-V",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product.identity.rossmann_rebrand",
+      "source_label": "Rossmann.de Produktseite (Seitentitel + JSON-LD-sku)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-serum-shot-mit-collagen-peptiden/p/4084500390089",
+      "source_text": "Pantene Pro-V Serum Shot mit Collagen Peptiden online kaufen | rossmann.de",
+      "fact_value": "Rossmann listet dieselbe EAN mit identischer INCI und identischem Anwendungstext unter dem neueren Namen 'Serum Shot mit Collagen Peptiden'; auch das aktuelle dm-Packshot zeigt die 'Serum Shot'-Aufmachung (Aprikosenöl/Vitamin B7 auf der Packung, beides nicht in der Retailer-INCI).",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "75a3dc03-a2d1-4a5a-aa66-50edff642c41",
+      "name": "Schwarzkopf Gliss Haarkur 7sec Express-Repair, Ultimate Repair",
+      "brand": "Schwarzkopf Gliss",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+      "source_text": "Ingredients: Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua (Water, Eau), Glycerin, Caprylic/Capric Triglyceride, Parfum (Fragrance), Cetrimonium Chloride, PEG-7 Glyceryl Cocoate, Hydroxypropylgluconamide",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua, Glycerin, Caprylic/Capric Triglyceride, ..., Hydrolyzed Keratin (silikonfrei)",
+        "ingredient_flags": [
+          "proteins",
+          "humectants",
+          "oils"
+        ],
+        "balance_direction": "protein",
+        "repair_support_level": "medium"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "5a0b573e-bd4a-40a6-a328-9ceb8024109b",
+      "name": "Wahre Schätze Haarkur 1-Minute Honig Schätze",
+      "brand": "Wahre Schätze",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+      "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • GLYCERIN • CAPRYLYL GLYCOL • CITRIC ACID • TARTARIC ACID • POTASSIUM SORBATE • SODIUM BENZOATE • BENZOIC ACID • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sonnenblumenöl, Sheabutter, Mel/Honey, Honey Extract, Glycerin (silikonfrei, keine Proteine; kein Cera Alba trotz Bienenwachs-Claim)",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "balanced",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "5a0b573e-bd4a-40a6-a328-9ceb8024109b",
+      "name": "Wahre Schätze Haarkur 1-Minute Honig Schätze",
+      "brand": "Wahre Schätze",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product.claims.honig_repair",
+      "source_label": "dm.de Produktseite (Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+      "source_text": "Die Garnier Wahre Schätze 1-Minute Haarmaske Honig Schätze von Garnier vereint Akazienhonig mit Bienenwachs und führt damit zu weniger Spliss und Haarbruch. […] Dadurch entstehen im Nu geschmeidigere Haare, ohne zu beschweren. Dabei besteht die Formel aus 97 % Inhaltsstoffen natürlichen Ursprungs und Wasser.",
+      "fact_value": "Akazienhonig + Bienenwachs gegen Spliss und Haarbruch; reparierende Wirkung für brüchiges, strapaziertes Haar; geschmeidig ohne zu beschweren; 97 % natürlichen Ursprungs.",
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "25a545c5-91c3-4338-baf9-63b3d5c155e3",
+      "name": "Wahre Schätze Haarkur 1-Minute Traube",
+      "brand": "Wahre Schätze",
+      "category_key": "mask",
+      "is_active": true,
+      "fact_key": "product_mask_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+      "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • SORBITAN ISOSTEARATE • PARFUM / FRAGRANCE • MYRISTYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER • VITIS VINIFERA SEED OIL / GRAPE SEED OIL • ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT • AMODIMETHICONE • SODIUM CHLORIDE • SODIUM HYDROXIDE • COCO-BETAINE • CITRIC ACID • LACTIC ACID • TARTARIC ACID • CETYL ESTERS • TOCOPHEROL • PHENOXYETHANOL • BENZOIC ACID • CI 17200 / RED 33 • LINALOOL • LINALYL ACETATE • TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL • LIMONENE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CARVONE • HEXYL CINNAMAL",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Aqua, Glycerin (Pos. 2), Cetearyl Alcohol, ..., Sonnenblumenöl, Traubenwasser, Traubenkernöl, ..., Amodimethicone (Mittelfeld); keine Proteine, keine Butter",
+        "ingredient_flags": [
+          "oils",
+          "humectants",
+          "silicones"
+        ],
+        "balance_direction": "moisture",
+        "repair_support_level": "low"
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "brand": "Allgäuer Ölmühle",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Müller — Allgäuer Ölmühle Bio Traubenkernöl",
+      "source_url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+      "source_text": "100 ml food oil; ingredient is organic grape-seed oil.",
+      "fact_value": {
+        "weight": "light",
+        "role_support": [
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "fine",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "55c39339-bac0-4899-9499-ee96fa0bdad8",
+      "name": "Balea Professional Haaröl Plex Care",
+      "brand": "Balea Professional",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+      "source_text": "Ingredients: Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Zea Mays Oil, Parfum, Benzyl Alcohol, Tetramethyl Acetyloctahydronaphthalenes",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Zea Mays Oil (anhydrisch, volatile-dominant mit Pflanzenölen; INCI-Familie identisch mit Isana Professional Haaröl aus dem Pilot)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "pre_heat_protection"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "8a1f6818-84c7-4ed8-929a-221f0352b971",
+      "name": "Bali Curls Haaröl Bonding Oil",
+      "brand": "Bali Curls",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Herstellerseite führt deckungsgleiche INCI",
+      "source_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+      "source_text": "Ingredients: Ethylhexyl Stearate, Undecane, Coco-Caprylate/Caprate, Hydrogenated Ethylhexyl Olivate, Tridecane, Hydrogenated Castor Oil/Sebacic Acid Copolymer, Macadamia Integrifolia/Tetraphylla Seed Oil, Parfum, Isopropyl Myristate, Tocopherol, Shea Butter Ethyl Esters, Hydrogenated Olive Oil Unsaponifiables, Helianthus Annuus Seed Oil, Benzyl Alcohol, Linalool, Limonene, Geraniol, Bixa Orellana Seed Extract, CI 75120, Cananga Odorata Flower Extract.",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Ethylhexyl Stearate, Undecane, Coco-Caprylate/Caprate, Hydrogenated Ethylhexyl Olivate, Tridecane, ..., Macadamia Integrifolia/Tetraphylla Seed Oil, Shea Butter Ethyl Esters, Helianthus Annuus Seed Oil (anhydrisch, silikonfrei; Ester-/Volatile-Basis mit Pflanzenölen)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "name": "benecos BIO Körperöl Aprikosenkernöl",
+      "brand": "benecos",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Cosmondial — benecosBIO Körperöl Aprikosenkernöl",
+      "source_url": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-aprikosenkernoel",
+      "source_text": "INCI: Prunus Armeniaca Kernel Oil; 100% organic apricot-kernel oil.",
+      "fact_value": {
+        "weight": "light",
+        "role_support": [
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "fine",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "name": "benecos BIO Körperöl Macadamianussöl",
+      "brand": "benecos",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Cosmondial — benecosBIO Körperöl Macadamianussöl",
+      "source_url": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-macadamia",
+      "source_text": "INCI: Macadamia Integrifolia Seed Oil; 100% organic macadamia oil.",
+      "fact_value": {
+        "weight": "medium",
+        "role_support": [
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "normal"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "normal",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "name": "benecos BIO Körperöl Mandelöl",
+      "brand": "benecos",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Cosmondial — benecosBIO Körperöl Mandelöl",
+      "source_url": "https://cosmondial.com/collections/korper-bad-pflege/products/benecosbio-koerperoel-mandel",
+      "source_text": "INCI: Prunus Amygdalus Dulcis Oil; 100% organic sweet-almond oil.",
+      "fact_value": {
+        "weight": "medium",
+        "role_support": [
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "fine",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "brand": "benecos",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Cosmondial — benecosBIO Körperöl Wunderbaumsamenöl",
+      "source_url": "https://cosmondial.com/products/benecosbio-koerperoel-wunderbaumsamen",
+      "source_text": "INCI: Ricinus Communis Seed Oil; 100% organic castor oil; described as thick and rich.",
+      "fact_value": {
+        "weight": "rich",
+        "role_support": [
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "coarse",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "7dcde56c-40e7-4e84-86b7-f6ac3d407a9d",
+      "name": "Dejan Garz Haaröl Violet Hair Oil The Britney",
+      "brand": "Dejan Garz",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+      "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+      "source_text": "INGREDIENTS: ISODODECANE, DIMETHICONE, CAMELLIA OLEIFERA SEED OIL, ARGANIA SPINOSA KERNEL OIL, SIMMONDSIA CHINENSIS SEED OIL, AMODIMETHICONE, PHENYL TRIMETHICONE, PARFUM, HEXYL CINNAMAL, LINALOOL, ALPHA-ISOMETHYL IONONE, LIMONENE, CI 60725",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Isododecane, Dimethicone, Camellia Oleifera Seed Oil, Argania Spinosa Kernel Oil, Simmondsia Chinensis Seed Oil, Amodimethicone, Phenyl Trimethicone (anhydrisches Silikon-/Volatile-Profil, violettes Pigment CI 60725)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "pre_heat_protection"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "name": "Dr. Scheller Jojobaöl",
+      "brand": "Dr. Scheller",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "Dr. Scheller — Reines Jojobaöl",
+      "source_url": "https://dr-scheller.de/products/reines-jojobaol",
+      "source_text": "INCI: Simmondsia Chinensis (Jojoba) Seed Oil. Sparsam in Spitzen; als intensive Kur zehn Minuten, danach auswaschen.",
+      "fact_value": {
+        "weight": "light",
+        "role_support": [
+          "dry_finish",
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "fine",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "name": "Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+      "brand": "Garnier Fructis",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+      "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+      "source_text": "INGREDIENTS: ISODODECANE • DIMETHICONE • DIMETHICONOL • OLEA EUROPAEA FRUIT OIL / OLIVE FRUIT OIL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • ROSMARINUS OFFICINALIS LEAF EXTRACT / ROSEMARY LEAF EXTRACT • COCOS NUCIFERA OIL / COCONUT OIL • PERSEA GRATISSIMA OIL / AVOCADO OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • CITRIC ACID • TOCOPHEROL • LINALOOL • COUMARIN • LIMONENE • PARFUM / FRAGRANCE",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Isododecane, Dimethicone, Dimethiconol, Olea Europaea Fruit Oil, Helianthus Annuus Seed Oil, Cocos Nucifera Oil, Persea Gratissima Oil, Butyrospermum Parkii Butter (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen und Sheabutter im Mittelfeld)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "pre_heat_protection"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "770ee16b-154e-4c60-adf8-e9831718f6da",
+      "name": "Herbal Essences Haaröl Arganöl Elixir, Tiefenreparatur",
+      "brand": "Herbal Essences",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+      "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+      "source_text": "Ingredients: Cyclopentasiloxane, Dimethiconol, Argania Spinosa Kernel Oil, Parfum, Hexamethylindanopyran, Benzyl Benzoate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Linalyl Acetate, Limonene, Alpha-Isomethyl Ionone, Coumarin, Vanillin, Citrus Limon Peel Oil, Pinene, Trimethylcyclopentenyl Methylisopentenol, Eugenol, Benzyl Alcohol, Cinnamomum Zeylanicum Bark Oil",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Cyclopentasiloxane, Dimethiconol, Argania Spinosa Kernel Oil (anhydrisches Silikon-Profil mit Arganöl an Position 3)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "name": "Isana Professional Haaröl Arganöl & Pflege",
+      "brand": "Isana Professional",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "source_text": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil, Parfum",
+      "fact_value": {
+        "weight": "medium",
+        "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil (anhydrisch, volatile-dominant mit Pflanzenölen)",
+        "role_support": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "name": "Kevin Murphy Young Again",
+      "brand": "Kevin Murphy",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "KEVIN.MURPHY Produktseite DE (EU-Hersteller)",
+      "source_url": "https://kevinmurphy.com.au/de/de/km/products-/by-benefit-/rejuvenate-/YOUNG-AGAIN.html",
+      "source_text": "\"Die ultimative tägliche Verwöhnpflege für sichtbar verjüngtes Haar – YOUNG.AGAIN ist ein schwereloses Leave-in-Öl, angereichert mit Immortelle.\" \"Verwende es täglich, um Haarbruch vorzubeugen und das Haar vor schädlichen Umwelteinflüssen und Hitze bis zu 230 °C schützen.\" Inhaltsstoffe (EU-Hersteller): Cyclopentasiloxane, Dimethicone, Dimethiconol, Bis-Cetearyl Amodimethicone, Helichrysum Stoechas Flower Extract*, Pyrus Malus (Apple) Fruit Extract, Camellia Sinensis Leaf Extract, Carthamus Tinctorius (Safflower) Seed Oil, Citrus Limon (Lemon) Peel Oil, Citrus Limon (Lemon) Fruit Extract, Vitis Vinifera (Grape) Seed Extract, Saccharum Officinarum (Sugarcane) Extract, Ginkgo Biloba Leaf Extract, Glycerin, Hydrolyzed Soy Protein, Water (Aqua) (Eau), Hexylene Glycol, Butylene Glycol, Cyclohexasiloxane, Betaine, Vanillyl Butyl Ether, Behentrimonium Chloride, Quaternium-91, Myristyl Myristate, Hexapeptide-11, Cetearyl Alcohol, Ethylhexyl Methoxycinnamate, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate, Fragrance (Parfum), Linalool, Limonene, Geraniol, Violet 2 (CI 60725)",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Cyclopentasiloxane, Dimethicone, Dimethiconol, Bis-Cetearyl Amodimethicone, … Carthamus Tinctorius (Safflower) Seed Oil, Citrus Limon (Lemon) Peel Oil, … (silikonbasiertes Leave-in-Öl; Silikone an Position 1–4)",
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ],
+        "provides_heat_protection": true
+      },
+      "checked_at": "2026-09-29"
+    },
+    {
+      "product_id": "f7f28e1c-e177-4505-906d-c59f4291ba6b",
+      "name": "L'Oréal Paris Elvital Haaröl Öl Magique, für alle Haartypen",
+      "brand": "L'Oréal Paris Elvital",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+      "source_text": "INGREDIENTS: ISODODECANE • DIMETHICONE • DIMETHICONOL • COCOS NUCIFERA OIL / COCONUT OIL • TOCOPHEROL • POGOSTEMON CABLIN OIL • ANISE ALCOHOL • SCLEROCARYA BIRREA SEED OIL • CAMELLIA JAPONICA SEED OIL",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Isododecane, Dimethicone, Dimethiconol, Cocos Nucifera Oil, Tocopherol, ..., Sclerocarya Birrea Seed Oil, Camellia Japonica Seed Oil (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "pre_heat_protection"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "f89c1edc-cb71-4ec6-ac86-dc27c515568e",
+      "name": "Langhaarmädchen Haaröl Intense Repair",
+      "brand": "Langhaarmädchen",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+      "source_text": "INGREDIENTS: DIMETHICONE | ISODODECANE | C12-15 ALKYL BENZOATE | DIMETHICONOL | COCOS NUCIFERA OIL | MAURITIA FLEXUOSA FRUIT OIL | HELIANTHUS ANNUUS SEED OIL | CAPRYLIC/CAPRIC TRIGLYCERIDE | DIETHYLHEXYL SYRINGYLIDENEMALONATE | PARFUM | TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES | CI 40800.",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Dimethiconol, Cocos Nucifera Oil, Mauritia Flexuosa Fruit Oil, Helianthus Annuus Seed Oil, Caprylic/Capric Triglyceride (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen; NEUE Rezeptur, siehe Notes)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "pre_heat_protection"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "name": "Pantene Pro-V Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+      "brand": "Pantene Pro-V",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+      "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+      "source_text": "Ingredients: Cyclopentasiloxane, Dimethiconol, Alcohol Denat., Parfum, Argania Spinosa Kernel Oil, Panthenyl Ethyl Ether, Panthenol, Benzyl Salicylate, Hexyl Cinnamal, Alpha-Isomethyl Ionone, Aqua, Linalool, Citronellol, Limonene",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Cyclopentasiloxane, Dimethiconol, Alcohol Denat., Argania Spinosa Kernel Oil, Panthenol; Aqua erst an Position 11 ohne Emulgatoren/Verdicker — silikonbasiertes Öl, KEINE Serum-Emulsion (Identitätscheck bestanden, s. Notes)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "name": "Primavera Calendulaöl Bio",
+      "brand": "Primavera",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "oil.authority_facts",
+      "source_label": "PRIMAVERA — Calendulaöl bio",
+      "source_url": "https://www.primaveralife.com/calendulaoel-bio.html",
+      "source_text": "INCI: Helianthus Annuus Seed Oil, Olea Europaea Fruit Oil, Calendula Officinalis Flower Extract, Rosmarinus Officinalis Leaf Extract. Kleine Menge in trockene Haarspitzen.",
+      "fact_value": {
+        "weight": "rich",
+        "role_support": [
+          "dry_finish",
+          "pre_wash_fibre_treatment"
+        ],
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "product_oil_eligibility": [
+          {
+            "thickness": "coarse",
+            "oil_purpose": "pre_wash_oiling",
+            "oil_subtype": "natuerliches-oel",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        ],
+        "provides_heat_protection": false
+      },
+      "checked_at": "2026-09-01"
+    },
+    {
+      "product_id": "e93d522b-6a07-42c8-8858-75a830d809b9",
+      "name": "Schwarzkopf Gliss Haaröl Tägliches Öl Elixier",
+      "brand": "Schwarzkopf Gliss",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+      "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+      "source_text": "Ingredients: Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Helianthus Annuus (Sunflower) Seed Oil, Hydroxyoctanone, Argania Spinosa Kernel Oil, Parfum (Fragrance)",
+      "fact_value": {
+        "weight": "light",
+        "inci_basis": "Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Helianthus Annuus Seed Oil, ..., Argania Spinosa Kernel Oil (anhydrisches Silikon-/Trockenöl-Profil)",
+        "role_support": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "name": "Weleda Haaröl Rosmarin",
+      "brand": "Weleda",
+      "category_key": "oil",
+      "is_active": true,
+      "fact_key": "product_oil_specs.authority_facts",
+      "source_label": "dm.de Produktseite (Inhaltsstoffe); weleda.de führt deckungsgleiche Volldeklaration",
+      "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+      "source_text": "Ingredients (INCI): Arachis Hypogaea (Peanut) Oil+, Trifolium Pratense (Clover) Flower Extract, Fragrance (Parfum)*, Arctium Lappa Root+ Extract, Rosmarinus Officinalis (Rosemary) Leaf Oil+, Limonene*, Linalool*, Geraniol*, Coumarin*. *from natural essential oils and/or plant extracts +organic ingredient",
+      "fact_value": {
+        "weight": "rich",
+        "inci_basis": "Arachis Hypogaea (Peanut) Oil an Position 1 (reines, nicht-flüchtiges Pflanzenöl; keine Silikone, keine Volatiles) + Pflanzenextrakte und ätherische Öle",
+        "role_support": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "ingredient_flags": [
+          "oils"
+        ]
+      },
+      "checked_at": "2026-09-03"
+    },
+    {
+      "product_id": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+      "name": "Garnier Wahre Schätze Shampoo Honig Schätze",
+      "brand": "Garnier Wahre Schätze",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.identifiers.ean",
+      "source_label": "Müller and Oh Feliz exact 300 ml EAN fields",
+      "source_url": "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+      "source_text": "Müller structured product data and Oh Feliz list EAN 3600542462228 for the exact 300 ml Honig Schätze shampoo. Müller's current INCI matches the selected current formula.",
+      "fact_value": "3600542462228",
+      "checked_at": "2026-09-04"
+    },
+    {
+      "product_id": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+      "name": "Garnier Wahre Schätze Shampoo Honig Schätze",
+      "brand": "Garnier Wahre Schätze",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.identifiers.ean",
+      "source_label": "Rossmann, dm AT and Flaconi exact 250 ml EAN fields",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+      "source_text": "Rossmann, dm AT and Flaconi list EAN 3600542461511 for the exact 250 ml Honig Schätze shampoo. Retailer INCI snapshots show that this EAN spans an older silicone formula and the current formula, so scans resolve to the current catalog record with that reformulation caveat.",
+      "fact_value": "3600542461511",
+      "checked_at": "2026-09-04"
+    },
+    {
+      "product_id": "1e61a644-94b0-4356-ab55-f58572fa1e18",
+      "name": "head&shoulders Anti-Schuppen Shampoo Classic Clean",
+      "brand": "head&shoulders",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.formula.inci",
+      "source_label": "Rossmann",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
+      "source_text": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen.",
+      "fact_value": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Dimethiconol, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Dimethicone, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Hexyl Cinnamal, Linalool, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Glycerin, Niacinamide, Panthenol, Tocopheryl Acetate, Acetic Acid, Benzyl Alcohol, Triethylene Glycol, Propylene Glycol, CI 42090, CI 17200",
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+      "name": "ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai",
+      "brand": "ISANA",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.formula.inci",
+      "source_label": "Rossmann Germany",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
+      "source_text": "In das nasse Haar einmassieren und gründlich ausspülen.",
+      "fact_value": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Malva Sylvestris Flower Extract, Euterpe Oleracea Fruit Extract, Hydrolyzed Wheat Protein, Niacinamide, Panthenol, Pantolactone, Coco-Glucoside, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Magnesium Sulfate, Tocopherol, Hydrogenated Palm Glycerides Citrate, PEG-3 Distearate, Propylene Glycol, Glycerin, Parfum, Benzyl Salicylate, Linalool, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Phenoxyethanol, Citric Acid, Sodium Hydroxide",
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+      "name": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume",
+      "brand": "ISANA",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.formula.inci",
+      "source_label": "Rossmann Germany",
+      "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "source_text": "Masseres ind i fugtigt hår. Skylles grundigt ud.",
+      "fact_value": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract",
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+      "name": "NIVEA Power Repair Reparatur Shampoo",
+      "brand": "NIVEA",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.category_specs.authority_facts",
+      "source_label": "PR #508 production-light projection (frozen source-backed input)",
+      "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+      "source_text": "Manufacturer and dm exact 250 ml INCI lists match in ingredient order.",
+      "fact_value": {
+        "adapter_status": "property_lane_ready",
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "thickness": "normal",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "cleansing_intensity": "regular"
+            },
+            {
+              "thickness": "coarse",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "cleansing_intensity": "regular"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "required_protocol_roles": [
+          "shampoo_everyday"
+        ],
+        "production_light_product_id": "nivea-power-repair"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "e4e4fd05-33fd-4048-9553-76815bff5d43",
+      "name": "schauma Shampoo Repair & Pflege",
+      "brand": "schauma",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.category_specs.authority_facts",
+      "source_label": "PR #508 production-light projection (frozen source-backed input)",
+      "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+      "source_text": "Two exact German retailer sources agree on the full INCI.",
+      "fact_value": {
+        "adapter_status": "property_lane_ready",
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "thickness": "coarse",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "cleansing_intensity": "regular"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "required_protocol_roles": [
+          "shampoo_everyday"
+        ],
+        "production_light_product_id": "schauma-repair-pflege"
+      },
+      "checked_at": "2026-09-02"
+    },
+    {
+      "product_id": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+      "name": "Syoss Shampoo Intense Keratin",
+      "brand": "Syoss",
+      "category_key": "shampoo",
+      "is_active": true,
+      "fact_key": "product.category_specs.authority_facts",
+      "source_label": "PR #508 production-light projection (frozen source-backed input)",
+      "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+      "source_text": "Manufacturer and dm exact 440 ml INCI lists match in ingredient order.",
+      "fact_value": {
+        "adapter_status": "property_lane_ready",
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "thickness": "coarse",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "cleansing_intensity": "regular"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "required_protocol_roles": [
+          "shampoo_everyday"
+        ],
+        "production_light_product_id": "syoss-intense-keratin"
+      },
+      "checked_at": "2026-09-02"
+    }
+  ]
+}

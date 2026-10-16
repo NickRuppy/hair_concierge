@@ -1,0 +1,249 @@
+{
+  "run_id": "oil-O08-retained-source-successor-v0.1",
+  "case_id": "O08",
+  "reviewed_at": "2026-10-09",
+  "status": "resolved_retained_fibre_source_gap",
+  "scope": "Exact-product retained hair-fibre direction evidence only. No weight/persistence/penetration/heat/UV classification.",
+  "identity": {
+    "brand": "OGX",
+    "product": "Coconut Miracle Oil Extra Strength Penetrating Oil",
+    "size_ml": 100,
+    "market": "DE",
+    "gtin_if_verified": "3574661563398"
+  },
+  "sources": [
+    {
+      "id": "O08-boozy-de",
+      "url": "https://www.boozyshop.de/products/ogx-coconut-miracle-oil-extra-strength",
+      "author": "Boozyshop DE storefront",
+      "source_tier": "retailer",
+      "reviewed_at": "2026-10-09",
+      "scope": "Exact product body, full ordered INCI, coherent application steps and100ml statement; reviews and unrelated creams excluded.",
+      "directions_excerpt": "Nicht ausspülen.",
+      "directions_paraphrase": "After washing, towel-dry or fully dry hair. Rub3–4 drops between palms, apply to ends and leave in."
+    },
+    {
+      "id": "O08-boozy-identity-json",
+      "url": "https://www.boozyshop.de/products/ogx-coconut-miracle-oil-extra-strength.js",
+      "author": "Boozyshop public product data",
+      "source_tier": "retailer_identity_data",
+      "reviewed_at": "2026-10-09",
+      "scope": "Same product/page sole variant, barcode,SKU,100ml description, formula and application metadata.",
+      "sha256": "987559bb204be92242fcc4115b07b5d45fe039b34fbcf34d88b96754846fd7c2",
+      "product_id": 15386911900031,
+      "variant_id": 56361224667519,
+      "sku": "Q-3574661563398",
+      "barcode": "3574661563398"
+    },
+    {
+      "id": "O08-dm-current",
+      "url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+      "author": "dm DE",
+      "source_tier": "retailer",
+      "reviewed_at": "2026-10-09",
+      "scope": "Exact100ml,GTIN3574661563398,17-entry frozen formula and original towel-dried application reaffirmed. Still lacks explicit retention; not the new leave-in authority."
+    },
+    {
+      "id": "O08-US-maker-excluded",
+      "url": "https://www.ogxbeauty.com/products/coconut-miracle-penetrating-oil",
+      "author": "OGX US",
+      "source_tier": "manufacturer_other_market",
+      "reviewed_at": "2026-10-09",
+      "scope": "Reviewed and excluded: current displayed10-entry list omits frozen Tocopheryl Acetate and named allergen tail. No formula equivalence assumed and no US application imported."
+    },
+    {
+      "id": "E04-dm",
+      "url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+      "source_author": "dm DE",
+      "tier": 3,
+      "accessed_at": "2026-10-01T08:15:24Z",
+      "notes": "Exact name, 100 ml and GTIN; canonical German retailer ingredient declaration and directions.",
+      "scope": "Historical dm direction authority preserved verbatim; not new explicit retention evidence."
+    }
+  ],
+  "exact_product_binding": {
+    "source_id": "O08-boozy-identity-json",
+    "market": "German-language DE retail storefront; retailer domiciled Netherlands",
+    "size_ml": 100,
+    "barcode": "3574661563398",
+    "sku": "Q-3574661563398",
+    "sole_variant": true,
+    "same_product_page": "https://www.boozyshop.de/products/ogx-coconut-miracle-oil-extra-strength",
+    "formula_comparison": {
+      "status": "same_ordered17_ingredient_identities_with_explicit_display_translations",
+      "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O08",
+      "raw_source_inci": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, Argania Spinosa (Argan) Kernel Oil, Cocos Nucifera (Kokosöl), Gardenia Taitensis (Tiaré) Flower Extract, Vanilla Planifolia Fruit Extract, Carthamus Tinctorius (Färberdistel) Seed Oil, Tocopheryl Acetate, Parfum, Benzyl Benzoate, Linalool, Benzyl Salicylate, Limonene, Benzyl Alcohol, Coumarin",
+      "raw_source_sha256": "7eb11666d7a4cf4e76bf9c565887668b34841de1fc4cb357151ad2febaeda261",
+      "raw_frozen_sha256": "514034a70c1594f31913a5e35a2c45a1990ee7bf5d0a918672c9361150e625b5",
+      "source_entry_count": 17,
+      "frozen_entry_count": 17,
+      "normalized_ordered_match": true,
+      "normalized_ordered_sha256": "9458c76ddcaee0e6ad35f3754ee537c7eb300939e8321b51ee1b2b26f39c40d4",
+      "frozen_ordered_sha256": "9458c76ddcaee0e6ad35f3754ee537c7eb300939e8321b51ee1b2b26f39c40d4",
+      "display_translation_receipts": [
+        {
+          "source_token": "Argania Spinosa (Argan) Kernel Oil",
+          "frozen_token": "Argania Spinosa Kernel Oil",
+          "reason": "Explicit common-name translation or optional common-name/Fragrance display spelling in this matched source; no new ingredient or oil/extract alias."
+        },
+        {
+          "source_token": "Cocos Nucifera (Kokosöl)",
+          "frozen_token": "Cocos Nucifera (Coconut) Oil",
+          "reason": "Explicit common-name translation or optional common-name/Fragrance display spelling in this matched source; no new ingredient or oil/extract alias."
+        },
+        {
+          "source_token": "Gardenia Taitensis (Tiaré) Flower Extract",
+          "frozen_token": "Gardenia Taitensis Flower Extract",
+          "reason": "Explicit common-name translation or optional common-name/Fragrance display spelling in this matched source; no new ingredient or oil/extract alias."
+        },
+        {
+          "source_token": "Carthamus Tinctorius (Färberdistel) Seed Oil",
+          "frozen_token": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "reason": "Explicit common-name translation or optional common-name/Fragrance display spelling in this matched source; no new ingredient or oil/extract alias."
+        },
+        {
+          "source_token": "Parfum",
+          "frozen_token": "Parfum/Fragrance",
+          "reason": "Explicit common-name translation or optional common-name/Fragrance display spelling in this matched source; no new ingredient or oil/extract alias."
+        }
+      ],
+      "material_additions": [],
+      "material_removals": [],
+      "reordering": false
+    }
+  },
+  "directions": [
+    {
+      "direction_id": "O08-boozy-towel-dried-ends-leave-on",
+      "source_id": "O08-boozy-de",
+      "text": "Nach dem Waschen handtuchtrockenes Haar:3–4 Tropfen zwischen den Handflächen verteilen, auf die Haarspitzen auftragen und nicht ausspülen.",
+      "site": [
+        "ends"
+      ],
+      "stage": "clean_towel_dried",
+      "dose": "3–4 drops",
+      "contact_time": "not_stated",
+      "removal": "leave_on",
+      "rinse": "do_not_rinse",
+      "shake": "not_stated",
+      "restrictions": "No fine-hair or scalp rule imported from dm; no dwell time or heat step supplied.",
+      "scenario_binding": "One complete retailer sequence; towel-dried and fully dry are its explicit alternatives, not merged directions from different sources."
+    },
+    {
+      "direction_id": "O08-boozy-dry-ends-leave-on",
+      "source_id": "O08-boozy-de",
+      "text": "Nach dem Waschen vollständig getrocknetes Haar:3–4 Tropfen zwischen den Handflächen verteilen, auf die Haarspitzen auftragen und nicht ausspülen.",
+      "site": [
+        "ends"
+      ],
+      "stage": "clean_dry",
+      "dose": "3–4 drops",
+      "contact_time": "not_stated",
+      "removal": "leave_on",
+      "rinse": "do_not_rinse",
+      "shake": "not_stated",
+      "restrictions": "No fine-hair or scalp rule imported from dm; no dwell time or heat step supplied.",
+      "scenario_binding": "One complete retailer sequence; towel-dried and fully dry are its explicit alternatives, not merged directions from different sources."
+    }
+  ],
+  "retained_fibre_evidence": {
+    "source_id": "O08-boozy-de",
+    "explicit_hair_site": true,
+    "explicit_retention": true,
+    "retention_basis": "Retailer product application explicitly says Nicht ausspülen.",
+    "selected_successor_direction_id": "O08-boozy-towel-dried-ends-leave-on",
+    "interpretation": "Exact DE retailer,GTIN,100ml and ordered formula support retained ends application; use complete successor scenario for any new binding."
+  },
+  "historical_context": {
+    "frozen_source_ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json#F08",
+    "selected_context_preserved": {
+      "mode": "retained_fibre",
+      "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+      "source_context_key": "F08",
+      "scenario_index": 0,
+      "scenario": {
+        "direction_id": "F08-direction-1",
+        "source_id": "E04-dm",
+        "verbatim": false,
+        "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+        "stage": "towel_dried",
+        "site": "hair_to_ends",
+        "dose": "a few drops",
+        "contact_time": "not_stated",
+        "rinse": "not_stated",
+        "shake": "not_stated"
+      },
+      "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+    },
+    "prior_directions_preserved": [
+      {
+        "direction_id": "F08-direction-1",
+        "source_id": "E04-dm",
+        "verbatim": false,
+        "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+        "stage": "towel_dried",
+        "site": "hair_to_ends",
+        "dose": "a few drops",
+        "contact_time": "not_stated",
+        "rinse": "not_stated",
+        "shake": "not_stated"
+      }
+    ],
+    "defect": "Earlier dm-only direction has no retention/styling/removal statement; prior persistence admission is not evidence.",
+    "disposition": "Historical bytes unchanged; successor adds independent explicit retention and narrower ends-only application. Do not relabel the old source as explicit leave-in or splice its few-drops dose into this scenario."
+  },
+  "images": [
+    {
+      "source_id": "O08-boozy-de",
+      "url": "https://cdn.shopify.com/s/files/1/0859/0275/4068/files/ogx-beauty-coconut-miracle-oil-extra-strength-68567209312639.png?v=1762445732",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/O08-boozy-1.png",
+      "sha256": "165cf42bbf0024e680752cb2c9341c7a406822ebe5462e58987b458d7b92ce58",
+      "observation": "Visually inspected same linked product100ml Extra Strength Penetrating Oil front; no legible back barcode or formula on these images, so binding comes from same-page variant data."
+    },
+    {
+      "source_id": "O08-boozy-de",
+      "url": "https://cdn.shopify.com/s/files/1/0859/0275/4068/files/ogx-beauty-coconut-miracle-oil-extra-strength-68567210557823.png?v=1762445732",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/O08-boozy-2.png",
+      "sha256": "617a424687d31e28198758da96717cd089ac822da48b47af01a11866eaa90210",
+      "observation": "Visually inspected same linked product100ml Extra Strength Penetrating Oil front; no legible back barcode or formula on these images, so binding comes from same-page variant data."
+    }
+  ],
+  "excluded_sources": [
+    {
+      "source_id": "O08-US-maker-excluded",
+      "reason": "Different/shorter current displayed formula; excluded from exactDE binding."
+    },
+    {
+      "url": "https://www.shopping4net.de/Schoenheit/Fur-Sie/Haar/Styling/Glanz-Anti-Frizz/Ogx-Coconut-Miracle-Oil-Penetrating-Oil.htm",
+      "reason": "Explicit do-not-rinse found but full formula/GTIN not established; not needed for accepted binding."
+    },
+    {
+      "url": "https://www.chemistwarehouse.com.au/buy/83087/ogx-extra-strength-damage-remedy-hydrating-repairing-coconut-miracle-oil-penetrating-oil-for-dry-damaged-hair-100ml",
+      "reason": "Matching17-entry list and explicit retention found, but AU context not imported because exactDE retailer supplies sufficient bound evidence."
+    }
+  ],
+  "source_limits": [
+    "Secondary retailer application evidence, not a manufacturer-label transcription or physical batch verification.",
+    "Translated parenthetical formula display is preserved with explicit comparison receipts; no cross-market reformulation merge.",
+    "Only application evidence adopted; retailer repair/vegan/strengthening/hero claims and user reviews are not adopted.",
+    "New explicit3–4-drop ends scenario is not asserted to have been present in the historical dm capture."
+  ],
+  "verification": {
+    "gtin_matches": true,
+    "size_matches": true,
+    "ordered_formula_identity_match": true,
+    "coherent_explicit_leave_in_scenarios": 2,
+    "all_source_ids_resolve": true,
+    "input_bytes_unchanged": true
+  },
+  "input_manifest": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+      "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+      "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885"
+    }
+  ]
+}

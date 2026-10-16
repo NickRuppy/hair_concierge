@@ -1,0 +1,12 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "revision": "source-only-v0.1.1",
+  "files": {
+    "input-manifest.json": "83f4b8b2ba56436bd48e5a39c9dce89c2efd50d7df7e397409af68b7cf923476",
+    "source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "unblinded-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "post-seal-source-amendment-v0.1.1.json": "47896c2bc0fe7d368fc207b86416b5791d14ee447b88d0eabe100fa0acabf895",
+    "initial-stage2-preservation.json": "cda757fbfff2be28e147688ae07c5fcff6f56c92ce431a53b92fd27b971e3ed5",
+    "blind-stage-seal.json": "12b32292260574d81596fe0d7cded389c595662c7c9a8bbd3ac9b9c71bce3ddc"
+  }
+}

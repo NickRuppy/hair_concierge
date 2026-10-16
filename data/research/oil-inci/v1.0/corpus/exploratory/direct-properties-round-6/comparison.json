@@ -1,0 +1,157 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "meaning": "Repeatability only; no sensory accuracy, fit or weight metrics. Known means nonunknown scalar and no unknown hero prominence. Empty reviewed sets are known. Boolean conditional counts disclose sparse positives.",
+  "fields": {
+    "base": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "penetration_potential": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 5,
+      "both_known_equal": 5
+    },
+    "build_up_potential": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 2,
+      "both_known_equal": 2
+    },
+    "ingredient_flags.silicones": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "ingredient_flags.mineral_oil": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "ingredient_flags.drying_alcohol": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "ingredient_flags.fragrance": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "ingredient_flags.scalp_active_botanicals": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "dispenser": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 4,
+      "both_known_equal": 4
+    },
+    "provides_heat_protection": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "provides_uv_protection": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "supported_uses": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 6,
+      "both_known_equal": 6
+    },
+    "named_oils": {
+      "total": 6,
+      "equal": 6,
+      "both_known": 3,
+      "both_known_equal": 3
+    }
+  },
+  "booleans": {
+    "ingredient_flags.silicones": {
+      "lane_a_true": 2,
+      "lane_b_true": 2,
+      "both_true": 2,
+      "both_false": 4,
+      "either_true": 2,
+      "either_false": 4,
+      "equal_when_either_true": 2,
+      "equal_when_either_false": 4
+    },
+    "ingredient_flags.mineral_oil": {
+      "lane_a_true": 0,
+      "lane_b_true": 0,
+      "both_true": 0,
+      "both_false": 6,
+      "either_true": 0,
+      "either_false": 6,
+      "equal_when_either_true": 0,
+      "equal_when_either_false": 6
+    },
+    "ingredient_flags.drying_alcohol": {
+      "lane_a_true": 0,
+      "lane_b_true": 0,
+      "both_true": 0,
+      "both_false": 6,
+      "either_true": 0,
+      "either_false": 6,
+      "equal_when_either_true": 0,
+      "equal_when_either_false": 6
+    },
+    "ingredient_flags.fragrance": {
+      "lane_a_true": 4,
+      "lane_b_true": 4,
+      "both_true": 4,
+      "both_false": 2,
+      "either_true": 4,
+      "either_false": 2,
+      "equal_when_either_true": 4,
+      "equal_when_either_false": 2
+    },
+    "ingredient_flags.scalp_active_botanicals": {
+      "lane_a_true": 2,
+      "lane_b_true": 2,
+      "both_true": 2,
+      "both_false": 4,
+      "either_true": 2,
+      "either_false": 4,
+      "equal_when_either_true": 2,
+      "equal_when_either_false": 4
+    },
+    "provides_heat_protection": {
+      "lane_a_true": 0,
+      "lane_b_true": 0,
+      "both_true": 0,
+      "both_false": 6,
+      "either_true": 0,
+      "either_false": 6,
+      "equal_when_either_true": 0,
+      "equal_when_either_false": 6
+    },
+    "provides_uv_protection": {
+      "lane_a_true": 1,
+      "lane_b_true": 1,
+      "both_true": 1,
+      "both_false": 5,
+      "either_true": 1,
+      "either_false": 5,
+      "equal_when_either_true": 1,
+      "equal_when_either_false": 5
+    }
+  },
+  "disagreements": []
+}

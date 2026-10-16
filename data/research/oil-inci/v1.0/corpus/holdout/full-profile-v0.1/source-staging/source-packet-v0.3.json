@@ -1,0 +1,445 @@
+{
+  "run_id": "oil-full-profile-holdout-source-staging-v0.3",
+  "captured_at": "2026-10-09",
+  "registration": "selection-registration-v0.2.json",
+  "scope": "Exact-product source capture only. This packet contains no property classifications, target labels, expected outcomes, or source-based product ranking.",
+  "records": [
+    {
+      "source_key": "V2-S01",
+      "registered_slot": "volatile_mobile_oil_spray",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "5 Sens Enhancing Dry Oil for Hair and Body",
+        "market": "EN global maker page",
+        "size": "100 ml",
+        "gtin_if_verified": "3282770049275"
+      },
+      "maker_url": "https://www.renefurterer.com/en/p/5-sens-enhancing-dry-oil-for-hair-and-body-3282770049275-5e13c847",
+      "raw_inci": "ISODODECANE, DIISOPROPYL ADIPATE, ISODECYL NEOPENTANOATE, DICAPRYLYL CARBONATE, COCO-CAPRYLATE/CAPRATE, C12-15 ALKYL BENZOATE, CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL (CARTHAMUS TINCTORIUS SEED OIL), PERSEA GRATISSIMA (AVOCADO) OIL (PERSEA GRATISSIMA OIL), PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (PRUNUS AMYGDALUS DULCIS OIL), RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL), SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (SIMMONDSIA CHINENSIS SEED OIL), BHT, FRAGRANCE (PARFUM), GERANIOL, GERANYL ACETATE, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL (HELIANTHUS ANNUUS SEED OIL), HEXADECANOLACTONE, HEXAMETHYLINDANOPYRAN, ISOEUGENYL ACETATE, LINALYL ACETATE, POGOSTEMON CABLIN OIL (POGOSTEMON CABLIN LEAF OIL), TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, TOCOPHEROL.",
+      "directions": {
+        "site": [
+          "hair"
+        ],
+        "stage": [
+          "wet",
+          "dry"
+        ],
+        "dose": "not stated",
+        "removal": "explicit leave-in",
+        "restrictions": "none stated in reviewed product text",
+        "source_paraphrase": "The maker says to spray into the palm, directly onto wet or dry hair, and calls it a multi-purpose leave-in oil."
+      },
+      "dispenser": {
+        "observed": "spray",
+        "basis": "maker names a spray bottle/micro-spray and directs spraying"
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Castor oil",
+          "inci_mapping": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL) (rank 10)",
+          "maker_context": "Maker five-oil benefit list."
+        },
+        {
+          "claim_name": "Sweet Almond oil",
+          "inci_mapping": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (PRUNUS AMYGDALUS DULCIS OIL) (rank 9)",
+          "maker_context": "Maker five-oil benefit list."
+        },
+        {
+          "claim_name": "Jojoba oil",
+          "inci_mapping": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (SIMMONDSIA CHINENSIS SEED OIL) (rank 11)",
+          "maker_context": "Maker five-oil benefit list."
+        },
+        {
+          "claim_name": "Avocado oil",
+          "inci_mapping": "PERSEA GRATISSIMA (AVOCADO) OIL (PERSEA GRATISSIMA OIL) (rank 8)",
+          "maker_context": "Maker five-oil benefit list."
+        },
+        {
+          "claim_name": "Safflower oil",
+          "inci_mapping": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL (CARTHAMUS TINCTORIUS SEED OIL) (rank 7)",
+          "maker_context": "Maker five-oil benefit list."
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product description",
+            "benefits",
+            "detailed composition",
+            "five-oil ingredient section"
+          ],
+          "negative_basis": "No explicit heat-protection claim in the reviewed exact product body."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product description",
+            "benefits",
+            "detailed composition",
+            "five-oil ingredient section"
+          ],
+          "negative_basis": "No explicit hair-UV-protection claim in the reviewed exact product body."
+        }
+      },
+      "oil_category_evidence": "Exact maker title says Enhancing Dry Oil for Hair and Body.",
+      "source_limits": "Maker advises checking composition before purchase.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://www.renefurterer.com/en/p/5-sens-enhancing-dry-oil-for-hair-and-body-3282770049275-5e13c847",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    },
+    {
+      "source_key": "V2-S02",
+      "registered_slot": "silicone_led_non_spray",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Ultimate Smooth Miracle Oil Serum",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      },
+      "maker_url": "https://www.wella.com/professional/en-US/products/hair-care/ultimate-smooth/ultimate-smooth-miracle-oil-serum",
+      "raw_inci": "DIMETHICONE, DIMETHICONOL, ALCOHOL DENAT., PARFUM/FRAGRANCE, TOCOPHERYL ACETATE, GLYCERYL OLEATE, MALIC ACID, LIMONENE, LINALOOL, OLEIC ACID, SQUALANE, LECITHIN, ASCORBYL PALMITATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE.",
+      "directions": {
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": [
+          "damp_before_styling",
+          "dry_finish"
+        ],
+        "dose": "1–3 pumps on damp hair; small amount on dry hair",
+        "removal": "retained styling context",
+        "restrictions": "none stated in reviewed instructions",
+        "source_paraphrase": "The maker directs 1–3 pumps onto damp lengths and ends or a small amount on dry hair after styling."
+      },
+      "dispenser": {
+        "observed": "pump",
+        "basis": "maker directions specify pumps"
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Squalane",
+          "inci_mapping": "SQUALANE (rank 11)",
+          "maker_context": "Squalane and Omega-9 technology"
+        },
+        {
+          "claim_name": "Omega-9",
+          "inci_mapping": "OLEIC ACID (rank 10) is present; Omega-9 is not itself an INCI name",
+          "maker_context": "Squalane and Omega-9 technology"
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": true,
+          "excerpt": "UV & Heat protection",
+          "scope": "exact hair product maker page"
+        },
+        "hair_uv": {
+          "accepted_explicit": true,
+          "excerpt": "UV & Heat protection",
+          "scope": "exact hair product maker page"
+        }
+      },
+      "oil_category_evidence": "Maker calls it a delicate hair oil / Miracle Oil Serum.",
+      "source_limits": "Published maker declaration.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://www.wella.com/professional/en-US/products/hair-care/ultimate-smooth/ultimate-smooth-miracle-oil-serum",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    },
+    {
+      "source_key": "V2-S03",
+      "registered_slot": "ester_or_alkane_led_fluid",
+      "identity": {
+        "brand": "Biossance",
+        "product": "100% Squalane Oil Jumbo Size",
+        "market": "US maker storefront",
+        "size": "250 ml / 8.4 oz",
+        "gtin_if_verified": null
+      },
+      "maker_url": "https://www.biossance.com/p/100-percent-squalane-oil-jumbo-size/17626077/",
+      "raw_inci": "SQUALANE.",
+      "directions": {
+        "site": [
+          "hair",
+          "dry hair",
+          "wet hair"
+        ],
+        "stage": [
+          "post_shower",
+          "dry",
+          "wet"
+        ],
+        "dose": "small amount",
+        "removal": "retained styling context",
+        "restrictions": "none stated in reviewed maker directions",
+        "source_paraphrase": "The maker says the product may be applied to hair as needed and directs smoothing a small amount through dry or wet hair for shine and flyaways."
+      },
+      "dispenser": {
+        "observed": "pump",
+        "basis": "Current exact maker page image alt text identifies a dark green pump bottle; separate hair directions are outlet-neutral."
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Squalane Oil",
+          "inci_mapping": "SQUALANE (sole declared ingredient)",
+          "maker_context": "maker says just one ingredient and describes sustainable sugarcane sourcing"
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product description",
+            "FAQ",
+            "How To Use",
+            "full ingredient declaration"
+          ],
+          "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product description",
+            "FAQ",
+            "How To Use",
+            "full ingredient declaration"
+          ],
+          "negative_basis": "The page mentions post-sun use, but no explicit hair-UV-protection claim was found in reviewed exact maker content."
+        }
+      },
+      "oil_category_evidence": "Exact maker title says 100% Squalane Oil and maker expressly supplies hair directions.",
+      "source_limits": "Maker frames the product primarily for skin and advises package-list confirmation; retained hair use is nevertheless explicit.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://www.biossance.com/p/100-percent-squalane-oil-jumbo-size/17626077/",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    },
+    {
+      "source_key": "V2-S04",
+      "registered_slot": "botanical_oil_blend",
+      "identity": {
+        "brand": "Rahua",
+        "product": "Legendary Amazon Oil",
+        "market": "US maker storefront",
+        "size": "not established in retrieved maker text",
+        "gtin_if_verified": null
+      },
+      "maker_url": "https://rahua.com/products/legendary-amazon-oil",
+      "raw_inci": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL, ORGANIC DECOLORIZED ALOE BARBADENSIS LEAF OIL, ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL, ORGANIC ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL, MAURITIA FLEXUOSA (MORETE) FRUIT OIL, PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL, AROMA, GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL.",
+      "directions": {
+        "site": [
+          "dry hair"
+        ],
+        "stage": [
+          "dry"
+        ],
+        "dose": "1–3 drops",
+        "removal": "retained styling context",
+        "restrictions": "none stated in reviewed maker directions",
+        "source_paraphrase": "The maker directs warming 1–3 drops in the palms and working the product through dry hair, starting small, for daily use."
+      },
+      "dispenser": {
+        "observed": "unknown",
+        "basis": "drop directions do not establish the outlet mechanism"
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Rahua Oil",
+          "inci_mapping": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL (rank 5)",
+          "maker_context": "key ingredient section"
+        },
+        {
+          "claim_name": "Morete Oil",
+          "inci_mapping": "MAURITIA FLEXUOSA (MORETE) FRUIT OIL (rank 6)",
+          "maker_context": "key ingredient section"
+        },
+        {
+          "claim_name": "Sacha Inchi",
+          "inci_mapping": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL (rank 7)",
+          "maker_context": "key ingredient section"
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product detail",
+            "key benefits",
+            "key ingredients",
+            "How to use",
+            "full ingredient list"
+          ],
+          "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+        },
+        "hair_uv": {
+          "accepted_explicit": true,
+          "excerpt": "Morete Oil protects hair from damaging UVA rays while enhancing moisture.",
+          "scope": "Exact Rahua Legendary Amazon Oil US maker page; named Morete Oil ingredient subsection.",
+          "supporting_context": "Product details also says Morete oil helps defend against UV damage; key-ingredient list identifies Morete Oil as MAURITIA FLEXUOSA (MORETE) FRUIT OIL (rank 6)."
+        }
+      },
+      "oil_category_evidence": "Exact maker title says Legendary Amazon Oil and product page is hair-specific.",
+      "source_limits": "Current maker page does not establish a selected size or dispenser mechanism. Drop-dose directions alone are not treated as mechanism evidence; no legacy-package inference is retained.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://rahua.com/products/legendary-amazon-oil",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    },
+    {
+      "source_key": "V2-S05",
+      "registered_slot": "structured_conditioning_or_film_challenge",
+      "identity": {
+        "brand": "Oribe",
+        "product": "Gold Lust Nourishing Hair Oil",
+        "market": "US maker storefront",
+        "size": "Standard 3.4 oz / 100 ml",
+        "gtin_if_verified": "840035204499"
+      },
+      "maker_url": "https://www.oribe.com/products/gold-lust-nourishing-hair-oil",
+      "raw_inci": "ISODODECANE, COCONUT ALKANES, DIMETHICONE, CAPRYLIC/CAPRIC TRIGLYCERIDE, CRAMBE ABYSSINICA SEED OIL, COCO-CAPRYLATE/CAPRATE, LIMNANTHES ALBA (MEADOWFOAM) SEED OIL, BUTYROSPERMUM PARKII (SHEA) BUTTER, ARGANIA SPINOSA KERNEL OIL, TOCOPHEROL, PARFUM/FRAGRANCE, ORBIGNYA SPECIOSA KERNEL OIL, POLYSILICONE-15, ASTROCARYUM MURUMURU SEED BUTTER, CITRUS LIMON (LEMON) PEEL OIL, SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT, OLEA EUROPAEA (OLIVE) FRUIT OIL, CITRULLUS LANATUS (WATERMELON) SEED OIL, RIBES NIGRUM (BLACK CURRANT) SEED OIL, JASMINUM OFFICINALE (JASMINE) OIL, LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT, LITCHI CHINENSIS FRUIT EXTRACT, TOCOPHERYL ACETATE, HEXYL CINNAMAL, LIMONENE, LINALOOL, CITRAL, HEXAMETHYLINDANOPYRAN, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM BERGAMIA (BERGAMOT) PEEL OIL.",
+      "directions": {
+        "site": [
+          "damp hair",
+          "ends"
+        ],
+        "stage": [
+          "damp",
+          "dry_finish"
+        ],
+        "dose": "not stated",
+        "removal": "retained styling context",
+        "restrictions": "none stated in retrieved maker directions",
+        "source_paraphrase": "The maker directs application throughout damp hair and an additional amount to ends after styling."
+      },
+      "dispenser": {
+        "observed": "unknown",
+        "basis": "Current US maker product text and reviewed provided product-image URL did not yield sufficiently bound visible outlet evidence in this capture; retained as unknown rather than inferred."
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Argan Oil",
+          "inci_mapping": "ARGANIA SPINOSA KERNEL OIL (rank 9)",
+          "maker_context": "ingredients section"
+        },
+        {
+          "claim_name": "Cassis Seed Oil",
+          "inci_mapping": "RIBES NIGRUM (BLACK CURRANT) SEED OIL (rank 19)",
+          "maker_context": "ingredients section"
+        },
+        {
+          "claim_name": "Jasmine Oil",
+          "inci_mapping": "JASMINUM OFFICINALE (JASMINE) OIL (rank 20)",
+          "maker_context": "ingredients section"
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": true,
+          "excerpt": "Provides heat protection and reduces dry time.",
+          "scope": "Exact Gold Lust Nourishing Hair Oil US maker page, BENEFITS."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current US product title/description",
+            "BENEFITS",
+            "HOW TO USE",
+            "INGREDIENTS and full INCI",
+            "current US page full-text literal-UV check"
+          ],
+          "negative_basis": "No literal UV occurs on the current US exact-product page, and no explicit hair-UV-protection statement was found. Other locale content was not transferred."
+        }
+      },
+      "oil_category_evidence": "Exact maker title says Gold Lust Nourishing Hair Oil.",
+      "source_limits": "Maker structured product data supplies GTIN; ingredient list is published product content.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://www.oribe.com/products/gold-lust-nourishing-hair-oil",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    },
+    {
+      "source_key": "V2-S06",
+      "registered_slot": "water_based_or_biphasic_oil_labelled_hair_product",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Light Luminous Reflective Oil",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      },
+      "maker_url": "https://www.wella.com/professional/en-US/products/hair-care/oil-reflections/oil-reflections-light-luminous-reflective-oil",
+      "raw_inci": "CYCLOPENTASILOXANE, DIMETHICONOL, DIMETHICONE, DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER, PARFUM/FRAGRANCE, TOCOPHERYL ACETATE, HEXYL CINNAMAL, LINALOOL, ALPHA-ISOMETHYL IONONE, COUMARIN, CAMELLIA OLEIFERA SEED OIL, LIMONENE, CITRONELLOL, FARNESOL, GERANIOL.",
+      "directions": {
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": [
+          "towel_dried_before_styling",
+          "dry_finish"
+        ],
+        "dose": "1–3 pumps",
+        "removal": "retained styling context",
+        "restrictions": "none stated in reviewed maker directions",
+        "source_paraphrase": "The maker directs 1–3 pumps through towel-dried lengths and ends before styling, with a small amount on dry hair for finish."
+      },
+      "dispenser": {
+        "observed": "pump",
+        "basis": "maker directions specify pumps"
+      },
+      "named_oil_claims": [
+        {
+          "claim_name": "Camellia Seed Oil",
+          "inci_mapping": "CAMELLIA OLEIFERA SEED OIL (rank 11)",
+          "maker_context": "product detail/FAQ"
+        }
+      ],
+      "claim_review": {
+        "heat": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product detail",
+            "FAQ",
+            "directions",
+            "ingredients"
+          ],
+          "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "reviewed_sections": [
+            "current maker product detail",
+            "FAQ",
+            "directions",
+            "ingredients"
+          ],
+          "negative_basis": "No explicit hair-UV-protection claim in reviewed exact maker content."
+        }
+      },
+      "oil_category_evidence": "Exact maker title is Oil Reflections Light Luminous Reflective Oil and maker calls it a versatile hair oil.",
+      "slot_coverage_limit": "This first source-complete registered candidate is oil-labelled, but its maker declaration is not water-based and the maker does not describe it as biphasic. Retain it by deterministic order; report the aqueous/biphasic archetype as missing.",
+      "source_limits": "Published maker declaration.",
+      "evidence_capture": {
+        "accessed_at": "2026-10-09",
+        "maker_url": "https://www.wella.com/professional/en-US/products/hair-care/oil-reflections/oil-reflections-light-luminous-reflective-oil",
+        "raw_inci_verified_unchanged_from_v0_2": true,
+        "identity_verified_unchanged_from_v0_2": true
+      }
+    }
+  ],
+  "predecessor": "source-packet-v0.2.json (preserved; v0.3 corrects source evidence only)"
+}

@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "reviewer": "persistence_input_audit read-only subagent",
+  "stage": "before assessment dispatch",
+  "records": 4,
+  "ranks": 89,
+  "unique_exact_names": 72,
+  "preserved_historical_paths": 930,
+  "prior_json_scanned": 625,
+  "distinct_prior_raw_strings": 87,
+  "literal_prior_matches": 0,
+  "source_formula_rank_parity": true,
+  "function_role_limits_reviewed": true,
+  "known_product_or_anchor_labels_absent_from_blind_inputs": true,
+  "source_context_binding": true,
+  "correction": "Initial preflight preserved; v0.2 adds only source-stated amounts/sites to all four neutral contexts before any assessment. No unit conversion.",
+  "allowed_blind_input_hashes": {
+    "method-v0.2.md": "fc0ccd33c71cc76d04f4da3d495be89e3b2f9af529562168019930dd41c0080d",
+    "neutral-packet-v0.2.json": "4ea5f881780115519a68d4a11483e21e69d7db66d9cf04d334d8593fab461a00",
+    "function-dictionary.json": "2b239859c6eec60b4da1fcd1c02151d946c482ba5d2d1d50c760f22a5a8cd92d"
+  },
+  "source_bindings_sha256": "7dc9eb6d776d6e482a85b6e727bd5462b0173b88e47608d76d8e553bb95177ff",
+  "limits": [
+    "Literal raw-formula comparison does not establish chemical equivalence or model unfamiliarity.",
+    "No exact supplier grades or constituent concentrations established.",
+    "Unassessed functions are visible and not assumed negligible."
+  ]
+}

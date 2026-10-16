@@ -1,0 +1,45 @@
+{
+  "lane_id": "b",
+  "records": [
+    {
+      "case_id": "T02",
+      "reason": "The recognized silicone conditioning-film system with hydrocarbon and ester emollient support favors an ordinary retained fluid conditioning coating in the admitted leave-on fibre context. Rank 6 supplies fragrance; rank 4 remains functionally unresolved and is neither promoted to a persistent film nor dismissed as negligible. Low loses because the identified conditioning-film route is substantive in the architecture; high loses because these functions do not affirm a particularly cohesive, adherent or structured whole-film route. The choice does not come from weight, a silicone-presence rule, missing gum, or a material binary prior.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Treat the identified silicone carrier/conditioning films, in the supported mixed emollient vehicle, as ordinary retained conditioning coating rather than a specifically cohesive film. The unresolved rank 4 and unspecified grades do not provide affirmative evidence that overturns this architecture; this is a committed qualitative judgment without an invented species, concentration or removal estimate."
+    }
+  ]
+}

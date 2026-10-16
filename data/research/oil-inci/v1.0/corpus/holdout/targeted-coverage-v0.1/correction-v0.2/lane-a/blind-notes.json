@@ -1,0 +1,28 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "fe8f733abba22ae94767c6afee84fa0d416324d4233e89961da80d9bfbe2e9bb",
+    "function-dictionary.json": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "T02"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limitations": [
+    "Only the four permitted files were accessed; no external sources, memory files, product-identity inference, peer outputs or source reveal were used.",
+    "Initial combined tool output was truncated; complete bounded rereads of the same permitted inputs recovered every section before assessment.",
+    "The literal rank 4 identity/function remains unassessed; no species completion or material-prior transfer was made. The admitted case was assessed using the independently identified carrier architecture, with the unresolved contribution retained in the ledger and substantive property limitations.",
+    "Concentrations, physical grades and exact-formula performance are unavailable. Research estimates do not establish measured effects or user fit.",
+    "The parent-specified run_id oil-targeted-neutral-v0.2 supersedes the older example run_id in method.md and the input packet run_id.",
+    "All output objects were validated in memory before writing; no semantic output reread was performed."
+  ]
+}

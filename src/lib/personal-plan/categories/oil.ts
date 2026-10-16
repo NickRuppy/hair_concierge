@@ -1,6 +1,5 @@
 import type {
   OilFunctionalBenefit,
-  PlanCareWeight,
   PlanCategoryDecision,
   PlanCoverageOwnership,
   PlanFunctionPriority,
@@ -10,6 +9,7 @@ import type {
   PlanProfile,
   PlanReasonFact,
 } from "../types"
+import { getOilLeaveOnWeightTargets } from "@/lib/oil/weight"
 
 type OilRole = Extract<
   PlanProductRole,
@@ -67,18 +67,11 @@ function priority(hasConcern: boolean, hasGoal: boolean): PlanFunctionPriority {
   return 1
 }
 
-function leaveOnWeight(profile: PlanProfile): PlanCareWeight {
-  const loadSensitive = has(profile.concerns, "low_volume_or_weighed_down")
-  if (profile.hair.thickness === "fine") return "light"
-  if (profile.hair.thickness === "normal") return loadSensitive ? "light" : "medium"
-  return loadSensitive ? "medium" : "rich"
-}
-
-function idealLeaveOnWeights(profile: PlanProfile): PlanCareWeight[] {
-  if (has(profile.concerns, "low_volume_or_weighed_down"))
-    return [profile.hair.thickness === "coarse" ? "medium" : "light"]
-  if (profile.hair.thickness === "fine") return ["light"]
-  return profile.hair.thickness === "normal" ? ["light", "medium"] : ["medium", "rich"]
+function leaveOnWeightTargets(profile: PlanProfile) {
+  return getOilLeaveOnWeightTargets(
+    profile.hair.thickness,
+    has(profile.concerns, "low_volume_or_weighed_down"),
+  )
 }
 
 function benefit(
@@ -131,11 +124,13 @@ function dryFinish(
     selectedBenefit = "smoothing_frizz_control"
   }
 
+  const { weight, acceptedTargets } = leaveOnWeightTargets(profile)
+
   return {
     role: "dry_finish",
     tier: tier === "not_needed" ? "optional" : tier,
-    weight: leaveOnWeight(profile),
-    acceptedTargets: idealLeaveOnWeights(profile),
+    weight,
+    acceptedTargets,
     functionalBenefits:
       tier === "not_needed"
         ? []
@@ -243,11 +238,13 @@ function dampLeaveOn(
     selectedBenefit = "slip_manageability"
   }
 
+  const { weight, acceptedTargets } = leaveOnWeightTargets(profile)
+
   return {
     role: "leave_on_fibre_conditioning",
     tier: tier === "not_needed" ? "optional" : tier,
-    weight: leaveOnWeight(profile),
-    acceptedTargets: idealLeaveOnWeights(profile),
+    weight,
+    acceptedTargets,
     functionalBenefits:
       tier === "not_needed"
         ? []

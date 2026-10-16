@@ -1,0 +1,2715 @@
+{
+  "entries": [
+    {
+      "source_id": "F001",
+      "canonical_name": "ALCOHOL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ALCOHOL",
+            "roles": [
+              "solvent"
+            ],
+            "source_ids": [
+              "PSB-F08"
+            ],
+            "limits": "Exact ingredient is Alcohol, no denaturant assumption. No percentage, retained amount or negligible-remainder inference."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F002",
+      "canonical_name": "ALCOHOL DENAT.",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ALCOHOL DENAT.",
+            "roles": [
+              "solvent_alcohol"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 5,
+            "raw_name": "ALCOHOL DENAT.",
+            "canonical_name": "ALCOHOL DENAT.",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "solvent_alcohol"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#ALCOHOL DENAT.",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F003",
+      "canonical_name": "ALPHA-TERPINENE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ALPHA-TERPINENE",
+            "roles": [
+              "not_assessed"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F004",
+      "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ANGELICA ARCHANGELICA ROOT OIL",
+            "roles": [
+              "essential_oil",
+              "aromatic_auxiliary"
+            ],
+            "source_ids": [
+              "PSB-F11"
+            ],
+            "limits": "Exact root essential oil documented by supplier. No grade, contribution, retained remainder or medicinal claim inferred."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F005",
+      "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ANGELICA ARCHANGELICA SEED OIL",
+            "roles": [
+              "aromatic_capability",
+              "preparation_not_resolved"
+            ],
+            "source_ids": [
+              "PSB-F13",
+              "PSB-F14"
+            ],
+            "limits": "Exact-INCI suppliers describe aromatic oil and coldpressed oil. No particular extraction/grade or intact fixed-oil prior admitted. Fragrance longevity not hair persistence."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F006",
+      "canonical_name": "ANISE ALCOHOL",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 11,
+            "raw_name": "Anise Alcohol",
+            "canonical_name": "ANISE ALCOHOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "source_ids": [
+              "PAFN14"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F007",
+      "canonical_name": "AQUA",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "AQUA",
+            "roles": [
+              "aqueous_vehicle"
+            ],
+            "notes": "Water vehicle does not decide residual architecture.",
+            "function_source_refs": [
+              "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+              "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "AQUA",
+            "roles": [
+              "aqueous_vehicle"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN070"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 2,
+            "raw_name": "AQUA / WATER",
+            "canonical_name": "AQUA",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "aqueous_vehicle"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#AQUA",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F008",
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ARACHIS HYPOGAEA OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F06"
+            ],
+            "limits": "No grade/coldpressed identity transfer."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F009",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN005",
+              "FN028",
+              "FN055",
+              "FN090"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 6,
+            "raw_name": "Argania Spinosa Kernel Oil",
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#ARGANIA SPINOSA KERNEL OIL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F010",
+      "canonical_name": "BENZYL BENZOATE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "BENZYL BENZOATE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "BENZYL BENZOATE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN047",
+              "FN095"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F011",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "BETA-CARYOPHYLLENE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F012",
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "C13-14 ISOPARAFFIN",
+            "roles": [
+              "hydrocarbon_carrier",
+              "rheology_system_component"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 14,
+            "raw_name": "C13-14 ISOPARAFFIN",
+            "canonical_name": "C13-14 ISOPARAFFIN",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "hydrocarbon_carrier",
+              "rheology_system_component"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#C13-14 ISOPARAFFIN",
+            "source_ids": [
+              "PAFN11"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F013",
+      "canonical_name": "C13-15 ALKANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "C13-15 ALKANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "C13-15 ALKANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "solvent"
+            ],
+            "source_ids": [
+              "PSB-F10"
+            ],
+            "limits": "No synonym to hemisqualane or assumption of sugarcane origin, particular volatility, dose or finishedproduct remainder."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F014",
+      "canonical_name": "CAMPHOR",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CAMPHOR",
+            "roles": [
+              "cooling_or_aromatic_auxiliary",
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F015",
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CANANGA ODORATA FLOWER OIL",
+            "roles": [
+              "essential_oil",
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN033"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F016",
+      "canonical_name": "CARAMEL",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 19,
+            "raw_name": "CARAMEL",
+            "canonical_name": "CARAMEL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "colourant",
+              "fragrance"
+            ],
+            "source_ids": [
+              "PAFN15"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F017",
+      "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+      "observations": [],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F018",
+      "canonical_name": "CI 15985",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 26,
+            "raw_name": "CI 15985 / YELLOW 6",
+            "canonical_name": "CI 15985",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "colourant"
+            ],
+            "source_ids": [
+              "PAFN16"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F019",
+      "canonical_name": "CI 19140",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CI 19140",
+            "roles": [
+              "colourant"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 24,
+            "raw_name": "CI 19140 / YELLOW 5",
+            "canonical_name": "CI 19140",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "colourant"
+            ],
+            "source_ids": [
+              "PAFN16"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F020",
+      "canonical_name": "CI 40800",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 15,
+            "raw_name": "CI 40800 (Beta-Carotene)",
+            "canonical_name": "CI 40800",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "colourant"
+            ],
+            "source_ids": [
+              "PAFN17"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F021",
+      "canonical_name": "CITRAL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CITRAL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CITRAL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN048"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 20,
+            "raw_name": "CITRAL",
+            "canonical_name": "CITRAL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#CITRAL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F022",
+      "canonical_name": "CITRONELLOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CITRONELLOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "CITRONELLOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN014",
+              "FN043"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F023",
+      "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL",
+      "observations": [],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F024",
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+            "roles": [
+              "defined_ester_emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+            "roles": [
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F05"
+            ],
+            "limits": "Exact slash-containing mixed ester; no intact-coconut-oil prior transfer."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F025",
+      "canonical_name": "COUMARIN",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "COUMARIN",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "COUMARIN",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN013"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 23,
+            "raw_name": "COUMARIN",
+            "canonical_name": "COUMARIN",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#COUMARIN",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F026",
+      "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+      "observations": [],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F027",
+      "canonical_name": "DICAPRYLYL ETHER",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DICAPRYLYL ETHER",
+            "roles": [
+              "emollient"
+            ],
+            "notes": "Emollience does not itself prove low persistence.",
+            "function_source_refs": [
+              "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+              "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 4,
+            "raw_name": "Dicaprylyl Ether",
+            "canonical_name": "DICAPRYLYL ETHER",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "emollient"
+            ],
+            "source_ids": [
+              "PAFN09"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F028",
+      "canonical_name": "DIMETHICONE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DIMETHICONE",
+            "roles": [
+              "silicone_carrier",
+              "conditioning_film"
+            ],
+            "notes": "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DIMETHICONE",
+            "roles": [
+              "silicone_carrier",
+              "conditioning_film"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN053"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 1,
+            "raw_name": "Dimethicone",
+            "canonical_name": "DIMETHICONE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_carrier",
+              "conditioning_film"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#DIMETHICONE",
+            "source_ids": []
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 4,
+            "raw_name": "DIMETHICONE",
+            "canonical_name": "DIMETHICONE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_carrier",
+              "conditioning_film"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#DIMETHICONE",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F029",
+      "canonical_name": "DIMETHICONOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DIMETHICONOL",
+            "roles": [
+              "silicone_gum",
+              "conditioning_film"
+            ],
+            "notes": "Gum/residual-film signal; finished load and durability require architecture and grade.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DIMETHICONOL",
+            "roles": [
+              "silicone_gum",
+              "conditioning_film"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN002"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 2,
+            "raw_name": "Dimethiconol",
+            "canonical_name": "DIMETHICONOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_gum",
+              "conditioning_film"
+            ],
+            "source_ids": [
+              "PAFN12"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 6,
+            "raw_name": "DIMETHICONOL",
+            "canonical_name": "DIMETHICONOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_gum",
+              "conditioning_film"
+            ],
+            "source_ids": [
+              "PAFN12"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F030",
+      "canonical_name": "DIPROPYLENE GLYCOL",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 3,
+            "raw_name": "DIPROPYLENE GLYCOL",
+            "canonical_name": "DIPROPYLENE GLYCOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "cosolvent"
+            ],
+            "source_ids": [
+              "PAFN06"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F031",
+      "canonical_name": "DISILOXANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "DISILOXANE",
+            "roles": [
+              "silicone_carrier",
+              "volatile_carrier"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 14,
+            "raw_name": "Disiloxane",
+            "canonical_name": "DISILOXANE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_carrier",
+              "volatile_carrier"
+            ],
+            "source_ids": [
+              "PAFN10"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F032",
+      "canonical_name": "ETHYLHEXYL PALMITATE",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ETHYLHEXYL PALMITATE",
+            "roles": [
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F08"
+            ],
+            "limits": "Historical generic role only; grade undisclosed."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F033",
+      "canonical_name": "GERANIOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "GERANIOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "GERANIOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN025",
+              "FN045",
+              "FN099"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 22,
+            "raw_name": "GERANIOL",
+            "canonical_name": "GERANIOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#GERANIOL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F034",
+      "canonical_name": "GLYCERIN",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "GLYCERIN",
+            "roles": [
+              "humectant"
+            ],
+            "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "GLYCERIN",
+            "roles": [
+              "humectant"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN073"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 7,
+            "raw_name": "GLYCERIN",
+            "canonical_name": "GLYCERIN",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "humectant"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#GLYCERIN",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F035",
+      "canonical_name": "GLYCINE",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 21,
+            "raw_name": "GLYCINE",
+            "canonical_name": "GLYCINE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "buffering",
+              "skin_conditioning"
+            ],
+            "source_ids": [
+              "PAFN07"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F036",
+      "canonical_name": "GLYCINE SOJA OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL",
+            "roles": [
+              "fixed_oil_carrier"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F037",
+      "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT",
+            "roles": [
+              "botanical_seed_extract",
+              "skin_conditioning"
+            ],
+            "source_ids": [
+              "PSB-F09"
+            ],
+            "limits": "Extract, not sunflower fixed oil, wax or ceramide identity. No hairfilm inferred."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F038",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN041"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 7,
+            "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#HELIANTHUS ANNUUS SEED OIL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F039",
+      "canonical_name": "HEXYL CINNAMAL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "HEXYL CINNAMAL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "HEXYL CINNAMAL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN008"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 16,
+            "raw_name": "HEXYL CINNAMAL",
+            "canonical_name": "HEXYL CINNAMAL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#HEXYL CINNAMAL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F040",
+      "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "HYDROGENATED COCO-GLYCERIDES",
+            "roles": [
+              "emollient",
+              "film_forming_capability",
+              "viscosity_increasing"
+            ],
+            "source_ids": [
+              "PSB-F01"
+            ],
+            "limits": "Film-forming is an affirmative generic capability supported by an exact-INCI grade. Neither persistence class nor structural dominance is implied. Grade, quantity and coating performance in finished product undisclosed; do not call it intact coconut oil."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F041",
+      "canonical_name": "HYDROXYETHYL UREA",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 9,
+            "raw_name": "HYDROXYETHYL UREA",
+            "canonical_name": "HYDROXYETHYL UREA",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "humectant"
+            ],
+            "source_ids": [
+              "PAFN05"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F042",
+      "canonical_name": "ISODODECANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ISODODECANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "ISODODECANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "emollient"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN003"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 1,
+            "raw_name": "ISODODECANE",
+            "canonical_name": "ISODODECANE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "hydrocarbon_carrier",
+              "emollient"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#ISODODECANE",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F043",
+      "canonical_name": "ISOPROPYL PALMITATE",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "ISOPROPYL PALMITATE",
+            "roles": [
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F04"
+            ],
+            "limits": "No spreading-to-persistence mapping."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F044",
+      "canonical_name": "LAURETH-7",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LAURETH-7",
+            "roles": [
+              "emulsifying_auxiliary",
+              "rheology_system_component"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 18,
+            "raw_name": "LAURETH-7",
+            "canonical_name": "LAURETH-7",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "emulsifying_auxiliary",
+              "rheology_system_component"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#LAURETH-7",
+            "source_ids": [
+              "PAFN11"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F045",
+      "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+            "roles": [
+              "not_assessed"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F046",
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LAVANDULA OIL/EXTRACT",
+            "roles": [
+              "fragrance_group",
+              "botanical_preparation_unspecified"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LAVANDULA OIL/EXTRACT",
+            "roles": [
+              "fragrance_group",
+              "botanical_preparation_unspecified"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN022"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F047",
+      "canonical_name": "LECITHIN",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "LECITHIN",
+            "roles": [
+              "emulsion_stabilizer"
+            ],
+            "source_ids": [
+              "PSB-F02"
+            ],
+            "limits": "No lysolecithin substitution. Generic stability function alone does not prove cohesive hairfilm or rinsability."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F048",
+      "canonical_name": "LIMONENE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LIMONENE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LIMONENE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN016",
+              "FN044"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 12,
+            "raw_name": "LIMONENE",
+            "canonical_name": "LIMONENE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#LIMONENE",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F049",
+      "canonical_name": "LINALOOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LINALOOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LINALOOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN015",
+              "FN046",
+              "FN084",
+              "FN096"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 10,
+            "raw_name": "Linalool",
+            "canonical_name": "LINALOOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#LINALOOL",
+            "source_ids": []
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 17,
+            "raw_name": "LINALOOL",
+            "canonical_name": "LINALOOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#LINALOOL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F050",
+      "canonical_name": "LINALYL ACETATE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LINALYL ACETATE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "LINALYL ACETATE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN012"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 12,
+            "raw_name": "Linalyl Acetate",
+            "canonical_name": "LINALYL ACETATE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#LINALYL ACETATE",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F051",
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+            "roles": [
+              "botanical_extract"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+            "roles": [
+              "botanical_leaf_extract",
+              "skin_conditioning"
+            ],
+            "source_ids": [
+              "PSB-F09"
+            ],
+            "limits": "Extract, not neem fixed oil. No carrier/oil quantity or hairfilm inferred."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F052",
+      "canonical_name": "OCTYLDODECANOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "OCTYLDODECANOL",
+            "roles": [
+              "emollient",
+              "solvent"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "OCTYLDODECANOL",
+            "roles": [
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F03"
+            ],
+            "limits": "No drying-alcohol role; no spreading-to-persistence mapping."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F053",
+      "canonical_name": "PARFUM",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PARFUM",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PARFUM (FRAGRANCE)",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PARFUM/FRAGRANCE",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PARFUM",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN004"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 9,
+            "raw_name": "Parfum (Fragrance)",
+            "canonical_name": "PARFUM",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#PARFUM",
+            "source_ids": []
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 29,
+            "raw_name": "PARFUM / FRAGRANCE",
+            "canonical_name": "PARFUM",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "fragrance_composition"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#PARFUM",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F054",
+      "canonical_name": "PEG-14 DIMETHICONE",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 8,
+            "raw_name": "PEG-14 DIMETHICONE",
+            "canonical_name": "PEG-14 DIMETHICONE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "hair_conditioning",
+              "skin_conditioning",
+              "plasticizing_agent_for_hair_setting_polymers"
+            ],
+            "source_ids": [
+              "PAFN01",
+              "PAFN02"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F055",
+      "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 11,
+            "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+            "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "nonionic_solubilizer",
+              "emulsifying_auxiliary"
+            ],
+            "source_ids": [
+              "PAFN04"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F056",
+      "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "PELARGONIUM GRAVEOLENS LEAF OIL",
+            "roles": [
+              "essential_oil",
+              "aromatic_auxiliary"
+            ],
+            "source_ids": [
+              "PSB-F12"
+            ],
+            "limits": "Exact leaf essential oil preparation/function; do not substitute floweroil or intactfixedoil."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F057",
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "roles": [
+              "antioxidant"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 27,
+            "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "antioxidant"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F058",
+      "canonical_name": "PHENOXYETHANOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PHENOXYETHANOL",
+            "roles": [
+              "preservative"
+            ],
+            "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PHENOXYETHANOL",
+            "roles": [
+              "preservative"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN081"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 10,
+            "raw_name": "PHENOXYETHANOL",
+            "canonical_name": "PHENOXYETHANOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "preservative"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#PHENOXYETHANOL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F059",
+      "canonical_name": "PINENE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PINENE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PINENE",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN019"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F060",
+      "canonical_name": "POLYACRYLAMIDE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "POLYACRYLAMIDE",
+            "roles": [
+              "rheology_polymer"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 13,
+            "raw_name": "POLYACRYLAMIDE",
+            "canonical_name": "POLYACRYLAMIDE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "rheology_polymer"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#POLYACRYLAMIDE",
+            "source_ids": [
+              "PAFN11"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F061",
+      "canonical_name": "POLYQUATERNIUM-7",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 25,
+            "raw_name": "POLYQUATERNIUM-7",
+            "canonical_name": "POLYQUATERNIUM-7",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "conditioning_polymer_for_hair"
+            ],
+            "source_ids": [
+              "PAFN03"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F062",
+      "canonical_name": "PROPYLENE GLYCOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PROPYLENE GLYCOL",
+            "roles": [
+              "humectant",
+              "solvent"
+            ],
+            "notes": "Water-associated auxiliary; whole residual system decides.",
+            "function_source_refs": [
+              "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+              "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 15,
+            "raw_name": "PROPYLENE GLYCOL",
+            "canonical_name": "PROPYLENE GLYCOL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "humectant",
+              "solvent"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json#PROPYLENE GLYCOL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F063",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN089"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F064",
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "RICINUS COMMUNIS SEED OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F065",
+      "canonical_name": "SODIUM BENZOATE",
+      "observations": [
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA02",
+            "rank": 28,
+            "raw_name": "SODIUM BENZOATE",
+            "canonical_name": "SODIUM BENZOATE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "preservative"
+            ],
+            "source_ids": [
+              "PAFN13"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F066",
+      "canonical_name": "TERPINEOL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TERPINEOL",
+            "roles": [
+              "declared_fragrance_allergen"
+            ],
+            "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F067",
+      "canonical_name": "TOCOPHEROL",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TOCOPHEROL",
+            "roles": [
+              "antioxidant"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TOCOPHEROL",
+            "roles": [
+              "antioxidant"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+            "source_ids": [
+              "FN042",
+              "FN093"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 8,
+            "raw_name": "Tocopherol",
+            "canonical_name": "TOCOPHEROL",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "antioxidant"
+            ],
+            "existing_exact_entry_ref": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json#TOCOPHEROL",
+            "source_ids": []
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F068",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TOCOPHERYL ACETATE",
+            "roles": [
+              "antioxidant_auxiliary"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TOCOPHERYL ACETATE",
+            "roles": [
+              "antioxidant_auxiliary"
+            ],
+            "limits": "Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance.",
+            "source_ids": [
+              "FN068"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F069",
+      "canonical_name": "TRIDECANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TRIDECANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "possible_volatile_vehicle_in_reviewed_pair"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 5,
+            "raw_name": "Tridecane",
+            "canonical_name": "TRIDECANE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "hydrocarbon_carrier",
+              "possible_volatile_vehicle_in_reviewed_pair"
+            ],
+            "source_ids": [
+              "PAFN08"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F070",
+      "canonical_name": "TRISILOXANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "TRISILOXANE",
+            "roles": [
+              "silicone_carrier"
+            ],
+            "notes": "Carrier identity does not establish finished evaporation.",
+            "function_source_refs": [
+              "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+              "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 13,
+            "raw_name": "Trisiloxane",
+            "canonical_name": "TRISILOXANE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "silicone_carrier",
+              "volatile_carrier"
+            ],
+            "source_ids": [
+              "PAFN10"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F071",
+      "canonical_name": "TRITICUM VULGARE GERM OIL",
+      "observations": [
+        {
+          "source": "source-b/function-supplement.json",
+          "entry": {
+            "canonical_name": "TRITICUM VULGARE GERM OIL",
+            "roles": [
+              "intact_botanical_fixed_oil",
+              "emollient"
+            ],
+            "source_ids": [
+              "PSB-F07"
+            ],
+            "limits": "Exact germ oil; no protein role or skinfeel transfer."
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    },
+    {
+      "source_id": "F072",
+      "canonical_name": "UNDECANE",
+      "observations": [
+        {
+          "source": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+          "entry": {
+            "canonical_name": "UNDECANE",
+            "roles": [
+              "hydrocarbon_carrier",
+              "possible_volatile_vehicle_in_reviewed_pair"
+            ],
+            "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+            "function_source_refs": [
+              "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+            ]
+          }
+        },
+        {
+          "source": "source-a/function-supplement.json",
+          "entry": {
+            "product_key": "PA01",
+            "rank": 3,
+            "raw_name": "Undecane",
+            "canonical_name": "UNDECANE",
+            "limits": "Exact generic ingredient functions only. No supplier grade, quantity, deposition, hair-film mechanics, measured persistence, product-weight class or user fit is established. Function not assessed never means negligible contribution.",
+            "roles": [
+              "hydrocarbon_carrier",
+              "possible_volatile_vehicle_in_reviewed_pair"
+            ],
+            "source_ids": [
+              "PAFN08"
+            ]
+          }
+        }
+      ],
+      "resolution": "Retain reviewed exact generic roles and all limits; no grade, amount, material label or product label transfer."
+    }
+  ],
+  "primary_supplement_sources": [
+    [
+      {
+        "id": "PAFN01",
+        "author": "Evonik",
+        "url": "https://www.evonik.com/en/products/cs/pr_52004112.html",
+        "exact_ingredient": "PEG-14 DIMETHICONE",
+        "supported_functions": [
+          "plasticizing_agent_for_hair_setting_polymers"
+        ],
+        "summary": "Exact ABIL B 8843 INCI PEG-14 Dimethicone. Producer identifies use as plasticizing agent for hair-setting polymers and fixatives; not a silicone gum claim."
+      },
+      {
+        "id": "PAFN02",
+        "author": "Korea Cosmetic Association ingredient dictionary",
+        "url": "https://kcia.or.kr/cid/search/ingd_view.php?no=4165",
+        "exact_ingredient": "PEG-14 DIMETHICONE",
+        "supported_functions": [
+          "hair_conditioning",
+          "skin_conditioning"
+        ],
+        "summary": "Exact entry gives hair conditioning and other skin conditioning purposes; own association dictionary, no film mechanics or grade evidence."
+      },
+      {
+        "id": "PAFN03",
+        "author": "BASF",
+        "url": "https://care360.basf.com/global/en/Product-Finder/30537018",
+        "exact_ingredient": "POLYQUATERNIUM-7",
+        "supported_functions": [
+          "conditioning_polymer_for_hair"
+        ],
+        "summary": "Dehyquart CC 7 BZ INCI Polyquaternium-7; described as conditioning polymer for hair-conditioning formulations. No automatic film, adhesion or persistence class is assigned."
+      },
+      {
+        "id": "PAFN04",
+        "author": "Clariant",
+        "url": "https://www.clariant.com/en/Solutions/Products/2022/01/17/09/31/Emulsogen-HCO-060-SG-Vita",
+        "exact_ingredient": "PEG-60 HYDROGENATED CASTOR OIL",
+        "supported_functions": [
+          "nonionic_solubilizer",
+          "emulsifying_auxiliary"
+        ],
+        "summary": "Exact PEG-60 Hydrogenated Castor Oil chemical name, nonionic solubilizer with solubilizing/emulsifying effect. No pure castor-oil identity or persistence prior transferred."
+      },
+      {
+        "id": "PAFN05",
+        "author": "Health Canada NHPID",
+        "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=3438&lang=eng&wbdisable=true",
+        "exact_ingredient": "HYDROXYETHYL UREA",
+        "supported_functions": [
+          "humectant"
+        ],
+        "summary": "Exact Hydroxyethyl Urea entry lists humectant and skin-conditioning humectant. No hair film inferred."
+      },
+      {
+        "id": "PAFN06",
+        "author": "Dow",
+        "url": "https://www.dow.com/en-us/pdp.dipropylene-glycol-cir-lo.512322z.html",
+        "exact_ingredient": "DIPROPYLENE GLYCOL",
+        "supported_functions": [
+          "cosolvent"
+        ],
+        "summary": "Exact Dipropylene Glycol personal-care grade supports water/oil/hydrocarbon cosolvent function. No grade, concentration or sensory transfer to finished product."
+      },
+      {
+        "id": "PAFN07",
+        "author": "Health Canada NHPID",
+        "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/singredReq?id=409&wbdisable=true",
+        "exact_ingredient": "GLYCINE",
+        "supported_functions": [
+          "buffering",
+          "skin_conditioning"
+        ],
+        "summary": "Glycine constituent entry includes exact glycine chemical substance and topical buffering/skin-conditioning purposes. No gum, repair, hair conditioning or persistence role assigned."
+      },
+      {
+        "id": "PAFN08",
+        "author": "BASF",
+        "url": "https://care360.basf.com/global/en/Product-Finder/30597825",
+        "exact_ingredients": [
+          "UNDECANE",
+          "TRIDECANE"
+        ],
+        "supported_functions": [
+          "hydrocarbon_carrier",
+          "possible_volatile_vehicle_in_reviewed_pair"
+        ],
+        "summary": "Cetiol Ultimate exact INCI Undecane (and) Tridecane provides a reviewed volatile pair and hair/skin leave-on vehicle function. Presence does not identify supplier blend or percentage in candidate."
+      },
+      {
+        "id": "PAFN09",
+        "author": "BASF",
+        "url": "https://care360.basf.com/global/pt/Product-Finder/30527880",
+        "exact_ingredient": "DICAPRYLYL ETHER",
+        "supported_functions": [
+          "emollient"
+        ],
+        "summary": "Cetiol OE exact Dicaprylyl Ether INCI supports emollient function only; skin-feel claims not transferred to hair persistence."
+      },
+      {
+        "id": "PAFN10",
+        "author": "AB Specialty Silicones / Andisil",
+        "url": "https://andisil-personal-care.andisil.com/linear-siloxanes.html",
+        "exact_ingredients": [
+          "DISILOXANE",
+          "TRISILOXANE"
+        ],
+        "supported_functions": [
+          "silicone_carrier",
+          "volatile_carrier"
+        ],
+        "summary": "Primary personal-care supplier table identifies exact Disiloxane and Trisiloxane under volatile linear siloxanes. Grade is not identified in finished product."
+      },
+      {
+        "id": "PAFN11",
+        "author": "Seppic",
+        "url": "https://www.seppic.com/en-DE/product/sepigel-305",
+        "exact_ingredients": [
+          "POLYACRYLAMIDE",
+          "C13-14 ISOPARAFFIN",
+          "LAURETH-7"
+        ],
+        "supported_functions": [
+          "rheology_system"
+        ],
+        "summary": "Primary supplier indexed page names exact combination; C13-14 Isoalkane now named formerly Isoparaffin. Describes thickening/stabilizing/texturizing, not evidence of a conditioning film or supplier-grade identity in Metal Detox."
+      },
+      {
+        "id": "PAFN12",
+        "author": "Dow",
+        "url": "https://www.dow.com/en-us/market/mkt-beauty-personal-care/sub-beauty-hair-care/dowsil-silicone-gum-blends.html",
+        "exact_ingredient": "DIMETHICONOL",
+        "supported_functions": [
+          "silicone_gum",
+          "conditioning_film"
+        ],
+        "summary": "Primary supplier describes ultra-high-viscosity dimethiconol gum in different carriers for leave-on conditioning hair oils. Ingredient function clue; no exact commercial grade, dose or finished coating performance established."
+      },
+      {
+        "id": "PAFN13",
+        "author": "Health Canada NHPID",
+        "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=844",
+        "exact_ingredient": "SODIUM BENZOATE",
+        "supported_functions": [
+          "preservative"
+        ],
+        "summary": "Exact Sodium Benzoate ingredient entry includes topical antimicrobial preservative purpose. No concentration or safety ruling transferred."
+      },
+      {
+        "id": "PAFN14",
+        "author": "European Commission SCCS",
+        "url": "https://ec.europa.eu/health/scientific_committees/opinions_layman/perfume-allergies/en/figtableboxes/table-10-4.htm",
+        "exact_ingredient": "ANISE ALCOHOL",
+        "supported_functions": [
+          "fragrance_allergen"
+        ],
+        "summary": "SCCS fragrance-substance table names exact INCI Anise alcohol among individually labelled fragrance allergens. Identity/function only; no quantitative threshold or product exposure inferred."
+      },
+      {
+        "id": "PAFN15",
+        "author": "Korea Cosmetic Association ingredient dictionary",
+        "url": "https://kcia.or.kr/cid/search/ingd_view.php?no=2864",
+        "exact_ingredient": "CARAMEL",
+        "supported_functions": [
+          "colourant",
+          "fragrance"
+        ],
+        "summary": "Exact Caramel ingredient entry gives colourant and fragrance purposes; no coating or persistence role inferred."
+      },
+      {
+        "id": "PAFN16",
+        "author": "European Commission Joint Research Centre",
+        "url": "https://susproc.jrc.ec.europa.eu/product-bureau/sites/default/files/contentype/product_group_documents/1581684261/Preliminary_Report_EUEcolabel_Cosmetics.pdf",
+        "exact_ingredients": [
+          "CI 15985",
+          "CI 19140"
+        ],
+        "supported_functions": [
+          "colourant"
+        ],
+        "summary": "Table 52, printed page 141, lists exact CI 15985 and CI 19140 as ingredients with colourant function. No toning performance or hair coating inference."
+      },
+      {
+        "id": "PAFN17",
+        "author": "European Commission / EU Cosmetics Regulation Annex IV identity table",
+        "url": "https://health.ec.europa.eu/document/download/47f167ec-b5db-4ec9-9d12-3d807bf3e526_sk?filename=cosmetic_1223_2009_regulation_en.pdf",
+        "exact_ingredient": "CI 40800",
+        "supported_functions": [
+          "colourant"
+        ],
+        "summary": "Annex IV entry 55 identifies beta carotene as Colour Index 40800, orange. Used solely for exact CI40800/Beta-Carotene label identity and colourant function, no current compliance or concentration determination."
+      }
+    ],
+    [
+      {
+        "source_id": "PSB-F01",
+        "url": "https://www.ioioleo.de/personal-care/product/softisan-100/",
+        "title": "IOI Oleo SOFTISAN100",
+        "excerpt": "Hydrogenated Coco-Glycerides: Emollient; Film-Forming; Viscosity Increasing.",
+        "limits": "Primary current ingredient maker. Grade example only; no proof of grade in finished product."
+      },
+      {
+        "source_id": "PSB-F02",
+        "url": "https://www.cargill.com/personal-care/product-guide/emulsifiers",
+        "title": "Cargill Topcithin Care P IP",
+        "excerpt": "INCI: Lecithin. Topcithin Care P IP is an emulsion stabilizer.",
+        "limits": "Primary current ingredient maker. No transfer of skin affinity, lipid-barrier or grade specifics."
+      },
+      {
+        "source_id": "PSB-F03",
+        "url": "https://care360.basf.com/global/de/Product-Finder/30527896",
+        "title": "BASF Eutanol G",
+        "excerpt": "Produkt-INCI: Octyldodecanol. Medium spreading emollient.",
+        "limits": "Primary current ingredient maker. Spreading is not measured hair persistence."
+      },
+      {
+        "source_id": "PSB-F04",
+        "url": "https://care360.basf.com/global/de/Product-Finder/30528720",
+        "title": "BASF Isopropyl Palmitate",
+        "excerpt": "Produkt-INCI: Isopropyl Palmitate. Fast spreading emollient.",
+        "limits": "Primary current ingredient maker. Spreading is not measured hair persistence."
+      },
+      {
+        "source_id": "PSB-F05",
+        "url": "https://www.hallstarbeauty.com/formula/glow-up-effect/",
+        "title": "Hallstar Glow Up Effect formulation",
+        "excerpt": "Coco-Caprylate/Caprate: Emollient.",
+        "limits": "Primary current formulator. Generic function only, no transfer of formulation dose."
+      },
+      {
+        "source_id": "PSB-F06",
+        "url": "https://www.oand3.com/product/peanut-oil-cold-pressed-organic/",
+        "title": "O&3 Peanut Oil Cold Pressed Organic",
+        "excerpt": "INCI Listing Arachis Hypogaea Oil. Hair care products as an emollient.",
+        "limits": "Primary supplier. Exact INCI matches; coldpressed/organic batch is not established for finished product. Skinfeel excluded."
+      },
+      {
+        "source_id": "PSB-F07",
+        "url": "https://www.oand3.com/product/wheatgerm-oil-refined/",
+        "title": "O&3 Wheatgerm Oil Refined",
+        "excerpt": "INCI Listing Triticum Vulgare Germ Oil. Emollient.",
+        "limits": "Primary supplier search-rendered page. Direct re-open403; search capture explicit exact INCI/function. No skinfeel transfer."
+      },
+      {
+        "source_id": "PSB-F08",
+        "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+        "title": "European Commission archived first update EU inventory2000",
+        "excerpt": "Alcohol: Ethanol; solvent. Ethylhexyl Palmitate: emollient.",
+        "limits": "Historical technical ingredient-function evidence, not current EU compliance status. Exact entries only."
+      },
+      {
+        "source_id": "PSB-F09",
+        "url": "https://ec.europa.eu/health/archive/ph_risk/committees/sccp/documents/out123cm_en.pdf",
+        "title": "European Commission archived first update EU inventory2000",
+        "excerpt": "Melia Azadirachta Leaf Extract: skin conditioning. Helianthus Annuus Seed Extract: skin conditioning.",
+        "limits": "Historical technical function evidence, not current EU compliance status. Does not establish lipid quantity, extract solvent or hairfilm."
+      },
+      {
+        "source_id": "PSB-F10",
+        "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=16817",
+        "title": "Health Canada NHPID C13-15 Alkane",
+        "excerpt": "C13-15 Alkane. Non-medicinal purposes: Solvent.",
+        "limits": "Primary regulator technical identity/function, not EU authorization or specific grade/volatility."
+      },
+      {
+        "source_id": "PSB-F11",
+        "url": "https://www.florihana.com/en/module/axproductattachments/export?file=FLE004FT.pdf&reference=FLE004&type=Fiche+technique",
+        "title": "Florihana organic angelica root TDS2023",
+        "excerpt": "ANGELICA ARCHANGELICA ROOT OIL. Essential oil obtained by water steam distillation from roots.",
+        "limits": "Primary distiller exact rootoil; generic preparation type only. Organic origin and composition not transferred."
+      },
+      {
+        "source_id": "PSB-F12",
+        "url": "https://webprod.hc-sc.gc.ca/nhpid-bdipsn/ingredReq?id=18144",
+        "title": "Health Canada Pelargonium Graveolens Leaf Oil",
+        "excerpt": "Pelargonium Graveolens Leaf Oil. Oil, Essential (water steam distillation). Fragrance Ingredient.",
+        "limits": "Primary regulator exact preparation/function, not EU approval or particular grade."
+      },
+      {
+        "source_id": "PSB-F13",
+        "url": "https://fraterworks.com/products/angelica-seed-oil",
+        "title": "Fraterworks Angelica Seed Oil",
+        "excerpt": "INCI Name ANGELICA ARCHANGELICA SEED OIL. Odour Family Aromatic.",
+        "limits": "Primary fragrance supplier demonstrates aromatic product variant, not proof of L’Occitane grade. Supplier odour longevity is not haircoating persistence."
+      },
+      {
+        "source_id": "PSB-F14",
+        "url": "https://www.oand3.com/product/angelica-seed-oil-cold-pressed/",
+        "title": "O&3 Angelica Seed Oil Cold Pressed",
+        "excerpt": "INCI Listing Angelica Archangelica Seed Oil. Manufacturing Method Cold Pressed.",
+        "limits": "Primary supplier uses same exact INCI for coldpressed description, so declaration alone cannot select this grade or inferred triglyceride profile."
+      }
+    ]
+  ]
+}

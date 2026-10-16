@@ -1,0 +1,66 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "lane": "b",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/method.md",
+      "sha256": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-packet.json",
+      "sha256": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+      "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2"
+    }
+  ],
+  "completed_ids": [
+    "O01",
+    "O03",
+    "O04",
+    "O05",
+    "O06",
+    "O07",
+    "O08",
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O15",
+    "O16",
+    "O17",
+    "O18",
+    "O19",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "O01",
+      "recognition": "Partial familiarity from the distinctive peptide declaration triggered an unverified product association. No identity was checked and no prior product label or persistence value was used."
+    },
+    {
+      "case_id": "O07",
+      "recognition": "Partial familiarity from the distinctive dimaleate declaration triggered an unverified product association. No identity was checked and no prior product label or persistence value was used."
+    }
+  ],
+  "access_incidents": [],
+  "limits": [
+    "Read only the three declared input files in full; function-source references and method links were not followed. No browsing, repository/history/source/staging/manifests, memory files, peer outputs or nested review were accessed.",
+    "All 27 complete primary declarations, all 540 primary ranks, all contextual declarations and all 269 dictionary entries were read. Each primary rank was considered in its retained leave-on hair-fibre context; footnotes, annotations and formula codes were not promoted to ranked ingredients.",
+    "These are committed qualitative whole-formula judgments, not measured retained loads or durability. Exact grades, quantities and finished-film measurements were not supplied; rank was used only as declaration order, never as a quantity or cutoff.",
+    "Unassessed functions were not assumed negligible and were not used independently to establish a high conditioning-film claim. Rheology, optical-filter and conditioning-film functions were distinguished.",
+    "No weight, fit, penetration, scalp, pre-wash, washout or repeated-accumulation endpoint was assessed. No prior label, ingredient-presence rule or distribution target determined a value.",
+    "Schema, complete ID/rank coverage, exact evidence references, dictionary coverage and unchanged input hashes were validated in memory before writing. Only the two assigned lane-b output files were written; neither output was reread."
+  ]
+}

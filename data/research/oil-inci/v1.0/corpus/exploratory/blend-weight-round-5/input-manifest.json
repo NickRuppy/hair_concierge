@@ -1,0 +1,31 @@
+{
+  "run_id": "oil-blend-weight-round-5",
+  "method_revision": "round5-v1",
+  "blind_input_files": [
+    "method.md",
+    "material-reference.json",
+    "policy.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "files": {
+    "method.md": "c860688c977715c1b468e74ec556a82d707afd49a2ef875ae0f0793b0061b981",
+    "material-reference.json": "fa48a09cf0b1b04262626061266bc7b557bead57a345c40e5c767696ed94d003",
+    "policy.json": "8d26aa5c566456588ba4d2e8eb74d32f9f71795be973d7ab53fa966ea998c06e",
+    "role-lexicon.json": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f",
+    "blind-packet.json": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46"
+  },
+  "neutral_ids": [
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R06",
+    "R07",
+    "R08"
+  ],
+  "frozen_at": "2026-10-04",
+  "limits": "Six files only. Scope receipts are self-report, not enforced sandbox proof. Known reference priors and possible formula recognition prevent a clean cognitive holdout."
+}

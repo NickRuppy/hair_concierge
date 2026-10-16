@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-05",
+  "status": "passed",
+  "cases": 6,
+  "ingredient_occurrences": 88,
+  "dictionary_entries": 69,
+  "root_checks": [
+    "Full raw/source parity, exact ranks and prior reviewed identity aliases",
+    "Closed flag families reviewed; unsupported novel functional roles stay not_assessed rather than placeholder flags",
+    "D05 exact ETHYLHEXYL SALICYLATE recognized filter plus source hair UV claim",
+    "Fruit Oil generic fixed-oil identity admitted independently; no science/penetration equivalence transferred",
+    "No product/URL identifiers or weight decisions in blind stage packet/lexicon",
+    "Historical preservation snapshot covers219 predecessor files; unchanged after preparation",
+    "Stage2 projection corrected before unblind; stage1 bytes unchanged"
+  ],
+  "input_manifest_sha256": "83f4b8b2ba56436bd48e5a39c9dce89c2efd50d7df7e397409af68b7cf923476",
+  "scope_limits": [
+    "Published declarations and maker claims; no physical batch verification",
+    "Prompt/read-scope independence only; prior development exposure; no unseen holdout",
+    "No fit eligibility or sensory accuracy"
+  ],
+  "provenance_note": "Parent repaired the initial placeholder-only dictionary and incomplete unblind projection before classifier dispatch/controlled unblind, respectively; unassessed functional materials remain explicit."
+}

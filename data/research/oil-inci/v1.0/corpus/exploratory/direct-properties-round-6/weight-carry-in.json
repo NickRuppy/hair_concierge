@@ -1,0 +1,54 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "scope": "Separate carry-in only. No new weight assessment or lane input; excluded from direct-property metrics. All estimates, not measured performance.",
+  "records": [
+    {
+      "neutral_id": "D01",
+      "value": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "authority": "human_accepted_OE38",
+      "source": "plans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json"
+    },
+    {
+      "neutral_id": "D02",
+      "value": "rich",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "authority": "prior_trial_working_estimate_not_human_acceptance",
+      "source": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json#F04"
+    },
+    {
+      "neutral_id": "D03",
+      "value": "medium",
+      "confidence": "low",
+      "nearest_alternative": "light",
+      "authority": "prior_trial_working_estimate_not_human_acceptance",
+      "source": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/adjudication.json#R01"
+    },
+    {
+      "neutral_id": "D04",
+      "value": "medium",
+      "confidence": "low",
+      "nearest_alternative": "rich",
+      "authority": "human_accepted_OE26",
+      "source": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md"
+    },
+    {
+      "neutral_id": "D05",
+      "value": "medium",
+      "confidence": "low",
+      "nearest_alternative": "rich",
+      "authority": "prior_trial_working_estimate_not_human_acceptance",
+      "source": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json#F03"
+    },
+    {
+      "neutral_id": "D06",
+      "value": "rich",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "authority": "prior_trial_working_estimate_not_human_acceptance",
+      "source": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/adjudication.json#R05"
+    }
+  ]
+}

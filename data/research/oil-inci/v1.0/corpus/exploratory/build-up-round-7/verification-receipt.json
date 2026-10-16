@@ -1,0 +1,81 @@
+{
+  "verified_at": "2026-10-06T06:18:27.013725+00:00",
+  "branch": "codex/oil-inci",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "base": "358572da276e2cbe6b6c43edd01fbcc86c25a8c6",
+  "scope": "New focused research round only; branch predates latest main by seven commits, no runtime/production readiness claim.",
+  "decision_coverage": {
+    "status": "authorized local provisional guide/check; no consequential choice silently adopted",
+    "original_acknowledgement": "Nick do it, 2026-10-05",
+    "internal_revalidation": "Guidance and four new declared-formula checks complete; three unknowns preserved. No ingredient defaults/fit changes/intake activation."
+  },
+  "positive": {
+    "status": "passed",
+    "stage": "complete",
+    "primary_ranks": 57,
+    "closed_ingredients": 51,
+    "preserved_files": 324,
+    "metrics": {
+      "in_scope_cases": 4,
+      "excluded_cases": 0,
+      "lane_agreement": 4,
+      "known_in_both": 1,
+      "known_by_lane": {
+        "a": 1,
+        "b": 1
+      },
+      "working_known": 1
+    },
+    "limits": "Structural provenance and repeatability only; not sensory/wash-cycle validation."
+  },
+  "negative_controls": [
+    {
+      "name": "duplicate lane case",
+      "rejected_by": "Duplicate/missing case"
+    },
+    {
+      "name": "invented evidence rank",
+      "rejected_by": "Evidence rank/name parity"
+    },
+    {
+      "name": "invented conditioning role",
+      "rejected_by": "Full ledger role/rank parity"
+    },
+    {
+      "name": "confidence upgrade",
+      "rejected_by": "Confidence ceiling"
+    },
+    {
+      "name": "false known-coverage denominator",
+      "rejected_by": "Metric denominator/value parity"
+    },
+    {
+      "name": "dropped primary rank",
+      "rejected_by": "Source/blind parity: ingredients"
+    },
+    {
+      "name": "rewritten unblinded class",
+      "rejected_by": "Working selected property integrity"
+    },
+    {
+      "name": "missing historical predecessor",
+      "rejected_by": "Historical snapshot membership count"
+    }
+  ],
+  "local_markdown_links_checked": 88,
+  "historical_round6": "unchanged verifier passed: six cases, two lanes, 219 older historical files unchanged",
+  "skipped_checks": [
+    "App/browser/live DB/runtime tests not applicable to this research-only change."
+  ],
+  "residual_risk": [
+    "No sensory or repeated-shampoo validation.",
+    "New coverage only 1/4; no new low result.",
+    "Source pages are declarations, not physical labels; indexed-only SEPPIC access limit.",
+    "Contractual lane isolation; self-reported no recognition/incidents."
+  ],
+  "artifact_disposition": {
+    "commit_intended": "guide, plan, verifier, source/normalization/function packets, all frozen run outputs and durable receipts; not committed",
+    "discard": "temporary builders and raw Claude review after reconciliation",
+    "outside_scope": "all existing task dirt; root/main, history, runtime, DB, catalog, activation unchanged"
+  }
+}

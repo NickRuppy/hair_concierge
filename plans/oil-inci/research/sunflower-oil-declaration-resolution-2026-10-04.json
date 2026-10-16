@@ -1,0 +1,68 @@
+{
+  "decision": "OE36",
+  "accessed_at": "2026-10-04",
+  "objective": "Resolve shorter sunflower Oil declarations using external identity evidence; apply already approved hair-weight tendency if matched.",
+  "sources": {
+    "SUNFLOWEROILCOSMILE20261004": {
+      "title": "COSMILE Europe: sunflower seed oil and shorter Helianthus annuus oil wording",
+      "url": "https://cosmileeurope.eu/inci/detail/6310/helianthus-annuus-seed-oil/",
+      "kind": "identity_only",
+      "access": "Live ingredient page read 2026-10-04; plant-part field and opening background sentence.",
+      "supports": "The background explicitly identifies Helianthus annuus oil as sunflower oil obtained from ripe seeds. Supports interpreting the shorter oil declaration as seed-derived fixed oil; skin penetration/lightness claims do not choose hair weight. No universal supplier-grade equivalence."
+    },
+    "SUNFLOWEROILNLM20261004": {
+      "title": "NLM MeSH: Sunflower Oil",
+      "url": "https://www.ncbi.nlm.nih.gov/mesh/2023272",
+      "kind": "identity_only",
+      "access": "Live controlled-vocabulary page read 2026-10-04.",
+      "supports": "Defines sunflower oil as seed-derived and includes Sunflower Seed Oil among entry terms. Corroborates ordinary material terminology, not cosmetic grade, composition or hair weight."
+    },
+    "SUNFLOWEROILK18UK20261004": {
+      "title": "K18 UK Molecular Repair Hair Oil: exact parenthetical Oil declaration",
+      "url": "https://k18hair.co.uk/products/molecular-repair-hair-oil",
+      "kind": "identity_only",
+      "access": "Live UK maker ingredient list read 2026-10-04.",
+      "supports": "Exact Helianthus Annuus (Sunflower) Oil at rank four in the 17-entry UK declaration matches the frozen Q10/W01 ingredient sequence. Establishes encountered commercial spelling, not seed extraction method, supplier grade, concentration or neat-oil weight."
+    },
+    "SUNFLOWERDERIVATIVELIMITCIR20261004": {
+      "title": "CIR 2016 sunflower-derived ingredients assessment: distinct extracts, waxes and oils",
+      "url": "https://www.cir-safety.org/sites/default/files/Helian092016FR.pdf",
+      "kind": "identity_limit",
+      "access": "Live PDF introduction and definitions table read 2026-10-04.",
+      "supports": "Treats extracts, waxes and powders separately from oils; seed oils were assessed in the plant-derived oil report. Supports retaining derivative/plant-part boundaries, not a hair-weight or efficacy claim."
+    }
+  },
+  "external_identity_finding": "The shorter Helianthus annuus oil name is seed-derived in registry background; exact parenthetical commercial spelling is confirmed by K18 UK.",
+  "internal_weight_application": {
+    "previous_entry": "sunflower",
+    "previous_reference": "oil-natural-weight-v0.9",
+    "new_entry": "sunflower_oil_declaration",
+    "new_reference": "oil-natural-weight-v0.10",
+    "weight": "light",
+    "confidence": "low",
+    "nearest_alternative": "medium",
+    "basis": "explicit material-family estimate from existing approved sunflower tendency",
+    "new_hair_weight_measurement": false,
+    "excluded": "skin lightness and absorption; finished K18 marketing/performance"
+  },
+  "product_source_check": {
+    "source_id": "SUNFLOWEROILK18UK20261004",
+    "frozen_case": "Q10 / replay W01",
+    "frozen_source_capture": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+    "ingredient_count": 17,
+    "rank": 4,
+    "literal_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+    "normalized_live_uk_sequence_matches_frozen_q10": true,
+    "comparison": "Exact case/whitespace-insensitive ordered list match; full UK sequence observed in live web tool, no plant-part normalization.",
+    "frozen_raw_inci_sha256": "48ff98d511f87ee302e4950a89179452020fef271f0abddfeba85feed5b2b47d",
+    "market_limit": "UK corroboration of selected DE retailer declaration; physical DE pack/batch and supplier grade unverified. Global 22-entry alternative remains distinct.",
+    "accepted_product_weight": "OE28 light/low, medium alternative; unchanged"
+  },
+  "limits": [
+    "No general removal of Seed or parentheses. Only two reviewed shorter Oil spellings are admitted.",
+    "Not every supplier grade is characterized; high-oleic composition is not inferred.",
+    "Extracts, wax/butter, unsaponifiables and modified derivatives remain distinct.",
+    "Frozen outputs remain historical and no new formula classification run follows."
+  ],
+  "next_work": "Prepare a broader contrast cohort containing heavier retained-film systems, lighter carriers and borderline blends with current exact references frozen."
+}

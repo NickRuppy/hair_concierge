@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main-working.json": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+    "main-before-lanes-seal.json": "160c0bf03042d08ec2ec047e16d51501d5c31b51fce988fa5f176ffcd45f1003",
+    "comparison.json": "04559ea83aaa1bdfc902f92a8f41f97803c184c37eb5d967698bb2e9ed9b60d8",
+    "adjudication.json": "3bf0a54ba083d0e71833ab9ec23d5d5b218f43feaad5b936fb52f9eecd9a3b45",
+    "results-for-review.md": "296db96a916ddaa6ddea2435c89fd4fdf1b4406cbaafa873ca6d1e546ffb5ca7",
+    "working-weights.csv": "dd4c69d4ad3f268f8b55cfb275c0a55e641c123ae14a6c50f3d3cb4e65c3ad7c",
+    "lane-a/records.json": "2d0b6ea7a7353dcbac5aa1e12b24e72723217e3f7e7e6130a19202bf7d62fd83",
+    "lane-a/notes.md": "a7e0572c711922ef787156d213f29f7defa3a4b9885bbf8cf82959fc7e3c18c4",
+    "lane-b/records.json": "11c54d3191c66bbc27b3cd87f187fa11948522e55fb4d4613171ee3c6b8aa885",
+    "lane-b/notes.md": "208c5df62885e9340c8882b9d1803990a9b0faee4fbec517499d82b1b2733467"
+  },
+  "scope": "Frozen result artifacts only. Operational verification receipts are generated after actual checks, avoiding circular dependency."
+}

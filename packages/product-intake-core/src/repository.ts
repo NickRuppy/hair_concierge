@@ -134,7 +134,7 @@ export type CommitResearchPassParams = UpdateResearchJobParams & {
   reviewOutcome: "continue" | "ready_for_review" | "needs_nick"
   notificationPayload?: JsonRecord | null
   expectedReviewCycleId?: string | null
-  artifacts?: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId">>
+  artifacts?: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId"> & { id?: string }>
   autoRework?: boolean
 }
 
@@ -159,6 +159,7 @@ export async function commitResearchPass(
     notification_payload: params.notificationPayload ?? null,
     expected_review_cycle_id: params.expectedReviewCycleId ?? null,
     research_artifacts: (params.artifacts ?? []).map((artifact) => ({
+      ...(artifact.id === undefined ? {} : { id: artifact.id }),
       kind: artifact.kind,
       status: artifact.status ?? "proposed",
       payload: artifact.payload,

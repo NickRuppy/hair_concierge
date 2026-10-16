@@ -1,0 +1,1642 @@
+{
+  "inputs": [
+    "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+  ],
+  "supplements": [
+    "source-a/function-supplement.json",
+    "source-b/function-supplement.json"
+  ],
+  "rank_bound_evidence": [
+    {
+      "id": "FN001",
+      "neutral_id": "BC01",
+      "rank": 1,
+      "raw_name": "Cyclopentasiloxane",
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "CYCLOPENTASILOXANE"
+        }
+      ]
+    },
+    {
+      "id": "FN002",
+      "neutral_id": "BC01",
+      "rank": 2,
+      "raw_name": "Dimethiconol",
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "DIMETHICONOL"
+        }
+      ]
+    },
+    {
+      "id": "FN003",
+      "neutral_id": "BC01",
+      "rank": 3,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "ISODODECANE"
+        }
+      ]
+    },
+    {
+      "id": "FN004",
+      "neutral_id": "BC01",
+      "rank": 4,
+      "raw_name": "Parfum/Fragrance",
+      "canonical_name": "PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "PARFUM"
+        }
+      ]
+    },
+    {
+      "id": "FN005",
+      "neutral_id": "BC01",
+      "rank": 5,
+      "raw_name": "Argania Spinosa Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL"
+        }
+      ]
+    },
+    {
+      "id": "FN006",
+      "neutral_id": "BC01",
+      "rank": 6,
+      "raw_name": "Ethylhexyl Methoxycinnamate",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "ETHYLHEXYL METHOXYCINNAMATE"
+        }
+      ]
+    },
+    {
+      "id": "FN007",
+      "neutral_id": "BC01",
+      "rank": 7,
+      "raw_name": "Tetramethyl Acetyloctahydronaphthalenes",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        }
+      ]
+    },
+    {
+      "id": "FN008",
+      "neutral_id": "BC01",
+      "rank": 8,
+      "raw_name": "Hexyl Cinnamal",
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "HEXYL CINNAMAL"
+        }
+      ]
+    },
+    {
+      "id": "FN009",
+      "neutral_id": "BC01",
+      "rank": 9,
+      "raw_name": "Hexamethylindanopyran",
+      "canonical_name": "HEXAMETHYLINDANOPYRAN",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "HEXAMETHYLINDANOPYRAN"
+        }
+      ]
+    },
+    {
+      "id": "FN010",
+      "neutral_id": "BC01",
+      "rank": 10,
+      "raw_name": "Acetyl Cedrene",
+      "canonical_name": "ACETYL CEDRENE",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "ACETYL CEDRENE"
+        }
+      ]
+    },
+    {
+      "id": "FN011",
+      "neutral_id": "BC01",
+      "rank": 11,
+      "raw_name": "Vanillin",
+      "canonical_name": "VANILLIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "VANILLIN"
+        }
+      ]
+    },
+    {
+      "id": "FN012",
+      "neutral_id": "BC01",
+      "rank": 12,
+      "raw_name": "Linalyl Acetate",
+      "canonical_name": "LINALYL ACETATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "LINALYL ACETATE"
+        }
+      ]
+    },
+    {
+      "id": "FN013",
+      "neutral_id": "BC01",
+      "rank": 13,
+      "raw_name": "Coumarin",
+      "canonical_name": "COUMARIN",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "COUMARIN"
+        }
+      ]
+    },
+    {
+      "id": "FN014",
+      "neutral_id": "BC01",
+      "rank": 14,
+      "raw_name": "Citronellol",
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "CITRONELLOL"
+        }
+      ]
+    },
+    {
+      "id": "FN015",
+      "neutral_id": "BC01",
+      "rank": 15,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "LINALOOL"
+        }
+      ]
+    },
+    {
+      "id": "FN016",
+      "neutral_id": "BC01",
+      "rank": 16,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "LIMONENE"
+        }
+      ]
+    },
+    {
+      "id": "FN017",
+      "neutral_id": "BC01",
+      "rank": 17,
+      "raw_name": "Fusanus Spicatus Wood Oil",
+      "canonical_name": "FUSANUS SPICATUS WOOD OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN018",
+      "neutral_id": "BC01",
+      "rank": 18,
+      "raw_name": "Citrus Limon Peel Oil",
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CITRUS LIMON PEEL OIL"
+        }
+      ]
+    },
+    {
+      "id": "FN019",
+      "neutral_id": "BC01",
+      "rank": 19,
+      "raw_name": "Pinene",
+      "canonical_name": "PINENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "PINENE"
+        }
+      ]
+    },
+    {
+      "id": "FN020",
+      "neutral_id": "BC01",
+      "rank": 20,
+      "raw_name": "Santalol",
+      "canonical_name": "SANTALOL",
+      "roles": [
+        "fragrance"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/26777/santalol/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn650view2",
+          "verbatim_function_heading_excerpt": "FRAGRANCE"
+        }
+      ]
+    },
+    {
+      "id": "FN021",
+      "neutral_id": "BC01",
+      "rank": 21,
+      "raw_name": "Cinnamomum Zeylanicum Bark Oil",
+      "canonical_name": "CINNAMOMUM ZEYLANICUM BARK OIL",
+      "roles": [
+        "fragrance",
+        "tonic"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/3349/cinnamomum-zeylanicum-bark-oil/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn650view3",
+          "verbatim_function_heading_excerpt": "FRAGRANCE; TONIC"
+        }
+      ]
+    },
+    {
+      "id": "FN022",
+      "neutral_id": "BC01",
+      "rank": 22,
+      "raw_name": "Lavandula Oil/Extract",
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "roles": [
+        "fragrance_group",
+        "botanical_preparation_unspecified"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "LAVANDULA OIL/EXTRACT"
+        }
+      ]
+    },
+    {
+      "id": "FN023",
+      "neutral_id": "BC01",
+      "rank": 23,
+      "raw_name": "Eugenol",
+      "canonical_name": "EUGENOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "EUGENOL"
+        }
+      ]
+    },
+    {
+      "id": "FN024",
+      "neutral_id": "BC01",
+      "rank": 24,
+      "raw_name": "Farnesol",
+      "canonical_name": "FARNESOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "FARNESOL"
+        }
+      ]
+    },
+    {
+      "id": "FN025",
+      "neutral_id": "BC01",
+      "rank": 25,
+      "raw_name": "Geraniol",
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "GERANIOL"
+        }
+      ]
+    },
+    {
+      "id": "FN026",
+      "neutral_id": "BC02",
+      "rank": 1,
+      "raw_name": "carthamus tinctorius (safflower) seed oil*",
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CARTHAMUS TINCTORIUS SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN027",
+      "neutral_id": "BC02",
+      "rank": 2,
+      "raw_name": "rosa canina (rosehip) fruit oil*",
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ROSA CANINA FRUIT OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN028",
+      "neutral_id": "BC02",
+      "rank": 3,
+      "raw_name": "argania spinosa (argan) kernel oil*",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN029",
+      "neutral_id": "BC02",
+      "rank": 4,
+      "raw_name": "hippophae rhamnoides (sea buckthorn) seed oil*",
+      "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "roles": [
+        "skin_protecting"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN04",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "id": "FN030",
+      "neutral_id": "BC02",
+      "rank": 5,
+      "raw_name": "rosa damascena (rose) flower oil*",
+      "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ROSA DAMASCENA FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN031",
+      "neutral_id": "BC02",
+      "rank": 6,
+      "raw_name": "pelargonium graveolens (rose geranium) flower oil*",
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "roles": [
+        "aromatic_auxiliary"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN032",
+      "neutral_id": "BC02",
+      "rank": 7,
+      "raw_name": "citrus sinensis (sweet orange) peel oil expressed*",
+      "canonical_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN033",
+      "neutral_id": "BC02",
+      "rank": 8,
+      "raw_name": "cananga odorata (yang ylang) flower oil*",
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "roles": [
+        "essential_oil",
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "CANANGA ODORATA FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-source-registry.json",
+          "entry": "F012",
+          "url": "https://www.indesso.com/en/our-catalog/cananga-oil",
+          "claim": "Reviewed manufacturer exact INCI essential flower oil; not all oil/extract forms."
+        }
+      ]
+    },
+    {
+      "id": "FN034",
+      "neutral_id": "BC02",
+      "rank": 9,
+      "raw_name": "pogostemon cablin (patchouli) leaf oil*",
+      "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN035",
+      "neutral_id": "BC02",
+      "rank": 10,
+      "raw_name": "lycium barbarum (goji berry) fruit extract*",
+      "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LYCIUM BARBARUM FRUIT EXTRACT",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN036",
+      "neutral_id": "BC02",
+      "rank": 11,
+      "raw_name": "styrax tonkinensis (benzoin) resin extract",
+      "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+      "roles": [
+        "fragrance",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN03",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "id": "FN037",
+      "neutral_id": "BC02",
+      "rank": 12,
+      "raw_name": "rosmarinus officinalis (rosemary) extract*",
+      "canonical_name": "ROSMARINUS OFFICINALIS EXTRACT",
+      "roles": [
+        "antimicrobial",
+        "refreshing",
+        "tonic"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN06",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "id": "FN038",
+      "neutral_id": "BC02",
+      "rank": 13,
+      "raw_name": "cedrus atlantica (cedar) bark oil*",
+      "canonical_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN039",
+      "neutral_id": "BC02",
+      "rank": 14,
+      "raw_name": "citrus aurantium (orange) flower oil*",
+      "canonical_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN040",
+      "neutral_id": "BC02",
+      "rank": 15,
+      "raw_name": "anthemis nobilis (chamomile) flower oil*",
+      "canonical_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN041",
+      "neutral_id": "BC02",
+      "rank": 16,
+      "raw_name": "helianthus annuus (sunflower) seed oil",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "HELIANTHUS ANNUUS SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN042",
+      "neutral_id": "BC02",
+      "rank": 17,
+      "raw_name": "tocopherol (vitamin E)",
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "TOCOPHEROL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN043",
+      "neutral_id": "BC02",
+      "rank": 18,
+      "raw_name": "citronellol**",
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CITRONELLOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN044",
+      "neutral_id": "BC02",
+      "rank": 19,
+      "raw_name": "limonene**",
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LIMONENE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN045",
+      "neutral_id": "BC02",
+      "rank": 20,
+      "raw_name": "geraniol**",
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "GERANIOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN046",
+      "neutral_id": "BC02",
+      "rank": 21,
+      "raw_name": "linalool**",
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LINALOOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN047",
+      "neutral_id": "BC02",
+      "rank": 22,
+      "raw_name": "benzyl benzoate**",
+      "canonical_name": "BENZYL BENZOATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL BENZOATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN048",
+      "neutral_id": "BC02",
+      "rank": 23,
+      "raw_name": "citral**",
+      "canonical_name": "CITRAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CITRAL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN049",
+      "neutral_id": "BC02",
+      "rank": 24,
+      "raw_name": "farnesol**",
+      "canonical_name": "FARNESOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "FARNESOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN050",
+      "neutral_id": "BC02",
+      "rank": 25,
+      "raw_name": "benzyl salicylate**",
+      "canonical_name": "BENZYL SALICYLATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL SALICYLATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN051",
+      "neutral_id": "BC02",
+      "rank": 26,
+      "raw_name": "eugenol**",
+      "canonical_name": "EUGENOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "EUGENOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN052",
+      "neutral_id": "BC03",
+      "rank": 1,
+      "raw_name": "Cyclopentasiloxane",
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "CYCLOPENTASILOXANE"
+        }
+      ]
+    },
+    {
+      "id": "FN053",
+      "neutral_id": "BC03",
+      "rank": 2,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "DIMETHICONE"
+        }
+      ]
+    },
+    {
+      "id": "FN054",
+      "neutral_id": "BC03",
+      "rank": 3,
+      "raw_name": "C12-15 Alkyl Benzoate",
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "C12-15 ALKYL BENZOATE"
+        }
+      ]
+    },
+    {
+      "id": "FN055",
+      "neutral_id": "BC03",
+      "rank": 4,
+      "raw_name": "Argania Spinosa Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL"
+        }
+      ]
+    },
+    {
+      "id": "FN056",
+      "neutral_id": "BC03",
+      "rank": 5,
+      "raw_name": "Keratin",
+      "canonical_name": "KERATIN",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/7702/keratin/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view0",
+          "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING"
+        }
+      ]
+    },
+    {
+      "id": "FN057",
+      "neutral_id": "BC03",
+      "rank": 6,
+      "raw_name": "Hydrolyzed Keratin",
+      "canonical_name": "HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "film_forming",
+        "hair_conditioning",
+        "humectant",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/6885/hydrolyzed-keratin/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view1",
+          "verbatim_function_heading_excerpt": "ANTISTATIC; FILM FORMING; HAIR CONDITIONING; HUMECTANT; SKIN CONDITIONING"
+        }
+      ]
+    },
+    {
+      "id": "FN058",
+      "neutral_id": "BC03",
+      "rank": 7,
+      "raw_name": "Hydrolyzed Keratin PG-Propyl Methylsilanediol",
+      "canonical_name": "HYDROLYZED KERATIN PG-PROPYL METHYLSILANEDIOL",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/6886/hydrolyzed-keratin-pg-propyl-methylsilanediol/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view2",
+          "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING"
+        }
+      ]
+    },
+    {
+      "id": "FN059",
+      "neutral_id": "BC03",
+      "rank": 8,
+      "raw_name": "Cocodimonium Hydroxypropyl Hydrolyzed Keratin",
+      "canonical_name": "COCODIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/21758/cocodimonium-hydroxypropyl-hydrolyzed-keratin/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view3",
+          "verbatim_function_heading_excerpt": "ANTISTATIC; HAIR CONDITIONING; SKIN CONDITIONING"
+        }
+      ]
+    },
+    {
+      "id": "FN060",
+      "neutral_id": "BC03",
+      "rank": 9,
+      "raw_name": "Laurdimonium Hydroxypropyl Hydrolyzed Keratin",
+      "canonical_name": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+      "roles": [
+        "antistatic",
+        "hair_conditioning",
+        "skin_conditioning"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/8019/laurdimonium-hydroxypropyl-hydrolyzed-keratin/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view4",
+          "verbatim_function_heading_excerpt": "ANTISTATIC; HAIR CONDITIONING; SKIN CONDITIONING"
+        }
+      ]
+    },
+    {
+      "id": "FN061",
+      "neutral_id": "BC03",
+      "rank": 10,
+      "raw_name": "Rosa Canina Fruit Oil",
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ROSA CANINA FRUIT OIL"
+        }
+      ]
+    },
+    {
+      "id": "FN062",
+      "neutral_id": "BC03",
+      "rank": 11,
+      "raw_name": "Phosphatidylcholine",
+      "canonical_name": "PHOSPHATIDYLCHOLINE",
+      "roles": [
+        "fragrance_functional",
+        "skin_conditioning",
+        "surfactant_emulsifying"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/11610/phosphatidylcholine/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn650view4",
+          "verbatim_function_heading_excerpt": "FRAGRANCE FUNCTIONAL; SKIN CONDITIONING; SURFACTANT - EMULSIFYING"
+        }
+      ]
+    },
+    {
+      "id": "FN063",
+      "neutral_id": "BC03",
+      "rank": 12,
+      "raw_name": "Schinziophyton Rautanenii Kernel Oil",
+      "canonical_name": "SCHINZIOPHYTON RAUTANENII KERNEL OIL",
+      "roles": [
+        "supplier_conditioning",
+        "supplier_moisturizing"
+      ],
+      "evidence": [
+        {
+          "publisher": "Caribbean Natural Products, Inc. (ingredient supplier)",
+          "url": "https://www.caribnaturalproducts.com/caribpure-manketti-seed-oil.html",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact INCI and supplier function bullets checked",
+          "web_reference": "turn650view1",
+          "verbatim_excerpt": "Conditioning; Protective; Moisturizing; INCI Name: Schinziophyton rautanenii Kernel Oil"
+        }
+      ]
+    },
+    {
+      "id": "FN064",
+      "neutral_id": "BC03",
+      "rank": 13,
+      "raw_name": "Aleurites Moluccanus Seed Oil",
+      "canonical_name": "ALEURITES MOLUCCANUS SEED OIL",
+      "roles": [
+        "intact_fixed_botanical_oil"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+          "entry": "kukui",
+          "scope": "identity/material family only"
+        }
+      ]
+    },
+    {
+      "id": "FN065",
+      "neutral_id": "BC03",
+      "rank": 14,
+      "raw_name": "Psidium Guajava Fruit Extract",
+      "canonical_name": "PSIDIUM GUAJAVA FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN066",
+      "neutral_id": "BC03",
+      "rank": 15,
+      "raw_name": "Aloe Barbadensis Leaf Juice",
+      "canonical_name": "ALOE BARBADENSIS LEAF JUICE",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN067",
+      "neutral_id": "BC03",
+      "rank": 16,
+      "raw_name": "Oenothera Biennis (Evening Primrose) Oil",
+      "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        }
+      ]
+    },
+    {
+      "id": "FN068",
+      "neutral_id": "BC03",
+      "rank": 17,
+      "raw_name": "Tocopheryl Acetate",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "TOCOPHERYL ACETATE"
+        }
+      ]
+    },
+    {
+      "id": "FN069",
+      "neutral_id": "BC03",
+      "rank": 18,
+      "raw_name": "Glycolipids",
+      "canonical_name": "GLYCOLIPIDS",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN070",
+      "neutral_id": "BC03",
+      "rank": 19,
+      "raw_name": "Water/Aqua/Eau",
+      "canonical_name": "AQUA",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "AQUA"
+        }
+      ]
+    },
+    {
+      "id": "FN071",
+      "neutral_id": "BC03",
+      "rank": 20,
+      "raw_name": "Hydrogenated Castor Oil/Sebacic Acid Copolymer",
+      "canonical_name": "HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER",
+      "roles": [
+        "hair_conditioning",
+        "skin_conditioning",
+        "skin_conditioning_emollient"
+      ],
+      "evidence": [
+        {
+          "publisher": "COSMILE Europe / Cosmetics Europe",
+          "url": "https://cosmileeurope.eu/inci/detail/6601/hydrogenated-castor-oil-sebacic-acid-copolymer/",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact name and Function(s) section checked",
+          "web_reference": "turn646view5",
+          "verbatim_function_heading_excerpt": "HAIR CONDITIONING; SKIN CONDITIONING; SKIN CONDITIONING - EMOLLIENT"
+        }
+      ]
+    },
+    {
+      "id": "FN072",
+      "neutral_id": "BC03",
+      "rank": 21,
+      "raw_name": "Arginine HCl",
+      "canonical_name": "ARGININE HCL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN073",
+      "neutral_id": "BC03",
+      "rank": 22,
+      "raw_name": "Glycerin",
+      "canonical_name": "GLYCERIN",
+      "roles": [
+        "humectant"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "GLYCERIN"
+        }
+      ]
+    },
+    {
+      "id": "FN074",
+      "neutral_id": "BC03",
+      "rank": 23,
+      "raw_name": "Thioctic Acid",
+      "canonical_name": "THIOCTIC ACID",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN075",
+      "neutral_id": "BC03",
+      "rank": 24,
+      "raw_name": "Butyl Methoxydibenzoylmethane",
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BUTYL METHOXYDIBENZOYLMETHANE"
+        }
+      ]
+    },
+    {
+      "id": "FN076",
+      "neutral_id": "BC03",
+      "rank": 25,
+      "raw_name": "Polyquaternium-55",
+      "canonical_name": "POLYQUATERNIUM-55",
+      "roles": [
+        "film_forming",
+        "foam_stabilizing"
+      ],
+      "evidence": [
+        {
+          "publisher": "Brenntag (ingredient supplier/distributor)",
+          "url": "https://www.brenntag.com/en-us/products/styleze-tm-w20.html",
+          "access_date": "2026-10-14",
+          "access_method": "live full-page web open; exact INCI and supplier description checked",
+          "web_reference": "turn650view0",
+          "verbatim_excerpt": "A film former and foam stabilizer.",
+          "identity_excerpt": "INCI name(s) Polyquaternium-55"
+        }
+      ]
+    },
+    {
+      "id": "FN077",
+      "neutral_id": "BC03",
+      "rank": 26,
+      "raw_name": "Sodium Hyaluronate",
+      "canonical_name": "SODIUM HYALURONATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN078",
+      "neutral_id": "BC03",
+      "rank": 27,
+      "raw_name": "Allantoin",
+      "canonical_name": "ALLANTOIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN079",
+      "neutral_id": "BC03",
+      "rank": 28,
+      "raw_name": "Sodium Ascorbyl Phosphate",
+      "canonical_name": "SODIUM ASCORBYL PHOSPHATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN080",
+      "neutral_id": "BC03",
+      "rank": 29,
+      "raw_name": "Benzoic Acid",
+      "canonical_name": "BENZOIC ACID",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN081",
+      "neutral_id": "BC03",
+      "rank": 30,
+      "raw_name": "Phenoxyethanol",
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "PHENOXYETHANOL"
+        }
+      ]
+    },
+    {
+      "id": "FN082",
+      "neutral_id": "BC03",
+      "rank": 31,
+      "raw_name": "Potassium Sorbate",
+      "canonical_name": "POTASSIUM SORBATE",
+      "roles": [
+        "preservative"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "POTASSIUM SORBATE"
+        }
+      ]
+    },
+    {
+      "id": "FN083",
+      "neutral_id": "BC03",
+      "rank": 32,
+      "raw_name": "Hydroxycitronellal",
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "HYDROXYCITRONELLAL"
+        }
+      ]
+    },
+    {
+      "id": "FN084",
+      "neutral_id": "BC03",
+      "rank": 33,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "LINALOOL"
+        }
+      ]
+    },
+    {
+      "id": "FN085",
+      "neutral_id": "BC03",
+      "rank": 34,
+      "raw_name": "Fragrance/Parfum",
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+          "entry": "FRAGRANCE/PARFUM"
+        }
+      ]
+    },
+    {
+      "id": "FN086",
+      "neutral_id": "BC04",
+      "rank": 1,
+      "raw_name": "Sesamum Indicum (Sesame) Seed Oil",
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "SESAMUM INDICUM SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN087",
+      "neutral_id": "BC04",
+      "rank": 2,
+      "raw_name": "Cocos Nucifera (Coconut) Oil",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "COCOS NUCIFERA OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN088",
+      "neutral_id": "BC04",
+      "rank": 3,
+      "raw_name": "Persea Americana (Avocado) Oil",
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN01",
+          "claim": "Exact whole-oil synonym identity."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+          "entry": "PERSEA GRATISSIMA OIL",
+          "claim": "Previously reviewed exact whole-oil generic functions only."
+        }
+      ]
+    },
+    {
+      "id": "FN089",
+      "neutral_id": "BC04",
+      "rank": 4,
+      "raw_name": "Prunus Dulcis (Sweet Almond) Oil",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN02",
+          "claim": "Exact whole-oil synonym identity."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+          "entry": "PRUNUS AMYGDALUS DULCIS OIL",
+          "claim": "Previously reviewed exact whole-oil generic functions only."
+        }
+      ]
+    },
+    {
+      "id": "FN090",
+      "neutral_id": "BC04",
+      "rank": 5,
+      "raw_name": "Argania Spinosa (Argan) Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN091",
+      "neutral_id": "BC04",
+      "rank": 6,
+      "raw_name": "Brahmi Herpestis (Brahmi) Fruit Extract",
+      "canonical_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN092",
+      "neutral_id": "BC04",
+      "rank": 7,
+      "raw_name": "Jasminum Officinale (Jasmin Absolute) Oil",
+      "canonical_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL",
+      "roles": [
+        "fragrance",
+        "moisturising",
+        "skin_conditioning",
+        "soothing"
+      ],
+      "evidence": [
+        {
+          "id": "SB-FN05",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "id": "FN093",
+      "neutral_id": "BC04",
+      "rank": 8,
+      "raw_name": "Tocopherol (Vitamin E)",
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "TOCOPHEROL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN094",
+      "neutral_id": "BC04",
+      "rank": 9,
+      "raw_name": "Azadirachta Indica (Neem) Oil",
+      "canonical_name": "AZADIRACHTA INDICA (NEEM) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "FN095",
+      "neutral_id": "BC04",
+      "rank": 10,
+      "raw_name": "Benzyl Benzoate\u03b5",
+      "canonical_name": "BENZYL BENZOATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL BENZOATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN096",
+      "neutral_id": "BC04",
+      "rank": 11,
+      "raw_name": "Linalool\u03b5",
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LINALOOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN097",
+      "neutral_id": "BC04",
+      "rank": 12,
+      "raw_name": "Eugenol\u03b5",
+      "canonical_name": "EUGENOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "EUGENOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN098",
+      "neutral_id": "BC04",
+      "rank": 13,
+      "raw_name": "Benzyl Alcohol\u03b5",
+      "canonical_name": "BENZYL ALCOHOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL ALCOHOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "id": "FN099",
+      "neutral_id": "BC04",
+      "rank": 14,
+      "raw_name": "Geraniol\u03b5",
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "evidence": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "GERANIOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limitations": [
+    "Exactly the four allowed inputs were read in full using bounded chunks. No repository, source, identity, prior-output, peer, memory-file or browser access occurred. No brands were inferred and no formula was spontaneously recognized. General ingredient familiarity was subordinated to the frozen dictionary.",
+    "Inherited general working instructions and memory summary were present in the agent context; no memory file was opened and no prior product result or identity was used.",
+    "The exact top-of-method case_id schema supersedes embedded older neutral_id and blind-notes.md examples. All three outputs were validated in memory before writing; output files were not semantically reread.",
+    "Every primary rank and raw/canonical spelling is preserved; formula code N4803/B remains contextual and was not added as an ingredient.",
+    "Closed-family booleans use complete dictionary review and include all positive exact ranks. Unassessed formulation functions are not silently converted to auxiliaries or to material priors.",
+    "All weight judgments are estimates with low confidence. Unknown base/penetration values identify specific permitted gaps; persistence remains a single committed scalar with separate reasons and all considered ranks.",
+    "The persistence application context is the exact admitted neutral leave-on fibre context from blind-packet.json. No unprovided manufacturer source ID, dose, washing schedule, scalp scenario or prewash removal factor was invented. Material weight priors were not used to set persistence; no binary build-up prior was accessed.",
+    "Stage 1 only. No Stage 2, source reveal, claims, product positioning or fit overlay was performed."
+  ]
+}

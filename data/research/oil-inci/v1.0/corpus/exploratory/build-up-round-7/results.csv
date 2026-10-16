@@ -1,0 +1,5 @@
+neutral_id,brand,product,build_up,estimate,confidence,lane_a,lane_b,source_url
+N01,JVN,Complete Nourishing Shine Drops,unknown,false,low,unknown,unknown,https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops
+N02,Biopark Cosmetics,Jojoba Oil Organic,unknown,false,low,unknown,unknown,https://biopark-cosmetics.com/products/jojoba-oil-30ml
+N03,Bumble and bumble,Hairdresser’s Invisible Oil Frizz Reducing Hair Oil,elevated,true,low,elevated,elevated,https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil
+N04,Color Wow,Pop & Lock High Gloss Finish,unknown,false,low,unknown,unknown,https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488

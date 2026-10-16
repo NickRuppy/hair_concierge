@@ -1,0 +1,124 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "cohorts": {
+    "fresh": {
+      "total": 6,
+      "lane_pair_raw_equal": 6,
+      "lane_pair_known_equal": 6,
+      "lane_pair_both_known": 6,
+      "classified_by_lane": {
+        "a": 6,
+        "b": 6,
+        "main": 6
+      }
+    },
+    "replay": {
+      "total": 4,
+      "lane_pair_raw_equal": 4,
+      "lane_pair_known_equal": 4,
+      "lane_pair_both_known": 4,
+      "classified_by_lane": {
+        "a": 4,
+        "b": 4,
+        "main": 4
+      }
+    }
+  },
+  "rows": [
+    {
+      "neutral_id": "Q01",
+      "cohort_group": "fresh",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q02",
+      "cohort_group": "replay",
+      "a": "light",
+      "b": "light",
+      "main": "light",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q03",
+      "cohort_group": "fresh",
+      "a": "light",
+      "b": "light",
+      "main": "medium",
+      "note": "Lanes light versus root initial medium; working reconciliation light with medium alternative."
+    },
+    {
+      "neutral_id": "Q04",
+      "cohort_group": "fresh",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q05",
+      "cohort_group": "replay",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q06",
+      "cohort_group": "fresh",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q07",
+      "cohort_group": "replay",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q08",
+      "cohort_group": "fresh",
+      "a": "light",
+      "b": "light",
+      "main": "light",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q09",
+      "cohort_group": "fresh",
+      "a": "medium",
+      "b": "medium",
+      "main": "medium",
+      "note": "Shared class; architecture, alternative and function gaps remain."
+    },
+    {
+      "neutral_id": "Q10",
+      "cohort_group": "replay",
+      "a": "medium",
+      "b": "medium",
+      "main": "light",
+      "note": "Lanes medium versus accepted/root light; working light retained, B4 early botanical tie-breaker remains too judgment-sensitive."
+    }
+  ],
+  "accepted_replay_consistency": {
+    "total": 4,
+    "a_matches": 3,
+    "b_matches": 3,
+    "main_initial_matches": 4,
+    "human_choices": {
+      "Q02": "light",
+      "Q05": "medium",
+      "Q07": "medium",
+      "Q10": "light"
+    },
+    "meaning": "Developmental policy-fit only; no sensory accuracy target."
+  },
+  "interpretation": "Lanes agree on classes, not all roles/alternatives. Fresh = transfer-to-new-oil-formula repeatability only; reused examples/cognitive recognition prevent clean holdout claim.",
+  "adjudication_file": "adjudication.json"
+}

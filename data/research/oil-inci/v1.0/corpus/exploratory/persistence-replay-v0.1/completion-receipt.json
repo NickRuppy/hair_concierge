@@ -1,0 +1,108 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "status": "complete_local_research_increment",
+  "branch": "codex/oil-inci",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "authorization": "Original oil integration approval plus OE57 explicit oil-only leave-on selection; decision coverage confirmed",
+  "content_fingerprint": "c8e281a953c4a203561058364be966141b9635e42d19cb1ce889e8a5a0dafb6c",
+  "files": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/README.md": "0d7b422379a554cd085000a2e7f8b602ca74c1333c14d424c21bc41a1a0a2a42",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-packet.json": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-stage-seal.json": "09fb0b386e37022996535513267d768c4d1c81d166d7d46c0030eca1f548464b",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/historical-preservation-final.json": "1a7746353c8a5c6ea7c535332712fe25c4ffc17224564d10e0055f3d7620cafe",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/input-manifest.json": "c30bde4b44fcf6978b001063ffbe5c791abff00a020e4ceb7fe00d309d210a6e",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/integration-notes.json": "dc6f8fdcc7b02dbd6436ffcf040e1f21377d0082b355542430bf286656dd368e",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-a/notes.json": "415aae15c2c2155f341cf35da4c8b3cacb059ffd67769c498691dc3d19da289d",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-a/records.json": "c7529e56f8395751c46436cfc94cf29343629ca4adef57b81f75d0b198649f29",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/notes.json": "bc9bc5aa91b8befe2614b85fee0cfd1a2c93c3d6d69e369f30de9907c3b2416a",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json": "1495771f7790df07b8a8d1f7d35e45b1754b5e0a11003e5939f3ebfb505e6816",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/method.md": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection-schema.json": "70916637152b71ddb30ef40a09ee346f37a782e520038073eac4b19fe4e6b451",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/research-decisions.json": "4e9b6b80874435f16cbb5c30d495e0b0c5dc5255a3b86c5a847ee3880a92ef6b",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/results-for-review.md": "dfa564a88699fd3d5a55ff73b987c3a29c206b49dcc6f5386adb9fe6c0375b9e",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/results.csv": "24ffced32cb85b1150389d872b2141b8a23ddb70b814e489d967e4fbadacffbd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/scope-decision.json": "306bc288887f60f33dafb9ee667a21ef6048b9aebc96d465ef766250899a8c62",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+    "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/verification-receipt.json": "8d888262ce37039642c86bc51ec3d6e11c429b01a7883dad6b9f16fa7f7513cf",
+    "docs/research/README.md": "136df5fcfb1e83e7031ab233a2705a2732100d81767f1bcd84b6478d1460906b",
+    "docs/research/oil-inci/README.md": "3e92e7b7ff3d5688f7bc462de7f8fa4fb9b82a8765f83a94fe298cf4b189743f",
+    "docs/research/oil-inci/v1.0/00_category-charter-v0.2.md": "c92f36d0294664dc05a9d7e74f4e63beac62f5ee0462b5856f00313e0f2fca72",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+    "plans/oil-inci/oil-engine-finalization-status-2026-10-09-v0.2.md": "5398ca2d39c6dd59ad7075e82d5cf3b518f409f9199ddc242976ccf8f342e831",
+    "plans/oil-inci/oil-persistence-integration-plan.md": "a259e17c73f9cfb6c489a2d337d254117ad9ca2735c99644d16106a03d9a324d",
+    "plans/oil-inci/phase1-decision-coverage.md": "6c9e665c0c9228b0f2f9c20f46196005c946aa3c92091e9a999cc217f6444c5c",
+    "plans/oil-inci/reviews/oil-leave-on-persistence-final-review-2026-10-09.md": "a178381bd066a06026fe364234969b376b8d22cf68bb07c46ac1ea67345c76da",
+    "plans/oil-inci/verify-oil-persistence-replay-final.py": "5ead65414519e63aeb269bda4a944873ce02af468f55230a4c1b8ae6a5e53090"
+  },
+  "input_manifest_sha256": "c30bde4b44fcf6978b001063ffbe5c791abff00a020e4ceb7fe00d309d210a6e",
+  "results": {
+    "admitted": 27,
+    "excluded_pre_wash_only": [
+      "O02"
+    ],
+    "low": 0,
+    "moderate": 15,
+    "high": 12,
+    "agreement": {
+      "count": 27,
+      "denominator": 27,
+      "meaning": "development repeatability only"
+    }
+  },
+  "checks": {
+    "full_replay_verifier": "passed",
+    "shared_pilot_verifier": "passed; receipt byte-identical",
+    "historical_preflight": "passed under its original preparation scope",
+    "tracked_diff_whitespace": "passed",
+    "increment_json_python_syntax": "passed",
+    "increment_markdown_links": "passed; copied method uses its source document bases",
+    "increment_whitespace": "passed",
+    "historical_files_unchanged": 428,
+    "negative_controls": [
+      "unknown_class",
+      "dropped_case",
+      "broken_evidence",
+      "confidence_field"
+    ]
+  },
+  "reviews": {
+    "counterpart_plan": "Prior single read-only review reconciled; latest context explicitly settled by user",
+    "main_correctness": "No blocking finding for this fingerprint",
+    "main_structural": "No blocking finding for this fingerprint",
+    "scope": "Current integration increment, not whole-branch publication readiness"
+  },
+  "process_limits": {
+    "partial_formula_familiarity": {
+      "a": [
+        "O01",
+        "O07",
+        "O11"
+      ],
+      "b": [
+        "O01",
+        "O07"
+      ]
+    },
+    "no_access_incident_or_prior_label_use_reported": true,
+    "interpretation": "Source-hidden development replay; no guaranteed cognitive blinding, unseen accuracy or measured persistence validation"
+  },
+  "artifact_disposition": {
+    "durable_files": "Commit-intended, uncommitted in owned oil worktree",
+    "temporary_generator_scripts": "Both discarded",
+    "historical_artifacts": "Preserved",
+    "production_and_publication": "No runtime, sibling migration, database, catalog, commit, push, PR or activation"
+  },
+  "remaining_gates": [
+    "Full-profile consolidation and exact evidence gaps",
+    "Inherited base-effect wording checkpoint",
+    "Pre-registered unseen holdout including low band and structure/film cases",
+    "Later deterministic oil intake projection/bridge and separate activation"
+  ],
+  "next_recommended_action": "Full-profile gap/consolidation pass, then unseen holdout"
+}

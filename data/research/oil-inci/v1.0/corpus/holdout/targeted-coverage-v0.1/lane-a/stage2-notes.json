@@ -1,0 +1,31 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "stage2-packet.json",
+    "lane-a/blind-records.json",
+    "method.md",
+    "function-dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e",
+    "lane-a/blind-records.json": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69"
+  },
+  "completed_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "access_incidents": [],
+  "blind_preserved": true,
+  "limitations": [
+    "Exactly the four source-stage allowlisted files were accessed. The method and dictionary were already fully reviewed in Stage 1 and their actual bytes were read and hashed for this stage. No browsing, other repository files, memory, source-record references, peer outputs or nested agents were accessed.",
+    "The only writes are the two new lane-a source-stage outputs. The sealed blind file hash matches the Stage 1 receipt; no blind formula decision or ingredient role was modified. Output structures were validated in memory without semantic output rereads.",
+    "Online maker declarations and supplied accepted-claim reviews are source-scoped evidence, not package/batch verification. Source limits remain applicable to all four cases.",
+    "Exact hero mappings only: the incomplete T02 species token is not expanded, T04 rosemary retains its unresolved prominence because no qualified suffix exists, and the T04 unmatched lavender hero has no ranked match.",
+    "T02 generic style finishing and T06 unspecified sun-use stage do not establish dry_finish. The T04 scalp-only pre-wash route does not establish fibre pre-wash. Every independent instruction retains its exact source, direction, site, stage, dose, contact time, removal and restrictions.",
+    "Heat and UV are accepted-claim gates. UV additionally requires an exact dictionary-recognized filter; no protection magnitude, KPF-to-SPF, treatment, tolerance, dose conversion, fit or production claim is derived."
+  ]
+}

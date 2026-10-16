@@ -1,0 +1,27 @@
+{
+  "overlay_id": "round-1-post-seal-source-amendment-0.1.1",
+  "captured_at": "2026-10-01",
+  "applies_to": "F05",
+  "source_id": "E05-maker-damp-styling-context",
+  "source_author": "Living Proof",
+  "url": "https://www.livingproof.com/collections/no-frizz/products/no-frizz-vanishing-oil",
+  "section": "FAQ: Does No Frizz Vanishing Oil have heat protection?",
+  "verbatim": false,
+  "direction_paraphrase": "The manufacturer separately instructs application to damp hair followed by a styler or heat protector. This establishes a retained damp styling scenario; dose, ends-specific placement and contact time are not supplied in this instruction.",
+  "scenario": {
+    "source_id": "E05-maker-damp-styling-context",
+    "direction_id": "F05-post-seal-maker-damp-style",
+    "supported_roles": [
+      "leave_on_fibre_conditioning"
+    ],
+    "site": [
+      "hair_fibre"
+    ],
+    "stage": "damp_before_styler_or_heat_protector",
+    "dose": "unestablished in this scenario",
+    "contact_time": "unestablished",
+    "removal": "retained_by_explicit_styling_context",
+    "restrictions": "No heat-protection property is inferred from the later styler. No dose/site restrictions imported from another scenario."
+  },
+  "effect": "Supports damp leave-on role under unchanged v0.1 method. Independent lane records, packets and comparison remain unchanged; this is a separate main-session derivation."
+}

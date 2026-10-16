@@ -1,0 +1,2545 @@
+{
+  "run_id": "oil-full-profile-stage2-v0.1",
+  "assembled_at": "2026-10-09",
+  "status": "assembled_pending_root_seal_and_review",
+  "scope": "17 admitted Stage2 source records. Source assembly only; no formula-property values, prominence classification, new aliases, or efficacy conclusions.",
+  "input_manifest": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a.json",
+      "sha256": "402ee7c6a67c8d0d4a19453c4b1e75e3e3d55dd59471e770c78134f7aa1f36a0"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json",
+      "sha256": "4e9446e3b6ae27be87a88aed9a437a3cf05a3ec90f4e666921fa76736d3f78ac"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json",
+      "sha256": "b6c2291038ce86239bf878ec3b659d92542734ce5afb8b9eaa267f96f5df70aa"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json",
+      "sha256": "179a487c9988fbe65cebdec1507f7a3b4a186024cdf250dcd9509da551862a84"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json",
+      "sha256": "5a4cb46777e58167fc4beb8a18c7492c6e39b8a87f0ef63bb85d270c39a583c3"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json",
+      "sha256": "19273c26b86275cfe147c137e1b684efdfb4c9f03db401530f6fe9cb439d657a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+      "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+    }
+  ],
+  "records": [
+    {
+      "case_id": "O09",
+      "identity": {
+        "brand": "NUXE",
+        "product": "Huile Prodigieuse original",
+        "market": "DE",
+        "size": "30 ml"
+      },
+      "sources": [
+        {
+          "id": "O09-maker",
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+          "reviewed_at": "2026-10-09",
+          "scope": "body,directions,ingredients",
+          "root_review": "2026-10-09 full exactDE30ml source page read; sameN2212/E formula.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "NUXE",
+        "product": "Huile Prodigieuse original",
+        "size": "30 ml selected; page variants retained separately",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "A few drops on lengths/ends as needed; FAQ 1–2 sprays on lengths/ends or weekly mask ≥10 minutes before shampoo."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Original only, not Riche/Florale/Or; actual hair directions establish eligibility despite multi-use claims. Formula code is not ingredient. No physical pack/batch verified."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "blend-weight-round-4/source-capture.json#Q01",
+        "current_page": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+        "evidence": "Current page labels 30 ml and reproduces frozen N2212/E INCI.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09"
+      },
+      "heroes": [
+        {
+          "hero_id": "nuxe_tsubaki",
+          "hero_name": "Tsubaki",
+          "canonical_ingredients": [
+            "CAMELLIA JAPONICA SEED OIL"
+          ],
+          "mapping_note": "Japanese camellia named Tsubaki; exact species correspondence needs independent maker identity binding for final prominence. Candidate correspondence retained from root supplement, not an established species alias.",
+          "source_id": "O09-maker",
+          "mapping_status": "candidate_unresolved"
+        },
+        {
+          "hero_id": "nuxe_argan",
+          "hero_name": "Argan",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "mapping_note": "Literal oil identity.",
+          "source_id": "O09-maker"
+        },
+        {
+          "hero_id": "nuxe_macadamia",
+          "hero_name": "Macadamia",
+          "canonical_ingredients": [
+            "MACADAMIA INTEGRIFOLIA SEED OIL"
+          ],
+          "mapping_note": "Exact formula species retained.",
+          "source_id": "O09-maker"
+        },
+        {
+          "hero_id": "nuxe_borage",
+          "hero_name": "Borretsch",
+          "canonical_ingredients": [
+            "BORAGO OFFICINALIS SEED OIL"
+          ],
+          "mapping_note": "Reviewed botanical translation; fixed seed-oil identity.",
+          "source_id": "O09-maker"
+        },
+        {
+          "hero_id": "nuxe_camellia",
+          "hero_name": "Kamelie",
+          "canonical_ingredients": [
+            "CAMELLIA OLEIFERA SEED OIL"
+          ],
+          "mapping_note": "Maker separately names Tsubaki/Kamelie; correspondence remains explicit mapping limit. Candidate correspondence retained from root supplement, not an established species alias.",
+          "source_id": "O09-maker",
+          "mapping_status": "candidate_unresolved"
+        },
+        {
+          "hero_id": "nuxe_hazelnut",
+          "hero_name": "Haselnuss",
+          "canonical_ingredients": [
+            "CORYLUS AVELLANA SEED OIL"
+          ],
+          "mapping_note": "Reviewed botanical translation.",
+          "source_id": "O09-maker"
+        },
+        {
+          "hero_id": "nuxe_almond",
+          "hero_name": "Süßmandel",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          ],
+          "mapping_note": "Reviewed literal botanical translation/parenthetical spelling. Root exact preparation-preserving common-name parenthesis normalization into this packet’s canonical keys; original source spelling retained in staging.",
+          "source_id": "O09-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O09-maker",
+        "reason": "Root read exactDE30ml manufacturerdescription/composition: seven individually named oils. No skinclinical/repair/omega claims adopted. Mapping caveats retained for two camellias."
+      },
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "O09-maker",
+        "observation": "30 ml page image/product format; no explicit outlet mechanism or use-direction dispensing verb establishes pump/dropper/spray.",
+        "source_capture_status": "gap"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O09-maker",
+          "reason": "Completed exact page body/directions/ingredients review found no explicit hair heat-protection claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O09-maker",
+          "reason": "Completed exact page body/directions/ingredients review found no explicit hair-UV protection claim; pollution claim is not UV.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O09-maker",
+          "direction_id": "O09-hair-1",
+          "text": "Warm a few drops in hands and apply to lengths and ends as often as necessary.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "unspecified",
+          "dose": "a few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O09/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O10",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Luminous Smoothing Oil",
+        "market": "DE",
+        "size": "source-captured DE page; size unverified"
+      },
+      "sources": [
+        {
+          "id": "O10-maker",
+          "url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "body,directions,ingredients",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Luminous Smoothing Oil",
+        "size": "DE maker page does not state size; US same-name 100 ml is corroboration only",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q03",
+        "scenario_index": null,
+        "scenario": {
+          "text": "1–2 pumps; apply to lengths/ends before blow-drying or on dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Complete DE maker declaration; local size/batch unverified.",
+        "Current root-supplement dose is 1–3 pumps for towel-dried use; original frozen context says 1–2 pumps. Both provenance scopes preserved; current dose does not overwrite historical context or transfer to dry finishing."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "blend-weight-round-4/source-capture.json#Q03",
+        "current_page": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+        "evidence": "Current DE page reproduces frozen 12-entry INCI.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10"
+      },
+      "heroes": [
+        {
+          "hero_id": "macadamia_oil",
+          "hero_name": "Macadamia oil",
+          "canonical_ingredients": [
+            "MACADAMIA TERNIFOLIA SEED OIL"
+          ],
+          "mapping_note": "Exact maker page positioning and frozen INCI.",
+          "source_id": "O10-maker"
+        },
+        {
+          "hero_id": "avocado_oil",
+          "hero_name": "Avocado oil",
+          "canonical_ingredients": [
+            "PERSEA GRATISSIMA (AVOCADO) OIL"
+          ],
+          "mapping_note": "Exact maker page positioning and frozen INCI.",
+          "source_id": "O10-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O10-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O10-maker",
+        "observation": "ExactDEsource directions explicitly instruct1–3pump strokes, which establishes pump under current standard; no spray or dropunitconversion."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O10-maker",
+          "reason": "Completed exact DE page review: no explicit heat-protection claim for this oil.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O10-maker",
+          "reason": "Completed exact DE page review: no explicit hair-UV claim or matching UV-filter claim gate.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O10-towel-dried-retained",
+          "source_id": "O10-maker",
+          "text": "Apply 1–3 pumps to hands, distribute on towel-dried lengths and ends, then style.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried",
+          "dose": "1–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10/directions"
+        },
+        {
+          "direction_id": "O10-dry-finish",
+          "source_id": "O10-maker",
+          "text": "Use a small amount on dry lengths and ends for finishing.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json#O10/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O11",
+      "identity": {
+        "brand": "Mielle",
+        "product": "Rosemary Mint Scalp & Hair Strengthening Oil",
+        "market": "US",
+        "size": "2 fl oz frozen scope"
+      },
+      "sources": [
+        {
+          "id": "O11-maker",
+          "url": "https://mielleorganics.com/products/rosemary-mint-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Product-specific maker review documented in source-group-a2.json#O11",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Mielle",
+        "product": "Rosemary Mint Scalp & Hair Strengthening Oil (Original)",
+        "size": "2 fl oz US; corroborating DE offer 59 ml",
+        "market": "US maker with matching DE Notino listing; no universal batch equivalence"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount on scalp; massage and comb through ends, leave in. Daily scalp/ends use; capped ends treatment can be rinsed/shampooed."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Preserve source misspellings Globolus/Melalueca and malformed Ocimum, Basilicum as unresolved display tokens; no silent generic correction. US maker/local offer scope only."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "persistence-replay-v0.1/source-packet.json#O11",
+        "evidence": "Current maker ingredient list reproduces the frozen 31-item raw INCI in the same order.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11"
+      },
+      "heroes": [
+        {
+          "hero_id": "rosemary_mint",
+          "hero_name": "Rosemary Mint",
+          "canonical_ingredients": [
+            "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+            "MENTHA PIPERITA (PEPPERMINT) OIL"
+          ],
+          "mapping_note": "Exact maker title; exact canonical formula forms.",
+          "source_id": "O11-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O11-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "O11-maker",
+        "observation": "Maker page asset was located but its outlet was not visually inspected in this capture; no dispenser value inferred.",
+        "source_capture_status": "blocker"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O11-maker",
+          "reason": "Completed product detail, benefits, directions, and ingredient review contains no exact product heat-protection claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O11-maker",
+          "reason": "Completed product detail, benefits, directions, and ingredient review contains no exact product hair-UV claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O11-scalp-combed-ends-retained",
+          "source_id": "O11-maker",
+          "text": "Apply a small amount directly to scalp, massage, comb through ends, leave in and style.",
+          "site": [
+            "scalp",
+            "ends"
+          ],
+          "stage": "unspecified",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11/directions",
+          "normalization_note": "Split the two explicitly captured maker scenarios; retained dose not transferred to capped washout treatment."
+        },
+        {
+          "direction_id": "O11-capped-ends-washout",
+          "source_id": "O11-maker",
+          "text": "Apply as a separate capped ends treatment; after 10 minutes rinse, then shampoo.",
+          "site": [
+            "ends"
+          ],
+          "stage": "treatment",
+          "dose": "unspecified",
+          "contact_time": "10 minutes",
+          "removal": "rinse_then_shampoo",
+          "restrictions": "Cover ends for this treatment; separate from retained scalp/ends scenario.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O11/directions",
+          "normalization_note": "Split the two explicitly captured maker scenarios; retained dose not transferred to capped washout treatment."
+        }
+      ]
+    },
+    {
+      "case_id": "O12",
+      "identity": {
+        "brand": "John Frieda",
+        "product": "Der Bändiger - Extra Strong Serum",
+        "market": "DE",
+        "size": "50 ml"
+      },
+      "sources": [
+        {
+          "id": "O12-maker",
+          "url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/seren/der-baendiger-extra-strong-serum/",
+          "reviewed_at": "2026-10-09",
+          "scope": "Product-specific maker review documented in source-group-a2.json#O12",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12"
+        },
+        {
+          "id": "O12-historical-directions",
+          "author": "John Frieda DE",
+          "url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/seren/der-baendiger-extra-strong-serum/",
+          "source_ref": "blend-weight-round-4/source-capture.json#Q06",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json#O12",
+          "scope": "Frozen structured application context; retained separately from current source review."
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "John Frieda",
+        "product": "Der Bändiger – Extra Strong Serum",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q06",
+        "scenario_index": null,
+        "scenario": {
+          "text": "One pump on wet/damp hair avoiding roots; air-dry/style. A few drops on dry hair for frizz."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Current DE exact name/formula differs from old All-in-1 UK/retail declarations. Pack/batch not inspected."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "persistence-replay-v0.1/source-packet.json#O12",
+        "evidence": "Current DE page reproduces the frozen nine-entry INCI exactly; no CH claim was transferred.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12"
+      },
+      "heroes": [
+        {
+          "hero_id": "rice_oil",
+          "hero_name": "Reisöl",
+          "canonical_ingredients": [
+            "ORYZA SATIVA (RICE) BRAN OIL"
+          ],
+          "mapping_note": "Source-reviewed literal named oil and declared canonical ingredient; assembly adds no alias.",
+          "source_id": "O12-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O12-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O12-maker",
+        "observation": "Exact DE directions say Einen Pumpstoß."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O12-maker",
+          "reason": "Exact DE page states Hitzeschutz bis 230 C.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O12-maker",
+          "reason": "Completed DE page review has no hair-UV claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12/claims/uv"
+        }
+      },
+      "current_direction_capture": {
+        "source_id": "O12-maker",
+        "texts": [
+          "One pump on wet hair avoiding roots; air-dry or style. Use a few drops on dry hair for frizz."
+        ],
+        "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O12/directions"
+      },
+      "directions": [
+        {
+          "source_id": "O12-historical-directions",
+          "direction_id": "O12-direction-1",
+          "text": "Apply one pump to wet or damp hair, avoiding roots; air-dry or style.",
+          "site": [
+            "hair"
+          ],
+          "stage": "wet_or_damp_before_styling",
+          "dose": "one pump",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "avoid roots",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json#O12/directions",
+          "normalization_note": "Exact frozen structured fallback for incomplete current direction fields; no cross-scenario value splicing."
+        },
+        {
+          "source_id": "O12-historical-directions",
+          "direction_id": "O12-direction-2",
+          "text": "Use a few drops on dry hair for frizz.",
+          "site": [
+            "hair"
+          ],
+          "stage": "dry_finish",
+          "dose": "a few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json#O12/directions",
+          "normalization_note": "Exact frozen structured fallback for incomplete current direction fields; no cross-scenario value splicing."
+        }
+      ]
+    },
+    {
+      "case_id": "O13",
+      "identity": {
+        "brand": "khadi",
+        "product": "Strong Amla Haaröl",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "O13-maker-root-successor",
+          "url": "https://khadi.de/products/haare-haaroel-strong-amla",
+          "reviewed_at": "2026-10-09",
+          "scope": "Direct complete product description, application, full33-entry ingredient glossary, recycling, featured ingredients; unrelated recommendations excluded.",
+          "access_method": "web full-text review plus direct HTTPS ingredient extraction and deterministic comparison",
+          "review_role": "root-requested successor independently verified by source integrator",
+          "formula_comparison": {
+            "method": "Extract dt ingredient names from the current maker ingredient dl; HTML entity decode and collapse surrounding/internal whitespace only. Compare exact ordered list against frozen raw_inci split by comma.",
+            "current_entry_count": 33,
+            "frozen_entry_count": 33,
+            "exact_ordered_match": true,
+            "current_ordered_list_sha256": "1e7919af3d1ad3dc30dd47481c2b87e91f721c2079e42fec395098181fab7de2",
+            "frozen_ordered_list_sha256": "1e7919af3d1ad3dc30dd47481c2b87e91f721c2079e42fec395098181fab7de2",
+            "current_html_sha256": "85bf9d0c2655f2d121027d013b55dbebf173acadbbba75a2507befddbbf91a3a",
+            "normalizations": [
+              "HTML entity decode",
+              "whitespace collapse only"
+            ],
+            "chemical_alias_substitutions": 0
+          }
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "assembled-stage2-source.json#O13/root-reviewed-successor",
+        "rule": "Direct current exact maker review and deterministic33-entry match supersede incorrect unverified groupA mismatch report; historical input remains unchanged."
+      },
+      "historical_identity": {
+        "brand": "khadi",
+        "product": "Strong Amla Haaröl",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q08",
+        "scenario_index": null,
+        "scenario": {
+          "text": "2–3 pumps on scalp/lengths; sparse daily leave-in or pre-wash 30–60 min/overnight 1–2 times weekly."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O13",
+        "source_id": "O13-maker-root-successor",
+        "comparison": {
+          "method": "Extract dt ingredient names from the current maker ingredient dl; HTML entity decode and collapse surrounding/internal whitespace only. Compare exact ordered list against frozen raw_inci split by comma.",
+          "current_entry_count": 33,
+          "frozen_entry_count": 33,
+          "exact_ordered_match": true,
+          "current_ordered_list_sha256": "1e7919af3d1ad3dc30dd47481c2b87e91f721c2079e42fec395098181fab7de2",
+          "frozen_ordered_list_sha256": "1e7919af3d1ad3dc30dd47481c2b87e91f721c2079e42fec395098181fab7de2",
+          "current_html_sha256": "85bf9d0c2655f2d121027d013b55dbebf173acadbbba75a2507befddbbf91a3a",
+          "normalizations": [
+            "HTML entity decode",
+            "whitespace collapse only"
+          ],
+          "chemical_alias_substitutions": 0
+        }
+      },
+      "heroes": [],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O13-maker-root-successor",
+        "reason": "Complete product and featured-ingredient review positions Amla, Tulsi, Brahmi and Bhringaraj as extract features. No intact named-oil hero promoted outside ingredient glossary."
+      },
+      "non_oil_hero_features": [
+        {
+          "name": "Amla",
+          "canonical_ingredients": [
+            "EMBLICA OFFICINALIS FRUIT EXTRACT"
+          ],
+          "source_id": "O13-maker-root-successor"
+        },
+        {
+          "name": "Tulsi",
+          "canonical_ingredients": [
+            "OCIMUM SANCTUM LEAF EXTRACT"
+          ],
+          "source_id": "O13-maker-root-successor"
+        },
+        {
+          "name": "Brahmi",
+          "canonical_ingredients": [
+            "BACOPA MONNIERI LEAF EXTRACT"
+          ],
+          "source_id": "O13-maker-root-successor"
+        },
+        {
+          "name": "Bhringaraj",
+          "canonical_ingredients": [
+            "ECLIPTA ALBA LEAF EXTRACT"
+          ],
+          "source_id": "O13-maker-root-successor"
+        },
+        {
+          "name": "khadi Amla Elixier",
+          "canonical_ingredients": [],
+          "source_id": "O13-maker-root-successor",
+          "mapping_note": "Advertised plant-extract mixture, no invented single oil identity."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O13-maker-root-successor",
+        "observation": "Application explicitly specifies pump strokes; recycling explicitly identifies a pump dispenser.",
+        "selected_package": "DE50ml",
+        "observation_method": "explicit_mechanism_text"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O13-maker-root-successor",
+          "reason": "Complete relevant product review found no finished-product heat-protection claim; towel warmth is treatment context."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O13-maker-root-successor",
+          "reason": "Complete relevant product review found no finished-product hairUV protection claim. Benzyl Salicylate glossary description as UV absorber is ingredient information only."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O13-daily-retained",
+          "source_id": "O13-maker-root-successor",
+          "text": "Daily leave-in use is separately permitted at a sparing dose.",
+          "site": [
+            "hair"
+          ],
+          "stage": "daily_leave_on",
+          "dose": "sparing amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "No prewash numeric dose or timing transferred."
+        },
+        {
+          "direction_id": "O13-prewash",
+          "source_id": "O13-maker-root-successor",
+          "text": "Apply2–3 pumps to scalp, then lengths and ends, or reverse that order. Keep hair warm in a towel; wash after30–60 minutes or overnight.",
+          "site": [
+            "scalp",
+            "lengths",
+            "ends"
+          ],
+          "stage": "pre_wash",
+          "dose": "2–3 pumps",
+          "contact_time": "30–60 minutes or overnight",
+          "removal": "shampoo",
+          "restrictions": "1–2 times weekly; brush application is an alternative within this prewash scenario."
+        }
+      ],
+      "source_limits": [
+        "Source * is organic marker and ** essential-oil constituent annotation; preserve source parentheticals/duplicates. Current web declaration only.",
+        "Very light or bleached hair may develop a temporary reddish tint; avoid eye contact and keep away from children.",
+        "No growth, greying or repair claims adopted. Public declaration matches; physical batch not verified.",
+        "Original historical context remains verbatim but its combined2–3-pump sentence is not used to dose the separately permitted daily leave-in."
+      ],
+      "superseded_capture": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a.json#O13",
+        "reported_status": "irreparable_current_source_conflict",
+        "reported_reason": "Current maker page displays a materially different ingredient sequence from the frozen source; do not merge.",
+        "disposition": "superseded_in_assembly_only",
+        "correction": "Earlier groupA report supplied no mismatch sequence. Direct current maker review now confirms all33 literal ingredient identities in frozen order; no reformulation or formula merge occurred."
+      }
+    },
+    {
+      "case_id": "O14",
+      "identity": {
+        "brand": "Moroccanoil",
+        "product": "Behandlung Original",
+        "market": "DE",
+        "size": "100 ml"
+      },
+      "sources": [
+        {
+          "id": "O14-maker",
+          "url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+          "reviewed_at": "2026-10-09",
+          "scope": "Product-specific maker review documented in source-group-a2.json#O14",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14"
+        },
+        {
+          "id": "O14-historical-directions",
+          "author": "Moroccanoil DE",
+          "url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+          "source_ref": "blend-weight-round-4/source-capture.json#Q09",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json#O14",
+          "scope": "Frozen structured application context; retained separately from current source review."
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Moroccanoil",
+        "product": "Behandlung Original",
+        "size": "100 ml selected; page also 25/50 ml",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q09",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount midlengths to ends of clean towel-dried hair; blow-dry or air-dry; also apply to dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Current DE web declaration; other official EU formula differs materially. No physical pack/batch verified."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "persistence-replay-v0.1/source-packet.json#O14",
+        "evidence": "Current DE 100 ml page reproduces the frozen MOT02 INCI.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14"
+      },
+      "heroes": [
+        {
+          "hero_id": "argan_oil",
+          "hero_name": "Argan-Öl",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "mapping_note": "Source-reviewed literal named oil and declared canonical ingredient; assembly adds no alias.",
+          "source_id": "O14-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O14-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "O14-maker",
+        "observation": "Exact 100 ml maker outlet was not visually inspected; page text does not establish a mechanism.",
+        "source_capture_status": "blocker"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O14-maker",
+          "reason": "Maker FAQ says treatment helps protect from heat damage.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O14-maker",
+          "reason": "Maker FAQ explicitly says it does not protect hair from UV rays.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14/claims/uv"
+        }
+      },
+      "current_direction_capture": {
+        "source_id": "O14-maker",
+        "texts": [
+          "Apply a small amount from mid-lengths to ends of clean towel-dried hair; blow-dry or air-dry; use on dry hair to smooth."
+        ],
+        "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json#O14/directions"
+      },
+      "directions": [
+        {
+          "source_id": "O14-historical-directions",
+          "direction_id": "O14-direction-1",
+          "text": "Apply a small amount from mid-lengths to ends of clean towel-dried hair; blow-dry or air-dry, or apply to dry hair.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "clean_towel_dried_or_dry",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json#O14/directions",
+          "normalization_note": "Exact frozen structured fallback for incomplete current direction fields; no cross-scenario value splicing."
+        }
+      ]
+    },
+    {
+      "case_id": "O16",
+      "identity": {
+        "brand": "Sunny Isle",
+        "product": "Rosemary Mint Hair and Strong Roots LITE Oil",
+        "size": "2 oz",
+        "market": "US"
+      },
+      "sources": [
+        {
+          "id": "O16-maker",
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16"
+        },
+        {
+          "id": "O16-front",
+          "url": "https://jamaicanblackcastoroil.com/cdn/shop/files/Sunny-Isle-Rosemary-Mint-Hair-and-Strong-Roots-LITE-Oil-2oz.jpg?v=1696518574&width=1080",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact 2oz maker product image, visually inspected label and pipette.",
+          "local_file": "images/group-b/O16-front.jpg",
+          "sha256": "57dc43a19fd68a927d37958a3fe3ca2cce7d405779b9a326e02644fe63525c44",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16"
+        },
+        {
+          "id": "O16-back",
+          "url": "https://jamaicanblackcastoroil.com/cdn/shop/files/Sunny-Isle-Rosemary-Mint-Hair-and-Strong-Roots-LITE-Oil-2oz-left.jpg?v=1696518575&width=1080",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact 2oz maker back-label image, visually inspected daily and hot-oil directions.",
+          "local_file": "images/group-b/O16-back.jpg",
+          "sha256": "a51f5b66e2d9b607cdcb5ba78a94edd1ced04bcd76171f8d6634988eb9ca1713",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Sunny Isle",
+        "product": "Rosemary Mint Hair and Strong Roots LITE Oil",
+        "size": "2 oz",
+        "market": "US"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json",
+        "source_context_key": "O16",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker permits daily hair care and use with protective styles such as braids or weaves, separately mentioning hot-oil treatment. This admits retained protective-style fibre care; no numeric hair dose or damp/dry stage is inferred."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "US maker only; no DE equivalence. Preserve unusual Oil declarations and duplicated Wheat Germ entries. LITE label is not weight evidence.",
+        "US maker scope only. Protective-style retained scenario does not inherit the hot-oil dose, heat or removal. Growth/repair and scalp efficacy claims are not assessed."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O16",
+        "current_page": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US 2oz maker page retains all 32 entries in order, including duplicated wheat germ and unusual Aloe leaf Oil / Vitamin E Oil declarations. SKU SIROSMINTLITE, barcode 00850054732064.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16"
+      },
+      "heroes": [
+        {
+          "hero_id": "rosemary_oil",
+          "hero_name": "Rosemary oil",
+          "canonical_ingredients": [
+            "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          ],
+          "mapping_note": "Named in title and product description; literal rosemary Oil declaration.",
+          "source_id": "O16-maker",
+          "ingredient_ranks": [
+            8
+          ]
+        },
+        {
+          "hero_id": "mint_oil",
+          "hero_name": "Mint oil",
+          "canonical_ingredients": [
+            "MENTHA ARVENSIS (PEPPERMINT) OIL"
+          ],
+          "mapping_note": "Title Mint maps to literal Mentha arvensis (Peppermint) Oil; preserve arvensis, do not substitute Mentha piperita.",
+          "source_id": "O16-maker",
+          "ingredient_ranks": [
+            7
+          ]
+        },
+        {
+          "hero_id": "jamaican_black_castor_oil",
+          "hero_name": "Jamaican black castor oil",
+          "canonical_ingredients": [
+            "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          ],
+          "mapping_note": "Maker highlights its Jamaican Black Castor Oil in this product; literal castor seed oil declaration. Geography/processing claim does not create a different INCI token.",
+          "source_id": "O16-maker",
+          "ingredient_ranks": [
+            1
+          ]
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O16-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "non_oil_hero_features": [
+        {
+          "name": "Biotin",
+          "ingredient_ranks": [
+            9
+          ],
+          "note": "Featured non-oil ingredient; not a named botanical oil."
+        }
+      ],
+      "packaging": {
+        "value": "dropper",
+        "status": "confirmed",
+        "source_id": "O16-front",
+        "observation": "Black bulb attached to a glass pipette on exact maker front image.",
+        "selected_package": "US 2oz SIROSMINTLITE",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O16-maker",
+          "reason": "Full product page and front/back label reviewed; no explicit hair heat-protection claim. Hot-oil treatment instructs heating, which is not heat protection.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16/claims/heat",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O16-maker",
+          "reason": "Full product page and front/back label reviewed; no explicit hair-UV protection claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16/claims/uv",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O16-protective-style-retained",
+          "source_id": "O16-maker",
+          "text": "Daily hair care includes protective styles such as braids and weaves; retained fibre scenario preserved from the original supplement.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16/directions"
+        },
+        {
+          "direction_id": "O16-daily-label",
+          "source_id": "O16-back",
+          "text": "Apply a small amount to scalp, comb through and style.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16/directions"
+        },
+        {
+          "direction_id": "O16-hot-oil-label",
+          "source_id": "O16-back",
+          "text": "Apply generously to scalp and through ends; apply heat for 15 minutes, then shampoo and style.",
+          "site": [
+            "scalp",
+            "ends"
+          ],
+          "stage": "unspecified",
+          "dose": "generous amount",
+          "contact_time": "15 minutes with heat",
+          "removal": "shampoo",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O16/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O17",
+      "identity": {
+        "brand": "khadi",
+        "product": "After Color Haaröl Color Protect",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "sources": [
+        {
+          "id": "O17-maker",
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "khadi",
+        "product": "After Color Haaröl Color Protect",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "2–3 pumps on dry lengths/ends before wash, 30–60 minutes or overnight; sparing leave-in daily use also permitted."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "DE maker 32-entry declaration; source organic/aroma footnotes removed by exact receipts, including literal VANILLIN***. Combined LAVANDULA OIL/ EXTRACT remains unresolved. Physical pack/batch unverified.",
+        "Do not transfer numeric prewash dose, dry stage or dwell time to the separate daily leave-in permission. Public formula, not physical batch."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O17",
+        "current_page": "https://khadi.de/products/haare-haaroel-color-care",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current 50ml German maker page reproduces the 32-entry declaration including VANILLIN*** and combined LAVANDULA OIL/ EXTRACT. Current title Color Protect and body Color Care occur on the same page; no formula merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17"
+      },
+      "heroes": [
+        {
+          "hero_id": "broccoli_seed_oil",
+          "hero_name": "Broccoli seed oil",
+          "canonical_ingredients": [
+            "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+          ],
+          "mapping_note": "Explicitly highlighted in product description; botanical name matches primary declaration.",
+          "source_id": "O17-maker",
+          "ingredient_ranks": [
+            3
+          ]
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O17-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "non_oil_hero_features": [
+        {
+          "name": "Senna",
+          "note": "Named plant feature, not an oil claim; no forced exact species mapping."
+        },
+        {
+          "name": "Centella",
+          "ingredient_ranks": [
+            14
+          ],
+          "note": "Leaf extract in INCI, not an oil."
+        },
+        {
+          "name": "khadi Color Care Elixier",
+          "note": "Advertised plant-extract mixture; no invented single INCI or concentration imported."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O17-maker",
+        "observation": "Application gives Pumphübe; package disposal explicitly names Pumpspender.",
+        "selected_package": "DE 50ml",
+        "observation_method": "explicit_mechanism_text",
+        "excerpt": "2- 3 Pumphübe"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O17-maker",
+          "reason": "Complete description, application, INCI and FAQ/recycling sections reviewed; no explicit heat-protection claim. Warm towel is treatment context.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17/claims/heat",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O17-maker",
+          "reason": "Product description explicitly claims the plant layer protects hair from UV rays; this is claim evidence, not filter identification.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17/claims/uv",
+          "excerpt": "bewahren es vor UV-Strahlen",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O17-daily-retained",
+          "source_id": "O17-maker",
+          "text": "Daily leave-in use is separately permitted with sparing application.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "sparing",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17/directions"
+        },
+        {
+          "direction_id": "O17-prewash",
+          "source_id": "O17-maker",
+          "text": "Earliest 24 hours after colouring, distribute 2–3 pumps over dry hair, especially coloured areas, lengths and ends; wrap in a towel, wait 30–60 minutes or overnight, then wash.",
+          "site": [
+            "hair_fibre",
+            "lengths",
+            "ends"
+          ],
+          "stage": "dry",
+          "dose": "2–3 pumps",
+          "contact_time": "30–60 minutes or overnight",
+          "removal": "wash",
+          "restrictions": "Prewash colour-care treatment: earliest 24 hours after colouring.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17/directions"
+        },
+        {
+          "direction_id": "O17-prewash-brush-alternative",
+          "source_id": "O17-maker",
+          "text": "As an alternative application route within the prewash treatment, brush the oil into scalp and hair.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "dry",
+          "dose": "same prewash treatment",
+          "contact_time": "30–60 minutes or overnight",
+          "removal": "wash",
+          "restrictions": "Alternative route within preceding prewash scenario, not an additional leave-on instruction.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O17/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O20",
+      "identity": {
+        "brand": "Schwarzkopf Professional",
+        "product": "Oil Ultime Rose Finishing Oil",
+        "size": "100 ml; IDH3050393; GTIN4067971053929",
+        "market": "FI/EU"
+      },
+      "sources": [
+        {
+          "id": "O20-maker",
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact IDH/GTIN identity, description, benefits, full INCI, application and warnings in indexed official product page.",
+          "access_method": "Search-indexed full official product content",
+          "direct_access_result": "Web direct open and direct HTTP fetch failed (403); official indexed result reviewed on 2026-10-09, index indicated crawled four weeks earlier.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20"
+        },
+        {
+          "id": "O20-brand",
+          "url": "https://www.schwarzkopf-professional.com/com/en/care/oil-ultime/rose-finishing-oil.html",
+          "reviewed_at": "2026-10-09",
+          "scope": "Official Rose product body and full FAQ; contemporary supporting use/claim evidence, not substitute INCI.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20"
+        },
+        {
+          "id": "O20-official-pdf",
+          "url": "https://dm.henkel-dam.com/is/content/henkel/GB_OilUltime_0524_OnePager_041488",
+          "reviewed_at": "2026-10-09",
+          "scope": "Official 2024 Oil Ultime document: product range, heat claim and capped Rose 100ml pack image; text reviewed and page1 visually inspected.",
+          "local_file": "images/group-b/O20-official.pdf",
+          "sha256": "def82b8db045f361798a4e3505dbe79a7d37b04080ff6465de9f01877a9e0568",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20"
+        },
+        {
+          "id": "O20-package-retailer",
+          "url": "https://www.haarshop.com/schwarzkopf-oil-ultime-rose-finishing-oil-100-ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Secondary exact-EAN4067971053929 / 100ml packaging corroboration ONLY; explicit pump verb; no retailer formula/claim transfer.",
+          "source_tier": "secondary",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Schwarzkopf Professional",
+        "product": "Oil Ultime Rose Finishing Oil",
+        "size": "100 ml; IDH3050393; GTIN4067971053929",
+        "market": "FI/EU"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R08",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount on towel-dried or dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "FI/EU official maker declaration. DE shop confirms SKU/size but not readable formula; no exact DE physical-pack equivalence claimed.",
+        "O20 dispenser uses exact-GTIN secondary explicit mechanism text. Official image remains capped; direct official shop access failed, so indexed exact official content supports other fields. No retailer formula/claim transfer."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O20",
+        "current_page": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Exact FI official indexed page for IDH3050393 / GTIN4067971053929 reproduces the 15-entry declaration, including Tetramethyl Acetyloctahydronaphthalenes, Geranyl Acetate and Rose Ketones. Older linalool/hexyl-cinnamal variant excluded.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20"
+      },
+      "heroes": [
+        {
+          "hero_id": "rose_oil",
+          "hero_name": "Rose oil",
+          "canonical_ingredients": [
+            "ROSA CANINA FRUIT OIL",
+            "ROSA DAMASCENA FLOWER OIL"
+          ],
+          "mapping_note": "Maker explicitly names rose oil as the combination of Rosa Canina fruit oil and Rosa Damascena flower oil; preserve both components, not one invented token.",
+          "source_id": "O20-maker",
+          "ingredient_ranks": [
+            3,
+            4
+          ]
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O20-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed_secondary_exact_gtin",
+        "source_id": "O20-package-retailer",
+        "observation": "Exact GTIN4067971053929 / 100ml retailer directions explicitly say to pump a small amount. Accepted as package evidence under the existing standard and root instruction; no primary visual mechanism asserted.",
+        "source_tier": "secondary",
+        "binding": "Same exact GTIN4067971053929 and100ml; secondary text only, not primary visual confirmation.",
+        "excerpt": "Pump a small amount of hair oil onto your hands",
+        "primary_observation": {
+          "source_id": "O20-official-pdf",
+          "observation": "Official exact-range image shows capped Rose100ml bottle; outlet mechanism is concealed. Direct official shop images unavailable behind403.",
+          "status": "reviewed_primary_mechanism_unresolved"
+        },
+        "selected_package": "100ml IDH3050393 GTIN4067971053929 FI/EU"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O20-maker",
+          "reason": "Exact official indexed product benefits explicitly state heat protection up to230°C; official product FAQ corroborates the finishing oils claim. Temperature is manufacturer claim, not independently measured efficacy.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20/claims/heat",
+          "excerpt": "heat protection up to 230°C",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O20-maker",
+          "reason": "Complete indexed official product body/benefits/INCI/how-to/warnings and official brand FAQ reviewed; no explicit hairUV protection claim. Keep-out-of-sunlight warning is storage, not hair protection.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20/claims/uv",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O20-retained",
+          "source_id": "O20-maker",
+          "text": "Apply a small amount to towel-dried or dry hair, then style as desired.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "towel_dried_or_dry",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20/directions"
+        },
+        {
+          "direction_id": "O20-prewash",
+          "source_id": "O20-maker",
+          "text": "The maker separately permits use as a pre-shampoo treatment or overnight oiling.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "pre-shampoo or overnight",
+          "removal": "shampoo",
+          "restrictions": "Separate from retained finishing context; no invented numeric dose or heating.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O20/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O21",
+      "identity": {
+        "brand": "JVN",
+        "product": "Complete Nourishing Shine Drops",
+        "size": "1.7 fl oz / 50 ml",
+        "market": "US maker/USD"
+      },
+      "sources": [
+        {
+          "id": "O21-maker",
+          "url": "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21"
+        },
+        {
+          "id": "O21-package",
+          "url": "https://jvnhair.com/cdn/shop/files/ShineDrops_AwardSeal.jpg?v=1743711280&width=900",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact maker50ml product image; pipette/bulb visually inspected.",
+          "local_file": "images/group-b/O21-package.jpg",
+          "sha256": "15948d98eca4ac9b9ab5a6bdbddf871520c2ffb01a9957c2cb85346b453e419d",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "JVN",
+        "product": "Complete Nourishing Shine Drops",
+        "size": "1.7 fl oz / 50 ml",
+        "market": "US maker/USD"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Few drops rubbed between palms, smoothed through damp or dry mid-lengths and ends; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public maker page declaration, not physical batch-label verification.",
+        "Market/size scope is literal page context; no cross-market formula join.",
+        "Claims are recorded as maker claims only; percentage is not an independent efficacy conclusion. Ingredient marketing does not prove UV-filter or heat-protection gates."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O21",
+        "current_page": "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US50ml maker page reproduces all13 primary entries plus the same separately marked fragrance sublist. Original missing separator within the fragrance phrase remains preserved; no nested primary ranks created.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21"
+      },
+      "heroes": [],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O21-maker",
+        "reason": "Completed description, key-ingredient, full-INCI and FAQ review: no intact named botanical oil is positioned as an oil hero. Featured Hemisqualane, Meadowfoam Ester and Hibiscus Extract are captured separately below; merely appearing in full INCI is not promotional positioning."
+      },
+      "non_oil_hero_features": [
+        {
+          "name": "Hemisqualane",
+          "canonical_ingredients": [
+            "HYDROGENATED FARNESENE"
+          ],
+          "ingredient_ranks": [
+            1
+          ],
+          "mapping_note": "Maker INCI footnote explicitly identifies sugarcane-derived Hemisqualane."
+        },
+        {
+          "name": "Meadowfoam Ester",
+          "canonical_ingredients": [
+            "MEADOWFOAM ESTOLIDE"
+          ],
+          "ingredient_ranks": [
+            5
+          ],
+          "mapping_note": "Featured meadowfoam ester maps to the declared estolide derivative, not the separately declared Meadowfoam Seed Oil rank4."
+        },
+        {
+          "name": "Hibiscus Extract",
+          "canonical_ingredients": [
+            "HIBISCUS SABDARIFFA FLOWER EXTRACT"
+          ],
+          "ingredient_ranks": [
+            7
+          ],
+          "mapping_note": "Literal flower extract, not hibiscus seed oil."
+        }
+      ],
+      "packaging": {
+        "value": "dropper",
+        "status": "confirmed",
+        "source_id": "O21-package",
+        "observation": "Maker image shows dropper bulb and pipette tube for labelled50ml bottle.",
+        "selected_package": "US1.7fl oz50ml",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O21-maker",
+          "reason": "Full product details, benefits, clinical results, key/full ingredients, directions and FAQ reviewed; no explicit product heat-protection claim. Heat Protection navigation excluded.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21/claims/heat",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O21-maker",
+          "reason": "Product details and clinical-results section explicitly claim hairUV protection. Claim acceptance does not establish a recognized UV filter.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21/claims/uv",
+          "excerpt": "Provides 100% UV Protection of hair",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O21-retained",
+          "source_id": "O21-maker",
+          "text": "Rub a few drops between palms and smooth through damp or dry mid-lengths and ends.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21/directions"
+        },
+        {
+          "direction_id": "O21-finish",
+          "source_id": "O21-maker",
+          "text": "FAQ permits finishing after air-drying or diffusing to finish styling and break a cast.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "after_air_drying_or_diffusing",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O21/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O22",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Jojoba Oil Organic",
+        "size": "30 ml",
+        "market": "Maker EUR storefront; country unspecified"
+      },
+      "sources": [
+        {
+          "id": "O22-maker",
+          "url": "https://biopark-cosmetics.com/products/jojoba-oil-30ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22"
+        },
+        {
+          "id": "O22-front",
+          "url": "https://biopark-cosmetics.com/cdn/shop/files/Biopark-Cosmetics-Organic-Jojoba_Oil_30ml.webp?v=1788451194&width=1200",
+          "reviewed_at": "2026-10-09",
+          "scope": "Maker30ml product image visually inspected: JOJOBINO OLJE label and pump actuator; image alt text erroneously names olive oil.",
+          "local_file": "images/group-b/O22-front.webp",
+          "sha256": "c18c3ca285075345e40a0745beeba9159cae2b9c76fb355324b75db00500a91a",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Jojoba Oil Organic",
+        "size": "30 ml",
+        "market": "Maker EUR storefront; country unspecified"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N02",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Hair/scalp treatment at least 30 minutes then shampoo; separate small amount on dry ends retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public maker page declaration, not physical batch-label verification.",
+        "Market/size scope is literal page context; no cross-market formula join.",
+        "EUR maker storefront country unspecified; no DE market or physical-batch equivalence assumed. Retained ends use is separate from scalp/prewash."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O22",
+        "current_page": "https://biopark-cosmetics.com/products/jojoba-oil-30ml",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current maker30ml page declares Simmondsia Chinensis Seed Oil with the same organic-production annotation; annotation is not an ingredient.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22"
+      },
+      "heroes": [
+        {
+          "hero_id": "jojoba_oil",
+          "hero_name": "Jojoba oil",
+          "canonical_ingredients": [
+            "SIMMONDSIA CHINENSIS SEED OIL"
+          ],
+          "mapping_note": "Title and description explicitly position jojoba; single declared seed oil. Botanical identity mapping only, no physical-property classification.",
+          "source_id": "O22-maker",
+          "ingredient_ranks": [
+            1
+          ]
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O22-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O22-front",
+        "observation": "White pump actuator under transparent protective cap; visible bottle label identifies jojoba despite erroneous olive-oil alt text.",
+        "selected_package": "Maker30ml jojoba bottle",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O22-maker",
+          "reason": "Complete description, hair/skin use and ingredient sections reviewed; no explicit hair heat-protection claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22/claims/heat",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O22-maker",
+          "reason": "Complete description, hair/skin use and ingredient sections reviewed; no explicit hairUV protection claim. Skin benefits not transferred.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22/claims/uv",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O22-prewash",
+          "source_id": "O22-maker",
+          "text": "Apply as hair/scalp treatment for at least30 minutes, then shampoo.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "at least30 minutes",
+          "removal": "shampoo",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22/directions"
+        },
+        {
+          "direction_id": "O22-dry-ends-retained",
+          "source_id": "O22-maker",
+          "text": "Rub a small amount between palms and apply to dry ends.",
+          "site": [
+            "ends"
+          ],
+          "stage": "dry",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O22/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O23",
+      "identity": {
+        "brand": "Bumble and bumble",
+        "product": "Hairdresser’s Invisible Oil Frizz Reducing Hair Oil",
+        "size": "Page options 3.4 fl oz / 0.85 fl oz; shared page declaration",
+        "market": "US maker"
+      },
+      "sources": [
+        {
+          "id": "O23-maker",
+          "url": "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23"
+        },
+        {
+          "id": "O23-front",
+          "url": "https://m.bumbleandbumble.com/media/images/products/650x650/bb_sku_B1G701_44578_650x650_0.jpg",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact maker B1G7013.4fl oz100ml image; white pump and heat/UV label text visually inspected.",
+          "local_file": "images/group-b/O23-front.jpg",
+          "sha256": "5a41f8ff5056f41266f367c39245e6d9f78abf46b01d79de344b3187cd3db78b",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Bumble and bumble",
+        "product": "Hairdresser’s Invisible Oil Frizz Reducing Hair Oil",
+        "size": "Page options 3.4 fl oz / 0.85 fl oz; shared page declaration",
+        "market": "US maker"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N03",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Sparingly on damp hair before heat styling or smooth through dry hair for shine; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public maker page declaration, not physical batch-label verification.",
+        "Market/size scope is literal page context; no cross-market formula join.",
+        "Current shared page formula remains frozen source authority; physical batch not verified. Pack-specific claim/mechanism evidence limited to3.4fl oz100ml image. Page warns ingredient lists may change."
+      ],
+      "source_admission": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O23",
+        "current_page": "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US maker page reproduces the original24-entry formula exactly. The shared page offers3.4fl oz and.85fl oz; selected pack observation is specifically3.4fl oz100ml and does not assert the mini dispenser.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23"
+      },
+      "heroes": [
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Coconut oil",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA (COCONUT) OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact coconut declaration.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            10
+          ]
+        },
+        {
+          "hero_id": "argan_oil",
+          "hero_name": "Argan oil",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact argan kernel oil.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            13
+          ]
+        },
+        {
+          "hero_id": "grape_seed_oil",
+          "hero_name": "Grape seed oil",
+          "canonical_ingredients": [
+            "VITIS VINIFERA (GRAPE) SEED OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; seed OIL rank11, not grape seed EXTRACT rank5.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            11
+          ]
+        },
+        {
+          "hero_id": "macadamia_oil",
+          "hero_name": "Macadamia oil",
+          "canonical_ingredients": [
+            "MACADAMIA TERNIFOLIA SEED OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact Macadamia ternifolia seed oil.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            8
+          ]
+        },
+        {
+          "hero_id": "sweet_almond_oil",
+          "hero_name": "Sweet almond oil",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact sweet almond oil.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            12
+          ]
+        },
+        {
+          "hero_id": "safflower_seed_oil",
+          "hero_name": "Safflower seed oil",
+          "canonical_ingredients": [
+            "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact safflower seed oil.",
+          "source_id": "O23-maker",
+          "ingredient_ranks": [
+            14
+          ]
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O23-maker",
+        "reason": "Completed named-oil positioning review in selected source capture; names and ingredient correspondences copied without new classification."
+      },
+      "excluded_or_separate_contexts": [
+        {
+          "source_id": "O23-maker",
+          "text": "Pro tip adds a few drops into conditioner.",
+          "reason": "Mixture context; do not reuse as a standalone retained oil application or assign conditioner removal rules to this oil."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O23-front",
+        "observation": "Visible white pump actuator on the exact100ml maker image.",
+        "selected_package": "US3.4fl oz100ml B1G701",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O23-front",
+          "reason": "Exact selected maker label explicitly claims heat/UV damage protection. No temperature shown. Nearby450°F claims for primer/cream excluded.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23/claims/heat",
+          "excerpt": "protects against heat/UV damage",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O23-maker",
+          "reason": "Exact oil body says UV filters help protect hair against sun drying; exact selected label also namesUV damage protection.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23/claims/uv",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O23-damp-retained",
+          "source_id": "O23-maker",
+          "text": "Apply sparingly to damp hair before heat styling.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "damp_before_heat_styling",
+          "dose": "sparing",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23/directions"
+        },
+        {
+          "direction_id": "O23-dry-finish",
+          "source_id": "O23-maker",
+          "text": "Smooth through dry hair for shine, starting small and adding more when needed.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry",
+          "dose": "small amount; add if necessary",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json#O23/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O24",
+      "identity": {
+        "brand": "Color Wow",
+        "product": "Pop & Lock High Gloss Finish",
+        "size": "Selected travel 0.4 fl oz; page also offers full 1.8 fl oz",
+        "market": "US maker"
+      },
+      "sources": [
+        {
+          "id": "O24-maker",
+          "url": "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Color Wow",
+        "product": "Pop & Lock High Gloss Finish",
+        "size": "Selected travel 0.4 fl oz; page also offers full 1.8 fl oz",
+        "market": "US maker"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Few drops on wet or dry lower lengths/ends; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public maker page declaration, not physical batch-label verification.",
+        "Market/size scope is literal page context; no cross-market formula join.",
+        "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      ],
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24"
+      },
+      "heroes": [],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O24-maker",
+        "reason": "Reviewed product description, benefits, ingredients, lab note and FAQ: oil/serum language but no named botanical-oil hero."
+      },
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "O24-maker",
+        "observation": "Exact travel12ml manufacturer variant image inspected: capped outlet is hidden; mechanism unestablished. Do not inherit fullsize55ml pump.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O24-front.jpg",
+        "image_sha256": "a9e951805dd52a824265642347eb41205f89b87f9d2a1872f6aa7eb64e2b6d45",
+        "variant_binding": {
+          "product_json_url": "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum.js",
+          "variant_id": 41342159159488,
+          "image_url": "https://cdn.shopify.com/s/files/1/0587/5210/6688/files/CW213_Pop_Lock_12ml_pdp_main_image_2048x2048_39c1e68e-e9e9-405a-a585-4fac63559f32.jpg?v=1770219539"
+        },
+        "source_capture_status": "observed_mechanism_unestablished"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O24-maker",
+          "reason": "Product header identifies heat protectant; benefits list heat protection; FAQ explicitly confirms.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24/claims/heat"
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O24-maker",
+          "reason": "Benefits explicitly claim UV protection against hair color fade.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O24-maker",
+          "direction_id": "O24-direction-1",
+          "text": "Apply a few drops on wet or dry lower lengths and ends; retain.",
+          "site": [
+            "lower_lengths",
+            "ends"
+          ],
+          "stage": "wet_or_dry",
+          "dose": "few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "For extensions, avoid bonds/attachment areas; maker FAQ.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O24/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O25",
+      "identity": {
+        "brand": "Davines",
+        "product": "OI Oil",
+        "market_size": "US maker; 135 ml default page / 50 ml option"
+      },
+      "sources": [
+        {
+          "id": "O25-maker",
+          "url": "https://us.davines.com/products/oi-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Davines",
+        "product": "OI Oil",
+        "market_size": "US maker; 135 ml default page / 50 ml option"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+        "source_context_key": "C01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Retained: 2–3 pumps towel-dried hair before styling; dry lengths/ends finish, fine hair start one pump."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels.",
+        "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      ],
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25"
+      },
+      "heroes": [
+        {
+          "hero_id": "roucou_oil",
+          "hero_name": "Roucou oil",
+          "canonical_ingredients": [],
+          "mapping_note": "Maker identifies Achiote seed-derived Roucou oil, but INCI declares BIXA ORELLANA SEED EXTRACT. Oil/extract equivalence not established; do not substitute MAURITIA FLEXUOSA FRUIT OIL.",
+          "source_id": "O25-maker",
+          "mapping_status": "unresolved_oil_extract_identity"
+        },
+        {
+          "hero_id": "sunflower_oil",
+          "hero_name": "Sunflower seed oil",
+          "canonical_ingredients": [
+            "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          ],
+          "mapping_note": "Exact reviewed botanical parenthetical spelling in FAQ and formula. Root exact preparation-preserving common-name parenthesis normalization into this packet’s canonical keys; original source spelling retained in staging.",
+          "source_id": "O25-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O25-maker",
+        "reason": "Ingredient highlight and FAQ explicitly name Roucou oil; sunflower seed oil also discussed in FAQ."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O25-maker",
+        "observation": "Exact maker page packaging components explicitly lists pump and directions specify2–3pumps; selected135ml default."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O25-maker",
+          "reason": "Maker FAQ recommends separate true heat protectant; generic styling/environment protection is insufficient.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O25-maker",
+          "reason": "Full current product description/benefits/FAQ reviewed: no explicit hairUV claim; filter presence alone insufficient.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O25-maker",
+          "direction_id": "O25-direction-1",
+          "text": "Apply 2–3 pumps to towel-dried hair before styling.",
+          "site": [
+            "hair"
+          ],
+          "stage": "towel_dried_before_styling",
+          "dose": "2–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Fine hair starts with one pump.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25/directions"
+        },
+        {
+          "source_id": "O25-maker",
+          "direction_id": "O25-direction-2",
+          "text": "Use on dry lengths and ends to finish.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Fine-hair one-pump statement recorded in the separate damp/styling instruction; no dose imported here.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O25/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O26",
+      "identity": {
+        "brand": "Verb",
+        "product": "Ghost Oil",
+        "market_size": "US maker; current shared product page"
+      },
+      "sources": [
+        {
+          "id": "O26-maker",
+          "url": "https://www.verbproducts.com/products/ghost-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Verb",
+        "product": "Ghost Oil",
+        "market_size": "US maker; current shared product page"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+        "source_context_key": "C02",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Retained: 2–3 pumps mid-lengths/ends of damp/dry hair, comb to distribute; more as needed."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels.",
+        "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      ],
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26"
+      },
+      "heroes": [
+        {
+          "hero_id": "moringa_oil",
+          "hero_name": "Moringa Oil",
+          "canonical_ingredients": [
+            "MORINGA OLEIFERA SEED OIL"
+          ],
+          "mapping_note": "Literal seed-oil identity; other featured green tea extract/proteins not named oils.",
+          "source_id": "O26-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O26-maker",
+        "reason": "Reviewed ingredients/key ingredients: named oil hero Moringa."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O26-maker",
+        "observation": "Maker directions explicitly instruct2–3pumps; US default2floz selected within prior shared-page identity."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O26-maker",
+          "reason": "Maker claims450°F/232°C; manufacturer Q&A confirms heat protection.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O26-maker",
+          "reason": "Maker Q&A explicitly denies UV protection despite Polysilicone-15 in formula.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O26-maker",
+          "direction_id": "O26-direction-1",
+          "text": "Apply 2–3 pumps to mid-lengths and ends of damp or dry hair and comb to distribute; retain.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "2–3 pumps; more as needed",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O26/directions"
+        }
+      ]
+    },
+    {
+      "case_id": "O27",
+      "identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "sources": [
+        {
+          "id": "O27-maker",
+          "url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+        "source_context_key": "O27",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels.",
+        "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      ],
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27"
+      },
+      "heroes": [
+        {
+          "hero_id": "pomegranate_oil",
+          "hero_name": "Pomegranate seed oil",
+          "canonical_ingredients": [
+            "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          ],
+          "mapping_note": "Exact retained declared form.",
+          "source_id": "O27-maker"
+        },
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Certified organic coconut oil",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA (COCONUT) OIL"
+          ],
+          "mapping_note": "Reviewed parenthetical coconut spelling is normalized to existing canonical identity. Root exact preparation-preserving common-name parenthesis normalization into this packet’s canonical keys; original source spelling retained in staging.",
+          "source_id": "O27-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O27-maker",
+        "reason": "Reviewed superfood complex, featured ingredients and productdescription. Mango is explicitly butter, not another named-oil claim."
+      },
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O27-maker",
+        "observation": "Maker selected30ml AWGM01 image visually inspected: exposed dispensing pump/nozzle, not spray/pipette.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O27-front.jpg",
+        "image_sha256": "e770b0125f1326c9781b26d198b250f61f8c49159639ef1c7db524fc1fb233fd"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O27-maker",
+          "reason": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O27-maker",
+          "reason": "No explicit product-specific hairUV protection claim in reviewed sections.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O27-maker",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+          "direction_id": "O27-prewash",
+          "text": "Distribute on dry hair from scalp through ends, then follow usual washing.",
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "pre_wash_dry",
+          "removal": "usual_wash_day_routine"
+        },
+        {
+          "source_id": "O27-maker",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+          "direction_id": "O27-leavein",
+          "text": "Distribute on towel-dried hair and style.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "towel_dried",
+          "removal": "retained_by_styling_context"
+        },
+        {
+          "source_id": "O27-maker",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+          "direction_id": "O27-finish",
+          "text": "Apply as needed to dry mid-lengths and ends.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "removal": "leave_on"
+        },
+        {
+          "source_id": "O27-maker",
+          "dose": "unestablished",
+          "contact_time": "overnight",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+          "direction_id": "O27-overnight",
+          "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day.",
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "overnight_pre_wash",
+          "removal": "usual_wash_day_routine_next_day"
+        },
+        {
+          "source_id": "O27-maker",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+          "direction_id": "O27-scalp",
+          "text": "Massage into scalp.",
+          "site": [
+            "scalp"
+          ],
+          "stage": "unspecified",
+          "removal": "unestablished"
+        }
+      ]
+    },
+    {
+      "case_id": "O28",
+      "identity": {
+        "brand": "The Ordinary",
+        "product": "100% Cold-Pressed Virgin Marula Oil",
+        "market_size": "US maker; 30 ml"
+      },
+      "sources": [
+        {
+          "id": "O28-maker",
+          "url": "https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28"
+        }
+      ],
+      "source_precedence": {
+        "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28",
+        "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+      },
+      "historical_identity": {
+        "brand": "The Ordinary",
+        "product": "100% Cold-Pressed Virgin Marula Oil",
+        "market_size": "US maker; 30 ml"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+        "source_context_key": "O28",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker instructs working through clean damp hair daily or as needed. Face-dose instructions do not transfer to hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels.",
+        "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      ],
+      "source_admission": {
+        "status": "confirmed_exact_ordered_declaration",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+        "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28"
+      },
+      "heroes": [
+        {
+          "hero_id": "marula_oil",
+          "hero_name": "100% Virgin Marula Seed Oil",
+          "canonical_ingredients": [
+            "SCLEROCARYA BIRREA SEED OIL"
+          ],
+          "mapping_note": "Literal single-ingredient identity.",
+          "source_id": "O28-maker"
+        }
+      ],
+      "hero_review": {
+        "review_complete": true,
+        "source_id": "O28-maker",
+        "reason": "Title/keyingredients/about explicitly identify100%marula seedoil. Skinclaims nottransferred tohair."
+      },
+      "packaging": {
+        "value": "dropper",
+        "status": "confirmed",
+        "source_id": "O28-maker",
+        "observation": "Exact maker30ml image visually inspected: bulb/pipette closure. Facefewdrops nothairdose.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O28-front.png",
+        "image_sha256": "a56e56dc84a8c5f0bb6f185a1d568e7ec9e5b12bf977e84ee4bcb8a7b7f30277"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O28-maker",
+          "reason": "Complete currentproductdetails/highlights/usage reviewed; no explicit hairheat protection claim.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28/claims/heat"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O28-maker",
+          "reason": "No explicit hairUV protectionclaim; skinantioxidant/radiance language excluded.",
+          "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28/claims/uv"
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O28-maker",
+          "direction_id": "O28-direction-1",
+          "text": "Maker instructs working through clean damp hair daily or as needed.",
+          "site": [
+            "hair"
+          ],
+          "stage": "clean_damp",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Face-dose directions do not transfer.",
+          "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O28/directions"
+        }
+      ]
+    }
+  ],
+  "blocked_records": [],
+  "concerns": [
+    {
+      "case_id": "O09",
+      "field": "heroes",
+      "reason": "Tsubaki/Kamelie species correspondences remain explicit unresolved candidates; no new alias established."
+    },
+    {
+      "case_id": "O09",
+      "field": "packaging",
+      "reason": "30 ml page image/product format; no explicit outlet mechanism or use-direction dispensing verb establishes pump/dropper/spray."
+    },
+    {
+      "case_id": "O10",
+      "field": "directions",
+      "reason": "Current reviewed 1–3 pumps differs from frozen 1–2 pumps; source scopes kept separate."
+    },
+    {
+      "case_id": "O11",
+      "field": "packaging",
+      "reason": "Maker page asset was located but its outlet was not visually inspected in this capture; no dispenser value inferred."
+    },
+    {
+      "case_id": "O14",
+      "field": "packaging",
+      "reason": "Exact 100 ml maker outlet was not visually inspected; page text does not establish a mechanism."
+    },
+    {
+      "case_id": "O24",
+      "field": "packaging",
+      "reason": "Exact travel12ml manufacturer variant image inspected: capped outlet is hidden; mechanism unestablished. Do not inherit fullsize55ml pump."
+    },
+    {
+      "case_id": "O25",
+      "field": "heroes",
+      "reason": "Roucou oil retained as named hero with empty canonical list because declared seed extract does not establish oil identity."
+    }
+  ],
+  "verification": {
+    "admitted_records": 17,
+    "blocked_records": 0,
+    "unique_total_cases": 17,
+    "all_source_ids_resolve": true,
+    "all_directions_have_complete_scenario_fields": true,
+    "original_retained_contexts_preserved": true,
+    "hero_names_unchanged": true,
+    "empty_hero_arrays_have_reviewed_absence_basis": true,
+    "claim_reviews_documented": 34,
+    "input_bytes_unchanged": true,
+    "formula_property_classifications_added": 0,
+    "root_successor_formula_equality_O13": true
+  },
+  "corrections": [
+    {
+      "case_id": "O13",
+      "source_id": "O13-maker-root-successor",
+      "reason": "Earlier groupA report supplied no mismatch sequence. Direct current maker review now confirms all33 literal ingredient identities in frozen order; no reformulation or formula merge occurred."
+    }
+  ],
+  "root_review": "Root reviewed source groups; explicit exact-form hero name normalizations and complete Aveda directions below supersede earlier incomplete capture. No formula judgments in this packet."
+}

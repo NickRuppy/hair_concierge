@@ -1,0 +1,64 @@
+{
+  "audit_id": "blend-contrast-frozen-input-audit-2026-10-14",
+  "scope": "Frozen blind inputs and their declared local source/function provenance. No blind-lane output was opened or read; no normative/source change, browser activity, database write, or heavy verification was performed.",
+  "verdict": "READY_WITH_LIMITS",
+  "hard_blockers": [],
+  "verified": {
+    "raw_rank_preservation": {
+      "total_ranks": 99,
+      "records": [
+        {"neutral_id":"BC01","ranks":25,"draft_raw_rank_sequence_equal":true},
+        {"neutral_id":"BC02","ranks":26,"draft_raw_rank_sequence_equal":true},
+        {"neutral_id":"BC03","ranks":34,"draft_raw_rank_sequence_equal":true},
+        {"neutral_id":"BC04","ranks":14,"draft_raw_rank_sequence_equal":true}
+      ],
+      "source_map_parity":"Each 99-rank source-map sequence equals neutral-packet raw_name order; no rank gap or count mismatch found.",
+      "receipts":["neutral-packet.json","neutral-packet-draft.json","plans/oil-inci/research/blend-contrast-2026-10-14/identity-source-map.json"]
+    },
+    "canonicalization_and_parentheticals": {
+      "source_scoped_only":"function-provenance.json and both function supplements identify source-specific lookups; they do not register generic aliases.",
+      "parts_and_derivatives":"Raw names remain in the packet. Examples checked: BC02 seed/fruit/bark/leaf/flower/resin distinctions, BC03 Hydrogenated Castor Oil/Sebacic Acid Copolymer, and BC04 Brahmi Herpestis Fruit Extract.",
+      "absolute_qualifier":"BC04 rank 7 retains raw 'Jasminum Officinale (Jasmin Absolute) Oil' and canonical 'JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL'.",
+      "markers":"Tabitha * and ** plus Fushi epsilon markers remain in raw names; marker notes do not create extra ranks or percentages."
+    },
+    "function_role_boundaries": {
+      "keratins":"Only HYDROLYZED KERATIN carries film_forming. KERATIN, Hydrolyzed Keratin PG-Propyl Methylsilanediol, Cocodimonium Hydroxypropyl Hydrolyzed Keratin, and Laurdimonium Hydroxypropyl Hydrolyzed Keratin do not.",
+      "castor_sebacic_copolymer":"HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER has conditioning/emollient roles only; it has neither film_forming nor structural_gum.",
+      "styrax":"STYRAX TONKINENSIS RESIN EXTRACT is fragrance/skin_conditioning only; it is not assumed to be a structural gum.",
+      "provenance_parity":"Every packet rank has a function-dictionary entry and a matching function-provenance record; zero missing entries and zero role mismatches."
+    },
+    "material_priors": {
+      "reference_version":"v0.10",
+      "entry_count":68,
+      "scope":"Pure-material tendencies only; never percentages or finished-formula labels.",
+      "identity_limits":"Checked selected exact botanical priors retain plant part/form restrictions, including separate Hippophae seed versus fruit/seed, whole Cocos versus processed derivatives, and exact source-scoped botanical aliases."
+    },
+    "method_and_blinding": {
+      "hashes_match_input_manifest": {
+        "blind-method.md":true,
+        "material-priors.json":true,
+        "neutral-packet.json":true,
+        "function-dictionary.json":true
+      },
+      "formula_ids":"BC01, BC02, BC03, and BC04 match input-manifest formula identifiers.",
+      "brand_marketing_absence":"No selected brand/product identifier, URL, web-reference, or source-field marker occurs in the four frozen inputs."
+    }
+  },
+  "meaningful_limits_retained": [
+    "All blend judgments remain estimates with low confidence; ingredient order is qualitative and supplies no percentages, trace boundary, or mass weighting.",
+    "Generic functions do not establish dose, deposition, retention, hair performance, persistence, fit, or finished-product weight.",
+    "BC04's published Brahmi Herpestis wording remains raw and not_assessed; no correction or alias was invented.",
+    "US/UK source and package-equivalence limits remain outside the blind packet and unchanged from source preflight."
+  ],
+  "files_audited": [
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/material-priors.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/blind-method.md",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/input-manifest.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/identity-source-map.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/function-provenance.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/function-supplement.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/function-supplement.json"
+  ]
+}

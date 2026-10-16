@@ -1,0 +1,69 @@
+{
+  "receipt_id": "natural-oil-coverage-display-resolution-2026-10-02",
+  "status": "source_scoped_research_identity_receipts",
+  "limits": "Applies only to the exact preserved evidence snapshots. Does not verify current live formulas, create global aliases or authorize new product labels without reconciliation. No inferred percentages or source-label weights adopted.",
+  "cases": [
+    {
+      "case_id": "DISPLAY-SOY",
+      "raw_name": "GLYCINE SOJA OIL / SOYBEAN OIL",
+      "normalized_inci": "GLYCINE SOJA OIL",
+      "reference_entry": "soybean",
+      "source_scope": [
+        "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json"
+      ],
+      "product_id": "4a7b5b38-ff8b-4e0a-aaa2-4f5031797ee3",
+      "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+      "reason": "In this stored declaration the English soybean name follows the exact botanical INCI as a slash-separated translation. No species/plant-part/form change."
+    },
+    {
+      "case_id": "DISPLAY-BROCCOLI",
+      "raw_name": "Brassica Oleracea Italica Seed Oil* (Brokkolisamenöl)",
+      "normalized_inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "reference_entry": "broccoli_seed",
+      "source_scope": [
+        "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json"
+      ],
+      "product_id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+      "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+      "reason": "This source pairs the exact botanical name with German display translation/marker; its stored inci_basis separately retains the unannotated exact name, corroborated by primary supplier identity. No generic annotation stripping."
+    },
+    {
+      "case_id": "DISPLAY-PEANUT",
+      "raw_name": "Arachis Hypogaea (Peanut) Oil+",
+      "normalized_inci": "ARACHIS HYPOGAEA (PEANUT) OIL",
+      "reference_entry": "peanut",
+      "source_scope": [
+        "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json"
+      ],
+      "product_id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+      "reason": "This source explicitly explains + as organic ingredient, so the marker is not part of the oil identity. Parenthetical INCI independently corroborated by Ota."
+    },
+    {
+      "case_id": "DISPLAY-SEA-COMBINED",
+      "raw_name": "Hippophae Rhamnoides (Sea Buckthorn/Argousier) Fruit/Seed Oil",
+      "normalized_inci": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL",
+      "reference_entry": "sea_buckthorn_fruit_seed",
+      "source_scope": [
+        "data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json"
+      ],
+      "reason": "Exact preserved declaration uses English/French translations; plant-part slash remains fruit/seed. Primary COSMILE combined identity corroborates it; weight stays unknown."
+    }
+  ],
+  "unresolved": [
+    {
+      "raw_name": "Cocos Nucifera Fruit Oil",
+      "weight": "unknown",
+      "reason": "Ambiguous declaration retained. The proposed source capture did not establish a generic whole-coconut mapping; primary SDS conflict is an additional exclusion example.",
+      "evidence_ids": [
+        "EDENCOCONUTEXCLUSION"
+      ]
+    }
+  ],
+  "not_in_generic_aliases": [
+    "GLYCINE SOJA OIL / SOYBEAN OIL",
+    "Brassica Oleracea Italica Seed Oil* (Brokkolisamenöl)",
+    "Arachis Hypogaea (Peanut) Oil+",
+    "Hippophae Rhamnoides (Sea Buckthorn/Argousier) Fruit/Seed Oil"
+  ]
+}

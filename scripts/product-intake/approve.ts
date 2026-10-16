@@ -76,6 +76,34 @@ export async function approveSubmissionById(params: {
 }) {
   const supabase = createSupabaseClientFromEnv()
   const submission = await loadSubmission(supabase, params.submissionId)
+  if (submission.category === "oil") {
+    // Image approval is separate from the Lab's property snapshot. Materialize
+    // only the latest processed asset; the SQL guard rechecks it under lock.
+    const { data: artifact, error } = await supabase
+      .from("product_intake_research_artifacts")
+      .select("payload")
+      .eq("submission_id", submission.id)
+      .eq("kind", "processed_image")
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (error) throw error
+    if (!artifact) throw new Error("Current oil processed image required")
+    const payload = structuredClone(submission.researched_payload ?? {}) as Record<string, unknown>
+    const final = (payload.final ?? {}) as Record<string, unknown>
+    const product = (final.product ?? {}) as Record<string, unknown>
+    payload.final = {
+      ...final,
+      product: {
+        ...product,
+        image_url: artifact.payload.planned_public_url,
+        canonical_image_sha256: artifact.payload.asset_sha256,
+        thumbnail_image_url: artifact.payload.thumbnail_public_url,
+      },
+    }
+    submission.researched_payload = payload
+  }
   const validation = validateSubmissionReady(submission)
 
   if (!validation.ok) {
@@ -90,6 +118,15 @@ export async function approveSubmissionById(params: {
       throw new Error(`approval_validation_failed: ${validation.missingFields.join(", ")}`)
     }
     return null
+  }
+
+  if (submission.category === "oil") {
+    const { error } = await supabase.rpc("product_intake_oil_publication_preflight", {
+      p_submission_id: submission.id,
+      p_final_payload: validation.normalizedPayload.final,
+      p_spec_operations: validation.targetSpecOperations,
+    })
+    if (error) throw error
   }
 
   const reviewedAt = new Date().toISOString()
@@ -136,9 +173,9 @@ export async function approveSubmissionById(params: {
     await writeSuitableThicknessesForApprovedProduct({
       supabase,
       productId: approval.product_id,
-      reviewedThicknesses:
-        validation.normalizedPayload.final.product.suitable_thicknesses ?? [],
-      specOperations: validation.targetSpecOperations,
+      reviewedThicknesses: validation.normalizedPayload.final.product.suitable_thicknesses ?? [],
+      // Oil matching/thicknesses were explicitly reviewed together in the Lab.
+      specOperations: submission.category === "oil" ? [] : validation.targetSpecOperations,
     })
   } catch (error) {
     console.error(

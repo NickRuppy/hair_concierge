@@ -1,0 +1,71 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json",
+    "../lane-b/blind-records.json",
+    "../lane-b/blind-notes.json"
+  ],
+  "input_hashes": {
+    "method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "../lane-b/blind-records.json": "ee7f4f997f77ddce3cffe500e545d0fad3da143bfb14f6ddc7e0831ac8954723",
+    "../lane-b/blind-notes.json": "d0c8b25f2d0a47809e3f8bff077baf6d527622ab1a518f29f0a909b35879ddd3"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "familiarity": "The ester/botanical dry-oil pattern felt familiar. No identity was resolved or looked up and no previous finished-product label was used."
+    },
+    {
+      "case_id": "O11",
+      "familiarity": "The soybean/castor/aromatic-oil pattern felt familiar as a retail formula family. No brand or exact product was inferred or looked up; the declared inputs determined these judgments."
+    },
+    {
+      "case_id": "O16",
+      "familiarity": "The castor-led many-botanical pattern felt familiar as a retail formula family. No brand or exact product was inferred or looked up, and no previous answer was used."
+    },
+    {
+      "case_id": "all_17",
+      "familiarity": "This is a disclosed development re-derivation of the same 17 formulas. My own predecessor records, notes, roles and judgments were explicitly supplied and read; this is not an unseen, fresh or independent lane. No peer or source identity was revealed."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "Read only the four successor inputs and the two explicitly permitted own predecessor files, using the exact relative paths and actual SHA256 hashes listed here. The predecessor packet and material reference hashes equal the declared successor copies; their previously read content is unchanged. Original outputs were not modified.",
+    "Corrected dictionary v0.4-root-reviewed was read in full with compact/lossless tables. An overlong display of repeated provenance/alias fields was truncated; complete replacement displays recovered the omitted content. Source references remained provenance and were not opened. No browser, peer, identity/source packet, staging, memory or other prior-label file was read.",
+    "All 17 records and all 363 primary ranks were reviewed. Patches contain complete replacements of changed top-level fields; an empty changed_fields object preserves truly unchanged cases. Parent applies these to the sealed predecessor and seals the successor before source reveal.",
+    "Base and weight scalar values and metadata remain byte-for-byte equivalent as parsed objects. Actual functional changes concern aromatic auxiliaries; the O14 silicone-resin flag correction does not add a new film role because its conditioning film was already included. No weight change is justified by a new fragrance match or penetration admission.",
+    "Only O16 and O27 change penetration scalar from unknown to penetration_potential. Their coconut, or safflower/coconut, anchors were principal before correction. O10/O23 remain surface_led with corrected admitted-anchor reasoning because anchors are auxiliary/secondary. O11 remains unknown because its admitted anchors are secondary in a botanical system with unresolved relative delivery.",
+    "Corrected anchor booleans, not direct/indirect/none/not_assessed tags, govern admission. All coconut/safflower fixed-oil keys remain false for scalp_active_botanicals. Admitted presence does not establish normal-dose delivery or efficacy.",
+    "New suffixes are O12 rank 3 and O25 rank 17. O12 rice-bran rank 3 remains secondary despite lying in the qualified suffix; established roles take precedence. O25 uses distinct fragrance rank 17 and cooling rank 20, not two fragrance allergens or one dual-function ingredient twice. Existing other suffixes remain.",
+    "All remaining unknown-function ingredients stay unresolved. No generic aliases, species/plant-part transfers, concentrations, analytical purity, brand identities, unsupported functions or earlier product answers were introduced.",
+    "All five flags were recomputed for all cases and validated against every exact primary-rank dictionary entry; complete ingredient_flags replacements are emitted where evidence changes. Dictionary-closed false does not establish no smell, universal tolerance or permitted application.",
+    "In-memory validation covers exact patch and property key sets, complete ledger replacements, all 363 raw/canonical rank identities, all 85 flags and matching evidence, anchor-role conditions, suffix earliest-boundary constraints and role precedence, unchanged base/weight, hashes, serialization round trips and deterministic patch reconstruction. Outputs were not reread after writing.",
+    "The recorded original familiarity with O09/O11/O16 persists; reading my own predecessor is authorized development replay, not independent evidence. Original prewrite role-mapper/count corrections remain disclosed in predecessor notes. This successor had no prohibited-access incident.",
+    "No persistence, prior build-up, source-only heroes/dispenser/claims/uses, fit or production result is emitted. Source stage remains unrevealed pending parent seal."
+  ]
+}

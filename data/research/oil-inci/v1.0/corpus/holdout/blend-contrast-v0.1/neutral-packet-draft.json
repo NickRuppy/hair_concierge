@@ -1,0 +1,529 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "scope": "weight-only source-scoped formula contrast",
+  "records": [
+    {
+      "neutral_id": "BC01",
+      "application_context": "Source-supported retained hair-fibre use; compare a modest equal applied dose. Directions and identity held outside blind lane.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Ethylhexyl Methoxycinnamate",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Tetramethyl Acetyloctahydronaphthalenes",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Hexamethylindanopyran",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Acetyl Cedrene",
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Vanillin",
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Coumarin",
+          "canonical_name": "COUMARIN"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Fusanus Spicatus Wood Oil",
+          "canonical_name": "FUSANUS SPICATUS WOOD OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citrus Limon Peel Oil",
+          "canonical_name": "CITRUS LIMON PEEL OIL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Pinene",
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Santalol",
+          "canonical_name": "SANTALOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamomum Zeylanicum Bark Oil",
+          "canonical_name": "CINNAMOMUM ZEYLANICUM BARK OIL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Eugenol",
+          "canonical_name": "EUGENOL"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 25,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL"
+        }
+      ],
+      "contextual_marker_note": "Terminal asterisks or epsilon mark source footnotes, not additional ranked ingredients. Raw marker spelling retained. No percentage or concentration inferred."
+    },
+    {
+      "neutral_id": "BC02",
+      "application_context": "Source-supported retained hair-fibre use; compare a modest equal applied dose. Directions and identity held outside blind lane.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "carthamus tinctorius (safflower) seed oil*",
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "rosa canina (rosehip) fruit oil*",
+          "canonical_name": "ROSA CANINA FRUIT OIL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "argania spinosa (argan) kernel oil*",
+          "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "hippophae rhamnoides (sea buckthorn) seed oil*",
+          "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "rosa damascena (rose) flower oil*",
+          "canonical_name": "ROSA DAMASCENA FLOWER OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "pelargonium graveolens (rose geranium) flower oil*",
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "citrus sinensis (sweet orange) peel oil expressed*",
+          "canonical_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED"
+        },
+        {
+          "rank": 8,
+          "raw_name": "cananga odorata (yang ylang) flower oil*",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "pogostemon cablin (patchouli) leaf oil*",
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "lycium barbarum (goji berry) fruit extract*",
+          "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT"
+        },
+        {
+          "rank": 11,
+          "raw_name": "styrax tonkinensis (benzoin) resin extract",
+          "canonical_name": "STYRAX TONKINENSIS (BENZOIN) RESIN EXTRACT"
+        },
+        {
+          "rank": 12,
+          "raw_name": "rosmarinus officinalis (rosemary) extract*",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) EXTRACT"
+        },
+        {
+          "rank": 13,
+          "raw_name": "cedrus atlantica (cedar) bark oil*",
+          "canonical_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "citrus aurantium (orange) flower oil*",
+          "canonical_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "anthemis nobilis (chamomile) flower oil*",
+          "canonical_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "helianthus annuus (sunflower) seed oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "tocopherol (vitamin E)",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "citronellol**",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "limonene**",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "geraniol**",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "linalool**",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "benzyl benzoate**",
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "citral**",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 24,
+          "raw_name": "farnesol**",
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 25,
+          "raw_name": "benzyl salicylate**",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 26,
+          "raw_name": "eugenol**",
+          "canonical_name": "EUGENOL"
+        }
+      ],
+      "contextual_marker_note": "Terminal asterisks or epsilon mark source footnotes, not additional ranked ingredients. Raw marker spelling retained. No percentage or concentration inferred."
+    },
+    {
+      "neutral_id": "BC03",
+      "application_context": "Source-supported retained hair-fibre use; compare a modest equal applied dose. Directions and identity held outside blind lane.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Keratin",
+          "canonical_name": "KERATIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Hydrolyzed Keratin",
+          "canonical_name": "HYDROLYZED KERATIN"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hydrolyzed Keratin PG-Propyl Methylsilanediol",
+          "canonical_name": "HYDROLYZED KERATIN PG-PROPYL METHYLSILANEDIOL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Cocodimonium Hydroxypropyl Hydrolyzed Keratin",
+          "canonical_name": "COCODIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Laurdimonium Hydroxypropyl Hydrolyzed Keratin",
+          "canonical_name": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Rosa Canina Fruit Oil",
+          "canonical_name": "ROSA CANINA FRUIT OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Phosphatidylcholine",
+          "canonical_name": "PHOSPHATIDYLCHOLINE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Schinziophyton Rautanenii Kernel Oil",
+          "canonical_name": "SCHINZIOPHYTON RAUTANENII KERNEL OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Aleurites Moluccanus Seed Oil",
+          "canonical_name": "ALEURITES MOLUCCANUS SEED OIL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Psidium Guajava Fruit Extract",
+          "canonical_name": "PSIDIUM GUAJAVA FRUIT EXTRACT"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Aloe Barbadensis Leaf Juice",
+          "canonical_name": "ALOE BARBADENSIS LEAF JUICE"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Oenothera Biennis (Evening Primrose) Oil",
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Tocopheryl Acetate",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Glycolipids",
+          "canonical_name": "GLYCOLIPIDS"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Water/Aqua/Eau",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Hydrogenated Castor Oil/Sebacic Acid Copolymer",
+          "canonical_name": "HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Arginine HCl",
+          "canonical_name": "ARGININE HCL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Thioctic Acid",
+          "canonical_name": "THIOCTIC ACID"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Butyl Methoxydibenzoylmethane",
+          "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE"
+        },
+        {
+          "rank": 25,
+          "raw_name": "Polyquaternium-55",
+          "canonical_name": "POLYQUATERNIUM-55"
+        },
+        {
+          "rank": 26,
+          "raw_name": "Sodium Hyaluronate",
+          "canonical_name": "SODIUM HYALURONATE"
+        },
+        {
+          "rank": 27,
+          "raw_name": "Allantoin",
+          "canonical_name": "ALLANTOIN"
+        },
+        {
+          "rank": 28,
+          "raw_name": "Sodium Ascorbyl Phosphate",
+          "canonical_name": "SODIUM ASCORBYL PHOSPHATE"
+        },
+        {
+          "rank": 29,
+          "raw_name": "Benzoic Acid",
+          "canonical_name": "BENZOIC ACID"
+        },
+        {
+          "rank": 30,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 31,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 32,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 33,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 34,
+          "raw_name": "Fragrance/Parfum",
+          "canonical_name": "FRAGRANCE/PARFUM"
+        }
+      ],
+      "contextual_marker_note": "Terminal asterisks or epsilon mark source footnotes, not additional ranked ingredients. Raw marker spelling retained. No percentage or concentration inferred."
+    },
+    {
+      "neutral_id": "BC04",
+      "application_context": "Source-supported retained hair-fibre use; compare a modest equal applied dose. Directions and identity held outside blind lane.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Sesamum Indicum (Sesame) Seed Oil",
+          "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Persea Americana (Avocado) Oil",
+          "canonical_name": "PERSEA AMERICANA (AVOCADO) OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Prunus Dulcis (Sweet Almond) Oil",
+          "canonical_name": "PRUNUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Argania Spinosa (Argan) Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Brahmi Herpestis (Brahmi) Fruit Extract",
+          "canonical_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Jasminum Officinale (Jasmin Absolute) Oil",
+          "canonical_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Tocopherol (Vitamin E)",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Azadirachta Indica (Neem) Oil",
+          "canonical_name": "AZADIRACHTA INDICA (NEEM) OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Benzyl Benzoate\u03b5",
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Linalool\u03b5",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Eugenol\u03b5",
+          "canonical_name": "EUGENOL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Benzyl Alcohol\u03b5",
+          "canonical_name": "BENZYL ALCOHOL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniol\u03b5",
+          "canonical_name": "GERANIOL"
+        }
+      ],
+      "contextual_marker_note": "Terminal asterisks or epsilon mark source footnotes, not additional ranked ingredients. Raw marker spelling retained. No percentage or concentration inferred."
+    }
+  ]
+}

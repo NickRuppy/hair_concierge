@@ -1,0 +1,36 @@
+{
+  "artifact": "oil-inci-full-profile-holdout-source-selection-resolution",
+  "version": "v0.2",
+  "resolved_at": "2026-10-09",
+  "registration": "selection-registration-v0.2.json",
+  "source_packet": "source-packet-v0.2.json",
+  "status": "six_source_complete_candidates_selected_with_missing_aqueous_biphasic_archetype",
+  "selected_in_registered_order": [
+    {"slot": "volatile_mobile_oil_spray", "source_key": "V2-S01", "selected_candidate": "René Furterer 5 Sens Enhancing Dry Oil for Hair and Body 100 ml", "selection_reason": "first registered candidate source-complete"},
+    {"slot": "silicone_led_non_spray", "source_key": "V2-S02", "selected_candidate": "Wella Professionals Ultimate Smooth Miracle Oil Serum 100 ml", "selection_reason": "first registered candidate source-complete"},
+    {"slot": "ester_or_alkane_led_fluid", "source_key": "V2-S03", "selected_candidate": "Biossance 100% Squalane Oil Jumbo Size 250 ml", "selection_reason": "first registered candidate source-complete; exact maker hair directions are retained"},
+    {"slot": "botanical_oil_blend", "source_key": "V2-S04", "selected_candidate": "Rahua Legendary Amazon Oil", "selection_reason": "first registered candidate source-complete"},
+    {"slot": "structured_conditioning_or_film_challenge", "source_key": "V2-S05", "selected_candidate": "Oribe Gold Lust Nourishing Hair Oil 100 ml", "selection_reason": "first registered candidate source-complete"},
+    {"slot": "water_based_or_biphasic_oil_labelled_hair_product", "source_key": "V2-S06", "selected_candidate": "Wella Professionals Oil Reflections Light Luminous Reflective Oil 100 ml", "selection_reason": "first registered candidate source-complete, but it does not meet the slot's aqueous/biphasic stress description; retained to preserve the predeclared first-source-complete rule and flagged below"}
+  ],
+  "reserve_status": [
+    {"slot": "volatile_mobile_oil_spray", "candidate": "Bumble and bumble Hairdresser's Invisible Oil UV Protective Dry Oil Finishing Spray 150 ml", "status": "not_reached", "reason": "first candidate passed source completeness"},
+    {"slot": "silicone_led_non_spray", "candidate": "SACHAJUAN Intensive Hair Oil", "status": "not_reached", "reason": "first candidate passed source completeness"},
+    {"slot": "ester_or_alkane_led_fluid", "candidate": "The Ordinary 100% Plant-Derived Hemi-Squalane", "status": "not_reached", "reason": "first candidate passed source completeness"},
+    {"slot": "botanical_oil_blend", "candidate": "Fable & Mane MahaMane Smooth & Shine Hair Oil", "status": "not_reached", "reason": "first candidate passed source completeness"},
+    {"slot": "structured_conditioning_or_film_challenge", "candidate": "R+Co TWO-WAY MIRROR Smoothing Oil 2 oz", "status": "not_reached", "reason": "first candidate passed source completeness"},
+    {"slot": "water_based_or_biphasic_oil_labelled_hair_product", "candidate": "NUXE Huile Prodigieuse Or Florale Multi-Purpose Dry Oil", "status": "source_checked_not_selected", "reason": "maker source showed explicit hair use and a distinct declaration, but it was not selected because the preceding ordered Wella candidate was source-complete; neither candidate's source establishes an aqueous or biphasic hair-oil product"}
+  ],
+  "formula_overlap_audit": {
+    "scope": "Every parseable JSON under data/research/oil-inci/v1.0/corpus excluding the current holdout folder; actual, material-only, and hypothetical artifacts were included.",
+    "normalization": "Uppercase; remove parenthetical aliases; collapse punctuation and whitespace; compare complete ordered raw_inci/primary_inci/ingredient_declaration strings.",
+    "result": "No selected v0.2 raw declaration exactly matched a prior normalized complete declaration. A separate scan found no prior one-ingredient ingredients array containing only SQUALANE.",
+    "limit": "This is exact-declaration comparison, not a claim that individual ingredients or partial formula fragments are novel."
+  },
+  "coverage": {
+    "source_complete_count": 6,
+    "source_complete_slots": ["volatile_mobile_oil_spray", "silicone_led_non_spray", "ester_or_alkane_led_fluid", "botanical_oil_blend", "structured_conditioning_or_film_challenge", "water_based_or_biphasic_oil_labelled_hair_product"],
+    "missing_stress_archetype": "No selected product has maker evidence that it is water-based or biphasic. The sixth selected product remains an oil-labelled hair product but does not satisfy that intended architecture stress; do not describe the cohort as balanced across all six archetypes."
+  },
+  "integrity": "All six source captures occurred after selection-registration-v0.2.json was written. This resolution makes no property or persistence classification."
+}

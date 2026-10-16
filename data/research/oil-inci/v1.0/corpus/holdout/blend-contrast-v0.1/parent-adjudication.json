@@ -1,0 +1,226 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "scope": "Targeted project-new weight-only formula contrast, not measured hair-weight accuracy or full-profile intake research",
+  "records": [
+    {
+      "neutral_id": "BC01",
+      "identity": {
+        "brand": "Sebastian Professional",
+        "product": "Dark Oil - Smooth and Shine Styling Oil",
+        "market_scope": "US manufacturer declaration; does not establish a DE package formula",
+        "package": null,
+        "source_url": "https://www.sebastianprofessional.com/en-US/products/dark-oil/dark-oil-smooth-and-shine-styling-oil"
+      },
+      "source_raw_sha256": "527d9728abeef424bb2bb280fe8db5332c8b53f0d7a2843a55393717a6dc3cae",
+      "neutral_formula_sha256": "2117386e6003ce67018ac9b6678a10bd69ab038a100fac5d00cabeb886fb9305",
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B5",
+          "B6",
+          "B7"
+        ],
+        "reason": "The volatile delivery system includes an affirmative retained dimethiconol conditioning-gum route. Medium is the stronger existing B5 interpretation; the declared botanical oil supports rather than determines it.",
+        "counter_signal": "Light if the gum contributes a smaller coating; no fraction/grade is established.",
+        "deciding_assumption": "Rank 2 DIMETHICONOL is a principal retained-conditioning route within ranks 1-3, not merely a secondary accessory to the volatile carrier. This is a qualitative architecture judgment and could reverse with formulation evidence.",
+        "unresolved": [
+          "Relative carrier/gum/oil amounts and dimethiconol grade are unknown; actual modest-dose coating could favor light.",
+          "Unassessed ranks 9-11 and 17 and preparation at rank 22 remain substantive gaps, but do not currently identify an equally supported alternative first-order carrier architecture.",
+          "No comparative finished-formula hair-weight measurement; medium is low-confidence estimated load, not persistence, repair or thickness fit."
+        ]
+      },
+      "lane_values": {
+        "a": "medium",
+        "b": "medium"
+      },
+      "lane_result_sha256": {
+        "a": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3",
+        "b": "39e7b6cc8e3d03bcb8d6f08ab7aaddba8d914716093d45746c532fc1121705c3"
+      },
+      "parent_disposition": "Retain agreed estimate under existing rules; no new normative rule."
+    },
+    {
+      "neutral_id": "BC02",
+      "identity": {
+        "brand": "Tabitha James Kraan Professional Haircare",
+        "product": "Scented Organic Hair Oil",
+        "market_scope": "UK professional maker storefront, GBP; no DE/EU pack equivalence established",
+        "package": "150 ml",
+        "source_url": "https://tabithajkpro.com/products/scented-organic-hair-oil-150ml"
+      },
+      "source_raw_sha256": "b685bdd01307969548bcc3cd0ebc2d55ab871a716f9a9052c5a07f644e03ed20",
+      "neutral_formula_sha256": "3a7ad45323ac92d6d1356ba43dc315df7aec1e6d692aee0b8b2c61c86dd706a0",
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6",
+          "B7"
+        ],
+        "reason": "A coherent safflower/rosehip/sea-buckthorn-seed carrier system supports light under B3, with argan as a meaningful medium counter-signal. The fragrance resin declaration does not establish a structured retained film.",
+        "counter_signal": "Medium if carrier proportions or unresolved preparations produce a more substantial coating.",
+        "deciding_assumption": "The exact admitted fixed oils at ranks 1-4 provide the first-order carrier interpretation; unresolved later preparations do not replace that identified architecture. This is not an assumed percentage, cutoff or count of oils.",
+        "unresolved": [
+          "Actual carrier balance could make medium preferable; every applied material prior remains low confidence and unvalidated for this finished formula.",
+          "Roles/preparations at ranks 5, 7, 9, 10 and 13-15 and any retained contribution of rank 11 require formulation evidence. No claim that they are trace or negligible.",
+          "Standardized comparative hair-weight data and grades are absent; the known coherent carrier base still supports a working estimate."
+        ]
+      },
+      "lane_values": {
+        "a": "light",
+        "b": "light"
+      },
+      "lane_result_sha256": {
+        "a": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3",
+        "b": "39e7b6cc8e3d03bcb8d6f08ab7aaddba8d914716093d45746c532fc1121705c3"
+      },
+      "parent_disposition": "Retain agreed estimate under existing rules; no new normative rule."
+    },
+    {
+      "neutral_id": "BC03",
+      "identity": {
+        "brand": "Joico",
+        "product": "K-PAK Color Therapy Luster Lock Glossing Oil",
+        "market_scope": "US manufacturer pro-care formula and directions; US maker guide package",
+        "package": {
+          "declared_size": "2.13 oz / 63 ml",
+          "code": null,
+          "gtin": null,
+          "source": {
+            "url": "https://www.joico.com/wp-content/uploads/2026/02/joico-care-styling-guide-2026.pdf",
+            "publisher": "manufacturer",
+            "title": "Joico Care & Styling Guide 2026",
+            "access_date": "2026-10-14",
+            "access_method": "live web open; full-page parsed text read, not search snippet admission",
+            "web_reference": "turn636view0",
+            "location": "PDF page index 8 (printed 8), lines 160-161"
+          },
+          "identity_excerpt": "K-PAK COLOR THERAPY LUSTER LOCK\u00ae GLOSSING OIL\n2.13 oz / 63 ml"
+        },
+        "source_url": "https://www.joico.com/pro-care/k-pak-color-therapy/"
+      },
+      "source_raw_sha256": "7589ec1ce66e9fb8640aaa502b2d871eee869ada8dc5eea89cb4b6cb798dc31d",
+      "neutral_formula_sha256": "98698ad5a7176ef08ff1a29210051809cf736a6b6e74d480ec9baad19d9b9ecf",
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B4",
+          "B5",
+          "B6",
+          "B7"
+        ],
+        "reason": "The dimethicone/ester co-carrier system supplies a positive intermediate conditioning-film interpretation under B5. Protein/film-function names do not create a rich floor.",
+        "counter_signal": "Light if silicone grade and carrier balance leave a smaller coating. Exact evening-primrose alias is admitted light and reinforces this counterargument.",
+        "deciding_assumption": "Rank 2 DIMETHICONE is a functionally principal retained-conditioning co-carrier with rank 3 C12-15 ALKYL BENZOATE; its unknown grade does not reverse that architecture. Generic protein and polymer functions are not assigned an additional weight score.",
+        "unresolved": [
+          "Dimethicone grade, carrier balance and secondary conditioning amounts could favor light; exact generic functions do not establish deposition or finished-formula weight.",
+          "Unassessed ranks 14, 15, 18, 21, 23 and 26-29 remain gaps; rank 12 SCHINZIOPHYTON RAUTANENII KERNEL OIL has no admitted weight prior or finished-grade evidence.",
+          "Source-scoped supplier entries do not establish product grade, film mechanics, repair or persistence; no such properties classified."
+        ]
+      },
+      "lane_values": {
+        "a": "medium",
+        "b": "medium"
+      },
+      "lane_result_sha256": {
+        "a": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3",
+        "b": "39e7b6cc8e3d03bcb8d6f08ab7aaddba8d914716093d45746c532fc1121705c3"
+      },
+      "parent_disposition": "Retain agreed estimate under existing rules; no new normative rule."
+    },
+    {
+      "neutral_id": "BC04",
+      "identity": {
+        "brand": "Fushi",
+        "product": "Really Good Hair Oil",
+        "market_scope": "UK maker English storefront, GBP; DE/EU pack identity not established",
+        "package": "100 ml",
+        "source_url": "https://fushiwellbeing.com/products/really-good-hair-oil-100ml"
+      },
+      "source_raw_sha256": "2e41327d5021a99866a413d2d1cd12da9dd2491c5189d71be81049c57259791d",
+      "neutral_formula_sha256": "29ffa1796de90d3f8c119b103e2b0438bec174498e3ecda9a86a5b6386baee41",
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6",
+          "B7"
+        ],
+        "reason": "The sesame-led botanical backbone, with avocado/argan, whole-coconut and almond contributions, supports medium under B3. Coconut participation does not establish an overriding rich system.",
+        "counter_signal": "Rich if coconut or unresolved preparations govern the retained feel; no amount dominance is inferred.",
+        "deciding_assumption": "The opening sesame/coconut/avocado/almond/argan sequence is a coherent co-carrier base whose sesame-led intermediate tendency remains more persuasive than coconut-led richness. No amount dominance is asserted.",
+        "unresolved": [
+          "Relative oil amounts, whole-coconut physical grade/temperature and actual distribution could move the result toward rich or light.",
+          "Rank 6 unresolved botanical identity/preparation and rank 9 unassessed exact neem declaration remain gaps; neither currently supplies an equally supported first-order alternative backbone.",
+          "Packet source-scoped synonyms are accepted only for this record; no generic alias expansion or finished-formula validation follows."
+        ]
+      },
+      "lane_values": {
+        "a": "medium",
+        "b": "medium"
+      },
+      "lane_result_sha256": {
+        "a": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3",
+        "b": "39e7b6cc8e3d03bcb8d6f08ab7aaddba8d914716093d45746c532fc1121705c3"
+      },
+      "parent_disposition": "Retain agreed estimate under existing rules; no new normative rule."
+    }
+  ],
+  "comparison": {
+    "products": 4,
+    "ingredient_positions_per_lane": 99,
+    "value_agreement": {
+      "numerator": 4,
+      "denominator": 4
+    },
+    "committed": 4,
+    "unknown": 0,
+    "distribution": {
+      "light": 1,
+      "medium": 3,
+      "rich": 0
+    },
+    "meaning": "Independent label repeatability within identical supplied method/evidence, not sensory validation or broad market accuracy."
+  },
+  "post_seal_parent_corrections": [
+    {
+      "neutral_id": "BC03",
+      "lane": "b",
+      "rank": 16,
+      "field": "evening-primrose prior availability",
+      "finding": "Lane B incorrectly states no exact prior is available. The supplied v0.10 material-priors entry evening_primrose explicitly admits OENOTHERA BIENNIS (EVENING PRIMROSE) OIL as an alias with light tendency.",
+      "correction": "Retain medium and strengthen light counter-signal. Original sealed lane result preserved unchanged; no fresh blind rerun or confidence increase claimed."
+    }
+  ],
+  "critical_policy_decisions": [],
+  "rule_changes": [],
+  "source_and_validation_limits": [
+    "US/UK maker web declarations; no DE/EU physical package or cross-market equivalence",
+    "Fushi/Tabitha new exact product/variant formulas; other products/variants from these brands were encountered before",
+    "Fushi source typo Brahmi Herpestis remains unresolved and uncorrected",
+    "Sebastian package size unavailable; research-scoped formula, not intake-ready identity",
+    "Only weight assessed, no other product property, eligibility, matching, persistence or efficacy derived",
+    "No rich case in this contrast and no measured dose/retention/sensory endpoint",
+    "Generic function/identity supplements are local to this batch, no new global alias or material-weight prior"
+  ]
+}

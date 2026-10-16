@@ -1,0 +1,30 @@
+{
+  "run_id": "oil-missing-direct-properties-v0.2",
+  "inputs": {
+    "method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "predecessor_seal": "fe60a757ae696fa9c07253fa9e01c9cbe243c601434d443822e6537fe56557ad",
+  "case_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "reason": "Correct reviewed aliases/closed flags/functions before source reveal; keep original invalid-dictionary decisions visible."
+}

@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "scope": "Source and output integrity, not measured performance",
+  "cases": 6,
+  "primary_ranks": 93,
+  "dictionary_identities": 71,
+  "historical_files_preserved": 576,
+  "committed_values": {
+    "high": 3,
+    "low": 1,
+    "moderate": 2
+  },
+  "lane_value_agreement": {
+    "count": 6,
+    "denominator": 6,
+    "meaning": "repeatability, not accuracy"
+  },
+  "negative_controls_rejected": [
+    "unknown_class",
+    "dropped_case",
+    "broken_evidence",
+    "confidence_field"
+  ],
+  "recognized_formulas": {
+    "a": [],
+    "b": []
+  }
+}

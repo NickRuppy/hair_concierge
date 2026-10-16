@@ -1,0 +1,541 @@
+{
+  "version": "build-up-function-lexicon-0.1",
+  "scope": "Closed exact literal declarations; roles only; unknowns explicit; no product answers or weight classes.",
+  "entries": [
+    {
+      "canonical_name": "HYDROGENATED FARNESENE",
+      "roles": [
+        "hydrocarbon_emollient",
+        "solvent_carrier"
+      ],
+      "notes": "Exact emollient/solvent. No admitted volatility or repeated washout; not squalane/C13-15 alkane.",
+      "source_refs": [
+        "F001"
+      ]
+    },
+    {
+      "canonical_name": "SQUALANE",
+      "roles": [
+        "hydrocarbon_emollient"
+      ],
+      "notes": "No plant-oil identity or feedstock follows from the name; no admitted penetration anchor.",
+      "source_refs": [
+        "F002"
+      ]
+    },
+    {
+      "canonical_name": "JOJOBA ESTERS",
+      "roles": [
+        "jojoba_derived_ester_emollient",
+        "grade_dependent_wax"
+      ],
+      "notes": "Distinct from whole jojoba oil. Same INCI spans liquid, paste and hard-wax grades; cannot choose fluid or substantial wax contribution from name alone.",
+      "source_refs": [
+        "F003"
+      ]
+    },
+    {
+      "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact whole fixed seed oil, not estolide. Liquid material does not prove weak or persistent hair film.",
+      "source_refs": [
+        "F004"
+      ]
+    },
+    {
+      "canonical_name": "MEADOWFOAM ESTOLIDE",
+      "roles": [
+        "derived_emollient"
+      ],
+      "notes": "Distinct from whole meadowfoam seed oil; derivative grade unspecified.",
+      "source_refs": [
+        "F005"
+      ]
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Not in initial direct-positive anchor set; no nonpenetration claim.",
+      "source_refs": [
+        "F006"
+      ]
+    },
+    {
+      "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Extract only, preparation/carrier unspecified; no coating inference.",
+      "source_refs": [
+        "F007"
+      ]
+    },
+    {
+      "canonical_name": "ECLIPTA PROSTRATA EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Exact declared extract, not leaf-extract alias; preparation/carrier unspecified.",
+      "source_refs": [
+        "F008"
+      ]
+    },
+    {
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "source_refs": [
+        "F009"
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "source_refs": [
+        "F010"
+      ]
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Literal maker declaration reviewed only for stated extract/fragrance identity; exact preparation/grade and functional contribution unknown.",
+      "source_refs": [
+        "F011"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "roles": [
+        "botanical_extract",
+        "possible_antioxidant"
+      ],
+      "notes": "Literal leaf extract retained, distinct from leaf essential oil. Supplier antioxidant role/solvent grade not assured; no lipid/film inference.",
+      "source_refs": [
+        "F012"
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "roles": [
+        "fragrance"
+      ],
+      "notes": "Literal maker declaration reviewed only for stated extract/fragrance identity; exact preparation/grade and functional contribution unknown.",
+      "source_refs": [
+        "F013"
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration. Wax-ester chemistry; retain intact-botanical identity precedence.",
+      "source_refs": [
+        "F014"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Grade controls viscosity and volatility; INCI does not establish either. Historical silicone penetration observations do not transfer to an unspecified grade.",
+      "source_refs": [
+        "F015"
+      ]
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "notes": "Not liquid mineral oil; feedstock and evaporation profile are not established by this INCI. Supplier blend evidence does not specify the retail grade.",
+      "source_refs": [
+        "F016"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE",
+      "roles": [
+        "derived_ester_emollient"
+      ],
+      "notes": "Exact modified olive ester emollient, not whole olive oil; registry skin emollient role is not measured hair-film behavior.",
+      "source_refs": [
+        "F017"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade.",
+      "source_refs": [
+        "F018"
+      ]
+    },
+    {
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Literal maker declaration reviewed only for stated extract/fragrance identity; exact preparation/grade and functional contribution unknown.",
+      "source_refs": [
+        "F019"
+      ]
+    },
+    {
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "source_refs": [
+        "F020"
+      ]
+    },
+    {
+      "canonical_name": "BIS-CETEARYL AMODIMETHICONE",
+      "roles": [
+        "silicone_conditioning_polymer",
+        "conditioning_film"
+      ],
+      "notes": "Amino-functional hair conditioning silicone; no measured persistence/deposition or grade supplied.",
+      "source_refs": [
+        "F021"
+      ]
+    },
+    {
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact seed-oil family only; no weight or film tendency transferred.",
+      "source_refs": [
+        "F022"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+      "roles": [
+        "derived_emollient",
+        "hair_conditioning"
+      ],
+      "notes": "Modified unsaponifiable olive fraction, not whole olive oil; generic conditioning does not establish substantial persistent film.",
+      "source_refs": [
+        "F023"
+      ]
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+      "source_refs": [
+        "F024"
+      ]
+    },
+    {
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact seed-oil family only; no weight or film tendency transferred.",
+      "source_refs": [
+        "F025"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. No admitted penetration evidence in the bounded review; none means no admitted evidence, not demonstrated nonpenetration.",
+      "source_refs": [
+        "F026"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Direct-study candidate only: NOT in initial admitted positive-anchor set until full-method review; use unknown under that anchor policy.",
+      "source_refs": [
+        "F027"
+      ]
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Intact botanical emollient; identity admission does not assign weight or build-up. Initial method penetration anchor; 1 g oil/g hair, 24 h at 40 C in this study. Botanical-to-studied-material transfer and ordinary-use limits remain.",
+      "source_refs": [
+        "F028"
+      ]
+    },
+    {
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred.",
+      "source_refs": [
+        "F029"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred.",
+      "source_refs": [
+        "F030"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred.",
+      "source_refs": [
+        "F031"
+      ]
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "source_refs": [
+        "F032"
+      ]
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "source_refs": [
+        "F033"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "source_refs": [
+        "F034"
+      ]
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "source_refs": [
+        "F035"
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "source_refs": [
+        "F036"
+      ]
+    },
+    {
+      "canonical_name": "PROPYLENE GLYCOL",
+      "roles": [
+        "humectant",
+        "solvent"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "source_refs": [
+        "F037"
+      ]
+    },
+    {
+      "canonical_name": "AQUA/WATER",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "notes": "Explicit bilingual wrappers only. Water presence does not establish water leadership, continuity or lightness.",
+      "source_refs": [
+        "F038"
+      ]
+    },
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "notes": "Volatile D5; no blend-residue inference.",
+      "source_refs": [
+        "F039"
+      ]
+    },
+    {
+      "canonical_name": "HEXYLENE GLYCOL",
+      "roles": [
+        "solvent",
+        "emulsifying_auxiliary"
+      ],
+      "notes": "Exact glycol solvent; neither lipid nor admitted substantive film. Registry generic functions do not prove final cleanser action.",
+      "source_refs": [
+        "F040"
+      ]
+    },
+    {
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Exact hair-conditioning silicone; film load, grade and repeated washout unspecified.",
+      "source_refs": [
+        "F041"
+      ]
+    },
+    {
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "source_refs": [
+        "F042"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "roles": [
+        "multifunctional_diol",
+        "not_assessed"
+      ],
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "source_refs": [
+        "F043"
+      ]
+    },
+    {
+      "canonical_name": "POLYACRYLAMIDE",
+      "roles": [
+        "rheology_polymer"
+      ],
+      "notes": "In the declared polyacrylamide/C13-14 isoparaffin/Laureth-7 system, an aqueous thickening/stabilizing interpretation is supported. Not automatically a hair-hold film, and not proof of exact SEPIGEL grade or dose.",
+      "source_refs": [
+        "F044"
+      ]
+    },
+    {
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "roles": [
+        "hydrocarbon_carrier",
+        "rheology_system_component"
+      ],
+      "notes": "Exact old INCI appears in official 2024 SEPIGEL index; retain spelling, no automatic rename to isoalkane or evaporation/low-film claim. Triad fits aqueous emulsion rheology, not proof of this supplier grade.",
+      "source_refs": [
+        "F045"
+      ]
+    },
+    {
+      "canonical_name": "MICA",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "No exact reviewed function entry in this closed supplement. Do not infer chemical identity, hair film, grade or washout; decide whether this gap is material.",
+      "source_refs": [
+        "F046"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "source_refs": [
+        "F047"
+      ]
+    },
+    {
+      "canonical_name": "LAURETH-7",
+      "roles": [
+        "emulsifying_auxiliary",
+        "rheology_system_component"
+      ],
+      "notes": "Triad supports aqueous stabilizing/emulsifying system; not substantive hair-hold film or proof of final washout.",
+      "source_refs": [
+        "F048"
+      ]
+    },
+    {
+      "canonical_name": "TITANIUM DIOXIDE (CI 77891)",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "No exact reviewed function entry in this closed supplement. Do not infer chemical identity, hair film, grade or washout; decide whether this gap is material.",
+      "source_refs": [
+        "F049"
+      ]
+    },
+    {
+      "canonical_name": "BUTYLENE GLYCOL",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "No exact reviewed function entry in this closed supplement. Do not infer chemical identity, hair film, grade or washout; decide whether this gap is material.",
+      "source_refs": [
+        "F050"
+      ]
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "source_refs": [
+        "F051"
+      ]
+    }
+  ]
+}

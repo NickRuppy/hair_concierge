@@ -1,0 +1,48 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "stage2-packet.json",
+    "lane-b/blind-records.json",
+    "method.md",
+    "dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42",
+    "lane-b/blind-records.json": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b",
+    "method.md": "bed580a121f35c344208add0a561a4291ade68586d4a8eb0120fe606370597e0",
+    "dictionary.json": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1"
+  },
+  "completed_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "H05",
+    "H06"
+  ],
+  "blind_preservation": {
+    "status": "byte_identical",
+    "blind_records_sha256_before": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b",
+    "blind_records_sha256_after": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b",
+    "statement": "Stage 2 is a separate source-property artifact. No blind property, role, persistence value, trace, note or other lane file was written. Method and dictionary hashes match those read in Stage 1."
+  },
+  "recognized_formulas": [
+    {
+      "case_id": "H04",
+      "disclosure": "Stage 1 had disclosed familiarity with the literal RAHUA token; identity is now explicitly revealed by this packet."
+    },
+    {
+      "case_id": "H05",
+      "disclosure": "Stage 1 had disclosed an unverified possible Oribe association; identity is now explicitly revealed by this packet. No remembered claims or directions were used."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "Read only the four authorized Stage 2 files. No browser, source-packet reference target, prior corpus, material reference reread, peer output, memory or nested reviewer was accessed. The method/dictionary were already read completely in Stage 1 and their exact hashes were verified unchanged; Stage 2-relevant contents were inspected again.",
+    "H04 Rahua Oil and H05 Jasmine Oil are present matches with unknown prominence because the sealed roles remain unresolved. Unknown is not absence. H04 Sacha Inchi carries its sealed affirmative secondary role, including its existing identity rationale, without a new functional inference.",
+    "H04 and H05 dispenser mechanisms remain unknown; drop directions or familiar packaging are not treated as mechanism evidence.",
+    "H02 and H04 preserve accepted UV claims but have no recognized exact filter; H05 preserves Polysilicone-15 but has no accepted source-scoped UV claim. All fail the conjunction without rewriting source claim acceptance.",
+    "H04 supports dry_finish only. H05 second direction remains post_styling_finish on ends, with its own nonnumeric additional dose; no dampness/dryness wording is inserted into the source stage.",
+    "The standard eight property keys, all six cases, source/direction IDs, hero mappings, exact rank evidence, trace markers, claim conjunctions, complete separate scenarios and input hash stability were validated in memory before output. No semantic Stage 2 output reread was performed."
+  ]
+}

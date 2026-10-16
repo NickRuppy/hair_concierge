@@ -1,0 +1,186 @@
+{
+  "scope": "Chat Oil weight and supported-use alignment only",
+  "branch": "codex/chat-oil-facts",
+  "base": "9fc02a26285ad172c9c21556a0dac8419bc45257",
+  "content_fingerprint": "36fb87eb6c0cc905de33ba87728be8251557c19185f1d92f378371eacb96dd65",
+  "manifest": [
+    {
+      "path": "plans/oil-inci/chat-oil-facts-alignment-2026-10-15.md",
+      "sha256": "e8585bab3021b45c71e0051a3b18c482a0a8a32941ee96cbcc01a06ed355f310"
+    },
+    {
+      "path": "src/lib/agent/tools/select-products.ts",
+      "sha256": "2968ea10b7d9726806528fe51124a4db8497de32db36a9961241a8445cdd673c"
+    },
+    {
+      "path": "src/lib/oil/constants.ts",
+      "sha256": "9ebf18572cd09c7be59d184deadd598bbf18c6e4c536ccafdf19a5f199e04323"
+    },
+    {
+      "path": "src/lib/oil/weight.ts",
+      "sha256": "1a23d2fbb1b16aa2672a197a48a3092712b7c8fb07f7b9f403362759e56a045c"
+    },
+    {
+      "path": "src/lib/personal-plan/categories/oil.ts",
+      "sha256": "0a3e92bb671df73f1041b4e42c3cf6b5164e132d2ecf2386914809985118d0f2"
+    },
+    {
+      "path": "src/lib/recommendation-engine/categories/oil.ts",
+      "sha256": "d18f4dac1a27a2de91b87b96d9e7445185f205dd79193966ae8a040b9aa79cfb"
+    },
+    {
+      "path": "src/lib/recommendation-engine/request-context.ts",
+      "sha256": "08ec74a25410cdf30eb9a7b78ed38b9a7f2d394341e42c1ddffd12e151bca0c9"
+    },
+    {
+      "path": "src/lib/recommendation-engine/selection.ts",
+      "sha256": "a4a86eeededdb797d9bdec18583ec7cc95cc6033c364734dc04a130cadc236b1"
+    },
+    {
+      "path": "src/lib/recommendation-engine/types.ts",
+      "sha256": "c256af10814aad799eec684ac5e23b4225a7c510c81a709cb4be5fb6c45ad6f0"
+    },
+    {
+      "path": "src/lib/types.ts",
+      "sha256": "6ce9f287dc8accc52c87a44ab35e7dc43419d38df86db24264e425ade7e8ad81"
+    },
+    {
+      "path": "tests/agent-select-products-tool.spec.ts",
+      "sha256": "cc29023d2a51b4750b7e472d54b7269eece5d2481b004f0a65d70d6aebbb109c"
+    },
+    {
+      "path": "tests/chat-oil-spec-selection.test.ts",
+      "sha256": "719160772de636e8270e766a53ba326d0c26edb647593e556ddc92b182ed87ed"
+    },
+    {
+      "path": "tests/recommendation-engine-selection.test.ts",
+      "sha256": "238ad935ef96459407b828647162f13300635488ac84b4a0836952d9e7063570"
+    }
+  ],
+  "fingerprint_contract": "SHA256 of sorted relative-path TAB current-content-SHA256 NEWLINE; receipt itself excluded to avoid self-reference.",
+  "source_handoff": {
+    "branch": "codex/oil-review-lab",
+    "base": "10f2f9726978a18c52acb3ee12569d63023feabd",
+    "content_fingerprint": "6369fccac3d00bda7edfa8d665745c452507c3f32016bcc7f9addbff44f0eab4",
+    "review_status": "approved",
+    "receipt_sha256": "9ff75d27295c5fbcf3bdc804d9e47babd59fcd6acb5cf86b16d89d289d3dd969",
+    "preserved_worktree": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-review-lab",
+    "preserved_changed_untracked_files": 1103,
+    "transfer": "Ten tracked code/test deltas applied to fresh main; new helper/loading test copied explicitly. Current-main Bondbuilder/Leave-in changes preserved. Only publication plan and this receipt rewritten for self-contained PR."
+  },
+  "decision_coverage": {
+    "status": "confirmed",
+    "implementation_acknowledgement": "Okay let\u2019s align chat with the actual oil weight and supported uses then. Keep matching tags manual, use subagents, and only come back if there\u2019s a critical decision.",
+    "publication_acknowledgement": "Okay good, let\u2019s prepare the draft PR then. Use subagents and only come back if there\u2019s a critical decision.",
+    "internal_revalidation": "Publication includes exactly12 code/test paths, one plan and this receipt. All original product decisions retained. No additional consequential assumptions."
+  },
+  "verification": [
+    {
+      "command": "npm run verification:plan -- --files [12 code/test paths in manifest]",
+      "result": "owner-review; orchestrator selected direct owners plus matcher/foundation/Personal Plan siblings"
+    },
+    {
+      "command": "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:1 SUPABASE_SERVICE_ROLE_KEY=local-contract-key npm run test:focused -- tests/recommendation-engine-selection.test.ts tests/chat-oil-spec-selection.test.ts tests/agent-select-products-tool.spec.ts tests/product-matcher.spec.ts tests/recommendation-engine-foundation.test.ts tests/personal-plan/categories/oil.test.ts tests/personal-plan/fit-verdict-categories.test.ts",
+      "result": "466 passed on fresh base",
+      "raw_log_sha256": "a5346f7b5b4e4a9bae3e1879e0622c9423d46b8403f5a8c6e988ac3fe467031c"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "pass on fresh base",
+      "raw_log_sha256": "39f91d15a6b5c10be2abd5339acdd48de6eab8d1ffcfc4714d3f572991aade29"
+    },
+    {
+      "command": "~/.local/bin/coding-check -- ./node_modules/.bin/eslint [nine source paths in manifest]",
+      "result": "pass; no source errors or warnings",
+      "raw_log_sha256": "1392489ddc1d9282bcac145dae19af53a8ee3458fd18445695da1a4ee50b2d02"
+    },
+    {
+      "command": "prettier --check [13 manifest paths]; git diff --check",
+      "result": "pass"
+    }
+  ],
+  "reused_source_proof": {
+    "red_proof": "Original loader/request guards failed3/3; original owner/projection guards failed6/7; strengthened HTTP fixture rechecked against original selector failed2/3 for intended unsupported-product/fallback behavior. Proposed selector passes.",
+    "integration": "Real selector, matcher, Supabase HTTP client and Chat projection; 501 unsupported rows before qualifying finishes; paging, missing-role/weight/thickness, raw null thickness, spec-error, inactive/curation/category and owned/preserve/budget boundaries covered. GET only.",
+    "read_only_catalog_check_date": "2026-10-15",
+    "live_catalog": {
+      "project_id": "pqdkhefxsxkyeqelqegq",
+      "read_only": true,
+      "active_recommended_oils": 39,
+      "with_canonical_spec": 39,
+      "with_valid_weight": 39,
+      "with_reviewed_role_set": 39,
+      "with_thickness_set": 39,
+      "finish_complete": 24,
+      "prewash_complete": 17,
+      "fine_ideal_finish": 7,
+      "normal_ideal_finish": 9,
+      "coarse_ideal_finish": 4,
+      "exact_sdk_join": {
+        "joined_rows": 52,
+        "active_recommended_oils": 39,
+        "join_shape": "object",
+        "valid_weights": 39
+      }
+    },
+    "live_selector_smoke": "Six diameter/use paths (fine, normal, coarse \u00d7 finish, prewash) passed against live read-only catalog; every finish result ideal and projected as recommended. No DB write or LLM request."
+  },
+  "review": {
+    "status": "approved",
+    "content_fingerprint": "36fb87eb6c0cc905de33ba87728be8251557c19185f1d92f378371eacb96dd65",
+    "routing": "normal correctness plus structural lens; nine source paths and large existing selector/output files",
+    "counterpart": "Claude Opus4.8/high, read-only terminal whole-branch review before push",
+    "prior_scope_review": "Source implementation approved; fresh-base publication review required after isolated transfer.",
+    "verdict": "No hard defects found. Nothing blocks the draft PR. Correctness and structural routing clear.",
+    "report_sha256": "350968fe128b7507e87019b07e050a441746dae3fd62b677fad5e9e5f74dbfbd",
+    "report_disposition": "discard after recording verdict and rulings",
+    "orchestrator_revalidation": "Inspected all observations against scoped code and fresh-base delta. No blocking finding; current-main Bondbuilder/Leave-in behavior remains preserved. Canonical fingerprint unchanged.",
+    "nonblocking_rulings": [
+      "Pagination mock matches the installed client HTTP contract; revisit on a dependency change. No production defect identified.",
+      "Legacy purpose_fit/subtype guard and orphaned matcher export are compatibility/cleanup observations outside this bounded publication; all current purposes map correctly.",
+      "OilWeight and PlanCareWeight are structurally identical; TypeScript enforces compatibility if either changes.",
+      "HairProfile.concerns is a non-null typed array, consistent with existing callers. No evidence of an in-scope runtime defect."
+    ]
+  },
+  "artifact_disposition": {
+    "commit": [
+      "plans/oil-inci/chat-oil-facts-alignment-2026-10-15.md",
+      "src/lib/agent/tools/select-products.ts",
+      "src/lib/oil/constants.ts",
+      "src/lib/oil/weight.ts",
+      "src/lib/personal-plan/categories/oil.ts",
+      "src/lib/recommendation-engine/categories/oil.ts",
+      "src/lib/recommendation-engine/request-context.ts",
+      "src/lib/recommendation-engine/selection.ts",
+      "src/lib/recommendation-engine/types.ts",
+      "src/lib/types.ts",
+      "tests/agent-select-products-tool.spec.ts",
+      "tests/chat-oil-spec-selection.test.ts",
+      "tests/recommendation-engine-selection.test.ts",
+      "plans/oil-inci/chat-oil-facts-alignment-2026-10-15-verification.json"
+    ],
+    "preserve_outside_pr": [
+      "Existing Oil research/Intake/Lab files and original historical receipts in .worktrees/oil-review-lab"
+    ],
+    "discard": [
+      "/tmp/chat-oil-publication.patch",
+      "/tmp/chat-oil-pr-claude-review.md",
+      "/tmp/chat-oil-source-preservation.json",
+      "/tmp/chat-oil-pr-tests.log",
+      "/tmp/chat-oil-pr-typecheck.log",
+      "/tmp/chat-oil-pr-lint.log",
+      "/tmp/chat-oil-pr-body.md"
+    ],
+    "archive": []
+  },
+  "boundaries": [
+    "Matching tags remain manual; no catalog additions or writes.",
+    "No schema/migration/intake/Lab/method-pin/worker activation changes.",
+    "No new damp/scalp intent or persistence/UV/heat/ingredient-flag ranking.",
+    "User authorizes commit,push,draftPR only. Merge,deployment and production writes remain separate."
+  ],
+  "remaining_checks": [
+    "Hosted CI after push; required before merge."
+  ],
+  "commit_gate": "Normal pre-commit lint-staged and TypeScript hooks must succeed; commit output and committed-manifest comparison provide the publication receipt."
+}

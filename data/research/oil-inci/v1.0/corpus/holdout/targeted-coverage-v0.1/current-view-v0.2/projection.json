@@ -1,0 +1,22 @@
+[
+  {
+    "product_key": "oil-targeted-t01",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-targeted-t02",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-targeted-t04",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-targeted-t06",
+    "policy_version": "oil-persistence-leave-on-v0.1",
+    "persistence_potential": "moderate"
+  }
+]

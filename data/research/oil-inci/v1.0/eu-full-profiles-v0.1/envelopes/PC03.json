@@ -1,0 +1,4671 @@
+{
+  "research_id": "oil:oil-eu-full-pc03",
+  "submission_id": null,
+  "research_method": {
+    "purpose": "local_research",
+    "engine_id": "oil-standard",
+    "methodology_version": "v0.9",
+    "adapter_version": "oil-production-adapter-v1",
+    "policy_pins": {
+      "docs/research/oil-inci/v1.0/02_classification-standard-v0.9.md": "d00a7fd6d870163e6d95ad0fb52e9a0208c9232736f4b0c204abf4b31a1446ba",
+      "docs/research/oil-inci/v1.0/01_property-set-v0.3.md": "b8c6ef11ea0e64188f0a7f432c4ee0b78cbfe891d2be425ecbda3b1d2bea5d6b",
+      "docs/research/oil-inci/v1.0/11_operating-guide-v0.3.md": "3087b412c1e9bb7b2d444a0c032a39086762318bcf3dde4094981ea4ffc2c925",
+      "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.3.md": "01c3c1caa317d588cc4bdc429dc171fcc1f47c51f289402652ede1adae08b248",
+      "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+      "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+      "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+      "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+      "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+      "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+      "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+      "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+    }
+  },
+  "identity": {
+    "brand": "Dr. Hauschka",
+    "product": "Haaröl",
+    "market": "DE",
+    "variant": null,
+    "package": {
+      "size_text": null,
+      "size_ml": 75,
+      "combined_declaration": null
+    },
+    "identifier": null,
+    "category": "hair_oil",
+    "original": {
+      "brand": "Dr. Hauschka",
+      "product": "Haaröl",
+      "market": "DE",
+      "size_ml": 75,
+      "gtin_if_verified": null,
+      "variant": null
+    },
+    "mapping_receipt": [
+      {
+        "reason": "Literal exact European maker identity; no EU-wide formula equivalence or variant inference.",
+        "source_id": "EUFP-PC03-S01"
+      }
+    ],
+    "source_ids": [
+      "EUFP-PC03-S01",
+      "EUFP-PC03-I01"
+    ],
+    "conflicts": []
+  },
+  "formula": {
+    "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+    "ingredients": [
+      {
+        "rank": 1,
+        "raw_name": "Arachis Hypogaea Oil",
+        "canonical_name": "ARACHIS HYPOGAEA OIL"
+      },
+      {
+        "rank": 2,
+        "raw_name": "Melia Azadirachta Leaf Extract",
+        "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+      },
+      {
+        "rank": 3,
+        "raw_name": "Triticum Vulgare Germ Oil",
+        "canonical_name": "TRITICUM VULGARE GERM OIL"
+      },
+      {
+        "rank": 4,
+        "raw_name": "Chamomilla Recutita Flower Extract",
+        "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+      },
+      {
+        "rank": 5,
+        "raw_name": "Lecithin",
+        "canonical_name": "LECITHIN"
+      },
+      {
+        "rank": 6,
+        "raw_name": "Alcohol",
+        "canonical_name": "ALCOHOL"
+      },
+      {
+        "rank": 7,
+        "raw_name": "Parfum*",
+        "canonical_name": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "raw_name": "Helianthus Annuus Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+      },
+      {
+        "rank": 9,
+        "raw_name": "Lavandula Oil/Extract",
+        "canonical_name": "LAVANDULA OIL/EXTRACT"
+      },
+      {
+        "rank": 10,
+        "raw_name": "Pinene*",
+        "canonical_name": "PINENE"
+      },
+      {
+        "rank": 11,
+        "raw_name": "Camphor*",
+        "canonical_name": "CAMPHOR"
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool*",
+        "canonical_name": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "raw_name": "Beta-Caryophyllene*",
+        "canonical_name": "BETA-CARYOPHYLLENE"
+      },
+      {
+        "rank": 14,
+        "raw_name": "Limonene*",
+        "canonical_name": "LIMONENE"
+      },
+      {
+        "rank": 15,
+        "raw_name": "Terpineol*",
+        "canonical_name": "TERPINEOL"
+      },
+      {
+        "rank": 16,
+        "raw_name": "Linalyl Acetate*",
+        "canonical_name": "LINALYL ACETATE"
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol*",
+        "canonical_name": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "raw_name": "Citral*",
+        "canonical_name": "CITRAL"
+      },
+      {
+        "rank": 19,
+        "raw_name": "Alpha-Terpinene*",
+        "canonical_name": "ALPHA-TERPINENE"
+      }
+    ],
+    "raw_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+    "normalized_sha256": "302e145a64d91ea0803e73b02624fc165fb95457681312c58551cd49985dcfb8",
+    "normalization_receipt": [
+      {
+        "rank": 1,
+        "raw_name": "Arachis Hypogaea Oil",
+        "canonical_name": "ARACHIS HYPOGAEA OIL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Melia Azadirachta Leaf Extract",
+        "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 3,
+        "raw_name": "Triticum Vulgare Germ Oil",
+        "canonical_name": "TRITICUM VULGARE GERM OIL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Chamomilla Recutita Flower Extract",
+        "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Lecithin",
+        "canonical_name": "LECITHIN",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Alcohol",
+        "canonical_name": "ALCOHOL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 7,
+        "raw_name": "Parfum*",
+        "canonical_name": "PARFUM",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 8,
+        "raw_name": "Helianthus Annuus Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 9,
+        "raw_name": "Lavandula Oil/Extract",
+        "canonical_name": "LAVANDULA OIL/EXTRACT",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 10,
+        "raw_name": "Pinene*",
+        "canonical_name": "PINENE",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 11,
+        "raw_name": "Camphor*",
+        "canonical_name": "CAMPHOR",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool*",
+        "canonical_name": "LINALOOL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 13,
+        "raw_name": "Beta-Caryophyllene*",
+        "canonical_name": "BETA-CARYOPHYLLENE",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 14,
+        "raw_name": "Limonene*",
+        "canonical_name": "LIMONENE",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 15,
+        "raw_name": "Terpineol*",
+        "canonical_name": "TERPINEOL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 16,
+        "raw_name": "Linalyl Acetate*",
+        "canonical_name": "LINALYL ACETATE",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol*",
+        "canonical_name": "CITRONELLOL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 18,
+        "raw_name": "Citral*",
+        "canonical_name": "CITRAL",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      },
+      {
+        "rank": 19,
+        "raw_name": "Alpha-Terpinene*",
+        "canonical_name": "ALPHA-TERPINENE",
+        "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+      }
+    ],
+    "contextual_declarations": [],
+    "source_ids": [
+      "EUFP-PC03-S01"
+    ],
+    "declaration_status": "complete",
+    "conflicts": []
+  },
+  "sources": [
+    {
+      "source_id": "EUFP-PC03-S01",
+      "url": "https://www.drhauschka.de/haarpflege/haaroel/",
+      "url_note": null,
+      "original": {
+        "source_id": "EUFP-PC03-S01",
+        "url": "https://www.drhauschka.de/haarpflege/haaroel/",
+        "market": "DE",
+        "kind": "manufacturer_product_page",
+        "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+        "reviewed_scope": [
+          "exact selected75ml product",
+          "description plus expanded More information",
+          "German ingredient summary and full INCI",
+          "complete application",
+          "tips and quality",
+          "linked product gallery (not customer reviews)"
+        ],
+        "short_verbatim_excerpts": [
+          "vor Sonne oder Salzwasser",
+          "Weizenkeimöl und Rosmarin",
+          "Vor Gebrauch schütteln."
+        ],
+        "factual_paraphrase": "Manufacturer describes protecting hair from sun/salt water, but does not explicitly refer to UV/rays/UVcolor protection. Marketing describes rosemary; full current INCI instead includes generic Lavandula Oil/Extract and Camphor. Do not insert rosemary into formula. Directions separately provide prewash lengths/ends, prewash scalp, and retained very-small-dose postwash ends.",
+        "web_reference": "turn704view2"
+      },
+      "directions": [
+        {
+          "direction_id": "EUFP-PC03-D01",
+          "text": "[{\"scenario_id\":\"PC03-USE-PREWASH-FIBRE\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D01\",\"supported_roles\":[\"pre_wash_fibre_treatment\"],\"site\":[\"lengths\",\"ends\"],\"stage\":\"dampen hair before washing\",\"dose\":\"unestablished\",\"contact_time\":\"at least20minutes; overnight alternative for very stressed hair\",\"removal\":\"wash\",\"restrictions\":\"None specified in this branch.\",\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\",\"source_original\":{\"scenario_id\":\"PC03-USE-PREWASH-FIBRE\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D01\",\"supported_roles\":[\"pre_wash_fibre_treatment\"],\"site\":\"lengths and ends\",\"stage\":\"dampen hair before washing\",\"dose\":\"unestablished\",\"contact_time\":\"at least20minutes; overnight alternative for very stressed hair\",\"removal\":{\"kind\":\"explicit_wash_after_contact\",\"detail\":\"Wash twice afterwards.\"},\"restrictions\":[],\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\"}}]"
+        },
+        {
+          "direction_id": "EUFP-PC03-D02",
+          "text": "[{\"scenario_id\":\"PC03-USE-PREWASH-SCALP\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D02\",\"supported_roles\":[\"scalp_application\"],\"site\":[\"scalp\"],\"stage\":\"dampen scalp before washing\",\"dose\":\"unestablished\",\"contact_time\":\"under towel about20minutes; overnight alternative for very stressed scalp\",\"removal\":\"wash\",\"restrictions\":\"None specified in this branch.\",\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\",\"source_original\":{\"scenario_id\":\"PC03-USE-PREWASH-SCALP\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D02\",\"supported_roles\":[\"scalp_application\"],\"site\":\"scalp; massage with fingertips\",\"stage\":\"dampen scalp before washing\",\"dose\":\"unestablished\",\"contact_time\":\"under towel about20minutes; overnight alternative for very stressed scalp\",\"removal\":{\"kind\":\"explicit_wash_after_contact\",\"detail\":\"Wash twice afterwards.\"},\"restrictions\":[],\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\"}}]"
+        },
+        {
+          "direction_id": "EUFP-PC03-D03",
+          "text": "[{\"scenario_id\":\"PC03-USE-DAMP-ENDS\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D03\",\"supported_roles\":[\"leave_on_fibre_conditioning\"],\"site\":[\"ends\"],\"stage\":\"after washing, slightly damp hair\",\"dose\":\"very little\",\"contact_time\":\"unestablished\",\"removal\":\"explicit_no_rinse\",\"restrictions\":\"None specified in this branch.\",\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\",\"source_original\":{\"scenario_id\":\"PC03-USE-DAMP-ENDS\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D03\",\"supported_roles\":[\"leave_on_fibre_conditioning\"],\"site\":\"ends only\",\"stage\":\"after washing, slightly damp hair\",\"dose\":\"very little\",\"contact_time\":\"unestablished\",\"removal\":{\"kind\":\"explicit_do_not_wash_out\",\"detail\":\"Do not wash out.\"},\"restrictions\":[],\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\"}},{\"scenario_id\":\"PC03-USE-DRY-ENDS\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D03\",\"supported_roles\":[\"dry_finish\"],\"site\":[\"ends\"],\"stage\":\"after washing, dry hair\",\"dose\":\"very little\",\"contact_time\":\"unestablished\",\"removal\":\"explicit_no_rinse\",\"restrictions\":\"None specified in this branch.\",\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\",\"source_original\":{\"scenario_id\":\"PC03-USE-DRY-ENDS\",\"source_id\":\"EUFP-PC03-S01\",\"direction_id\":\"EUFP-PC03-D03\",\"supported_roles\":[\"dry_finish\"],\"site\":\"ends only\",\"stage\":\"after washing, dry hair\",\"dose\":\"very little\",\"contact_time\":\"unestablished\",\"removal\":{\"kind\":\"explicit_do_not_wash_out\",\"detail\":\"Do not wash out.\"},\"restrictions\":[],\"shake_before_use\":true,\"frequency\":\"once weekly; more often if needed\"}}]"
+        }
+      ]
+    },
+    {
+      "source_id": "EUFP-PC03-I01",
+      "url": "https://picture.drhauschka.de/dprj6oup9/image/private/s--88aeO0Jf--/media/7e/28/fb/1762929098/3219618-.jpg?_a=BAAAV6H8",
+      "url_note": null,
+      "original": {
+        "source_id": "EUFP-PC03-I01",
+        "url": "https://picture.drhauschka.de/dprj6oup9/image/private/s--88aeO0Jf--/media/7e/28/fb/1762929098/3219618-.jpg?_a=BAAAV6H8",
+        "market": "DE",
+        "kind": "manufacturer_linked_product_image",
+        "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+        "reviewed_scope": [
+          "manufacturer selected75ml product gallery full image"
+        ],
+        "short_verbatim_excerpts": [],
+        "factual_paraphrase": "Chrome image observation: Dr.Hauschka Haaröl/HairOil bottle with a white press actuator and short lateral outlet; pump mechanism visible, not inferred from a closed cap. Source page calls it a dosing dispenser.",
+        "web_reference": "chrome:1280031977:image-observation"
+      },
+      "directions": []
+    },
+    {
+      "source_id": "PSB-S01",
+      "url": "https://www.drhauschka.de/haarpflege/haaroel/",
+      "url_note": null,
+      "original": {
+        "neutral_id": "PC03",
+        "source_key": "PSB01",
+        "identity": {
+          "brand": "Dr. Hauschka",
+          "product": "Haaröl",
+          "market": "DE",
+          "size_ml": 75,
+          "gtin": null,
+          "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+        },
+        "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+        "source_url": "https://www.drhauschka.de/haarpflege/haaroel/",
+        "source_id": "PSB-S01",
+        "direction_id": "PSB-S01",
+        "selected_direction": "Nach der Haarwäsche: Zur Pflege der Haarspitzen sehr wenig Haaröl in die Spitzen geben (in leicht feuchtes oder trockenes Haar), nicht auswaschen. Wir empfehlen, das Haaröl einmal pro Woche anzuwenden, bei Bedarf auch öfter.",
+        "admitted_neutral_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+        "limits": [
+          "GTIN not captured; page identity and 75 ml size only.",
+          "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+          "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+          "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+          "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+        ],
+        "formula_conflicts": []
+      },
+      "directions": [
+        {
+          "direction_id": "PSB-S01",
+          "text": "Nach der Haarwäsche: Zur Pflege der Haarspitzen sehr wenig Haaröl in die Spitzen geben (in leicht feuchtes oder trockenes Haar), nicht auswaschen. Wir empfehlen, das Haaröl einmal pro Woche anzuwenden, bei Bedarf auch öfter."
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "import_kind": "local",
+    "original_method": {
+      "run_id": "eu-full-profiles-v0.1",
+      "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+      "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+      "declared_version": "v0.9",
+      "unrecorded_note": null
+    },
+    "original_record": {
+      "product_key": "oil-eu-full-pc03",
+      "case_id": "PC03",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin_if_verified": null,
+        "variant": null
+      },
+      "formula": {
+        "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Arachis Hypogaea Oil",
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Melia Azadirachta Leaf Extract",
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "raw_name": "Triticum Vulgare Germ Oil",
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Chamomilla Recutita Flower Extract",
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Lecithin",
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Alcohol",
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 7,
+            "raw_name": "Parfum*",
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 8,
+            "raw_name": "Helianthus Annuus Seed Oil",
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "raw_name": "Lavandula Oil/Extract",
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 10,
+            "raw_name": "Pinene*",
+            "canonical_name": "PINENE"
+          },
+          {
+            "rank": 11,
+            "raw_name": "Camphor*",
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 12,
+            "raw_name": "Linalool*",
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "raw_name": "Beta-Caryophyllene*",
+            "canonical_name": "BETA-CARYOPHYLLENE"
+          },
+          {
+            "rank": 14,
+            "raw_name": "Limonene*",
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 15,
+            "raw_name": "Terpineol*",
+            "canonical_name": "TERPINEOL"
+          },
+          {
+            "rank": 16,
+            "raw_name": "Linalyl Acetate*",
+            "canonical_name": "LINALYL ACETATE"
+          },
+          {
+            "rank": 17,
+            "raw_name": "Citronellol*",
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "raw_name": "Citral*",
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 19,
+            "raw_name": "Alpha-Terpinene*",
+            "canonical_name": "ALPHA-TERPINENE"
+          }
+        ],
+        "raw_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+        "normalized_sha256": "302e145a64d91ea0803e73b02624fc165fb95457681312c58551cd49985dcfb8",
+        "normalization_receipt": [
+          {
+            "rank": 1,
+            "raw_name": "Arachis Hypogaea Oil",
+            "canonical_name": "ARACHIS HYPOGAEA OIL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 2,
+            "raw_name": "Melia Azadirachta Leaf Extract",
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 3,
+            "raw_name": "Triticum Vulgare Germ Oil",
+            "canonical_name": "TRITICUM VULGARE GERM OIL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 4,
+            "raw_name": "Chamomilla Recutita Flower Extract",
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 5,
+            "raw_name": "Lecithin",
+            "canonical_name": "LECITHIN",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 6,
+            "raw_name": "Alcohol",
+            "canonical_name": "ALCOHOL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 7,
+            "raw_name": "Parfum*",
+            "canonical_name": "PARFUM",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 8,
+            "raw_name": "Helianthus Annuus Seed Oil",
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 9,
+            "raw_name": "Lavandula Oil/Extract",
+            "canonical_name": "LAVANDULA OIL/EXTRACT",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 10,
+            "raw_name": "Pinene*",
+            "canonical_name": "PINENE",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 11,
+            "raw_name": "Camphor*",
+            "canonical_name": "CAMPHOR",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 12,
+            "raw_name": "Linalool*",
+            "canonical_name": "LINALOOL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 13,
+            "raw_name": "Beta-Caryophyllene*",
+            "canonical_name": "BETA-CARYOPHYLLENE",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 14,
+            "raw_name": "Limonene*",
+            "canonical_name": "LIMONENE",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 15,
+            "raw_name": "Terpineol*",
+            "canonical_name": "TERPINEOL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 16,
+            "raw_name": "Linalyl Acetate*",
+            "canonical_name": "LINALYL ACETATE",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 17,
+            "raw_name": "Citronellol*",
+            "canonical_name": "CITRONELLOL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 18,
+            "raw_name": "Citral*",
+            "canonical_name": "CITRAL",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          },
+          {
+            "rank": 19,
+            "raw_name": "Alpha-Terpinene*",
+            "canonical_name": "ALPHA-TERPINENE",
+            "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+          }
+        ],
+        "source_ids": [
+          "EUFP-PC03-S01"
+        ],
+        "declaration_status": "complete",
+        "conflicts": [],
+        "contextual_declarations": []
+      },
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Leading intact peanut oil establishes the clearest plant-conditioning carrier.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+          "dictionary_roles": [
+            "botanical_extract",
+            "botanical_leaf_extract",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Early leaf extract contributes a reviewed skin-conditioning ingredient; it is not neem fixed oil or an established separate carrier.",
+          "ambiguity": "Grade and amount are not supplied; formula role is qualitative and does not imply a negligible contribution."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Intact wheat germ oil contributes a second plant-conditioning backbone route, with its rich material prior treated as qualitative.",
+          "ambiguity": "The admitted rich prior concerns a named unrefined grade; this formula grade is unknown."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact extract is present but its function/preparation is not assessed in the admitted dictionary.",
+          "ambiguity": "Exact function/preparation unassessed; contribution is not assumed negligible."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN",
+          "dictionary_roles": [
+            "emulsion_stabilizer"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized emulsion stabilizer; no lysolecithin or cohesive hair-film substitution.",
+          "ambiguity": "Generic stabilization does not establish a cohesive hair film."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL",
+          "dictionary_roles": [
+            "solvent"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Alcohol is a recognized solvent, retained as a delivery contribution without claiming its quantity or negligible remainder.",
+          "ambiguity": "Solvent quantity and delivery contribution are unknown."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance_composition function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Intact sunflower seed oil contributes to the complete plant-oil inventory without establishing a second synthetic backbone.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "dictionary_roles": [
+            "fragrance_group",
+            "botanical_preparation_unspecified"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Fragrance group is recognized, but Oil/Extract preparation is unspecified; preserve that role uncertainty.",
+          "ambiguity": "Exact functional role or preparation remains unresolved in the frozen dictionary; no unreviewed substitution or negligible-contribution assumption."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Pinene*",
+          "canonical_name": "PINENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Camphor*",
+          "canonical_name": "CAMPHOR",
+          "dictionary_roles": [
+            "cooling_or_aromatic_auxiliary",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized cooling_or_aromatic_auxiliary, declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool*",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Beta-Caryophyllene*",
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Limonene*",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Terpineol*",
+          "canonical_name": "TERPINEOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Linalyl Acetate*",
+          "canonical_name": "LINALYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol*",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citral*",
+          "canonical_name": "CITRAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+          "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Function is explicitly not assessed, so this terminal ingredient cannot be declared an auxiliary solely from its name or position.",
+          "ambiguity": "Not assessed; contextual aromatic-origin declaration does not supply an exact functional assessment."
+        }
+      ],
+      "auxiliary_suffix": {
+        "start_rank": "none",
+        "ranks": [],
+        "markers": [],
+        "reason": "The final rank 19 has an explicitly unassessed function, excluding every preceding suffix. Earlier regions also contain the rank 4 unresolved extract and rank 6 solvent. The aromatic-origin asterisks do not supply the missing exact function or erase those ingredients."
+      },
+      "base": {
+        "value": "plant_oil_blend",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "Alcohol at rank 6 is a synthetic solvent, and two extract/preparation gaps prevent treating the whole product as literal pure oil."
+        ],
+        "nearest_alternative": "hybrid",
+        "reason": "The affirmative conditioning backbone comprises intact peanut and wheat germ oils, with sunflower seed oil also included in the inventory. Alcohol is a secondary solvent; the available functions do not establish a competing principal synthetic carrier system. The extracts are not neem/chamomile fixed oils, and the lavender oil/extract group is not counted as a known intact fixed carrier.",
+        "unresolved": "Extract preparations and solvent contribution are undisclosed; rank 4 is function-unassessed. If a substantial unreported extraction-carrier architecture exists, the base would require review."
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "ALPHA-TERPINENE"
+          }
+        ],
+        "counter_signal": [
+          "Rich: principal wheat germ oil has a rich low-confidence prior, with unspecified grade.",
+          "Light: sunflower oil has a light prior and the peanut prior admits light; alcohol delivery could reduce the effective retained contribution but no amount is known."
+        ],
+        "nearest_alternative": "rich",
+        "reason": "B1/B3 favor medium from the leading peanut medium tendency together with rich wheat germ and lighter sunflower. The rich wheat-germ contribution argues against a light outcome, but does not make this a rich-leading or demonstrated structured-rich backbone under B6. Extract/preparation gaps are disclosed rather than replaced by invented effects; no affirmative competing carrier architecture currently makes them class-decisive under B7.",
+        "unresolved": "No amounts, extraction carriers, wheat-germ grade or equal-dose hair feel. Rank 4 and terminal rank 19 have unassessed functions; their contribution cannot be called negligible."
+      },
+      "penetration_potential": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "A fixed-oil surface/emollient interpretation is plausible, but absence of an admitted positive whole-oil anchor does not demonstrate surface-only behavior."
+        ],
+        "nearest_alternative": "surface_led",
+        "reason": "The plant-conditioning backbone contains none of the method-admitted coconut, Camellia oleifera or safflower anchors. It also lacks an independent affirmative mineral-oil or predominant synthetic film backbone that would settle surface-led. Preserve unknown rather than infer nonpenetration from missing studies.",
+        "unresolved": "Exact-formula or admitted exact-oil uptake evidence is missing. Extract preparations and laboratory-to-retail delivery extrapolation remain unresolved."
+      },
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 1,
+              "canonical_name": "ARACHIS HYPOGAEA OIL"
+            },
+            {
+              "rank": 2,
+              "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+            },
+            {
+              "rank": 3,
+              "canonical_name": "TRITICUM VULGARE GERM OIL"
+            },
+            {
+              "rank": 4,
+              "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "LECITHIN"
+            },
+            {
+              "rank": 6,
+              "canonical_name": "ALCOHOL"
+            },
+            {
+              "rank": 7,
+              "canonical_name": "PARFUM"
+            },
+            {
+              "rank": 8,
+              "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+            },
+            {
+              "rank": 9,
+              "canonical_name": "LAVANDULA OIL/EXTRACT"
+            },
+            {
+              "rank": 10,
+              "canonical_name": "PINENE"
+            },
+            {
+              "rank": 11,
+              "canonical_name": "CAMPHOR"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 13,
+              "canonical_name": "BETA-CARYOPHYLLENE"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "TERPINEOL"
+            },
+            {
+              "rank": 16,
+              "canonical_name": "LINALYL ACETATE"
+            },
+            {
+              "rank": 17,
+              "canonical_name": "CITRONELLOL"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "CITRAL"
+            },
+            {
+              "rank": 19,
+              "canonical_name": "ALPHA-TERPINENE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Complete supplied ordered declaration reviewed; no recognized exact match. Exact silicone identities are counted, including PEG-14 Dimethicone when present; no behavior is inferred from this presence flag.",
+          "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 1,
+              "canonical_name": "ARACHIS HYPOGAEA OIL"
+            },
+            {
+              "rank": 2,
+              "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+            },
+            {
+              "rank": 3,
+              "canonical_name": "TRITICUM VULGARE GERM OIL"
+            },
+            {
+              "rank": 4,
+              "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+            },
+            {
+              "rank": 5,
+              "canonical_name": "LECITHIN"
+            },
+            {
+              "rank": 6,
+              "canonical_name": "ALCOHOL"
+            },
+            {
+              "rank": 7,
+              "canonical_name": "PARFUM"
+            },
+            {
+              "rank": 8,
+              "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+            },
+            {
+              "rank": 9,
+              "canonical_name": "LAVANDULA OIL/EXTRACT"
+            },
+            {
+              "rank": 10,
+              "canonical_name": "PINENE"
+            },
+            {
+              "rank": 11,
+              "canonical_name": "CAMPHOR"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 13,
+              "canonical_name": "BETA-CARYOPHYLLENE"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "TERPINEOL"
+            },
+            {
+              "rank": 16,
+              "canonical_name": "LINALYL ACETATE"
+            },
+            {
+              "rank": 17,
+              "canonical_name": "CITRONELLOL"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "CITRAL"
+            },
+            {
+              "rank": 19,
+              "canonical_name": "ALPHA-TERPINENE"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Complete supplied ordered declaration reviewed; no recognized exact match. Closed liquid-mineral identity only; alkane/isoparaffin carriers and petroleum-related names are not automatically mineral oil.",
+          "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+        },
+        "drying_alcohol": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 6,
+              "canonical_name": "ALCOHOL"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "Recognized exact match(es). Only exact Alcohol or Alcohol Denat. matches. Anise Alcohol, glycols, Phenoxyethanol and Octyldodecanol do not match.",
+          "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 7,
+              "canonical_name": "PARFUM"
+            },
+            {
+              "rank": 9,
+              "canonical_name": "LAVANDULA OIL/EXTRACT"
+            },
+            {
+              "rank": 10,
+              "canonical_name": "PINENE"
+            },
+            {
+              "rank": 11,
+              "canonical_name": "CAMPHOR"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 13,
+              "canonical_name": "BETA-CARYOPHYLLENE"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "TERPINEOL"
+            },
+            {
+              "rank": 16,
+              "canonical_name": "LINALYL ACETATE"
+            },
+            {
+              "rank": 17,
+              "canonical_name": "CITRONELLOL"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "CITRAL"
+            }
+          ],
+          "counter_signal": [
+            "Some aromatic botanical preparations/functions are unresolved or unassessed. The true flag is independently established by the cited exact recognized fragrance declarations; no unassessed ingredient is relabeled merely to expand the match list."
+          ],
+          "nearest_alternative": false,
+          "reason": "Recognized exact match(es). Declared fragrance/allergen/aromatic exposure is present irrespective of perfuming intent; every admitted matching exact name is cited.",
+          "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+        },
+        "scalp_active_botanicals": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 11,
+              "canonical_name": "CAMPHOR"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "Recognized exact match(es). Closed essential-oil/Menthol/Camphor set only. Extracts and lavender alone do not extend it. Camphor asterisks do not erase declared presence.",
+          "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+        }
+      },
+      "named_oils": [
+        {
+          "hero_id": "PC03-H-WHEATGERM",
+          "hero_name": "Weizenkeimöl",
+          "matched_ranks": [
+            3
+          ],
+          "prominence": {
+            "value": "leading",
+            "estimate": true,
+            "confidence": "low",
+            "evidence": [
+              {
+                "source_id": "EUFP-PC03-S01"
+              },
+              {
+                "rank": 3,
+                "canonical_name": "TRITICUM VULGARE GERM OIL"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": null,
+            "reason": "Prominence follows the sealed formula-role ledger (leading); no concentration threshold inferred.",
+            "unresolved": []
+          },
+          "hero_kind": "fixed_botanical_oil",
+          "mapping_receipt": {
+            "hero_id": "PC03-H-WHEATGERM",
+            "hero_name": "Weizenkeimöl",
+            "hero_kind": "fixed_botanical_oil",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [
+              3
+            ],
+            "exact_inci_names": [
+              "Triticum Vulgare Germ Oil"
+            ],
+            "mapping_status": "source name and exact declared germ oil"
+          }
+        },
+        {
+          "hero_id": "PC03-H-ROSEMARY",
+          "hero_name": "ätherisches Rosmarinöl",
+          "matched_ranks": [],
+          "prominence": {
+            "value": "absent",
+            "estimate": false,
+            "confidence": "high",
+            "evidence": [
+              {
+                "source_id": "EUFP-PC03-S01"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": null,
+            "reason": "Advertised oil has no exact recognized match in the complete current declaration; source-copy mismatch preserved.",
+            "unresolved": [
+              "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+            ]
+          },
+          "hero_kind": "essential_oil",
+          "mapping_receipt": {
+            "hero_id": "PC03-H-ROSEMARY",
+            "hero_name": "ätherisches Rosmarinöl",
+            "hero_kind": "essential_oil",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [],
+            "exact_inci_names": [],
+            "mapping_status": "explicit advertised oil; no exact recognized rosemary oil in frozen declaration",
+            "ambiguity": "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "pump",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "EUFP-PC03-S01"
+          },
+          {
+            "source_id": "EUFP-PC03-I01"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": null,
+        "reason": "Uncapped producer bottle image exposes pump head and side outlet; product description confirms dosing dispenser.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "EUFP-PC03-S01"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": null,
+        "reason": "Completed review found no accepted explicit maker heat-protection claim.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "EUFP-PC03-S01"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": null,
+        "reason": "No accepted explicit hair-UV claim in the reviewed exact maker sources; therefore the filter AND claim gate is false. This does not measure zero protection.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "pre_wash_fibre_treatment",
+        "scalp_application",
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ],
+      "use_evidence": {
+        "value": [
+          "pre_wash_fibre_treatment",
+          "scalp_application",
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D01"
+          },
+          {
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D02"
+          },
+          {
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03"
+          },
+          {
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": null,
+        "reason": "Only coherent source-supported application branches; no dose, site, timing or removal imported from another branch.",
+        "unresolved": []
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC03-USE-PREWASH-FIBRE",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "dampen hair before washing",
+          "dose": "unestablished",
+          "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+          "removal": "wash",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-PREWASH-FIBRE",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D01",
+            "supported_roles": [
+              "pre_wash_fibre_treatment"
+            ],
+            "site": "lengths and ends",
+            "stage": "dampen hair before washing",
+            "dose": "unestablished",
+            "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        {
+          "scenario_id": "PC03-USE-PREWASH-SCALP",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": [
+            "scalp"
+          ],
+          "stage": "dampen scalp before washing",
+          "dose": "unestablished",
+          "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+          "removal": "wash",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-PREWASH-SCALP",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D02",
+            "supported_roles": [
+              "scalp_application"
+            ],
+            "site": "scalp; massage with fingertips",
+            "stage": "dampen scalp before washing",
+            "dose": "unestablished",
+            "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        {
+          "scenario_id": "PC03-USE-DAMP-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": [
+            "ends"
+          ],
+          "stage": "after washing, slightly damp hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": "explicit_no_rinse",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-DAMP-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "leave_on_fibre_conditioning"
+            ],
+            "site": "ends only",
+            "stage": "after washing, slightly damp hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        {
+          "scenario_id": "PC03-USE-DRY-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": [
+            "ends"
+          ],
+          "stage": "after washing, dry hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": "explicit_no_rinse",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-DRY-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "dry_finish"
+            ],
+            "site": "ends only",
+            "stage": "after washing, dry hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        }
+      ],
+      "persistence_potential": "moderate",
+      "persistence_trace_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+        "neutral_id": "PC03",
+        "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d"
+      },
+      "field_authority": {
+        "base": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "weight": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "penetration_potential": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "ingredient_ledger": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "auxiliary_suffix": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "ingredient_flags": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "named_oils": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "dispenser": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "provides_heat_protection": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "provides_uv_protection": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "supported_uses": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "use_evidence": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "application_scenarios": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+          "record_key": "PC03",
+          "reason": "Exact European maker source stage, applied after formula assessment seal."
+        },
+        "persistence_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+          "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d",
+          "record_key": "PC03",
+          "reason": "Preserve prior approved persistence scalar and full rank trace; not a new assessment."
+        }
+      },
+      "fit": {
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        }
+      },
+      "completion_status": "complete_research_with_permitted_gaps",
+      "issues": [
+        "Three identified intact fixed oils are counted: peanut rank 1, wheat germ rank 3 and sunflower seed rank 8. Leaf/flower extracts and lavender oil/extract are not silently counted as fixed oils.",
+        "Camphor rank 11 meets the closed scalp-botanical flag even though the asterisk declares its natural-essential-oil origin; this is neither an efficacy claim nor scalp-application permission.",
+        "No product identity was inferred. Unassessed functions and unspecified preparations limit robustness but do not supply permission to invent a class.",
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "source_stage": {
+        "neutral_id": "PC03",
+        "identity": {
+          "brand": "Dr. Hauschka",
+          "product": "Haaröl",
+          "market": "DE",
+          "size_ml": 75,
+          "gtin": null,
+          "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+        },
+        "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+        "raw_inci_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+        "frozen_formula_reference": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+          "source_id": "PSB-S01",
+          "raw_string_byte_equal": true,
+          "live_names_order_equal": true,
+          "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+        },
+        "prior_selected_persistence_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+        "formula_conflicts": [],
+        "source_limits": [
+          "GTIN not captured; page identity and 75 ml size only.",
+          "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+          "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+          "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+          "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+        ],
+        "source_ids": [
+          "EUFP-PC03-S01",
+          "EUFP-PC03-I01"
+        ],
+        "heroes": [
+          {
+            "hero_id": "PC03-H-WHEATGERM",
+            "hero_name": "Weizenkeimöl",
+            "hero_kind": "fixed_botanical_oil",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [
+              3
+            ],
+            "exact_inci_names": [
+              "Triticum Vulgare Germ Oil"
+            ],
+            "mapping_status": "source name and exact declared germ oil"
+          },
+          {
+            "hero_id": "PC03-H-ROSEMARY",
+            "hero_name": "ätherisches Rosmarinöl",
+            "hero_kind": "essential_oil",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [],
+            "exact_inci_names": [],
+            "mapping_status": "explicit advertised oil; no exact recognized rosemary oil in frozen declaration",
+            "ambiguity": "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+          }
+        ],
+        "non_oil_heroes": [
+          {
+            "name": "Neem",
+            "kind": "leaf extract",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [
+              2
+            ],
+            "reason": "marketed extract rather than named oil"
+          },
+          {
+            "name": "Kamille",
+            "kind": "flower extract",
+            "source_id": "EUFP-PC03-S01",
+            "matched_ranks": [
+              4
+            ],
+            "reason": "marketed extract rather than named oil"
+          }
+        ],
+        "packaging_observation": {
+          "source_ids": [
+            "EUFP-PC03-S01",
+            "EUFP-PC03-I01"
+          ],
+          "observed_mechanism": "press pump with short lateral outlet",
+          "permitted_dispenser_value": "pump",
+          "observation": "Uncapped producer bottle image exposes pump head and side outlet; product description confirms dosing dispenser.",
+          "unresolved": []
+        },
+        "application_scenarios": [
+          {
+            "scenario_id": "PC03-USE-PREWASH-FIBRE",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D01",
+            "supported_roles": [
+              "pre_wash_fibre_treatment"
+            ],
+            "site": "lengths and ends",
+            "stage": "dampen hair before washing",
+            "dose": "unestablished",
+            "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          },
+          {
+            "scenario_id": "PC03-USE-PREWASH-SCALP",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D02",
+            "supported_roles": [
+              "scalp_application"
+            ],
+            "site": "scalp; massage with fingertips",
+            "stage": "dampen scalp before washing",
+            "dose": "unestablished",
+            "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          },
+          {
+            "scenario_id": "PC03-USE-DAMP-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "leave_on_fibre_conditioning"
+            ],
+            "site": "ends only",
+            "stage": "after washing, slightly damp hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          },
+          {
+            "scenario_id": "PC03-USE-DRY-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "dry_finish"
+            ],
+            "site": "ends only",
+            "stage": "after washing, dry hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        ],
+        "supplemental_directions": [],
+        "storage_restrictions": [],
+        "heat_claim_review": {
+          "review_complete": true,
+          "source_ids": [
+            "EUFP-PC03-S01"
+          ],
+          "accepted_manufacturer_explicit_heat_claim": false,
+          "accepted_quote": "",
+          "temperature_source_text": null,
+          "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label."
+        },
+        "uv_claim_review": {
+          "review_complete": true,
+          "source_ids": [
+            "EUFP-PC03-S01"
+          ],
+          "accepted_manufacturer_explicit_hair_uv_claim": false,
+          "accepted_quote": null,
+          "reviewed_nearby_nonqualifying_text": "Hair protection from sun or saltwater is stated, but no explicit UV/radiation/hair-color-from-UV wording.",
+          "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label.",
+          "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+        }
+      },
+      "formula_context_notes": [
+        "Asterisks identify constituents from natural essential oils; not extra ingredients."
+      ],
+      "reviewed_inputs": [
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-method.md",
+          "sha256": "330a291d1fe105c8c990109abeb7c75d5528660d5c6bfe6d08157973719d2244"
+        },
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-input.json",
+          "sha256": "7cc52218886297dd7b63d7a1441b8b74dbf738a0aa255cc36d59e1e2b7c975c3"
+        },
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-a/results.json",
+          "sha256": "d575ab7aff4cf5e5556b7b2fc9716b0155b025869fd34a2717184613c5d90cd9"
+        },
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-b/results.json",
+          "sha256": "e93f369326858bc2c849545e68a0b39831250fa7f5e539061e2e4f21215cb11e"
+        },
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+          "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41"
+        },
+        {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a"
+        }
+      ],
+      "matching_policy": "manual_review_only; draft proposals are not engine-derived matching rules"
+    },
+    "original_record_sha256": "0f3634ac5d189c28d3cd15ea119ab325a7d263e1f747b24ef38e19aedc9418a7",
+    "field_authorities": {
+      "base": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "weight": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "penetration_potential": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "ingredient_ledger": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "auxiliary_suffix": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "ingredient_flags": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "named_oils": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "dispenser": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "provides_heat_protection": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "provides_uv_protection": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "supported_uses": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "use_evidence": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "application_scenarios": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+        "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d",
+        "record_key": "PC03",
+        "reason": "Preserve prior approved persistence scalar and full rank trace; not a new assessment."
+      }
+    },
+    "dependencies": [
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/assemble.ts",
+        "sha256": "ea00c4ae3bfecb886a14c97d04a940a72dbf0a3a92e28ded352faf84362b12de"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/matching-drafts.json",
+        "sha256": "da295417465a18c5b3e0d97ea2377e35f914c6723d119b32f7f65dff25bce9e0"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-input.json",
+        "sha256": "7cc52218886297dd7b63d7a1441b8b74dbf738a0aa255cc36d59e1e2b7c975c3"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-method.md",
+        "sha256": "330a291d1fe105c8c990109abeb7c75d5528660d5c6bfe6d08157973719d2244"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-a/results.json",
+        "sha256": "d575ab7aff4cf5e5556b7b2fc9716b0155b025869fd34a2717184613c5d90cd9"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-b/results.json",
+        "sha256": "e93f369326858bc2c849545e68a0b39831250fa7f5e539061e2e4f21215cb11e"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+        "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "sha256": "7dc9eb6d776d6e482a85b6e727bd5462b0173b88e47608d76d8e553bb95177ff"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/02_classification-standard-v0.9.md",
+        "sha256": "d00a7fd6d870163e6d95ad0fb52e9a0208c9232736f4b0c204abf4b31a1446ba"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/01_property-set-v0.3.md",
+        "sha256": "b8c6ef11ea0e64188f0a7f432c4ee0b78cbfe891d2be425ecbda3b1d2bea5d6b"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/11_operating-guide-v0.3.md",
+        "sha256": "3087b412c1e9bb7b2d444a0c032a39086762318bcf3dde4094981ea4ffc2c925"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.3.md",
+        "sha256": "01c3c1caa317d588cc4bdc429dc171fcc1f47c51f289402652ede1adae08b248"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/shared/persistence-potential-v0.1.md",
+        "sha256": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md",
+        "sha256": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+        "sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md",
+        "sha256": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json",
+        "sha256": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md",
+        "sha256": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md",
+        "sha256": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4"
+      },
+      {
+        "kind": "local_research_authority",
+        "path": "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md",
+        "sha256": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      }
+    ],
+    "mapping_receipts": [
+      {
+        "kind": "declaration_admission",
+        "basis": "Complete exact European maker declaration rechecked; frozen raw string and all original ranks retained.",
+        "source_id": "EUFP-PC03-S01"
+      },
+      {
+        "kind": "persistence_carry_forward",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+        "record_key": "PC03",
+        "reason": "Previously approved scalar and rank trace unchanged; only source context binding documented."
+      }
+    ]
+  },
+  "version": "oil-research-envelope-v1",
+  "profile": {
+    "product_key": "oil-eu-full-pc03",
+    "case_id": "PC03",
+    "ingredient_ledger": [
+      {
+        "rank": 1,
+        "raw_name": "Arachis Hypogaea Oil",
+        "canonical_name": "ARACHIS HYPOGAEA OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "Leading intact peanut oil establishes the clearest plant-conditioning carrier.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Melia Azadirachta Leaf Extract",
+        "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+        "dictionary_roles": [
+          "botanical_extract",
+          "botanical_leaf_extract",
+          "skin_conditioning"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Early leaf extract contributes a reviewed skin-conditioning ingredient; it is not neem fixed oil or an established separate carrier.",
+        "ambiguity": "Grade and amount are not supplied; formula role is qualitative and does not imply a negligible contribution."
+      },
+      {
+        "rank": 3,
+        "raw_name": "Triticum Vulgare Germ Oil",
+        "canonical_name": "TRITICUM VULGARE GERM OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "Intact wheat germ oil contributes a second plant-conditioning backbone route, with its rich material prior treated as qualitative.",
+        "ambiguity": "The admitted rich prior concerns a named unrefined grade; this formula grade is unknown."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Chamomilla Recutita Flower Extract",
+        "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+        "dictionary_roles": [
+          "not_assessed"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "Exact extract is present but its function/preparation is not assessed in the admitted dictionary.",
+        "ambiguity": "Exact function/preparation unassessed; contribution is not assumed negligible."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Lecithin",
+        "canonical_name": "LECITHIN",
+        "dictionary_roles": [
+          "emulsion_stabilizer"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized emulsion stabilizer; no lysolecithin or cohesive hair-film substitution.",
+        "ambiguity": "Generic stabilization does not establish a cohesive hair film."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Alcohol",
+        "canonical_name": "ALCOHOL",
+        "dictionary_roles": [
+          "solvent"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Alcohol is a recognized solvent, retained as a delivery contribution without claiming its quantity or negligible remainder.",
+        "ambiguity": "Solvent quantity and delivery contribution are unknown."
+      },
+      {
+        "rank": 7,
+        "raw_name": "Parfum*",
+        "canonical_name": "PARFUM",
+        "dictionary_roles": [
+          "fragrance_composition"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance_composition function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 8,
+        "raw_name": "Helianthus Annuus Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Intact sunflower seed oil contributes to the complete plant-oil inventory without establishing a second synthetic backbone.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 9,
+        "raw_name": "Lavandula Oil/Extract",
+        "canonical_name": "LAVANDULA OIL/EXTRACT",
+        "dictionary_roles": [
+          "fragrance_group",
+          "botanical_preparation_unspecified"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "Fragrance group is recognized, but Oil/Extract preparation is unspecified; preserve that role uncertainty.",
+        "ambiguity": "Exact functional role or preparation remains unresolved in the frozen dictionary; no unreviewed substitution or negligible-contribution assumption."
+      },
+      {
+        "rank": 10,
+        "raw_name": "Pinene*",
+        "canonical_name": "PINENE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 11,
+        "raw_name": "Camphor*",
+        "canonical_name": "CAMPHOR",
+        "dictionary_roles": [
+          "cooling_or_aromatic_auxiliary",
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized cooling_or_aromatic_auxiliary, declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool*",
+        "canonical_name": "LINALOOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 13,
+        "raw_name": "Beta-Caryophyllene*",
+        "canonical_name": "BETA-CARYOPHYLLENE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 14,
+        "raw_name": "Limonene*",
+        "canonical_name": "LIMONENE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 15,
+        "raw_name": "Terpineol*",
+        "canonical_name": "TERPINEOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 16,
+        "raw_name": "Linalyl Acetate*",
+        "canonical_name": "LINALYL ACETATE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol*",
+        "canonical_name": "CITRONELLOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 18,
+        "raw_name": "Citral*",
+        "canonical_name": "CITRAL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen function supports the established carrier system; role does not imply negligible amount.",
+        "ambiguity": "Exact identity/function is supplied; quantity, grade and finished contribution are unmeasured."
+      },
+      {
+        "rank": 19,
+        "raw_name": "Alpha-Terpinene*",
+        "canonical_name": "ALPHA-TERPINENE",
+        "dictionary_roles": [
+          "not_assessed"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "Function is explicitly not assessed, so this terminal ingredient cannot be declared an auxiliary solely from its name or position.",
+        "ambiguity": "Not assessed; contextual aromatic-origin declaration does not supply an exact functional assessment."
+      }
+    ],
+    "auxiliary_suffix": {
+      "reason": "The final rank 19 has an explicitly unassessed function, excluding every preceding suffix. Earlier regions also contain the rank 4 unresolved extract and rank 6 solvent. The aromatic-origin asterisks do not supply the missing exact function or erase those ingredients.",
+      "markers": [],
+      "start_rank": "none",
+      "ranks": []
+    },
+    "base": {
+      "value": "plant_oil_blend",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        }
+      ],
+      "counter_signal": [
+        "Alcohol at rank 6 is a synthetic solvent, and two extract/preparation gaps prevent treating the whole product as literal pure oil."
+      ],
+      "nearest_alternative": "hybrid",
+      "reason": "The affirmative conditioning backbone comprises intact peanut and wheat germ oils, with sunflower seed oil also included in the inventory. Alcohol is a secondary solvent; the available functions do not establish a competing principal synthetic carrier system. The extracts are not neem/chamomile fixed oils, and the lavender oil/extract group is not counted as a known intact fixed carrier.",
+      "unresolved": "Extract preparations and solvent contribution are undisclosed; rank 4 is function-unassessed. If a substantial unreported extraction-carrier architecture exists, the base would require review."
+    },
+    "weight": {
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "counter_signal": [
+        "Rich: principal wheat germ oil has a rich low-confidence prior, with unspecified grade.",
+        "Light: sunflower oil has a light prior and the peanut prior admits light; alcohol delivery could reduce the effective retained contribution but no amount is known."
+      ],
+      "nearest_alternative": "rich",
+      "reason": "B1/B3 favor medium from the leading peanut medium tendency together with rich wheat germ and lighter sunflower. The rich wheat-germ contribution argues against a light outcome, but does not make this a rich-leading or demonstrated structured-rich backbone under B6. Extract/preparation gaps are disclosed rather than replaced by invented effects; no affirmative competing carrier architecture currently makes them class-decisive under B7.",
+      "unresolved": "No amounts, extraction carriers, wheat-germ grade or equal-dose hair feel. Rank 4 and terminal rank 19 have unassessed functions; their contribution cannot be called negligible."
+    },
+    "penetration_potential": {
+      "value": "unknown",
+      "estimate": false,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        }
+      ],
+      "counter_signal": [
+        "A fixed-oil surface/emollient interpretation is plausible, but absence of an admitted positive whole-oil anchor does not demonstrate surface-only behavior."
+      ],
+      "nearest_alternative": "surface_led",
+      "reason": "The plant-conditioning backbone contains none of the method-admitted coconut, Camellia oleifera or safflower anchors. It also lacks an independent affirmative mineral-oil or predominant synthetic film backbone that would settle surface-led. Preserve unknown rather than infer nonpenetration from missing studies.",
+      "unresolved": "Exact-formula or admitted exact-oil uptake evidence is missing. Extract preparations and laboratory-to-retail delivery extrapolation remain unresolved."
+    },
+    "named_oils": [
+      {
+        "hero_id": "PC03-H-WHEATGERM",
+        "hero_name": "Weizenkeimöl",
+        "matched_ranks": [
+          3
+        ],
+        "prominence": {
+          "value": "leading",
+          "estimate": true,
+          "confidence": "low",
+          "evidence": [
+            {
+              "source_id": "EUFP-PC03-S01"
+            },
+            {
+              "rank": 3,
+              "canonical_name": "TRITICUM VULGARE GERM OIL"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": null,
+          "reason": "Prominence follows the sealed formula-role ledger (leading); no concentration threshold inferred.",
+          "unresolved": []
+        },
+        "hero_kind": "fixed_botanical_oil",
+        "mapping_receipt": {
+          "hero_id": "PC03-H-WHEATGERM",
+          "hero_name": "Weizenkeimöl",
+          "hero_kind": "fixed_botanical_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            3
+          ],
+          "exact_inci_names": [
+            "Triticum Vulgare Germ Oil"
+          ],
+          "mapping_status": "source name and exact declared germ oil"
+        }
+      },
+      {
+        "hero_id": "PC03-H-ROSEMARY",
+        "hero_name": "ätherisches Rosmarinöl",
+        "matched_ranks": [],
+        "prominence": {
+          "value": "absent",
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_id": "EUFP-PC03-S01"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": null,
+          "reason": "Advertised oil has no exact recognized match in the complete current declaration; source-copy mismatch preserved.",
+          "unresolved": [
+            "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+          ]
+        },
+        "hero_kind": "essential_oil",
+        "mapping_receipt": {
+          "hero_id": "PC03-H-ROSEMARY",
+          "hero_name": "ätherisches Rosmarinöl",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [],
+          "exact_inci_names": [],
+          "mapping_status": "explicit advertised oil; no exact recognized rosemary oil in frozen declaration",
+          "ambiguity": "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+        }
+      }
+    ],
+    "dispenser": {
+      "value": "pump",
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "EUFP-PC03-S01"
+        },
+        {
+          "source_id": "EUFP-PC03-I01"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": null,
+      "reason": "Uncapped producer bottle image exposes pump head and side outlet; product description confirms dosing dispenser.",
+      "unresolved": []
+    },
+    "provides_heat_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "EUFP-PC03-S01"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": null,
+      "reason": "Completed review found no accepted explicit maker heat-protection claim.",
+      "unresolved": []
+    },
+    "provides_uv_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "EUFP-PC03-S01"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": null,
+      "reason": "No accepted explicit hair-UV claim in the reviewed exact maker sources; therefore the filter AND claim gate is false. This does not measure zero protection.",
+      "unresolved": []
+    },
+    "supported_uses": [
+      "pre_wash_fibre_treatment",
+      "scalp_application",
+      "leave_on_fibre_conditioning",
+      "dry_finish"
+    ],
+    "use_evidence": {
+      "value": [
+        "pre_wash_fibre_treatment",
+        "scalp_application",
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ],
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01"
+        },
+        {
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02"
+        },
+        {
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03"
+        },
+        {
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": null,
+      "reason": "Only coherent source-supported application branches; no dose, site, timing or removal imported from another branch.",
+      "unresolved": []
+    },
+    "application_scenarios": [
+      {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D01",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "dampen hair before washing",
+        "dose": "unestablished",
+        "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+        "removal": "wash",
+        "restrictions": "None specified in this branch.",
+        "scenario_id": "PC03-USE-PREWASH-FIBRE",
+        "shake_before_use": true,
+        "frequency": "once weekly; more often if needed",
+        "source_original": {
+          "scenario_id": "PC03-USE-PREWASH-FIBRE",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": "lengths and ends",
+          "stage": "dampen hair before washing",
+          "dose": "unestablished",
+          "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      },
+      {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D02",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "dampen scalp before washing",
+        "dose": "unestablished",
+        "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+        "removal": "wash",
+        "restrictions": "None specified in this branch.",
+        "scenario_id": "PC03-USE-PREWASH-SCALP",
+        "shake_before_use": true,
+        "frequency": "once weekly; more often if needed",
+        "source_original": {
+          "scenario_id": "PC03-USE-PREWASH-SCALP",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": "scalp; massage with fingertips",
+          "stage": "dampen scalp before washing",
+          "dose": "unestablished",
+          "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      },
+      {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D03",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after washing, slightly damp hair",
+        "dose": "very little",
+        "contact_time": "unestablished",
+        "removal": "explicit_no_rinse",
+        "restrictions": "None specified in this branch.",
+        "scenario_id": "PC03-USE-DAMP-ENDS",
+        "shake_before_use": true,
+        "frequency": "once weekly; more often if needed",
+        "source_original": {
+          "scenario_id": "PC03-USE-DAMP-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "ends only",
+          "stage": "after washing, slightly damp hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      },
+      {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D03",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after washing, dry hair",
+        "dose": "very little",
+        "contact_time": "unestablished",
+        "removal": "explicit_no_rinse",
+        "restrictions": "None specified in this branch.",
+        "scenario_id": "PC03-USE-DRY-ENDS",
+        "shake_before_use": true,
+        "frequency": "once weekly; more often if needed",
+        "source_original": {
+          "scenario_id": "PC03-USE-DRY-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "ends only",
+          "stage": "after washing, dry hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      }
+    ],
+    "persistence_potential": "moderate",
+    "ingredient_flags": {
+      "silicones": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "PINENE"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "BETA-CARYOPHYLLENE"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "TERPINEOL"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "LINALYL ACETATE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "ALPHA-TERPINENE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Complete supplied ordered declaration reviewed; no recognized exact match. Exact silicone identities are counted, including PEG-14 Dimethicone when present; no behavior is inferred from this presence flag.",
+        "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+      },
+      "mineral_oil": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ARACHIS HYPOGAEA OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "TRITICUM VULGARE GERM OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "LECITHIN"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ALCOHOL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "PINENE"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "BETA-CARYOPHYLLENE"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "TERPINEOL"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "LINALYL ACETATE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "ALPHA-TERPINENE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Complete supplied ordered declaration reviewed; no recognized exact match. Closed liquid-mineral identity only; alkane/isoparaffin carriers and petroleum-related names are not automatically mineral oil.",
+        "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+      },
+      "drying_alcohol": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 6,
+            "canonical_name": "ALCOHOL"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "Recognized exact match(es). Only exact Alcohol or Alcohol Denat. matches. Anise Alcohol, glycols, Phenoxyethanol and Octyldodecanol do not match.",
+        "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+      },
+      "fragrance": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 7,
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "PINENE"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "BETA-CARYOPHYLLENE"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "TERPINEOL"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "LINALYL ACETATE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "CITRAL"
+          }
+        ],
+        "counter_signal": [
+          "Some aromatic botanical preparations/functions are unresolved or unassessed. The true flag is independently established by the cited exact recognized fragrance declarations; no unassessed ingredient is relabeled merely to expand the match list."
+        ],
+        "nearest_alternative": false,
+        "reason": "Recognized exact match(es). Declared fragrance/allergen/aromatic exposure is present irrespective of perfuming intent; every admitted matching exact name is cited.",
+        "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+      },
+      "scalp_active_botanicals": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 11,
+            "canonical_name": "CAMPHOR"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "Recognized exact match(es). Closed essential-oil/Menthol/Camphor set only. Extracts and lavender alone do not extend it. Camphor asterisks do not erase declared presence.",
+        "unresolved": "Applies to the supplied declaration, not analytical batch testing, undeclared composition, concentration, tolerance or application permission."
+      }
+    },
+    "fit": {
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      }
+    },
+    "completion_status": "complete_research_with_permitted_gaps",
+    "issues": [
+      "Three identified intact fixed oils are counted: peanut rank 1, wheat germ rank 3 and sunflower seed rank 8. Leaf/flower extracts and lavender oil/extract are not silently counted as fixed oils.",
+      "Camphor rank 11 meets the closed scalp-botanical flag even though the asterisk declares its natural-essential-oil origin; this is neither an efficacy claim nor scalp-application permission.",
+      "No product identity was inferred. Unassessed functions and unspecified preparations limit robustness but do not supply permission to invent a class.",
+      "GTIN not captured; page identity and 75 ml size only.",
+      "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+      "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+      "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+      "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+    ],
+    "identity": {
+      "brand": "Dr. Hauschka",
+      "product": "Haaröl",
+      "market": "DE",
+      "size_ml": 75,
+      "gtin_if_verified": null,
+      "variant": null
+    },
+    "formula": {
+      "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Pinene*",
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Camphor*",
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool*",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Beta-Caryophyllene*",
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Limonene*",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Terpineol*",
+          "canonical_name": "TERPINEOL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Linalyl Acetate*",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol*",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citral*",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "raw_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+      "normalized_sha256": "302e145a64d91ea0803e73b02624fc165fb95457681312c58551cd49985dcfb8",
+      "normalization_receipt": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Pinene*",
+          "canonical_name": "PINENE",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Camphor*",
+          "canonical_name": "CAMPHOR",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool*",
+          "canonical_name": "LINALOOL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Beta-Caryophyllene*",
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Limonene*",
+          "canonical_name": "LIMONENE",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Terpineol*",
+          "canonical_name": "TERPINEOL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Linalyl Acetate*",
+          "canonical_name": "LINALYL ACETATE",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol*",
+          "canonical_name": "CITRONELLOL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citral*",
+          "canonical_name": "CITRAL",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE",
+          "reason": "Exact frozen per-rank normalization receipt retained; source display wrappers/footnotes do not change ingredient identity."
+        }
+      ],
+      "source_ids": [
+        "EUFP-PC03-S01"
+      ],
+      "declaration_status": "complete",
+      "conflicts": [],
+      "contextual_declarations": []
+    },
+    "persistence_trace_reference": {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+      "neutral_id": "PC03",
+      "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d"
+    },
+    "field_authority": {
+      "base": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "weight": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "penetration_potential": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "ingredient_ledger": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "auxiliary_suffix": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "ingredient_flags": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "named_oils": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "dispenser": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "provides_heat_protection": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "provides_uv_protection": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "supported_uses": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "use_evidence": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "application_scenarios": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41",
+        "record_key": "PC03",
+        "reason": "Exact European maker source stage, applied after formula assessment seal."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/parent-adjudication.json",
+        "sha256": "285e405330222377383f0fc011644c3aac20642cbfb5b63808ab9eb94146901d",
+        "record_key": "PC03",
+        "reason": "Preserve prior approved persistence scalar and full rank trace; not a new assessment."
+      }
+    },
+    "source_stage": {
+      "neutral_id": "PC03",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+      "raw_inci_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+      "frozen_formula_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "source_id": "PSB-S01",
+        "raw_string_byte_equal": true,
+        "live_names_order_equal": true,
+        "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+      },
+      "prior_selected_persistence_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+      "formula_conflicts": [],
+      "source_limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "source_ids": [
+        "EUFP-PC03-S01",
+        "EUFP-PC03-I01"
+      ],
+      "heroes": [
+        {
+          "hero_id": "PC03-H-WHEATGERM",
+          "hero_name": "Weizenkeimöl",
+          "hero_kind": "fixed_botanical_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            3
+          ],
+          "exact_inci_names": [
+            "Triticum Vulgare Germ Oil"
+          ],
+          "mapping_status": "source name and exact declared germ oil"
+        },
+        {
+          "hero_id": "PC03-H-ROSEMARY",
+          "hero_name": "ätherisches Rosmarinöl",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [],
+          "exact_inci_names": [],
+          "mapping_status": "explicit advertised oil; no exact recognized rosemary oil in frozen declaration",
+          "ambiguity": "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+        }
+      ],
+      "non_oil_heroes": [
+        {
+          "name": "Neem",
+          "kind": "leaf extract",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            2
+          ],
+          "reason": "marketed extract rather than named oil"
+        },
+        {
+          "name": "Kamille",
+          "kind": "flower extract",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            4
+          ],
+          "reason": "marketed extract rather than named oil"
+        }
+      ],
+      "packaging_observation": {
+        "source_ids": [
+          "EUFP-PC03-S01",
+          "EUFP-PC03-I01"
+        ],
+        "observed_mechanism": "press pump with short lateral outlet",
+        "permitted_dispenser_value": "pump",
+        "observation": "Uncapped producer bottle image exposes pump head and side outlet; product description confirms dosing dispenser.",
+        "unresolved": []
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC03-USE-PREWASH-FIBRE",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": "lengths and ends",
+          "stage": "dampen hair before washing",
+          "dose": "unestablished",
+          "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-PREWASH-SCALP",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": "scalp; massage with fingertips",
+          "stage": "dampen scalp before washing",
+          "dose": "unestablished",
+          "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-DAMP-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "ends only",
+          "stage": "after washing, slightly damp hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-DRY-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "ends only",
+          "stage": "after washing, dry hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      ],
+      "supplemental_directions": [],
+      "storage_restrictions": [],
+      "heat_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC03-S01"
+        ],
+        "accepted_manufacturer_explicit_heat_claim": false,
+        "accepted_quote": "",
+        "temperature_source_text": null,
+        "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label."
+      },
+      "uv_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC03-S01"
+        ],
+        "accepted_manufacturer_explicit_hair_uv_claim": false,
+        "accepted_quote": null,
+        "reviewed_nearby_nonqualifying_text": "Hair protection from sun or saltwater is stated, but no explicit UV/radiation/hair-color-from-UV wording.",
+        "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label.",
+        "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+      }
+    },
+    "formula_context_notes": [
+      "Asterisks identify constituents from natural essential oils; not extra ingredients."
+    ],
+    "reviewed_inputs": [
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-method.md",
+        "sha256": "330a291d1fe105c8c990109abeb7c75d5528660d5c6bfe6d08157973719d2244"
+      },
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/blind-input.json",
+        "sha256": "7cc52218886297dd7b63d7a1441b8b74dbf738a0aa255cc36d59e1e2b7c975c3"
+      },
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-a/results.json",
+        "sha256": "d575ab7aff4cf5e5556b7b2fc9716b0155b025869fd34a2717184613c5d90cd9"
+      },
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/lane-b/results.json",
+        "sha256": "e93f369326858bc2c849545e68a0b39831250fa7f5e539061e2e4f21215cb11e"
+      },
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/source-unblind/unblind-source-packet.json",
+        "sha256": "76588b3a701454d7392713a9a10192b43f1df6dfc7c13077c10071691cd8da41"
+      },
+      {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a"
+      }
+    ],
+    "matching_policy": "manual_review_only; draft proposals are not engine-derived matching rules"
+  },
+  "persistence_trace": {
+    "reason": "The exact peanut, wheat-germ and sunflower oil functions support an ordinary retained lipid coat. Lecithin stabilization does not establish an especially cohesive hair film; unassessed extract/aroma contributions remain gaps rather than zero.",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "ARACHIS HYPOGAEA OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "TRITICUM VULGARE GERM OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "LECITHIN"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "ALCOHOL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "LAVANDULA OIL/EXTRACT"
+      },
+      {
+        "rank": 19,
+        "canonical_name": "ALPHA-TERPINENE"
+      }
+    ],
+    "considered_ranks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "tipping_assumption": "The retained fixed-oil system behaves as ordinary fluid conditioning, with lecithin primarily stabilizing the preparation rather than organizing a persistent coating.",
+    "tipping_assumption_note": null,
+    "context": {
+      "source_id": "EUFP-PC03-S01",
+      "direction_id": "EUFP-PC03-D03",
+      "role": "leave_on_fibre_conditioning"
+    },
+    "original": {
+      "neutral_id": "PC03",
+      "product_key": "Dr. Hauschka|Haaröl|DE|75ml",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "persistence_potential": "moderate",
+      "reason": "The exact peanut, wheat-germ and sunflower oil functions support an ordinary retained lipid coat. Lecithin stabilization does not establish an especially cohesive hair film; unassessed extract/aroma contributions remain gaps rather than zero.",
+      "tipping_assumption": "The retained fixed-oil system behaves as ordinary fluid conditioning, with lecithin primarily stabilizing the preparation rather than organizing a persistent coating.",
+      "source_id": "PSB-S01",
+      "direction_id": "PSB-S01",
+      "application_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "lane_values": {
+        "a": "moderate",
+        "b": "moderate"
+      },
+      "lane_result_hashes": {
+        "a": "6a0172853df4b8c8e9cbf9c3335dc14662b89f56b4b6a96d35b7de464ce1fd2b",
+        "b": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+      },
+      "recognition_limit": "Lane A disclosed a tentative unverified identity association, stated unused; keep the disclosure and do not call this case clean model-unfamiliar blind validation.",
+      "source_limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "formula_conflicts": [],
+      "context_rebinding": {
+        "original_source_id": "PSB-S01",
+        "original_direction_id": "PSB-S01",
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D03",
+        "reason": "Same exact product/formula and retained application branch; full-source stage now carries all coherent scenarios."
+      }
+    }
+  },
+  "scenario_fit": [
+    {
+      "source_id": "EUFP-PC03-S01",
+      "direction_id": "EUFP-PC03-D01",
+      "role": "pre_wash_fibre_treatment",
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_pre_wash_gate",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_pre_wash_gate",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_pre_wash_gate",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        }
+      },
+      "weight_authority": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D01",
+        "role": "pre_wash_fibre_treatment",
+        "thickness": {
+          "fine": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          }
+        },
+        "weight_authority": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "policy_pins": {
+          "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+          "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+          "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+        },
+        "supported_role": "pre_wash_fibre_treatment",
+        "scenario": {
+          "scenario_id": "PC03-USE-PREWASH-FIBRE",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "dampen hair before washing",
+          "dose": "unestablished",
+          "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+          "removal": "wash",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-PREWASH-FIBRE",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D01",
+            "supported_roles": [
+              "pre_wash_fibre_treatment"
+            ],
+            "site": "lengths and ends",
+            "stage": "dampen hair before washing",
+            "dose": "unestablished",
+            "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        "weight": "medium",
+        "estimate": true,
+        "weight_confidence": "low",
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "no_weight_only_pre_wash_gate",
+            "condition": null
+          }
+        },
+        "sensitivity_note": "Alternative weight sensitivity only; no averaged class or extra application permission."
+      }
+    },
+    {
+      "source_id": "EUFP-PC03-S01",
+      "direction_id": "EUFP-PC03-D02",
+      "role": "scalp_application",
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "weight_authority": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D02",
+        "role": "scalp_application",
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "weight_authority": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "policy_pins": {
+          "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+          "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+          "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+        },
+        "supported_role": "scalp_application",
+        "scenario": {
+          "scenario_id": "PC03-USE-PREWASH-SCALP",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": [
+            "scalp"
+          ],
+          "stage": "dampen scalp before washing",
+          "dose": "unestablished",
+          "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+          "removal": "wash",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-PREWASH-SCALP",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D02",
+            "supported_roles": [
+              "scalp_application"
+            ],
+            "site": "scalp; massage with fingertips",
+            "stage": "dampen scalp before washing",
+            "dose": "unestablished",
+            "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+            "removal": {
+              "kind": "explicit_wash_after_contact",
+              "detail": "Wash twice afterwards."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        "weight": "medium",
+        "estimate": true,
+        "weight_confidence": "low",
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "sensitivity_note": "Alternative weight sensitivity only; no averaged class or extra application permission."
+      }
+    },
+    {
+      "source_id": "EUFP-PC03-S01",
+      "direction_id": "EUFP-PC03-D03",
+      "role": "leave_on_fibre_conditioning",
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        }
+      },
+      "weight_authority": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D03",
+        "role": "leave_on_fibre_conditioning",
+        "thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          }
+        },
+        "weight_authority": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "policy_pins": {
+          "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+          "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+          "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+        },
+        "supported_role": "leave_on_fibre_conditioning",
+        "scenario": {
+          "scenario_id": "PC03-USE-DAMP-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": [
+            "ends"
+          ],
+          "stage": "after washing, slightly damp hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": "explicit_no_rinse",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-DAMP-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "leave_on_fibre_conditioning"
+            ],
+            "site": "ends only",
+            "stage": "after washing, slightly damp hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        "weight": "medium",
+        "estimate": true,
+        "weight_confidence": "low",
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "normal": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "sensitivity_note": "Alternative weight sensitivity only; no averaged class or extra application permission."
+      }
+    },
+    {
+      "source_id": "EUFP-PC03-S01",
+      "direction_id": "EUFP-PC03-D03",
+      "role": "dry_finish",
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate",
+          "condition": null
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate",
+          "condition": null
+        }
+      },
+      "weight_authority": {
+        "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+        "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+        "record_key": "PC03",
+        "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "source_id": "EUFP-PC03-S01",
+        "direction_id": "EUFP-PC03-D03",
+        "role": "dry_finish",
+        "thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate",
+            "condition": null
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate",
+            "condition": null
+          }
+        },
+        "weight_authority": {
+          "path": "plans/oil-inci/research/eu-full-profiles-2026-10-15/adjudication.json",
+          "sha256": "940bfe20c0e34ce856c7a357373a60b95bcecc293c80f690201fbfcf141f3a9a",
+          "record_key": "PC03",
+          "reason": "Parent adjudication of sealed independent remaining-property assessments under v0.9; no marketing-driven formula rewrite."
+        },
+        "policy_pins": {
+          "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+          "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+          "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+        },
+        "supported_role": "dry_finish",
+        "scenario": {
+          "scenario_id": "PC03-USE-DRY-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": [
+            "ends"
+          ],
+          "stage": "after washing, dry hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": "explicit_no_rinse",
+          "restrictions": "None specified in this branch.",
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed",
+          "source_original": {
+            "scenario_id": "PC03-USE-DRY-ENDS",
+            "source_id": "EUFP-PC03-S01",
+            "direction_id": "EUFP-PC03-D03",
+            "supported_roles": [
+              "dry_finish"
+            ],
+            "site": "ends only",
+            "stage": "after washing, dry hair",
+            "dose": "very little",
+            "contact_time": "unestablished",
+            "removal": {
+              "kind": "explicit_do_not_wash_out",
+              "detail": "Do not wash out."
+            },
+            "restrictions": [],
+            "shake_before_use": true,
+            "frequency": "once weekly; more often if needed"
+          }
+        },
+        "weight": "medium",
+        "estimate": true,
+        "weight_confidence": "low",
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "normal": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Sparsam innerhalb der veröffentlichten Anwendung und Haarpartie dosieren; mögliche Beschwerung beachten. Keine zusätzliche Mengenangabe abgeleitet."
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "sensitivity_note": "Alternative weight sensitivity only; no averaged class or extra application permission."
+      }
+    }
+  ]
+}

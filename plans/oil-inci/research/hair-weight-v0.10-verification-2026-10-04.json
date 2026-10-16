@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "verified_at": "2026-10-04",
+  "scope": "v0.10 artifact integrity and exact shorter sunflower Oil resolution; not sensory validation",
+  "decision": "OE36",
+  "reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+  "guide": "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md",
+  "reference_entries": 68,
+  "exact_names": 108,
+  "counts": {
+    "light": 44,
+    "rich": 9,
+    "medium": 14,
+    "unknown": 1
+  },
+  "assigned_low_confidence": 65,
+  "assigned_moderate_confidence": 2,
+  "validated_hair_weight_entries": 0,
+  "unchanged_predecessor_entries": 67,
+  "unchanged_prior_sources": 89,
+  "immutable_files_unchanged": 122,
+  "historical_snapshot": "plans/oil-inci/research/hair-weight-v0.10-historical-hashes-2026-10-04.json",
+  "guide_table_rows": 68,
+  "sole_added_entry": "sunflower_oil_declaration",
+  "added_exact_names": [
+    "HELIANTHUS ANNUUS OIL",
+    "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+  ],
+  "matching_and_exclusion_checks": "passed",
+  "coverage_audit_preserved": true,
+  "separate_post_audit_addition": true,
+  "live_uk_sequence_match_record_checked": true,
+  "accepted_blend_decisions_unchanged": true,
+  "policy_clauses_unchanged": true,
+  "checked_docs": 8,
+  "checked_local_links": 73,
+  "local_links": "passed",
+  "whitespace_check": "passed (git diff --check plus explicit edited-document scan)",
+  "frozen_verifiers": [
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "status": "passed"
+    }
+  ],
+  "new_classification_runs": 0,
+  "verified_artifact_sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+    "docs/research/oil-inci/README.md": "62bbed50c447c0d92a96ce946243668546402b270b8d7a7c01aecf9bb352cb6d",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "995023cdc782dd6989bb957e621594a97fdd9c2b62950cc8064107378927b82c",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.md": "f96c2dbd19458189d8a51e28bb0ce5611cd2a807dcee27a8a47ebe851fb62626",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.1.md": "25271bb03fbcb0c0e03fccc1d1bdd6ec9f01ce954a9ae54cfac8ed7814fa1bfe",
+    "plans/oil-inci/phase1-decision-coverage.md": "2c60595d2cde192a20c7722bc42eb3b023c207434d31a26c71dc5eb86a681351",
+    "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md": "ad6305b91ebd5e3b510e769b8d0585c9588b977baf0b2635da939caa40c88da9",
+    "plans/oil-inci/research/hair-weight-v0.10-sunflower-oil-addition-2026-10-04.md": "e541134488744be2b889be2b93f231e27c8954870e205bbb88641512a265bb48",
+    "plans/oil-inci/research/hair-weight-v0.10-historical-hashes-2026-10-04.json": "717b407e9ce18c2f32a4aa4f483a9f91518d3b3fee5539ba63276d5ea07595ef",
+    "plans/oil-inci/research/sunflower-oil-declaration-resolution-2026-10-04.json": "766d686419600cc390a68f81e13eea4a51a90092a45cf3f3d930649ec090ffd3"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "summary": "Six new formula profiles completed with immutable independent judgments and controlled source stage; disagreement is retained and root selection attributed. See metrics.json for acceptance outcomes and missing class/archetype coverage. No activation is implied.",
+  "decisions": {
+    "cases": {
+      "H01": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      },
+      "H02": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      },
+      "H03": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      },
+      "H04": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      },
+      "H05": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      },
+      "H06": {
+        "lane": "a",
+        "reason": "All independent formula scalar/flag values agree. Select intact laneA to preserve internally coherent ledger, property reasoning and source prominence; unknown material functions remain unknown rather than guessed."
+      }
+    },
+    "source_difference": "Named prominence can differ with independently assigned roles; selected source-stage must remain coherent with its own sealed ledger. No first-pass metric rewritten."
+  },
+  "no_production_writes": true
+}

@@ -1,0 +1,46 @@
+{
+  "version": "oil-blend-weight-policy-v0.1",
+  "status": "exploratory_authorized_estimate",
+  "weight_values": [
+    "light",
+    "medium",
+    "rich",
+    "unknown"
+  ],
+  "mixture_confidence": "low",
+  "rules": [
+    {
+      "id": "B0",
+      "text": "exact identity.** Match only reviewed exact names/aliases. Keep plant parts, derivatives, macerates and grades distinct. A modified castor/coconut ingredient does not inherit the intact oil prior. An unspecified sunflower declaration does not inherit the seed-oil prior. Unknown preparation remains a gap; it blocks a class only if it could plausibly change the chosen backbone interpretation."
+    },
+    {
+      "id": "B1",
+      "text": "identify the carrier and retained system.** Annotate all ingredients as principal, secondary, auxiliary or unresolved, with a reason. Identify the early carrier sequence using exact functions and ordered INCI together; do not mechanically make the first two ingredients principal, presume a 1% boundary, count oils, or assume all later ingredients are trace. Consider retained silicones, waxes, long-chain lipids, gums/resins and botanical oils alongside mobile carriers. Role assignments are themselves qualitative estimates where quantities are absent."
+    },
+    {
+      "id": "B2",
+      "text": "single carrier or coherent oil base.** A sole admitted fixed oil applies its material prior with the original confidence ceiling. A coherent multi-oil backbone whose principal priors point to the same class supports that class. Auxiliaries do not automatically change it; any credible retained-film counter-signal must still be addressed."
+    },
+    {
+      "id": "B3",
+      "text": "competing botanical carriers.** Use the leading identified fixed-oil tendency as the initial hypothesis, then evaluate the remaining principal carriers. A leading light oil plus a medium carrier supports light/low with medium alternative if no affirmative rich or structured-film signal overrides it. A leading medium base with lighter carriers supports medium/low with light alternative. A rich oil participating in an otherwise lighter principal oil base supplies a positive reason to lean medium rather than light; this is a qualitative burden hypothesis, not an average. A rich-leading botanical base supports rich unless a positive mobile-carrier/other architecture argument supports a lighter estimate. These are soft trial tie-breakers, not proof of dominant amount or universal rank rules."
+    },
+    {
+      "id": "B4",
+      "text": "mobile ester/alkane base.** A coherent ester/alkane carrier architecture supports light/low when the retained system supplies no stronger structural/conditioning-film argument. Nonvolatile emollients and medium/rich botanicals remain counter-signals even when later. An early substantial botanical carrier can support medium if its retained-coating contribution is affirmatively explained. Mobility/spreading is only a hypothesis about hair load; it does not measure evaporation or the retained fraction."
+    },
+    {
+      "id": "B5",
+      "text": "silicone conditioning base.** When conditioning silicones form the principal carrier/film system, medium/low is the working interpretation of retained conditioning film, including mixed mobile hydrocarbon/ester carriers. Light remains an alternative when the mobile portion could produce a smaller residue. If the architecture is affirmatively mobile/volatile with only a secondary conditioning-film route, light may be selected with medium alternative. Silicone presence alone does not invoke this rule. Unspecified dimethicone grade stays a limitation; no grade-specific viscosity or volatility is invented."
+    },
+    {
+      "id": "B6",
+      "text": "affirmative rich retained system.** Rich requires a positive whole-formula argument: a rich-leading oil base or a principal structured/persistent lipid, wax, gum or resin system that plausibly outweighs lighter distribution clues. One wax/gum, a rich-source name or several later oils is insufficient. When this argument is stronger than B3–B5's lighter hypothesis, choose rich/low and document why the lighter architecture loses. Otherwise retained materials supply a counter-signal and may support medium; they do not impose a universal rich floor."
+    },
+    {
+      "id": "B7",
+      "text": "unresolved backbone.** Use unknown when the first-order carrier identity/function is missing, the declaration is materially incomplete/conflicted, or two incompatible backbone readings remain equally persuasive after the positive rules. Explain the missing deciding observation and the plausible classes. Do not assign medium just because evidence is missing. A known but unquantified later ingredient is not automatically decisive."
+    }
+  ],
+  "precedence": "Apply B0/B1 first. Exact single-carrier B2 keeps its material confidence ceiling. For mixtures, evaluate B3–B6 as competing architecture arguments; B6 overrides a lighter class only with its affirmative whole-system reason. Select the best-supported soft interpretation and cite its rule IDs, positive signals, heavier/lighter counter-signals, alternative and remaining gaps. If none wins, B7 returns unknown. This is an expert judgment policy, not a concentration calculator or a deterministic runtime classifier.\n\nOutput values remain `light | medium | rich | unknown`; substantive mixtures have `estimate=true`, `confidence=low`. Unknown has `estimate=false`, `confidence=low`, an explicit gap and plausible alternatives. Two independent lanes test repeatability; neither agreement nor matching a human example raises confidence. No product eligibility, fit or production write follows."
+}

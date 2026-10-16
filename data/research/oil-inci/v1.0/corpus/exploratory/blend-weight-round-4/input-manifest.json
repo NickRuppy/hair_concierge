@@ -1,0 +1,33 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "method_revision": "blend-policy-v0.1/material-v0.7",
+  "blind_input_files": [
+    "method.md",
+    "material-reference.json",
+    "policy.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "files": {
+    "method.md": "99515c0c6d3fdf0502dc436254c0ceb8dd02fc3397345ba304089193c49c942b",
+    "material-reference.json": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068",
+    "policy.json": "0855642ec7975a710bf30447da7af8f5b39ebb99ee98f5404dd333efe6a524e7",
+    "role-lexicon.json": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e",
+    "blind-packet.json": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836"
+  },
+  "neutral_ids": [
+    "Q01",
+    "Q02",
+    "Q03",
+    "Q04",
+    "Q05",
+    "Q06",
+    "Q07",
+    "Q08",
+    "Q09",
+    "Q10"
+  ],
+  "frozen_at": "2026-10-03",
+  "limits": "No recursive self-hash. Read-scope output hashes include this file; no product labels or source-role targets supplied."
+}

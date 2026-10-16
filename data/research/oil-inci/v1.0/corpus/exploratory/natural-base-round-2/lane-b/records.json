@@ -1,0 +1,737 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "method_revision": "weight-v0.2",
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "material-reference.json",
+    "role-lexicon.json",
+    "blind-packet.json",
+    "input-manifest.json"
+  ],
+  "records": [
+    {
+      "neutral_id": "B01",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "castor",
+          "prior": "rich",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches castor in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Rich is the most defensible material prior, but even this is not a validated universal hair class. Alternative matters mainly when dilution/dose changes context. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference castor: principal carrier role from exact identity and this formula context. Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin."
+        }
+      ],
+      "weight": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Rank 1 / castor: the entire declared carrier has the admitted rich prior (moderate). MERCKCASTOR describes a viscous material and reports 950–1100 mPa·s with temperature unspecified. This supports the reference prior without a numerical hair-weight threshold."
+        ],
+        "counter_signal": [
+          "Rank 1 / castor / MDPI2024 reports a much lower castor viscosity; the sample/method discrepancy remains unresolved. Medium is the admitted alternative, especially where application context differs."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "Rank 1 is the sole carrier, so the method single-material rule applies to castor. Rich retains the admitted material judgment. Medium is credible given conflicting physical evidence and application uncertainty; light has no affirmative support in this entry. There is no class above rich, and no measured hair burden is asserted.",
+        "unresolved": [
+          "Rank 1 / castor: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Conflicting castor viscosity observations are not pooled or reconciled."
+      ]
+    },
+    {
+      "neutral_id": "B02",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "apricot_kernel",
+          "prior": "medium",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches apricot_kernel in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: light; nearest: light. Prefer comparative panel's intermediate estimate; alternative is credible and explicit. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS ARMENIACA KERNEL OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference apricot_kernel: principal carrier role from exact identity and this formula context. Kernel oil only; not fruit extract, kernel extract or butter."
+        }
+      ],
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Rank 1 / apricot_kernel / UNIVAR2018: comparative skin sensory description is intermediate and fluid; this is positive intermediate evidence for the admitted medium estimate."
+        ],
+        "counter_signal": [
+          "Rank 1 / apricot_kernel / O3PLAY2026 offers lighter positioning, so light remains a credible alternative."
+        ],
+        "nearest_alternative": "light",
+        "reason": "Rank 1 is the sole carrier. The method preserves apricot_kernel medium with moderate confidence because comparative intermediate evidence is stronger than the lighter supplier guidance. Rich lacks affirmative support in the supplied entry; medium is not an average of missing evidence.",
+        "unresolved": [
+          "Rank 1 / apricot_kernel: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": []
+    },
+    {
+      "neutral_id": "B03",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "jojoba",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches jojoba in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Liquid wax, not a triglyceride. A light prior is plausible from skin finish, not proven on hair. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference jojoba: principal carrier role from exact identity and this formula context. Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / jojoba / JDDESERT reports low greasy skin residue; O3PLAY2026 offers light/ungreasy positioning. These support the admitted low-confidence light prior."
+        ],
+        "counter_signal": [
+          "Rank 1 / jojoba: the reference retains medium because skin finish does not establish hair feel, and grade/application remain unresolved. Liquid-wax identity alone does not decide weight."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "Rank 1 is the sole carrier and the exact jojoba identity is admitted. Light follows the skin-finish-informed prior; medium remains the nearest alternative, while rich lacks affirmative evidence in the entry. Light is the lowest class and does not mean residue-free.",
+        "unresolved": [
+          "Rank 1 / jojoba: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": []
+    },
+    {
+      "neutral_id": "B04",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "coconut_whole",
+          "prior": "rich",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches coconut_whole in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Working rich prior from intact lipid coating plus comparatively greasy skin profile/room-temperature structure; medium remains plausible. Structure alone does not establish hair heaviness. Penetration evidence does not decide weight. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference coconut_whole: principal carrier role from exact identity and this formula context. Exclude MCT/fractionated derivatives, Coconut Alkanes, Coco-Caprylate/Caprate, hydrogenated coconut oil and coconut extract."
+        }
+      ],
+      "weight": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / coconut_whole / UNIVAR2022 describes relatively greasy skin afterfeel alongside melting/spreading. Under the admitted whole-coconut prior this supports rich at low confidence.",
+          "Rank 1 identity is accepted only through blind-packet.json source-reconciled whole-coconut normalization; the raw Fruit Oil wording is not added as a generic alias."
+        ],
+        "counter_signal": [
+          "Rank 1 / coconut_whole retains medium; temperature-sensitive structure and changing film over time (KEIS2005) limit transfer to perceived burden. Melting/spreading does not establish lightness."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The single rank-1 carrier uses coconut_whole rich, not the separate CCT prior. Medium remains plausible under unresolved temperature/application conditions; light is not established by melting or penetration. Rich is the highest class. RELE2003 protein-loss and KEIS2005 penetration/film endpoints are not used as sensory-weight proof.",
+        "unresolved": [
+          "Rank 1 / coconut_whole: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Exact-declaration normalization is local to this benchmark; no new botanical alias is inferred."
+      ]
+    },
+    {
+      "neutral_id": "B05",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "sweet_almond",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches sweet_almond in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Accept a light prior rather than declaring all kernel oils medium/rich; leave medium plausible for grade/application differences. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference sweet_almond: principal carrier role from exact identity and this formula context. Exclude seed extract, bitter almond essential oil, almond butter and hydrogenated carrier blends."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Rank 1 / sweet_almond / UNIVAR2018 reports light, less greasy skin feel, retained in UNIVAR2022. MDPI2024 sampled almond below sampled macadamia in viscosity, providing only a separate material proxy."
+        ],
+        "counter_signal": [
+          "Rank 1 / sweet_almond retains medium for grade/application differences; the skin comparison is not a validated hair class and the viscosity samples do not define universal thresholds."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The sole rank-1 sweet_almond carrier takes its admitted light prior with moderate confidence. Medium remains possible; rich has no affirmative support here. Light is the lowest class and does not promise a weightless finish.",
+        "unresolved": [
+          "Rank 1 / sweet_almond: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": []
+    },
+    {
+      "neutral_id": "B06",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "c8_c10_mct",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches c8_c10_mct in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Relatively fluid C8/C10 carrier supports light estimate against heavier intact oils; medium-spreading and nonvolatile limits remain. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "role": "processed_triglyceride_emollient",
+          "reason": "Rank 1 / material-reference c8_c10_mct: principal carrier role from exact identity and this formula context. Not whole Cocos Nucifera Oil; not Triheptanoin (C7), Caprylic/Capric/Succinic Triglyceride, caprylate esters or generic fractionated coconut oil without exact INCI."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Rank 1 / c8_c10_mct / INOLEXCCT has an exact-CCT grade described as lightweight and low viscosity; IOI2022 provides relatively fluid C8/C10 carrier observations. These support the admitted light prior.",
+          "Rank 1 identity uses only the documented exact-product CCT display normalization in blind-packet.json, not a generic plural or fractionated-coconut alias."
+        ],
+        "counter_signal": [
+          "Rank 1 / c8_c10_mct / IOI2022 describes medium spreading, and the reference retains the nonvolatile-carrier limit and medium alternative. INOLEXCCT is grade-bound supplier evidence."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The sole rank-1 processed triglyceride carrier takes c8_c10_mct light with moderate confidence. Medium remains plausible; rich has no positive support for this exact material. Light is the lowest class and nonvolatility is retained. Whole-coconut, C7 and modified-triglyceride priors do not transfer.",
+        "unresolved": [
+          "Rank 1 / c8_c10_mct: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Exact-declaration normalization does not admit a generic plural alias; CCT is not an intact plant oil."
+      ]
+    },
+    {
+      "neutral_id": "B07",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "safflower",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches safflower in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Light is a supplier-informed working estimate, not a linoleic-acid deduction. High-oleic and high-linoleic grades remain unresolved by INCI. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference safflower: principal carrier role from exact identity and this formula context. Exclude safflower oleosomes, phospholipid derivatives and extracts. INCI does not identify chemotype."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / safflower / O3PLAY2026 supplies light sensory guidance, supporting only the admitted low-confidence light estimate."
+        ],
+        "counter_signal": [
+          "Rank 1 / safflower retains medium; high-oleic versus high-linoleic grade is unresolved by INCI, and the source supplies no comparative hair-weight method."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The sole rank-1 safflower carrier follows its supplier-informed light prior. Medium remains credible, while rich has no affirmative support in the entry. Light is the lowest class; neither fatty-acid ratio nor botanical origin supplies the decision.",
+        "unresolved": [
+          "Rank 1 / safflower: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": []
+    },
+    {
+      "neutral_id": "B08",
+      "input_kind": "cosmetic_material_benchmark",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "grapeseed",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches grapeseed in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Comparative skin feel supports the lower end among intact oils. It does not promise weightless hair. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "VITIS VINIFERA SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference grapeseed: principal carrier role from exact identity and this formula context. Seed oil only; exclude seed extract and hydrogenated/PEG derivatives."
+        }
+      ],
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          "Rank 1 / grapeseed / UNIVAR2018 reports light, less greasy skin feel, retained in UNIVAR2022. MDPI2024 reports the lowest viscosity among its four tested natural samples, a limited physical proxy."
+        ],
+        "counter_signal": [
+          "Rank 1 / grapeseed retains medium for unresolved grade/application and skin-to-hair transfer; the sampled viscosity comparison cannot establish a general hair-weight threshold."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "The sole rank-1 grapeseed carrier follows its admitted light prior with moderate confidence. Medium is the nearest alternative; rich is not affirmatively supported by this entry. Light is the lowest class and does not imply zero residue.",
+        "unresolved": [
+          "Rank 1 / grapeseed: Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by ordinary INCI.",
+          "Supplier skin sensory and material proxies are not validated comparative hair-weight measurements."
+        ]
+      },
+      "completion_status": "weight_only_complete",
+      "issues": []
+    },
+    {
+      "neutral_id": "P01",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [
+        {
+          "rank": 2,
+          "reference_id": "c8_c10_mct",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 2 canonical identity matches c8_c10_mct in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Relatively fluid C8/C10 carrier supports light estimate against heavier intact oils; medium-spreading and nonvolatile limits remain. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        },
+        {
+          "rank": 3,
+          "reference_id": "jojoba",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 3 canonical identity matches jojoba in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Liquid wax, not a triglyceride. A light prior is plausible from skin finish, not proven on hair. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        },
+        {
+          "rank": 6,
+          "reference_id": "castor",
+          "prior": "rich",
+          "formula_role": "secondary",
+          "reason": "Rank 6 canonical identity matches castor in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Rich is the most defensible material prior, but even this is not a validated universal hair class. Alternative matters mainly when dilution/dose changes context. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "role": "defined_ester_emollient",
+          "reason": "Rank 1 / role-lexicon COCO-CAPRYLATE/CAPRATE: Principal carrier candidate by emollient function within this sketch; exact ester identity/function does not supply a weight class or evaporation claim."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "role": "processed_triglyceride_emollient",
+          "reason": "Rank 2 / material-reference c8_c10_mct: principal carrier role from exact identity and this formula context. Not whole Cocos Nucifera Oil; not Triheptanoin (C7), Caprylic/Capric/Succinic Triglyceride, caprylate esters or generic fractionated coconut oil without exact INCI."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 3 / material-reference jojoba: principal carrier role from exact identity and this formula context. Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL",
+          "role": "antioxidant",
+          "reason": "Rank 4 / role-lexicon TOCOPHEROL: Recognized antioxidant auxiliary; no trace amount is inferred from its rank."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PARFUM",
+          "role": "fragrance_composition",
+          "reason": "Rank 5 / role-lexicon PARFUM: Fragrance-composition auxiliary role; mixture content and load remain unspecified, not presumed negligible or volatile."
+        },
+        {
+          "rank": 6,
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 6 / material-reference castor: secondary carrier role from exact identity and this formula context. Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "confidence": "low",
+        "evidence": [
+          "Ranks 2 and 3 / c8_c10_mct and jojoba supply light priors (moderate and low respectively), with medium alternatives. They provide a coherent lighter carrier signal.",
+          "Rank 1 / role-lexicon COCO-CAPRYLATE/CAPRATE establishes a defined ester emollient and excludes intact coconut identity, but supplies no admitted sensory weight or evaporation claim.",
+          "Rank 6 / castor supplies a rich prior with medium alternative; ranks 4 and 5 are antioxidant and fragrance-composition roles, not concentration boundaries."
+        ],
+        "counter_signal": [
+          "Ranks 2–3 lighter priors and lack of an identified silicone gum make light a plausible alternative; rank 6 castor contributes a richer residual counter-signal.",
+          "Rank 5 / PARFUM composition is unspecified and cannot be assumed volatile or negligible. Rank 6 position alone cannot establish trace concentration."
+        ],
+        "nearest_alternative": "light",
+        "reason": "Unknown is warranted because the rank-1 ester is a principal carrier candidate without weight evidence in the allowed lexicon, while rich rank-6 castor cannot be quantified away. Light is the best-supported provisional alternative from ranks 2–3, but those priors cannot determine the entire carrier. Medium has no affirmative intermediate architecture evidence; rich cannot be inferred from castor presence alone. No majority or fixed first-two rule is applied.",
+        "unresolved": [
+          "Rank 1 exact ester sensory/residual evidence is absent from the permitted inputs.",
+          "The blend proportions, ester grade, rank-5 fragrance composition and castor contribution are unprovided.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Decisive non-reference emollient has a reviewed identity/function but no weight prior; do not inherit coconut rich or infer ester light."
+      ]
+    },
+    {
+      "neutral_id": "P02",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "castor",
+          "prior": "rich",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches castor in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Rich is the most defensible material prior, but even this is not a validated universal hair class. Alternative matters mainly when dilution/dose changes context. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        },
+        {
+          "rank": 2,
+          "reference_id": "coconut_whole",
+          "prior": "rich",
+          "formula_role": "principal",
+          "reason": "Rank 2 canonical identity matches coconut_whole in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Working rich prior from intact lipid coating plus comparatively greasy skin profile/room-temperature structure; medium remains plausible. Structure alone does not establish hair heaviness. Penetration evidence does not decide weight. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        },
+        {
+          "rank": 3,
+          "reference_id": "olive",
+          "prior": "medium",
+          "formula_role": "principal",
+          "reason": "Rank 3 canonical identity matches olive in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: rich; nearest: rich. Medium is a tentative central emollience hypothesis grounded only weakly in sensory description; rich remains plausible. No verified comparative evidence here warrants a universal rich rule. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference castor: principal carrier role from exact identity and this formula context. Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 2 / material-reference coconut_whole: principal carrier role from exact identity and this formula context. Exclude MCT/fractionated derivatives, Coconut Alkanes, Coco-Caprylate/Caprate, hydrogenated coconut oil and coconut extract."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 3 / material-reference olive: principal carrier role from exact identity and this formula context. Fruit oil only; exclude leaf extract, olive squalane, olivates, hydrogenated olive oil and unsaponifiables."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL",
+          "role": "antioxidant",
+          "reason": "Rank 4 / role-lexicon TOCOPHEROL: Recognized antioxidant auxiliary; no trace amount is inferred from its rank."
+        }
+      ],
+      "weight": {
+        "value": "rich",
+        "confidence": "low",
+        "evidence": [
+          "Ranks 1–2 / castor and coconut_whole have concordant rich priors, with medium alternatives; castor is moderate-confidence and whole coconut low-confidence.",
+          "Rank 3 / olive contributes medium with rich alternative, so the full declared carrier architecture points toward the medium-to-rich side rather than introducing an opposing light carrier.",
+          "Rank 4 / role-lexicon TOCOPHEROL is an antioxidant auxiliary; no mobile/volatile or opposing light carrier is identified in this sketch."
+        ],
+        "counter_signal": [
+          "Rank 3 / olive positively supports medium, and ranks 1–2 also admit medium alternatives. Exact mixture ratios and temperature-dependent coconut behavior are unresolved.",
+          "Rank 1 / castor / MDPI2024 conflicts with MERCKCASTOR on viscosity; rank 3 olive evidence is weak supplier emollience, not a comparative weight ranking."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "Rich is a low-confidence working estimate from the coherent entire nonvolatile oil carrier: castor and whole coconut have rich priors, while olive medium/rich does not create an opposite light architecture. This is qualitative alignment of the carrier roles, not a count vote or an assumed majority for ranks 1–2. Medium remains credible through olive and both rich-material alternatives. Light lacks affirmative support from any carrier entry, and rich is the upper class. No penetration or protein-loss endpoint establishes the decision.",
+        "unresolved": [
+          "Relative oil proportions, commercial grades and coconut temperature/time behavior are unprovided.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_complete",
+      "issues": [
+        "Confidence is capped at low by the whole-coconut and olive evidence and unmeasured blend architecture."
+      ]
+    },
+    {
+      "neutral_id": "P03",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [
+        {
+          "rank": 1,
+          "reference_id": "jojoba",
+          "prior": "light",
+          "formula_role": "principal",
+          "reason": "Rank 1 canonical identity matches jojoba in material-reference.json using the packet's stated normalization. Admitted prior confidence: low; alternatives: medium; nearest: medium. Liquid wax, not a triglyceride. A light prior is plausible from skin finish, not proven on hair. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        },
+        {
+          "rank": 2,
+          "reference_id": "castor",
+          "prior": "rich",
+          "formula_role": "principal",
+          "reason": "Rank 2 canonical identity matches castor in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Rich is the most defensible material prior, but even this is not a validated universal hair class. Alternative matters mainly when dilution/dose changes context. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 1 / material-reference jojoba: principal carrier role from exact identity and this formula context. Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 2 / material-reference castor: principal carrier role from exact identity and this formula context. Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TOCOPHEROL",
+          "role": "antioxidant",
+          "reason": "Rank 3 / role-lexicon TOCOPHEROL: Recognized antioxidant auxiliary; no trace amount is inferred from its rank."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / jojoba has a light prior with medium alternative (low confidence).",
+          "Rank 2 / castor has a rich prior with medium alternative (moderate confidence).",
+          "Rank 3 / role-lexicon TOCOPHEROL is an antioxidant auxiliary and does not resolve the competing oil backbone."
+        ],
+        "counter_signal": [
+          "Rank 1 jojoba supports a lighter interpretation; rank 2 castor supports a richer interpretation. The two admitted medium alternatives do not themselves demonstrate an intermediate blend."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "The full carrier is a two-oil mixture with opposing priors and no provided ratio or blend-sensory evidence. Rank 1 does not prove jojoba dominance. Neither light nor rich wins the architecture comparison, and medium would be an unsupported averaging rule. Nearest alternative remains unknown because no substantive class is preferentially established.",
+        "unresolved": [
+          "Jojoba/castor ratio and comparative residual blend behavior are missing.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Balanced opposing-prior case; no forced medium."
+      ]
+    },
+    {
+      "neutral_id": "P04",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "COFFEA ARABICA SEED OIL",
+          "role": "unresolved",
+          "reason": "Rank 1 / role-lexicon unresolved_names lists COFFEA ARABICA SEED OIL; no admitted identity-specific carrier-weight evidence. No family substring mapping is used."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "TOCOPHEROL",
+          "role": "antioxidant",
+          "reason": "Rank 2 / role-lexicon TOCOPHEROL: Recognized antioxidant auxiliary; no trace amount is inferred from its rank."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / COFFEA ARABICA SEED OIL appears in role-lexicon unresolved_names and has no admitted material-reference entry.",
+          "Rank 2 / role-lexicon TOCOPHEROL establishes only an antioxidant auxiliary."
+        ],
+        "counter_signal": [
+          "The rank-1 botanical-oil wording supplies no admitted light, medium or rich sensory evidence. The rank-2 antioxidant cannot fill this missing carrier prior."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "Unknown follows the decisive unresearched rank-1 carrier. The single-material shortcut requires an admitted prior, which is absent. Light and rich lack supported comparisons, and medium cannot be a generic plant-oil default. There is no supported nearest class.",
+        "unresolved": [
+          "Research exact COFFEA ARABICA SEED OIL identity, form exclusions and weight evidence before using a carrier prior.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Decision-relevant material is outside the admitted reference; no invented material match."
+      ]
+    },
+    {
+      "neutral_id": "P05",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "AQUA",
+          "role": "aqueous_vehicle",
+          "reason": "Rank 1 / role-lexicon AQUA: Aqueous vehicle; phase leadership, continuity and finished lightness remain unproved."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "GLYCERIN",
+          "role": "humectant",
+          "reason": "Rank 2 / role-lexicon GLYCERIN: Humectant contribution; weight and concentration are unresolved by function/rank."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+          "role": "solubilizer; surfactant",
+          "reason": "Rank 3 / role-lexicon PEG-40 HYDROGENATED CASTOR OIL: Solubilizer/surfactant contribution; exact modified identity excludes transfer of the castor-oil weight prior."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "SODIUM BENZOATE",
+          "role": "preservative",
+          "reason": "Rank 4 / role-lexicon SODIUM BENZOATE: Recognized preservative auxiliary; no concentration threshold is inferred."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / role-lexicon AQUA is an aqueous vehicle; its presence/rank does not establish water leadership, continuity or finished lightness.",
+          "Rank 2 / role-lexicon GLYCERIN is a humectant; rank 3 PEG-40 HYDROGENATED CASTOR OIL is a solubilizer/surfactant; rank 4 SODIUM BENZOATE is a preservative.",
+          "Rank 3 is expressly excluded from castor prior inheritance by material-reference castor identity_limits."
+        ],
+        "counter_signal": [
+          "Rank 1 aqueous vehicle makes a lower oil-carrier burden conceivable, but ranks 2–3 have unresolved residual contributions and no weight scale in the provided role evidence. Neither castor-derived wording nor humectant presence demonstrates rich."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "Unknown is required because the role inventory resolves identity/function without supplying sensory load for this aqueous/humectant/surfactant architecture. Light cannot follow water-first ordering; medium has no affirmative intermediate evidence; rich cannot inherit neat castor properties through the modified ingredient. No substantive class is clearly nearest.",
+        "unresolved": [
+          "Relative aqueous vehicle, glycerin and solubilizer amounts and their finished residual/sensory behavior are unspecified.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Modified castor ingredient is not an intact-oil match; no broader eligibility conclusion follows."
+      ]
+    },
+    {
+      "neutral_id": "P06",
+      "input_kind": "hypothetical_formula_probe",
+      "material_matches": [
+        {
+          "rank": 4,
+          "reference_id": "grapeseed",
+          "prior": "light",
+          "formula_role": "secondary",
+          "reason": "Rank 4 canonical identity matches grapeseed in material-reference.json using the packet's stated normalization. Admitted prior confidence: moderate; alternatives: medium; nearest: medium. Comparative skin feel supports the lower end among intact oils. It does not promise weightless hair. Formula role is a qualitative architecture interpretation, not a concentration or majority claim."
+        }
+      ],
+      "ingredient_roles": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "role": "silicone_carrier; volatile_carrier",
+          "reason": "Rank 1 / role-lexicon CYCLOPENTASILOXANE: Volatile silicone carrier; evaporation does not erase the rest of the residual film architecture."
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL",
+          "role": "silicone_gum; conditioning_film",
+          "reason": "Rank 2 / role-lexicon DIMETHICONOL: Principal residual-film candidate from its gum/conditioning-film role; rank does not establish substantial concentration."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DIMETHICONE",
+          "role": "silicone_carrier; conditioning_film",
+          "reason": "Rank 3 / role-lexicon DIMETHICONE: Carrier/conditioning-film contribution; grade controls viscosity and volatility and remains unspecified."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "VITIS VINIFERA SEED OIL",
+          "role": "intact_fixed_botanical_oil",
+          "reason": "Rank 4 / material-reference grapeseed: secondary carrier role from exact identity and this formula context. Seed oil only; exclude seed extract and hydrogenated/PEG derivatives."
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHEROL",
+          "role": "antioxidant",
+          "reason": "Rank 5 / role-lexicon TOCOPHEROL: Recognized antioxidant auxiliary; no trace amount is inferred from its rank."
+        }
+      ],
+      "weight": {
+        "value": "unknown",
+        "confidence": "low",
+        "evidence": [
+          "Rank 1 / role-lexicon CYCLOPENTASILOXANE is a volatile silicone carrier; this role provides no blend-residue inference.",
+          "Rank 2 / DIMETHICONOL supplies a silicone-gum/conditioning-film signal; rank 3 / DIMETHICONE supplies carrier/conditioning-film roles with grade-dependent viscosity and volatility. Together they require assessment of the residual system.",
+          "Rank 4 / grapeseed has a light prior with medium alternative (moderate confidence); rank 5 / TOCOPHEROL is an antioxidant auxiliary."
+        ],
+        "counter_signal": [
+          "Rank 1 volatility and rank 4 light grapeseed give lighter signals, but neither cancels rank-2 gum or rank-3 conditioning film.",
+          "Rank 2 film signal makes rich the nearest architectural alternative, but the role lexicon explicitly requires grade/architecture to establish finished load and does not show that this sketch has a substantial gum concentration."
+        ],
+        "nearest_alternative": "rich",
+        "reason": "Unknown retains the unresolved decisive film load. Rich is a plausible nearest alternative because ranks 2–3 expressly form a gum/film system, but rank alone cannot establish its substantialness or finished burden. Light cannot be selected from volatile rank 1 or grapeseed rank 4; medium lacks positive intermediate evidence. INCI does not identify the dimethicone grade, so neither a rich floor nor a light carrier override is justified.",
+        "unresolved": [
+          "Dimethiconol and dimethicone grades, relative amounts and measured residual sensory behavior are absent.",
+          "Rank-3 dimethicone viscosity/volatility cannot be inferred from INCI.",
+          "Commercial grade, applied dose, temperature/time and direct comparative hair feel remain unresolved by the supplied INCI; estimates compare modest leave-on conditions, not directions."
+        ],
+        "estimate": true
+      },
+      "completion_status": "weight_only_blocked",
+      "issues": [
+        "Recognized film architecture without sufficient load evidence; no grade, durability or repeated-build-up conclusion."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,517 @@
+{
+  "scope": "Outside blind lane. Exact source ranks/raw declarations preserved; no input source file edited.",
+  "mappings": [
+    {
+      "case_id": "T01",
+      "rank": 1,
+      "raw_name": "AQUA/WATER",
+      "canonical_name": "AQUA/WATER",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 2,
+      "raw_name": "DICAPRYLYL CARBONATE",
+      "canonical_name": "DICAPRYLYL CARBONATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 3,
+      "raw_name": "ALCOHOL",
+      "canonical_name": "ALCOHOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 4,
+      "raw_name": "DIBUTYL ADIPATE",
+      "canonical_name": "DIBUTYL ADIPATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 5,
+      "raw_name": "DICAPRYLYL ETHER",
+      "canonical_name": "DICAPRYLYL ETHER",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 6,
+      "raw_name": "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL",
+      "canonical_name": "BRASSICA CAMPESTRIS SEED OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 7,
+      "raw_name": "COCO-CAPRYLATE/CAPRATE",
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 8,
+      "raw_name": "ETHYLHEXYL TRIAZONE",
+      "canonical_name": "ETHYLHEXYL TRIAZONE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 9,
+      "raw_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+      "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 10,
+      "raw_name": "PARFUM/FRAGRANCE",
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 11,
+      "raw_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 12,
+      "raw_name": "SODIUM CHLORIDE",
+      "canonical_name": "SODIUM CHLORIDE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 13,
+      "raw_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 14,
+      "raw_name": "PANTHENOL",
+      "canonical_name": "PANTHENOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 15,
+      "raw_name": "FRUCTOOLIGOSACCHARIDES",
+      "canonical_name": "FRUCTOOLIGOSACCHARIDES",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 16,
+      "raw_name": "TOCOPHEROL",
+      "canonical_name": "TOCOPHEROL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 17,
+      "raw_name": "INULIN",
+      "canonical_name": "INULIN",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 18,
+      "raw_name": "CITRIC ACID",
+      "canonical_name": "CITRIC ACID",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 19,
+      "raw_name": "PANTOLACTONE",
+      "canonical_name": "PANTOLACTONE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 20,
+      "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 21,
+      "raw_name": "CITRUS AURANTIUM PEEL OIL",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 22,
+      "raw_name": "LINALYL ACETATE",
+      "canonical_name": "LINALYL ACETATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 23,
+      "raw_name": "LIMONENE",
+      "canonical_name": "LIMONENE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 24,
+      "raw_name": "LINALOOL",
+      "canonical_name": "LINALOOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 25,
+      "raw_name": "CITRONELLOL",
+      "canonical_name": "CITRONELLOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 26,
+      "raw_name": "DIMETHYL PHENETHYL ACETATE",
+      "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 27,
+      "raw_name": "GERANIOL",
+      "canonical_name": "GERANIOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 28,
+      "raw_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T01",
+      "rank": 29,
+      "raw_name": "ISOEUGENYL ACETATE",
+      "canonical_name": "ISOEUGENYL ACETATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T02",
+      "rank": 1,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T02",
+      "rank": 2,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T02",
+      "rank": 3,
+      "raw_name": "C12-15 Alkyl Benzoate",
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T02",
+      "rank": 4,
+      "raw_name": "Argania Kernel Oil",
+      "canonical_name": "ARGANIA KERNEL OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": "Species-incomplete literal declaration. Do not alias to Argania Spinosa Kernel Oil or transfer an oil weight/penetration prior. Secondary contribution remains unresolved; review decisive-identity impact under the method."
+    },
+    {
+      "case_id": "T02",
+      "rank": 5,
+      "raw_name": "Phenyl Trimethicone",
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T02",
+      "rank": 6,
+      "raw_name": "Fragrance (Parfum)",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 1,
+      "raw_name": "ISODODECANE",
+      "canonical_name": "ISODODECANE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 2,
+      "raw_name": "ALCOHOL DENAT.",
+      "canonical_name": "ALCOHOL DENAT.",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 3,
+      "raw_name": "C12-15 ALKYL BENZOATE",
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 4,
+      "raw_name": "HEXYLENE GLYCOL",
+      "canonical_name": "HEXYLENE GLYCOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 5,
+      "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 6,
+      "raw_name": "QUATERNIUM-95",
+      "canonical_name": "QUATERNIUM-95",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 7,
+      "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 8,
+      "raw_name": "FRAGRANCE (PARFUM)",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 9,
+      "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 10,
+      "raw_name": "TOCOPHERYL ACETATE",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 11,
+      "raw_name": "AMYL SALICYLATE",
+      "canonical_name": "AMYL SALICYLATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 12,
+      "raw_name": "BENZYL SALICYLATE",
+      "canonical_name": "BENZYL SALICYLATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 13,
+      "raw_name": "BHT",
+      "canonical_name": "BHT",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 14,
+      "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": "Exact flower oil identity retained; parenthetical collective Oil/Extract label does not alias this oil to all extracts. Not in the closed scalp-active essential-oil family."
+    },
+    {
+      "case_id": "T06",
+      "rank": 15,
+      "raw_name": "GERANYL ACETATE",
+      "canonical_name": "GERANYL ACETATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 16,
+      "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 17,
+      "raw_name": "PROPANEDIOL",
+      "canonical_name": "PROPANEDIOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 18,
+      "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 19,
+      "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+      "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T06",
+      "rank": 20,
+      "raw_name": "VANILLIN",
+      "canonical_name": "VANILLIN",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 1,
+      "raw_name": "Arachis Hypogaea (Peanut) Oil",
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 2,
+      "raw_name": "Trifolium Pratense (Clover) Flower Extract",
+      "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 3,
+      "raw_name": "Fragrance (Parfum)",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 4,
+      "raw_name": "Arctium Lappa Root Extract",
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 5,
+      "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Oil",
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 6,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 7,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 8,
+      "raw_name": "Geraniol",
+      "canonical_name": "GERANIOL",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    },
+    {
+      "case_id": "T04",
+      "rank": 9,
+      "raw_name": "Coumarin",
+      "canonical_name": "COUMARIN",
+      "mapping_basis": "Exact reviewed name or case/parenthetical common-name normalization; plant part and preparation retained.",
+      "identity_limitation": null
+    }
+  ]
+}

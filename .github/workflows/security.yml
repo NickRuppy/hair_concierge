@@ -47,6 +47,14 @@ jobs:
       - uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
+          # Immutable third-party HTML evidence; retain bytes and provenance paths.
+          # These four source captures are not application code. All other files stay in scope.
+          config: |
+            paths-ignore:
+              - plans/oil-inci/research/record-resolution-2026-10-13/rahua/classic-set.html
+              - plans/oil-inci/research/record-resolution-2026-10-13/rahua/ingredient-page.html
+              - plans/oil-inci/research/record-resolution-2026-10-13/rahua/launch-article.html
+              - plans/oil-inci/research/record-resolution-2026-10-13/rahua/standalone.html
       - uses: github/codeql-action/autobuild@v4
       - uses: github/codeql-action/analyze@v4
         with:

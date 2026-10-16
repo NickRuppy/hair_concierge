@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-12",
+  "status": "registered_before_new_source_capture_and_labels",
+  "slots": [
+    {
+      "id": "T01",
+      "question": "aqueous or biphasic oil-labelled retained hair product",
+      "candidates": [
+        "NUXE Sun Moisturising Protective Milky Oil for Hair",
+        "Phyto Plage Protective Sun Veil / Huile lactée capillaire",
+        "Yves Rocher Monoï de Tahiti hair and body dry oil mist"
+      ]
+    },
+    {
+      "id": "T02",
+      "question": "mobile/volatile delivery oil spray",
+      "candidates": [
+        "OGX Argan Oil of Morocco Weightless Dry Oil Spray",
+        "Pantene Pro-V Repair & Protect Dry Oil with Vitamin E",
+        "L’Oréal Paris Elvital Öl Magique lightweight oil spray"
+      ]
+    },
+    {
+      "id": "T03",
+      "question": "mineral-oil-containing retained hair oil",
+      "candidates": [
+        "Dabur Amla Hair Oil original",
+        "Dabur Vatika Enriched Almond Hair Oil",
+        "Africa’s Best Ultimate Herbal Oil"
+      ]
+    },
+    {
+      "id": "T04",
+      "question": "aromatic botanical oil with source-supported fibre leave-on",
+      "candidates": [
+        "Weleda Intensive Nourishing Hair Oil",
+        "Sukin Revitalising Scalp Oil",
+        "Alverde Haaröl Bio-Argan Bio-Walnuss"
+      ]
+    },
+    {
+      "id": "T05",
+      "question": "structured/botanical hair-oil carrier challenge",
+      "candidates": [
+        "Dabur Vatika Enriched Coconut Hair Oil",
+        "Tropic Isle Living Jamaican Black Castor Oil with Coconut",
+        "Fable & Mane HoliRoots Hair Oil"
+      ]
+    },
+    {
+      "id": "T06",
+      "question": "explicit hair UV claim with exact full formula for filter review",
+      "candidates": [
+        "René Furterer Solaire Protective Summer Oil",
+        "Phyto Plage Protective Sun Oil",
+        "NUXE Sun Moisturising Protective Milky Oil for Hair"
+      ]
+    }
+  ],
+  "selection_rule": "For each slot in order take the first exact source-complete unused declaration. No target value is assigned. Candidate may fail the structural question after capture; retain that coverage gap. Skip duplicates of already selected or any prior complete actual/material/hypothetical formula. Record every attempted candidate and exclusion; no unregistered replacement. Missing slots remain explicit; never source-splice or manufacture context.",
+  "admission": "Exact current identity/market/variant, complete ordered raw INCI and source-supported retained hair-fibre scenario. Published maker preferred; matched exact retailer accepted with provenance. No scalp-only/prewash-only, perfume-only, rinse-only or cream category. All sources must be directly readable, not search snippets alone.",
+  "acceptance": {
+    "cases_target": 6,
+    "schema_rank_stage_preservation": 1.0,
+    "persistence_unknown": 0,
+    "per_formula_field_agreement_fraction": 0.8,
+    "factual_flags_claim_gate_agreement": 1.0,
+    "coverage_is_observed_not_required_labels": true,
+    "meaning": "Targeted stress test; no measured sensory accuracy, adapter unlock or production activation."
+  },
+  "scope": "Full oil properties as current v0.8; two isolated lanes after frozen neutral inputs. No standard changes or old-label conversion."
+}

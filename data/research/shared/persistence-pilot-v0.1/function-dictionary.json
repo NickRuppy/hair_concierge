@@ -1,0 +1,772 @@
+{
+  "role_scope": "Reviewed internal function clues; no native product values, weight classes or target answers",
+  "entries": [
+    {
+      "canonical_name": "1,2-HEXANEDIOL",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ACETYL CEDRENE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact declared identity; function requires source review. No assumed coating role or negligible residue.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF JUICE POWDER",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AMYL SALICYLATE",
+      "roles": [
+        "fragrance",
+        "skin_conditioner"
+      ],
+      "notes": "Exact fragrance/skin-conditioning functions; no measured residual contribution.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AQUA",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "notes": "Water vehicle does not decide residual architecture.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BAMBUSA VULGARIS EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL CINNAMATE",
+      "roles": [
+        "fragrance"
+      ],
+      "notes": "Exact fragrance identity; not assigned a substantial conditioning-film function.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL SALICYLATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BETAINE",
+      "roles": [
+        "humectant"
+      ],
+      "notes": "Humectancy not proof of substantial conditioning film.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "roles": [
+        "multifunctional_diol",
+        "not_assessed"
+      ],
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL METHICONE",
+      "roles": [
+        "silicone_emollient"
+      ],
+      "notes": "Supplier exact identity supports spreading emollient function; skin sensory wording is not hair residue. Grade/retained load unestablished.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CETEARYL ALCOHOL",
+      "roles": [
+        "fatty_alcohol",
+        "conditioning_emulsion_structure"
+      ],
+      "notes": "Retained fatty alcohol can contribute conditioning structure; viscosity is not persistence.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CETRIMONIUM CHLORIDE",
+      "roles": [
+        "monomeric_long_chain_quat",
+        "conditioning_deposition_route"
+      ],
+      "notes": "Monomeric conditioner, distinct from polymeric/silicone-functional quats; no wash-count claim.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CETYL ALCOHOL",
+      "roles": [
+        "fatty_alcohol",
+        "conditioning_emulsion_structure"
+      ],
+      "notes": "Retained fatty alcohol can contribute conditioning structure; no finished amount is implied.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CETYL PEG/PPG-10/1 DIMETHICONE",
+      "roles": [
+        "silicone_emulsifier"
+      ],
+      "notes": "Modified emulsifier identity distinct from unmodified gum.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CITRIC ACID",
+      "roles": [
+        "acid",
+        "ph_adjustment_clue"
+      ],
+      "notes": "No finished pH or persistence inferred.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "notes": "Volatile D5; no blend-residue inference.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DICAPRYLYL ETHER",
+      "roles": [
+        "emollient"
+      ],
+      "notes": "Emollience does not itself prove low persistence.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE CROSSPOLYMER",
+      "roles": [
+        "silicone_elastomer",
+        "texture_rheology_modifier"
+      ],
+      "notes": "Supplier elastomer blend used in haircare; thickening/texture role. Not automatically an independent substantial conditioning film; no grade or blend percentages transfer.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DISODIUM EDTA",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact declared identity; function requires source review. No assumed coating role or negligible residue.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DISODIUM PHOSPHATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYLGLYCERIN",
+      "roles": [
+        "conditioning_auxiliary",
+        "humectant"
+      ],
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GERANYL ACETATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "roles": [
+        "humectant"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLEATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "notes": "Exact lipid ester; no generic weight or build-up class.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLENATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "notes": "Exact lipid ester/emollient function; not a generic weight/build-up class.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED KERATIN",
+      "roles": [
+        "hydrolyzed_protein_conditioner"
+      ],
+      "notes": "Temporary conditioning/film clue; no structural repair or independent durable-film proof.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED PEARL",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED SOY PROTEIN",
+      "roles": [
+        "hydrolyzed_protein_conditioner"
+      ],
+      "notes": "Exact hydrolyzed protein conditioning clue; actual molecular-weight, grade, film load and behavior unestablished. No repair/protein-direction property.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+      "roles": [
+        "modified_protein_conditioner"
+      ],
+      "notes": "Exact modified ingredient distinct from plain vegetable protein. Functional clue only; no actual grade/film load or repair flag.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYACETOPHENONE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "roles": [
+        "cationic_polymer",
+        "conditioning_film"
+      ],
+      "notes": "Exact polymeric quat in Leave-In PERS list; whole-formula role and intended rinsing still assessed.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "INULIN",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ISOPROPYL PALMITATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "notes": "Neutral retained emollient; no amount, washout or weight class.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "LACTIC ACID",
+      "roles": [
+        "acid",
+        "ph_adjustment_clue"
+      ],
+      "notes": "Acid presence does not specify finished pH or persistence.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "NIACINAMIDE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ORYZA SATIVA BRAN OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PANTHENOL",
+      "roles": [
+        "humectant",
+        "conditioning_auxiliary"
+      ],
+      "notes": "Auxiliary clue, not independent durable-film proof.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Exact hair-conditioning silicone; film load, grade and repeated washout unspecified.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYQUATERNIUM-16",
+      "roles": [
+        "cationic_polymer",
+        "conditioning_film"
+      ],
+      "notes": "Exact polymeric quat in Leave-In PERS list; presence alone does not decide whole formula.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "POLYSILICONE-15",
+      "roles": [
+        "recognized_uv_filter",
+        "silicone_polymer"
+      ],
+      "notes": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POTASSIUM PHOSPHATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "POTASSIUM SORBATE",
+      "roles": [
+        "preservative"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PROPYLENE GLYCOL",
+      "roles": [
+        "humectant",
+        "solvent"
+      ],
+      "notes": "Water-associated auxiliary; whole residual system decides.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS ARMENIACA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact kernel oil is retained emollient; no ingredient-level product value.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact whole jojoba is a fluid liquid-wax material; this physical clue supplies no finished persistence value. No weight or old build-up label is transferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+        "docs/research/oil-inci/v1.0/09_natural-oil-build-up-reference-v0.1.md"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM BENZOATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM CETEARYL SULFATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM HYALURONATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM HYDROXIDE",
+      "roles": [
+        "ph_adjustment_clue"
+      ],
+      "notes": "No finished pH or film inferred.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "STEARAMIDOPROPYL DIMETHYLAMINE",
+      "roles": [
+        "amidoamine",
+        "ph_dependent_conditioning_route"
+      ],
+      "notes": "Acid-associated conditioning route plausible; actual pH and deposited load unspecified.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "TERPINEOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "TRISILOXANE",
+      "roles": [
+        "silicone_carrier"
+      ],
+      "notes": "Carrier identity does not establish finished evaporation.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    }
+  ]
+}

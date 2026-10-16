@@ -1,0 +1,12 @@
+{
+  "sealed_before_semantic_inspection": true,
+  "input_manifest_sha256": "fd48c425d9b1e1b7ba7f3398e5ab474040f0f60e5f831713197672143e33d07c",
+  "outputs": {
+    "lane-a/blind-records.json": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556",
+    "lane-a/blind-notes.json": "9a04b0b660b1141a0c9eec8451d6a5c312fc016e11a8508c174e931cbe1b817a",
+    "lane-a/persistence-research-trace.json": "d39bf1291dc91150969f04238501353ae9f3b974efa7df606fa12c29e1650dc8",
+    "lane-b/blind-records.json": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b",
+    "lane-b/blind-notes.json": "7ff5527c99ce23ae9a6a3ff26464ca711f92062df15b885be9f95a4bb799e749",
+    "lane-b/persistence-research-trace.json": "4729a40702acd1501965ec47e13f2c5d856ae2bf04e57ec217d59609da65ac61"
+  }
+}

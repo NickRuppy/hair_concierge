@@ -1,0 +1,873 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "records": [
+    {
+      "neutral_id": "Q01",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "MACADAMIA INTEGRIFOLIA SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CORYLUS AVELLANA SEED OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CAMELLIA JAPONICA SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "BORAGO OFFICINALIS SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "POLYGLYCERYL-3 DIISOSTEARATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "DIMETHYL PHENETHYL ACETATE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "VANILLIN"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "PINENE"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q02",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF EXTRACT"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q03",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q04",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "MENTHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "ALOE BARBADENSIS EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL NICOTINATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "BIOTIN"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "CHOLECALCIFEROL (VITAMIN D)"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "ASCORBIC ACID"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "OCIMUM"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BASILICUM (BASIL) OIL"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "SILICA"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q05",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISOHEXADECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C13-14 ISOALKANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "COCO-CAPRYLATE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "ZEA MAYS (CORN) OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "BETA-CAROTENE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PUNICA GRANATUM SEED OIL"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "HEXYL CINNAMAL"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q06",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "FRAGRANCE/PARFUM"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "VANILLIN"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q07",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "MENTHA ARVENSIS (WILD MINT) LEAF OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MENTHOL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "TERPINEOL"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q08",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "CANANGA ODORATA OIL/EXTRACT"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "BETA-CARYOPHYLLENE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "ONOSMA HISPIDUM ROOT EXTRACT"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BACOPA MONNIERI LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ECLIPTA ALBA LEAF EXTRACT"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "SYMPLOCOS RACEMOSA BARK EXTRACT"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT"
+        },
+        {
+          "rank": 27,
+          "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT"
+        },
+        {
+          "rank": 28,
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 29,
+          "canonical_name": "ALPHA-TERPINENE"
+        },
+        {
+          "rank": 30,
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 31,
+          "canonical_name": "EUGENOL"
+        },
+        {
+          "rank": 32,
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 33,
+          "canonical_name": "TERPINOLENE"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q09",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "CAPSANTHIN/CAPSORUBIN"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "DIETHYLHEXYL SODIUM SULFOSUCCINATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "CARVONE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "ISOEUGENYL ACETATE"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "LAVANDULA (LAVENDER) OIL/EXTRACT"
+        },
+        {
+          "rank": 21,
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 22,
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 23,
+          "canonical_name": "MENTHA VIRIDIS (SPEARMINT) LEAF OIL"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "PINENE"
+        },
+        {
+          "rank": 25,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 26,
+          "canonical_name": "VANILLIN"
+        }
+      ]
+    },
+    {
+      "neutral_id": "Q10",
+      "input_kind": "product_formula",
+      "ingredients": [
+        {
+          "rank": 1,
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "BENZYL ALCOHOL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "SH-OLIGOPEPTIDE-78"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CINNAMAL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "LINALOOL"
+        }
+      ]
+    }
+  ]
+}

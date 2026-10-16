@@ -1,0 +1,55 @@
+{
+  "audit_id": "blend-contrast-preflight-audit-2026-10-14",
+  "scope": "Independent local preflight audit only. No weight/classification judgment, source re-research, app test, build, or typecheck was performed.",
+  "verdict": "READY_WITH_LIMITS",
+  "hard_blockers": [],
+  "verified": {
+    "selected_source_scoped_formulas_and_retained_directions": [
+      {"neutral_id":"BC01","candidate_id":"A01","identity":"Sebastian Professional Dark Oil - Smooth and Shine Styling Oil","market":"US maker; DE declaration remains separate","formula_sha256":"527d9728abeef424bb2bb280fe8db5332c8b53f0d7a2843a55393717a6dc3cae","direction_receipt":"source-a/candidates.json#A01.directions"},
+      {"neutral_id":"BC02","candidate_id":"source-b-tabitha-scented-original-150ml","identity":"Tabitha James Kraan Professional Haircare Scented Organic Hair Oil","market":"UK maker; DE/EU pack equivalence unestablished","formula_sha256":"b685bdd01307969548bcc3cd0ebc2d55ab871a716f9a9052c5a07f644e03ed20","direction_receipt":"source-b/candidates.json#source-b-tabitha-scented-original-150ml.retained_fibre_source_quote"},
+      {"neutral_id":"BC03","candidate_id":"A02","identity":"Joico K-PAK Color Therapy Luster Lock Glossing Oil","market":"US maker formula/directions; EU page lacks an accessible full INCI","formula_sha256":"7589ec1ce66e9fb8640aaa502b2d871eee869ada8dc5eea89cb4b6cb798dc31d","direction_receipt":"source-a/candidates.json#A02.directions"},
+      {"neutral_id":"BC04","candidate_id":"source-b-fushi-really-good-100ml","identity":"Fushi Really Good Hair Oil","market":"UK maker; DE/EU pack identity unestablished","formula_sha256":"2e41327d5021a99866a413d2d1cd12da9dd2491c5189d71be81049c57259791d","direction_receipt":"source-b/candidates.json#source-b-fushi-really-good-100ml.retained_fibre_source_quote"}
+    ],
+    "rank_parity": [
+      {"neutral_id":"BC01","source_count":25,"map_count":25,"packet_count":25,"ordered_names_equal":true},
+      {"neutral_id":"BC02","source_count":26,"map_count":26,"packet_count":26,"ordered_names_equal":true},
+      {"neutral_id":"BC03","source_count":34,"map_count":34,"packet_count":34,"ordered_names_equal":true},
+      {"neutral_id":"BC04","source_count":14,"map_count":14,"packet_count":14,"ordered_names_equal":true}
+    ],
+    "raw_hash_parity":"All four source raw-declaration SHA-256 values recompute and equal identity-source-map.json values.",
+    "footnotes_and_numeric_commas": {
+      "tabitha":"The 26 ranked names retain terminal * and ** source markers; the source footnote is not promoted to ranks.",
+      "fushi":"The 14 ranked names retain the raw Greek epsilon markers; the long printed footnote/tail is not promoted to ranks.",
+      "numeric_commas":"No numeric-comma ingredient occurs in these four selected declarations, so no numeric-comma split case was exercised. All four preserve one source token per rank.",
+      "packet_receipt":"neutral-packet-draft.json supplies the same marker rule for every BC record."
+    },
+    "novelty_and_exclusions": {
+      "formula_exposure_check":"506 prior JSON files and 73 distinct prior raw formula strings scanned; zero exact literal matches. This is a literal-string check only.",
+      "named_prior_limits":"identity-source-map.json preserves that Tabitha/Fushi have prior exposure only through other product/variant names. source-a/candidates.json excludes Redken All Soft Argan-6 for prior name-only exposure and Paul Mitchell Super Skinny Serum as an investigated but unadmitted alternative.",
+      "conclusion":"The selected exact product/formula pairs may be called project-new only with the stated project-tree and variant/formula limits, never as unseen model knowledge."
+    },
+    "known_method_files_preserved": {
+      "method_inputs":"All four current SHA-256 values match plans/oil-inci/research/blend-contrast-2026-10-14/method-inputs.json.",
+      "base_check":"Those same four controlling files are unchanged from base 10f2f972: classification standard v0.8, blend policy v0.2, natural-oil weight v0.10, and operating guide v0.2."
+    }
+  },
+  "limits_not_blockers": [
+    "BC01 has a separately preserved localized DE declaration, but neither that nor the US source proves a specific DE package is formula-identical to the US declaration.",
+    "BC02 and BC04 are UK maker declarations; DE/EU package equivalence is unestablished.",
+    "BC03 has a distinct EU product page/directions but no accessible full EU INCI; the admitted formula remains US-scoped.",
+    "BC04 retains the maker's published 'Brahmi Herpestis (Brahmi) Fruit Extract' exactly. Its identity/function is unresolved here; no correction or alias was invented. This is a declared blind-lane gap to retain, not a contradiction in raw formula/rank preservation.",
+    "The packet is brand-neutral by direct keyword check for the four selected brand/product/source identifiers; occurrence of the letters 'us' inside ingredient text is not a market cue."
+  ],
+  "files_audited": [
+    "plans/oil-inci/research/blend-contrast-2026-10-14/protocol.md",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/candidates.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a01-source-excerpt.md",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a02-source-excerpt.md",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a03-source-excerpt.md",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/candidates.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/receipt.md",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/identity-source-map.json",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/formula-exposure-check.json",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet-draft.json"
+  ]
+}

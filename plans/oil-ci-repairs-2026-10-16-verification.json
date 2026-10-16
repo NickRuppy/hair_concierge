@@ -1,0 +1,83 @@
+{
+  "scope": "CI repairs for draft PR692; PR690 unchanged and green; matching manual; no deployment",
+  "parent_head": "e4f4764437b74d6c3957b561635a368882da5bb7",
+  "content_fingerprint": "f14bb418ec87574b88c0610712bcd8d345278f1335913edf637697daec773063",
+  "fingerprint_contract": "SHA256 of sorted relative path TAB current content SHA256 NEWLINE for this CI repair delta; receipt excluded",
+  "manifest": [
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "e198524318a812e04305fbf516d545cd9257aa9cd1b40e386505b5b411067842"
+    },
+    {
+      "path": "plans/oil-ci-repairs-2026-10-16.md",
+      "sha256": "a9b9e2aafcc9d618edc67f5dc5bed1f28c77a51f3a27219b60ce9f84a59dcf09"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/process.ts",
+      "sha256": "3904b14da0b5fa1456995acd253031a53469967e789424e70061e4448479f312"
+    },
+    {
+      "path": "tests/product-intake-router-characterization.test.ts",
+      "sha256": "8d8fd19e20ceb3c2e3a9130a87769d623b82f239ea4eb6366abd05f2284418d0"
+    },
+    {
+      "path": "tests/product-intake-worker-heartbeat.test.ts",
+      "sha256": "b09db68f69c189b9cdcf19560533db608366054bbf4ed8327a1ec53ea8e7b4f5"
+    },
+    {
+      "path": "tests/profile-page-smoke.spec.ts",
+      "sha256": "c5a68e592a6994ddaf08cf8645a686987cedc1a61e47acaf409f037bc10582a8"
+    }
+  ],
+  "local_checks": [
+    {
+      "command": "CODING_TEST_CONCURRENCY=1 npm run test:focused -- tests/product-intake-worker-heartbeat.test.ts tests/product-intake-router-characterization.test.ts tests/product-intake-category-research-router.test.ts tests/oil-current-intake.test.ts tests/oil-worker-admission.test.ts tests/product-intake-pipeline-image.test.ts",
+      "result": "79/79 passed",
+      "log": "/tmp/oil-692-ci-repair-focused.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed",
+      "log": "/tmp/oil-692-ci-repair-typecheck.log"
+    },
+    {
+      "command": "~/.local/bin/coding-check -- npx eslint src/lib/product-intake/pipeline/process.ts",
+      "result": "passed",
+      "log": "/tmp/oil-692-ci-repair-lint.log"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "Parse security workflow and inline CodeQL config with yaml",
+      "result": "passed; exactly four existing capture paths excluded"
+    },
+    {
+      "command": "Compare raw captures to capture-manifest.json SHA256",
+      "result": "all four unchanged"
+    }
+  ],
+  "red_capable_evidence": {
+    "prompt": "Original characterization fails only the stale Oil hash; corrected owner batch passes.",
+    "worker_arguments": "Actual marker-file regression fails before shell:false and passes after; process timeout tests preserved.",
+    "profile": "Original CI artifact shows Speichern\u2026 during expired five-second toast wait. New test waits for exact save POST and asserts HTTP200; no local browser-pass claim."
+  },
+  "counterpart_review": {
+    "plan": "/tmp/oil-ci-repair-plan-review.md; no technical blockers; dispositions recorded in repair plan",
+    "code": "/tmp/oil-ci-repair-code-review.md; no hard defects; hosted-only clearance retained as pending; type narrowing and pre-existing unused fixture hash deferred outside this bounded repair"
+  },
+  "hosted_checks": {
+    "status": "required after push on exact resulting head",
+    "required": [
+      "CI including profile smoke",
+      "Security including combined CodeQL annotations",
+      "Review"
+    ]
+  },
+  "boundaries": [
+    "No matching approval or automation",
+    "No merge/deploy/migration/catalog writes",
+    "No mutation of source captures"
+  ]
+}

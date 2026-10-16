@@ -1,0 +1,1631 @@
+{
+  "scope": "Outside blind lane only. Actual ingredient provenance for neutral source IDs.",
+  "reviewed_at": "2026-10-12",
+  "entries": [
+    {
+      "id": "F001",
+      "canonical_name": "ALCOHOL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://www.fda.gov/cosmetics/cosmetics-labeling-claims/alcohol-free",
+            "claim_supported": "Cosmetic label Alcohol denotes ethanol; distinct from fatty alcohols."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F002",
+      "canonical_name": "ALCOHOL DENAT.",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F001",
+            "canonical_name": "ALCOHOL DENAT.",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "ALCOHOL DENAT.",
+                "matched_name": "ALCOHOL DENAT.",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F003",
+      "canonical_name": "AMYL SALICYLATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F004",
+      "canonical_name": "AQUA/WATER",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "AQUA",
+            "matched_name": "AQUA/WATER",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "AQUA",
+            "matched_name": "AQUA/WATER",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F005",
+      "canonical_name": "ARACHIS HYPOGAEA OIL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://ota-oil.co.jp/business/cosmetic-materials/arachis/",
+            "claim_supported": "Manufacturer identifies exact peanut oil INCI, pressed/refined seed oil and hair-care use; no grade inferred for a finished formula."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F006",
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F007",
+      "canonical_name": "ARGANIA KERNEL OIL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F008",
+      "canonical_name": "BENZYL SALICYLATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "BENZYL SALICYLATE",
+            "matched_name": "BENZYL SALICYLATE",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F009",
+      "canonical_name": "BHT",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F008",
+            "canonical_name": "BHT",
+            "source_refs": [
+              {
+                "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_257.pdf",
+                "accessed_at": "2026-10-09",
+                "source_quality": "EU_scientific_committee",
+                "claim_supported": "Antioxidant function in cosmetics",
+                "evidence_excerpt_or_paraphrase": "SCCS opinion describes BHT as a synthetic antioxidant and reports CosIng antioxidant/fragrance functions."
+              }
+            ],
+            "alias_basis": []
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F010",
+      "canonical_name": "BRASSICA CAMPESTRIS SEED OIL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://docs.newdirectionsaromatics.com/msds/MSDS_CanolaOrganicCarrierOil.pdf",
+            "claim_supported": "Supplier exact botanical/INCI identity and whole carrier oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F011",
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F010",
+            "canonical_name": "C12-15 ALKYL BENZOATE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "C12-15 ALKYL BENZOATE",
+                "matched_name": "C12-15 ALKYL BENZOATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F012",
+      "canonical_name": "CANANGA ODORATA FLOWER OIL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://www.indesso.com/en/our-catalog/cananga-oil",
+            "claim_supported": "Manufacturer exact INCI identifies aromatic essential flower oil."
+          },
+          {
+            "url": "https://webgate.ec.europa.eu/reqs2/public/v2/requirement/auxi/eu/32009R1223_spcosmet_annex_3.pdf",
+            "claim_supported": "Annex III entry347 explicitly lists Cananga Odorata Flower Oil and its collective allergen label."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F013",
+      "canonical_name": "CITRIC ACID",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          },
+          {
+            "ref": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "CITRIC ACID",
+            "matched_name": "CITRIC ACID",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "CITRIC ACID",
+            "matched_name": "CITRIC ACID",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F014",
+      "canonical_name": "CITRONELLOL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F016",
+            "canonical_name": "CITRONELLOL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "CITRONELLOL",
+                "matched_name": "CITRONELLOL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F015",
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          },
+          {
+            "ref": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "predecessor": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "claim": "Exact closed flag role or explicitly reviewed material variant."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "CITRUS AURANTIUM PEEL OIL",
+            "matched_name": "CITRUS AURANTIUM PEEL OIL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "CITRUS AURANTIUM PEEL OIL",
+            "matched_name": "CITRUS AURANTIUM PEEL OIL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F016",
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F020",
+            "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "COCO-CAPRYLATE/CAPRATE",
+                "matched_name": "COCO-CAPRYLATE/CAPRATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F017",
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "aliases": [
+              "COCOS NUCIFERA (COCONUT) OIL",
+              "COCOS NUCIFERA OIL / COCONUT OIL"
+            ],
+            "basis": "Previously reviewed exact lexicon alias; no raw packet normalization."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "COCOS NUCIFERA OIL",
+            "matched_name": "COCOS NUCIFERA OIL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "COCOS NUCIFERA OIL",
+            "matched_name": "COCOS NUCIFERA OIL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": [
+          "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json#COCOS NUCIFERA OIL",
+          "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json#COCOS NUCIFERA OIL"
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F018",
+      "canonical_name": "COUMARIN",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F023",
+            "canonical_name": "COUMARIN",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "COUMARIN",
+                "matched_name": "COUMARIN",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "COUMARIN",
+                "matched_name": "COUMARIN",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F019",
+      "canonical_name": "DIBUTYL ADIPATE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://promo.basf.com/campaign/Projetos/CaringForYou/Documentos/Cuidados%20de%20la%20Piel/Cetiol%C2%AE%20B.pdf",
+            "claim_supported": "BASF identifies exact INCI and di-n-butyl adipate ester, emollient and crystalline-filter solvent functions."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F020",
+      "canonical_name": "DICAPRYLYL CARBONATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F026",
+            "canonical_name": "DICAPRYLYL CARBONATE",
+            "source_refs": [
+              {
+                "url": "https://care360.basf.com/global/en/Product-Finder/30527869",
+                "accessed_at": "2026-10-09",
+                "source_quality": "primary_supplier_or_authoritative",
+                "claim_supported": "Exact INCI and qualitative emollient function",
+                "evidence_excerpt_or_paraphrase": "BASF Cetiol CC identifies INCI Dicaprylyl Carbonate and describes it as a fast-spreading emollient."
+              }
+            ],
+            "alias_basis": []
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F021",
+      "canonical_name": "DICAPRYLYL ETHER",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          },
+          {
+            "ref": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "DICAPRYLYL ETHER",
+            "matched_name": "DICAPRYLYL ETHER",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F022",
+      "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://promo.basf.com/campaign/EMB/AR/BROCHURE%20FILTROS%20UV%20ES%20Y%20PT%20shop.pdf",
+            "claim_supported": "BASF exact INCI UV-filter identity; no finished-product SPF or hair efficacy inferred."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F023",
+      "canonical_name": "DIMETHICONE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F028",
+            "canonical_name": "DIMETHICONE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "DIMETHICONE",
+                "matched_name": "DIMETHICONE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "DIMETHICONE",
+                "matched_name": "DIMETHICONE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F024",
+      "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://webgate.ec.europa.eu/reqs2/public/v2/requirement/auxi/eu/32009R1223_spcosmet_annex_3.pdf",
+            "claim_supported": "Annex III entry334 identifies this exact fragrance-allergen ingredient."
+          }
+        ],
+        "correction_of_prior_entry": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+          "previous_roles": [
+            "not_assessed"
+          ],
+          "previous_fragrance": false,
+          "reason": "New primary exact-name review; historical dictionary left unchanged."
+        }
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F025",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "ETHYLHEXYL METHOXYCINNAMATE",
+            "matched_name": "ETHYLHEXYL METHOXYCINNAMATE",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F026",
+      "canonical_name": "ETHYLHEXYL TRIAZONE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://promo.basf.com/campaign/EMB/AR/BROCHURE%20FILTROS%20UV%20ES%20Y%20PT%20shop.pdf",
+            "claim_supported": "BASF exact INCI UV-filter identity; no finished-product SPF or hair efficacy inferred."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F027",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F032",
+            "canonical_name": "FRAGRANCE (PARFUM)",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "PARFUM",
+                "matched_name": "FRAGRANCE (PARFUM)",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "PARFUM",
+                "matched_name": "FRAGRANCE (PARFUM)",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F028",
+      "canonical_name": "FRUCTOOLIGOSACCHARIDES",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F029",
+      "canonical_name": "GERANIOL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F034",
+            "canonical_name": "GERANIOL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "GERANIOL",
+                "matched_name": "GERANIOL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "GERANIOL",
+                "matched_name": "GERANIOL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F030",
+      "canonical_name": "GERANYL ACETATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F035",
+            "canonical_name": "GERANYL ACETATE",
+            "source_refs": [
+              {
+                "ref": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              },
+              {
+                "ref": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "predecessor": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "claim": "Exact closed flag role or explicitly reviewed material variant."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "GERANYL ACETATE",
+                "matched_name": "GERANYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "GERANYL ACETATE",
+                "matched_name": "GERANYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F031",
+      "canonical_name": "HEXYLENE GLYCOL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F032",
+      "canonical_name": "INULIN",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F033",
+      "canonical_name": "ISODODECANE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F043",
+            "canonical_name": "ISODODECANE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "ISODODECANE",
+                "matched_name": "ISODODECANE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "ISODODECANE",
+                "matched_name": "ISODODECANE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F034",
+      "canonical_name": "ISOEUGENYL ACETATE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://webgate.ec.europa.eu/reqs2/public/v2/requirement/auxi/eu/32009R1223_spcosmet_annex_3.pdf",
+            "claim_supported": "Annex III entry370 identifies this exact fragrance-allergen ingredient."
+          }
+        ],
+        "correction_of_prior_entry": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+          "previous_roles": [
+            "not_assessed"
+          ],
+          "previous_fragrance": false,
+          "reason": "New primary exact-name review; historical dictionary left unchanged."
+        }
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F035",
+      "canonical_name": "LIMONENE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F049",
+            "canonical_name": "LIMONENE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "LIMONENE",
+                "matched_name": "LIMONENE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "LIMONENE",
+                "matched_name": "LIMONENE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F036",
+      "canonical_name": "LINALOOL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F050",
+            "canonical_name": "LINALOOL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "LINALOOL",
+                "matched_name": "LINALOOL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "LINALOOL",
+                "matched_name": "LINALOOL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F037",
+      "canonical_name": "LINALYL ACETATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F051",
+            "canonical_name": "LINALYL ACETATE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "LINALYL ACETATE",
+                "matched_name": "LINALYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "LINALYL ACETATE",
+                "matched_name": "LINALYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F038",
+      "canonical_name": "PANTHENOL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://www.dsm-firmenich.com/protected/beauty-care/en/products/vitamins/d-panthenol.html",
+            "claim_supported": "Supplier identifies panthenol as moisturizer in skin/hair care; no stereoisomer, grade or biological activity transferred from supplied D-panthenol."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F039",
+      "canonical_name": "PANTOLACTONE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F040",
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F059",
+            "canonical_name": "PARFUM/FRAGRANCE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "PARFUM",
+                "matched_name": "PARFUM/FRAGRANCE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "PARFUM",
+                "matched_name": "PARFUM/FRAGRANCE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F041",
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "predecessor": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "claim": "Exact closed flag role or explicitly reviewed material variant."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+            "matched_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F042",
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "matched_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F043",
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "PHENYL TRIMETHICONE",
+            "matched_name": "PHENYL TRIMETHICONE",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F044",
+      "canonical_name": "PROPANEDIOL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+            "key": "PROPANEDIOL",
+            "matched_name": "PROPANEDIOL",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F045",
+      "canonical_name": "QUATERNIUM-95",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://www.crodabeauty.com/en-gb/products/product/1550-chromaveil",
+            "claim_supported": "Supplier describes a Quaternium-95/Propanediol blend as quaternary ammonium hair conditioner with UVA/UVB absorption; standalone exact ingredient filter assignment is not established by this blend page."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F046",
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F066",
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "RICINUS COMMUNIS SEED OIL",
+                "matched_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "RICINUS COMMUNIS SEED OIL",
+                "matched_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F047",
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "aliases": [
+              "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL"
+            ],
+            "basis": "Previously reviewed exact lexicon alias; no raw packet normalization."
+          },
+          {
+            "predecessor": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "claim": "Exact closed flag role or explicitly reviewed material variant."
+          },
+          {
+            "reviewed_by": "root",
+            "reviewed_at": "2026-10-09",
+            "target": "ROSMARINUS OFFICINALIS LEAF OIL",
+            "basis": "Explicit botanical Latin name, oil preparation and source common-name annotation reviewed. Globolus/Melalueca literal spelling defects retained in raw/canonical keys; normalized family interpretation disclosed. No species/plant-part/penetration transfer. Arvensis remains arvensis despite source common name peppermint; unspecified Tea Tree Oil remains separate from leaf oil.",
+            "source_contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md#flags"
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F048",
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F049",
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F069",
+            "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "SIMMONDSIA CHINENSIS SEED OIL",
+                "matched_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "SIMMONDSIA CHINENSIS SEED OIL",
+                "matched_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F050",
+      "canonical_name": "SODIUM CHLORIDE",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F051",
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F071",
+            "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+            "source_refs": [
+              {
+                "ref": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              },
+              {
+                "ref": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+                "matched_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F052",
+      "canonical_name": "TOCOPHEROL",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F072",
+            "canonical_name": "TOCOPHEROL",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "TOCOPHEROL",
+                "matched_name": "TOCOPHEROL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "TOCOPHEROL",
+                "matched_name": "TOCOPHEROL",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F053",
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+        "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+        "registry_records": [
+          {
+            "id": "F073",
+            "canonical_name": "TOCOPHERYL ACETATE",
+            "source_refs": [
+              {
+                "ref": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "claim_supported": "Previously reviewed exact function or identity provenance."
+              }
+            ],
+            "alias_basis": [
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+                "key": "TOCOPHERYL ACETATE",
+                "matched_name": "TOCOPHERYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              },
+              {
+                "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+                "key": "TOCOPHERYL ACETATE",
+                "matched_name": "TOCOPHERYL ACETATE",
+                "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+              }
+            ]
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F054",
+      "canonical_name": "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "ref": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+            "claim_supported": "Literal identity is retained with functions not assessed. Five closed-family exclusions reviewed; no plant extract converted to an essential oil."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F055",
+      "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+      "provenance": {
+        "new_review": true,
+        "reviewed_at": "2026-10-12",
+        "source_refs": [
+          {
+            "url": "https://webgate.ec.europa.eu/reqs2/public/v2/requirement/auxi/eu/32009R1223_spcosmet_annex_3.pdf",
+            "claim_supported": "Annex III entry339 identifies this exact fragrance-allergen ingredient (CAS67801-20-1)."
+          }
+        ]
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    },
+    {
+      "id": "F056",
+      "canonical_name": "VANILLIN",
+      "provenance": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+        "sources": [
+          {
+            "ref": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+            "claim_supported": "Previously reviewed exact function or identity provenance."
+          }
+        ],
+        "alias_basis": [
+          {
+            "predecessor": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "claim": "Exact closed flag role or explicitly reviewed material variant."
+          },
+          {
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+            "key": "VANILLIN",
+            "matched_name": "VANILLIN",
+            "claim": "Exact reviewed canonical/declared alias qualitative functions and closed positive flags."
+          }
+        ],
+        "penetration_source_refs": []
+      },
+      "closed_flags_review": {
+        "contract": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "basis": "All five exact closed families reviewed. Extracts are not essential oils; glycols and aromatic alcohols do not become ethanol; oil plant-name tokens do not become silicone/mineral oil."
+      }
+    }
+  ]
+}

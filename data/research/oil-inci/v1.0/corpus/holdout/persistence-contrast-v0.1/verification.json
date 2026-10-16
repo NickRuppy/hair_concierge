@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS",
+  "command": "python3 plans/oil-inci/research/persistence-contrast-2026-10-15/verify.py",
+  "records": 4,
+  "ranks_per_lane": 89,
+  "unique_exact_names": 72,
+  "declared_formula_agreement": {
+    "numerator": 4,
+    "denominator": 4
+  },
+  "parent_classes": {
+    "high": 2,
+    "moderate": 2
+  },
+  "recognition_incidents": {
+    "a": [
+      {
+        "neutral_id": "PC03",
+        "description": "A tentative unverified product-identity association arose from the botanical combination. It was not pursued, verified, recorded as an identity, or used in the classification."
+      }
+    ],
+    "b": "none"
+  },
+  "historical_research_paths_preserved": 930,
+  "prior_implementation_paths_checked": 959,
+  "authorized_routing_doc_changes": [
+    ".agents/skills/product-research-engine/SKILL.md",
+    "docs/research/README.md",
+    "docs/research/oil-inci/README.md"
+  ],
+  "application_code_and_existing_profiles_unchanged": true,
+  "relative_document_links_checked": 54,
+  "checks": [
+    "final input, source receipt and normative dependency hashes",
+    "full rank/name/function/context parity",
+    "sealed independent outputs",
+    "closed scalar shapes and source-bound parent projection",
+    "CSV parity",
+    "prior research preservation",
+    "existing implementation receipt unchanged except authorized routing docs",
+    "local document links"
+  ],
+  "limits": [
+    "Repeatability only; no measured accuracy.",
+    "PC03 lane A recognition disclosure retained; not four clean model-unfamiliar cases.",
+    "No low coverage demonstrated.",
+    "Data/document-only QA; no new application suite/typecheck/build or live database check required or performed."
+  ]
+}

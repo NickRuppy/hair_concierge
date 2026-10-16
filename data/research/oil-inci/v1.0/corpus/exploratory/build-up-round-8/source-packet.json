@@ -1,0 +1,519 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "records": [
+    {
+      "neutral_id": "C01",
+      "eligible": true,
+      "raw_inci": "CYCLOPENTASILOXANE, DISILOXANE, DIMETHICONOL, CYCLOHEXASILOXANE, ETHYLHEXYL METHOXYCINNAMATE, PARFUM / FRAGRANCE, TOCOPHEROL, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, BIXA ORELLANA SEED EXTRACT, MAURITIA FLEXUOSA FRUIT OIL, HEXAMETHYLINDANOPYRAN, EUCALYPTUS GLOBULUS OIL, ACETYL CEDRENE, TERPINEOL, CITRONELLOL, METHYL SALICYLATE, LAVANDULA OIL/EXTRACT, GERANIOL, ALPHA-ISOMETHYL IONONE, CAMPHOR, PELARGONIUM GRAVEOLENS FLOWER OIL, LINALOOL, LINALYL ACETATE, LIMONENE",
+      "primary_inci": "CYCLOPENTASILOXANE, DISILOXANE, DIMETHICONOL, CYCLOHEXASILOXANE, ETHYLHEXYL METHOXYCINNAMATE, PARFUM / FRAGRANCE, TOCOPHEROL, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, BIXA ORELLANA SEED EXTRACT, MAURITIA FLEXUOSA FRUIT OIL, HEXAMETHYLINDANOPYRAN, EUCALYPTUS GLOBULUS OIL, ACETYL CEDRENE, TERPINEOL, CITRONELLOL, METHYL SALICYLATE, LAVANDULA OIL/EXTRACT, GERANIOL, ALPHA-ISOMETHYL IONONE, CAMPHOR, PELARGONIUM GRAVEOLENS FLOWER OIL, LINALOOL, LINALYL ACETATE, LIMONENE",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DISILOXANE",
+          "canonical_name": "DISILOXANE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "CYCLOHEXASILOXANE",
+          "canonical_name": "CYCLOHEXASILOXANE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 7,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "BIXA ORELLANA SEED EXTRACT",
+          "canonical_name": "BIXA ORELLANA SEED EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "MAURITIA FLEXUOSA FRUIT OIL",
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN"
+        },
+        {
+          "rank": 12,
+          "raw_name": "EUCALYPTUS GLOBULUS OIL",
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "ACETYL CEDRENE",
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "TERPINEOL",
+          "canonical_name": "TERPINEOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "METHYL SALICYLATE",
+          "canonical_name": "METHYL SALICYLATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "LAVANDULA OIL/EXTRACT",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 18,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "ALPHA-ISOMETHYL IONONE",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "CAMPHOR",
+          "canonical_name": "CAMPHOR"
+        },
+        {
+          "rank": 21,
+          "raw_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 23,
+          "raw_name": "LINALYL ACETATE",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE"
+        }
+      ],
+      "contextual_declarations": [],
+      "identity": {
+        "brand": "Davines",
+        "product": "OI Oil",
+        "market_size": "US maker; 135 ml default page / 50 ml option"
+      },
+      "source_url": "https://us.davines.com/products/oi-oil",
+      "captured_at": "2026-10-06",
+      "directions_summary": "Retained: 2\u20133 pumps towel-dried hair before styling; dry lengths/ends finish, fine hair start one pump.",
+      "category_evidence": "Maker cosmetic oil explicitly sold for hair use; multi-use oil inclusion follows existing charter.",
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels."
+      ]
+    },
+    {
+      "neutral_id": "C02",
+      "eligible": true,
+      "raw_inci": "Cyclopentasiloxane, Dimethiconol, Dimethicone, Caprylyl Methicone, Phenyl Trimethicone, Argania Spinosa Kernel Oil, Moringa Oleifera Seed Oil, Oryza Sativa Bran Oil, Bambusa Vulgaris Extract, Camellia Sinensis Leaf Extract, Hydrolyzed Soy Protein, Ethylhexylglycerin, Glycerin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Dimethicone Crosspolymer, Polysilicone-15, Glyceryl Linoleate, Glyceryl Linolenate, Parfum/Fragrance, Phenoxyethanol, Disodium EDTA, Potassium Sorbate, Acetyl Cedrene, Alpha-Isomethyl Ionone, Amyl Salicylate, Benzyl Cinnamate, Benzyl Salicylate, Citronellol, Limonene, Geraniol, Hexyl Cinnamal, Hydroxycitronellal, Linalool, Linalyl Acetate, Terpineol.",
+      "primary_inci": "Cyclopentasiloxane, Dimethiconol, Dimethicone, Caprylyl Methicone, Phenyl Trimethicone, Argania Spinosa Kernel Oil, Moringa Oleifera Seed Oil, Oryza Sativa Bran Oil, Bambusa Vulgaris Extract, Camellia Sinensis Leaf Extract, Hydrolyzed Soy Protein, Ethylhexylglycerin, Glycerin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Dimethicone Crosspolymer, Polysilicone-15, Glyceryl Linoleate, Glyceryl Linolenate, Parfum/Fragrance, Phenoxyethanol, Disodium EDTA, Potassium Sorbate, Acetyl Cedrene, Alpha-Isomethyl Ionone, Amyl Salicylate, Benzyl Cinnamate, Benzyl Salicylate, Citronellol, Limonene, Geraniol, Hexyl Cinnamal, Hydroxycitronellal, Linalool, Linalyl Acetate, Terpineol",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Caprylyl Methicone",
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Moringa Oleifera Seed Oil",
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Oryza Sativa Bran Oil",
+          "canonical_name": "ORYZA SATIVA BRAN OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Bambusa Vulgaris Extract",
+          "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Camellia Sinensis Leaf Extract",
+          "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Hydrolyzed Soy Protein",
+          "canonical_name": "HYDROLYZED SOY PROTEIN"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Ethylhexylglycerin",
+          "canonical_name": "ETHYLHEXYLGLYCERIN"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol",
+          "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Dimethicone Crosspolymer",
+          "canonical_name": "DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Polysilicone-15",
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Glyceryl Linoleate",
+          "canonical_name": "GLYCERYL LINOLEATE"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Glyceryl Linolenate",
+          "canonical_name": "GLYCERYL LINOLENATE"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Disodium EDTA",
+          "canonical_name": "DISODIUM EDTA"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Acetyl Cedrene",
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Alpha-Isomethyl Ionone",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 25,
+          "raw_name": "Amyl Salicylate",
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 26,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE"
+        },
+        {
+          "rank": 27,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 28,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 29,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 30,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 31,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 32,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 33,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 34,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 35,
+          "raw_name": "Terpineol",
+          "canonical_name": "TERPINEOL"
+        }
+      ],
+      "contextual_declarations": [],
+      "identity": {
+        "brand": "Verb",
+        "product": "Ghost Oil",
+        "market_size": "US maker; current shared product page"
+      },
+      "source_url": "https://www.verbproducts.com/products/ghost-oil",
+      "captured_at": "2026-10-06",
+      "directions_summary": "Retained: 2\u20133 pumps mid-lengths/ends of damp/dry hair, comb to distribute; more as needed.",
+      "category_evidence": "Maker cosmetic oil explicitly sold for hair use; multi-use oil inclusion follows existing charter.",
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels."
+      ]
+    },
+    {
+      "neutral_id": "C03",
+      "eligible": true,
+      "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate <ILN46770>",
+      "primary_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Persea Gratissima (Avocado) Oil",
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Mangifera Indica (Mango) Seed Butter",
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Amyl Cinnamal",
+          "canonical_name": "AMYL CINNAMAL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Benzyl Benzoate",
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamal",
+          "canonical_name": "CINNAMAL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Cinnamyl Alcohol",
+          "canonical_name": "CINNAMYL ALCOHOL"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE"
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "formula_code",
+          "raw": "<ILN46770>",
+          "ordering": "not an ingredient"
+        }
+      ],
+      "identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "source_url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+      "captured_at": "2026-10-06",
+      "directions_summary": "Maker explicitly hair oil; multi-use directions are source context only, not a build-up adjustment.",
+      "category_evidence": "Maker cosmetic oil explicitly sold for hair use; multi-use oil inclusion follows existing charter.",
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels."
+      ]
+    },
+    {
+      "neutral_id": "C04",
+      "eligible": true,
+      "raw_inci": "Sclerocarya Birrea Seed Oil.",
+      "primary_inci": "Sclerocarya Birrea Seed Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Sclerocarya Birrea Seed Oil",
+          "canonical_name": "SCLEROCARYA BIRREA SEED OIL"
+        }
+      ],
+      "contextual_declarations": [],
+      "identity": {
+        "brand": "The Ordinary",
+        "product": "100% Cold-Pressed Virgin Marula Oil",
+        "market_size": "US maker; 30 ml"
+      },
+      "source_url": "https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html",
+      "captured_at": "2026-10-06",
+      "directions_summary": "Maker oil explicitly supports hair use; no invented hair-dose or washout protocol.",
+      "category_evidence": "Maker cosmetic oil explicitly sold for hair use; multi-use oil inclusion follows existing charter.",
+      "source_limits": [
+        "Public current maker declaration; no physical batch proof or DE equivalence.",
+        "No list merging with search snippets, alternate markets or historical labels."
+      ]
+    }
+  ]
+}

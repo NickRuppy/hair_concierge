@@ -1,0 +1,929 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "stage": "blind_formula",
+  "records": [
+    {
+      "neutral_id": "F01",
+      "raw_inci": "CAPRYLYL CAPRYLATE/CAPRATE, SQUALANE, PERSEA GRATISSIMA (AVOCADO) OIL, HELIANTHUS ANNUUS (SUNFLOWER) OIL, C13-15 ALKANE, UNDECANE, BENZYL ALCOHOL, TRIDECANE, CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78, FRAGRANCE (PARFUM), TOCOPHEROL, CINNAMAL, HEXYL CINNAMAL, LIMONENE, LINALOOL.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+          "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "SQUALANE",
+          "canonical_name": "SQUALANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+          "canonical_name": "PERSEA GRATISSIMA OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+          "canonical_name": "HELIANTHUS ANNUUS OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "C13-15 ALKANE",
+          "canonical_name": "C13-15 ALKANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "UNDECANE",
+          "canonical_name": "UNDECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "BENZYL ALCOHOL",
+          "canonical_name": "BENZYL ALCOHOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "TRIDECANE",
+          "canonical_name": "TRIDECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "CASTOR ISOSTEARATE SUCCINATE",
+          "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "PROPANEDIOL",
+          "canonical_name": "PROPANEDIOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SH-OLIGOPEPTIDE-78",
+          "canonical_name": "SH-OLIGOPEPTIDE-78",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "CINNAMAL",
+          "canonical_name": "CINNAMAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "LINALOOL.",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F02",
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Prunus amygdalus dulcis (Sweet almond) oil",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Ricinus communis (Castor) seed oil",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Carthamus tinctorius (Safflower) seed oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Rosmarinus officinalis (Rosemary) leaf oil",
+          "canonical_name": "ROSMARINUS OFFICINALIS LEAF OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Mentha arvensis (Wild mint) leaf oil",
+          "canonical_name": "MENTHA ARVENSIS LEAF OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Lavandula oil/extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Camphor",
+          "canonical_name": "CAMPHOR",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Menthol",
+          "canonical_name": "MENTHOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Tocopheryl acetate",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Beta-caryophyllene",
+          "canonical_name": "BETA-CARYOPHYLLENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Pinene",
+          "canonical_name": "PINENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Terpineol",
+          "canonical_name": "TERPINEOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Geranyl acetate",
+          "canonical_name": "GERANYL ACETATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Linalyl acetate",
+          "canonical_name": "LINALYL ACETATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F03",
+      "raw_inci": "Aqua / Water, Isopropyl Myristate, Isododecane, Dimethicone, Vp/Va Copolymer, Magnesium Sulfate, Phenoxyethanol, Chlorphenesin, Caprylyl Glycol, Cocos Nucifera Oil / Coconut Oil, Ethylhexyl Salicylate, Benzyl Alcohol, Orbignya Oleifera Seed Oil, Tocopherol, Citric Acid, Ci 19140 / Yellow 5, Ci 17200 / Red 33, Sodium Hydroxide, Parfum / Fragrance",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua / Water",
+          "canonical_name": "AQUA",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isopropyl Myristate",
+          "canonical_name": "ISOPROPYL MYRISTATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Vp/Va Copolymer",
+          "canonical_name": "VP/VA COPOLYMER",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Magnesium Sulfate",
+          "canonical_name": "MAGNESIUM SULFATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Chlorphenesin",
+          "canonical_name": "CHLORPHENESIN",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Caprylyl Glycol",
+          "canonical_name": "CAPRYLYL GLYCOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Cocos Nucifera Oil / Coconut Oil",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Ethylhexyl Salicylate",
+          "canonical_name": "ETHYLHEXYL SALICYLATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Benzyl Alcohol",
+          "canonical_name": "BENZYL ALCOHOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Orbignya Oleifera Seed Oil",
+          "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Citric Acid",
+          "canonical_name": "CITRIC ACID",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Ci 19140 / Yellow 5",
+          "canonical_name": "CI 19140",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Ci 17200 / Red 33",
+          "canonical_name": "CI 17200",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Sodium Hydroxide",
+          "canonical_name": "SODIUM HYDROXIDE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Parfum / Fragrance",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F04",
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cocos Nucifera Fruit Oil",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "normalization": "input_scoped_material_mapping"
+        }
+      ],
+      "technical_observations": [
+        {
+          "fact": "Declared single material independently confirmed as cold-pressed, unrefined whole coconut oil; this scoped mapping excludes extract/juice/butter/fractionated derivative equivalence.",
+          "basis": "technical material identity corroboration; source outside blind packet"
+        },
+        {
+          "fact": "Semisolid at cool temperatures, liquid when warmed.",
+          "basis": "observed manufacturer physical-form description; no benefit claim"
+        }
+      ]
+    },
+    {
+      "neutral_id": "F05",
+      "raw_inci": "C13‐15 Alkane, Isohexadecane, Isododecane, Isoamyl Laurate, Ethylene/Propylene/Styrene Copolymer, C9-12 Alkane, Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil, Helianthus Annus (Sunflower) Seed Oil, Coco Caprylate/Caprate, Brassica Campestris/Aleurites Fordi Oil Copolymer, Citrullus Lanatus Seed Oil, Moringa Oleifera Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Orbignya Oleifera Seed Oil, Phytosteryl/Octyldodecyl Lauroyl Glutamate, Butylene/Ethylene/Styrene Copolymer, Amaranthus Caudatus Seed Extract, Diisostearyl Malate, Pentaerythrityl Tetra-Di-T-Butylhydroxyhydrocinnamate, Parfum, Citronellol, Limonene, Citral, Linalool",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "C13‐15 Alkane",
+          "canonical_name": "C13-15 ALKANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isohexadecane",
+          "canonical_name": "ISOHEXADECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Isoamyl Laurate",
+          "canonical_name": "ISOAMYL LAURATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Ethylene/Propylene/Styrene Copolymer",
+          "canonical_name": "ETHYLENE/PROPYLENE/STYRENE COPOLYMER",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "C9-12 Alkane",
+          "canonical_name": "C9-12 ALKANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil",
+          "canonical_name": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "normalization": "input_scoped_material_mapping"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Coco Caprylate/Caprate",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "normalization": "input_scoped_material_mapping"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Brassica Campestris/Aleurites Fordi Oil Copolymer",
+          "canonical_name": "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Citrullus Lanatus Seed Oil",
+          "canonical_name": "CITRULLUS LANATUS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Moringa Oleifera Seed Oil",
+          "canonical_name": "MORINGA OLEIFERA SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Orbignya Oleifera Seed Oil",
+          "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Phytosteryl/Octyldodecyl Lauroyl Glutamate",
+          "canonical_name": "PHYTOSTERYL/OCTYLDODECYL LAUROYL GLUTAMATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Butylene/Ethylene/Styrene Copolymer",
+          "canonical_name": "BUTYLENE/ETHYLENE/STYRENE COPOLYMER",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Amaranthus Caudatus Seed Extract",
+          "canonical_name": "AMARANTHUS CAUDATUS SEED EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Diisostearyl Malate",
+          "canonical_name": "DIISOSTEARYL MALATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Pentaerythrityl Tetra-Di-T-Butylhydroxyhydrocinnamate",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Parfum",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F06",
+      "raw_inci": "Aqua [Water], Polyquaternium-10, Polysorbate 20, Glycerin, PEG-40 hydrogenated castor oil, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Phenoxyethanol, PPG-3 caprylyl ether, Ethylhexylglycerin, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexyl methoxycinnamate, Propylene glycol, Citric acid, Linalyl acetate, CI 47005 [Yellow 10], 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Limonene, Hexyl cinnamal, Linalool",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua [Water]",
+          "canonical_name": "AQUA",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Polyquaternium-10",
+          "canonical_name": "POLYQUATERNIUM-10",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Polysorbate 20",
+          "canonical_name": "POLYSORBATE 20",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PEG-40 hydrogenated castor oil",
+          "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Avena sativa (Oat) peptide",
+          "canonical_name": "AVENA SATIVA PEPTIDE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Gardenia taitensis flower extract",
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Lycium barbarum fruit extract",
+          "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Malva sylvestris (Mallow) extract",
+          "canonical_name": "MALVA SYLVESTRIS EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Juniperus virginiana oil",
+          "canonical_name": "JUNIPERUS VIRGINIANA OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Citrus aurantium peel oil",
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "PPG-3 caprylyl ether",
+          "canonical_name": "PPG-3 CAPRYLYL ETHER",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Ethylhexylglycerin",
+          "canonical_name": "ETHYLHEXYLGLYCERIN",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Tetramethyl acetyloctahydronaphthalenes",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "C13-15 alkane",
+          "canonical_name": "C13-15 ALKANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Ethylhexyl methoxycinnamate",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Propylene glycol",
+          "canonical_name": "PROPYLENE GLYCOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Citric acid",
+          "canonical_name": "CITRIC ACID",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Linalyl acetate",
+          "canonical_name": "LINALYL ACETATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 21,
+          "raw_name": "CI 47005 [Yellow 10]",
+          "canonical_name": "CI 47005",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 22,
+          "raw_name": "1,2-Hexanediol",
+          "canonical_name": "1,2-HEXANEDIOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Caprylyl glycol",
+          "canonical_name": "CAPRYLYL GLYCOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Parfum [Fragrance]",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 25,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 26,
+          "raw_name": "Hexyl cinnamal",
+          "canonical_name": "HEXYL CINNAMAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 27,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F07",
+      "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Water/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Fragrance (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isohexadecane",
+          "canonical_name": "ISOHEXADECANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C13-14 Isoalkane",
+          "canonical_name": "C13-14 ISOALKANE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Coco-Caprylate",
+          "canonical_name": "COCO-CAPRYLATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Bis-Aminopropyl Diglycol Dimaleate",
+          "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Propanediol",
+          "canonical_name": "PROPANEDIOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Zea Mays (Corn) Oil",
+          "canonical_name": "ZEA MAYS OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Beta-Carotene",
+          "canonical_name": "BETA-CAROTENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Punica Granatum Seed Oil",
+          "canonical_name": "PUNICA GRANATUM SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Water/Aqua/Eau",
+          "canonical_name": "AQUA",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Morinda Citrifolia Fruit Extract",
+          "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate",
+          "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    },
+    {
+      "neutral_id": "F08",
+      "raw_inci": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, Argania Spinosa Kernel Oil, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis Flower Extract, Vanilla Planifolia Fruit Extract, Carthamus Tinctorius (Safflower) Seed Oil, Tocopheryl Acetate, Parfum/Fragrance, Benzyl Benzoate, Linalool, Benzyl Salicylate, Limonene, Benzyl Alcohol, Coumarin",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isopropyl Myristate",
+          "canonical_name": "ISOPROPYL MYRISTATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 4,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Gardenia Taitensis Flower Extract",
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Vanilla Planifolia Fruit Extract",
+          "canonical_name": "VANILLA PLANIFOLIA FRUIT EXTRACT",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopheryl Acetate",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Benzyl Benzoate",
+          "canonical_name": "BENZYL BENZOATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Benzyl Alcohol",
+          "canonical_name": "BENZYL ALCOHOL",
+          "normalization": "reviewed_exact_name_or_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Coumarin",
+          "canonical_name": "COUMARIN",
+          "normalization": "reviewed_exact_name_or_alias"
+        }
+      ],
+      "technical_observations": []
+    }
+  ]
+}

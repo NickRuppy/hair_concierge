@@ -1,0 +1,1192 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "lane": "a",
+  "records": [
+    {
+      "neutral_id": "C01",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Carrier scaffold with rank 2 and rank 4; admitted volatility informs the vehicle, not absence of a retained film."
+        },
+        {
+          "rank": 2,
+          "raw_name": "DISILOXANE",
+          "canonical_name": "DISILOXANE",
+          "roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Volatile carrier within the scaffold surrounding the rank 3 gum; does not cancel its retained conditioning contribution."
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL",
+          "roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The admitted silicone-gum and conditioning-film functions make this the central retained-film candidate in the carrier scaffold; grade and actual film load remain unknown."
+        },
+        {
+          "rank": 4,
+          "raw_name": "CYCLOHEXASILOXANE",
+          "canonical_name": "CYCLOHEXASILOXANE",
+          "roles": [
+            "silicone_carrier"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Additional silicone carrier in the same scaffold; its exact finished evaporation behavior is not established."
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed filter function does not establish a substantial conditioning film; its residual contribution is not quantified."
+        },
+        {
+          "rank": 6,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM",
+          "roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance composition is an auxiliary function, but mixture composition and retained contribution are unspecified; it is not assumed volatile or negligible."
+        },
+        {
+          "rank": 7,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Antioxidant function supports an auxiliary assignment; no negligible-residue assumption follows."
+        },
+        {
+          "rank": 8,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Fixed-oil emollient contributes to the retained lipid portion beside the gum system; no accepted build-up prior for this oil is supplied."
+        },
+        {
+          "rank": 9,
+          "raw_name": "BIXA ORELLANA SEED EXTRACT",
+          "canonical_name": "BIXA ORELLANA SEED EXTRACT",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 10,
+          "raw_name": "MAURITIA FLEXUOSA FRUIT OIL",
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL",
+          "roles": [
+            "botanical_fixed_oil"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact fruit fixed oil contributes a plausible retained lipid portion; grade and persistence remain unassessed."
+        },
+        {
+          "rank": 11,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 12,
+          "raw_name": "EUCALYPTUS GLOBULUS OIL",
+          "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+          "roles": [
+            "essential_oil",
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted essential-oil/aromatic function, with no affirmative substantial conditioning-film function; residue is not assumed absent."
+        },
+        {
+          "rank": 13,
+          "raw_name": "ACETYL CEDRENE",
+          "canonical_name": "ACETYL CEDRENE",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 14,
+          "raw_name": "TERPINEOL",
+          "canonical_name": "TERPINEOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 15,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 16,
+          "raw_name": "METHYL SALICYLATE",
+          "canonical_name": "METHYL SALICYLATE",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 17,
+          "raw_name": "LAVANDULA OIL/EXTRACT",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "roles": [
+            "fragrance_group",
+            "botanical_preparation_unspecified"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Fragrance-group identity is admitted, but oil versus extract and preparation are unresolved; neither a lipid-film role nor negligible residue is assigned."
+        },
+        {
+          "rank": 18,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 19,
+          "raw_name": "ALPHA-ISOMETHYL IONONE",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 20,
+          "raw_name": "CAMPHOR",
+          "canonical_name": "CAMPHOR",
+          "roles": [
+            "cooling_or_aromatic_auxiliary",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted cooling/aromatic auxiliary function; its contribution to residual load is not established."
+        },
+        {
+          "rank": 21,
+          "raw_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "roles": [
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted aromatic auxiliary function; this does not establish zero residue or a substantial conditioning film."
+        },
+        {
+          "rank": 22,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 23,
+          "raw_name": "LINALYL ACETATE",
+          "canonical_name": "LINALYL ACETATE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 24,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        }
+      ],
+      "contextual_declarations": [],
+      "residual_architecture": "CYCLOPENTASILOXANE (1) and DISILOXANE (2) provide an admitted volatile-carrier scaffold with CYCLOHEXASILOXANE (4), whose finished evaporation behavior is unspecified. DIMETHICONOL (3) supplies the explicit gum/conditioning-film function within that scaffold, making a coherent retained gum film more plausible than a merely mobile emollient remainder. Sunflower seed oil (8) and Mauritia fruit oil (10) contribute a further retained lipid portion. The filter at 5 and antioxidant at 7 have no admitted substantial conditioning-film function. PARFUM (6), the admitted aromatic materials and the remaining declared fragrance constituents have uncertain residual contributions and are not erased from the remainder. BIXA ORELLANA SEED EXTRACT (9), HEXAMETHYLINDANOPYRAN (11), ACETYL CEDRENE (13) and METHYL SALICYLATE (16) remain functionally unassessed; LAVANDULA OIL/EXTRACT (17) has unresolved preparation. The estimate rests on the carrier-plus-gum architecture, not an invented role for any of those gaps. Rank is used as qualitative ordering, never as a quantity boundary.",
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DISILOXANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CYCLOHEXASILOXANE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "BIXA ORELLANA SEED EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "HEXAMETHYLINDANOPYRAN"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "ACETYL CEDRENE"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "METHYL SALICYLATE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          },
+          {
+            "rank": 20,
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 21,
+            "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL"
+          }
+        ],
+        "counter_signal": [
+          "The volatile carriers at ranks 1 and 2 support a plausible mobile-vehicle reading, and the actual gum grade and deposited film may be insufficient for a substantial coating.",
+          "DIMETHICONOL at rank 3 is the single explicit gum signal; the botanical oils add retained emollience but do not independently prove substantial persistence.",
+          "Unassessed functions and the unresolved fragrance/botanical preparations limit confidence in the complete residual-system reading."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Elevated is the more plausible rough direction because the admitted DIMETHICONOL gum/conditioning-film function at rank 3 appears integrated into the main carrier scaffold, with additional retained oils at ranks 8 and 10. The tipping assumption is that this gum provides a meaningful retained conditioning film after the volatile carrier contribution changes, rather than functioning as a minor residual modifier. The opposing low reading would fit a modest gum contribution and a mobile remainder, but is less consistent with this coherent architecture. Neither evaporation nor ingredient order establishes film amount or repeated accumulation.",
+        "unresolved": [
+          "DIMETHICONOL grade, actual deposited film, adhesion and repeated cleansing behavior are unspecified.",
+          "The supplied reference has no accepted build-up prior for sunflower or Mauritia fruit oil; their individual persistence is unassessed.",
+          "Ranks 9 BIXA ORELLANA SEED EXTRACT, 11 HEXAMETHYLINDANOPYRAN, 13 ACETYL CEDRENE and 16 METHYL SALICYLATE have explicitly unassessed functions; no zero-residue assumption resolves them.",
+          "Rank 17 LAVANDULA OIL/EXTRACT preparation and rank 6 PARFUM mixture composition are unresolved.",
+          "The retained contributions of the filter, antioxidant and aromatic/fragrance constituents are not quantified; no comparative repeat-application hair-residue observations are supplied."
+        ]
+      }
+    },
+    {
+      "neutral_id": "C02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Volatile silicone carrier for the full conditioning system; vehicle mobility does not cancel its retained components."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL",
+          "roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Admitted gum/conditioning-film functions form the strongest substantial residual-film candidate, considered jointly with ranks 3 and 5 rather than from ingredient presence alone."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Carrier and conditioning-film functions support the main retained silicone system beside rank 2; actual grade and film load remain unknown."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Caprylyl Methicone",
+          "canonical_name": "CAPRYLYL METHICONE",
+          "roles": [
+            "silicone_emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Silicone emollient participates in the carrier/emollient scaffold; spreading function alone does not resolve persistence or establish volatility."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE",
+          "roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Carrier and conditioning-film functions reinforce the retained architecture with ranks 2 and 3; durability remains unmeasured."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Fixed-oil emollient adds a retained lipid contribution beside the main silicone system; no supplied build-up prior decides this contribution."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Moringa Oleifera Seed Oil",
+          "canonical_name": "MORINGA OLEIFERA SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Fixed-oil emollient adds a retained lipid contribution; its actual persistence and grade are unestablished."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Oryza Sativa Bran Oil",
+          "canonical_name": "ORYZA SATIVA BRAN OIL",
+          "roles": [
+            "botanical_fixed_oil"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact bran fixed oil belongs to the additional lipid portion; no wax grade or persistence is established by the name."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Bambusa Vulgaris Extract",
+          "canonical_name": "BAMBUSA VULGARIS EXTRACT",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Camellia Sinensis Leaf Extract",
+          "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Hydrolyzed Soy Protein",
+          "canonical_name": "HYDROLYZED SOY PROTEIN",
+          "roles": [
+            "hydrolyzed_protein_conditioner"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted hydrolyzed-protein conditioning function is a secondary conditioning clue; molecular characteristics and actual film behavior are unspecified."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Ethylhexylglycerin",
+          "canonical_name": "ETHYLHEXYLGLYCERIN",
+          "roles": [
+            "conditioning_auxiliary",
+            "humectant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted conditioning-auxiliary and humectant functions contribute possible residue without establishing a substantial gum or polymer film."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN",
+          "roles": [
+            "humectant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Humectant function is retained as an auxiliary clue; no washout or negligible-residue inference is made."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol",
+          "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+          "roles": [
+            "modified_protein_conditioner"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted modified-protein conditioning function adds a separate conditioning clue; not equated with plain protein or a demonstrated substantial film."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Dimethicone Crosspolymer",
+          "canonical_name": "DIMETHICONE CROSSPOLYMER",
+          "roles": [
+            "silicone_elastomer",
+            "texture_rheology_modifier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Admitted silicone elastomer/texture-rheology role may structure the formulation; not automatically an independent substantial hair-conditioning film."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Polysilicone-15",
+          "canonical_name": "POLYSILICONE-15",
+          "roles": [
+            "recognized_uv_filter",
+            "silicone_polymer"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Reviewed silicone-polymer/filter identity is retained; a substantial conditioning-film role is not supplied and is not inferred from polymer identity alone."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Glyceryl Linoleate",
+          "canonical_name": "GLYCERYL LINOLEATE",
+          "roles": [
+            "lipid_ester_emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Lipid-ester emollient contributes to the additional retained emollient portion; no generic ester build-up class is assigned."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Glyceryl Linolenate",
+          "canonical_name": "GLYCERYL LINOLENATE",
+          "roles": [
+            "lipid_ester_emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Lipid-ester emollient contributes to the additional retained emollient portion; persistence is unestablished."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance composition is an auxiliary function, but mixture composition and retained contribution are unspecified; it is not assumed volatile or negligible."
+        },
+        {
+          "rank": 20,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL",
+          "roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Preservative function supports an auxiliary assignment without inferring negligible residue."
+        },
+        {
+          "rank": 21,
+          "raw_name": "Disodium EDTA",
+          "canonical_name": "DISODIUM EDTA",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 22,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE",
+          "roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Preservative function supports an auxiliary assignment without inferring negligible residue."
+        },
+        {
+          "rank": 23,
+          "raw_name": "Acetyl Cedrene",
+          "canonical_name": "ACETYL CEDRENE",
+          "roles": [
+            "function_not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "The frozen lexicon explicitly leaves this exact material function unassessed. No coating, fragrance, carrier or negligible-residue role is invented; its contribution remains an unresolved part of the whole-formula estimate."
+        },
+        {
+          "rank": 24,
+          "raw_name": "Alpha-Isomethyl Ionone",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 25,
+          "raw_name": "Amyl Salicylate",
+          "canonical_name": "AMYL SALICYLATE",
+          "roles": [
+            "fragrance",
+            "skin_conditioner"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance/skin-conditioning functions do not establish substantial hair-film support; residual contribution remains unspecified."
+        },
+        {
+          "rank": 26,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE",
+          "roles": [
+            "fragrance"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance function has no supplied substantial conditioning-film function; no absence of residue is inferred."
+        },
+        {
+          "rank": 27,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 28,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 29,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 30,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 31,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 32,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 33,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 34,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 35,
+          "raw_name": "Terpineol",
+          "canonical_name": "TERPINEOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        }
+      ],
+      "contextual_declarations": [],
+      "residual_architecture": "The admitted volatile carrier CYCLOPENTASILOXANE (1) carries a residual system in which DIMETHICONOL (2) provides an explicit gum/conditioning-film signal alongside DIMETHICONE (3) and PHENYL TRIMETHICONE (5), both admitted conditioning-film materials. CAPRYLYL METHICONE (4) supplies emollience without establishing easy removal. The oils at 6-8 and lipid esters at 17-18 add a retained emollient portion. Protein conditioners at 11 and 14 add secondary conditioning clues without proven film load. DIMETHICONE CROSSPOLYMER (15) is assigned its admitted texture/rheology function, not treated as independent substantial film proof. POLYSILICONE-15 (16) has admitted polymer/filter identity without a supplied conditioning-film role. Humectant/conditioning auxiliaries at 12-13, preservatives at 20 and 22, fragrance composition at 19 and declared fragrance constituents remain part of the possible remainder; AMYL SALICYLATE (25) has an admitted skin-conditioning function but no measured hair-film contribution. BAMBUSA VULGARIS EXTRACT (9), CAMELLIA SINENSIS LEAF EXTRACT (10), DISODIUM EDTA (21) and ACETYL CEDRENE (23) remain functionally unassessed. The mutually supporting gum and conditioning-film scaffold makes a substantial coating more plausible; neither a late polymer nor the number of ingredients is the deciding signal.",
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CAPRYLYL METHICONE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "MORINGA OLEIFERA SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "ORYZA SATIVA BRAN OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "HYDROLYZED SOY PROTEIN"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "ETHYLHEXYLGLYCERIN"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "GLYCERIN"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "DIMETHICONE CROSSPOLYMER"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "POLYSILICONE-15"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "GLYCERYL LINOLEATE"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "GLYCERYL LINOLENATE"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "PARFUM/FRAGRANCE"
+          },
+          {
+            "rank": 21,
+            "canonical_name": "DISODIUM EDTA"
+          },
+          {
+            "rank": 23,
+            "canonical_name": "ACETYL CEDRENE"
+          },
+          {
+            "rank": 25,
+            "canonical_name": "AMYL SALICYLATE"
+          }
+        ],
+        "counter_signal": [
+          "CYCLOPENTASILOXANE at rank 1 and emollient/carrier functions elsewhere allow a mobile system with a less substantial deposited remainder if the conditioning-film grades behave that way.",
+          "The silicone gum and fluid-film grades are unknown; their names and order do not measure actual retained film or accumulation.",
+          "The crosspolymer at rank 15 may mainly modify texture, while protein-conditioning and filter/polymer identities do not independently prove a substantial persistent film."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Elevated is the more plausible estimate from the combined admitted gum at rank 2 and conditioning-film materials at ranks 3 and 5, supported by the retained emollient portion at ranks 6-8 and 17-18. The tipping assumption is that this integrated gum/film system supplies a meaningful coating under comparable small applications. Low remains plausible if the actual grades yield a less substantial residual system, but the carrier and spreading clues do not outweigh the affirmative combined film architecture. The decision does not require assigning film roles to unassessed ingredients or treating the crosspolymer and filter polymer as substantial film proof.",
+        "unresolved": [
+          "Actual grades, deposited load and cleansing durability of DIMETHICONOL, DIMETHICONE and PHENYL TRIMETHICONE are unspecified.",
+          "CAPRYLYL METHICONE spreading does not establish its retained contribution; DIMETHICONE CROSSPOLYMER texture effects and protein-conditioner film behavior remain unresolved.",
+          "The oil and lipid-ester materials have no accepted build-up priors here; possible material-grade differences, including any wax-containing oil grades, are not resolved by the supplied identities.",
+          "Ranks 9 BAMBUSA VULGARIS EXTRACT, 10 CAMELLIA SINENSIS LEAF EXTRACT, 21 DISODIUM EDTA and 23 ACETYL CEDRENE have explicitly unassessed functions and cannot be assumed residue-free.",
+          "Fragrance-mixture, humectant, preservative and filter-polymer residual contributions are unmeasured. No comparative repeat-application or shampoo-residue evidence is supplied."
+        ]
+      }
+    },
+    {
+      "neutral_id": "C03",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Fixed-oil emollient begins the continuous oil-base reading with the other intact oils; generic emollience does not prove low persistence."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Persea Gratissima (Avocado) Oil",
+          "canonical_name": "PERSEA GRATISSIMA OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Fixed-oil emollient contributes to the principal retained oil architecture; exact grade and persistence are unestablished."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Exact whole-jojoba identity matches the supplied narrow rough prior; it informs one constituent in the oil architecture and cannot classify this blend."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Fixed-oil emollient participates in the principal oil architecture; neither oil count nor botanical origin decides coating tendency."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Fixed-oil emollient participates in the principal oil architecture with an unassessed individual build-up tendency."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Whole coconut oil is an admitted fixed-oil emollient within the lipid blend; presence alone does not establish substantial structured coating."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+          "roles": [
+            "botanical_fixed_oil"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact seed fixed oil adds to the retained lipid architecture without a supplied material build-up prior."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Mangifera Indica (Mango) Seed Butter",
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+          "roles": [
+            "botanical_seed_fat"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Botanical seed fat is the clearest possible structuring counter-signal, but finished structure and retained-film contribution are not established; secondary is an architectural hypothesis, not a quantity inference."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "roles": [
+            "botanical_extract",
+            "possible_antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Botanical leaf extract with a possible antioxidant function; preparation is unspecified and no oil or film role is inferred."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL",
+          "roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted antioxidant function; residual contribution is not measured or treated as zero."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance composition is an auxiliary function, but mixture composition and retained contribution are unspecified; it is not assumed volatile or negligible."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Amyl Cinnamal",
+          "canonical_name": "AMYL CINNAMAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Benzyl Benzoate",
+          "canonical_name": "BENZYL BENZOATE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 20,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamal",
+          "canonical_name": "CINNAMAL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 22,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 23,
+          "raw_name": "Cinnamyl Alcohol",
+          "canonical_name": "CINNAMYL ALCOHOL",
+          "roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "The admitted role identifies a declared fragrance constituent, without proving perfuming intent, substantial conditioning-film function or negligible residue."
+        },
+        {
+          "rank": 24,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE",
+          "roles": [
+            "fragrance"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Admitted fragrance function has no supplied substantial conditioning-film function; no absence of residue is inferred."
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "formula_code",
+          "raw": "<ILN46770>",
+          "ordering": "not an ingredient"
+        }
+      ],
+      "residual_architecture": "The complete declaration reads as an intact-oil emollient architecture led by sunflower (1), avocado (2), whole jojoba (3), argan (4) and safflower (5), with coconut (6), pomegranate seed oil (7) and mango seed fat (8). All these lipid entries can remain as a coating; the oil base is not equated with low persistence. The specific whole-jojoba prior contributes a bounded fluid-material clue at rank 3. The competing structured-coating reading is strongest at the mango seed fat and potentially through the collective retained lipid phase; however the admitted botanical-seed-fat function does not establish finished solidity or substantial film. Rosemary leaf extract (9) supplies only botanical-extract/possible-antioxidant roles with unresolved preparation; tocopherol (10) is an antioxidant. Fragrance composition (11) and the remaining declared fragrance constituents retain uncertain residual contributions. On balance, a mobile oil-emollient remainder with a secondary fat contribution is the more plausible rough architecture, but this is a weak hypothesis because most material functions are generic and actual blend structure is unknown. The formula code is retained as context, not an ingredient.",
+      "build_up_potential": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "counter_signal": [
+          "Every intact oil in ranks 1-7 contributes to a retained lipid phase, and a mobile oil layer can still produce substantial persistent coating.",
+          "MANGIFERA INDICA (MANGO) SEED BUTTER at rank 8 is an admitted botanical seed fat and could structure the blend more than the selected reading assumes.",
+          "Whole jojoba at rank 3 supplies only one constituent clue; its low prior cannot classify the other oils or the finished blend.",
+          "The dictionary primarily admits generic emollience for the oils, which alone does not establish low persistence or rule out consequential grade differences."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "Low is selected as a weak whole-system hypothesis: the oil-emollient reading is more plausible than a substantially structured seed-fat coating, provided the rank 8 seed fat is a secondary contribution to the fluid oil architecture. That assumption, not oil count, botanical origin, coconut presence or the absence of gum, tips the decision. The exact match SIMMONDSIA CHINENSIS SEED OIL at rank 3 consumes only the constituent clue from reference oil-natural-build-up-v0.1, version 0.1, material_id jojoba: OE51 human-accepted rough material prior and HW001 liquid-wax/fluidity observation reused from natural-oil-weight-v0.10. This supports only a bounded fluid-material inference for whole jojoba, not a blend answer or measured washout. Elevated would be more plausible if the seed fat or unresolved oil grades make the complete retained phase substantially structured or persistent.",
+        "unresolved": [
+          "The actual blend structure and mango seed-fat behavior are not established; rank 8 is not a quantity threshold and does not prove a minor physical effect.",
+          "Sunflower, avocado, argan, safflower, coconut and pomegranate oils have unassessed build-up tendencies in the supplied reference; generic emollience is the evidence ceiling.",
+          "Exact oil grades, including possible retained wax fractions or other grade-dependent structure, are unspecified; no wax content is inferred.",
+          "Rosemary leaf-extract preparation and fragrance-mixture residual contributions remain unspecified.",
+          "The accepted jojoba prior itself lacks controlled repeat-application/shampoo hair-residue validation; no such evidence for this blend is supplied."
+        ]
+      }
+    },
+    {
+      "neutral_id": "C04",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Sclerocarya Birrea Seed Oil",
+          "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+          "roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "The sole declared whole fixed-oil emollient is the entire retained architecture; its build-up tendency is unassessed in the supplied material reference."
+        }
+      ],
+      "contextual_declarations": [],
+      "residual_architecture": "SCLEROCARYA BIRREA SEED OIL (1) is the entire declared system. The lexicon admits an intact botanical fixed oil and generic emollient function, so the whole application is a potentially retained lipid coating. The natural-oil reference explicitly leaves marula unassessed and supplies no transferable jojoba prior. A mobile whole-oil emollient remainder is selected as the more plausible rough reading, but fluid behavior and persistence are not measured or specified by grade. The competing elevated reading is a substantial persistent oil coating or consequential grade-dependent structure. Neither the single-ingredient format nor absence of a named gum resolves that competition.",
+      "build_up_potential": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "SCLEROCARYA BIRREA SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "The sole ingredient is a retained fixed oil, so the complete applied material can contribute to coating; low does not mean little material remains.",
+          "Generic emollience does not establish mobility, low persistence or easy cleansing, and the supplied reference has no accepted marula build-up prior.",
+          "An unspecified oil grade or a more persistent deposited oil layer could favor elevated even without a gum or resin."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "Low is the best rough direction under the explicit assumption that the exact whole-oil declaration behaves as a mobile emollient coating rather than a substantially structured or particularly persistent film at comparable small applications. This is a weak hypothesis from the admitted fixed-oil/emollient architecture, not an accepted material prior, a zero-residue claim or a deduction from missing gum. Elevated is the nearest alternative because the entire system remains a potential oil coating; the supplied functions do not affirmatively establish substantial structure or persistence sufficient to make that alternative more likely. The natural-oil reference lists marula as unassessed, which remains unchanged by this required complete-formula estimate.",
+        "unresolved": [
+          "No accepted SCLEROCARYA BIRREA SEED OIL build-up prior is supplied; the sole admitted functional basis is generic intact-oil emollience.",
+          "Exact grade, actual fluid/structured state and deposited-film behavior are unspecified, including any consequential wax-containing grade differences.",
+          "No controlled comparative application, reapplication or shampoo hair-residue evidence establishes which binary direction is correct."
+        ]
+      }
+    }
+  ]
+}

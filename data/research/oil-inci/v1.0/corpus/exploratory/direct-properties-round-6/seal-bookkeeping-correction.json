@@ -1,0 +1,7 @@
+{
+  "event": "Root recheck inadvertently rewrote seal timestamp after authorization; blind output hashes unchanged.",
+  "action": "Restored original exact seal bytes using first-read cached lane-b timestamp and SHA256; canonical source seal retained.",
+  "restored_sha256": "12b32292260574d81596fe0d7cded389c595662c7c9a8bbd3ac9b9c71bce3ddc",
+  "stage_order": "Both blind artifacts validated and sealed before root Stage2 authorization. No blind values, fields or hashes changed.",
+  "receipts": "Check final lane receipts for original or temporary seal read; any temporary read must remain disclosed in independent supplemental provenance rather than silently rewritten."
+}

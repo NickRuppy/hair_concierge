@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "scope": "approved sunflower revision, unchanged other entries/identity/source/coverage/method, active routing and historical hash preservation; no sensory validation",
+  "reference_version": "0.4",
+  "changed_material_ids": [
+    "sunflower"
+  ],
+  "weights": {
+    "light": 40,
+    "medium": 10,
+    "rich": 6,
+    "unknown": 8
+  },
+  "historical_hash_checks": 6,
+  "historical_coverage_contract": "passed",
+  "sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.4.json": "7ad2d960c008290687938a7b32be00598b6782f21b9d604cc13821266f02ddb2",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.4.md": "b95f173e506b608fc2a53283c987e55e25511a72853bea3094eae174ac3fd8b0"
+  }
+}

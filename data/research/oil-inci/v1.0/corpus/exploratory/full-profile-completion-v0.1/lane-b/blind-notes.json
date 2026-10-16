@@ -1,0 +1,64 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "familiarity": "The ester/botanical dry-oil pattern felt familiar. No identity was resolved or looked up and no previous finished-product label was used."
+    },
+    {
+      "case_id": "O11",
+      "familiarity": "The soybean/castor/aromatic-oil pattern felt familiar as a retail formula family. No brand or exact product was inferred or looked up; the declared inputs determined these judgments."
+    },
+    {
+      "case_id": "O16",
+      "familiarity": "The castor-led many-botanical pattern felt familiar as a retail formula family. No brand or exact product was inferred or looked up, and no previous answer was used."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "Only the four declared files were opened. The dictionary was read completely through lossless column-value encoding and complete flag/role displays. A truncated verbose flags display was replaced by a complete compact display asserting every repeated field. No provenance target, source packet, peer lane, staging file, manifest, repository convention, memory or external source was opened.",
+    "The material reference itself contains practice history and a named calendula-carrier example; these are declared input content. No example identity was matched to a blind case and no external prior label was consulted.",
+    "All 17 cases and 363 primary ranks are covered. Contextual formula codes and the O21 unordered fragrance footnote are not additional primary ingredients. O21 uses the parent fragrance match at rank 13; the separator-imperfect sublist is not repaired or assigned invented ranks.",
+    "All blend weights are low-confidence estimates. Single oils O22/O28 retain the original material low-confidence ceiling. No percentages, inferred 1% boundary, measured performance or persistence class is emitted.",
+    "Only three exact dictionary keys have admitted_penetration_anchor=true: CAMELLIA OLEIFERA SEED OIL, CARTHAMUS TINCTORIUS SEED OIL, COCOS NUCIFERA OIL. Only O09 rank 7 matches in this packet. Parenthetical coconut/safflower and direct-tagged argan/avocado were not promoted; plant-only cases consequently remain unknown where appropriate.",
+    "Closed dictionary flags were not repaired or generalized. For example O11 exact rosemary has a false scalp flag while O16 differently keyed rosemary is true. High flag confidence denotes complete exact-dictionary matching, not completeness of every possible botanical-exposure concept. False fragrance in a botanical formula is not a claim of no smell.",
+    "Unassessed functions remain unresolved and block auxiliary suffixes. Qualified suffixes are O10 rank 4, O23 rank 19, O26 rank 22 and O27 rank 10. Intact oils remain in base inventory regardless of suffix role.",
+    "O24 water_based is a low-confidence interpretation of the jointly leading glycol/water system with emulsifying/rheology support although literal water is second. Hybrid remains the rival because phase continuity/ratios are unknown.",
+    "O17 hybrid is an affirmative joint plant/ester-carrier judgment. O09 remains ester_alkane_led because the ester/ether/processed-triglyceride route better explains its principal vehicle. These low-confidence base choices are not ingredient-count rules.",
+    "Exact material priors exclude unlisted forms, including O16 non-Seed jojoba and differently keyed argan, and O27 parenthetical pomegranate. Known botanical identities remain in inventory without invented priors.",
+    "One in-memory assembly attempt stopped before any writes because the role mapper omitted silicone_elastomer/structurant. It was corrected, and the complete construction and validation was rerun. This was not prohibited access or partial output publication. Before handback, an O09 prose inventory count was corrected from nine to eight in the retained in-memory construction and reserialized without rereading outputs.",
+    "Before output writes, in-memory validation checked exact key sets, 17 cases, 363 ranks, unchanged raw/canonical names, dictionary roles, all 85 flag matches, 51 substantive/gap property objects, evidence rank/name links, suffix admissibility, enums/confidence, input hashes and serialization round trips. Outputs were not reread after writing.",
+    "Blind stage only: no dispenser, heroes, claims, supported uses, fit, persistence or old build-up outputs. Parent sealing precedes any source-only Stage 2."
+  ]
+}

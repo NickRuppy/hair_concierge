@@ -1,0 +1,15 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "files": {
+    "blind-method.md": "1b1f2ed476e1ee4b1ae1a745148a617c20aef9fdd9edd0841c74b5ac7b6b2435",
+    "material-priors.json": "ed2cf346bb3a5aa0419a25f3ddfc4ec651c6a372383f2d3d9496cf8b002e91d4",
+    "neutral-packet.json": "b217cfbe6b788ab181a0239ea097c385654aa50d0afd721ba85c7c266e4ba9e1",
+    "function-dictionary.json": "45fbdca0710d99bbc813409c9de388a40b9a31ba20931535f831e9ee73ff0253"
+  },
+  "formula_sha256_by_id": {
+    "BC01": "2117386e6003ce67018ac9b6678a10bd69ab038a100fac5d00cabeb886fb9305",
+    "BC02": "3a7ad45323ac92d6d1356ba43dc315df7aec1e6d692aee0b8b2c61c86dd706a0",
+    "BC03": "98698ad5a7176ef08ff1a29210051809cf736a6b6e74d480ec9baad19d9b9ecf",
+    "BC04": "29ffa1796de90d3f8c119b103e2b0438bec174498e3ecda9a86a5b6386baee41"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "status": "passed",
+  "scope": "completion",
+  "summary": {
+    "case_count": 27,
+    "scenario_role_count": 71,
+    "lane_stage_counts": {
+      "a": {
+        "cases": 17,
+        "ranks": 363
+      },
+      "b": {
+        "cases": 17,
+        "ranks": 363
+      }
+    }
+  },
+  "meaningful_boundary_corruptions": [
+    {
+      "mutation": "drop case",
+      "rejected_for": "case membership/order"
+    },
+    {
+      "mutation": "persistence unknown",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "persistence confidence wrapper",
+      "rejected_for": "persistence scalar enum"
+    },
+    {
+      "mutation": "unbound source",
+      "rejected_for": "unbound source"
+    },
+    {
+      "mutation": "changed ordered blind ingredient",
+      "rejected_for": "ordered raw/canonical preservation"
+    },
+    {
+      "mutation": "changed selected base property",
+      "rejected_for": "selected field authority parity: O28/base"
+    }
+  ],
+  "artifact_hashes": {
+    "README.md": "06b7ab3eef71e56e855ffc8006531fccb8e9fd60d22dd7aabe1c284b03381720",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "blind-seal.json": "fe60a757ae696fa9c07253fa9e01c9cbe243c601434d443822e6537fe56557ad",
+    "derivation-v0.2/blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "derivation-v0.2/blind-seal.json": "43fd1b95faa2c41b21d8d40cc3992cb2585465717c3b7f0fef1111ecf1b56f6d",
+    "derivation-v0.2/correction-seal.json": "bec39c076fd656d6db3caa24a44767680c6f2f55ce65dcdbee16a813e2011ae5",
+    "derivation-v0.2/function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "derivation-v0.2/input-manifest.json": "8174f6966b6979c33e9e6e614f86d2eefdddebfa834ee6b0573aa4d7c1bb7824",
+    "derivation-v0.2/lane-a/blind-records.json": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+    "derivation-v0.2/lane-a/correction-notes.json": "90788c54f40ba698f8131770557a28db201db3c841f0dc091b438a492a9a6495",
+    "derivation-v0.2/lane-a/correction-records.json": "03519b1dcbc6232593a46562307095a95c17718f841c176c72d54ba534b79c2c",
+    "derivation-v0.2/lane-b/blind-records.json": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+    "derivation-v0.2/lane-b/correction-notes.json": "69f06c12ec524f6a9dbdfcb37c4652d31eded3a326f662690c41e0223d081a59",
+    "derivation-v0.2/lane-b/correction-records.json": "eb7a83e9fa82b36dd992ee71bd9767b53eb4fc2f86b786e3b6aeb15690474c45",
+    "derivation-v0.2/material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "derivation-v0.2/method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "dictionary-staging/corrected-function-dictionary-v0.2.json": "ea2e3f1101e4d10f4deb3e0374f951361121ec309fe2342420b06c9408c8cebd",
+    "dictionary-staging/corrected-function-dictionary-v0.3.json": "62f573c3974dc9b1819d2d69258197173dc7fc64aa0db293849059e3205fe6d1",
+    "dictionary-staging/corrected-function-dictionary-v0.4.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "dictionary-staging/corrections-v0.2.json": "105bb15ecae0bec465dd1dbbae0efe38f9104663d2948c3caf3fa7be5337b119",
+    "dictionary-staging/corrections-v0.3.json": "faf7b70bac4b668e78fde027cdbdcebcfe19bd844b47e58b4ef324bba6cfc872",
+    "dictionary-staging/full-property-function-dictionary-v0.1.json": "7cc4f23fd57144b8da12ea6d5b62c59909dbde089a08f62ac82c88bb1df0e97b",
+    "dictionary-staging/holdout-function-dictionary-v0.2.json": "2231a3105a60a147ef998a36f4996d543beabbaf0413bb83892bcfced9ed4b73",
+    "dictionary-staging/root-review-v0.4.json": "35332fb4d3e242269b19f9bb3415d9fe4b7e1cd4425ddb22c3b84f6f1d773079",
+    "function-dictionary.json": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f",
+    "input-manifest.json": "11bd87d1068cca5a6134f5e21e42ab74a4fbad049cafcc14295fcb69bf24649c",
+    "integration-notes.json": "a4fe1a5c734ba24ef504a4463dda28439229186864edb8c6497df3dcdd5b7d84",
+    "lane-a/blind-notes.json": "68cadcb2695d31843d05af8b14c3524eeb3d9cfa87e900e9637e6ad853844b5c",
+    "lane-a/blind-records.json": "77a75f666c0ca53d7a8507d1ff50bf9e91862df760e57896fc6be6e33c301d01",
+    "lane-a/stage2-notes.json": "06a6a388f58c4dfe84face5bbd7b367efbd286e56b3fa9e1eda87ad7b7590ca4",
+    "lane-a/stage2-records.json": "8be277b3e51cd510f408cb3702c59d17acfd780c7fc55d95382e9317188dd9e8",
+    "lane-b/blind-notes.json": "d0c8b25f2d0a47809e3f8bff077baf6d527622ab1a518f29f0a909b35879ddd3",
+    "lane-b/blind-records.json": "ee7f4f997f77ddce3cffe500e545d0fad3da143bfb14f6ddc7e0831ac8954723",
+    "lane-b/stage2-notes.json": "47c5a035b18e11f3960a7f771f54a90eedc60851d8afa53a47a1f918d11d8c4e",
+    "lane-b/stage2-records.json": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "method.md": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386",
+    "metrics.json": "e2d26ae6927d90f238cdfc1b10378378c9224e4d10ac1b23f4116ff7d376ce09",
+    "profiles.json": "01438e468a2f756ee2f6721289bb40f216e0fed4588d9cb804249ba86a15a627",
+    "projection.json": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+    "results-for-review.md": "7aebee11aaee0f147a700754b179862077b6230132bcc90eb3ddc4ac00d2a6f1",
+    "results.csv": "2796d2263937c0138ca30330d4ec32d8b2f8f732c92898b6b746de598b3201e5",
+    "scenario-fit.json": "52880221f64f29bb49fe01060c416ea3ff7411f630a991c4b90a10cbcae7a18f",
+    "source-staging/O08-retained-source-successor.json": "c3b1b0f072efc0dbdef39b54bbd5fea56ff219d256b5c007049ab5a87c3bb492",
+    "source-staging/assembled-stage2-source.json": "ca6b0142a6496838b2060eb1d47d1c153adf8f866568966cd4660fbda0e9fd65",
+    "source-staging/images/O08-boozy-1.png": "165cf42bbf0024e680752cb2c9341c7a406822ebe5462e58987b458d7b92ce58",
+    "source-staging/images/O08-boozy-2.png": "617a424687d31e28198758da96717cd089ac822da48b47af01a11866eaa90210",
+    "source-staging/images/group-b/O16-back.jpg": "a51f5b66e2d9b607cdcb5ba78a94edd1ced04bcd76171f8d6634988eb9ca1713",
+    "source-staging/images/group-b/O16-front.jpg": "57dc43a19fd68a927d37958a3fe3ca2cce7d405779b9a326e02644fe63525c44",
+    "source-staging/images/group-b/O20-official-page1.png": "f6406c15290c34e43f11dd9ad5ec35325d881b7b3ea6472a8b9157b88a85f3dd",
+    "source-staging/images/group-b/O20-official.pdf": "def82b8db045f361798a4e3505dbe79a7d37b04080ff6465de9f01877a9e0568",
+    "source-staging/images/group-b/O21-package.jpg": "15948d98eca4ac9b9ab5a6bdbddf871520c2ffb01a9957c2cb85346b453e419d",
+    "source-staging/images/group-b/O22-front.webp": "c18c3ca285075345e40a0745beeba9159cae2b9c76fb355324b75db00500a91a",
+    "source-staging/images/group-b/O23-front.jpg": "5a41f8ff5056f41266f367c39245e6d9f78abf46b01d79de344b3187cd3db78b",
+    "source-staging/images/group-b/image-sources.json": "ce882f7eae2427a17eeeaae2a9716dd2dfb2e1346aef26778362b0fc63e95ed4",
+    "source-staging/images/group-c/O24-front.jpg": "a9e951805dd52a824265642347eb41205f89b87f9d2a1872f6aa7eb64e2b6d45",
+    "source-staging/images/group-c/O27-front.jpg": "e770b0125f1326c9781b26d198b250f61f8c49159639ef1c7db524fc1fb233fd",
+    "source-staging/images/group-c/O28-front.png": "a56e56dc84a8c5f0bb6f185a1d568e7ec9e5b12bf977e84ee4bcb8a7b7f30277",
+    "source-staging/inventory.json": "16b18e4157ce31bf0dcb3ce850b218d24f14ab1d6faa6798f1bd5a7652709de0",
+    "source-staging/source-group-a-root-supplement.json": "b6c2291038ce86239bf878ec3b659d92542734ce5afb8b9eaa267f96f5df70aa",
+    "source-staging/source-group-a.json": "402ee7c6a67c8d0d4a19453c4b1e75e3e3d55dd59471e770c78134f7aa1f36a0",
+    "source-staging/source-group-a2.json": "4e9446e3b6ae27be87a88aed9a437a3cf05a3ec90f4e666921fa76736d3f78ac",
+    "source-staging/source-group-b.json": "179a487c9988fbe65cebdec1507f7a3b4a186024cdf250dcd9509da551862a84",
+    "source-staging/source-group-c.json": "5a4cb46777e58167fc4beb8a18c7492c6e39b8a87f0ef63bb85d270c39a583c3",
+    "source-staging/stage2-contexts-completed.json": "19273c26b86275cfe147c137e1b684efdfb4c9f03db401530f6fe9cb439d657a",
+    "source-staging/stage2-contexts.json": "9630ba92342162a1c9f901f5cbff63457e11abb07d9019533b81e74b5a69f3f6",
+    "stage2-manifest.json": "eef52890b4bf24b37e6c6463f1d60043ca7922bf27b7cdbe1e8dc5ae7915760c",
+    "stage2-packet.json": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c",
+    "stage2-seal.json": "067a71938ab1bfbaa3eac3a2102394baa3f6a5bba48f68937bc8b4e03a6aa9be"
+  },
+  "limits": "Structural/process/source/fit consistency, not sensory accuracy. Acceptance/coverage outcomes are separately reported in metrics.json. No runtime or production action."
+}
