@@ -55,6 +55,7 @@ export type ProductIntakeNotificationResult =
 export type ProductIntakeReviewMessageContext = Partial<MessageContext> & {
   product_intake_review: {
     submission_id: string
+    event_id?: string
     status: ProductSubmissionForNotification["status"]
     approved_product_id: string | null
     category: ProductSubmissionForNotification["category"]
@@ -94,8 +95,15 @@ function createStableUuidFromParts(parts: readonly string[]): string {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
 }
 
-function productIntakeReviewMessageId(submission: ProductSubmissionForNotification): string {
-  return createStableUuidFromParts(["product-intake-review", submission.id, submission.status])
+function productIntakeReviewMessageId(
+  submission: ProductSubmissionForNotification,
+  eventId?: string,
+): string {
+  return createStableUuidFromParts([
+    "product-intake-review",
+    submission.id,
+    eventId ?? submission.status,
+  ])
 }
 
 async function bumpConversationUpdatedAtBestEffort(params: {
@@ -367,11 +375,13 @@ async function existingProductIntakeReviewMessageId(params: {
   conversationId: string
   submissionId: string
   status: ProductSubmissionForNotification["status"]
+  eventId?: string
 }): Promise<string | null> {
   const expectedContext = {
     product_intake_review: {
       submission_id: params.submissionId,
       status: params.status,
+      ...(params.eventId ? { event_id: params.eventId } : {}),
     },
   }
 
@@ -453,6 +463,7 @@ async function bumpConversationUpdatedAt(params: {
 export async function sendProductIntakeReviewNotification(
   supabase: SupabaseClient,
   submission: ProductSubmissionForNotification,
+  options: { eventId?: string } = {},
 ): Promise<ProductIntakeNotificationResult> {
   // A kept submission of a deleted account has no owner to notify (D10).
   if (!submission.user_id) return { sent: false, reason: "owner_deleted" }
@@ -466,7 +477,7 @@ export async function sendProductIntakeReviewNotification(
   }
 
   const sentAt = submission.notification_sent_at ?? new Date().toISOString()
-  const shouldClaimNotification = !submission.notification_sent_at
+  const shouldClaimNotification = !options.eventId && !submission.notification_sent_at
 
   if (shouldClaimNotification) {
     const marked = await markNotificationSent({
@@ -496,16 +507,20 @@ export async function sendProductIntakeReviewNotification(
       conversationId,
       submissionId: submission.id,
       status: submission.status,
+      eventId: options.eventId,
     })
 
     if (existingMessageId) {
       notificationMaterialized = true
       await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
-      return { sent: false, reason: "already_sent" }
+      return options.eventId
+        ? { sent: true, conversationId, messageId: existingMessageId }
+        : { sent: false, reason: "already_sent" }
     }
 
-    const messageId = productIntakeReviewMessageId(submission)
+    const messageId = productIntakeReviewMessageId(submission, options.eventId)
     const messageContext = buildProductIntakeReviewMessageContext(submission)
+    if (options.eventId) messageContext.product_intake_review.event_id = options.eventId
     const { data: message, error: messageError } = await supabase
       .from("messages")
       .insert({
@@ -521,7 +536,9 @@ export async function sendProductIntakeReviewNotification(
     if (isDuplicateKeyError(messageError)) {
       notificationMaterialized = true
       await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
-      return { sent: false, reason: "already_sent" }
+      return options.eventId
+        ? { sent: true, conversationId, messageId }
+        : { sent: false, reason: "already_sent" }
     }
 
     if (messageError || !message?.id) {

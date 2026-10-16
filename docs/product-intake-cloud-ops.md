@@ -145,6 +145,53 @@ The price-audit unit and any shared host lock must use the same inode/ownership;
 never delete/recreate the lock file while contenders may hold it. An image-stage
 wait must not stop heartbeat/lease renewal or bypass cancellation.
 
+The Linux implementation is `deploy/product-intake/heavy-stage.py`. Both rembg
+and price audit enter it through literal arguments, using
+`/run/chaarlie/heavy-work.lock` and the private shared
+`heavy-work-state.json` marker. Install `chaarlie-heavy-work.conf` with tmpfiles;
+its `f` rule creates a missing lock without replacing an existing inode. Preserve
+the installed price-audit user, environment, timer and three-hour budget when
+installing its reviewed helper wrapper. Waiting consumes the existing job/cycle
+deadline and never reserves a model run.
+
+Nick approved automatic recovery after a crash only when safety is verified.
+Under the lock, the next contender checks the exact recorded rembg container
+name and ownership label, removes that disposable container, and confirms both
+container and launcher absence before clearing the marker. For price audit it
+only confirms the recorded process group is gone; it never kills an orphaned
+audit. A malformed marker, pending launch, live audit group or unavailable Docker
+leaves heavy work paused with `HEAVY_STAGE_UNCONFIRMED`. The small `.unconfirmed`
+sidecar routes that hold through the independent health observer. Ordinary active
+markers are healthy, including a legitimately long price audit.
+
+For a recovery hold, inspect only the recorded stage with
+`sudo cat /opt/chaarlie/product-intake/shared/heavy-work-state.json` and the
+helper's journal. Use `docker container inspect <recorded-container-name>` to
+compare its exact name and `io.chaarlie.heavy-stage` label; use the recorded
+process group and service cgroup to inspect surviving processes. Do not run a
+prefix-wide container sweep, unlink the shared lock, or clear an unverifiable
+marker. Once the original stage is confirmed absent, let a later authorized
+stage perform reconciliation under the lock. Manual reconciliation of malformed
+state needs an explicit operator decision and a preserved copy of that state.
+
+Free worker-down monitoring uses
+`chaarlie-product-intake-worker-health.timer`, independent of the worker loop.
+The read-only observer checks the actual systemd process, current release and
+matching Supabase heartbeat; a ten-minute grace avoids short restart alarms.
+The same observer reports claimable work waiting more than two hours since its
+`next_run_at` eligibility time, three consecutive
+failures scoped to the current worker, that worker's latest `infra_auth` outcome,
+and free disk strictly below 15%. Old blocked/failed backlog does not count as a
+new failure streak. Claimability follows the existing due-time, stale-lock,
+attempt and submission-state predicates; an exhausted bounded read is explicitly
+incomplete. These checks never claim, retry or modify jobs.
+It reports changed unhealthy incidents through the existing production Sentry
+error allowance and `product_intake_admin_alert` rule. Failed event delivery
+remains retryable. It does not use paid Cron capacity or Customer.io and does not
+change any automatic email, image, rework or publication switch. Verify the
+effective unit, a healthy read, and a sanitized delivery test before calling the
+monitoring route operational.
+
 Validate a representative research/image run under the intended limits and
 check for OOM, excessive throttling and lease loss before broad activation.
 Configure/verify missed-heartbeat, repeated-failure, auth and low-disk alerts;
@@ -177,6 +224,28 @@ pruning any additional installed copy; do not prune by age alone. The private
 archives preserve historical data and require sudo for access; they are not
 installed or running application versions. No automatic cleanup was installed.
 
+## Current release and continuation (2026-10-16)
+
+PR #689 merged as `80b963a2`; main app production is READY. Hetzner runs reviewed
+head `7c00ca4a` from `20261015-201339-7c00ca4a76c6`; verified rollback is
+`20261007-92bfe95862eb`. Other installed copies were archived/verified before
+removal. Read-only morning refresh: worker/review healthy, fresh idle heartbeat,
+zero active jobs/outbox rows, disk 60% (~15 GiB available); 74 shared finalized
+images and one rembg model intact. Runtime email/image switches are false.
+
+The [continuation checklist](../plans/product-intake-cloud-research/continuation-2026-10-16.md)
+is current. The next local safety increment introduces independent outbox
+observation and [bounded research cycles](../plans/product-intake-cloud-research/s3-review-cycles.md),
+including migration `20261016052958_product_intake_review_cycles.sql`.
+The Shampoo integration in #693 adds successor
+`20261016131141_product_intake_atomic_artifact_ids.sql` so Oil artifact IDs and
+review pointers persist in the same completion transaction. Apply the ordered
+review-cycle, Oil binding and successor migrations before releasing the combined
+worker; see the [completion record](../plans/product-intake-cloud-research/s2-completion-2026-10-16.md).
+**These changes were not applied or deployed in the completion pass.**
+Migration-before-code, reviewed head/CI and exact release guards remain mandatory;
+no automatic activation is implied. Existing resource units/caps have not changed.
+
 ## Status of the completion work
 
 - #645: merged as `a34feee1789843f76681673a655fd8c9cf01ff80` after all checks
@@ -185,7 +254,7 @@ installed or running application versions. No automatic cleanup was installed.
   finish refused ignored `tmp/`; worktree/branches preserved.
 - #650: merged as `6ae710fb32add7fb9192645b88aae2d952b8d41e` after all final
   checks passed on `7777d0ef082865a2c6dd58f92b33ae0043784003`; owner tests 23/23.
-  Runtime deployment reconciliation remains. Exact worktree cleanup refused
+  Native runtime is preserved in the verified #689 worker release. Exact worktree cleanup refused
   because ignored `tmp/` may be unique; worktree/branches preserved.
 - Unit/resource activation and monitoring delivery:
   **not performed** by preparing these files. Retention cleanup is complete as

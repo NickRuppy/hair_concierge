@@ -13,6 +13,22 @@ design interview. Original request: “Yeah build it first but the central
 decisions, let's align on them quickly.” Queue default is now explicitly settled.
 The retained proposal and `review-proposal/journey.md` are the design authority.
 
+Publication recovery decision confirmed with Nick on 2026-10-16: use a **dedicated
+durable publication receipt**, rather than extending submission notification
+fields. Record the exact committed product, submission revision, payload hash and
+approved image hash atomically with publication. Notification delivery/recovery
+belongs to that receipt; retry must reuse the committed product and send only the
+missing customer notification. It must never republish or reuse the separate
+Admin-alert outbox. No individual publication/customer notification is approved
+by this architecture decision. Automatic Admin alerts remain disabled.
+
+The next implementation worktree is `codex/intake-admin-revisions`, based on the
+reviewed safety dependency `75da3b16` (#691). It owns the step-2 revision/private
+image foundation; step 3 consumes its exact revision/hash contracts and the
+publication receipt decision above. Shampoo #693 remains a separate integration
+dependency; shared worker edits are integrated sequentially. Merge, migration
+application and deployment require Nick's separate exact decisions.
+
 Internal revalidation: Admin has a shared `requireAdmin` session/profile gate.
 The standalone cockpit reads directly from the same intake tables, limits its
 queue to 100 rows, and records decisions without payload-revision binding. Its

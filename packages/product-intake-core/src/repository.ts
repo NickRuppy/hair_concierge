@@ -1,3 +1,4 @@
+import { loadReviewAuthorityPreflight } from "./publication"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type {
@@ -10,6 +11,7 @@ import type {
   ProductIntakeReviewDecision,
   ProductIntakeReviewDecisionRow,
   ProductIntakeSubmissionDetail,
+  ProductIntakeReviewAssetInput,
 } from "./jobs"
 import {
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
@@ -129,10 +131,15 @@ export async function updateResearchJob(
 }
 
 export type CommitResearchPassParams = UpdateResearchJobParams & {
+  expectedPayloadRevision?: number | null
+  reviewAssets?: ProductIntakeReviewAssetInput[]
   researchedPayload?: JsonRecord | null
   resolveDecisionIds?: string[]
   reviewOutcome: "continue" | "ready_for_review" | "needs_nick"
   notificationPayload?: JsonRecord | null
+  expectedReviewCycleId?: string | null
+  artifacts?: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId"> & { id?: string }>
+  autoRework?: boolean
 }
 
 /** Final preview, job outcome and notification snapshot share one database transaction. */
@@ -154,9 +161,81 @@ export async function commitResearchPass(
     resolve_decision_ids: params.resolveDecisionIds ?? [],
     review_outcome: params.reviewOutcome,
     notification_payload: params.notificationPayload ?? null,
+    expected_review_cycle_id: params.expectedReviewCycleId ?? null,
+    research_artifacts: (params.artifacts ?? []).map((artifact) => ({
+      ...(artifact.id === undefined ? {} : { id: artifact.id }),
+      kind: artifact.kind,
+      status: artifact.status ?? "proposed",
+      payload: artifact.payload,
+      confidence: artifact.confidence ?? null,
+      source_urls: artifact.sourceUrls ?? null,
+      model: artifact.model ?? null,
+      prompt_version: artifact.promptVersion ?? null,
+    })),
+    request_auto_rework: params.autoRework ?? false,
+    ...(params.expectedPayloadRevision !== undefined || params.reviewAssets !== undefined
+      ? {
+          expected_payload_revision: params.expectedPayloadRevision ?? null,
+          review_assets: params.reviewAssets ?? [],
+        }
+      : {}),
   })
+  if (
+    error?.code === "23514" &&
+    (error.details === "cycle_deadline" || error.details === "auto_rework_limit")
+  )
+    throw new ResearchModelReservationError(error.details, error.code)
   if (error) throw error
   return data as ProductIntakeResearchJob
+}
+
+export class ResearchModelReservationError extends Error {
+  constructor(
+    public readonly code:
+      | "model_run_limit"
+      | "auto_rework_limit"
+      | "cycle_deadline"
+      | "lease_lost"
+      | "storage_error",
+    public readonly sqlState?: string,
+  ) {
+    super(`Research model reservation denied: ${code}`)
+    this.name = "ResearchModelReservationError"
+  }
+}
+
+/** Reserve immediately before spawn. A failed or uncertain launch never refunds its slot. */
+export async function reserveResearchModelRun(
+  client: RpcClient,
+  params: {
+    jobId: string
+    expectedLockedBy: string
+    expectedLockedAt: string
+    expectedReviewCycleId: string
+  },
+): Promise<ProductIntakeResearchJob> {
+  try {
+    const { data, error } = await client.rpc("product_intake_reserve_model_run", {
+      target_job_id: params.jobId,
+      expected_locked_by: params.expectedLockedBy,
+      expected_locked_at: params.expectedLockedAt,
+      expected_review_cycle_id: params.expectedReviewCycleId,
+    })
+    if (error) {
+      const code =
+        error.code === "23514" &&
+        (error.details === "model_run_limit" || error.details === "cycle_deadline")
+          ? error.details
+          : error.code === "02000"
+            ? "lease_lost"
+            : "storage_error"
+      throw new ResearchModelReservationError(code, error.code)
+    }
+    return data as ProductIntakeResearchJob
+  } catch (error) {
+    if (error instanceof ResearchModelReservationError) throw error
+    throw new ResearchModelReservationError("storage_error")
+  }
 }
 
 export async function retryResearchJob(
@@ -294,50 +373,25 @@ export async function buildPublishPreflight(
   submissionId: string,
   options: { publishRouteEnabled?: boolean } = {},
 ): Promise<PublishPreflightResult> {
+  const authority = await loadReviewAuthorityPreflight(client, submissionId)
   const detail = await loadProductIntakeSubmissionDetail(client, submissionId)
-  if (!detail) {
-    throw new Error(`Submission ${submissionId} wurde nicht gefunden.`)
-  }
-
-  const unresolved = detail.decisions.filter(
-    (decision) => decision.decision === "change_requested" && !decision.resolved_at,
-  )
-  const latestImageDecision = latestDecisionForField(detail.decisions, "final.image")
-  const latestPublishDecision = latestDecisionForField(detail.decisions, "final.product")
-  const finalPayload = normalizeRecord(detail.payload?.final)
-  const blockers: string[] = []
-
-  if (!finalPayload) blockers.push("Kein finaler Research-Payload vorhanden.")
-  if (detail.status !== "ready_for_review") {
-    blockers.push(`Submission ist noch nicht ready_for_review (${detail.status}).`)
-  }
-  if (unresolved.length > 0) blockers.push(`${unresolved.length} Review-Kommentar(e) sind offen.`)
-  if (latestImageDecision !== "image_approved") {
-    blockers.push("Finales Bild wurde noch nicht freigegeben.")
-  }
-  if (latestPublishDecision !== "publish_approved") {
-    blockers.push("Finaler Produkt-Handoff wurde noch nicht freigegeben.")
-  }
-  if (detail.job?.status !== "waiting_for_review") {
-    blockers.push("Aktueller Job ist noch nicht review-bereit.")
-  }
-
   return {
     submission_id: submissionId,
-    ok: blockers.length === 0,
-    blockers,
-    unresolved_decisions: unresolved.length,
-    latest_image_decision: latestImageDecision,
-    latest_publish_decision: latestPublishDecision,
-    proposed_product: finalPayload,
+    ok: authority.ok,
+    blockers: authority.blockers,
+    unresolved_decisions: authority.blockers.includes("unresolved_review_questions") ? 1 : 0,
+    latest_image_decision:
+      detail?.decisions.find((decision) => decision.id === authority.image_decision_id)?.decision ??
+      null,
+    latest_publish_decision:
+      detail?.decisions.find((decision) => decision.id === authority.data_decision_id)?.decision ??
+      null,
+    proposed_product: normalizeRecord(detail?.payload?.final),
     publish_requires_confirm: true,
     publish_route_enabled: options.publishRouteEnabled ?? false,
-    next_action:
-      blockers.length === 0
-        ? options.publishRouteEnabled
-          ? "Publish ist fachlich vorbereitet. Finales Schreiben braucht explizite Bestaetigung."
-          : "Publish ist fachlich vorbereitet, aber serverseitig noch gesperrt."
-        : "Blocker klaeren und Preflight erneut starten.",
+    next_action: authority.ok
+      ? "Freigaben sind aktuell. Die Veröffentlichung benötigt eine ausdrückliche Bestätigung."
+      : "Blocker klären und Preflight erneut starten.",
   }
 }
 
@@ -362,7 +416,7 @@ export async function loadProductIntakeSubmissionDetail(
   const { data, error } = await client
     .from("product_submissions")
     .select(
-      "id,status,category,brand:brand_text,product_name:product_name_text,source,payload:researched_payload,created_at,updated_at",
+      "id,status,category,brand:brand_text,product_name:product_name_text,source,payload:researched_payload,payload_revision,payload_sha256,created_at,updated_at",
     )
     .eq("id", submissionId)
     .maybeSingle()
@@ -385,6 +439,10 @@ export async function loadProductIntakeSubmissionDetail(
     product_name: nullableString(record.product_name),
     source: nullableString(record.source),
     payload: normalizeRecord(record.payload),
+    ...(typeof record.payload_revision === "number"
+      ? { payload_revision: record.payload_revision }
+      : {}),
+    ...(typeof record.payload_sha256 === "string" ? { payload_sha256: record.payload_sha256 } : {}),
     created_at: String(record.created_at),
     updated_at: String(record.updated_at),
     job: jobsBySubmissionId.get(submissionId) ?? null,
@@ -522,11 +580,4 @@ function nullableString(value: unknown): string | null {
 
 function normalizeRecord(value: unknown): JsonRecord | null {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : null
-}
-
-function latestDecisionForField(
-  decisions: ProductIntakeReviewDecisionRow[],
-  fieldPath: string,
-): ProductIntakeReviewDecision | null {
-  return decisions.find((decision) => decision.field_path === fieldPath)?.decision ?? null
 }

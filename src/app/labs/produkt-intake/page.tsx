@@ -77,7 +77,13 @@ function fixtures(): ProductReviewQueueEntry[] {
 export default async function ProductIntakeLab({
   searchParams,
 }: {
-  searchParams: Promise<{ gruppe?: string; detail?: string; fehler?: string; leer?: string }>
+  searchParams: Promise<{
+    gruppe?: string
+    detail?: string
+    fehler?: string
+    leer?: string
+    bilder?: string
+  }>
 }) {
   if (process.env.NODE_ENV !== "development") notFound()
   const query = await searchParams
@@ -93,6 +99,7 @@ export default async function ProductIntakeLab({
         submission: {
           ...entry,
           payload_revision: 3,
+          payload_sha256: "a".repeat(64),
           researched_payload: {
             engine: { id: "conditioner-standard", methodology: "v1.6", adapter: "v1" },
             final: {
@@ -123,7 +130,41 @@ export default async function ProductIntakeLab({
             },
           },
         },
-        job: entry.job,
+        job: entry.job
+          ? { ...entry.job, review_cycle_id: "77777777-7777-4777-8777-777777777777" }
+          : null,
+        publication_review: {
+          submission_id: entry.id,
+          payload_revision: 3,
+          payload_sha256: "a".repeat(64),
+          job_id: entry.job?.id ?? null,
+          review_cycle_id: "77777777-7777-4777-8777-777777777777",
+          data_decision_id: null,
+          image_decision_id: null,
+          approved_asset_sha256: "a".repeat(64),
+          ok: false,
+          blockers: ["data_approval_missing", "image_approval_missing"],
+          no_image: false,
+          can_approve_no_image: false,
+          publication: null,
+          legacy_package: false,
+          proposed_final: null,
+          validation_blockers: [],
+        },
+        images:
+          query.bilder === "missing"
+            ? []
+            : (["raw", "magenta", "final"] as const)
+                .filter((kind) => query.bilder !== "raw" || kind === "raw")
+                .map((kind) => ({
+                  id: `example-${kind}`,
+                  kind,
+                  sha256: "a".repeat(64),
+                  signed_url:
+                    query.bilder === "abgelaufen" && kind === "raw"
+                      ? "/labs/produkt-intake/expired-image.png"
+                      : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="${kind === "magenta" ? "#ff00ff" : kind === "raw" ? "#ececec" : "#f6f4ef"}"/><rect x="58" y="27" width="64" height="160" rx="12" fill="#e7ddc8"/><rect x="62" y="28" width="56" height="17" rx="4" fill="#4a463b"/><rect x="64" y="74" width="52" height="61" fill="#faf8f2"/><text x="90" y="95" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#38352c">CARE</text><text x="90" y="113" text-anchor="middle" font-size="6" font-family="sans-serif" fill="#38352c">BEISPIEL</text></svg>`)}`,
+                })),
         decisions: [],
         artifacts: [
           {
@@ -145,7 +186,8 @@ export default async function ProductIntakeLab({
   return (
     <AdminLayout>
       <p className="mx-auto mb-6 max-w-6xl rounded-lg bg-primary/10 p-3 text-sm text-primary">
-        Lokale Vorschau mit erfundenen Recherchepaketen. Hier werden keine Produkte freigegeben.
+        Lokale Vorschau mit erfundenen Recherchepaketen. Alle Aktionen bleiben in dieser Vorschau;
+        Katalog und Kunden werden nicht verändert.
       </p>
       {query.fehler ? (
         <ProductReviewUnavailable href={basePath} />

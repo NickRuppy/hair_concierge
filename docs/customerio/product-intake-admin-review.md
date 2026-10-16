@@ -1,9 +1,6 @@
 # Product Review admin alerts
 
-Status, 2026-10-15: **outbox implemented locally; dedicated provider template created and one real outbox test received in Nick’s inbox; automatic alerts remain disabled**. Nick confirmed the sole alert recipient in
-this chat and confirmed that no template exists. The address is private runtime
-configuration, not committed source. This is an internal review alert; customer
-notification remains part of the separately approved exact product handoff.
+Status, 2026-10-16: **outbox/template delivered and deployed; Nick approved the test email; automatic alerts remain disabled**. The recipient and dedicated API key are private runtime configuration. This is an internal review alert; customer notification remains part of the separately approved exact product handoff. Independent reconciliation monitoring and bounded research-cycle changes are implemented in the next local increment, awaiting their reviewed publication/migration/release gates.
 
 Authority: [Product Intake operations](../product-intake-research-ops.md),
 [approved Admin journey](../../plans/product-intake-cloud-research/review-proposal/journey.md)
@@ -60,8 +57,11 @@ PRODUCT_INTAKE_REVIEW_ALERT_EMAIL=<Nick's confirmed address, private configurati
 CUSTOMERIO_PRODUCT_INTAKE_REVIEW_TRANSACTIONAL_MESSAGE_ID=20
 ```
 
-These names are consumed by the local implementation; the updated sender is not deployed. The local worktree stores Nick’s recipient, dedicated message ID and approved dedicated sending key in ignored mode-0600 `.env.local`, with alerts disabled. The
-Hetzner worker environment and running services were not changed by this step.
+These names are consumed by the deployed sender. The approved dedicated key,
+recipient and message ID are installed in the current Hetzner release’s private
+mode-0600 `.env.local`. The running worker explicitly has
+`PRODUCT_INTAKE_REVIEW_EMAILS=false`; the reviewed release identity is recorded in
+[the continuation checklist](../../plans/product-intake-cloud-research/continuation-2026-10-16.md).
 
 The completion RPC now atomically saves the final preview, job outcome and
 immutable outbox snapshot. It extends the existing lease fence and resolves only
@@ -106,11 +106,10 @@ Before enabling alerts: inspect pending outbox rows created while delivery was
 disabled against the latest job/outcome and current submission state. Present
 any stale/pre-activation dispositions to Nick before changing them; never mark an
 unsent row as sent or blindly flush the backlog. Only the approved fresh cohort
-may be activated. Then create/read back the actual provider draft, verify both ready and
-decision-needed renders (including zero/three questions and escaped text), then
-perform an explicitly authorized delivery test to the confirmed inbox. Record
-provider receipt and received-email verification separately. Activate only the
-approved bounded cohort after migration/release gates pass.
+may be activated. Reuse the completed provider/template/read-back, rendering and single real test
+receipts below; do not create a duplicate template or resend a test merely for a
+status refresh. Activate only the approved bounded cohort after reconciliation,
+monitoring and migration/release gates pass.
 
 The signed-in business Chrome session restored provider access. The dedicated
 `product_intake_admin_alerts` App API key was created with Nick’s explicit approval;
@@ -126,16 +125,38 @@ contain the test disclosure, product and direct Admin-home link; no empty questi
 section. Received headers confirm open/click tracking both `false`, with SPF,
 DKIM and DMARC passing. See the [sanitized delivery receipt](../../plans/product-intake-cloud-research/receipts/admin-alert-delivery-2026-10-15.json).
 
-Automatic alerts remain `false`; the key/recipient have not been copied to the
-worker. The additive migration is applied and verified; deployment, pending-row
-reconciliation and Nick’s review of the received test remain activation gates. The hold-for-reconciliation policy is settled.
+Automatic alerts remain `false`. The dedicated key/recipient are deployed privately;
+the additive outbox migration `20261015200636` is applied and verified. Nick
+confirmed on 2026-10-16 that the test’s wording/layout/link look right. Pending-row
+reconciliation, independent monitoring/routing proof and the exact bounded-cohort
+activation decision remain gates. Hold-for-reconciliation is settled.
 No live database rows or customer notifications were created by this test.
 
 Provider field reference: [Customer.io transactional email API](https://docs.customer.io/messaging/send/transactional/email/) (`tracked:false` disables opens and link clicks).
 
 ## Held-delivery reconciliation
 
-Run this read-only query with operator/service access after migration:
+The next worker increment’s independent observer (implemented locally, not yet
+deployed) reads only `needs_reconciliation`, `sending`
+and `failed` rows every 60 seconds. It uses the same five-minute lease boundary
+as the SQL claim RPC: a `sending` row is attention-required only after that
+lease expires. It reports changed nonempty counts to technical monitoring, and
+does not claim, settle, retry, send or alter a product.
+
+For an on-demand, read-only report with service access, run:
+
+```bash
+node --conditions=react-server --import tsx scripts/product-intake/admin-review-alert-health.ts
+```
+
+It returns only aggregate counts, the oldest held-or-expired alert age, and opaque notification
+IDs for private operator lookup. That age starts at notification creation; the
+ledger has no separate timestamp for entering reconciliation. A read error exits nonzero; it is never
+presented as an empty outbox. The command remains useful while automatic alerts
+are disabled, because disabled dispatch must not conceal an uncertain delivery.
+
+For an exact reconciliation investigation, run this read-only query with
+operator/service access after migration:
 
 ```sql
 SELECT id, submission_id, status, attempts, error, provider_delivery_id,

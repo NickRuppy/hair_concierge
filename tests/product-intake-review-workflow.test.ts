@@ -97,7 +97,7 @@ function ownerBondbuilderSubmission() {
   } as unknown as ProductSubmission
 }
 
-test("held low Bondbuilder research becomes owner-ready and routes only its validated payload to the owner RPC", async () => {
+test("held low Bondbuilder research remains owner-ready but requires current separate approvals before publishing", async () => {
   const submission = ownerBondbuilderSubmission()
   const normal = dryRunProductIntakeReadyForReview({
     id: submission.id,
@@ -166,8 +166,32 @@ test("held low Bondbuilder research becomes owner-ready and routes only its vali
   const supabase = {
     rpc: async (name: string, args: unknown) => {
       calls.push({ name, args })
-      return { data: { product_id: "created-product" }, error: null }
+      return {
+        data: {
+          submission_id: ready.id,
+          payload_revision: 1,
+          payload_sha256: "a".repeat(64),
+          job_id: null,
+          review_cycle_id: null,
+          blockers: ["data_approval_missing", "image_approval_missing"],
+          ok: false,
+          no_image: true,
+          publication: null,
+          legacy_package: false,
+        },
+        error: null,
+      }
     },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => ({
+            data: { ...ready, payload_revision: 1, payload_sha256: "a".repeat(64) },
+            error: null,
+          }),
+        }),
+      }),
+    }),
   } as unknown as SupabaseClient
   const params = {
     supabase,
@@ -178,23 +202,14 @@ test("held low Bondbuilder research becomes owner-ready and routes only its vali
     reviewedAt: "2026-10-02T12:30:00Z",
     reviewNotes: null,
   }
-  await approveReviewedSubmission(params)
-  assert.equal(calls[0]?.name, "product_intake_approve_bondbuilder_owner_v1")
+  await assert.rejects(approveReviewedSubmission(params), /requires_current_separate_reviews/)
   assert.equal(admission.ok, true)
   assert.equal(
     normal.ok,
     false,
     "No stored owner context must retain ordinary protocol requirements",
   )
-  assert.deepEqual(calls[0]?.args, {
-    p_submission_id: ready.id,
-    p_owner_user_id: ready.user_id,
-    p_final_payload: selected.normalizedPayload.final,
-    p_spec_operations: selected.targetSpecOperations,
-    p_reviewed_by: params.reviewedBy,
-    p_reviewed_at: params.reviewedAt,
-    p_review_notes: null,
-  })
+  assert.equal(calls[0]?.name, "product_intake_review_preflight")
   await assert.rejects(
     approveReviewedSubmission({
       ...params,

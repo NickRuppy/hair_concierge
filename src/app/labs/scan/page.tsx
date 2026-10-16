@@ -15,7 +15,12 @@ import { ScanLabClient } from "./scan-lab-client"
  * Same guard as every other `/labs` page (`personal-plan-start/page.tsx`): a production
  * build 404s here.
  */
-export default function ScanLabPage() {
+export default async function ScanLabPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ welcome?: string | string[] }>
+}) {
   if (process.env.NODE_ENV !== "development") notFound()
-  return <ScanLabClient />
+  const { welcome } = await searchParams
+  return <ScanLabClient welcomeHint={welcome === "scan"} />
 }

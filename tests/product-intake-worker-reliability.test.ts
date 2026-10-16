@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -62,6 +63,34 @@ test("Codex closes stdin and keeps reading the last-message file rather than CLI
     return result({ stdout: "Reading additional input from stdin..." })
   })
   assert.deepEqual(output, answer)
+})
+
+test("Codex delivers a full oversized Unicode prompt and EOF without Linux argument overflow", async (t) => {
+  const params = { ...codexFixture(t, json), prompt: "Formelprüfung: Aqua, Öl.\n".repeat(12_000) }
+  const output = await worker.runCodexJson(params, (_command, args, options) => {
+    // Linux MAX_ARG_STRLEN is 32 pages (128 KiB on the worker). Reproduce
+    // that platform boundary on macOS too, then exercise the real child pipes.
+    if (args.some((arg) => Buffer.byteLength(arg) >= 131_072))
+      return result({
+        status: null,
+        error: Object.assign(new Error("spawn E2BIG"), { code: "E2BIG" }),
+      })
+    return worker.runWorkerProcess(
+      process.execPath,
+      [
+        "-e",
+        `const fs = require('node:fs'); const crypto = require('node:crypto');
+        const prompt = fs.readFileSync(0, 'utf8');
+        fs.writeFileSync(${JSON.stringify(params.outputPath)}, JSON.stringify({
+          promptSha256: crypto.createHash('sha256').update(prompt).digest('hex')
+        }));`,
+      ],
+      options,
+    )
+  })
+  assert.deepEqual(output, {
+    promptSha256: createHash("sha256").update(params.prompt).digest("hex"),
+  })
 })
 
 for (const raw of [
@@ -220,22 +249,28 @@ for (const failure of [
   test(`rembg cleans up its named container after ${failure.error ? "timeout" : "nonzero exit"}`, async (t) => {
     const params = codexFixture(t, json)
     const calls: string[][] = []
-    const output = await worker.runRembgContainer(
-      {
-        config: worker.rembgRuntimeConfig({
-          PRODUCT_INTAKE_REMBG_ENABLED: "true",
-          PRODUCT_INTAKE_REMBG_MODEL_DIR: join(params.outputPath, "..", "models"),
-        }),
-        sourceFile: join(params.outputPath, "..", "source.jpg"),
-        outputFile: join(params.outputPath, "..", "cutout.png"),
-      },
-      (_command, args) => {
-        calls.push(args)
-        if (args[0] === "rm") throw new Error("Docker unavailable during cleanup")
-        return failure
-      },
-    )
-    assert.equal(output, null)
+    const run = () =>
+      worker.runRembgContainer(
+        {
+          config: worker.rembgRuntimeConfig({
+            PRODUCT_INTAKE_REMBG_ENABLED: "true",
+            PRODUCT_INTAKE_REMBG_MODEL_DIR: join(params.outputPath, "..", "models"),
+          }),
+          sourceFile: join(params.outputPath, "..", "source.jpg"),
+          outputFile: join(params.outputPath, "..", "cutout.png"),
+        },
+        (_command, args) => {
+          calls.push(args)
+          if (args[0] === "rm") throw new Error("Docker unavailable during cleanup")
+          return failure
+        },
+      )
+    if (process.platform === "linux") {
+      await assert.rejects(run, /HEAVY_STAGE_INFRASTRUCTURE/)
+      assert.equal(calls.length, 1, "Linux cleanup belongs exclusively to supervisor")
+      return
+    }
+    assert.equal(await run(), null)
     const runArgs = calls[0]
     assert.deepEqual(calls[1], ["rm", "-f", runArgs[runArgs.indexOf("--name") + 1]])
   })
@@ -253,6 +288,10 @@ test("rembg startup cleanup removes only prefixed container names, and continues
     if (args.at(-1) === "chaarlie-rembg-job-1") throw new Error("cleanup failed")
     return result()
   }, "custom-docker")
+  if (process.platform === "linux") {
+    assert.deepEqual(calls, [], "Linux may recover only through the owned-marker supervisor")
+    return
+  }
   assert.deepEqual(calls, [
     {
       command: "custom-docker",

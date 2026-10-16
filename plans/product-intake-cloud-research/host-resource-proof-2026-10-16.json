@@ -1,0 +1,70 @@
+{
+  "recorded_on": "2026-10-16",
+  "status": "verified source and disposable host proof; not installed or activated",
+  "base": "3b3ea6478a7d0bbf86085a2772c5f9cc441b31b4",
+  "source_sha256": {
+    "deploy/price-audit/price-audit.service": "d7d43e49cbe95b3e225f1c3f13a5d3e3023bf6ffb97fc5325321b9a5de9b86a0",
+    "deploy/product-intake/chaarlie-heavy-work.conf": "c243119bdc17290f40f08b17d4ff979bb190d42627f2b1a44b4ba775b9a627ef",
+    "deploy/product-intake/chaarlie-product-intake-worker-health.service": "5572bbac919479e653781866b73c6792f99b2a75955ad2ec0b52652305dcc131",
+    "deploy/product-intake/chaarlie-product-intake-worker-health.timer": "ce650edcb50c28018b2b7a17110fd358f13c8591d60c8e8bee731c49c62d2b64",
+    "deploy/product-intake/heavy-stage.py": "0e0906d5592b183153ccb8071a3b07dcbab0211b7da076f110beba9eaf22737a",
+    "deploy/product-intake/worker-health.py": "e84ea792900d21e0114897ae48e979cb4515755774b0da7aa273cb9c9c0f1473",
+    "packages/product-intake-core/src/repository.ts": "5a21972f6aa9349adb09250956014a2ce3011744855a5d64fe4a0c37987b7c5d",
+    "scripts/product-intake/codex-research-worker.ts": "5d6d2607a3ba2d6716b7b7473c46fa65d050072b4ec5470363c37acaf52664ed",
+    "src/lib/product-intake/pipeline/image-background.ts": "80dd8d0b7c9cc48de7783efdf7e1292d3fad2be18e063bc88f2a9d0719ef9063",
+    "src/lib/product-intake/pipeline/image.ts": "ddbd8816a58e037b0acbf62a1f3eebe11ceaaa6eae5160876fd7c1c29acc8167",
+    "src/lib/product-intake/pipeline/process.ts": "0802fff3e70dea4dfc7379eba12ca089db497e71efd4261fac9838d80238c085",
+    "tests/product-intake-heavy-stage.test.py": "3f6bbf4f5498ea048c31a95bfe88da58052f7bf63170d0c51e31000ec396fdfd",
+    "tests/product-intake-image-cancellation.test.ts": "9ddabc89a0608a24c98f62af8c5a53a138798d4e923f2e9cb6e27ffa88501bcb",
+    "tests/product-intake-research-jobs-postgres.test.ts": "f85326f1e85247d0b1aa8334a97a78c10f0fb33106fe150f4a48f2cc77bcf2a7",
+    "tests/product-intake-research-readiness-self-check.test.ts": "7bf5cf96c17d53b885598b01b7716124e91453c55e3194cfabd11120285f1d27",
+    "tests/product-intake-worker-health.test.py": "4515e454886391fd9f1ca21a154fa3d5fdb8e824a92ac0f91ba9f8cde4f5003c",
+    "tests/product-intake-worker-reliability.test.ts": "eb486f3593ba6781d229a52324d50cf64e3d029420516daf8fbe4c1e8935c514",
+    "tests/product-intake-host-controls.test.ts": "28fd2b1ba3f7615657c2f1ec92780c25caddc64a02427312ee099376138e1f8d"
+  },
+  "verification": {
+    "owner_sibling_checks": 119,
+    "final_cancellation_checks": 4,
+    "heavy_helper_behavior_checks": 9,
+    "health_monitor_behavior_checks": 12,
+    "typecheck": "pass",
+    "lint": "0 errors,29 existing warnings",
+    "real_docker": {
+      "real_docker_mutual_exclusion": true,
+      "real_docker_sigkill_recovery": true,
+      "product_or_database_calls": 0
+    },
+    "synthetic_rembg_resources": {
+      "synthetic_input": [
+        1024,
+        1536
+      ],
+      "elapsed_seconds": 53.58,
+      "container_peak_bytes": 1715466240,
+      "container_max_sampled_swap_bytes": 0,
+      "container_oom_kills": 0,
+      "container_throttled_usec": 815,
+      "host_min_available_bytes": 1705771008,
+      "samples": 180,
+      "waiting_audit_serialized": true,
+      "product_database_storage_calls": 0
+    },
+    "host_monitor_read": "healthy,zero reasons,read-only heartbeat",
+    "systemd_unit_validation": "pass; two unrelated existing xfs CPUAccounting deprecation warnings",
+    "hosted_ci_discovery": "Normal Node wrapper invokes both Python suites: 9 heavy helper + 12 health behavior checks; wrapper itself unchanged from its 2-case PASS",
+    "expanded_live_health_read": "Production process,heartbeat,claimability,current-worker outcomes and disk:healthy,zero reasons; no Sentry event was sent in this read-only probe",
+    "mobile_keyboard_CI_repair": "5 consecutive390px cases pass with explicit enabled/focus assertions beforeEnter; priorCI missed publishedlabel, transientfocusrace hypothesis, no productsource or timeoutchange",
+    "queue_age_regression": "RED then GREEN: old-created but newly due retry stays healthy; next_run_at waiting age preserves the independent research-cycle clock"
+  },
+  "boundaries": {
+    "production_release_switched": false,
+    "production_units_installed": false,
+    "automatic_email_changed": false,
+    "automatic_images_changed": false,
+    "automatic_rework_changed": false,
+    "catalog_publication_calls": 0,
+    "backlog_retry_calls": 0,
+    "candidate_memory_caps_installed": false,
+    "exact_operational_cohort": "proposed, awaiting Nick"
+  }
+}

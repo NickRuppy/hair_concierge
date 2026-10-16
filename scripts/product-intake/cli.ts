@@ -79,7 +79,9 @@ function envCandidatePaths(): string[] {
   return [...new Set(candidates)]
 }
 
-export function createSupabaseClientFromEnv(): SupabaseClient {
+export function createSupabaseClientFromEnv(
+  options: { signal?: AbortSignal } = {},
+): SupabaseClient {
   loadLocalEnv()
   initProductIntakeScriptSentry()
 
@@ -92,6 +94,20 @@ export function createSupabaseClientFromEnv(): SupabaseClient {
 
   return createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
+    ...(options.signal
+      ? {
+          global: {
+            fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+              const signals = [
+                options.signal!,
+                init?.signal,
+                input instanceof Request ? input.signal : null,
+              ].filter((signal): signal is AbortSignal => Boolean(signal))
+              return fetch(input, { ...init, signal: AbortSignal.any(signals) })
+            },
+          },
+        }
+      : {}),
   })
 }
 

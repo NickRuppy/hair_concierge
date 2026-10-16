@@ -1,13 +1,14 @@
 # Shampoo Production Light v1
 
-Status: implemented local research adapter — not live production logic
+Status: research adapter and candidate worker integration in this PR; not deployed
 
 Use this workflow when Nick wants to research one or many current German regular
 shampoos with the full Shampoo INCI method, but only needs the production
 Shampoo database properties as the reviewed output.
 
 “Light” means reduced output, not reduced research. The operator still resolves
-the exact product/formula and applies the full Shampoo v1.4 method first. The
+the exact product/formula and applies the full pinned method first: v1.6.2 for
+new research, v1.4 for historical replay. The
 adapter then projects that reviewed product truth into the smaller field set
 used by the current production catalog.
 
@@ -24,18 +25,94 @@ Use **Shampoo Production Light v1** for:
 Do not use it for:
 
 - conditioners, masks, leave-ins, oils or other categories;
-- explicit deep-cleansing shampoos, unless the purpose is to route them out of
-  regular Shampoo;
-- medical treatment claims, diagnosed scalp disease or hair-loss efficacy;
 - database import, publication or user-facing activation.
+- medical treatment claims, diagnosed scalp disease or hair-loss efficacy;
 
-The full Shampoo v1.4 engine remains independent and unchanged. Use
+The older sections below document historical v1.4 replay. For new research, use
+the v1.6.2 lane described next. The full Shampoo v1.4 engine remains independent
+and unchanged. Use
 `docs/research/shampoo-inci/v1.4/` for complete eight-property research,
 method validation, holdouts and future ingredient-based matching. This adapter
 does not replace that engine and does not activate its eight-property model in
 production.
 
-## Source-of-truth stack
+## Locked v1.6.2 lane and storage adaptation
+
+New research uses `shampoo-classification-v1.6.2` / `shampoo-inci-v1.6.2` and
+the hash-pinned [standard](research/shampoo-inci/v1.6.2/classification-standard.md)
+and [runbook](research/shampoo-inci/v1.6.2/runbook.md). The input policy pin
+selects the contract; unknown or contradictory pins fail closed. Existing
+four-pin v1.4 envelopes retain their historical output.
+
+The v1.6.2 input uses the native final record (`identity`, eight
+`directProperties`, `projection`) with `standard`, `policyId` or `policy` as its
+pin, or the full four-pin `researchMethod` metadata from the adapter. Attach an
+explicit pin to records that have none. For batch manifests, add
+`identity.productId` and `identity.gtinAliases`; native single records otherwise
+use `blindId` in their summary, without establishing catalog ownership.
+
+The locked research model proposes ideal + acceptable rows with research
+weight. The current storage adaptation follows Track A `build_apply.py` and
+rulings R19/R21 instead of adding a live weight column or extra fit axis:
+
+- Balanced scalp (`normal`) stores only researched T7 **full-fit** thicknesses:
+  `light` → `fine, normal`; `moderate` → `normal`; `heavy` → `coarse`.
+  The fit-verdict evaluator computes **Passt bedingt** from thickness distance,
+  with intensity distance added. Balanced scalp still expects `regular`, so
+  `gentle` is one intensity step away (R21).
+- Scalp-concern buckets (`schuppen`, `dehydriert-fettig`, `irritationen`,
+  `trocken`) retain **every researched thickness**; thickness is ignored for
+  fit in these cells (R19).
+- Low strength → `gentle`; moderate → `regular`; strong → `clarifying` **only
+  with explicit D1 positioning**, otherwise `regular`. D2 can flag a separate
+  deep-cleanser listing while retaining the regular-Shampoo rows. After the
+  research freeze, Nick decides whether to create or link that separate listing;
+  it never auto-creates or reroutes a product and never uses the historical v1.4
+  `routed_deep_cleansing` outcome.
+- `needs_research`, blocked statuses, unresolved review flags and low final
+  confidence emit no payload. Sealed blocks need adjudication before clearing.
+  Roles come from emitted buckets: `shampoo_dandruff` for `schuppen`,
+  `shampoo_everyday` for other buckets. Verified protocols remain an intake gate.
+
+Weight stays in the research review summary, alongside method version and D2
+listing. CLI summaries identify v1.6.2 members, including blocked ones.
+Fixtures retain both lane hashes, original blocks and the reviewed merge basis;
+eleven products match the Track A apply plan. Named catalog overrides are not
+general rules: Garnier Honig remains `needs_research` here despite R20.2;
+Monday X1 and Balea R20.1 are outside this parity sample. The locked standard's
+historical live-weight instructions remain unchanged. All outputs stay offline.
+
+## Routine intake and validation batches
+
+Routine intake uses one isolated research lane: source freeze with web access,
+blind formula assessment in a fresh directory without web or identity, then a
+revealed final pass without web. The shared Sol judge checks the projected intake
+package; Nick still approves exact data, images and publication. Validation batches
+retain two independent lanes under the locked runbook. The generic shadow research
+path is skipped for routine Shampoo because it does not implement that sealed method.
+
+Every launch consumes a durable slot before spawn. Source + blind + revealed + Sol
+use four launches, leaving at most two within the shared six-run/45-minute cycle
+for image work or one correction plus Sol. Reservations are never refunded. A
+correction reuses the same protected, hash-pinned blind record only when submission,
+cycle, method and formula still match; insufficient budget or changed evidence
+requires Nick's decision. No extra image/correction budget is created.
+
+The worker commits the full native research, protected stage proof and proposed
+payload atomically. Intake rationales are prose; typed confidence and rule references
+remain in the complete projection artifact. Missing or contradictory stage evidence
+blocks new research. Model-written approvals are cleared. A D2 flag retains ordinary
+Shampoo rows and asks: “Auch als Tiefenreiniger anlegen? Die reguläre Shampoo-Recherche
+bleibt erhalten.” It never creates another listing automatically.
+
+Local source depends on the review-cycle migration `20261016052958` and exact safety
+increment described in [the integration plan](../plans/product-intake-cloud-research/s2-shampoo-integration.md).
+The successor `20261016131141_product_intake_atomic_artifact_ids.sql` preserves Oil
+identity/property references inside the same atomic completion. Apply these ordered
+migrations, together with the required Oil binding migrations, before releasing this worker.
+Merge, migration and deployment remain separate gates. Automatic alerts stay off.
+
+## Historical v1.4 source-of-truth stack
 
 | Layer                   | Owning source                                                                                      | What it controls                                                                   |
 | ----------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -322,9 +399,10 @@ the repair/moisture boundary, record one formula verdict:
 `not_applicable`. Claims may break a genuinely `dual_supported` tie, but cannot
 turn `nonspecific` formula evidence into a confident specialist focus.
 
-The research validator and local Lab can consume the overlay. The unchanged
-Production Light v1 adapter continues to accept only its frozen v1.4 input enum;
-in particular, `moisture` in a Production Light input is intentionally invalid.
+The research validator and local Lab can consume the overlay. The historical v1.4
+Production Light lane continues to accept only its frozen v1.4 input enum;
+in particular, `moisture` in a v1.4 Production Light input is intentionally invalid. The
+separately pinned v1.6.2 native-record lane accepts its own `moisture` focus.
 
 Validate one completed research directory or a same-shape dataset without
 modifying its artifacts:
@@ -334,13 +412,13 @@ npm run research:shampoo:focus-v15 -- --product-dir <product-directory>
 npm run research:shampoo:focus-v15 -- --root <dataset-root>
 ```
 
-## Copyable future invocations
+## Copyable new-research invocations
 
 Single product:
 
 > Please research this product with **Shampoo Production Light v1**. Resolve the
-> exact current German identity and canonical INCI using the Shampoo v1.4
-> runbook, complete the full eight-property research envelope, then run the
+> exact current German identity and canonical INCI using the locked Shampoo v1.6.2
+> method, complete the isolated blind/reveal eight-property research, then run the
 > production-light adapter. Stop at local artifacts: `production-light.json` and
 > `production-light-summary.md`. Do not write to Supabase, Product Intake, the
 > catalog or live recommendations.
@@ -349,26 +427,26 @@ Batch:
 
 > Please research these 50 shampoos with **Shampoo Production Light v1**. First
 > freeze the batch manifest with exact product names, known GTIN aliases and
-> selection notes. For each item, apply the full Shampoo v1.4 identity/formula
-> and classification process, then run the production-light adapter. The batch
+> selection notes. For each item, apply the full Shampoo v1.6.2 identity/formula
+> and two-lane validation process, then run the production-light adapter. The batch
 > is complete only when every manifest item is accounted for as
-> `property_lane_ready`, `needs_research` or `routed_deep_cleansing`, with
+> `property_lane_ready` or `needs_research`, with D2 extra-listing decisions retained,
 > per-product JSON/Markdown artifacts plus a batch summary. Do not write to
 > Supabase, Product Intake, the catalog or live recommendations.
 
 ## Output statuses
 
-| Status                  | Meaning                                                                                                        | Next step                                                                                             |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `property_lane_ready`   | The ingredient research is complete enough to propose current production Shampoo properties.                   | Nick can review the property package. Product Intake still owns identity/image/price/protocols/apply. |
-| `needs_research`        | A required input, property, projection assessment or confidence gate is missing, contradictory or unsupported. | Rework the research envelope, then rerun the adapter. Do not hand-edit the output.                    |
-| `routed_deep_cleansing` | The product is a true reset/deep-cleansing product, not a regular Shampoo item.                                | Use the existing deep-cleansing category workflow instead. No regular Shampoo payload is emitted.     |
+| Status                                         | Meaning                                                                                                        | Next step                                                                                                                             |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `property_lane_ready`                          | The ingredient research is complete enough to propose current production Shampoo properties.                   | Nick can review the property package. Product Intake still owns identity/image/price/protocols/apply.                                 |
+| `needs_research`                               | A required input, property, projection assessment or confidence gate is missing, contradictory or unsupported. | Rework the research envelope, then rerun the adapter. Do not hand-edit the output.                                                    |
+| `routed_deep_cleansing` (historical v1.4 only) | Historical v1.4 projection for a deep-cleansing product.                                                       | This does not describe v1.6.2: D2 retains the regular-Shampoo payload and leaves any separate listing for Nick after research freeze. |
 
 `property_lane_ready` is not `catalog_intake_ready` and not
 `global_recommendation_ready`. It only says the Shampoo property lane is
 reviewable.
 
-## Production fields emitted
+## Historical v1.4 production fields emitted
 
 For `property_lane_ready`, the JSON contains the exact current production
 Shampoo fields:
@@ -389,7 +467,7 @@ The adapter does not produce `products` rows, GTIN ownership, image URLs,
 affiliate links, prices or exact `product_application_protocols` rows. Product
 Intake owns those.
 
-## Projection semantics
+## Historical v1.4 projection semantics
 
 ### Observed cleansing intensity
 

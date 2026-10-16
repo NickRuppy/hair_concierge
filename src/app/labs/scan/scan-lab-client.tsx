@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 
+import { ScanWelcomeHint } from "@/app/scan/scan-page-client"
 import { ScanFlow } from "@/components/scan/scan-flow"
 import type { ScanBarcodeDetector, ScannerRuntime } from "@/components/scan/use-scanner-loop"
 import type { EntitlementTier } from "@/lib/entitlements"
@@ -419,7 +420,7 @@ function ensureScanLab(): ScanLabInternals {
   return created
 }
 
-export function ScanLabClient() {
+export function ScanLabClient({ welcomeHint = false }: { welcomeHint?: boolean }) {
   const harness = useMemo(() => (typeof window === "undefined" ? null : ensureScanLab()), [])
   const tier = typeof window === "undefined" ? undefined : window.__SCAN_LAB_TIER
   const retailerSearchEnabled =
@@ -428,6 +429,7 @@ export function ScanLabClient() {
   return (
     <ToastProvider>
       <main className="min-h-dvh bg-background py-4">
+        {welcomeHint ? <ScanWelcomeHint /> : null}
         <ScanFlow
           analytics={harness?.analytics}
           scannerRuntime={harness?.runtime}

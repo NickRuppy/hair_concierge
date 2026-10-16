@@ -380,10 +380,6 @@ test("approveResearchPackage dry-run does not save or approve", async () => {
         calls.push("save")
         throw new Error("should not save in dry-run")
       },
-      approveById: async () => {
-        calls.push("approve")
-        throw new Error("should not approve in dry-run")
-      },
     },
   })
 
@@ -437,10 +433,6 @@ test("approveResearchPackage refuses to write incomplete payloads", async () => 
             calls.push("save")
             throw new Error("should not save invalid package")
           },
-          approveById: async () => {
-            calls.push("approve")
-            throw new Error("should not approve invalid package")
-          },
         },
       }),
     /requires a complete ready_for_review payload/,
@@ -474,10 +466,6 @@ test("approveResearchPackage refuses to write when package only has a raw remote
             calls.push("save")
             throw new Error("should not save without final image decision")
           },
-          approveById: async () => {
-            calls.push("approve")
-            throw new Error("should not approve without final image decision")
-          },
         },
       }),
     /requires approved product image finalization/,
@@ -508,48 +496,6 @@ test("approveResearchPackage refuses to write when approved image metadata does 
       }),
     /does not match final.product.image_url/,
   )
-})
-
-test("approveResearchPackage can write with explicit no-image reviewer decision", async () => {
-  const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
-  const dir = await writePackage({
-    root,
-    payload: readyPayload(null),
-    imageFinalization: noImageFinalization(),
-  })
-  const calls: string[] = []
-
-  const result = await approveResearchPackage({
-    packageDir: dir,
-    reviewedBy: "nick",
-    reviewNotes: "no image approved",
-    apply: true,
-    confirm: true,
-    deps: {
-      createSupabaseClient: () => ({}) as never,
-      loadSubmissionById: async () => {
-        calls.push("load")
-        return submission()
-      },
-      savePayload: async () => {
-        calls.push("save")
-        return {
-          submission_id: "submission-1",
-          status: "pending_review",
-          next_status: "ready_for_review",
-          dry_run: { ok: true, missingFields: [], normalizedPayload: {}, targetSpecOperations: [] },
-          researched_payload: {},
-        } as never
-      },
-      approveById: async () => {
-        calls.push("approve")
-        return { product_id: "product-1" } as never
-      },
-    },
-  })
-
-  assert.equal(result.mode, "applied")
-  assert.deepEqual(calls, ["load", "save", "approve"])
 })
 
 test("uploadApprovedPackageImage dry-run reports approved target without writing", async () => {
@@ -598,7 +544,7 @@ test("uploadApprovedPackageImage uploads and verifies an approved final asset", 
   ])
 })
 
-test("uploadApprovedPackageImage reuses a valid source-addressed thumbnail with different encoder bytes", async () => {
+test("uploadApprovedPackageImage refuses different bytes at an approved immutable thumbnail path", async () => {
   const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
   const dir = await writePackage({ root, imageFinalization: noImageFinalization() })
   const image = await writeApprovedImageFile(dir)
@@ -619,15 +565,17 @@ test("uploadApprovedPackageImage reuses a valid source-addressed thumbnail with 
       .toBuffer(),
   )
 
-  const result = await uploadApprovedPackageImage({
-    supabase: storage.client as never,
-    packageDir: dir,
-    imageFinalization: finalization,
-    apply: true,
-    confirm: true,
-  })
+  await assert.rejects(
+    uploadApprovedPackageImage({
+      supabase: storage.client as never,
+      packageDir: dir,
+      imageFinalization: finalization,
+      apply: true,
+      confirm: true,
+    }),
+    /checksum mismatch/,
+  )
 
-  assert.equal(result.status, "already_uploaded")
   assert.equal(
     storage.calls.some((call) => call.startsWith("upload:")),
     false,
@@ -650,64 +598,4 @@ test("uploadApprovedPackageImage refuses a final asset whose checksum changed", 
       }),
     /Local final image SHA-256 does not match image-finalization\.json/,
   )
-})
-
-test("approveResearchPackage apply saves payload before using existing approval path", async () => {
-  const root = await mkdtemp(join(tmpdir(), "product-intake-package-"))
-  const dir = await writePackage({
-    root,
-    payload: readyPayload(),
-    imageFinalization: approvedImageFinalization(),
-  })
-  const calls: string[] = []
-
-  const result = await approveResearchPackage({
-    packageDir: dir,
-    reviewedBy: "nick",
-    reviewNotes: "looks good",
-    apply: true,
-    confirm: true,
-    deps: {
-      createSupabaseClient: () => ({}) as never,
-      loadSubmissionById: async () => {
-        calls.push("load")
-        return submission()
-      },
-      savePayload: async () => {
-        calls.push("save")
-        return {
-          submission_id: "submission-1",
-          status: "pending_review",
-          next_status: "ready_for_review",
-          dry_run: { ok: true, missingFields: [], normalizedPayload: {}, targetSpecOperations: [] },
-          researched_payload: {},
-        } as never
-      },
-      approveById: async (params) => {
-        calls.push(`approve:${params.submissionId}:${params.reviewedBy}:${params.reviewNotes}`)
-        return { product_id: "product-1" } as never
-      },
-      uploadFinalImage: async () => {
-        calls.push("upload-image")
-        return {
-          status: "uploaded",
-          bucket: "product-images",
-          storage_path:
-            "product-intake-2026-06-26/submission-1/granatapfel-conditioner-aaaaaaaaaaaa.webp",
-          public_url: chaarlieImageUrl,
-          local_file: "images/final/granatapfel-conditioner.webp",
-          content_type: "image/webp",
-          asset_sha256: "a".repeat(64),
-          thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
-          thumbnail_public_url: `${chaarlieImageUrl.split("product-intake-")[0]}thumbnails/search-v1/${"a".repeat(64)}.webp`,
-          thumbnail_local_file: `images/final/thumbnails/${"a".repeat(64)}.webp`,
-          thumbnail_asset_sha256: "b".repeat(64),
-        }
-      },
-    },
-  })
-
-  assert.equal(result.mode, "applied")
-  assert.deepEqual(calls, ["load", "upload-image", "save", "approve:submission-1:nick:looks good"])
-  assert.equal(result.image_upload.status, "uploaded")
 })

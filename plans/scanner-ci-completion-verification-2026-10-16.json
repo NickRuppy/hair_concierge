@@ -1,0 +1,105 @@
+{
+  "scope": "Scanner CI correction on draft PR693; six-file delta versus e6e87439; previous unchanged engine review reused",
+  "base": "e6e87439012ff0446359f0b8c050f6d54ed5c417",
+  "branch": "codex/shampoo-intake-integration",
+  "fingerprint": "001139a7cc47c94d185f4135e3d0dd1e788a9e06304a5c80fe72bb81fe2617e5",
+  "manifest": [
+    {
+      "path": "plans/scanner-ci-completion-2026-10-16.md",
+      "sha256": "7e4219cf7dcc6ec5dc6c82e191c6a7cc1b355a74070e5c21df70a169ad1ff3bd"
+    },
+    {
+      "path": "src/app/labs/scan/page.tsx",
+      "sha256": "aeca44363de63852c388b12e19ab1645bc0aa4fa4429ba20658309433a96f211"
+    },
+    {
+      "path": "src/app/labs/scan/scan-lab-client.tsx",
+      "sha256": "f0829ce85a20aa6a454f2c0c1d797c95404bfaf4de580d95b4d8da52208b4af5"
+    },
+    {
+      "path": "tests/helpers/scan-welcome.ts",
+      "sha256": "ba6ab5d8546fe23be9a539d252e83cc97a90b9cbc88db34a38529e069b2ae92a"
+    },
+    {
+      "path": "tests/scan-flow.spec.ts",
+      "sha256": "f520067cf42d41b0a746274425bcaf8ed11c4411dc0b61c11412dfaa6745ef74"
+    },
+    {
+      "path": "tests/scan-funnel-journey.spec.ts",
+      "sha256": "07871280e859364340b6a70ec89c2ca802f0cd2e686535a28ba737cd8f7105c3"
+    }
+  ],
+  "manifest_definition": "SHA256 sorted path/content-hash manifest, relative to previous reviewed head; this receipt excluded",
+  "coverage_acknowledgement": "Okay let's finish the Scanner fix and rerun CI on #693 then. Use subagents, keep matching tags manual and don't deploy yet.",
+  "decision_coverage": "confirmed; bounded CI interaction repair, no new product choice",
+  "internal_revalidation": "Owned clean Shampoo branch reused; separate dirty Scanner candidate not changed or imported; parent691 merge/deploy remain unauthorized",
+  "root_cause": "Journey attempts to click optional background greeting while intentionally isolating camera fallback modal is open",
+  "repair": "Deny browser camera deterministically before first document; wait for real fallback; close accessibly; then acknowledge greeting. Post-reload assertion waits for client camera state before checking absence.",
+  "checks": [
+    {
+      "command": "Focused regression retaining the old direct-click helper",
+      "result": "red: control inaccessible under real modal isolation",
+      "log": "/tmp/scanner-ci-completion-red.log"
+    },
+    {
+      "command": "Focused repaired regression",
+      "result": "1 pass",
+      "log": "/tmp/scanner-ci-completion-green.log"
+    },
+    {
+      "command": "Full tests/scan-flow.spec.ts Chromium, workers1",
+      "result": "28 pass,0 fail",
+      "log": "/tmp/scanner-ci-completion-full-browser.log"
+    },
+    {
+      "command": "Greeting, ScanFlow state and modal manager Node owner tests",
+      "result": "71 pass,0 fail,0 skip",
+      "log": "/tmp/scanner-ci-completion-node.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "pass on final post-review content",
+      "log": "/tmp/scanner-ci-completion-final-typecheck.log"
+    },
+    {
+      "command": "Explicit scoped ESLint --no-ignore including test helper",
+      "result": "0 errors,0 warnings",
+      "log": "/tmp/scanner-ci-completion-final-lint.log"
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass"
+    },
+    {
+      "command": "git diff e6e87439 on production welcome/BottomSheet/modal-manager",
+      "result": "empty; production bytes unchanged"
+    }
+  ],
+  "browser_evidence": "Real browser fake-camera Lab mounts actual greeting; submits search, sees mock empty result, closes modal, acknowledges, reopens search. Full authenticated journey left to existing authorized hosted CI fixture lifecycle; no local production fixture writes.",
+  "review": {
+    "counterpart": "Claude/high read-only terminal normal correctness delta review approved with no hard defects",
+    "report": "/tmp/scanner-ci-completion-code-review.md",
+    "frozen_review_fingerprint": "3c8571ce64afd943b2326e24dd62d69849c114a57496ab2b163d617f7177458d",
+    "main_postreview_delta": "Wait for client camera denial after reload before session assertion; correct owner preservation wording after external concurrent edits. No new architecture/source behavior.",
+    "structural": "Small Lab/test-support delta; prior engine/SQL structural conclusions reused"
+  },
+  "residual_risks": [
+    "Hosted journey intentionally covers denied camera; working-camera greeting retains existing unit coverage",
+    "Camera fixture requires localhost secure context, matching CI contract",
+    "Parent691 dependency and PR682 supersession remain separate merge gates",
+    "Full exact-head CI/Security must finish after push"
+  ],
+  "artifact_disposition": {
+    "commit": "Six scoped Lab/test/plan files and this verification receipt",
+    "archive": "Transient reports/logs and initial owner-worktree snapshot under /tmp",
+    "preserve": "Separate scanner-welcome-ci dirty state; another owner continued editing it, no writes here"
+  },
+  "boundaries": {
+    "matching_tags": "manual",
+    "merge": false,
+    "deployment": false,
+    "migration_application": false,
+    "catalog_publication": false
+  },
+  "hosted_ci": "dispatch full CI/Security on final pushed head; exact results recorded in PR and /tmp hosted receipt"
+}

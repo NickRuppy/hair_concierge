@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
 import * as Sentry from "@sentry/node"
+import { createClient } from "@supabase/supabase-js"
 
 import * as worker from "../scripts/product-intake/codex-research-worker"
 
@@ -455,4 +456,108 @@ test("timeout signals the subprocess group including its grandchild", async () =
   // The handler must be installed before the timeout, otherwise the test is meaningless.
   assert.match(result.stdout, /grandchild-ready/)
   assert.match(result.stdout, /grandchild-terminated/)
+})
+
+test(
+  "a stalled outbox read stays independent of heartbeat leases and never overlaps itself",
+  { timeout: 5_000 },
+  async (t) => {
+    t.mock.timers.enable({ apis: ["setInterval"] })
+    const previous = process.env.PRODUCT_INTAKE_REVIEW_EMAILS
+    process.env.PRODUCT_INTAKE_REVIEW_EMAILS = "false"
+    t.after(() => {
+      if (previous === undefined) delete process.env.PRODUCT_INTAKE_REVIEW_EMAILS
+      else process.env.PRODUCT_INTAKE_REVIEW_EMAILS = previous
+    })
+    let requests = 0
+    let finish!: (response: Response) => void
+    const client = createClient("https://example.supabase.co", "test-service-key", {
+      global: {
+        fetch: (async () => {
+          requests++
+          return new Promise<Response>((resolve) => {
+            finish = resolve
+          })
+        }) as typeof fetch,
+      },
+    })
+    const observations: string[] = []
+    const monitor = worker.startAdminReviewOutboxHealthMonitor(client, (state) =>
+      observations.push(state.kind),
+    )
+    let renewals = 0
+    const heartbeatClient = {
+      rpc: async (name: string) => {
+        if (name.includes("renew")) renewals++
+        return { data: name.includes("renew") ? "2026-10-16T05:00:00Z" : null, error: null }
+      },
+    }
+    const job = leaseJob()
+    const heartbeat = worker.startWorkerHeartbeat({
+      client: heartbeatClient,
+      workerId: "worker-a",
+      host: "host",
+      pid: 1,
+      leases: new Map([[job.id, new worker.WorkerJobLease(job, heartbeatClient)]]),
+      currentJobId: () => job.id,
+    })
+    t.after(() => {
+      monitor.stop()
+      heartbeat.stop()
+    })
+    await heartbeat.tick()
+    await new Promise<void>((resolve) => setImmediate(resolve))
+    assert.equal(requests, 1)
+    t.mock.timers.tick(60_000)
+    await heartbeat.tick()
+    assert.equal(renewals, 2, "stalled observer must not delay renewal")
+    assert.equal(requests, 1, "stalled observer must not overlap reads")
+    finish(
+      Response.json([
+        {
+          id: "11111111-1111-4111-8111-111111111111",
+          status: "needs_reconciliation",
+          created_at: "2026-10-16T05:00:00Z",
+          locked_at: null,
+        },
+      ]),
+    )
+    await monitor.tick()
+    assert.deepEqual(
+      observations,
+      ["issue"],
+      "technical observation stays active while email sending is disabled",
+    )
+    monitor.stop()
+    t.mock.timers.tick(60_000)
+    await monitor.tick()
+    assert.equal(requests, 1)
+  },
+)
+
+test("runtime expiry may record a fenced human escalation, but confirmed lease loss never may", async (t) => {
+  t.mock.timers.enable({ apis: ["Date"] })
+  const previous = process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS
+  process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS = "1000"
+  t.after(() => {
+    if (previous === undefined) delete process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS
+    else process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS = previous
+  })
+  const owned = new worker.WorkerJobLease(leaseJob(), {
+    rpc: async () => ({ data: null, error: null }),
+  })
+  const lost = new worker.WorkerJobLease(leaseJob("lost"), {
+    rpc: async () => ({ data: null, error: null }),
+  })
+  await lost.renew()
+  t.mock.timers.tick(1_001)
+  await assert.rejects(
+    owned.write(async () => "ordinary"),
+    /lease lost/i,
+  )
+  assert.equal(await owned.write(async () => "blocked-needs-nick", true), "blocked-needs-nick")
+  await assert.rejects(
+    lost.write(async () => "must never write", true),
+    /lease lost/i,
+  )
 })

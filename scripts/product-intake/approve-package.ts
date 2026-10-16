@@ -4,7 +4,27 @@ import {
 } from "../../packages/product-intake-core/src/oil-review-binding"
 import { validateProductIntakeApprovalPayload } from "@/lib/product-intake/category-validators"
 import { basename, resolve } from "node:path"
-import { readFile } from "node:fs/promises"
+import { readFile, realpath } from "node:fs/promises"
+import { isDeepStrictEqual } from "node:util"
+import {
+  loadReviewAuthorityPreflight,
+  reviewRpc,
+  type ReviewBinding,
+  type ReviewPublicationReceipt,
+  type ProductIntakeReviewAssetInput,
+} from "@chaarlie/product-intake-core"
+import {
+  loadReviewPublicationPreflight,
+  publishReviewedProduct,
+  executeReviewAction,
+  stableReviewRequestId,
+  reviewBinding,
+} from "../../src/lib/product-intake/review-publication"
+import {
+  imageSha256,
+  uploadLegacyReviewImage,
+  validateFinalImageBytes,
+} from "../../src/lib/product-intake/publication-images"
 
 import {
   createSupabaseClientFromEnv,
@@ -14,16 +34,16 @@ import {
   printJson,
   requireFlag,
 } from "./cli"
-import { approveSubmissionById } from "./approve"
 import { validateProductIntakeImageFinalization } from "./image-finalization"
 import { validateResearchPackage } from "./prepare-research"
 import {
+  appendProductAdditionRecord,
   dryRunResearchedPayload,
   loadSubmission,
   saveResearchedPayload,
+  validateSubmissionReady,
   type ReviewActionSubmission,
 } from "./review-actions"
-import { uploadApprovedPackageImage } from "./upload-package-image"
 
 type ResearchPackageSubmissionSnapshot = {
   id?: unknown
@@ -45,8 +65,6 @@ type ApprovePackageDeps = {
   createSupabaseClient?: typeof createSupabaseClientFromEnv
   loadSubmissionById?: typeof loadSubmission
   savePayload?: typeof saveResearchedPayload
-  approveById?: typeof approveSubmissionById
-  uploadFinalImage?: typeof uploadApprovedPackageImage
 }
 
 async function readJson(path: string): Promise<unknown> {
@@ -132,6 +150,19 @@ function finalProductImageUrl(researchedPayload: Record<string, unknown>): unkno
 
 function researchedPayloadWithFinalImageMetadata(pack: ResearchPackage): Record<string, unknown> {
   if (
+    (pack.imageFinalization as { status?: unknown } | null)?.status === "no_image_approved_for_now"
+  ) {
+    const payload = structuredClone(pack.researchedPayload)
+    const product = (payload.final as { product?: Record<string, unknown> } | undefined)?.product
+    // Absence is an explicit reviewed choice, never inferred from a missing file.
+    if (product && product.image_url == null) {
+      product.image_url = null
+      product.canonical_image_sha256 = null
+      product.thumbnail_image_url = null
+    }
+    return payload
+  }
+  if (
     !pack.imageFinalization ||
     typeof pack.imageFinalization !== "object" ||
     Array.isArray(pack.imageFinalization) ||
@@ -189,7 +220,7 @@ export function buildApprovePackageDryRun(params: {
     image_finalization: imageFinalization,
     approval: {
       will_reload_submission_after_research_save: true,
-      will_call_existing_approve_submission_by_id: true,
+      will_use_guarded_publication_service: true,
       apply_requires_confirm: true,
     },
     image_upload: {
@@ -211,14 +242,13 @@ export async function approveResearchPackage(params: {
     createSupabaseClient: createSupabaseClientFromEnv,
     loadSubmissionById: loadSubmission,
     savePayload: saveResearchedPayload,
-    approveById: approveSubmissionById,
-    uploadFinalImage: uploadApprovedPackageImage,
     ...params.deps,
   }
   const pack = await readResearchPackage(params.packageDir)
   const supabase = deps.createSupabaseClient()
   const submission = await deps.loadSubmissionById(supabase, pack.submissionId)
-  if (submission.category === "oil") {
+  async function verifyOilPackage() {
+    if (submission.category !== "oil") return
     const incoming = researchedPayloadWithFinalImageMetadata(pack)
     const current = submission.researched_payload as Record<string, unknown> | null
     if (!current || typeof current !== "object" || Array.isArray(current))
@@ -247,40 +277,6 @@ export async function approveResearchPackage(params: {
         "Oil package is stale; rework and review the current intake before publication",
       )
     }
-    const { data: artifact, error: imageError } = await supabase
-      .from("product_intake_research_artifacts")
-      .select("payload")
-      .eq("submission_id", submission.id)
-      .eq("kind", "processed_image")
-      .order("created_at", { ascending: false })
-      .order("id", { ascending: false })
-      .limit(1)
-      .maybeSingle()
-    if (imageError) throw imageError
-    const image = artifact?.payload as Record<string, unknown> | undefined
-    const decision = pack.imageFinalization as Record<string, unknown> | null
-    if (!image || !decision || decision.status !== "approved_asset")
-      throw new Error("Current oil processed image and approved package image required")
-    for (const [packageKey, artifactKey] of [
-      ["public_url", "planned_public_url"],
-      ["asset_sha256", "asset_sha256"],
-      ["thumbnail_public_url", "thumbnail_public_url"],
-      ["thumbnail_asset_sha256", "thumbnail_asset_sha256"],
-    ]) {
-      if (
-        typeof image[artifactKey] !== "string" ||
-        !image[artifactKey] ||
-        decision[packageKey] !== image[artifactKey]
-      )
-        throw new Error("Oil package image differs from the current reviewed artifact")
-    }
-    const product = (incoming.final as Record<string, unknown>).product as Record<string, unknown>
-    product.image_url = image.planned_public_url
-    product.canonical_image_sha256 = image.asset_sha256
-    product.thumbnail_image_url = image.thumbnail_public_url
-    // Rebuild all local validation/dry-run inputs from the reviewed image, while
-    // preserving the authoritative persisted payload and property binding.
-    pack.researchedPayload = incoming
     const validation = validateProductIntakeApprovalPayload(incoming)
     if (!validation.ok) throw new Error("Oil package validation failed")
     const { error } = await supabase.rpc("product_intake_oil_publication_preflight", {
@@ -299,6 +295,7 @@ export async function approveResearchPackage(params: {
   })
 
   if (!params.apply) {
+    await verifyOilPackage()
     return {
       ...dryRun,
       mode: "dry_run" as const,
@@ -308,6 +305,54 @@ export async function approveResearchPackage(params: {
   if (!params.confirm) {
     throw new Error("Approve-package writes require --confirm")
   }
+  if (submission.status !== "approved" && submission.status !== "matched_existing") {
+    if (
+      dryRun.research_save.next_status !== "ready_for_review" ||
+      !dryRun.research_save.dry_run.ok
+    ) {
+      throw new Error("Approve-package requires a complete ready_for_review payload before writes")
+    }
+    if (!dryRun.image_finalization.ok) {
+      throw new Error(dryRun.image_finalization.reason)
+    }
+  }
+  const publicationRequestId = stableReviewRequestId([
+    "approve-package",
+    pack.submissionId,
+    params.reviewedBy,
+    pack.researchedPayload,
+    pack.imageFinalization,
+  ])
+  // Reconcile before saving the payload again: publication itself rotates its revision.
+  const existing = await supabase
+    .from("product_intake_publication_receipts")
+    .select("*")
+    .eq("request_id", publicationRequestId)
+    .maybeSingle()
+  if (existing.error) throw new Error("review_receipt_unavailable")
+  if (existing.data) {
+    const receipt = existing.data as ReviewPublicationReceipt
+    const approval = await publishReviewedProduct(supabase, {
+      ...reviewBinding(receipt),
+      request_id: publicationRequestId,
+      reviewed_by: params.reviewedBy,
+      data_decision_id: receipt.data_decision_id,
+      image_decision_id: receipt.image_decision_id,
+      confirm: true,
+    })
+    const additionRecordPath = await recordPackagePublication(
+      pack,
+      approval.publication,
+      params.reviewedBy,
+      submission,
+    )
+    return {
+      ...dryRun,
+      mode: "applied" as const,
+      approval,
+      addition_record_path: additionRecordPath,
+    }
+  }
   if (dryRun.research_save.next_status !== "ready_for_review" || !dryRun.research_save.dry_run.ok) {
     throw new Error("Approve-package requires a complete ready_for_review payload before writes")
   }
@@ -315,41 +360,204 @@ export async function approveResearchPackage(params: {
     throw new Error(dryRun.image_finalization.reason)
   }
 
-  const imageUpload = await deps.uploadFinalImage({
-    supabase,
-    packageDir: pack.packageDir,
-    imageFinalization: pack.imageFinalization,
-    apply: true,
-    confirm: true,
-  })
+  await verifyOilPackage()
+  const authority = await loadReviewAuthorityPreflight(supabase, pack.submissionId)
+  if (authority.publication) throw new Error("review_already_published_with_another_package")
+  const decision = dryRun.image_finalization.decision
+  const imageBytes =
+    decision.status === "approved_asset" ? await loadPackageReviewImages(pack, decision) : []
   const approvalPayload = researchedPayloadWithFinalImageMetadata(pack)
-  const researchSave =
-    submission.category === "oil"
-      ? { next_status: dryRun.research_save.next_status, dry_run: dryRun.research_save.dry_run }
-      : await deps.savePayload({
-          supabase,
-          submission,
-          researchedPayload: approvalPayload,
-          markReady: true,
-        })
-  const approval = await deps.approveById({
-    submissionId: pack.submissionId,
-    reviewedBy: params.reviewedBy,
-    reviewNotes: params.reviewNotes,
-    apply: true,
+  const validated = dryRunResearchedPayload({
+    submission,
+    researchedPayload: approvalPayload,
+    markReady: true,
+  }).dry_run
+  if (!validated.ok) throw new Error("review_payload_invalid")
+  const normalized = structuredClone(validated.normalizedPayload) as unknown as Record<
+    string,
+    unknown
+  >
+  const final = normalized.final as { product: Record<string, unknown> }
+  if (decision.status === "no_image_approved_for_now") {
+    final.product.image_url = null
+    final.product.canonical_image_sha256 = null
+    final.product.thumbnail_image_url = null
+  }
+  let currentBinding = reviewBinding(authority)
+  if (authority.job_id) {
+    // A worker owns this saved revision. A local package may approve its exact
+    // committed evidence but may never overwrite or replace it.
+    const storedValidation = dryRunResearchedPayload({
+      submission,
+      researchedPayload: submission.researched_payload ?? {},
+      markReady: true,
+    }).dry_run
+    if (
+      !storedValidation.ok ||
+      !isDeepStrictEqual(
+        storedValidation.normalizedPayload.final,
+        validated.normalizedPayload.final,
+      )
+    )
+      throw new Error("review_worker_package_mismatch")
+    if (
+      decision.status === "approved_asset" &&
+      (authority.final_asset?.sha256 !== decision.asset_sha256 ||
+        authority.thumbnail_asset?.sha256 !== decision.thumbnail_asset_sha256)
+    )
+      throw new Error("review_worker_image_mismatch")
+    for (const action of ["approve_data", "approve_image"] as const) {
+      const input = {
+        ...currentBinding,
+        reviewed_by: params.reviewedBy,
+        action,
+        ...(action === "approve_image"
+          ? {
+              approved_asset_sha256:
+                decision.status === "approved_asset" ? decision.asset_sha256 : null,
+              reviewer_value: { no_image: decision.status === "no_image_approved_for_now" },
+              comment: decision.notes ?? params.reviewNotes,
+            }
+          : {}),
+      }
+      await executeReviewAction(supabase, {
+        ...input,
+        request_id: stableReviewRequestId([publicationRequestId, input]),
+      })
+    }
+  } else {
+    normalized.draft = {
+      ...(typeof normalized.draft === "object" && normalized.draft ? normalized.draft : {}),
+      review_image_finalization: pack.imageFinalization,
+    }
+    if (
+      !isDeepStrictEqual(submission.researched_payload, normalized) ||
+      submission.status !== "ready_for_review"
+    ) {
+      await deps.savePayload({
+        supabase,
+        submission,
+        researchedPayload: normalized,
+        markReady: true,
+      })
+    }
+    const saved = (await deps.loadSubmissionById(
+      supabase,
+      pack.submissionId,
+    )) as ReviewActionSubmission & { payload_revision: number; payload_sha256: string }
+    currentBinding = {
+      submission_id: saved.id,
+      payload_revision: saved.payload_revision,
+      payload_sha256: saved.payload_sha256,
+      job_id: null,
+      review_cycle_id: null,
+    }
+    const assets: ProductIntakeReviewAssetInput[] = []
+    for (const image of imageBytes)
+      assets.push(await uploadLegacyReviewImage(supabase, currentBinding, image.kind, image.bytes))
+    await reviewRpc(supabase, "product_intake_register_legacy_review", {
+      p_request: {
+        ...currentBinding,
+        request_id: stableReviewRequestId([publicationRequestId, "legacy-review"]),
+        reviewed_by: params.reviewedBy,
+        approve_data: true,
+        approve_image: true,
+        no_image: decision.status === "no_image_approved_for_now",
+        review_assets: assets,
+        comment: decision.notes ?? params.reviewNotes,
+      },
+    })
+  }
+  const ready = await loadReviewPublicationPreflight(supabase, pack.submissionId)
+  if (!ready.ok || !ready.data_decision_id || !ready.image_decision_id)
+    throw new Error(`review_preflight_failed: ${ready.blockers.join(", ")}`)
+  const approval = await publishReviewedProduct(supabase, {
+    ...reviewBinding(ready),
+    request_id: publicationRequestId,
+    reviewed_by: params.reviewedBy,
+    data_decision_id: ready.data_decision_id,
+    image_decision_id: ready.image_decision_id,
     confirm: true,
   })
+  const additionRecordPath = await recordPackagePublication(
+    pack,
+    approval.publication,
+    params.reviewedBy,
+    submission,
+  )
+  return { ...dryRun, mode: "applied" as const, approval, addition_record_path: additionRecordPath }
+}
 
-  return {
-    ...dryRun,
-    mode: "applied" as const,
-    image_upload: imageUpload,
-    research_save: {
-      next_status: researchSave.next_status,
-      dry_run: researchSave.dry_run,
-    },
-    approval,
+async function recordPackagePublication(
+  pack: ResearchPackage,
+  receipt: ReviewPublicationReceipt,
+  reviewedBy: string,
+  submission: ReviewActionSubmission,
+) {
+  // This local audit record is recoverable from the durable receipt. A file write
+  // failure must never misreport the already committed catalog handoff as failed.
+  try {
+    const validation = validateSubmissionReady({
+      ...submission,
+      status: "ready_for_review",
+      researched_payload: researchedPayloadWithFinalImageMetadata(pack),
+    })
+    if (!validation.ok) return null
+    const final = structuredClone(validation.normalizedPayload.final)
+    if (receipt.approved_asset_sha256) {
+      final.product.image_url = `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/review/${receipt.approved_asset_sha256}.webp`
+      final.product.canonical_image_sha256 = receipt.approved_asset_sha256
+      final.product.thumbnail_image_url = `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${receipt.approved_asset_sha256}.webp`
+    }
+    return await appendProductAdditionRecord({
+      submission_id: pack.submissionId,
+      product_id: receipt.product_id,
+      category_key: final.product.category_key,
+      brand_id: receipt.brand_id,
+      product_line_id: receipt.product_line_id,
+      approved_at: receipt.created_at,
+      reviewed_by: reviewedBy,
+      final_payload: final,
+      spec_operations: validation.targetSpecOperations,
+    })
+  } catch {
+    return null
   }
+}
+
+async function loadPackageReviewImages(
+  pack: ResearchPackage,
+  decision: Extract<
+    import("./image-finalization").ProductIntakeImageFinalizationDecision,
+    { status: "approved_asset" }
+  >,
+) {
+  const evidence = pack.imageFinalization as Record<string, unknown>
+  if ((evidence.quality_gate as { status?: unknown } | undefined)?.status !== "pass")
+    throw new Error("review_image_finalizer_invalid")
+  const root = await realpath(pack.packageDir)
+  async function bytes(relative: unknown) {
+    if (typeof relative !== "string" || !relative) throw new Error("review_package_image_missing")
+    const file = await realpath(resolve(root, relative))
+    if (!file.startsWith(`${root}/`)) throw new Error("review_package_image_outside_package")
+    return readFile(file)
+  }
+  const final = await bytes(decision.final_file)
+  const thumbnail = await bytes(decision.thumbnail_final_file)
+  if (
+    imageSha256(final) !== decision.asset_sha256 ||
+    imageSha256(thumbnail) !== decision.thumbnail_asset_sha256
+  )
+    throw new Error("review_package_image_bytes_changed")
+  await validateFinalImageBytes(final)
+  await validateFinalImageBytes(thumbnail, true)
+  return [
+    { kind: "raw" as const, bytes: await bytes(evidence.selected_source_file) },
+    { kind: "magenta" as const, bytes: await bytes(evidence.qa_file) },
+    { kind: "neutral" as const, bytes: final },
+    { kind: "final" as const, bytes: final },
+    { kind: "search_thumbnail" as const, bytes: thumbnail },
+  ]
 }
 
 async function main() {

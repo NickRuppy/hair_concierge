@@ -21,11 +21,9 @@ import {
 } from "@/lib/product-intake/pipeline/commerce"
 import { createDmMcpClient } from "@/lib/scan/enrichment/dm-mcp-client"
 import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
-import { resolveOilStorage } from "@/lib/oil-research/storage"
+import { prepareOilResearchCompletion } from "@/lib/product-intake/pipeline/oil-completion"
 import {
-  assertOilFinalProductIdentity,
   OIL_PENDING_IDENTITY_ARTIFACT_ID,
-  OIL_RESEARCH_UUID_PATTERN,
   type OilWorkerAdmissionContext,
 } from "@/lib/product-intake/oil-research-adapter"
 import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
@@ -36,6 +34,7 @@ import {
   shouldAutoPrepareImage,
 } from "@/lib/product-intake/pipeline/image"
 import { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+import { stageRawImageCandidate } from "@/lib/product-intake/pipeline/raw-candidate-staging"
 import {
   assertAllowedProductIntakeModel,
   boundedNumber,
@@ -50,22 +49,41 @@ import {
   type CodexResearchRuntimeConfig,
 } from "@/lib/product-intake/pipeline/shared"
 
-import {
-  checkResearchReadiness,
-  type ResearchReadinessSelfCheck,
-} from "@/lib/product-intake/research-readiness-self-check"
+import { checkResearchReadiness } from "@/lib/product-intake/research-readiness-self-check"
 import { buildAdminReviewSnapshot } from "@/lib/product-intake/admin-review-email"
 import { drainAdminReviewOutbox } from "@/lib/product-intake/admin-review-outbox"
+import {
+  createAdminReviewOutboxHealthObserver,
+  type AdminReviewOutboxHealthClient,
+  type AdminReviewOutboxHealthPoll,
+} from "@/lib/product-intake/admin-review-outbox-health"
+import {
+  reserveCurrentResearchModelRun,
+  withResearchModelCycle,
+} from "@/lib/product-intake/pipeline/review-cycle"
+import {
+  buildProjectedResearchJudgePacket,
+  buildProjectedResearchJudgePrompt,
+  parseProjectedResearchJudgeVerdict,
+  decideProjectedResearchOutcome,
+  type ProjectedResearchJudgePacket,
+  type ProjectedResearchJudgeVerdict,
+} from "@/lib/product-intake/pipeline/research-judge"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
 import {
-  oilReviewFingerprint,
-  stableOilReviewJson,
+  runShampooResearchStages,
+  SHAMPOO_STAGE_PROOF_KIND,
+} from "@/lib/product-intake/shampoo-research-stages"
+import type { ShampooDownstreamDecision } from "@/lib/product-intake/shampoo-research-adapter"
+import {
   appendResearchArtifact as coreAppendResearchArtifact,
   claimResearchJobs,
   countResearchArtifacts,
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
   commitResearchPass as coreCommitResearchPass,
+  reserveResearchModelRun,
+  ResearchModelReservationError,
   updateResearchJob as coreUpdateResearchJob,
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_JOB_STAGES,
@@ -135,6 +153,15 @@ class WorkerLeaseLostError extends Error {
 
 export class WorkerJobLease {
   aborted = false
+  private readonly cancellation = new AbortController()
+  get signal(): AbortSignal {
+    return this.cancellation.signal
+  }
+  get deadlineMs(): number {
+    return this.startedAt + this.maxRuntimeMs
+  }
+  private runtimeExpired = false
+  private leaseLost = false
   private pending: Promise<unknown> = Promise.resolve()
   private readonly startedAt = Date.now()
   private readonly maxRuntimeMs = positiveDurationMs(
@@ -143,7 +170,11 @@ export class WorkerJobLease {
   )
 
   private checkRuntime(): void {
-    if (Date.now() - this.startedAt > this.maxRuntimeMs) this.aborted = true
+    if (Date.now() - this.startedAt > this.maxRuntimeMs) {
+      this.runtimeExpired = true
+      this.aborted = true
+      this.cancellation.abort(new ResearchModelReservationError("cycle_deadline"))
+    }
   }
 
   constructor(
@@ -166,22 +197,118 @@ export class WorkerJobLease {
         expected_locked_by: this.job.locked_by,
       })
       if (error) throw error
-      if (data === null) this.aborted = true
-      else if (typeof data === "string") this.job.locked_at = data
+      if (data === null) {
+        this.leaseLost = true
+        this.aborted = true
+        this.cancellation.abort(new WorkerLeaseLostError(this.job.id))
+      } else if (typeof data === "string") this.job.locked_at = data
       else throw new Error("Lease renewal returned an invalid timestamp")
     })
   }
 
-  write<T>(operation: () => Promise<T>): Promise<T> {
+  write<T>(operation: () => Promise<T>, allowExpiredRuntimeEscalation = false): Promise<T> {
     return this.serialize(async () => {
       this.checkRuntime()
-      if (this.aborted) throw new WorkerLeaseLostError(this.job.id)
+      if (
+        this.aborted &&
+        !(allowExpiredRuntimeEscalation && this.runtimeExpired && !this.leaseLost)
+      )
+        throw new WorkerLeaseLostError(this.job.id)
       return operation()
     })
   }
 }
 
 const workerLeases = new Map<string, WorkerJobLease>()
+
+function modelCycleForJob(
+  client: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+) {
+  return async () =>
+    withJobLease(job.id, async () => {
+      const leased = workerLeases.get(job.id)?.job as ProductIntakeResearchJob | undefined
+      const current = leased ?? job
+      if (!current.locked_by || !current.locked_at || !current.review_cycle_id)
+        throw new ResearchModelReservationError("lease_lost")
+      const reserved = await reserveResearchModelRun(client, {
+        jobId: current.id,
+        expectedLockedBy: current.locked_by,
+        expectedLockedAt: current.locked_at,
+        expectedReviewCycleId: current.review_cycle_id,
+      })
+      Object.assign(current, reserved)
+      const deadline = Date.parse(reserved.cycle_deadline_at ?? "")
+      if (!Number.isFinite(deadline)) throw new ResearchModelReservationError("storage_error")
+      return deadline
+    })
+}
+
+/** Separate timer: an outbox read must never delay safety-critical lease renewal. */
+export function startAdminReviewOutboxHealthMonitor(
+  client: AdminReviewOutboxHealthClient,
+  report: (observation: AdminReviewOutboxHealthPoll) => void,
+  intervalMs = 60_000,
+) {
+  let stopped = false
+  let inFlight: Promise<void> | undefined
+  const abort = new AbortController()
+  const observer = createAdminReviewOutboxHealthObserver(client, {
+    signal: () => AbortSignal.any([abort.signal, AbortSignal.timeout(10_000)]),
+  })
+  const tick = () => {
+    if (stopped) return Promise.resolve()
+    if (inFlight) return inFlight
+    inFlight = observer
+      .poll()
+      .then((observation) => {
+        if (!stopped && observation.kind !== "quiet") {
+          try {
+            report(observation)
+          } catch {
+            /* Monitoring must not stop research. */
+          }
+        }
+      })
+      .finally(() => {
+        inFlight = undefined
+      })
+    return inFlight
+  }
+  const timer = setInterval(() => {
+    void tick()
+  }, intervalMs)
+  void tick()
+  return {
+    tick,
+    stop: () => {
+      stopped = true
+      clearInterval(timer)
+      abort.abort()
+    },
+  }
+}
+
+function reportAdminReviewOutboxHealth(observation: AdminReviewOutboxHealthPoll) {
+  if (observation.kind === "issue") {
+    const summary = {
+      held_count: observation.report.heldCount,
+      expired_sending_count: observation.report.expiredSendingCount,
+      failed_count: observation.report.failedCount,
+      oldest_affected_notification_age_ms: observation.report.oldestReconciliationAgeMs,
+    }
+    console.log(JSON.stringify({ admin_review_alert_health: summary }))
+    Sentry.captureMessage("product_intake_admin_alert_outbox_requires_attention", {
+      level: "warning",
+      extra: summary,
+    })
+  } else if (observation.kind === "read_failure") {
+    console.error("product_intake_admin_alert_health_read_failed")
+    Sentry.captureMessage("product_intake_admin_alert_health_read_failed", "error")
+  } else if (observation.kind !== "quiet") {
+    console.log(JSON.stringify({ admin_review_alert_health: observation.kind }))
+  }
+}
 
 function withJobLease<T>(jobId: string | null | undefined, write: () => Promise<T>): Promise<T> {
   const lease = jobId ? workerLeases.get(jobId) : undefined
@@ -209,7 +336,8 @@ function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateRese
 }
 
 function commitResearchPass(...[client, params]: Parameters<typeof coreCommitResearchPass>) {
-  return withJobLease(params.jobId, async () => {
+  const lease = workerLeases.get(params.jobId)
+  const finish = async () => {
     const lease = workerLeases.get(params.jobId)
     const updated = await coreCommitResearchPass(client, {
       ...params,
@@ -218,6 +346,50 @@ function commitResearchPass(...[client, params]: Parameters<typeof coreCommitRes
     if (lease) Object.assign(lease.job, updated)
     workerLeases.delete(params.jobId)
     return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  }
+  // Runtime exhaustion may record only a blocked human outcome, still fenced in
+  // SQL by the exact lease/cycle. Renewal-confirmed lease loss never gets this path.
+  return lease
+    ? lease.write(finish, params.status === "blocked" && params.reviewOutcome === "needs_nick")
+    : finish()
+}
+
+async function blockExhaustedResearchCycle(params: {
+  client: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  detail: ProductIntakeSubmissionDetail | null
+  error: ResearchModelReservationError
+}) {
+  if (params.error.code === "lease_lost") throw new WorkerLeaseLostError(params.job.id)
+  const question =
+    params.error.code === "storage_error"
+      ? "Kannst du den technischen Fehler prüfen, bevor eine neue Recherche gestartet wird?"
+      : "Soll nach Prüfung der Zeit- und Laufgrenzen eine neue Recherche gestartet werden?"
+  return commitResearchPass(params.client, {
+    jobId: params.job.id,
+    status: "blocked",
+    stage: params.job.stage,
+    reviewOutcome: "needs_nick",
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
+    expectedReviewCycleId: params.job.review_cycle_id,
+    progress: {
+      ...params.job.progress,
+      message: question,
+      open_questions: [question],
+      cycle_budget_error: params.error.code,
+    },
+    lastError: params.error.code,
+    notificationPayload: {
+      ...buildAdminReviewSnapshot({
+        submissionId: params.job.submission_id,
+        category: params.detail?.category,
+        researchedPayload: params.detail?.payload,
+        outcome: "needs_nick",
+        questionCodes: [],
+      }),
+      question_1: question,
+    },
   })
 }
 
@@ -247,7 +419,7 @@ export async function bindResearchJobEngine(
       const message = stringValue(rpcError?.message) ?? "Engine binding RPC failed"
       if (rpcError?.code === "PGRST202" || /Could not find the function/i.test(message)) {
         const infrastructureError = new Error(
-          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; continuing without binding for job ${job.id}: ${message}`,
+          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; ${key === "shampoo" ? "blocking sealed Shampoo research" : "continuing without binding"} for job ${job.id}: ${message}`,
         )
         try {
           console.error(infrastructureError.message)
@@ -259,6 +431,7 @@ export async function bindResearchJobEngine(
         } catch {
           /* Sentry is best effort. */
         }
+        if (key === "shampoo") throw infrastructureError
         return job
       }
       throw new Error(message)
@@ -399,6 +572,7 @@ type CodexResearchOutput = {
   artifacts: CodexResearchArtifactOutput[]
   blockers: string[]
   next_stage?: ProductIntakeJobStage
+  downstream_decisions?: ShampooDownstreamDecision[]
 }
 
 export type ProductIntakeModelLane =
@@ -406,6 +580,7 @@ export type ProductIntakeModelLane =
   | "challenger_medium"
   | "judge"
   | "image_judge"
+  | "projected_judge"
 
 export type ModelEvaluationRuntimeConfig = {
   enabled: boolean
@@ -578,6 +753,9 @@ async function main() {
 
   const heartbeatMs = normalizeWorkerPollMs(process.env.PRODUCT_INTAKE_WORKER_HEARTBEAT_MS, 60_000)
   const sentryEnabled = initWorkerSentry()
+  const outboxHealth = watch
+    ? startAdminReviewOutboxHealthMonitor(supabase, reportAdminReviewOutboxHealth)
+    : undefined
   const heartbeat = watch
     ? startWorkerHeartbeat({
         client: supabase,
@@ -600,10 +778,6 @@ async function main() {
         const delivery = await drainAdminReviewOutbox(options.supabase)
         if (delivery.status !== "disabled" && delivery.status !== "empty")
           console.log(JSON.stringify({ admin_review_alert: delivery }))
-        if (delivery.status === "failed")
-          Sentry.captureMessage("product_intake_admin_alert_delivery_failed", "error")
-        if (delivery.status === "needs_reconciliation")
-          Sentry.captureMessage("product_intake_admin_alert_needs_reconciliation", "warning")
       } catch {
         // Delivery trouble must never requeue an already committed product pass.
         Sentry.captureMessage("product_intake_admin_alert_dispatch_failed", "error")
@@ -612,16 +786,20 @@ async function main() {
       if (watch) await sleep(pollMs)
     } while (watch)
   } finally {
+    outboxHealth?.stop()
     heartbeat?.stop()
   }
 }
 
-/** Persist artifacts before optional evaluation; release the preview/outcome/outbox atomically. */
+/** Commit final research/judge evidence, preview, outcome and outbox together. */
 export async function completeResearchPass(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
   category: string | null | undefined
-  submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
+  submission: Pick<
+    ProductIntakeSubmissionDetail,
+    "id" | "source" | "status" | "payload_revision"
+  > | null
   reworkRequest?: JsonRecord | null
   resolveDecisionIds?: string[]
   workerId: string
@@ -630,12 +808,25 @@ export async function completeResearchPass(params: {
   researchModel: string
   executeCodex: boolean
   autoPrepareImages: boolean
+  execution: { signal: AbortSignal; deadlineMs: number }
+  stageRawCandidate: (
+    input: Omit<Parameters<typeof stageRawImageCandidate>[0], "createStorageClient">,
+  ) => ReturnType<typeof stageRawImageCandidate>
+  judgeProjected?: (packet: ProjectedResearchJudgePacket) => Promise<ProjectedResearchJudgeVerdict>
+  projectedJudgeModel?: string
+  autoReworkEnabled?: boolean
+  currentJob?: () => ProductIntakeResearchJob
   beforeCompletion?: () => Promise<{
     job: ProductIntakeResearchJob
     modelEvaluation: ModelEvaluationResult
   }>
 }) {
   const { researchOutput, promptPacketPath } = params
+  const oilArtifactIds = prepareOilResearchCompletion({
+    job: params.job,
+    researchedPayload: researchOutput.researched_payload,
+    artifacts: researchOutput.artifacts,
+  })
   const reworkRequest =
     params.job.stage === "rework"
       ? (params.reworkRequest ?? activeReworkRequestFromProgress(params.job.progress))
@@ -664,26 +855,183 @@ export async function completeResearchPass(params: {
           submissionContext,
         )
       : null
-  const progress = await persistResearchOutput({ ...params, readiness })
   const evaluated = await params.beforeCompletion?.()
-  const leasedJob = evaluated?.job ?? params.job
+  let leasedJob = evaluated?.job ?? params.job
   const evaluation = evaluated?.modelEvaluation ?? {
     status: "disabled",
     successfulJudgments: 0,
     targetSuccessfulJudgments: 0,
   }
+  const finalArtifacts = researchOutput.artifacts.map((artifact) => ({
+    ...(oilArtifactIds.has(artifact) ? { id: oilArtifactIds.get(artifact)! } : {}),
+    kind: artifact.kind,
+    status: artifact.status ?? "proposed",
+    confidence: artifact.confidence ?? null,
+    payload: artifact.payload,
+    sourceUrls: artifact.source_urls ?? null,
+    model: params.researchModel,
+    promptVersion: "product_intake_codex_research_v1",
+  }))
+  let projectedOutcome: ReturnType<typeof decideProjectedResearchOutcome> | undefined
+  const listingQuestions = [
+    ...new Set((researchOutput.downstream_decisions ?? []).map((decision) => decision.question)),
+  ]
+  if (params.judgeProjected) {
+    const packet = buildProjectedResearchJudgePacket({
+      projectedPayload: { final: normalizeRecord(researchOutput.researched_payload?.final) ?? {} },
+      projectionEvidence: {
+        engine:
+          normalizeRecord(
+            researchOutput.artifacts.find((artifact) => artifact.kind === "property_synthesis")
+              ?.payload.engine,
+          ) ?? {},
+        artifacts: researchOutput.artifacts.filter(
+          (artifact) => artifact.kind !== "publication_preview",
+        ),
+      },
+      readiness,
+      rawBlockers: hasFinalPayload
+        ? blockers
+        : [...blockers, "schema_or_adapter_invalid: Final research payload is missing"],
+    })
+    let verdict: ProjectedResearchJudgeVerdict
+    try {
+      verdict = await params.judgeProjected(packet)
+    } catch (error) {
+      if (
+        error instanceof WorkerLeaseLostError ||
+        (error instanceof ResearchModelReservationError && error.code === "lease_lost")
+      )
+        throw error
+      verdict = {
+        ok: false,
+        error:
+          error instanceof ResearchModelReservationError ? error.code : "projected_judge_failed",
+      }
+    }
+    leasedJob = params.currentJob?.() ?? leasedJob
+    const category = normalizeCategoryKey(params.category)
+    const engineState =
+      category === "oil"
+        ? "pending_lock"
+        : category
+          ? CATEGORY_RESEARCH_REGISTRY[category].state
+          : "engine_not_available"
+    projectedOutcome = decideProjectedResearchOutcome({
+      verdict,
+      readiness,
+      rawBlockers: packet.raw_blockers,
+      engineState,
+      autoReworkEnabled: params.autoReworkEnabled === true,
+      autoReworkCount: leasedJob.auto_rework_count,
+      reservedModelRuns: leasedJob.reserved_model_runs,
+      cycleDeadlineAt: leasedJob.cycle_deadline_at,
+      inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+    })
+    if (listingQuestions.length) {
+      projectedOutcome = {
+        ...projectedOutcome,
+        outcome: "blocked_needs_human",
+        status: "blocked",
+        reviewOutcome: "needs_nick",
+        reworkInstruction: null,
+        inciRetryRequested: false,
+        questions: [...new Set([...listingQuestions, ...projectedOutcome.questions])].slice(0, 3),
+      }
+    }
+    finalArtifacts.push({
+      kind: "model_judgment",
+      status: verdict.ok ? "completed" : "failed",
+      confidence: null,
+      payload: {
+        review_type: "projected_research_values_v1",
+        projected_input_sha256: createHash("sha256").update(JSON.stringify(packet)).digest("hex"),
+        verdict,
+        outcome: projectedOutcome.outcome,
+        defects: projectedOutcome.defects,
+        open_questions: projectedOutcome.questions,
+      },
+      sourceUrls: null,
+      model: params.projectedJudgeModel ?? "gpt-6-sol",
+      promptVersion: "product_intake_projected_research_judge_v1",
+    })
+  }
+  if (!projectedOutcome && listingQuestions.length)
+    projectedOutcome = {
+      outcome: "blocked_needs_human",
+      status: "blocked",
+      reviewOutcome: "needs_nick",
+      defects: [],
+      questions: listingQuestions.slice(0, 3),
+      reworkInstruction: null,
+      inciRetryRequested: false,
+    }
+  const progress = {
+    summary: researchOutput.summary,
+    blockers: researchOutput.blockers,
+  }
   const autoPrepareImage = shouldAutoPrepareImage({
-    enabled: params.autoPrepareImages && readiness?.ok === true,
+    enabled:
+      params.autoPrepareImages &&
+      readiness?.ok === true &&
+      (!projectedOutcome || projectedOutcome.outcome === "ready_for_human_review"),
     researchOutput,
   })
-  const nextStatus = autoPrepareImage
-    ? "queued"
-    : readiness?.ok === true
-      ? "waiting_for_review"
-      : "blocked"
-  const nextStage = autoPrepareImage
-    ? "image_judging"
-    : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+  let nextStatus: ProductIntakeResearchJob["status"] =
+    projectedOutcome?.outcome === "needs_bounded_rework"
+      ? "waiting_for_rework"
+      : projectedOutcome?.outcome === "blocked_needs_human"
+        ? "blocked"
+        : autoPrepareImage
+          ? "queued"
+          : readiness?.ok === true
+            ? "waiting_for_review"
+            : "blocked"
+  const reviewAssets: NonNullable<Awaited<ReturnType<typeof stageRawImageCandidate>>>[] = []
+  let candidateStagingError: string | null = null
+  if (params.executeCodex && nextStatus === "waiting_for_review" && !autoPrepareImage) {
+    params.execution.signal.throwIfAborted()
+    leasedJob = params.currentJob?.() ?? leasedJob
+    const candidateDeadline = () => {
+      const cycleDeadline = Date.parse(leasedJob.cycle_deadline_at ?? "")
+      return Math.min(
+        params.execution.deadlineMs,
+        Number.isFinite(cycleDeadline) ? cycleDeadline : Infinity,
+      )
+    }
+    if (candidateDeadline() <= Date.now()) throw new ResearchModelReservationError("cycle_deadline")
+    try {
+      const revision = params.submission?.payload_revision
+      if (!revision || !Number.isSafeInteger(revision) || revision < 1)
+        throw new Error("review_payload_revision_missing")
+      const asset = await params.stageRawCandidate({
+        artifacts: researchOutput.artifacts,
+        submissionId: leasedJob.submission_id,
+        expectedRevision: revision,
+        signal: params.execution.signal,
+        deadlineMs: candidateDeadline(),
+      })
+      params.execution.signal.throwIfAborted()
+      if (!asset) throw new Error("raw_candidate_missing")
+      reviewAssets.push(asset)
+    } catch (error) {
+      params.execution.signal.throwIfAborted()
+      if (error instanceof WorkerLeaseLostError || error instanceof ResearchModelReservationError)
+        throw error
+      candidateStagingError =
+        "Bildkandidat fehlt oder konnte nicht sicher für die Rohbildprüfung bereitgestellt werden."
+      nextStatus = "blocked"
+    }
+    leasedJob = params.currentJob?.() ?? leasedJob
+    params.execution.signal.throwIfAborted()
+    if (candidateDeadline() <= Date.now()) throw new ResearchModelReservationError("cycle_deadline")
+  }
+  const nextStage =
+    nextStatus === "waiting_for_rework"
+      ? "rework"
+      : autoPrepareImage
+        ? "image_judging"
+        : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
 
   const readinessError =
     readiness && !readiness.ok
@@ -696,29 +1044,52 @@ export async function completeResearchPass(params: {
     for (const key of ["requested_by", "requested_at", "rework_type", "message"])
       delete previousProgress[key]
   }
-  const reviewOutcome = autoPrepareImage
-    ? "continue"
-    : nextStatus === "waiting_for_review"
-      ? "ready_for_review"
-      : "needs_nick"
+  const reviewOutcome =
+    nextStatus === "waiting_for_rework"
+      ? "continue"
+      : autoPrepareImage
+        ? "continue"
+        : nextStatus === "waiting_for_review"
+          ? "ready_for_review"
+          : "needs_nick"
   const updated = await commitResearchPass(params.supabase, {
     jobId: leasedJob.id,
+    expectedPayloadRevision: params.submission?.payload_revision,
+    reviewAssets,
     reviewOutcome,
     researchedPayload: hasFinalPayload ? researchOutput.researched_payload : null,
+    expectedReviewCycleId: leasedJob.review_cycle_id,
+    artifacts: finalArtifacts,
+    autoRework: nextStatus === "waiting_for_rework",
     resolveDecisionIds: reworkRequest && hasFinalPayload ? (params.resolveDecisionIds ?? []) : [],
     notificationPayload:
       reviewOutcome === "continue"
         ? null
-        : buildAdminReviewSnapshot({
-            submissionId: leasedJob.submission_id,
-            category: params.category,
-            researchedPayload: researchOutput.researched_payload,
-            outcome: reviewOutcome,
-            questionCodes:
-              reviewOutcome === "needs_nick"
-                ? [readiness && !readiness.ok ? "research_gaps" : "research_blockers"]
-                : [],
-          }),
+        : {
+            ...buildAdminReviewSnapshot({
+              submissionId: leasedJob.submission_id,
+              category: params.category,
+              researchedPayload: researchOutput.researched_payload,
+              outcome: reviewOutcome,
+              questionCodes:
+                reviewOutcome === "needs_nick"
+                  ? [
+                      candidateStagingError
+                        ? "image_review"
+                        : readiness && !readiness.ok
+                          ? "research_gaps"
+                          : "research_blockers",
+                    ]
+                  : [],
+            }),
+            ...(projectedOutcome?.questions.length
+              ? {
+                  question_1: projectedOutcome.questions[0] ?? "",
+                  question_2: projectedOutcome.questions[1] ?? "",
+                  question_3: projectedOutcome.questions[2] ?? "",
+                }
+              : {}),
+          },
     status: nextStatus,
     stage: nextStage,
     progress: {
@@ -734,7 +1105,32 @@ export async function completeResearchPass(params: {
       image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
       next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
       model_evaluation: evaluation,
+      downstream_decisions: researchOutput.downstream_decisions ?? [],
       ...progress,
+      raw_candidate_staging: candidateStagingError
+        ? "blocked"
+        : reviewAssets.length
+          ? "staged"
+          : "not_requested",
+      ...(candidateStagingError ? { blockers: [...blockers, candidateStagingError] } : {}),
+      ...(projectedOutcome
+        ? {
+            projected_review_outcome: projectedOutcome.outcome,
+            projected_review_defects: projectedOutcome.defects,
+            open_questions: projectedOutcome.questions,
+          }
+        : {}),
+      ...(projectedOutcome?.outcome === "needs_bounded_rework"
+        ? {
+            message: projectedOutcome.reworkInstruction,
+            requested_by: "worker",
+            requested_at: new Date().toISOString(),
+            rework_type: "bounded_automatic",
+            inci_retry_attempted:
+              leasedJob.progress.inci_retry_attempted === true ||
+              projectedOutcome.inciRetryRequested,
+          }
+        : {}),
       ...(readiness
         ? {
             readiness_check: readiness.ok ? "passed" : "failed",
@@ -742,7 +1138,13 @@ export async function completeResearchPass(params: {
           }
         : {}),
     },
-    lastError: blockers.length > 0 ? blockers.join("; ") : readinessError,
+    lastError:
+      candidateStagingError ??
+      (projectedOutcome?.status === "blocked"
+        ? projectedOutcome.questions.join("; ")
+        : blockers.length > 0
+          ? blockers.join("; ")
+          : readinessError),
     expectedLockedBy: leasedJob.locked_by,
     expectedLockedAt: leasedJob.locked_at,
   })
@@ -768,6 +1170,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     for (const job of jobs) {
       options.currentJobId = job.id
       const lease = workerLeases.get(job.id)!
+      const reserveModel = modelCycleForJob(options.supabase, job)
       // Lease refreshes replace progress.message before completion; retain the
       // reviewer instruction as it was when this rework pass was claimed.
       const reworkRequest =
@@ -835,31 +1238,48 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
         if (job.stage === "image_judging") {
           let imageLeasedJob = job
           try {
-            const updated = await processApprovedImageForReview(
-              {
-                supabase: options.supabase,
-                job,
-                detail,
-                workerId: options.workerId,
-                promptPacketPath,
-                executeCodex: options.executeCodex,
-                onLeaseRefresh: (refreshedJob) => {
-                  imageLeasedJob = refreshedJob
+            const updated = await withResearchModelCycle(reserveModel, () =>
+              processApprovedImageForReview(
+                {
+                  supabase: options.supabase,
+                  job,
+                  detail,
+                  workerId: options.workerId,
+                  promptPacketPath,
+                  executeCodex: options.executeCodex,
+                  execution: {
+                    signal: lease.signal,
+                    deadlineMs: Math.min(
+                      lease.deadlineMs,
+                      job.cycle_deadline_at ? Date.parse(job.cycle_deadline_at) : lease.deadlineMs,
+                    ),
+                  },
+                  onLeaseRefresh: (refreshedJob) => {
+                    imageLeasedJob = refreshedJob
+                  },
                 },
-              },
-              {
-                appendResearchArtifact,
-                commitResearchPass,
-                measureModelRun,
-                refreshModelRunLease,
-                captureOptionalTelemetryFailure,
-                runCodexJson,
-                outputPathForModelLane,
-              },
+                {
+                  commitResearchPass,
+                  measureModelRun,
+                  refreshModelRunLease,
+                  runCodexJson,
+                  outputPathForModelLane,
+                },
+              ),
             )
             result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
           } catch (error) {
             options.claimGate.handleFailure(error)
+            if (error instanceof ResearchModelReservationError) {
+              const updated = await blockExhaustedResearchCycle({
+                client: options.supabase,
+                job: imageLeasedJob,
+                detail,
+                error,
+              })
+              result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+              continue
+            }
             if (lease.aborted || error instanceof WorkerLeaseLostError) continue
             const updated = await updateResearchJob(
               options.supabase,
@@ -888,22 +1308,81 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
 
           if (options.executeCodex) {
             leasedJob = await bindResearchJobEngine(options.supabase, leasedJob, detail?.category)
-            const productionRun = await measureModelRun(
-              "production_low",
-              researchRuntimeConfig,
-              () => runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
-            )
-            leasedJob = await refreshModelRunLease({
-              supabase: options.supabase,
-              job: leasedJob,
-              workerId: options.workerId,
-              promptPacketPath,
-              message: "Luna/low research returned; worker lease refreshed.",
-            })
-            await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
-            if (!productionRun.success) throw new Error(productionRun.error)
+            if (normalizeCategoryKey(detail?.category) === "shampoo") {
+              const prior = (detail?.artifacts ?? [])
+                .filter(
+                  (artifact) =>
+                    artifact.kind === "formula" &&
+                    artifact.job_id === job.id &&
+                    artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND &&
+                    normalizeRecord(artifact.payload.proof)?.reviewCycleId ===
+                      leasedJob.review_cycle_id,
+                )
+                .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
+              const stages = await withResearchModelCycle(reserveModel, () =>
+                runShampooResearchStages({
+                  packet: parseJsonObject(readFileSync(promptPacketPath, "utf8")),
+                  submissionId: job.submission_id,
+                  reviewCycleId: leasedJob.review_cycle_id ?? "",
+                  reservedModelRuns: leasedJob.reserved_model_runs ?? 0,
+                  priorProof: prior?.payload.proof,
+                  model: async (request) => {
+                    const run = await measureModelRun("production_low", researchRuntimeConfig, () =>
+                      runCodexJson({ ...request, runtimeConfig: researchRuntimeConfig }),
+                    )
+                    leasedJob = await refreshModelRunLease({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      message: `Shampoo ${request.stage} returned; worker lease refreshed.`,
+                    })
+                    await persistModelRunArtifact(options.supabase, leasedJob, run, request.stage)
+                    if (!run.success) throw new Error(run.error)
+                    return run.output
+                  },
+                }),
+              )
+              rawResearchOutput = normalizeCodexOutput(stages.output)
+              // Models cannot create the protected formula artifact or its proof.
+              // Mirror only the server-produced proof onto the research artifact.
+              for (const artifact of rawResearchOutput.artifacts) {
+                if (artifact.kind !== "property_synthesis") continue
+                delete artifact.payload.shampoo_research_stages
+                if (stages.proof && artifact.payload.shampoo_research_envelope != null)
+                  artifact.payload.shampoo_research_stages = stages.proof
+              }
+              if (stages.proof && stages.formula)
+                rawResearchOutput.artifacts.push({
+                  kind: "formula",
+                  status: "completed",
+                  payload: {
+                    ...stages.formula,
+                    stage: SHAMPOO_STAGE_PROOF_KIND,
+                    proof: stages.proof,
+                  },
+                })
+            } else {
+              const productionRun = await measureModelRun(
+                "production_low",
+                researchRuntimeConfig,
+                () =>
+                  withResearchModelCycle(reserveModel, () =>
+                    runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+                  ),
+              )
+              leasedJob = await refreshModelRunLease({
+                supabase: options.supabase,
+                job: leasedJob,
+                workerId: options.workerId,
+                promptPacketPath,
+                message: "Luna/low research returned; worker lease refreshed.",
+              })
+              await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
+              if (!productionRun.success) throw new Error(productionRun.error)
 
-            rawResearchOutput = productionRun.output
+              rawResearchOutput = productionRun.output
+            }
           } else {
             rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
             leasedJob = await refreshModelRunLease({
@@ -925,6 +1404,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               retailerPacket: scanIntakeSeed.retailerEnrichment,
               inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
               brandCatalog,
+              expectedReviewCycleId: leasedJob.review_cycle_id,
               currentResearchRun: { jobId: leasedJob.id, runId: randomUUID() },
             },
           )
@@ -957,27 +1437,71 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               ? researchRuntimeConfig.model
               : "codex-worker-preview",
             executeCodex: options.executeCodex,
+            execution: { signal: lease.signal, deadlineMs: lease.deadlineMs },
+            stageRawCandidate: (input) =>
+              stageRawImageCandidate({
+                ...input,
+                createStorageClient: (signal) => createSupabaseClientFromEnv({ signal }),
+              }),
             autoPrepareImages:
               options.executeCodex &&
               process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
+            autoReworkEnabled: process.env.PRODUCT_INTAKE_AUTO_REWORK === "true",
+            projectedJudgeModel: evaluationRuntimeConfig.judge.model,
+            currentJob: () => leasedJob,
+            judgeProjected: options.executeCodex
+              ? async (packet) => {
+                  try {
+                    const judged = await measureModelRun(
+                      "projected_judge",
+                      evaluationRuntimeConfig.judge,
+                      () =>
+                        withResearchModelCycle(reserveModel, () =>
+                          runCodexJson({
+                            outputPath: outputPathForModelLane(promptPacketPath, "projected_judge"),
+                            prompt: buildProjectedResearchJudgePrompt(packet),
+                            runtimeConfig: evaluationRuntimeConfig.judge,
+                            webSearch: "disabled",
+                          }),
+                        ),
+                    )
+                    leasedJob = await refreshModelRunLease({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      message: "Projected-value judge returned; worker lease refreshed.",
+                    })
+                    await persistModelRunArtifact(options.supabase, leasedJob, judged)
+                    return judged.success
+                      ? parseProjectedResearchJudgeVerdict(judged.output)
+                      : { ok: false, error: "projected_judge_failed" }
+                  } catch (error) {
+                    options.claimGate.handleFailure(error)
+                    throw error
+                  }
+                }
+              : undefined,
             beforeCompletion: async () => {
-              if (options.executeCodex) {
+              if (options.executeCodex && normalizeCategoryKey(detail?.category) !== "shampoo") {
                 const evaluationRun = await runNonFatalModelEvaluation({
                   job: leasedJob,
                   currentJob: () => leasedJob,
                   targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
                   run: () =>
-                    runOptionalModelEvaluation({
-                      supabase: options.supabase,
-                      job: leasedJob,
-                      workerId: options.workerId,
-                      promptPacketPath,
-                      productionOutput: rawResearchOutput,
-                      config: evaluationRuntimeConfig,
-                      onLeaseRefresh: (refreshedJob) => {
-                        leasedJob = refreshedJob
-                      },
-                    }),
+                    withResearchModelCycle(reserveModel, () =>
+                      runOptionalModelEvaluation({
+                        supabase: options.supabase,
+                        job: leasedJob,
+                        workerId: options.workerId,
+                        promptPacketPath,
+                        productionOutput: rawResearchOutput,
+                        config: evaluationRuntimeConfig,
+                        onLeaseRefresh: (refreshedJob) => {
+                          leasedJob = refreshedJob
+                        },
+                      }),
+                    ),
                   persistFailure: (message) =>
                     persistModelJudgmentFailure(options.supabase, leasedJob, message),
                 })
@@ -990,6 +1514,16 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
         } catch (error) {
           options.claimGate.handleFailure(error)
+          if (error instanceof ResearchModelReservationError) {
+            const updated = await blockExhaustedResearchCycle({
+              client: options.supabase,
+              job: leasedJob,
+              detail,
+              error,
+            })
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+            continue
+          }
           if (lease.aborted || error instanceof WorkerLeaseLostError) continue
           const updated = await updateResearchJob(
             options.supabase,
@@ -1105,6 +1639,7 @@ export async function measureModelRun<T>(
       output,
     }
   } catch (error) {
+    if (error instanceof ResearchModelReservationError) throw error
     const code = codexInfrastructureCode(error)
     if (code === "infra_auth" || (code === "codex_timeout" && lane === "production_low")) {
       throw error
@@ -1149,7 +1684,9 @@ async function persistModelRunArtifact<T>(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   job: ProductIntakeResearchJob,
   run: MeasuredModelRun<T>,
+  researchStage?: string,
 ) {
+  const isJudge = ["judge", "projected_judge", "image_judge"].includes(run.lane)
   return appendResearchArtifact(supabase, {
     jobId: job.id,
     submissionId: job.submission_id,
@@ -1157,8 +1694,9 @@ async function persistModelRunArtifact<T>(
     status: run.success ? "completed" : "failed",
     payload: {
       lane: run.lane,
+      ...(researchStage ? { research_stage: researchStage } : {}),
       experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
-      role: run.lane === "judge" ? "judge" : "researcher",
+      role: isJudge ? "judge" : "researcher",
       model: run.runtimeConfig.model,
       reasoning_effort: run.runtimeConfig.reasoningEffort,
       service_tier: run.runtimeConfig.serviceTier ?? "standard",
@@ -1169,8 +1707,7 @@ async function persistModelRunArtifact<T>(
       token_usage: null,
     },
     model: run.runtimeConfig.model,
-    promptVersion:
-      run.lane === "judge" ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
+    promptVersion: isJudge ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
   })
 }
 
@@ -1458,145 +1995,6 @@ export function imageProcessingFailureUpdate(params: {
   }
 }
 
-async function persistResearchOutput(params: {
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>
-  job: ProductIntakeResearchJob
-  workerId: string
-  promptPacketPath: string
-  researchOutput: CodexResearchOutput
-  researchModel: string
-  readiness: ResearchReadinessSelfCheck | null
-}) {
-  const currentOilArtifacts = params.researchOutput.artifacts.filter(
-    (artifact) =>
-      artifact.kind === "property_synthesis" && artifact.payload.oil_storage_version != null,
-  )
-  if (currentOilArtifacts.length > 1)
-    throw new Error("Exactly one current oil research artifact may be persisted per run")
-  const currentOil = currentOilArtifacts[0]
-  const resolvedIdentities = params.researchOutput.artifacts.filter(
-    (artifact) =>
-      artifact.kind === "identity_candidate" &&
-      artifact.status === "resolved" &&
-      artifact.payload.stage === "identity",
-  )
-  const oilContext = currentOil ? normalizeRecord(currentOil.payload.oil_admission_context) : null
-  if (currentOil) {
-    const contextJson = currentOil.payload.oil_admission_context_json
-    const envelope = resolveOilStorage(currentOil.payload, { requireCurrent: true })
-    if (
-      envelope.submission_id !== params.job.submission_id ||
-      !oilContext ||
-      oilContext.submission_id !== params.job.submission_id ||
-      oilContext.job_id !== params.job.id ||
-      !OIL_RESEARCH_UUID_PATTERN.test(params.job.id) ||
-      !OIL_RESEARCH_UUID_PATTERN.test(String(oilContext.run_id)) ||
-      resolvedIdentities.length !== 1 ||
-      typeof contextJson !== "string" ||
-      contextJson !== stableOilReviewJson(oilContext) ||
-      createHash("sha256").update(contextJson, "utf8").digest("hex") !==
-        currentOil.payload.oil_admission_context_sha256 ||
-      oilReviewFingerprint(oilContext.resolved_identity_artifact) !==
-        oilReviewFingerprint(resolvedIdentities[0]!.payload)
-    )
-      throw new Error(
-        "Oil persistence requires the exact current job and resolved identity receipt",
-      )
-    const final = normalizeRecord(params.researchOutput.researched_payload?.final)
-    const product = normalizeRecord(final?.product)
-    if (!product) throw new Error("Oil final product identity is required at persistence")
-    assertOilFinalProductIdentity(product, envelope.identity)
-    const currentIdentity = Object.fromEntries(
-      [
-        "canonical_brand",
-        "product_line",
-        "clean_name",
-        "net_content_value",
-        "net_content_unit",
-      ].map((key) => [key, product[key] ?? null]),
-    )
-    if (
-      oilReviewFingerprint(currentIdentity) !==
-      oilReviewFingerprint(oilContext.final_product_identity)
-    )
-      throw new Error("Oil final product identity changed after admission")
-    if (!normalizeRecord(params.researchOutput.researched_payload?.draft))
-      throw new Error("Current oil research requires a persisted draft")
-  }
-  // Identity Stage appends its receipt after model artifacts. Persist that one
-  // receipt first so the property artifact can point to the real returned UUID.
-  const orderedArtifacts = currentOil
-    ? [
-        resolvedIdentities[0]!,
-        ...params.researchOutput.artifacts.filter((artifact) => artifact !== resolvedIdentities[0]),
-      ]
-    : params.researchOutput.artifacts
-  const created = []
-  let oilBinding: JsonRecord | null = null
-  let persistedIdentityId: string | null = null
-  for (const artifact of orderedArtifacts) {
-    if (artifact === currentOil) {
-      if (!persistedIdentityId || !oilContext)
-        throw new Error("Oil identity receipt was not persisted")
-      oilContext.resolved_identity_artifact_id = persistedIdentityId
-      const contextJson = stableOilReviewJson(oilContext)
-      artifact.payload.oil_admission_context_json = contextJson
-      artifact.payload.oil_admission_context_sha256 = createHash("sha256")
-        .update(contextJson, "utf8")
-        .digest("hex")
-      const engine = normalizeRecord(artifact.payload.engine)
-      if (engine) engine.input_hash = artifact.payload.oil_admission_context_sha256
-    }
-    const row = await appendResearchArtifact(params.supabase, {
-      jobId: params.job.id,
-      submissionId: params.job.submission_id,
-      kind: artifact.kind,
-      status: artifact.status ?? "proposed",
-      confidence: artifact.confidence ?? null,
-      payload: artifact.payload,
-      sourceUrls: artifact.source_urls ?? null,
-      model: params.researchModel,
-      promptVersion: "product_intake_codex_research_v1",
-    })
-    if (currentOil && !OIL_RESEARCH_UUID_PATTERN.test(row.id))
-      throw new Error("Oil artifact persistence returned an invalid UUID")
-    created.push(row.id)
-    if (currentOil && artifact === resolvedIdentities[0]) persistedIdentityId = row.id
-    if (artifact.kind === "property_synthesis" && artifact.payload.oil_storage_version != null) {
-      const envelope = resolveOilStorage(artifact.payload, { requireCurrent: true })
-      if (envelope.submission_id !== params.job.submission_id)
-        throw new Error("Oil research storage submission does not match persisted job")
-      if (oilBinding)
-        throw new Error("Exactly one current oil research artifact may be persisted per run")
-      oilBinding = {
-        artifact_id: row.id,
-        job_id: params.job.id,
-        run_id: oilContext?.run_id,
-        envelope_sha256: artifact.payload.oil_research_envelope_sha256,
-        method: envelope.research_method,
-        raw_sha256: envelope.formula.raw_sha256,
-        normalized_sha256: envelope.formula.normalized_sha256,
-        admission_context_sha256: artifact.payload.oil_admission_context_sha256,
-      }
-    }
-  }
-
-  // The atomic completion RPC below persists this draft with the job outcome.
-  // Do not save the preview independently of completion/outbox delivery.
-  if (oilBinding) {
-    const draft = normalizeRecord(params.researchOutput.researched_payload?.draft)
-    if (!draft) throw new Error("Current oil research requires a persisted draft")
-    draft.oil_research_binding = oilBinding
-  }
-
-  return {
-    summary: params.researchOutput.summary,
-    artifact_ids: created,
-    artifacts_created: created.length,
-    blockers: params.researchOutput.blockers,
-  }
-}
-
 export function writePromptPacket(
   job: ProductIntakeResearchJob,
   workerId: string,
@@ -1657,7 +2055,7 @@ export function writePromptPacket(
           approval_payload_schema: approvalPayloadContract(detail?.category),
           artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.filter(isModelGeneratedArtifactKind).join(", ")}`,
           blockers:
-            "array of strings; empty array only when ready for Nick review. Put review caveats in artifact payloads unless they block approval.",
+            "array of genuine research defects. A missing, wrong or uninspectable raw candidate is a blocker. Pending raw selection, background removal, final-image approval and publication are later human/workflow gates, not research defects. Put nonblocking review caveats in artifact payloads.",
           category_contract: categoryApprovalContract(detail?.category),
           image_source_contract: imageSourceContract(),
           commercial_source_contract: commercialSourceContract(),
@@ -1695,7 +2093,8 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
             "array containing every verified compatible hair diameter: fine, normal, coarse. Use [] only for heat_protectant, dry_shampoo, or scalp_care, whose authority does not use thickness.",
           affiliate_link:
             "string URL; chosen purchasable product-detail page following commercial_source_contract.purchase_url_preference. Must not be a search, listing, price-comparison, marketplace junk, or wrong-market page.",
-          image_url: "string URL or null; raw candidate image before final processing",
+          image_url:
+            "null until verified final processing; put the current raw source URL only in image_candidate.payload.image_url",
           price_eur:
             "number; current EUR price from the chosen affiliate_link/PDP when available, or blocker if no acceptable price source exists",
           currency: "EUR",
@@ -1807,6 +2206,8 @@ function codexBinaryForWorker(): string {
 function imageSourceContract(): JsonRecord {
   return {
     goal: "Find an image Nick can approve as the raw source before Chaarlie background removal and final sizing.",
+    handoff:
+      "Record the current exact candidate in image_candidate.payload.image_url. Private raw staging is not approval. Pending human raw selection, processing and final approval are later gates; keep final.product.image_url null until final processing.",
     ideal_candidate: [
       "Exact same product and variant: brand, line, product name, packaging type, and size must match when visible.",
       "Single saleable product unit only: the actual bottle, jar, tube, tub, spray, pouch, or sachet that the user buys.",
@@ -1914,6 +2315,7 @@ export function normalizeResearchOutputForCategory(
   expectedResearchId: string,
   options: InciStageOptions & {
     brandCatalog?: BrandResolutionCatalogInput
+    expectedReviewCycleId?: string
     currentResearchRun?: { jobId: string; runId: string }
   } = {},
 ): CodexResearchOutput {
@@ -1924,6 +2326,7 @@ export function normalizeResearchOutputForCategory(
     normalizeCategoryResearchedPayload(output.researched_payload, categoryKey, output.artifacts) ??
     {}
   const artifacts = [...output.artifacts]
+  let downstreamDecisions: ShampooDownstreamDecision[] = []
   let blockers = output.blockers.filter(
     (blocker) => !/^inci_(missing_first_pass|unavailable):/.test(blocker),
   )
@@ -2000,13 +2403,20 @@ export function normalizeResearchOutputForCategory(
             identity: independentIdentity as OilWorkerAdmissionContext["identity"],
             formula: independentFormula as OilWorkerAdmissionContext["formula"],
             resolvedIdentityArtifact: resolvedIdentityArtifact.payload,
-            // Replaced with the immutable UUID returned by appendResearchArtifact,
-            // before the oil artifact itself is inserted. Never persisted as a pointer.
+            // Replaced with a server-allocated UUID in the atomic completion request.
+            // The pending sentinel is never persisted as a pointer.
             resolvedIdentityArtifactId: OIL_PENDING_IDENTITY_ARTIFACT_ID,
             identityBlocker,
           }
         : undefined
-    const adapterResult = engine.apply({ final, artifacts, expectedResearchId, oilContext })
+    const adapterResult = engine.apply({
+      final,
+      artifacts,
+      expectedResearchId,
+      oilContext,
+      expectedReviewCycleId: options.expectedReviewCycleId,
+    })
+    downstreamDecisions = adapterResult.downstreamDecisions ?? []
     blockers.push(...adapterResult.blockers)
     projected = adapterResult.blockers.length === 0
     if (adapterResult.oilAdmission) {
@@ -2086,6 +2496,37 @@ export function normalizeResearchOutputForCategory(
     } else delete artifact.payload.engine
   }
 
+  if (categoryKey === "shampoo" && downstreamDecisions.length) {
+    const currentEngine = normalizeRecord(projectionArtifact?.payload.engine)
+    const answered = reviewDecisions.find((decision) => {
+      const pinned = normalizeRecord(decision.proposed_value?.engine)
+      const choice = decision.reviewer_value?.choice
+      return (
+        decision.submission_id === expectedResearchId &&
+        decision.field_path === "research.separate_deep_cleanser_listing" &&
+        decision.review_source === "admin" &&
+        decision.review_action === "answer" &&
+        decision.decision === "approved" &&
+        Boolean(decision.request_id) &&
+        (choice === "keep_regular_only" || choice === "review_extra_separately") &&
+        typeof currentEngine?.input_hash === "string" &&
+        /^[a-f0-9]{64}$/.test(currentEngine.input_hash) &&
+        ["id", "methodology", "input_hash"].every((key) => pinned?.[key] === currentEngine[key])
+      )
+    })
+    if (answered) {
+      downstreamDecisions = []
+      // Keep the explicit follow-up choice as audit evidence. It never creates
+      // another listing and does not clear formula/readiness/Sol defects.
+      if (projectionArtifact)
+        projectionArtifact.payload.downstream_review = {
+          decision_id: answered.id,
+          choice: answered.reviewer_value?.choice,
+          engine: currentEngine,
+        }
+    }
+  }
+
   // Read AFTER the category adapter: applyLeaveInResearchAdapter reassigns
   // `categorySpecs.product_leave_in_specs` to a brand-new projected object
   // (structuredClone) rather than mutating the original in place, so a
@@ -2140,15 +2581,21 @@ export function normalizeResearchOutputForCategory(
   })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
   if (missingSpecTables.length > 0) {
-    blockers.push(`missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`,
+    )
   }
   const missingProductFields = missingFinalProductFields(final)
   if (missingProductFields.length > 0) {
-    blockers.push(`missing final.product fields: ${missingProductFields.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing final.product fields: ${missingProductFields.join(", ")}`,
+    )
   }
   const missingFinalSections = missingFinalApprovalSections(final)
   if (missingFinalSections.length > 0) {
-    blockers.push(`missing final payload sections: ${missingFinalSections.join(", ")}`)
+    blockers.push(
+      `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing final payload sections: ${missingFinalSections.join(", ")}`,
+    )
   }
   const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, {
     ...options,
@@ -2164,6 +2611,7 @@ export function normalizeResearchOutputForCategory(
       payload: normalizeCategoryArtifactPayload(artifact.payload, categoryKey),
     })),
     blockers: dedupeStrings(blockers),
+    downstream_decisions: downstreamDecisions,
   }
 }
 
@@ -2263,7 +2711,6 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
       "category_key",
       "suitable_thicknesses",
       "affiliate_link",
-      "image_url",
       "price_eur",
       "currency",
       "purchase_link_status",
@@ -2278,7 +2725,6 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
     "category_key",
     "suitable_thicknesses",
     "affiliate_link",
-    "image_url",
     "price_eur",
     "currency",
     "purchase_link_status",
@@ -2506,33 +2952,43 @@ export async function runCodexJson(
     runtimeConfig: CodexResearchRuntimeConfig
     webSearch?: "disabled" | "live"
     imagePaths?: string[]
+    cwd?: string
   },
   spawn: WorkerSpawn = runWorkerProcess,
 ): Promise<JsonRecord> {
   const codexBinary = codexBinaryForWorker()
+  const deadline = await reserveCurrentResearchModelRun()
+  const remainingMs = deadline === undefined ? CODEX_RESEARCH_TIMEOUT_MS : deadline - Date.now()
+  if (!Number.isFinite(remainingMs) || remainingMs <= 0)
+    throw new ResearchModelReservationError("cycle_deadline")
+  const timeoutMs = Math.min(CODEX_RESEARCH_TIMEOUT_MS, remainingMs)
+  // Linux limits each argv entry to 128 KiB. Locked research standards can
+  // exceed that on their own; preserve the complete prompt through stdin.
+  const promptViaStdin = Buffer.byteLength(params.prompt, "utf8") > 64 * 1024
 
   const run = await spawn(
     codexBinary,
     codexResearchExecArgs({
-      cwd: process.cwd(),
+      cwd: params.cwd ?? process.cwd(),
       outputPath: params.outputPath,
-      prompt: params.prompt,
+      prompt: promptViaStdin ? "-" : params.prompt,
       runtimeConfig: params.runtimeConfig,
       webSearch: params.webSearch,
       imagePaths: params.imagePaths,
     }),
     {
       encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: [promptViaStdin ? "pipe" : "ignore", "pipe", "pipe"],
+      ...(promptViaStdin ? { input: params.prompt } : {}),
       maxBuffer: 1024 * 1024 * 20,
-      timeout: CODEX_RESEARCH_TIMEOUT_MS,
+      timeout: timeoutMs,
     },
   )
 
   if (run.error && "code" in run.error && run.error.code === "ETIMEDOUT") {
     throw new CodexInfrastructureError(
       "codex_timeout",
-      `Codex CLI timed out after ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s (${codexBinary}): ${run.error.message}`,
+      `Codex CLI timed out after ${timeoutMs / 1000}s (${codexBinary}): ${run.error.message}`,
     )
   }
   if (
@@ -2554,7 +3010,7 @@ export async function runCodexJson(
   if (run.signal) {
     throw new Error(
       truncateDiagnostic(
-        `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
+        `Codex CLI terminated by ${run.signal} after up to ${timeoutMs / 1000}s: ${
           run.stderr || run.stdout || "no output"
         }`,
       ),

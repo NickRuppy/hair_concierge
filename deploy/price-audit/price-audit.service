@@ -1,5 +1,3 @@
-# Chaarlie price audit — one run (see docs/price-audit.md).
-# Installed on the Hetzner worker next to the product-intake service.
 [Unit]
 Description=Chaarlie recurring price audit (apply mode)
 After=network-online.target
@@ -7,10 +5,17 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
+User=nick
+Group=nick
+UMask=0027
 WorkingDirectory=/opt/chaarlie/price-audit/current
-EnvironmentFile=/opt/chaarlie/price-audit/shared/env
-ExecStart=/usr/bin/npm run price-audit -- --apply
-# The 4 GB box also runs the intake worker at concurrency one; stay polite.
+Environment=NODE_ENV=production
+Environment=HOME=/home/nick
+EnvironmentFile=/opt/chaarlie/price-audit/shared/worker.env
+ExecStart=/usr/bin/python3 /opt/chaarlie/product-intake/current/deploy/product-intake/heavy-stage.py --kind price-audit --run-timeout-ms 10800000 -- /usr/local/bin/npm run price-audit -- --apply --llm-budget 100
 MemoryMax=1G
 Nice=10
 TimeoutStartSec=3h
+TimeoutStopSec=30s
+KillMode=control-group
+OOMPolicy=stop
