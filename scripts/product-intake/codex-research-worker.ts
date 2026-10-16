@@ -152,6 +152,13 @@ class WorkerLeaseLostError extends Error {
 
 export class WorkerJobLease {
   aborted = false
+  private readonly cancellation = new AbortController()
+  get signal(): AbortSignal {
+    return this.cancellation.signal
+  }
+  get deadlineMs(): number {
+    return this.startedAt + this.maxRuntimeMs
+  }
   private runtimeExpired = false
   private leaseLost = false
   private pending: Promise<unknown> = Promise.resolve()
@@ -165,6 +172,7 @@ export class WorkerJobLease {
     if (Date.now() - this.startedAt > this.maxRuntimeMs) {
       this.runtimeExpired = true
       this.aborted = true
+      this.cancellation.abort(new ResearchModelReservationError("cycle_deadline"))
     }
   }
 
@@ -191,6 +199,7 @@ export class WorkerJobLease {
       if (data === null) {
         this.leaseLost = true
         this.aborted = true
+        this.cancellation.abort(new WorkerLeaseLostError(this.job.id))
       } else if (typeof data === "string") this.job.locked_at = data
       else throw new Error("Lease renewal returned an invalid timestamp")
     })
@@ -801,6 +810,7 @@ export async function completeResearchPass(params: {
   judgeProjected?: (packet: ProjectedResearchJudgePacket) => Promise<ProjectedResearchJudgeVerdict>
   projectedJudgeModel?: string
   autoReworkEnabled?: boolean
+  currentJob?: () => ProductIntakeResearchJob
   beforeCompletion?: () => Promise<{
     job: ProductIntakeResearchJob
     modelEvaluation: ModelEvaluationResult
@@ -841,7 +851,7 @@ export async function completeResearchPass(params: {
         )
       : null
   const evaluated = await params.beforeCompletion?.()
-  const leasedJob = evaluated?.job ?? params.job
+  let leasedJob = evaluated?.job ?? params.job
   const evaluation = evaluated?.modelEvaluation ?? {
     status: "disabled",
     successfulJudgments: 0,
@@ -894,6 +904,7 @@ export async function completeResearchPass(params: {
           error instanceof ResearchModelReservationError ? error.code : "projected_judge_failed",
       }
     }
+    leasedJob = params.currentJob?.() ?? leasedJob
     const category = normalizeCategoryKey(params.category)
     const engineState =
       category === "oil"
@@ -1178,6 +1189,13 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                   workerId: options.workerId,
                   promptPacketPath,
                   executeCodex: options.executeCodex,
+                  execution: {
+                    signal: lease.signal,
+                    deadlineMs: Math.min(
+                      lease.deadlineMs,
+                      job.cycle_deadline_at ? Date.parse(job.cycle_deadline_at) : lease.deadlineMs,
+                    ),
+                  },
                   onLeaseRefresh: (refreshedJob) => {
                     imageLeasedJob = refreshedJob
                   },
@@ -1366,6 +1384,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
             autoReworkEnabled: process.env.PRODUCT_INTAKE_AUTO_REWORK === "true",
             projectedJudgeModel: evaluationRuntimeConfig.judge.model,
+            currentJob: () => leasedJob,
             judgeProjected: options.executeCodex
               ? async (packet) => {
                   try {

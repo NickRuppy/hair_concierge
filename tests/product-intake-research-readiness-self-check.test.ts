@@ -241,6 +241,7 @@ async function finish(
     refreshDuringEvaluation?: boolean
     judgeProjected?: Parameters<typeof completeResearchPass>[0]["judgeProjected"]
     autoReworkEnabled?: boolean
+    judgeReservedModelRuns?: number
     artifacts?: Parameters<typeof completeResearchPass>[0]["researchOutput"]["artifacts"]
     downstreamDecisions?: Parameters<
       typeof completeResearchPass
@@ -302,6 +303,7 @@ async function finish(
       }
     },
   }
+  let currentJob = initialJob
   const output = await completeResearchPass({
     supabase: client as unknown as Parameters<typeof completeResearchPass>[0]["supabase"],
     job: initialJob,
@@ -319,7 +321,19 @@ async function finish(
     researchModel: "fixture",
     executeCodex: true,
     autoPrepareImages: options.autoPrepareImages ?? false,
-    judgeProjected: options.judgeProjected,
+    currentJob: () => currentJob,
+    judgeProjected: options.judgeProjected
+      ? async (packet) => {
+          const verdict = await options.judgeProjected!(packet)
+          if (options.judgeReservedModelRuns !== undefined)
+            currentJob = {
+              ...initialJob,
+              reserved_model_runs: options.judgeReservedModelRuns,
+              locked_at: "2026-10-05T12:02:00Z",
+            }
+          return verdict
+        }
+      : undefined,
     autoReworkEnabled: options.autoReworkEnabled,
     beforeCompletion: async () => {
       assert.equal(submissionWrites.length, 0, "preview must wait for atomic final handoff")
@@ -754,4 +768,20 @@ test("a failed projected judge commits blocked evidence and never promotes a rea
   assert.equal(artifacts[0]!.kind, "model_judgment")
   assert.equal(artifacts[0]!.status, "failed")
   assert.doesNotMatch(JSON.stringify(jobWrites[0]), /private provider error/)
+})
+
+test("completion uses the refreshed post-judge reservation count before requesting automatic rework", async () => {
+  for (const count of [5, 4, 6]) {
+    const { output, jobWrites } = await finish(completePayload(), {
+      autoReworkEnabled: true,
+      judgeReservedModelRuns: count,
+      judgeProjected: async () => ({
+        ok: true,
+        defects: [{ code: "inci_missing_first_pass", field: "formula", reason: "Missing INCI" }],
+      }),
+    })
+    assert.equal(output.status, count === 4 ? "waiting_for_rework" : "blocked")
+    assert.equal(jobWrites[0]!.request_auto_rework, count === 4)
+    assert.equal(jobWrites[0]!.expected_locked_at, "2026-10-05T12:02:00Z")
+  }
 })

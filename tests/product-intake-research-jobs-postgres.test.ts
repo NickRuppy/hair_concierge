@@ -1094,7 +1094,13 @@ test("two automatic reworks share one cycle, require two slots, and explicit hum
     }
     ;[job] = await claim(pg)
   }
-  await assert.rejects(commitCycle(pg, job!, { autoRework: true }), /automatic rework budget/)
+  await assert.rejects(
+    commitCycle(pg, job!, { autoRework: true }),
+    (error: unknown) =>
+      error instanceof ResearchModelReservationError &&
+      error.code === "auto_rework_limit" &&
+      error.sqlState === "23514",
+  )
   await assert.rejects(
     pg.query("SELECT public.product_intake_request_rework_job($1)", [job!.submission_id]),
     /No review-ready/,
@@ -1122,7 +1128,13 @@ test("two automatic reworks share one cycle, require two slots, and explicit hum
 
   const [newClaim] = await claim(pg)
   for (let n = 0; n < 5; n++) await reserve(pg, newClaim!)
-  await assert.rejects(commitCycle(pg, newClaim!, { autoRework: true }), /automatic rework budget/)
+  await assert.rejects(
+    commitCycle(pg, newClaim!, { autoRework: true }),
+    (error: unknown) =>
+      error instanceof ResearchModelReservationError &&
+      error.code === "auto_rework_limit" &&
+      error.sqlState === "23514",
+  )
 })
 
 test("final artifacts commit atomically, identify stored images, and exact replay creates no duplicates", async (t) => {

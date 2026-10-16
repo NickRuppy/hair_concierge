@@ -180,15 +180,23 @@ export async function commitResearchPass(
         }
       : {}),
   })
-  if (error?.code === "23514" && error.details === "cycle_deadline")
-    throw new ResearchModelReservationError("cycle_deadline", error.code)
+  if (
+    error?.code === "23514" &&
+    (error.details === "cycle_deadline" || error.details === "auto_rework_limit")
+  )
+    throw new ResearchModelReservationError(error.details, error.code)
   if (error) throw error
   return data as ProductIntakeResearchJob
 }
 
 export class ResearchModelReservationError extends Error {
   constructor(
-    public readonly code: "model_run_limit" | "cycle_deadline" | "lease_lost" | "storage_error",
+    public readonly code:
+      | "model_run_limit"
+      | "auto_rework_limit"
+      | "cycle_deadline"
+      | "lease_lost"
+      | "storage_error",
     public readonly sqlState?: string,
   ) {
     super(`Research model reservation denied: ${code}`)

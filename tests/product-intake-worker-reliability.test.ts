@@ -249,22 +249,28 @@ for (const failure of [
   test(`rembg cleans up its named container after ${failure.error ? "timeout" : "nonzero exit"}`, async (t) => {
     const params = codexFixture(t, json)
     const calls: string[][] = []
-    const output = await worker.runRembgContainer(
-      {
-        config: worker.rembgRuntimeConfig({
-          PRODUCT_INTAKE_REMBG_ENABLED: "true",
-          PRODUCT_INTAKE_REMBG_MODEL_DIR: join(params.outputPath, "..", "models"),
-        }),
-        sourceFile: join(params.outputPath, "..", "source.jpg"),
-        outputFile: join(params.outputPath, "..", "cutout.png"),
-      },
-      (_command, args) => {
-        calls.push(args)
-        if (args[0] === "rm") throw new Error("Docker unavailable during cleanup")
-        return failure
-      },
-    )
-    assert.equal(output, null)
+    const run = () =>
+      worker.runRembgContainer(
+        {
+          config: worker.rembgRuntimeConfig({
+            PRODUCT_INTAKE_REMBG_ENABLED: "true",
+            PRODUCT_INTAKE_REMBG_MODEL_DIR: join(params.outputPath, "..", "models"),
+          }),
+          sourceFile: join(params.outputPath, "..", "source.jpg"),
+          outputFile: join(params.outputPath, "..", "cutout.png"),
+        },
+        (_command, args) => {
+          calls.push(args)
+          if (args[0] === "rm") throw new Error("Docker unavailable during cleanup")
+          return failure
+        },
+      )
+    if (process.platform === "linux") {
+      await assert.rejects(run, /HEAVY_STAGE_INFRASTRUCTURE/)
+      assert.equal(calls.length, 1, "Linux cleanup belongs exclusively to supervisor")
+      return
+    }
+    assert.equal(await run(), null)
     const runArgs = calls[0]
     assert.deepEqual(calls[1], ["rm", "-f", runArgs[runArgs.indexOf("--name") + 1]])
   })
@@ -282,6 +288,10 @@ test("rembg startup cleanup removes only prefixed container names, and continues
     if (args.at(-1) === "chaarlie-rembg-job-1") throw new Error("cleanup failed")
     return result()
   }, "custom-docker")
+  if (process.platform === "linux") {
+    assert.deepEqual(calls, [], "Linux may recover only through the owned-marker supervisor")
+    return
+  }
   assert.deepEqual(calls, [
     {
       command: "custom-docker",

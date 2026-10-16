@@ -3,6 +3,7 @@ import { basename, dirname, join, resolve } from "node:path"
 import { createHash } from "node:crypto"
 
 import { runWorkerProcess, type WorkerSpawn } from "./process"
+import { ResearchModelReservationError } from "@chaarlie/product-intake-core"
 import { errorMessage } from "./shared"
 
 export type RembgRuntimeConfig = {
@@ -23,6 +24,7 @@ export async function runVisionBackgroundRemoval(params: {
   sourceFile: string
   outputDir: string
   outputSlug: string
+  execution?: { signal: AbortSignal; deadlineMs: number }
 }): Promise<string | null> {
   const direct = await runWorkerProcess(
     "swift",
@@ -31,8 +33,15 @@ export async function runVisionBackgroundRemoval(params: {
       cwd: process.cwd(),
       encoding: "utf8",
       maxBuffer: 1024 * 1024 * 10,
+      signal: params.execution?.signal,
+      ...(params.execution
+        ? { timeout: Math.max(1, params.execution.deadlineMs - Date.now()) }
+        : {}),
     },
   )
+  if (params.execution?.signal.aborted) throw params.execution.signal.reason
+  if (params.execution && Date.now() >= params.execution.deadlineMs)
+    throw new ResearchModelReservationError("cycle_deadline")
   const sourceBase = basename(params.sourceFile).replace(/\.[^.]+$/, "")
   const directOutput = join(params.outputDir, `${sourceBase}.png`)
   if (!direct.error && direct.status === 0 && existsSync(directOutput)) return directOutput
@@ -45,9 +54,16 @@ export async function runVisionBackgroundRemoval(params: {
       cwd: process.cwd(),
       encoding: "utf8",
       maxBuffer: 1024 * 1024 * 10,
+      signal: params.execution?.signal,
+      ...(params.execution
+        ? { timeout: Math.max(1, params.execution.deadlineMs - Date.now()) }
+        : {}),
     },
   )
 
+  if (params.execution?.signal.aborted) throw params.execution.signal.reason
+  if (params.execution && Date.now() >= params.execution.deadlineMs)
+    throw new ResearchModelReservationError("cycle_deadline")
   if (!padded.error && padded.status === 0 && existsSync(paddedOutput)) return paddedOutput
   return null
 }
@@ -56,7 +72,11 @@ export async function runAutomaticBackgroundRemoval(params: {
   sourceFile: string
   outputDir: string
   outputSlug: string
+  execution?: { signal: AbortSignal; deadlineMs: number }
 }): Promise<{ file: string; method: "vision" | "rembg_isnet_general_use" } | null> {
+  if (params.execution?.signal.aborted) throw params.execution.signal.reason
+  if (params.execution && Date.now() >= params.execution.deadlineMs)
+    throw new ResearchModelReservationError("cycle_deadline")
   if (process.platform === "darwin") {
     const visionFile = await runVisionBackgroundRemoval(params)
     if (visionFile) return { file: visionFile, method: "vision" }
@@ -66,6 +86,7 @@ export async function runAutomaticBackgroundRemoval(params: {
     sourceFile: params.sourceFile,
     outputFile: join(params.outputDir, `${params.outputSlug}-rembg-isnet.png`),
     config: rembgRuntimeConfig(process.env),
+    execution: params.execution,
   })
   return rembg ? { file: rembg, method: "rembg_isnet_general_use" } : null
 }
@@ -145,14 +166,62 @@ export async function runRembgContainer(
     config: RembgRuntimeConfig
     sourceFile: string
     outputFile: string
+    execution?: { signal: AbortSignal; deadlineMs: number }
   },
   spawn: WorkerSpawn = runWorkerProcess,
 ): Promise<string | null> {
   if (!params.config.enabled) return null
+  if (params.execution?.signal.aborted) throw params.execution.signal.reason
+  if (params.execution && Date.now() >= params.execution.deadlineMs)
+    throw new ResearchModelReservationError("cycle_deadline")
   mkdirSync(dirname(params.outputFile), { recursive: true })
   mkdirSync(params.config.modelDir, { recursive: true })
 
   const name = rembgContainerName(params.outputFile)
+  if (process.platform === "linux") {
+    const deadlineMs = params.execution?.deadlineMs ?? Date.now() + params.config.timeoutMs
+    if (!Number.isFinite(deadlineMs) || deadlineMs <= Date.now())
+      throw new ResearchModelReservationError("cycle_deadline")
+    const result = await spawn(
+      "python3",
+      [
+        "deploy/product-intake/heavy-stage.py",
+        "--kind",
+        "rembg",
+        "--deadline-ms",
+        String(Math.floor(deadlineMs)),
+        "--run-timeout-ms",
+        String(params.config.timeoutMs),
+        "--container-name",
+        name,
+        "--",
+        params.config.dockerBin,
+        ...rembgContainerArgs(params),
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: "utf8",
+        maxBuffer: 1024 * 1024 * 10,
+        signal: params.execution?.signal,
+        timeout: Math.max(1, deadlineMs - Date.now()) + 30_000,
+        terminationGraceMs: 30_000,
+      },
+    )
+    // The supervisor alone owns Docker cleanup and the shared recovery marker.
+    // Never launch or remove a second Linux container outside its lock.
+    if (!result.error && result.status === 0 && existsSync(params.outputFile))
+      return params.outputFile
+    if (result.stderr.includes("HEAVY_STAGE_UNCONFIRMED"))
+      throw new Error("HEAVY_STAGE_UNCONFIRMED")
+    if (params.execution?.signal.aborted) throw params.execution.signal.reason
+    if (result.stderr.includes("HEAVY_STAGE_DEADLINE"))
+      throw new ResearchModelReservationError("cycle_deadline")
+    throw new Error(
+      result.stderr.includes("HEAVY_STAGE_CANCELLED")
+        ? "HEAVY_STAGE_CANCELLED"
+        : "HEAVY_STAGE_INFRASTRUCTURE",
+    )
+  }
   let detail = ""
   try {
     const result = await spawn(params.config.dockerBin, rembgContainerArgs(params), {
@@ -160,7 +229,13 @@ export async function runRembgContainer(
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       maxBuffer: 1024 * 1024 * 10,
-      timeout: params.config.timeoutMs,
+      signal: params.execution?.signal,
+      timeout: Math.min(
+        params.config.timeoutMs,
+        params.execution
+          ? Math.max(1, params.execution.deadlineMs - Date.now())
+          : params.config.timeoutMs,
+      ),
     })
     if (!result.error && result.status === 0 && existsSync(params.outputFile)) {
       return params.outputFile
@@ -172,6 +247,9 @@ export async function runRembgContainer(
     detail = errorMessage(error)
   }
   await removeRembgContainer(name, spawn, params.config.dockerBin)
+  if (params.execution?.signal.aborted) throw params.execution.signal.reason
+  if (params.execution && Date.now() >= params.execution.deadlineMs)
+    throw new ResearchModelReservationError("cycle_deadline")
   console.error(`rembg background removal failed${detail ? `: ${detail}` : "."}`)
   return null
 }
@@ -201,6 +279,8 @@ export async function cleanupStaleRembgContainers(
   spawn: WorkerSpawn = runWorkerProcess,
   dockerBin = rembgRuntimeConfig(process.env).dockerBin,
 ): Promise<void> {
+  // Linux recovery belongs to the shared supervisor under its lock and exact ownership marker.
+  if (process.platform === "linux") return
   try {
     const containers = await spawn(
       dockerBin,

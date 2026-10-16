@@ -63,6 +63,7 @@ export async function processApprovedImageForReview(
     workerId: string
     promptPacketPath: string
     executeCodex: boolean
+    execution?: { signal: AbortSignal; deadlineMs: number }
     onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
   },
   deps: ImageStageDeps,
@@ -109,6 +110,7 @@ export async function processApprovedImageForReview(
         sourceFile,
         outputDir: cutoutDir,
         outputSlug: sourceSlug,
+        execution: params.execution,
       })
   const preparedCutoutFile = preparedCutout?.file ?? null
   const transparentBackgroundDetected = sourceAlreadyTransparent || Boolean(preparedCutoutFile)

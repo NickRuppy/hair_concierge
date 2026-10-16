@@ -145,6 +145,46 @@ The price-audit unit and any shared host lock must use the same inode/ownership;
 never delete/recreate the lock file while contenders may hold it. An image-stage
 wait must not stop heartbeat/lease renewal or bypass cancellation.
 
+The Linux implementation is `deploy/product-intake/heavy-stage.py`. Both rembg
+and price audit enter it through literal arguments, using
+`/run/chaarlie/heavy-work.lock` and the private shared
+`heavy-work-state.json` marker. Install `chaarlie-heavy-work.conf` with tmpfiles;
+its `f` rule creates a missing lock without replacing an existing inode. Preserve
+the installed price-audit user, environment, timer and three-hour budget when
+installing its reviewed helper wrapper. Waiting consumes the existing job/cycle
+deadline and never reserves a model run.
+
+Nick approved automatic recovery after a crash only when safety is verified.
+Under the lock, the next contender checks the exact recorded rembg container
+name and ownership label, removes that disposable container, and confirms both
+container and launcher absence before clearing the marker. For price audit it
+only confirms the recorded process group is gone; it never kills an orphaned
+audit. A malformed marker, pending launch, live audit group or unavailable Docker
+leaves heavy work paused with `HEAVY_STAGE_UNCONFIRMED`. The small `.unconfirmed`
+sidecar routes that hold through the independent health observer. Ordinary active
+markers are healthy, including a legitimately long price audit.
+
+For a recovery hold, inspect only the recorded stage with
+`sudo cat /opt/chaarlie/product-intake/shared/heavy-work-state.json` and the
+helper's journal. Use `docker container inspect <recorded-container-name>` to
+compare its exact name and `io.chaarlie.heavy-stage` label; use the recorded
+process group and service cgroup to inspect surviving processes. Do not run a
+prefix-wide container sweep, unlink the shared lock, or clear an unverifiable
+marker. Once the original stage is confirmed absent, let a later authorized
+stage perform reconciliation under the lock. Manual reconciliation of malformed
+state needs an explicit operator decision and a preserved copy of that state.
+
+Free worker-down monitoring uses
+`chaarlie-product-intake-worker-health.timer`, independent of the worker loop.
+The read-only observer checks the actual systemd process, current release and
+matching Supabase heartbeat; a ten-minute grace avoids short restart alarms.
+It reports changed unhealthy incidents through the existing production Sentry
+error allowance and `product_intake_admin_alert` rule. Failed event delivery
+remains retryable. It does not use paid Cron capacity or Customer.io and does not
+change any automatic email, image, rework or publication switch. Verify the
+effective unit, a healthy read, and a sanitized delivery test before calling the
+monitoring route operational.
+
 Validate a representative research/image run under the intended limits and
 check for OOM, excessive throttling and lease loss before broad activation.
 Configure/verify missed-heartbeat, repeated-failure, auth and low-disk alerts;

@@ -48,7 +48,7 @@ Exit codes: `0` ok, `2` systemic failure (majority of *fetched* re-checks failed
 
 Unit files: `deploy/price-audit/price-audit.{service,timer}` → `/etc/systemd/system/`, then `systemctl daemon-reload && systemctl enable --now price-audit.timer`. Notes:
 
-- `EnvironmentFile=/opt/chaarlie/price-audit/shared/env` needs `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SENTRY_DSN`, `PRICE_AUDIT_OUT_DIR`.
+- `EnvironmentFile=/opt/chaarlie/price-audit/shared/worker.env` needs `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SENTRY_DSN`, `PRICE_AUDIT_OUT_DIR`.
 - The release checkout needs **dev dependencies** installed (`tsx` is a devDependency).
 - The box also runs the intake worker (concurrency one, 4 GB): the unit carries `MemoryMax=1G` and `Nice=10`; keep the Monday 04:30 slot.
 - `Persistent=true` catches missed ticks; since prices always show, a missed week only means staler numbers, never blank cards.
