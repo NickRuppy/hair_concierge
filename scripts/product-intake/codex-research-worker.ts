@@ -34,6 +34,7 @@ import {
   shouldAutoPrepareImage,
 } from "@/lib/product-intake/pipeline/image"
 import { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+import { stageRawImageCandidate } from "@/lib/product-intake/pipeline/raw-candidate-staging"
 import {
   assertAllowedProductIntakeModel,
   boundedNumber,
@@ -807,6 +808,10 @@ export async function completeResearchPass(params: {
   researchModel: string
   executeCodex: boolean
   autoPrepareImages: boolean
+  execution: { signal: AbortSignal; deadlineMs: number }
+  stageRawCandidate: (
+    input: Omit<Parameters<typeof stageRawImageCandidate>[0], "createStorageClient">,
+  ) => ReturnType<typeof stageRawImageCandidate>
   judgeProjected?: (packet: ProjectedResearchJudgePacket) => Promise<ProjectedResearchJudgeVerdict>
   projectedJudgeModel?: string
   autoReworkEnabled?: boolean
@@ -972,7 +977,7 @@ export async function completeResearchPass(params: {
       (!projectedOutcome || projectedOutcome.outcome === "ready_for_human_review"),
     researchOutput,
   })
-  const nextStatus =
+  let nextStatus: ProductIntakeResearchJob["status"] =
     projectedOutcome?.outcome === "needs_bounded_rework"
       ? "waiting_for_rework"
       : projectedOutcome?.outcome === "blocked_needs_human"
@@ -982,6 +987,45 @@ export async function completeResearchPass(params: {
           : readiness?.ok === true
             ? "waiting_for_review"
             : "blocked"
+  const reviewAssets: NonNullable<Awaited<ReturnType<typeof stageRawImageCandidate>>>[] = []
+  let candidateStagingError: string | null = null
+  if (params.executeCodex && nextStatus === "waiting_for_review" && !autoPrepareImage) {
+    params.execution.signal.throwIfAborted()
+    leasedJob = params.currentJob?.() ?? leasedJob
+    const candidateDeadline = () => {
+      const cycleDeadline = Date.parse(leasedJob.cycle_deadline_at ?? "")
+      return Math.min(
+        params.execution.deadlineMs,
+        Number.isFinite(cycleDeadline) ? cycleDeadline : Infinity,
+      )
+    }
+    if (candidateDeadline() <= Date.now()) throw new ResearchModelReservationError("cycle_deadline")
+    try {
+      const revision = params.submission?.payload_revision
+      if (!revision || !Number.isSafeInteger(revision) || revision < 1)
+        throw new Error("review_payload_revision_missing")
+      const asset = await params.stageRawCandidate({
+        artifacts: researchOutput.artifacts,
+        submissionId: leasedJob.submission_id,
+        expectedRevision: revision,
+        signal: params.execution.signal,
+        deadlineMs: candidateDeadline(),
+      })
+      params.execution.signal.throwIfAborted()
+      if (!asset) throw new Error("raw_candidate_missing")
+      reviewAssets.push(asset)
+    } catch (error) {
+      params.execution.signal.throwIfAborted()
+      if (error instanceof WorkerLeaseLostError || error instanceof ResearchModelReservationError)
+        throw error
+      candidateStagingError =
+        "Bildkandidat fehlt oder konnte nicht sicher für die Rohbildprüfung bereitgestellt werden."
+      nextStatus = "blocked"
+    }
+    leasedJob = params.currentJob?.() ?? leasedJob
+    params.execution.signal.throwIfAborted()
+    if (candidateDeadline() <= Date.now()) throw new ResearchModelReservationError("cycle_deadline")
+  }
   const nextStage =
     nextStatus === "waiting_for_rework"
       ? "rework"
@@ -1011,6 +1055,7 @@ export async function completeResearchPass(params: {
   const updated = await commitResearchPass(params.supabase, {
     jobId: leasedJob.id,
     expectedPayloadRevision: params.submission?.payload_revision,
+    reviewAssets,
     reviewOutcome,
     researchedPayload: hasFinalPayload ? researchOutput.researched_payload : null,
     expectedReviewCycleId: leasedJob.review_cycle_id,
@@ -1028,7 +1073,13 @@ export async function completeResearchPass(params: {
               outcome: reviewOutcome,
               questionCodes:
                 reviewOutcome === "needs_nick"
-                  ? [readiness && !readiness.ok ? "research_gaps" : "research_blockers"]
+                  ? [
+                      candidateStagingError
+                        ? "image_review"
+                        : readiness && !readiness.ok
+                          ? "research_gaps"
+                          : "research_blockers",
+                    ]
                   : [],
             }),
             ...(projectedOutcome?.questions.length
@@ -1056,6 +1107,12 @@ export async function completeResearchPass(params: {
       model_evaluation: evaluation,
       downstream_decisions: researchOutput.downstream_decisions ?? [],
       ...progress,
+      raw_candidate_staging: candidateStagingError
+        ? "blocked"
+        : reviewAssets.length
+          ? "staged"
+          : "not_requested",
+      ...(candidateStagingError ? { blockers: [...blockers, candidateStagingError] } : {}),
       ...(projectedOutcome
         ? {
             projected_review_outcome: projectedOutcome.outcome,
@@ -1082,11 +1139,12 @@ export async function completeResearchPass(params: {
         : {}),
     },
     lastError:
-      projectedOutcome?.status === "blocked"
+      candidateStagingError ??
+      (projectedOutcome?.status === "blocked"
         ? projectedOutcome.questions.join("; ")
         : blockers.length > 0
           ? blockers.join("; ")
-          : readinessError,
+          : readinessError),
     expectedLockedBy: leasedJob.locked_by,
     expectedLockedAt: leasedJob.locked_at,
   })
@@ -1379,6 +1437,12 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               ? researchRuntimeConfig.model
               : "codex-worker-preview",
             executeCodex: options.executeCodex,
+            execution: { signal: lease.signal, deadlineMs: lease.deadlineMs },
+            stageRawCandidate: (input) =>
+              stageRawImageCandidate({
+                ...input,
+                createStorageClient: (signal) => createSupabaseClientFromEnv({ signal }),
+              }),
             autoPrepareImages:
               options.executeCodex &&
               process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
@@ -1991,7 +2055,7 @@ export function writePromptPacket(
           approval_payload_schema: approvalPayloadContract(detail?.category),
           artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.filter(isModelGeneratedArtifactKind).join(", ")}`,
           blockers:
-            "array of strings; empty array only when ready for Nick review. Put review caveats in artifact payloads unless they block approval.",
+            "array of genuine research defects. A missing, wrong or uninspectable raw candidate is a blocker. Pending raw selection, background removal, final-image approval and publication are later human/workflow gates, not research defects. Put nonblocking review caveats in artifact payloads.",
           category_contract: categoryApprovalContract(detail?.category),
           image_source_contract: imageSourceContract(),
           commercial_source_contract: commercialSourceContract(),
@@ -2029,7 +2093,8 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
             "array containing every verified compatible hair diameter: fine, normal, coarse. Use [] only for heat_protectant, dry_shampoo, or scalp_care, whose authority does not use thickness.",
           affiliate_link:
             "string URL; chosen purchasable product-detail page following commercial_source_contract.purchase_url_preference. Must not be a search, listing, price-comparison, marketplace junk, or wrong-market page.",
-          image_url: "string URL or null; raw candidate image before final processing",
+          image_url:
+            "null until verified final processing; put the current raw source URL only in image_candidate.payload.image_url",
           price_eur:
             "number; current EUR price from the chosen affiliate_link/PDP when available, or blocker if no acceptable price source exists",
           currency: "EUR",
@@ -2141,6 +2206,8 @@ function codexBinaryForWorker(): string {
 function imageSourceContract(): JsonRecord {
   return {
     goal: "Find an image Nick can approve as the raw source before Chaarlie background removal and final sizing.",
+    handoff:
+      "Record the current exact candidate in image_candidate.payload.image_url. Private raw staging is not approval. Pending human raw selection, processing and final approval are later gates; keep final.product.image_url null until final processing.",
     ideal_candidate: [
       "Exact same product and variant: brand, line, product name, packaging type, and size must match when visible.",
       "Single saleable product unit only: the actual bottle, jar, tube, tub, spray, pouch, or sachet that the user buys.",
@@ -2644,7 +2711,6 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
       "category_key",
       "suitable_thicknesses",
       "affiliate_link",
-      "image_url",
       "price_eur",
       "currency",
       "purchase_link_status",
@@ -2659,7 +2725,6 @@ function missingFinalProductFields(final: JsonRecord | null | undefined): string
     "category_key",
     "suitable_thicknesses",
     "affiliate_link",
-    "image_url",
     "price_eur",
     "currency",
     "purchase_link_status",

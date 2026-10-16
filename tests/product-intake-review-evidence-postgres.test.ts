@@ -193,10 +193,10 @@ test("migration backfills every legacy payload while keeping historical approval
   ])
 })
 
-test("fenced research commit records exact revision assets atomically and replay is idempotent", async (t) => {
+test("fenced research commit records a raw-only revision atomically and replay is idempotent", async (t) => {
   const pg = await database(t)
   const job = await runningJob(pg)
-  const manifest = [asset(job), asset(job, 2, "raw")]
+  const manifest = [asset(job, 2, "raw")]
   const committed = await complete(pg, job, { assets: manifest })
   const saved = await submission(pg, job.submission_id)
   assert.equal(saved.payload_revision, 2)
@@ -216,13 +216,13 @@ test("fenced research commit records exact revision assets atomically and replay
       storage_key,
     })),
   )
-  assert.deepEqual(await counts(pg), { assets: 2, artifacts: 1, notifications: 1 })
+  assert.deepEqual(await counts(pg), { assets: 1, artifacts: 1, notifications: 1 })
   const replay = await complete(pg, job, { assets: manifest })
   assert.deepEqual(replay.progress, committed.progress)
   assert.equal((await submission(pg, job.submission_id)).payload_revision, 2)
-  assert.deepEqual(await counts(pg), { assets: 2, artifacts: 1, notifications: 1 })
+  assert.deepEqual(await counts(pg), { assets: 1, artifacts: 1, notifications: 1 })
   await assert.rejects(
-    complete(pg, job, { assets: [{ ...manifest[0], byte_length: 99 }, manifest[1]] }),
+    complete(pg, job, { assets: [{ ...manifest[0], byte_length: 99 }] }),
     /replay/,
   )
   await assert.rejects(complete(pg, job, { assets: manifest, expected: 2 }), /replay/)

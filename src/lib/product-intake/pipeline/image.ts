@@ -26,6 +26,7 @@ import {
   type ImageQualityVerdict,
 } from "./image-quality"
 import { loadApprovedRawImageForProcessing } from "./review-raw-image"
+import { downloadRawImageCandidate } from "./raw-candidate-staging"
 import {
   hasFinalResearchPayload,
   normalizeRecord,
@@ -81,8 +82,16 @@ export async function processApprovedImageForReview(
   })
   const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
   const sourceUrls = sourceImageUrl ? [sourceImageUrl] : []
-  const response = pinnedRaw ? null : await fetchRemoteApprovedSourceImage(sourceImageUrl)
-  const sourceBytes = pinnedRaw ? pinnedRaw.bytes : Buffer.from(await response!.arrayBuffer())
+  const remote = pinnedRaw
+    ? null
+    : await downloadRawImageCandidate(
+        sourceImageUrl ?? "",
+        params.execution ?? {
+          signal: new AbortController().signal,
+          deadlineMs: Date.now() + 30_000,
+        },
+      )
+  const sourceBytes = pinnedRaw ? pinnedRaw.bytes : remote!.bytes
   const sourceSha256 = createHash("sha256").update(sourceBytes).digest("hex")
   const sourceAlphaStats = await processedImageAlphaStats(sourceBytes)
   const sourceAlreadyTransparent = sourceAlphaStats.transparentRatio > 0.05
@@ -97,7 +106,7 @@ export async function processApprovedImageForReview(
   mkdirSync(sourceDir, { recursive: true })
   mkdirSync(cutoutDir, { recursive: true })
   const sourceExt = imageExtension(
-    pinnedRaw?.asset.media_type ?? response?.headers.get("content-type") ?? null,
+    pinnedRaw?.asset.media_type ?? remote?.contentType ?? null,
     sourceImageUrl ?? pinnedRaw?.asset.storage_key ?? "raw-image",
   )
   const sourceSlug = slugForProcessedImage(params.detail)
@@ -413,20 +422,6 @@ export async function processedImageAlphaStats(bytes: Buffer) {
     transparentRatio: total > 0 ? transparent / total : 0,
     opaqueRatio: total > 0 ? opaque / total : 0,
   }
-}
-
-async function fetchRemoteApprovedSourceImage(sourceImageUrl: string | null): Promise<Response> {
-  if (!sourceImageUrl) throw new Error("No approved source image URL found for image processing.")
-  const response = await fetch(sourceImageUrl, {
-    headers: {
-      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
-      // local Sharp/libvips build can read metadata but fail during pixel decode.
-      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
-      "user-agent": "ChaarlieProductIntakeReview/1.0",
-    },
-  })
-  if (!response.ok) throw new Error(`Download approved image failed: HTTP ${response.status}`)
-  return response
 }
 
 export function shouldAutoPrepareImage(params: {

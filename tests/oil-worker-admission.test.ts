@@ -430,13 +430,21 @@ async function persistNormalizedWorker(
       supabase: client as unknown as Parameters<typeof completeResearchPass>[0]["supabase"],
       job,
       category: "oil",
-      submission: { id: submissionId, source: "admin", status: "researching" },
+      submission: { id: submissionId, source: "admin", status: "researching", payload_revision: 1 },
       workerId: job.locked_by!,
       promptPacketPath: "/tmp/oil-fixture-prompt.json",
       researchOutput: output,
       researchModel: "fixture",
       executeCodex: true,
       autoPrepareImages: false,
+      execution: { signal: new AbortController().signal, deadlineMs: Date.now() + 60_000 },
+      stageRawCandidate: async ({ submissionId, expectedRevision }) => ({
+        kind: "raw",
+        sha256: "a".repeat(64),
+        storage_key: `${submissionId}/${expectedRevision + 1}/${"a".repeat(64)}`,
+        media_type: "image/png",
+        byte_length: 42,
+      }),
     })
   if (options.interruptCommit || options.duplicate || options.mutateAfterCommerce) {
     await assert.rejects(

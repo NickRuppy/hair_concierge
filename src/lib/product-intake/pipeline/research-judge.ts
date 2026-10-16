@@ -122,7 +122,7 @@ export function buildProjectedResearchJudgePrompt(packet: ProjectedResearchJudge
     'Return exactly one JSON object: {"defects":[{"code":"allowed_code","field":"affected.path","reason":"concise evidence-based explanation"}]}. Use an empty array only when no defects are found. No additional keys. At most 20 defects; field 1–200 characters; reason 1–1000 characters; no control characters.',
     `Allowed machine-fixable codes: ${Object.keys(MACHINE_ACTIONS).join(", ")}.`,
     `Allowed human-review codes: ${Object.keys(HUMAN_QUESTIONS).join(", ")}.`,
-    "Only mark brand_unmatched_resolvable when server evidence identifies an existing unique brand; creating a brand needs brand_new_needs_creation. Missing INCI after a targeted search is inci_unavailable. Identity, category and medical uncertainty require human review. Do not count human approval or final image publication fields as research omissions: readiness.humanGateFields are intentionally human-owned.",
+    "Only mark brand_unmatched_resolvable when server evidence identifies an existing unique brand; creating a brand needs brand_new_needs_creation. Missing INCI after a targeted search is inci_unavailable. Identity, category and medical uncertainty require human review. Do not count human approval or final image publication fields as research omissions: readiness.humanGateFields are intentionally human-owned. A valid raw image_candidate can be staged privately before human selection; pending raw selection, background removal and final-image review are later gates, not research defects. Missing, wrong or uninspectable candidate evidence remains a defect.",
     "BEGIN UNTRUSTED PROJECTED REVIEW PACKET",
     JSON.stringify(packet),
     "END UNTRUSTED PROJECTED REVIEW PACKET",

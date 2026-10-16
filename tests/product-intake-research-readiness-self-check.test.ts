@@ -230,6 +230,9 @@ async function finish(
     stage?: ProductIntakeResearchJob["stage"]
     blockers?: string[]
     autoPrepareImages?: boolean
+    stageRawCandidate?: Parameters<typeof completeResearchPass>[0]["stageRawCandidate"]
+    execution?: { signal: AbortSignal; deadlineMs: number }
+    refreshDuringStaging?: boolean
     submission?: {
       id: string
       user_id: string | null
@@ -242,6 +245,7 @@ async function finish(
     judgeProjected?: Parameters<typeof completeResearchPass>[0]["judgeProjected"]
     autoReworkEnabled?: boolean
     judgeReservedModelRuns?: number
+    judgeCycleDeadlineAt?: string
     artifacts?: Parameters<typeof completeResearchPass>[0]["researchOutput"]["artifacts"]
     downstreamDecisions?: Parameters<
       typeof completeResearchPass
@@ -257,12 +261,15 @@ async function finish(
       cycle_deadline_at: new Date(Date.now() + 60_000).toISOString(),
     })
   if (options.progress) initialJob.progress = { ...initialJob.progress, ...options.progress }
-  const submission = options.submission ?? {
-    id: initialJob.submission_id,
-    user_id: null,
-    source: "admin",
-    status: "researching",
-    category: "mask",
+  const submission = {
+    payload_revision: 1,
+    ...(options.submission ?? {
+      id: initialJob.submission_id,
+      user_id: null,
+      source: "admin",
+      status: "researching",
+      category: "mask",
+    }),
   }
   initialJob.submission_id = submission.id
   const submissionWrites: JsonRecord[] = []
@@ -304,6 +311,7 @@ async function finish(
     },
   }
   let currentJob = initialJob
+  const stagingCalls: unknown[] = []
   const output = await completeResearchPass({
     supabase: client as unknown as Parameters<typeof completeResearchPass>[0]["supabase"],
     job: initialJob,
@@ -321,6 +329,25 @@ async function finish(
     researchModel: "fixture",
     executeCodex: true,
     autoPrepareImages: options.autoPrepareImages ?? false,
+    execution: options.execution ?? {
+      signal: new AbortController().signal,
+      deadlineMs: Date.now() + 60_000,
+    },
+    stageRawCandidate: async (input) => {
+      stagingCalls.push(input)
+      const asset = options.stageRawCandidate
+        ? await options.stageRawCandidate(input)
+        : {
+            kind: "raw" as const,
+            sha256: "a".repeat(64),
+            storage_key: `${input.submissionId}/${input.expectedRevision + 1}/${"a".repeat(64)}`,
+            media_type: "image/png",
+            byte_length: 42,
+          }
+      if (options.refreshDuringStaging)
+        currentJob = { ...currentJob, locked_at: "2026-10-05T12:03:00Z" }
+      return asset
+    },
     currentJob: () => currentJob,
     judgeProjected: options.judgeProjected
       ? async (packet) => {
@@ -330,6 +357,7 @@ async function finish(
               ...initialJob,
               reserved_model_runs: options.judgeReservedModelRuns,
               locked_at: "2026-10-05T12:02:00Z",
+              cycle_deadline_at: options.judgeCycleDeadlineAt ?? initialJob.cycle_deadline_at,
             }
           return verdict
         }
@@ -352,7 +380,7 @@ async function finish(
       }
     },
   })
-  return { output, submissionWrites, jobWrites }
+  return { output, submissionWrites, jobWrites, stagingCalls }
 }
 
 test("research and rework with empty specs block the job and keep the submission researching", async () => {
@@ -784,4 +812,88 @@ test("completion uses the refreshed post-judge reservation count before requesti
     assert.equal(jobWrites[0]!.request_auto_rework, count === 4)
     assert.equal(jobWrites[0]!.expected_locked_at, "2026-10-05T12:02:00Z")
   }
+})
+
+test("research stages only raw evidence while automatic image processing stays off", async () => {
+  const deadline = new Date(Date.now() + 5_000).toISOString()
+  const { output, jobWrites, stagingCalls } = await finish(completePayload(), {
+    refreshDuringStaging: true,
+    judgeProjected: async () => ({ ok: true, defects: [] }),
+    judgeReservedModelRuns: 3,
+    judgeCycleDeadlineAt: deadline,
+  })
+  assert.equal(stagingCalls.length, 1)
+  assert.equal((stagingCalls[0] as { deadlineMs: number }).deadlineMs, Date.parse(deadline))
+  assert.equal(output.status, "waiting_for_review")
+  assert.equal(jobWrites[0]!.review_outcome, "ready_for_review")
+  assert.deepEqual(
+    (jobWrites[0]!.review_assets as JsonRecord[]).map((asset) => asset.kind),
+    ["raw"],
+  )
+  assert.equal(jobWrites[0]!.expected_payload_revision, 1)
+  assert.equal(jobWrites[0]!.expected_locked_at, "2026-10-05T12:03:00Z")
+  assert.notEqual(jobWrites[0]!.next_stage, "image_judging")
+})
+
+test("missing or failed raw staging preserves research and hands back an image blocker", async () => {
+  for (const stageRawCandidate of [
+    async () => null,
+    async () => {
+      throw new Error("unsafe candidate")
+    },
+  ]) {
+    const { output, jobWrites } = await finish(completePayload(), { stageRawCandidate })
+    assert.equal(output.status, "blocked")
+    assert.equal(jobWrites[0]!.review_outcome, "needs_nick")
+    assert.ok(jobWrites[0]!.researched_payload)
+    assert.deepEqual(jobWrites[0]!.review_assets, [])
+    assert.match(String(jobWrites[0]!.next_last_error), /Bildkandidat/)
+  }
+})
+
+test("lease cancellation during candidate staging prevents completion", async () => {
+  const controller = new AbortController()
+  await assert.rejects(
+    finish(completePayload(), {
+      execution: { signal: controller.signal, deadlineMs: Date.now() + 60_000 },
+      stageRawCandidate: async () => {
+        controller.abort()
+        return null
+      },
+    }),
+    (error: unknown) => error instanceof Error && error.name === "AbortError",
+  )
+})
+
+test("normalization preserves a raw candidate without requiring the unpublished final image", () => {
+  const rawUrl = "https://images.example/fixture-packshot.png"
+  const normalized = normalizeResearchOutputForCategory(
+    {
+      summary: "Research with a raw candidate",
+      researched_payload: completePayload(),
+      artifacts: [{ kind: "image_candidate", status: "proposed", payload: { image_url: rawUrl } }],
+      blockers: [],
+    },
+    "mask",
+    brandContext,
+    [],
+    "50000000-0000-4000-8000-000000000001",
+  )
+  assert.equal(
+    (normalized.researched_payload!.final as JsonRecord).product &&
+      ((normalized.researched_payload!.final as JsonRecord).product as JsonRecord).image_url,
+    null,
+  )
+  assert.ok(
+    normalized.artifacts.some(
+      (artifact) => artifact.kind === "image_candidate" && artifact.payload.image_url === rawUrl,
+    ),
+  )
+  assert.equal(
+    normalized.blockers.some(
+      (blocker) =>
+        blocker.includes("missing final.product fields") && blocker.includes("image_url"),
+    ),
+    false,
+  )
 })

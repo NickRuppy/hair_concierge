@@ -20,6 +20,7 @@ import {
   normalizeImageQualityVerdict,
   shouldAutoPrepareImage,
 } from "../scripts/product-intake/codex-research-worker"
+import { mockCandidateTransport } from "./fixtures/raw-candidate-transport"
 import { processApprovedImageForReview } from "../src/lib/product-intake/pipeline/image"
 import { loadApprovedRawImageForProcessing } from "../src/lib/product-intake/pipeline/review-raw-image"
 
@@ -419,12 +420,11 @@ test("image-processing failure uses the latest refreshed lease for its failed up
   assert.match(workerSource, /job: imageLeasedJob,\s*error,/)
 })
 
-test("transparent image completion commits the ready notification snapshot with the worker lease", async () => {
+test("transparent image completion commits the ready notification snapshot with the worker lease", async (t) => {
   const submissionId = randomUUID()
   const incompleteSubmissionId = randomUUID()
   const outputRoot = mkdtempSync(join(tmpdir(), "product-intake-finalized-test-"))
   const workRoot = join(process.cwd(), "tmp", "product-intake-image-processing", submissionId)
-  const originalFetch = globalThis.fetch
   const originalEnv = {
     finalized: process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR,
     visualJudge: process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED,
@@ -536,14 +536,14 @@ test("transparent image completion commits the ready notification snapshot with 
   process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR = outputRoot
   process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED = "false"
   process.env.PRODUCT_INTAKE_REMBG_ENABLED = "false"
-  let mutableRemoteFetches = 0
-  globalThis.fetch = (async (url: string | URL | Request) => {
-    mutableRemoteFetches += 1
-    assert.equal(String(url), "https://images.example.test/transparent-product.png")
-    return new Response(mutableRemote, {
-      headers: { "content-type": "image/png" },
-    })
-  }) as typeof fetch
+  const transport = mockCandidateTransport(t, {
+    responses: [
+      {
+        headers: { "content-type": "image/png" },
+        chunks: [mutableRemote],
+      },
+    ],
+  })
   const deps = {
     appendResearchArtifact: async (_client: unknown, params: Record<string, unknown>) => {
       throw new Error(
@@ -646,7 +646,7 @@ test("transparent image completion commits the ready notification snapshot with 
     )
     assert.equal(uploads.length, 5)
     assert.deepEqual(downloads, [rawStorageKey])
-    assert.equal(mutableRemoteFetches, 0)
+    assert.equal(transport.requests.length, 0)
     assert.deepEqual(uploads[0].bytes, source)
     for (const [index, asset] of manifest.entries()) {
       assert.equal(asset.storage_key, `${submissionId}/5/${asset.sha256}`)
@@ -712,7 +712,7 @@ test("transparent image completion commits the ready notification snapshot with 
       deps as never,
     )
     const missingReadinessCommit = commits[1]!
-    assert.equal(mutableRemoteFetches, 1)
+    assert.equal(transport.requests.length, 1)
     assert.equal(missingReadinessCommit.reviewOutcome, "needs_nick")
     assert.deepEqual(
       (missingReadinessCommit.notificationPayload as Record<string, unknown>).question_1,
@@ -723,7 +723,6 @@ test("transparent image completion commits the ready notification snapshot with 
       "Entscheidung nötig",
     )
   } finally {
-    globalThis.fetch = originalFetch
     if (originalEnv.finalized === undefined) delete process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR
     else process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR = originalEnv.finalized
     if (originalEnv.visualJudge === undefined)

@@ -1452,3 +1452,17 @@ After approval:
 - [ ] Product image URL renders.
 - [ ] User notification was sent.
 - [ ] Daily product-addition record was written.
+
+
+### Private raw candidate handoff
+
+With automatic image preparation disabled, otherwise complete research stages
+only this pass’s exact `image_candidate` bytes in private review storage. The
+current revision advances and its raw manifest registers atomically with research
+completion under the existing lease/cycle. This staging adds no approval or model
+run. Missing, unsafe or unreadable candidates remain an explicit image blocker;
+research evidence is retained. Nick selects the staged raw image before processing,
+then separately reviews the final image and confirms publication. Candidate
+storage never fills the final catalog-image fields. Interrupted private uploads
+may remain unreferenced; they must not be registered as stale evidence or deleted
+through speculative cleanup.

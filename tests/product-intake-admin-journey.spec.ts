@@ -115,3 +115,44 @@ test("an uncertain publication survives reload and blocks a new operation", asyn
     page.getByRole("button", { name: "Zur Veröffentlichungsfreigabe", exact: true }),
   ).toHaveCount(0)
 })
+
+test("raw-only candidate needs explicit selection before processing and cannot publish", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 900 })
+  const adminWrites: string[] = []
+  page.on("request", (request) => {
+    if (request.method() === "POST" && request.url().includes("/api/admin/"))
+      adminWrites.push(request.url())
+  })
+  await page.goto(`${path}&bilder=raw`)
+  const selectRaw = page.getByRole("button", {
+    name: "Rohbild auswählen und aufbereiten",
+    exact: true,
+  })
+  await expect(selectRaw).toBeEnabled()
+  await expect(
+    page.getByRole("button", { name: "Katalogbild freigeben", exact: true }),
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Zur Veröffentlichungsfreigabe", exact: true }),
+  ).toBeDisabled()
+  await selectRaw.click()
+  await expect(page.getByRole("dialog")).toContainText("Dieses exakte Bild")
+  await page.getByRole("dialog").getByRole("button", { name: "Abbrechen", exact: true }).click()
+  await expect(page.getByText("Neue Prüfung angefordert.", { exact: false })).toHaveCount(0)
+  await selectRaw.click()
+  const confirm = page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Bildaufbereitung anfordern", exact: true })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
+  await expect(
+    page.getByText(
+      "Neue Prüfung angefordert. Bisherige Freigaben gelten nicht für diesen Durchlauf.",
+      { exact: true },
+    ),
+  ).toBeVisible()
+  await expect(page.getByText("Produkt veröffentlicht · Version 3", { exact: true })).toHaveCount(0)
+  expect(adminWrites).toEqual([])
+})
