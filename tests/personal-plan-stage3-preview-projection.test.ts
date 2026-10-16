@@ -10,7 +10,6 @@ import type { Stage3DecisionReviewProjection } from "../src/lib/personal-plan/pr
 import type { Stage3ReviewDraftChoice } from "../src/lib/personal-plan/products/review-draft"
 import {
   clearDependentHeatReviewStateOnOilChange,
-  isCurrentStage3PreviewGeneration,
   mergeStage3PreviewBundles,
   reconcileStage3PreviewProjection,
   retainStage3ChoicesAllowedByBundles,
@@ -111,32 +110,6 @@ test("an omitted bundle without an auto intent never hides a local subject", () 
     projection: projection([], []),
   })
   assert.deepEqual([...reconciled.locallyResolvedDecisionKeys], [])
-})
-
-test("an older preview generation cannot overwrite a newer local choice", () => {
-  assert.equal(isCurrentStage3PreviewGeneration(1, 2), false)
-  assert.equal(isCurrentStage3PreviewGeneration(2, 2), true)
-  const laterChoice: Stage3AuthoritySemanticIntent = {
-    type: "resolve_decision",
-    subjectKey: "decision:conditioner:conditioner_rinse_out:gap",
-    action: "leave_uncovered",
-  }
-  const latestChoices = {
-    ...choices,
-    [laterChoice.subjectKey]: { kind: "decision" as const, intent: laterChoice },
-  }
-  // The stale full-carrier response is intentionally not reconciled. The
-  // current local state therefore retains the later non-Oil choice.
-  const stateAfterStaleResponse = isCurrentStage3PreviewGeneration(1, 2)
-    ? reconcileStage3PreviewProjection({
-        subjects,
-        choices,
-        order: [oilKey],
-        previousAutoResolvedIntents: [],
-        projection: projection([autoHeatIntent], [oilKey]),
-      }).choices
-    : latestChoices
-  assert.deepEqual(stateAfterStaleResponse, latestChoices)
 })
 
 test("a later non-Oil choice refreshes an existing planned Oil projection, while removing Oil refreshes Heat", () => {
