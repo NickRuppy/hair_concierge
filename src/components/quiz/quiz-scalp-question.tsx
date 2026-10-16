@@ -2,6 +2,7 @@
 
 import { MOTION_MS } from "@/lib/motion"
 import { useState, useCallback, useEffect, useRef } from "react"
+import { useQuizDelayedAction } from "./use-quiz-delayed-action"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
@@ -62,7 +63,7 @@ export const SCALP_CONDITIONS: {
 ]
 
 export function QuizScalpQuestion() {
-  const { answers, setAnswer, goNext, goBack } = useQuizStore()
+  const { answers, setAnswers, goNext, goBack } = useQuizStore()
   const gateRef = useRef<HTMLDivElement | null>(null)
   const conditionRef = useRef<HTMLDivElement | null>(null)
 
@@ -82,7 +83,7 @@ export function QuizScalpQuestion() {
   const [selectedCondition, setSelectedCondition] = useState(
     answers.has_scalp_issue === true && answers.scalp_condition ? answers.scalp_condition : "",
   )
-  const [advancing, setAdvancing] = useState(false)
+  const { schedule, cancel, isPending } = useQuizDelayedAction()
 
   // Track whether sections should animate (false on re-entry, true on user-driven transitions)
   const [animateGate, setAnimateGate] = useState(false)
@@ -101,80 +102,63 @@ export function QuizScalpQuestion() {
 
   const handleTypeSelect = useCallback(
     (value: string) => {
-      if (advancing) return
+      if (
+        !schedule(() => {
+          pushBrowserHistoryEntry()
+          setAnimateGate(true)
+          setPhase("gate")
+        }, MOTION_MS.settle)
+      )
+        return
       setSelectedType(value)
-      setAnswer("scalp_type", value)
-      setAnswer("has_scalp_issue", undefined)
-      setAnswer("scalp_condition", undefined)
-      setAdvancing(true)
-      setTimeout(() => {
-        pushBrowserHistoryEntry()
-        setAnimateGate(true)
-        setPhase("gate")
-        setAdvancing(false)
-      }, MOTION_MS.settle)
+      setAnswers({ scalp_type: value, has_scalp_issue: undefined, scalp_condition: undefined })
     },
-    [advancing, pushBrowserHistoryEntry, setAnswer],
+    [pushBrowserHistoryEntry, schedule, setAnswers],
   )
 
   const handleGateAnswer = useCallback(
     (answer: "ja" | "nein") => {
-      if (advancing) return
+      if (isPending()) return
+      if (answer === "nein" && !schedule(goNext, MOTION_MS.settle)) return
       setConditionAnswer(answer)
-      if (answer === "nein") {
-        setAnswer("has_scalp_issue", false)
-        setAnswer("scalp_condition", undefined)
-        setAdvancing(true)
-        setTimeout(() => {
-          goNext()
-        }, MOTION_MS.settle)
-      } else {
-        setAnswer("has_scalp_issue", true)
-        setAnswer("scalp_condition", undefined)
-        setAdvancing(true)
+      setAnswers({ has_scalp_issue: answer === "ja", scalp_condition: undefined })
+      if (answer === "ja") {
+        cancel()
         setAnimateCondition(true)
         pushBrowserHistoryEntry()
         setPhase("condition")
-        setAdvancing(false)
       }
     },
-    [advancing, goNext, pushBrowserHistoryEntry, setAnswer],
+    [isPending, cancel, goNext, pushBrowserHistoryEntry, schedule, setAnswers],
   )
 
   const handleConditionSelect = useCallback(
     (value: string) => {
-      if (advancing) return
+      if (!schedule(goNext, MOTION_MS.settle)) return
       setSelectedCondition(value)
-      setAnswer("has_scalp_issue", true)
-      setAnswer("scalp_condition", value)
-      setAdvancing(true)
-      setTimeout(() => {
-        goNext()
-      }, MOTION_MS.settle)
+      setAnswers({ has_scalp_issue: true, scalp_condition: value })
     },
-    [setAnswer, goNext, advancing],
+    [setAnswers, goNext, schedule],
   )
 
   const handleBack = useCallback(() => {
+    cancel()
     if (phase === "condition") {
       setSelectedCondition("")
       setConditionAnswer("")
-      setAnswer("has_scalp_issue", undefined)
-      setAnswer("scalp_condition", undefined)
+      setAnswers({ has_scalp_issue: undefined, scalp_condition: undefined })
       setAnimateCondition(false)
       setPhase("gate")
     } else if (phase === "gate") {
       setSelectedType("")
       setConditionAnswer("")
-      setAnswer("scalp_type", undefined)
-      setAnswer("has_scalp_issue", undefined)
-      setAnswer("scalp_condition", undefined)
+      setAnswers({ scalp_type: undefined, has_scalp_issue: undefined, scalp_condition: undefined })
       setAnimateGate(false)
       setPhase("type")
     } else {
       goBack()
     }
-  }, [phase, goBack, setAnswer])
+  }, [cancel, phase, goBack, setAnswers])
   const requestBack = useQuizBrowserBack(handleBack)
 
   const pastTypePhase = phase !== "type"

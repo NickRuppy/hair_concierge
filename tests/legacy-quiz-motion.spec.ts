@@ -174,6 +174,52 @@ test.describe("@ci legacy quiz motion", () => {
     await expect.poll(() => activeProgress.evaluate((element) => element.style.width)).toBe("10%")
   })
 
+  test("an atomic multi-select commit animates forward, while draft restore swaps directly", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
+    await page.evaluate(() => {
+      window.localStorage.setItem(
+        "chaarlie_cookie_consent_v1",
+        JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+      )
+      window.localStorage.setItem(
+        "chaarlie:quiz-draft:v1",
+        JSON.stringify({
+          version: 2,
+          savedAt: Date.now(),
+          step: 7,
+          answers: { structure: "wavy", thickness: "fine", density: "medium", hair_length: "long" },
+          funnelPackageKey: null,
+        }),
+      )
+    })
+    await page.reload({ waitUntil: "networkidle" })
+    await expect(
+      page.getByRole("heading", { name: "Sind deine Haare chemisch behandelt?" }),
+    ).toBeVisible()
+    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+    await page.getByRole("button", { name: "Naturhaar", exact: true }).click()
+    await armTransitionCapture(page)
+    await page.getByRole("button", { name: "1 ausgewählt · Weiter", exact: true }).click()
+    const transition = await readTransitionCapture(page)
+    expect(transition).toMatchObject({
+      activeDirection: "forward",
+      activeHeading: "Wie fühlt sich deine Kopfhaut normalerweise an?",
+      outgoingDirection: "forward",
+      outgoingHeading: "Sind deine Haare chemisch behandelt?",
+      outgoingHiddenFromAT: "true",
+      outgoingInert: true,
+      duplicateIds: [],
+    })
+    await page.reload({ waitUntil: "networkidle" })
+    await expect(
+      page.getByRole("heading", { name: "Wie fühlt sich deine Kopfhaut normalerweise an?" }),
+    ).toBeVisible()
+    await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
+  })
+
   test("renders a labelled real profile image on the organic landing", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" })
