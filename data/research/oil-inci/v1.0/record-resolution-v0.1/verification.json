@@ -1,0 +1,12 @@
+{
+  "version": "oil-record-resolution-verification-v0.1",
+  "ok": true,
+  "totals": {
+    "records": 37,
+    "ready": 37,
+    "refused": 0,
+    "corrected": 4,
+    "owner_provisional": 1
+  },
+  "errors": []
+}

@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "cases": 8,
+  "fresh": 6,
+  "replay": 2,
+  "formula_freshness": [
+    {
+      "neutral_id": "R01",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    },
+    {
+      "neutral_id": "R02",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    },
+    {
+      "neutral_id": "R03",
+      "cohort_group": "replay",
+      "exact_prior_capture_matches": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+          "neutral_id": "Q10"
+        }
+      ]
+    },
+    {
+      "neutral_id": "R04",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    },
+    {
+      "neutral_id": "R05",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    },
+    {
+      "neutral_id": "R06",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    },
+    {
+      "neutral_id": "R07",
+      "cohort_group": "replay",
+      "exact_prior_capture_matches": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+          "neutral_id": "Q03"
+        }
+      ]
+    },
+    {
+      "neutral_id": "R08",
+      "cohort_group": "fresh",
+      "exact_prior_capture_matches": []
+    }
+  ],
+  "historical_files": 127,
+  "limits": "Finite captured-formula check only; market survey encounters/recognition are possible. No clean holdout, exact physical stock or sensory class is claimed.",
+  "material_source_sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+  "policy_source_sha256": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+  "role_gaps": 45,
+  "category_eligibility": "Hair oil and anhydrous oil serum use verified separately from weight; no dispenser or fine-hair claim enters blind inputs."
+}

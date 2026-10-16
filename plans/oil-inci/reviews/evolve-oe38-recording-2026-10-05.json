@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "decision_id": "OE38",
+  "date": "2026-10-05",
+  "branch": "codex/oil-inci",
+  "scope": "Routine recording of the exact approved source-scoped product estimate. No policy/material change or new classification run.",
+  "content_fingerprint": "7a76cc9c7a4cc3b12f96aaf3ba3a171b02247548b7cf3c635ab514cb64859b4f",
+  "manifest": "docs/research/oil-inci/README.md\td01c4599f3e618244874aaa903c9d476b6aaa08487f2439fabd1c76602c0795c\nplans/oil-inci/phase1-decision-coverage.md\te20db9215860a834ab2b64b82e16a548240c7271c4ae7959f3404d8b7b848ca9\nplans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json\t545ad74cc5a2f1d7fe4a039ae76a5d1d38c843449bdbc81a9d8579eee545b91e\nplans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md\t91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92\n",
+  "preserved_files": 156,
+  "checks": [
+    "Exact source scope and accepted light/estimate/low/medium contract",
+    "Current accepted overview and guide/decision routing",
+    "All pre-edit historical/round-5/receipt/verifier hashes unchanged",
+    "Frozen round-5 verifier passed",
+    "Frozen round-4 verifier passed",
+    "Four changed-file whitespace and local-link checks passed",
+    "git diff --check passed"
+  ],
+  "review": "Root read back the approved values, source scope, current guides and immutable-history boundary; routine recording requires no new planning or counterpart review.",
+  "limits": "Low-confidence human working estimate; no sensory validation, unseen holdout, fit, runtime/database/catalog or publication.",
+  "artifact_disposition": "Retain decision overlay, current guides/ledger and this administrative receipt for eventual authorized commit; discard temporary preservation snapshot."
+}

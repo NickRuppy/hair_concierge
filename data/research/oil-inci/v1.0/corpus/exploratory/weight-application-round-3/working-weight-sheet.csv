@@ -1,0 +1,11 @@
+case_id,brand,product,source_url,cohort_group,weight,confidence,reason
+W01,K18,Molecular Repair Hair Oil,https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/,blend_product,unknown,low,Mobile ester/squalane backbone; unspecified sunflower part and modified-castor film remain unassessed.
+W02,PRIMAVERA,Jojobaöl bio,https://www.primaveralife.com/jojobaoel-bio.html,single_material_product,light,low,Single jojoba carrier; apply light/low material prior.
+W03,Cliganic,Organic Moringa Oil,https://www.cliganic.com/products/100-pure-organic-moringa-oil,single_material_product,medium,low,"Single moringa carrier; apply approved medium/low practical prior, with light alternative."
+W04,PRIMAVERA,Calendulaöl bio,https://www.primaveralife.com/calendulaoel-bio.html,blend_product,unknown,low,Sunflower/olive carriers; light–medium unresolved. Calendula extract supplies no rich prior.
+W05,Alepia,Huile de Ricin Bio,https://alepia.com/fr/huiles/66-huile-de-ricin-bio-30-ml.html,single_material_product,rich,moderate,Single castor carrier; rich/moderate prior retained.
+W06,NEQI,Smooth Strength Rosemary Oil,https://neqi-hair.com/products/smooth-strength-rosemary-oil,blend_product,unknown,low,Almond/safflower light versus castor rich; no ratio or whole-blend observation chooses the balance.
+W07,PRIMAVERA,Arganöl bio,https://www.primaveralife.com/arganoel-bio.html,single_material_product,medium,low,"Single argan carrier; apply approved medium/low prior, with light alternative."
+W08,Kahai SAS,Kahai Cacay oil,https://kahai.co/wp-content/uploads/2025/12/1.TDS_.pdf,raw_material_benchmark,rich,low,"Exact Cacay seed raw material; provisional rich/low practice prior, not a validated retail product."
+W09,OLAPLEX DE / New Flag,Original N°7 Bonding Oil,https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil,blend_product,unknown,low,Silicone/hydrocarbon/ester system; leading dimethicone grade and retained film balance unresolved.
+W10,PRIMAVERA,Schwarzkümmelöl bio,https://www.primaveralife.com/schwarzkuemmeloel-bio.html,single_material_product,medium,low,"Single black-seed carrier; apply approved medium/low prior, with light alternative."

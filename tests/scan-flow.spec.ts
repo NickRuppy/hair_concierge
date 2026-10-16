@@ -1,3 +1,4 @@
+import { acknowledgeScanWelcomeAfterCameraFallback } from "./helpers/scan-welcome"
 import { expect, test, type Page } from "@playwright/test"
 
 import { SCAN_CONFIRM_LABEL, SCAN_HINT_DEFAULT, SCAN_HINT_SPOTTED } from "../src/lib/scan/guidance"
@@ -305,6 +306,8 @@ async function openLab(
     holdCamera?: boolean
     denyCamera?: string
     tier?: "free" | "premium"
+    /** Mounts the production scan arrival acknowledgement beside the real flow. */
+    welcomeHint?: boolean
     /**
      * Task 7: stands in for the SERVER-derived `retailerSearchEnabled` prop
      * `/scan/page.tsx` passes in production — see `scan-lab-client.tsx`'s
@@ -320,6 +323,7 @@ async function openLab(
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
       )
+      window.sessionStorage.removeItem("chaarlie.scan.welcome-hint-dismissed")
       if (holdCamera) window.__SCAN_LAB_HOLD_CAMERA = true
       if (denyCamera) window.__SCAN_LAB_DENY_CAMERA = denyCamera
       // Fix round 1 (F1): stands in for the SERVER-derived `tier` prop `/scan/page.tsx`
@@ -334,7 +338,7 @@ async function openLab(
       retailerSearchEnabled: boot.retailerSearchEnabled ?? false,
     },
   )
-  await page.goto(LAB_PATH)
+  await page.goto(boot.welcomeHint ? `${LAB_PATH}?welcome=scan` : LAB_PATH)
   await page.waitForFunction(() => Boolean(window.__scanLab))
 }
 
@@ -720,6 +724,24 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
 
     const names = await trackedEventNames(page)
     expect(names.filter((name) => name === "scan_fallback_search_used")).toHaveLength(1)
+  })
+
+  test("camera fallback can be closed before the optional welcome is acknowledged", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { denyCamera: "NotAllowedError", welcomeHint: true })
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-camera", "unavailable")
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
+    const search = page.getByRole("dialog", { name: "Produkt finden", exact: true })
+    await expect(search).toBeVisible()
+    // Camera recovery stays useful while the optional greeting is undismissed.
+    await search.getByRole("searchbox", { name: "Produktname oder Marke" }).fill("Shampoo")
+    await search.getByRole("button", { name: "Suchen", exact: true }).click()
+    await expect(search.getByText("Dazu haben wir nichts gefunden.")).toBeVisible()
+    await acknowledgeScanWelcomeAfterCameraFallback(page)
+    await page.getByRole("button", { name: "Produkt suchen", exact: true }).click()
+    await expect(page.getByRole("dialog").filter({ hasText: "Produkt finden" })).toBeVisible()
   })
 
   test("F8: a dead stream that cannot be re-acquired shows the restart tile", async ({ page }) => {

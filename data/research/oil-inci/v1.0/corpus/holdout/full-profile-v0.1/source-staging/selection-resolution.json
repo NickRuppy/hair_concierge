@@ -1,0 +1,23 @@
+{
+  "artifact": "oil-inci-full-profile-holdout-source-selection-resolution",
+  "version": "v0.1",
+  "resolved_at": "2026-10-09",
+  "registration": "selection-registration.json",
+  "status": "source_staging_complete_with_selection-integrity_and_archetype_concerns",
+  "source_complete_candidate_keys": ["S01", "S02", "S03", "S04", "S05", "S06"],
+  "selection_basis": "Six exact manufacturer-page declarations were source-complete and did not match any prior finished identity found by case-insensitive name/alias sweep of the oil corpus. This is a source-side identity check only; it makes no formula-property judgment.",
+  "selection_integrity_concern": "S01 and S02 were in the frozen registration. S03–S06 were found while seeking source-complete replacements after the registered candidates failed source/novelty checks. They are useful source captures but cannot be represented as valid preregistered unseen-holdout admissions without a new registration followed by fresh source capture. The original registration is intentionally unchanged.",
+  "rejected_or_not_admitted": [
+    {"candidate": "Kérastase Soleil Huile Sirène", "reason": "prior finished formula O03"},
+    {"candidate": "Kérastase Elixir Ultime L’Huile Originale", "reason": "prior finished formula D03"},
+    {"candidate": "Davines OI Oil", "reason": "prior finished formula O25"},
+    {"candidate": "Verb Ghost Oil", "reason": "prior finished formula O26"},
+    {"candidate": "JVN Complete Nourishing Shine Drops", "reason": "prior finished formula O21"},
+    {"candidate": "OLAPLEX No.7 Bonding Oil", "reason": "prior finished formula O07"},
+    {"candidate": "Davines SU Hair Milk", "reason": "maker source is complete for a leave-on milk, but the product title/category does not itself label it an oil; not admitted as the required oil-labelled aqueous/biphasic stress case"},
+    {"candidate": "Bumble and bumble Hairdresser's Invisible Oil UV Protective Dry Oil Finishing Spray", "reason": "maker-source formula list was not accessible in this pass; retailer formula was found but did not meet the source-complete manufacturer-formula preference"},
+    {"candidate": "L'Oréal Professionnel Mythic Oil Original Oil", "reason": "current accessible exact INCI/directions were retailer sources; no coherent current maker-page formula capture was found in this pass"},
+    {"candidate": "Briogeo Farewell Frizz Rosehip, Argan & Coconut Oil Blend", "reason": "current manufacturer search exposed the conditioner page, which references the oil but did not provide the exact oil's current declaration"}
+  ],
+  "archetype_note": "The six admissible manufacturer captures cover mobile spray/oil, silicone-led, botanical, structured-film and shake-to-activate systems. No new exact water-based or explicitly biphasic product that is itself oil-labelled was source-complete in this pass. The absence is a coverage concern, not a substitute classification."
+}

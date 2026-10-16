@@ -1,0 +1,353 @@
+{
+  "scope": "PR693 Shampoo integration and index completion; semantic delta versus current main, including unchanged PR691 dependency",
+  "branch": "codex/shampoo-intake-integration",
+  "base": "412ec3bd7ac8e8c06d3595291ff39f24ce29d426",
+  "parent_pr": 691,
+  "parent_sha": "75da3b16ec4ea96c28341ca7cae342342866a627",
+  "reviewed_fingerprint": "bd8ac03e6e3e3e62b3e2d901e8ae2fe48192566e584900c3ed19c3d705efdf04",
+  "content_fingerprint": "60388c96440d0c06f0198e0b241ddd8861a0e24900792823155d3b251c575db6",
+  "manifest": [
+    {
+      "path": ".agents/skills/product-research-engine/SKILL.md",
+      "sha256": "3cc8c017b957b730095079868f23cca14f153fece034d0da5444d5f10d623e8f"
+    },
+    {
+      "path": "docs/customerio/product-intake-admin-review.md",
+      "sha256": "df17dd6496cbbd48cfc3144d0c5fa1528f54e98fa83c70e0292c85ec86e9de94"
+    },
+    {
+      "path": "docs/product-intake-cloud-ops.md",
+      "sha256": "9b632c3cfa279c4a2f30a8a11f9f63a244fdd3a9cad417bbed9ca774a48d9765"
+    },
+    {
+      "path": "docs/product-intake-research-ops.md",
+      "sha256": "df06c9c80740eb64e886d283a37057d6ae7af35f78e111e2d2a689f72cbedacb"
+    },
+    {
+      "path": "docs/product-intake-shampoo-production-light.md",
+      "sha256": "17991c73736ff1e135dfb3c98dc3f70e3b6578efe95b1252f9f0f883664253b3"
+    },
+    {
+      "path": "docs/research/README.md",
+      "sha256": "6a5df7854c5ed3b53474b1f3d2353817763db291539830c0c2a7c068781a6e10"
+    },
+    {
+      "path": "docs/research/shampoo-inci/README.md",
+      "sha256": "b836d1a7d5f1ae4c437b362c942001671cad27e3929dcda28ce0ba1b9cb4737e"
+    },
+    {
+      "path": "packages/product-intake-core/src/jobs.ts",
+      "sha256": "fd6bdabd9f341e0d3c21e2762355aa1ddc052c58e4b7732a289aa9abbc14eeba"
+    },
+    {
+      "path": "packages/product-intake-core/src/repository.ts",
+      "sha256": "11d11227325e1835e11ea1725c6eb1eeb8946c8cdfd6acf8815859e8dfd5cbfa"
+    },
+    {
+      "path": "plans/product-intake-cloud-research/continuation-2026-10-16.md",
+      "sha256": "47136f753377d5cb37967d566501c62238bf7a3daf46f81a9d9337dbdb8530d6"
+    },
+    {
+      "path": "plans/product-intake-cloud-research/s2-completion-2026-10-16.md",
+      "sha256": "9d3981f7b9841d916099bf007b91c29c2ba600ea6c20cb965f7a7bc010f6da9a"
+    },
+    {
+      "path": "plans/product-intake-cloud-research/s2-shampoo-integration.md",
+      "sha256": "91f73e9227170a4a6defbef1c829f43173869c2d97304cb893b73d4485dd6ebc"
+    },
+    {
+      "path": "plans/product-intake-cloud-research/s3-review-cycles.md",
+      "sha256": "eed070904f1eb14d9613e655164b31cbb4e9777c9c2681678485fa4e18b8d312"
+    },
+    {
+      "path": "scripts/product-intake/admin-alert-test-database.ts",
+      "sha256": "b2a8f1c83ae46951d7ba2e3a0c28f0acbc1df35c08df1d60fe91c9a657b6d0e3"
+    },
+    {
+      "path": "scripts/product-intake/admin-review-alert-health.ts",
+      "sha256": "f2f280c32057677a60f9a98b2401ac1834559a985ff86e5327c66d8d4572bcc3"
+    },
+    {
+      "path": "scripts/product-intake/admin-review-alert.ts",
+      "sha256": "ce7538a894097d72e51ef981e121f55cbd528e49ec5b8ccc3fae4d5aab56fa88"
+    },
+    {
+      "path": "scripts/product-intake/codex-research-worker.ts",
+      "sha256": "17125cf1ba2c18e90af6fc7972373399d6ac6887d8e44f7cf167a7194b817189"
+    },
+    {
+      "path": "scripts/shampoo-research/project-production-light.ts",
+      "sha256": "e963daabdb6e4e2ac804c0901dbe58ac13f6880837e13af12e8c3963fd55f579"
+    },
+    {
+      "path": "src/lib/product-intake/admin-review-outbox-health.ts",
+      "sha256": "0e0468a88de947c9ba7f25ccc8241763483c9f8fdfb0192b3baf4c0455e32607"
+    },
+    {
+      "path": "src/lib/product-intake/category-research-router.ts",
+      "sha256": "04a7139824244f4782b785203a866a0fb517fc21f7fe04495f532a37d853124b"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/image.ts",
+      "sha256": "71e55ee5f366f13db2e5e928817279d2d85e581ba26d0b6d9eb644314576c331"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/inci.ts",
+      "sha256": "ed67834ba5ffc0c1a72ed7e57451b36071734d9811bc196934b52ed5ebab5c8f"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/oil-completion.ts",
+      "sha256": "8cc6d9cfffac8c5a137ebb54298335e75a6b04b7beafe4c6444e55cc0b9b7923"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/process.ts",
+      "sha256": "6366a8bd77fc42477a964e0048dcd2d8203a26271e5fd2289aa315eb4b287541"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/research-judge.ts",
+      "sha256": "41aca7a50e7649790e1a75d214bbaf4da732b41a230f0f4835399abac2cc9a63"
+    },
+    {
+      "path": "src/lib/product-intake/pipeline/review-cycle.ts",
+      "sha256": "35335eb43d3c79c7bdbdc97edd0f62d9810c84234d7e87c448d85c30c066f2f6"
+    },
+    {
+      "path": "src/lib/product-intake/shampoo-research-adapter.ts",
+      "sha256": "c07254e6067e9a8d3318377da30aede4e81bc1d53642599e6b928bfe1909fef6"
+    },
+    {
+      "path": "src/lib/product-intake/shampoo-research-prompt-contract.ts",
+      "sha256": "86637377d3e06cb866c508d84f30d978522fd05f85098f3faf7349e5567f867e"
+    },
+    {
+      "path": "src/lib/product-intake/shampoo-research-stages.ts",
+      "sha256": "a9cc676404ae86b18a28bdce3c458e2c99d99923016cfeffdcc22bbf09c3e885"
+    },
+    {
+      "path": "src/lib/shampoo/production-light-adapter.ts",
+      "sha256": "0663b3bfda87743c9f49921bebf4c30c79b5b23621c4c08f7fed3a515e29ccbf"
+    },
+    {
+      "path": "supabase/migrations/20261016052958_product_intake_review_cycles.sql",
+      "sha256": "1e9c585d8755c9699636d43d745a6fd04176ca15363b86c8606a52017e848176"
+    },
+    {
+      "path": "supabase/migrations/20261016131141_product_intake_atomic_artifact_ids.sql",
+      "sha256": "97a4def6c78996f89812338bf5e82ac93877c8b0afa96395abcec753052b6a0b"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A01.json",
+      "sha256": "c66cd11103bc62309b55703c8fa276018a5623078312e911afac4a8617625510"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A02.json",
+      "sha256": "1e0701643c7c27d7fba985398343e15cce6d2674637ae763f8cc66de270c9843"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A08.json",
+      "sha256": "0192907e80b85303c5da5430a753c9bb89f6634542bfa6b39fda7c6a41ea7503"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A09.json",
+      "sha256": "6dff171e6bc6d1603632d4e4da90f660cd433c40c8dfe0e0fe890c03fee4f343"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A10.json",
+      "sha256": "17fc886bc8a97984dc31aa56789bc970406e09c4046b88183482b6e552c09c9a"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A19.json",
+      "sha256": "d5d80968639a29a8123426d15d826702fc160b5a701f22cb027cda5ad5486710"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A35.json",
+      "sha256": "49a9d5e883afba604eca560be8d44c6262d08b03acdbf2fa5bbc8afc6272ce68"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A39.json",
+      "sha256": "009b5847713e384c0519a2b93ecc74fe8455cae717cd68370f2fce7eb12c3622"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A47.json",
+      "sha256": "48cb1725e18bd18064ed3cdb8e15abd3cd9a1f320fff18c4d6db934a26215461"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/A51.json",
+      "sha256": "25bfd6eda604f25367673af3caeb11db3b4b88b8c436474c27242f3e39e48bda"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/U2.json",
+      "sha256": "d089b0f8d4db4090d892cd4db46315e42ba60725472b8c1b524587e57931054c"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/U6.json",
+      "sha256": "68ae12c829c1a2afc352b0266455290de47d450d51fa5294d497358e8c2ab94f"
+    },
+    {
+      "path": "tests/fixtures/shampoo-production-light/v1.6.2/merged-records.json",
+      "sha256": "9a7f8645a89a9c30d70c75e7eaa84335a26b1a92bf839349fbcf19889961fe33"
+    },
+    {
+      "path": "tests/oil-worker-admission.test.ts",
+      "sha256": "70d3a1535a7449f07313bf4fa460eea9526fe2b3b177d0a1b705eadbb8ea4c56"
+    },
+    {
+      "path": "tests/product-intake-admin-review-outbox-health.test.ts",
+      "sha256": "47e7124e914c05aeb4ee0696db7024557a1ca6646e1f5b895c951c2a008d54d9"
+    },
+    {
+      "path": "tests/product-intake-category-research-router.test.ts",
+      "sha256": "6d6e095e9fcf51cfdf26fa7a08ebd2de19fee23ab79b25f3857396cbd34b9a7a"
+    },
+    {
+      "path": "tests/product-intake-image-quality-judge.test.ts",
+      "sha256": "fabfe61ed1eec32a4b9cb2ee00ff1a69523ea06e56c0728fc5cad2699b2debe6"
+    },
+    {
+      "path": "tests/product-intake-pipeline-inci.test.ts",
+      "sha256": "a937977f9b9a1565dc5c77a18ceb58d80b68a61d995cca683c7d10651b9d5b13"
+    },
+    {
+      "path": "tests/product-intake-projected-research-judge.test.ts",
+      "sha256": "1e7d42afde3634cd3cb987812971f93cfb9333a4fac626a8e3e3d8620137ec17"
+    },
+    {
+      "path": "tests/product-intake-research-jobs-postgres.test.ts",
+      "sha256": "c62c5dbe40bdef77b83a4d95c094f4b7765b44e640fd63b66dcaaec4e5979870"
+    },
+    {
+      "path": "tests/product-intake-research-readiness-self-check.test.ts",
+      "sha256": "8cffb541e286d3e9075d2dcddb8d01ba6d5eb70c24b9f090fe614031d2f8c54e"
+    },
+    {
+      "path": "tests/product-intake-review-cycle-race.test.ts",
+      "sha256": "c54b78dc7a074731741b55a53d7de102c0fa7216b146d38e42dd090df72e1366"
+    },
+    {
+      "path": "tests/product-intake-router-characterization.test.ts",
+      "sha256": "f25fc101c4580ae015e8fbba77368a0d99bc8829791170ceb2c21025fce02b61"
+    },
+    {
+      "path": "tests/product-intake-shampoo-research-adapter.test.ts",
+      "sha256": "6f3ec7c44e599d4d08c44cc700241645e554dd2758703ce87e48613504073cb2"
+    },
+    {
+      "path": "tests/product-intake-shampoo-research-stages.test.ts",
+      "sha256": "04214f15c7d6cf1fffad0cda7f2c16846ced4530889e10f81b7cdaf986d0547e"
+    },
+    {
+      "path": "tests/product-intake-shampoo-worker.test.ts",
+      "sha256": "41c6e50ed1dc80bae2b736f41c4801673e7f5131ffbf3c5edf865e0e5bb20159"
+    },
+    {
+      "path": "tests/product-intake-worker-heartbeat.test.ts",
+      "sha256": "555b26381e00cab7b596091a6d609d900c2d06f2f993c7b22ba80b1aebe94be8"
+    },
+    {
+      "path": "tests/product-intake-worker-reliability.test.ts",
+      "sha256": "689c5cce5d11c413a47402e866fe492cd086089884f50fd9a4853417a3916465"
+    },
+    {
+      "path": "tests/product-intake-worker-review-cycle.test.ts",
+      "sha256": "cccd6629e9f3844c97988447c984423200f46f3e6aca0547b867e6d1d8f21f15"
+    },
+    {
+      "path": "tests/shampoo-production-light-adapter.test.ts",
+      "sha256": "eedc80df96af4dd7b1f75695d1f1b0834c9a45fe360bc6758a488d749b614660"
+    },
+    {
+      "path": "tests/shampoo-production-light-calibration.test.ts",
+      "sha256": "1aadde73d0b8edda3ae52c13f543f7a097aeee08cb30bb3f62414a39cf4867c3"
+    },
+    {
+      "path": "tests/shampoo-production-light-cli.test.ts",
+      "sha256": "928a03bec287f217f6721ea5bd9d5e50f1d5b5c2f545567e1d614f9cda0f7455"
+    }
+  ],
+  "coverage_acknowledgement": "Finish Shampoo integration in PR693 and refresh engine index; use subagents; matching manual; no deploy",
+  "decision_coverage": "confirmed; existing plan and present user authorization, no new consequential choice",
+  "internal_revalidation": "Exact parent and main refreshed; manual approval and migration/deployment boundaries intact",
+  "verified_outcomes": [
+    "Shampoo v1.6.2 staged server binding and projection",
+    "Missing binding RPC fails closed for Shampoo",
+    "Merged Oil admission and pointers preserved in one atomic completion",
+    "Exact retry, stale lease, invalid and duplicate ID rollback",
+    "Current index/skill/bridge versions agree; code versus release distinguished",
+    "Frozen method bytes and original parent migration unchanged"
+  ],
+  "checks": [
+    {
+      "command": "Final focused batch (15 owner/sibling files; command in completion plan)",
+      "result": "222 passed, 0 failed, 0 skipped",
+      "log": "/tmp/shampoo-completion-final-focused.log"
+    },
+    {
+      "command": "Real PostgreSQL Oil publication and review-cycle race suites",
+      "result": "2 passed, 0 failed, 0 skipped",
+      "log": "/tmp/shampoo-completion-real-postgres.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "pass",
+      "log": "/tmp/shampoo-completion-typecheck.log"
+    },
+    {
+      "command": "Core workspace typecheck",
+      "result": "pass",
+      "log": "/tmp/shampoo-completion-core-typecheck.log"
+    },
+    {
+      "command": "Review-app workspace typecheck",
+      "result": "pass",
+      "log": "/tmp/shampoo-completion-review-typecheck.log"
+    },
+    {
+      "command": "Explicit scoped source ESLint",
+      "result": "0 errors; 6 unchanged worker warnings",
+      "log": "/tmp/shampoo-completion-source-lint.log"
+    },
+    {
+      "command": "git diff origin/main --check",
+      "result": "pass; inherited main bytes preserved"
+    },
+    {
+      "command": "prettier on new/helper and affected core/worker/test source",
+      "result": "all unchanged"
+    }
+  ],
+  "red_evidence": [
+    "/tmp/shampoo-completion-binding-red-valid.log",
+    "/tmp/shampoo-atomic-ids-sql-red.log",
+    "/tmp/shampoo-oil-idempotent-red.log"
+  ],
+  "browser_manual": "No new UI or customer journey; existing approved Admin journey reused. Live model quality and exact publication approval are separate gates.",
+  "artifact_disposition": {
+    "commit": "All task-owned source, tests, living guidance, completion plan and this receipt; already-merged main bytes imported unchanged",
+    "archive_outside_repository": "Transient logs and Claude reports under /tmp; reports are advisory evidence, not runtime inputs",
+    "preserve": "Parent691 worktree/branch and projector682 unchanged; root main clean"
+  },
+  "gates": [
+    "Parent691 merge/retarget and PR-event CI require separate authorization",
+    "PR682 explicit supersession disposition before merge",
+    "Ordered migrations before separately authorized worker release",
+    "Admin/resource/cohort/backlog tasks remain in parent setup checklist",
+    "Manual matching approvals; no auto catalog publication",
+    "No deployment, queue mutation, live model trial or migration application"
+  ],
+  "review": {
+    "verdict": "No blocking findings; approved for draft update, merge/deploy separate",
+    "lanes": [
+      "normal correctness, security and data integrity",
+      "structural maintainability: worker orchestration, state and SQL concurrency"
+    ],
+    "counterpart_report": "/tmp/shampoo-completion-code-review.md",
+    "main_delta_review": "Cloud-ops ordered-migration guidance and completion receipt only; verified unchanged source after review",
+    "residual_risks": [
+      "Prepared-output ID reuse is in-process; a new lease is a new completion",
+      "Invalid ID raises cast error and rolls back; IDs are server allocated",
+      "Parent migration must precede successor before release"
+    ]
+  },
+  "hosted_ci": "dispatch after reviewed commit; exact head receipts kept with PR",
+  "fingerprint_definition": "SHA256 of sorted manifest paths with current file SHA256 or DELETED, relative to origin/main; this self-referential receipt excluded"
+}

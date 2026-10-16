@@ -1,0 +1,44 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "lane": "a",
+  "files_read": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/blind-method.md",
+      "sha256": "1b1f2ed476e1ee4b1ae1a745148a617c20aef9fdd9edd0841c74b5ac7b6b2435"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/material-priors.json",
+      "sha256": "ed2cf346bb3a5aa0419a25f3ddfc4ec651c6a372383f2d3d9496cf8b002e91d4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet.json",
+      "sha256": "b217cfbe6b788ab181a0239ea097c385654aa50d0afd721ba85c7c266e4ba9e1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json",
+      "sha256": "45fbdca0710d99bbc813409c9de388a40b9a31ba20931535f831e9ee73ff0253"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/input-manifest.json",
+      "sha256": "e0d9dbb9f370cd9432123d28f9e5c7b07abc925b52e9fbea4eb47e4cd86afe25"
+    }
+  ],
+  "produced_results": {
+    "path": "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-a/results.json",
+    "sha256": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3"
+  },
+  "input_manifest_hashes_verified": true,
+  "formula_sha256_by_id": {
+    "BC01": "2117386e6003ce67018ac9b6678a10bd69ab038a100fac5d00cabeb886fb9305",
+    "BC02": "3a7ad45323ac92d6d1356ba43dc315df7aec1e6d692aee0b8b2c61c86dd706a0",
+    "BC03": "98698ad5a7176ef08ff1a29210051809cf736a6b6e74d480ec9baad19d9b9ecf",
+    "BC04": "29ffa1796de90d3f8c119b103e2b0438bec174498e3ecda9a86a5b6386baee41"
+  },
+  "recognition_incidents": [],
+  "access_incidents": [],
+  "peer_access": false,
+  "browsing": false,
+  "other_files_read": false,
+  "verification": "Light in-memory JSON, required-field, complete ordered ledger and input-manifest SHA256 checks only. Initial combined display was truncated; allowed JSON files were subsequently queried for exact packet ingredients, functions and matching priors.",
+  "open_methodological_concern": "B5 principal-versus-secondary silicone-film placement and B3 botanical emphasis remain qualitative tie-breakers. Without amounts or sensory comparisons, BC01 medium versus light and BC04 medium versus rich can plausibly differ between independent assessors without a rule violation. Unassessed additions remain live gaps, not proof of negligible load."
+}

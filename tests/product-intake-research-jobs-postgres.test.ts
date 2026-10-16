@@ -6,7 +6,7 @@ import {
   commitResearchPass,
   reserveResearchModelRun,
   ResearchModelReservationError,
-  type AppendResearchArtifactParams,
+  type CommitResearchPassParams,
 } from "@chaarlie/product-intake-core"
 
 import { createAdminAlertTestDatabase } from "../scripts/product-intake/admin-alert-test-database"
@@ -939,6 +939,7 @@ async function commitCycle(
     artifacts: (options.artifacts ?? []).map((value) => {
       const artifact = value as Record<string, unknown>
       return {
+        id: artifact.id,
         kind: artifact.kind,
         payload: artifact.payload,
         status: artifact.status,
@@ -946,7 +947,7 @@ async function commitCycle(
         sourceUrls: artifact.source_urls,
         model: artifact.model,
         promptVersion: artifact.prompt_version,
-      } as Omit<AppendResearchArtifactParams, "jobId" | "submissionId">
+      } as NonNullable<CommitResearchPassParams["artifacts"]>[number]
     }),
     autoRework: options.autoRework ?? false,
   })) as unknown as Job
@@ -1190,6 +1191,117 @@ test("final artifacts commit atomically, identify stored images, and exact repla
     (await pg.query("SELECT * FROM public.product_intake_research_artifacts")).rows.length,
     3,
   )
+})
+
+test("atomic handoff persists allocated artifact IDs with payload references and rejects collisions without partial writes", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  const [job] = await claim(pg)
+  await reserve(pg, job!)
+  const identityId = "33333333-3333-4333-8333-333333333333"
+  const propertiesId = "44444444-4444-4444-8444-444444444444"
+  const artifacts = [
+    { id: identityId, kind: "identity_candidate", payload: { name: "Test Oil" } },
+    { id: propertiesId, kind: "property_synthesis", payload: { weight: "light" } },
+    finalArtifacts[2]!, // Generic callers still rely on database-generated IDs.
+  ]
+  const payload = { identity_artifact_id: identityId, property_artifact_id: propertiesId }
+  const decision = (
+    await pg.query<{ id: string }>(
+      `INSERT INTO public.product_intake_review_decisions
+      (submission_id, job_id, field_path, decision, reviewed_by)
+     VALUES ($1, $2, 'identity.name', 'change_requested', 'nick') RETURNING id`,
+      [job!.submission_id, job!.id],
+    )
+  ).rows[0]!
+  const snapshot = async () => ({
+    job: await storedJob(pg, job!.id),
+    submissions: (await pg.query("SELECT * FROM public.product_submissions ORDER BY id")).rows,
+    artifacts: (
+      await pg.query("SELECT * FROM public.product_intake_research_artifacts ORDER BY id")
+    ).rows,
+    decisions: (await pg.query("SELECT * FROM public.product_intake_review_decisions ORDER BY id"))
+      .rows,
+    notifications: (
+      await pg.query("SELECT * FROM public.product_intake_admin_notifications ORDER BY id")
+    ).rows,
+  })
+  const before = await snapshot()
+  const options = { artifacts, payload, decisionIds: [decision.id] }
+  await assert.rejects(
+    commitCycle(pg, { ...job!, locked_by: "expired-worker" }, options),
+    /lock no longer matches/,
+  )
+  assert.deepEqual(await snapshot(), before)
+  for (const invalidId of [null, 42, "not-a-uuid"]) {
+    await assert.rejects(
+      commitCycle(pg, job!, {
+        ...options,
+        artifacts: [artifacts[0]!, { ...artifacts[1]!, id: invalidId }],
+      }),
+      /invalid research artifact|invalid input syntax for type uuid/,
+    )
+    assert.deepEqual(await snapshot(), before, `invalid ID ${invalidId} rolls back earlier inserts`)
+  }
+  await assert.rejects(
+    commitCycle(pg, job!, {
+      ...options,
+      artifacts: [artifacts[0]!, { ...artifacts[1]!, id: identityId }],
+    }),
+    /duplicate key value/,
+  )
+  assert.deepEqual(await snapshot(), before, "duplicate IDs roll back the entire handoff")
+
+  const saved = await commitCycle(pg, job!, options)
+  const stored = (
+    await pg.query<{ id: string; kind: string }>(
+      "SELECT id,kind FROM public.product_intake_research_artifacts ORDER BY kind",
+    )
+  ).rows
+  assert.equal(stored.find((row) => row.kind === "identity_candidate")!.id, identityId)
+  assert.equal(stored.find((row) => row.kind === "property_synthesis")!.id, propertiesId)
+  const generatedId = stored.find((row) => row.kind === "processed_image")!.id
+  assert.match(generatedId, /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/)
+  assert.deepEqual(saved.progress.artifact_ids, [identityId, propertiesId, generatedId])
+  assert.equal(saved.progress.processed_image_artifact_id, generatedId)
+  assert.deepEqual(
+    (
+      await pg.query<{ researched_payload: unknown }>(
+        "SELECT researched_payload FROM public.product_submissions WHERE id=$1",
+        [job!.submission_id],
+      )
+    ).rows[0]!.researched_payload,
+    payload,
+  )
+  const committed = await snapshot()
+  assert.deepEqual(await commitCycle(pg, job!, options), saved)
+  assert.deepEqual(
+    await snapshot(),
+    committed,
+    "exact replay neither replaces artifacts nor emits another event",
+  )
+  await assert.rejects(
+    commitCycle(pg, job!, {
+      ...options,
+      artifacts: [{ ...artifacts[0]!, id: propertiesId }, ...artifacts.slice(1)],
+    }),
+    /completion replay/,
+  )
+  assert.deepEqual(await snapshot(), committed)
+
+  await queuedJob(pg)
+  const [otherJob] = await claim(pg, "worker-b")
+  const beforeCollision = await snapshot()
+  await assert.rejects(
+    commitCycle(pg, otherJob!, { artifacts: [finalArtifacts[0]!, artifacts[0]!] }),
+    /duplicate key value/,
+  )
+  assert.deepEqual(
+    await snapshot(),
+    beforeCollision,
+    "existing IDs cannot be replaced by another job",
+  )
+  assert.deepEqual(await storedJob(pg, otherJob!.id), otherJob)
 })
 
 test("cycle reservation privileges and closed submission rework remain service-only", async (t) => {

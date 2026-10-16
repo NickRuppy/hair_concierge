@@ -1,0 +1,441 @@
+{
+  "artifact": "hair-weight-lane-ambiguous",
+  "prepared_at": "2026-10-02",
+  "status": "advisory_hair_tendencies_for_parent_review",
+  "scope": "16 exact INCI entries; equal modest neat-oil leave-on dose near room temperature; no finished-product, penetration, efficacy, or hair-fit classifications.",
+  "method": "A low-confidence engineering tendency may be useful without a hair panel. Viscosity supports ease of distribution and localized coating, not remaining mass, absorption or a deterministic class threshold. Same-dose hair film depends also on wetting, hair substrate, application and elapsed time. No medium fallback or class quota.",
+  "foundational_source": {
+    "url": "https://www.cosmeticsandtoiletries.com/magazine/article/22862759/cosmetics-toiletries-magazine-choosing-the-right-plant-oil-for-hair-and-skin-benefits",
+    "observation": "Marsh, Knowles and Simmonds 2023: viscosity affects spreading/heaviness; hair lubrication depends on level and surface coverage. This supports physical inference, not measured classes."
+  },
+  "entries": [
+    {
+      "id": "rapeseed_napus",
+      "inci": "BRASSICA NAPUS SEED OIL",
+      "aliases": [],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Neat rapeseed in a same-method comparison flows close to sunflower. At equal modest application this supports a readily distributed thin hair coating and LIGHT tendency; no skin-absorption transfer. Exact Napus identity is separately confirmed.",
+      "sources": [
+        "https://ota-oil.co.jp/business/cosmetic-materials/brassica/",
+        "https://onlinelibrary.wiley.com/doi/10.5402/2011/531510"
+      ],
+      "source_observations": [
+        "Supplier specifies Brassica Napus Seed Oil, expressed then refined.",
+        "Balafoutis et al. 2011 Table 3: measured neat sunflower 40.96, rapeseed 42.38, cottonseed 41.67 cSt at 35 C; seeds screw-expelled and filtered. Species and cosmetic grade unspecified. Only neat-oil viscosity used; fuel blends and engine outcomes excluded."
+      ],
+      "excluded_evidence": [
+        "Supplier lightweight skin copy",
+        "Engine and fuel-blend performance"
+      ],
+      "remaining_uncertainty": "Study botanical species/grade not specified; cosmetic Napus and high-erucic grades may differ.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "canola_declaration",
+      "inci": "CANOLA OIL",
+      "aliases": [],
+      "previous_value": "unknown",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "RBD canola has a documented fluid liquid profile rather than castor-like thick flow. A thin distributed hair film at modest dose is a reasonable LIGHT engineering estimate, with MEDIUM credible; not a generic synonym of Napus/Campestris.",
+      "sources": [
+        "https://ss3-production-public.s3.amazonaws.com/seller-document/1/28D9568BD1FBC0C6D73719F272893D13.pdf",
+        "https://onlinelibrary.wiley.com/doi/10.5402/2011/531510"
+      ],
+      "source_observations": [
+        "LDC canola specification revision 7 June 2024: RBD canola with at most 0.0015% citric acid, typical viscosity 46.2 cP at 30 C. Food-grade physical anchor; not exact cosmetic batch measurement.",
+        "Balafoutis et al. 2011 Table 3: measured neat sunflower 40.96, rapeseed 42.38, cottonseed 41.67 cSt at 35 C; seeds screw-expelled and filtered. Species and cosmetic grade unspecified. Only neat-oil viscosity used; fuel blends and engine outcomes excluded."
+      ],
+      "excluded_evidence": [
+        "AAK skin sensory",
+        "Diluted canola hair blends"
+      ],
+      "remaining_uncertainty": "30 C food-grade viscosity is not a room-temperature cosmetic hair test; ordinary intact canola only.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "flax_linseed",
+      "inci": "LINUM USITATISSIMUM SEED OIL",
+      "aliases": [
+        "LINUM USITATISSIMUM (LINSEED) SEED OIL"
+      ],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "hair_specific_guidance",
+      "reason": "Exact refined Linum oil supplier explicitly describes lightweight hair moisturization. Retain LIGHT as weak practical guidance for fresh unmodified cosmetic oil.",
+      "sources": [
+        "https://www.oand3.com/product/linseed-oil-refined/"
+      ],
+      "source_observations": [
+        "Linum Usitatissimum Seed Oil grade has explicit lightweight hair moisturization wording."
+      ],
+      "excluded_evidence": [
+        "Skin lightness",
+        "Flax gel",
+        "Boiled/polymerized drying oils",
+        "Oxidation used as a weight ranking"
+      ],
+      "remaining_uncertainty": "No dose, hair type or comparative panel disclosed; cold-pressed grades may differ.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "evening_primrose",
+      "inci": "OENOTHERA BIENNIS OIL",
+      "aliases": [
+        "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+      ],
+      "previous_value": "unknown",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Cold-pressed exact-species oil measured 54.6 mPa.s at 20 C: fluid enough for thin distribution over hair at equal modest dose. This is positive physical support for LIGHT, not averaging conflicting skin claims into MEDIUM.",
+      "sources": [
+        "https://www.ippt.pan.pl/repository/open/o10344.pdf"
+      ],
+      "source_observations": [
+        "Krysiak et al. 2020 ACS doi:10.1021/acsabm.0c00854, sections 2.6 and 3.3/Table 1: cold-pressed OlVita Oenothera biennis 54.6 +/-0.1 and Etja Borago officinalis 18.7 +/-0.1 mPa.s at 20 C. Neat rheology measured in triplicate; Newtonian. PVB wetting and skin tests are not hair results."
+      ],
+      "excluded_evidence": [
+        "Oily skin residue",
+        "Low-percentage blended hair claims",
+        "PVB/skin wetting as hair evidence"
+      ],
+      "remaining_uncertainty": "Single supplier batch; remaining surface oil and strand clumping not measured; MEDIUM plausible.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "borage",
+      "inci": "BORAGO OFFICINALIS SEED OIL",
+      "aliases": [
+        "BORAGO OFFICINALIS (BORAGE) SEED OIL"
+      ],
+      "previous_value": "unknown",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Measured exact-species cold-pressed oil is low-viscosity (18.7 mPa.s at 20 C), favouring easy distribution and less concentrated film on hair. LIGHT is more defensible than RICH inferred from skin oiliness.",
+      "sources": [
+        "https://www.ippt.pan.pl/repository/open/o10344.pdf"
+      ],
+      "source_observations": [
+        "Krysiak et al. 2020 ACS doi:10.1021/acsabm.0c00854, sections 2.6 and 3.3/Table 1: cold-pressed OlVita Oenothera biennis 54.6 +/-0.1 and Etja Borago officinalis 18.7 +/-0.1 mPa.s at 20 C. Neat rheology measured in triplicate; Newtonian. PVB wetting and skin tests are not hair results."
+      ],
+      "excluded_evidence": [
+        "Oily versus lightweight skin descriptors",
+        "GLA content as heaviness",
+        "PVB spreading as hair measurement"
+      ],
+      "remaining_uncertainty": "Unusually low measured value is one supplier sample; do not claim all borage grades share it or infer evaporation/absorption.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "camelina",
+      "inci": "CAMELINA SATIVA SEED OIL",
+      "aliases": [],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "hair_specific_guidance",
+      "reason": "Manufacturer explicitly describes light nourishment without weighing down the hair fibre and suitability even for fine hair; small amounts on lengths support LIGHT practical tendency.",
+      "sources": [
+        "https://www.aroma-zone.com/page/bienfaits-huile-cameline"
+      ],
+      "source_observations": [
+        "Manufacturer describes camelina as light nourishment of the hair fibre, small amounts on lengths/ends, suitable even for fine hair without weighing down. Nearby passage also mentions mixing oils: useful guidance, not a neat controlled test."
+      ],
+      "excluded_evidence": [
+        "Dry skin feel",
+        "Scalp/growth benefits",
+        "Mixed-oil prewash results"
+      ],
+      "remaining_uncertainty": "Commercial advice includes mixing and very small dosage, so no equal-dose neat-oil validation.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "chia",
+      "inci": "SALVIA HISPANICA SEED OIL",
+      "aliases": [],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Unmodified chia oil measured about 43 mPa.s at 20 C supplies a direct fluidity anchor. Thin distribution over strands is plausible at modest dose, favouring LIGHT without claiming rapid hair absorption.",
+      "sources": [
+        "https://doi.org/10.1002/ppap.202300224"
+      ],
+      "source_observations": [
+        "Bellmann et al. 2024: unmodified chia oil 46.7 mm2/s and density 0.930 at 293.15 K, calculated dynamic viscosity 43.4 mPa.s; plasma coating results not used."
+      ],
+      "excluded_evidence": [
+        "Light skin feel",
+        "Mousse/conditioner volume claims",
+        "Chia gel",
+        "Epoxidized or plasma-polymerized oil results"
+      ],
+      "remaining_uncertainty": "Material from an engineering study rather than cosmetic hair test; spreading on hair remains inferred.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "blackcurrant",
+      "inci": "RIBES NIGRUM SEED OIL",
+      "aliases": [
+        "RIBES NIGRUM (BLACK CURRANT) SEED OIL"
+      ],
+      "previous_value": "unknown",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Primary physical study finds a mobile blackcurrant seed oil (~27 cSt at 40 C). Compared at the same temperature with typical seed oils, it supports a thin-film LIGHT tendency instead of interpreting its heavy odour as rich coating.",
+      "sources": [
+        "https://www.mdpi.com/2076-3417/10/24/9086"
+      ],
+      "source_observations": [
+        "Olszak et al. 2020: supercritical-CO2-extracted blackcurrant seed oil in Fig 1 approximately 27 cSt at 40 C, visually read from PDF plot; lower than strawberry/chokeberry samples. This is bulk flow, not hair lubrication or cosmetic sensory."
+      ],
+      "excluded_evidence": [
+        "Heavy/oily odour",
+        "Skin non-greasy template",
+        "Hair-growth claims",
+        "Hydraulic performance as hair performance"
+      ],
+      "remaining_uncertainty": "Supercritical extraction and 40 C are imperfect proxies for cold-pressed/refined room-temperature cosmetic oil; MEDIUM plausible.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sunflower_hybrid",
+      "inci": "HELIANTHUS ANNUUS HYBRID OIL",
+      "aliases": [],
+      "previous_value": "unknown",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Exact Heess high-oleic grade may use either Seed Oil or Hybrid Oil declaration. Retain approved sunflower LIGHT tendency through this limited grade bridge and fluid triglyceride film rationale, with no universal alias or claim that every hybrid is identical.",
+      "sources": [
+        "https://chemecosmetics.com/wp-content/uploads/2023/04/Sunflower-oil-high-oleic-refined-organic_Product-Dossier_22.03.pdf",
+        "https://www.cosmeticsandtoiletries.com/magazine/article/22862759/cosmetics-toiletries-magazine-choosing-the-right-plant-oil-for-hair-and-skin-benefits"
+      ],
+      "source_observations": [
+        "Gustav Heess product 220131: 100% refined organic high-oleic sunflower oil, expression from seeds, may carry Seed Oil OR Hybrid Oil INCI. Grade-specific bridge, not universal alias.",
+        "Marsh, Knowles and Simmonds 2023: viscosity affects spreading/heaviness; hair lubrication depends on level and surface coverage. This supports physical inference, not measured classes."
+      ],
+      "excluded_evidence": [
+        "Skin fairly-light descriptor as proof",
+        "Oxidative stability as weight",
+        "Universal Seed Oil=Hybrid Oil alias"
+      ],
+      "remaining_uncertainty": "Hybrid cultivar and grade variation can shift residual coating; approved ordinary sunflower remains a separate entry.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "macadamia_ternifolia",
+      "inci": "MACADAMIA TERNIFOLIA SEED OIL",
+      "aliases": [
+        "MACADAMIA TERNIFOLIA (MACADAMIA) SEED OIL"
+      ],
+      "previous_value": "light",
+      "recommended": "medium",
+      "confidence": "low",
+      "nearest_alternative": "light",
+      "evidence_basis": "material_inference",
+      "reason": "Suggest MEDIUM coherently with the macadamia family: producer physical anchor of 80 mPa.s at 20 C predicts somewhat more persistent localized coating than lower-viscosity seeds, yet far below castor. Exact ternifolia hair styling use supports a manageable film. Species transfer is explicit, weak, and not synonymy.",
+      "sources": [
+        "https://www.mayomacs.co.za/wp-content/uploads/2026/01/2025-Product-SPEC-Macadamia-Oil-Product-Specification-Non-Food-Grade-1.pdf",
+        "https://naissance.com/products/macadamia-nut-oil"
+      ],
+      "source_observations": [
+        "Mayo Macs mechanical-pressed integrifolia and/or tetraphylla kernel oil: viscosity specification 80 mPa.s at 20 C, 40 at 38 C. Family physical anchor, not proof for exact ternifolia or hybrid cosmetic declaration; method unspecified.",
+        "Refined/deodorized Macadamia ternifolia product is suggested on damp hair before styling for shine/frizz. Lightweight wording is predominantly skin/general, and separate mask is washed out; neither supplies a hair heaviness measurement."
+      ],
+      "excluded_evidence": [
+        "Oleon lightweight skin descriptor",
+        "Naissance skin absorption",
+        "Wash-out mask result",
+        "MakingCosmetics skin-rich/heavy-cream wording"
+      ],
+      "remaining_uncertainty": "80 mPa.s is integrifolia/tetraphylla family data, not measured ternifolia; refined ternifolia could be LIGHT. Difference from integrifolia is not established.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "macadamia_hybrid",
+      "inci": "MACADAMIA INTEGRIFOLIA/TETRAPHYLLA SEED OIL",
+      "aliases": [
+        "MACADAMIA INTEGRIFOLIA / TETRAPHYLLA SEED OIL",
+        "MACADAMIA INTEGRIFOLIA TETRAPHYLLA SEED OIL"
+      ],
+      "previous_value": "unknown",
+      "recommended": "medium",
+      "confidence": "low",
+      "nearest_alternative": "light",
+      "evidence_basis": "material_inference",
+      "reason": "MEDIUM is a material-led macadamia-family estimate: mechanically pressed integrifolia/tetraphylla oil has ~80 mPa.s at 20 C, while the exact hybrid supplier calls its refined oil low-viscosity. Together suggest a modest persistent lubricating film, not RICH. LIGHT remains close for refined grades.",
+      "sources": [
+        "https://www.mayomacs.co.za/wp-content/uploads/2026/01/2025-Product-SPEC-Macadamia-Oil-Product-Specification-Non-Food-Grade-1.pdf",
+        "https://www.interchimie.fr/produits/huiles-vegetales/huile-de-noix-de-macadamia-raffinee/"
+      ],
+      "source_observations": [
+        "Mayo Macs mechanical-pressed integrifolia and/or tetraphylla kernel oil: viscosity specification 80 mPa.s at 20 C, 40 at 38 C. Family physical anchor, not proof for exact ternifolia or hybrid cosmetic declaration; method unspecified.",
+        "Macadamia integrifolia tetraphylla seed oil is pressed/refined and low-viscosity."
+      ],
+      "excluded_evidence": [
+        "Withdrawn MakingCosmetics skin/heavy-cream rationale",
+        "Silicone/macadamia blends",
+        "Prewash non-weighing claims"
+      ],
+      "remaining_uncertainty": "Producer says integrifolia and/or tetraphylla, not certified botanical hybrid; family inference only, and qualitative low viscosity conflicts with a strict boundary.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "cottonseed_hirsutum",
+      "inci": "GOSSYPIUM HIRSUTUM SEED OIL",
+      "aliases": [],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Measured neat cottonseed flows almost identically to sunflower under the same method (41.67 vs40.96 cSt at35 C). This supports sunflower-like thin distribution on hair and a LIGHT estimate, with exact Hirsutum identity kept separate.",
+      "sources": [
+        "https://onlinelibrary.wiley.com/doi/10.5402/2011/531510",
+        "https://raasaoils.in/products/cottonseed-oil"
+      ],
+      "source_observations": [
+        "Balafoutis et al. 2011 Table 3: measured neat sunflower 40.96, rapeseed 42.38, cottonseed 41.67 cSt at 35 C; seeds screw-expelled and filtered. Species and cosmetic grade unspecified. Only neat-oil viscosity used; fuel blends and engine outcomes excluded.",
+        "Exact Gossypium Hirsutum Seed Oil is described as a light refined carrier for skin and hair."
+      ],
+      "excluded_evidence": [
+        "Generic supplier light skin carrier copy",
+        "Engine/blended-fuel results",
+        "Silent Herbaceum alias"
+      ],
+      "remaining_uncertainty": "Study lacks species declaration; Hirsutum transfer is family-level inference and depends on refining/winterization.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "buriti",
+      "inci": "MAURITIA FLEXUOSA FRUIT OIL",
+      "aliases": [
+        "MAURITIA FLEXUOSA (BURITI) FRUIT OIL"
+      ],
+      "previous_value": "rich",
+      "recommended": "rich",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "hair_specific_guidance",
+      "reason": "Supplier hair-specific guidance recommends blending buriti with lighter jojoba to lighten the finish. That positive relative coating signal supports a RICH tendency for neat fruit-pulp oil at equal dose; MEDIUM is the nearest alternative, not a skin-richness conclusion.",
+      "sources": [
+        "https://www.aroma-zone.com/en/page/hair-and-the-sun-5-plant-based-oils-that-really-do-protect-your-hair-from-uv-rays",
+        "https://www.aroma-zone.com/en/product/buriti-oil"
+      ],
+      "source_observations": [
+        "Manufacturer hair-use article specifically says buriti can be used alone or mixed with a lighter oil such as jojoba for a lighter finish. Relative hair-finish guidance; its UV/antioxidant efficacy assertions are excluded.",
+        "100% virgin cold-pressed Mauritia flexuosa fruit-pulp oil; clear oily liquid may crystallize in cold. Greasy skin feel and dilution due to orange colour are not weight proof."
+      ],
+      "excluded_evidence": [
+        "Beraca rich skin finish",
+        "Skin absorption",
+        "Orange colour or low-use dilution as weight proof",
+        "UV protection and antioxidant claims"
+      ],
+      "remaining_uncertainty": "Uncontrolled supplier advice and grade variation; comparison establishes heavier than jojoba, not a validated RICH cutoff.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "meadowfoam",
+      "inci": "LIMNANTHES ALBA SEED OIL",
+      "aliases": [
+        "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      ],
+      "previous_value": "light",
+      "recommended": "medium",
+      "confidence": "low",
+      "nearest_alternative": "light",
+      "evidence_basis": "material_inference",
+      "reason": "Manufacturer viscosity of49.6 cSt at40 C supports a more persistent lubricant film than lower-viscosity seed anchors at the same temperature. MEDIUM is a positive material inference; replacing current LIGHT based only on skin slip. Silky feel can coexist with residual coating.",
+      "sources": [
+        "https://meadowfoam.com/wp-content/uploads/2019/04/SDS-GHS-Format-MSO-ENGLISH-v1.5-2022.02.01.pdf",
+        "https://meadowfoam.com/wp-content/uploads/MSO_assessment_hair_effect_LTR_ENG_03282022.pdf"
+      ],
+      "source_observations": [
+        "Manufacturer NPP SDS: meadowfoam seed oil kinematic viscosity 49.6 cSt at 40 C. This is higher than the cited blackcurrant sample and many ordinary seed-oil values at 40 C; no direct hair heaviness endpoint.",
+        "15-person half-head comparison, 5% oil versus 5% 1000cSt dimethicone conditioner; shine/combing/manageability outcomes."
+      ],
+      "excluded_evidence": [
+        "Non-greasy skin descriptor",
+        "5% rinse-out conditioner versus silicone equivalence",
+        "Shine/combing as weight"
+      ],
+      "remaining_uncertainty": "No neat equal-dose hair sensory test; LIGHT remains plausible for well-distributed modest application.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rosehip_canina_fruit",
+      "inci": "ROSA CANINA FRUIT OIL",
+      "aliases": [],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Exact Canina Fruit Oil declaration can identify seed-pressed grades, and producer documentation describes such rosehip oil as low-viscosity. This supports thin hair-film distribution and LIGHT as a weak supplied-grade inference, preserving the separate Fruit Oil identity.",
+      "sources": [
+        "https://biofil.cl/Products/Organic-Rosehip-Seed-Oil/",
+        "https://www.all-organic-treasures.com/assortment-food/hagebuttenkernoel-bio-lebensmittel.html"
+      ],
+      "source_observations": [
+        "Producer BIT Oils: cold-pressed rosehip seed grade described as low viscosity, with Rosa Canina (Rosehip) Fruit Oil / Rosa aff. Rubiginosa (Rosehip) Seed Oil declarations. Supports supplied-grade/family inference; no universal species or part alias.",
+        "AOT explicitly declares Rosa Canina Fruit Oil for seed-pressed rosehip grade. Confirms this exact declaration can refer to seed-derived oil, without making all fruit and seed declarations equivalent."
+      ],
+      "excluded_evidence": [
+        "Dry/non-greasy skin finish",
+        "Finished rose hair-oil blend claims",
+        "Universal seed/fruit or species alias"
+      ],
+      "remaining_uncertainty": "Source offers alternate rosehip declarations; no exact-batch hair test and no blanket transfer from Rubiginosa.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rosehip_rubiginosa_seed",
+      "inci": "ROSA RUBIGINOSA SEED OIL",
+      "aliases": [
+        "ROSA RUBIGINOSA (ROSE HIP) SEED OIL"
+      ],
+      "previous_value": "light",
+      "recommended": "light",
+      "confidence": "low",
+      "nearest_alternative": "medium",
+      "evidence_basis": "material_inference",
+      "reason": "Producer low-viscosity rosehip seed-oil description includes a Rubiginosa declaration; separate exact pure Rubiginosa product confirms intact seed-oil identity. Thin distributed coating makes LIGHT a reasonable weak tendency without invoking skin absorption.",
+      "sources": [
+        "https://biofil.cl/Products/Organic-Rosehip-Seed-Oil/",
+        "https://www.oleobotanicals.com/collections/collections-featured/products/100-pure-organic-rosehip-oil"
+      ],
+      "source_observations": [
+        "Producer BIT Oils: cold-pressed rosehip seed grade described as low viscosity, with Rosa Canina (Rosehip) Fruit Oil / Rosa aff. Rubiginosa (Rosehip) Seed Oil declarations. Supports supplied-grade/family inference; no universal species or part alias.",
+        "100% pure cold-pressed unrefined Rosa rubiginosa (Rosehip) Seed Oil. Skin-oriented light profile excluded from hair-weight selection."
+      ],
+      "excluded_evidence": [
+        "Dry-oil skin absorption",
+        "Canina/Moschata synonymization",
+        "Finished blend weight claims"
+      ],
+      "remaining_uncertainty": "Producer writes Rosa aff. Rubiginosa and alternative Canina declaration; inference is family/supplied-grade, not exact species equivalence.",
+      "validated_hair_weight": false
+    }
+  ],
+  "verification": "16 assigned IDs unique; INCI and aliases copied without modification from v0.5; valid category enums; source links and exclusion notes present. No reference/standard edits or runtime tests.",
+  "remaining_uncertainty": "No source provides a controlled equal-dose neat-oil hair heaviness panel. All tendencies low confidence; macadamia species and rosehip declaration transfers explicitly qualified. Direct physical data do not validate final hair classes."
+}

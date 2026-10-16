@@ -1,0 +1,6 @@
+{
+  "version":"0.2",
+  "base":"corrected-function-dictionary-v0.2.json",
+  "changes":{"admitted_anchor_aliases":["COCOS NUCIFERA (COCONUT) OIL","CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"],"no_transfer":["COCOS NUCIFERA (COCONUT) FRUIT OIL"],"scalp_closed_aliases":["ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL","MENTHA PIPERITA (PEPPERMINT) OIL","EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL","EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL","MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL"],"fragrance_restored":["CITRUS AURANTIUM BERGAMIA PEEL OIL","CITRUS AURANTIUM PEEL OIL","CITRUS LIMON PEEL OIL","GERANYL ACETATE","PELARGONIUM GRAVEOLENS FLOWER OIL","POGOSTEMON CABLIN OIL","VANILLIN"],"supplier_supported_silicone":["CAPRYLYL METHICONE"]},
+  "limits":"No canonical keys removed or normalized; aliases are explicit review data only."
+}

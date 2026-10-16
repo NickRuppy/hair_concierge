@@ -1,0 +1,4612 @@
+{
+  "version": "oil-research-envelope-v1",
+  "research_id": "oil:oil-persistence-27",
+  "submission_id": null,
+  "research_method": {
+    "purpose": "consolidation_serialization",
+    "policy_pins": {
+      "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+      "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+      "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+      "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+      "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+      "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+      "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+      "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+      "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+      "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+      "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+      "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+    }
+  },
+  "identity": {
+    "brand": "Aveda",
+    "product": "Nutriplenish Multi-Use Hair Oil",
+    "market": "US maker; selected 1 fl oz / 30 ml",
+    "variant": null,
+    "package": {
+      "size_text": null,
+      "size_ml": null,
+      "combined_declaration": "US maker; selected 1 fl oz / 30 ml"
+    },
+    "identifier": null,
+    "category": "hair_oil",
+    "original": {
+      "brand": "Aveda",
+      "product": "Nutriplenish Multi-Use Hair Oil",
+      "market_size": "US maker; selected 1 fl oz / 30 ml"
+    },
+    "mapping_receipt": [
+      {
+        "rule": "Literal approved historical identity mapping; no unit conversion, market split, or inferred variant.",
+        "fields": {
+          "brand": "original.brand",
+          "product": "original.product",
+          "market": null,
+          "market_size": "original.market_size",
+          "size": null,
+          "size_ml": null,
+          "variant": null,
+          "gtin_if_verified": null,
+          "identifier_if_verified": null
+        },
+        "source_path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-packet.json",
+        "source_record_key": "O27"
+      }
+    ],
+    "source_ids": [
+      "O27-maker"
+    ],
+    "conflicts": []
+  },
+  "formula": {
+    "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate <ILN46770>",
+    "ingredients": [
+      {
+        "rank": 1,
+        "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      },
+      {
+        "rank": 2,
+        "raw_name": "Persea Gratissima (Avocado) Oil",
+        "canonical_name": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 3,
+        "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Spinosa Kernel Oil",
+        "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+        "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+      },
+      {
+        "rank": 6,
+        "raw_name": "Cocos Nucifera (Coconut) Oil",
+        "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+      },
+      {
+        "rank": 7,
+        "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+        "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+      },
+      {
+        "rank": 8,
+        "raw_name": "Mangifera Indica (Mango) Seed Butter",
+        "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+      },
+      {
+        "rank": 9,
+        "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+        "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+      },
+      {
+        "rank": 10,
+        "raw_name": "Tocopherol",
+        "canonical_name": "TOCOPHEROL"
+      },
+      {
+        "rank": 11,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool",
+        "canonical_name": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "raw_name": "Citral",
+        "canonical_name": "CITRAL"
+      },
+      {
+        "rank": 14,
+        "raw_name": "Geraniol",
+        "canonical_name": "GERANIOL"
+      },
+      {
+        "rank": 15,
+        "raw_name": "Hydroxycitronellal",
+        "canonical_name": "HYDROXYCITRONELLAL"
+      },
+      {
+        "rank": 16,
+        "raw_name": "Limonene",
+        "canonical_name": "LIMONENE"
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol",
+        "canonical_name": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "raw_name": "Amyl Cinnamal",
+        "canonical_name": "AMYL CINNAMAL"
+      },
+      {
+        "rank": 19,
+        "raw_name": "Benzyl Benzoate",
+        "canonical_name": "BENZYL BENZOATE"
+      },
+      {
+        "rank": 20,
+        "raw_name": "Farnesol",
+        "canonical_name": "FARNESOL"
+      },
+      {
+        "rank": 21,
+        "raw_name": "Cinnamal",
+        "canonical_name": "CINNAMAL"
+      },
+      {
+        "rank": 22,
+        "raw_name": "Benzyl Salicylate",
+        "canonical_name": "BENZYL SALICYLATE"
+      },
+      {
+        "rank": 23,
+        "raw_name": "Cinnamyl Alcohol",
+        "canonical_name": "CINNAMYL ALCOHOL"
+      },
+      {
+        "rank": 24,
+        "raw_name": "Benzyl Cinnamate",
+        "canonical_name": "BENZYL CINNAMATE"
+      }
+    ],
+    "raw_sha256": "244b1b636f1dce7a9540743ee6316402c45844930d311b4bcb56abebf605f661",
+    "normalized_sha256": "dd74a0461e0dd335855a3efc35be9c6ec9fdd67d5eeff6087295d7ab42ed185f",
+    "normalization_receipt": [
+      {
+        "rank": 1,
+        "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Persea Gratissima (Avocado) Oil",
+        "canonical_name": "PERSEA GRATISSIMA OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 3,
+        "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Spinosa Kernel Oil",
+        "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+        "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Cocos Nucifera (Coconut) Oil",
+        "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 7,
+        "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+        "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 8,
+        "raw_name": "Mangifera Indica (Mango) Seed Butter",
+        "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 9,
+        "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+        "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 10,
+        "raw_name": "Tocopherol",
+        "canonical_name": "TOCOPHEROL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 11,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool",
+        "canonical_name": "LINALOOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 13,
+        "raw_name": "Citral",
+        "canonical_name": "CITRAL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 14,
+        "raw_name": "Geraniol",
+        "canonical_name": "GERANIOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 15,
+        "raw_name": "Hydroxycitronellal",
+        "canonical_name": "HYDROXYCITRONELLAL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 16,
+        "raw_name": "Limonene",
+        "canonical_name": "LIMONENE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol",
+        "canonical_name": "CITRONELLOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 18,
+        "raw_name": "Amyl Cinnamal",
+        "canonical_name": "AMYL CINNAMAL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 19,
+        "raw_name": "Benzyl Benzoate",
+        "canonical_name": "BENZYL BENZOATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 20,
+        "raw_name": "Farnesol",
+        "canonical_name": "FARNESOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 21,
+        "raw_name": "Cinnamal",
+        "canonical_name": "CINNAMAL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 22,
+        "raw_name": "Benzyl Salicylate",
+        "canonical_name": "BENZYL SALICYLATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 23,
+        "raw_name": "Cinnamyl Alcohol",
+        "canonical_name": "CINNAMYL ALCOHOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 24,
+        "raw_name": "Benzyl Cinnamate",
+        "canonical_name": "BENZYL CINNAMATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      }
+    ],
+    "source_ids": [
+      "O27-maker"
+    ],
+    "declaration_status": "complete",
+    "conflicts": [],
+    "contextual_declarations": [
+      {
+        "literal": "<ILN46770>",
+        "kind": "formula_code",
+        "source_id": "O27-maker",
+        "reason": "{\"type\":\"formula_code\",\"raw\":\"<ILN46770>\",\"ordering\":\"not an ingredient\"}"
+      }
+    ]
+  },
+  "profile": {
+    "case_id": "O27",
+    "product_key": "oil-persistence-27",
+    "identity": {
+      "brand": "Aveda",
+      "product": "Nutriplenish Multi-Use Hair Oil",
+      "market_size": "US maker; selected 1 fl oz / 30 ml"
+    },
+    "formula": {
+      "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate <ILN46770>",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Persea Gratissima (Avocado) Oil",
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Mangifera Indica (Mango) Seed Butter",
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Amyl Cinnamal",
+          "canonical_name": "AMYL CINNAMAL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Benzyl Benzoate",
+          "canonical_name": "BENZYL BENZOATE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamal",
+          "canonical_name": "CINNAMAL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Cinnamyl Alcohol",
+          "canonical_name": "CINNAMYL ALCOHOL"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE"
+        }
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+        "source_context_key": "O27",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    "ingredient_ledger": [
+      {
+        "rank": 1,
+        "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 2,
+        "raw_name": "Persea Gratissima (Avocado) Oil",
+        "canonical_name": "PERSEA GRATISSIMA OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 3,
+        "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 4,
+        "raw_name": "Argania Spinosa Kernel Oil",
+        "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 5,
+        "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+        "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 6,
+        "raw_name": "Cocos Nucifera (Coconut) Oil",
+        "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+        "ambiguity": "Estimated functional role, not a known concentration or mass share."
+      },
+      {
+        "rank": 7,
+        "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+        "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+        "dictionary_roles": [
+          "botanical_fixed_oil"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Recognized intact oil supplies a supporting nonvolatile conditioning route in the established backbone; it remains in the complete base inventory without a trace claim from position.",
+        "ambiguity": "Relative contribution and supplied grade are unquantified."
+      },
+      {
+        "rank": 8,
+        "raw_name": "Mangifera Indica (Mango) Seed Butter",
+        "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+        "dictionary_roles": [
+          "botanical_seed_fat"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "The admitted botanical_seed_fat function supplies a supporting vehicle, film or structure contribution within the established architecture.",
+        "ambiguity": "Grade, loading and interactions are unknown; presence alone does not establish rich weight or another principal backbone."
+      },
+      {
+        "rank": 9,
+        "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+        "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+        "dictionary_roles": [
+          "not_assessed"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "Exact identity is retained, but the frozen function clues do not establish a specific formula role. A carrier or auxiliary function is not invented.",
+        "ambiguity": "Preparation/function and contribution remain unassessed; this rank blocks any auxiliary suffix spanning it."
+      },
+      {
+        "rank": 10,
+        "raw_name": "Tocopherol",
+        "canonical_name": "TOCOPHEROL",
+        "dictionary_roles": [
+          "antioxidant"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized antioxidant supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 11,
+        "raw_name": "Fragrance (Parfum)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "dictionary_roles": [
+          "fragrance_composition"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance_composition supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 12,
+        "raw_name": "Linalool",
+        "canonical_name": "LINALOOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 13,
+        "raw_name": "Citral",
+        "canonical_name": "CITRAL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 14,
+        "raw_name": "Geraniol",
+        "canonical_name": "GERANIOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 15,
+        "raw_name": "Hydroxycitronellal",
+        "canonical_name": "HYDROXYCITRONELLAL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 16,
+        "raw_name": "Limonene",
+        "canonical_name": "LIMONENE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 17,
+        "raw_name": "Citronellol",
+        "canonical_name": "CITRONELLOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 18,
+        "raw_name": "Amyl Cinnamal",
+        "canonical_name": "AMYL CINNAMAL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 19,
+        "raw_name": "Benzyl Benzoate",
+        "canonical_name": "BENZYL BENZOATE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 20,
+        "raw_name": "Farnesol",
+        "canonical_name": "FARNESOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 21,
+        "raw_name": "Cinnamal",
+        "canonical_name": "CINNAMAL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 22,
+        "raw_name": "Benzyl Salicylate",
+        "canonical_name": "BENZYL SALICYLATE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 23,
+        "raw_name": "Cinnamyl Alcohol",
+        "canonical_name": "CINNAMYL ALCOHOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      },
+      {
+        "rank": 24,
+        "raw_name": "Benzyl Cinnamate",
+        "canonical_name": "BENZYL CINNAMATE",
+        "dictionary_roles": [
+          "fragrance"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+        "ambiguity": "Quantity and finished-formula impact are not established."
+      }
+    ],
+    "auxiliary_suffix": {
+      "start_rank": 10,
+      "markers": [
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL",
+          "function": "antioxidant"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "function": "fragrance"
+        }
+      ],
+      "reason": "Earliest qualifying final suffix: two independent auxiliary functions occur in different ingredients after an established carrier. All later ranks are recognized auxiliaries or intact botanical oils; no later competing vehicle, synthetic emollient, structurant or unresolved function occurs. This is not a percentage boundary."
+    },
+    "base": {
+      "value": "plant_oil_blend",
+      "estimate": true,
+      "confidence": "moderate",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        }
+      ],
+      "counter_signal": "Butter can change structure but does not create a second vehicle family; hybrid lacks affirmative evidence.",
+      "nearest_alternative": "hybrid",
+      "reason": "Seven intact botanical oils and a supporting botanical seed butter form the lipid system. Butter is a structural botanical lipid, not another oil or competing synthetic vehicle.",
+      "unresolved": "Oil/butter ratios and grades are unknown; rosemary-extract function is unassessed."
+    },
+    "weight": {
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        }
+      ],
+      "counter_signal": "Rich is credible if coconut/butter structures the remainder strongly. Light remains possible with dominant mobile-oil behavior but is less persuasive against the combined richer and structural signals.",
+      "nearest_alternative": "rich",
+      "reason": "B1/B3/B6: light-leading sunflower and fluid jojoba/safflower are countered by principal medium-prior avocado/argan, rich-prior coconut and supporting seed butter. The combined lipid argument supports intermediate coating rather than a simple light-leading tie-break. Predominantly fluid oil architecture opposes a rich floor from butter presence.",
+      "unresolved": "No amounts, grades, temperature or butter specification; no neat pomegranate prior is transferred to its unlisted parenthetical spelling."
+    },
+    "penetration_potential": {
+      "value": "penetration_potential",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        }
+      ],
+      "counter_signal": "The sunflower/avocado/jojoba/argan carrier system and supporting butter can sustain a surface coating. Unknown proportions and film interactions make surface_led credible, and positive potential does not establish a measured delivered fraction.",
+      "nearest_alternative": "surface_led",
+      "reason": "Corrected exact safflower rank 5 and coconut rank 6 are admitted positive anchors and already belong to the principal botanical conditioning-oil sequence. Their joint participation in that backbone supports a low-confidence positive estimate; no principal-role changes were introduced.",
+      "unresolved": "No exact-formula delivery measurement. The whole-oil anchor study used 1 g oil/g hair for 24 h at 40 C; botanical/grade and lab-to-ordinary-use transfer limit the estimate."
+    },
+    "ingredient_flags": {
+      "silicones": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+        "nearest_alternative": null,
+        "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+        "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+      },
+      "mineral_oil": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+        "nearest_alternative": null,
+        "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+        "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+      },
+      "drying_alcohol": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+        "nearest_alternative": null,
+        "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+        "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+      },
+      "fragrance": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 11,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "GERANIOL"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "HYDROXYCITRONELLAL"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "AMYL CINNAMAL"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "BENZYL BENZOATE"
+          },
+          {
+            "rank": 20,
+            "canonical_name": "FARNESOL"
+          },
+          {
+            "rank": 21,
+            "canonical_name": "CINNAMAL"
+          },
+          {
+            "rank": 22,
+            "canonical_name": "BENZYL SALICYLATE"
+          },
+          {
+            "rank": 23,
+            "canonical_name": "CINNAMYL ALCOHOL"
+          },
+          {
+            "rank": 24,
+            "canonical_name": "BENZYL CINNAMATE"
+          }
+        ],
+        "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+        "nearest_alternative": null,
+        "reason": "All exact matches in the complete primary declaration are listed.",
+        "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+      },
+      "scalp_active_botanicals": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+        "nearest_alternative": null,
+        "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+        "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+      }
+    },
+    "named_oils": [
+      {
+        "hero_id": "pomegranate_oil",
+        "hero_name": "Pomegranate seed oil",
+        "matched_ranks": [
+          7
+        ],
+        "prominence": {
+          "value": "supporting",
+          "estimate": true,
+          "confidence": "moderate",
+          "evidence": [
+            {
+              "source_id": "O27-maker",
+              "field": "heroes",
+              "hero_id": "pomegranate_oil"
+            },
+            {
+              "rank": 7,
+              "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+            }
+          ],
+          "counter_signal": "Supporting does not quantify amount, and a suffix alone cannot downgrade an already established secondary role.",
+          "nearest_alternative": "trace",
+          "reason": "Every matched hero ingredient has an affirmative secondary conditioning role in the sealed blind ledger. That role takes precedence over any overlapping auxiliary suffix.",
+          "unresolved": "Relative material loading and grade are unknown; no new role assignment was made after source reveal."
+        }
+      },
+      {
+        "hero_id": "coconut_oil",
+        "hero_name": "Certified organic coconut oil",
+        "matched_ranks": [
+          6
+        ],
+        "prominence": {
+          "value": "leading",
+          "estimate": true,
+          "confidence": "moderate",
+          "evidence": [
+            {
+              "source_id": "O27-maker",
+              "field": "heroes",
+              "hero_id": "coconut_oil"
+            },
+            {
+              "rank": 6,
+              "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+            }
+          ],
+          "counter_signal": "Ingredient order and functional role do not establish a concentration or delivered amount.",
+          "nearest_alternative": "supporting",
+          "reason": "Every matched hero ingredient already has a principal role in the sealed blind ledger. Source positioning identifies the hero but does not promote its formula role.",
+          "unresolved": "Prominence is a qualitative role estimate; ratios and batch composition are not measured."
+        }
+      }
+    ],
+    "dispenser": {
+      "value": "pump",
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "O27-maker",
+          "field": "packaging"
+        }
+      ],
+      "counter_signal": "No conflicting mechanism evidence is recorded for the selected package.",
+      "nearest_alternative": null,
+      "reason": "Maker selected30ml AWGM01 image visually inspected: exposed dispensing pump/nozzle, not spray/pipette.",
+      "unresolved": "Observed/documented mechanism for the selected source/package only; no dose-unit conversion or cross-variant transfer."
+    },
+    "provides_heat_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "O27-maker",
+          "field": "claims.heat"
+        }
+      ],
+      "counter_signal": "Ingredient composition is not an additional heat-claim requirement; heated application or neighboring product claims do not qualify.",
+      "nearest_alternative": null,
+      "reason": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded.",
+      "unresolved": "This records an accepted exact-product manufacturer claim or completed absence review, not measured protection. False is absence of an accepted claim, not tested zero protection."
+    },
+    "provides_uv_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "O27-maker",
+          "field": "claims.uv"
+        }
+      ],
+      "counter_signal": "No conflicting gate evidence remains in the supplied exact declaration and accepted claim review.",
+      "nearest_alternative": null,
+      "reason": "Accepted claim review: No explicit product-specific hairUV protection claim in reviewed sections. Exact recognized filter ranks: none. The required recognized-filter AND accepted-hair-UV-claim gate is not satisfied.",
+      "unresolved": "This is the defined research claim/filter gate, not measured protection, SPF, delivery or efficacy. No ingredient synonym or claim was added."
+    },
+    "supported_uses": [
+      "pre_wash_fibre_treatment",
+      "leave_on_fibre_conditioning",
+      "dry_finish",
+      "scalp_application"
+    ],
+    "use_evidence": {
+      "value": [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "scalp_application"
+      ],
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "O27-maker",
+          "field": "directions",
+          "direction_id": "O27-prewash"
+        },
+        {
+          "source_id": "O27-maker",
+          "field": "directions",
+          "direction_id": "O27-leavein"
+        },
+        {
+          "source_id": "O27-maker",
+          "field": "directions",
+          "direction_id": "O27-finish"
+        },
+        {
+          "source_id": "O27-maker",
+          "field": "directions",
+          "direction_id": "O27-overnight"
+        },
+        {
+          "source_id": "O27-maker",
+          "field": "directions",
+          "direction_id": "O27-scalp"
+        }
+      ],
+      "counter_signal": "Dry prewash is not dry_finish; scalp-only does not establish fibre use. General retained use does not establish a dry stage, and explicit dry-only finishing does not invent damp use.",
+      "nearest_alternative": null,
+      "reason": "Each role comes from an independently retained coherent source direction. Sites, stages, doses, contact times, removal and restrictions are copied from that direction without combining scenarios. Styling context may establish retention only where the packet explicitly records it.",
+      "unresolved": "Unspecified/unestablished fields remain literal gaps. Source-level limitations: Public current maker declaration; no physical batch proof or DE equivalence.; No list merging with search snippets, alternate markets or historical labels.; Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    },
+    "application_scenarios": [
+      {
+        "source_id": "O27-maker",
+        "direction_id": "O27-prewash",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "pre_wash_dry",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "usual_wash_day_routine",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+      },
+      {
+        "source_id": "O27-maker",
+        "direction_id": "O27-leavein",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "towel_dried",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "retained_by_styling_context",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Distribute on towel-dried hair and style."
+      },
+      {
+        "source_id": "O27-maker",
+        "direction_id": "O27-finish",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Apply as needed to dry mid-lengths and ends."
+      },
+      {
+        "source_id": "O27-maker",
+        "direction_id": "O27-overnight",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "overnight_pre_wash",
+        "dose": "unestablished",
+        "contact_time": "overnight",
+        "removal": "usual_wash_day_routine_next_day",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+      },
+      {
+        "source_id": "O27-maker",
+        "direction_id": "O27-scalp",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "unspecified",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "unestablished",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Massage into scalp."
+      }
+    ],
+    "persistence_potential": "moderate",
+    "persistence_trace_reference": {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+      "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8",
+      "record_key": "O27",
+      "reason": "Attributed research decision"
+    },
+    "field_authority": {
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "record_key": "O27",
+        "reason": "Attributed research decision"
+      },
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+        "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+        "record_key": "oil-persistence-27",
+        "reason": "Unchanged current leave-on scalar; no legacy-label conversion."
+      }
+    },
+    "fit": {
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      }
+    },
+    "completion_status": "complete_research_with_permitted_gaps"
+  },
+  "sources": [
+    {
+      "source_id": "O27-maker",
+      "url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+      "url_note": null,
+      "original": {
+        "id": "O27-maker",
+        "url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+        "reviewed_at": "2026-10-09",
+        "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+        "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27"
+      },
+      "directions": [
+        {
+          "direction_id": "O27-prewash",
+          "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+        },
+        {
+          "direction_id": "O27-leavein",
+          "text": "Distribute on towel-dried hair and style."
+        },
+        {
+          "direction_id": "O27-finish",
+          "text": "Apply as needed to dry mid-lengths and ends."
+        },
+        {
+          "direction_id": "O27-overnight",
+          "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+        },
+        {
+          "direction_id": "O27-scalp",
+          "text": "Massage into scalp."
+        }
+      ]
+    }
+  ],
+  "persistence_trace": {
+    "reason": "The intact oils and mango seed fat form a retained lipid-conditioning blend. The butter is a botanical fat clue, not by itself proof of a coherent adherent network within these oils; ordinary lipid coating remains the better reading after including the rosemary extract, antioxidant and complete fragrance declaration.",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "TOCOPHEROL"
+      },
+      {
+        "rank": 11,
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      },
+      {
+        "rank": 24,
+        "canonical_name": "BENZYL CINNAMATE"
+      }
+    ],
+    "considered_ranks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "tipping_assumption": null,
+    "tipping_assumption_note": "Not separately recorded in this historical trace; original reasoning is preserved without a new research judgment.",
+    "context": {
+      "source_id": "O27-maker",
+      "direction_id": "O27-leavein",
+      "role": "leave_on_fibre_conditioning"
+    },
+    "original": {
+      "case_id": "O27",
+      "persistence_potential": "moderate",
+      "reason": "The intact oils and mango seed fat form a retained lipid-conditioning blend. The butter is a botanical fat clue, not by itself proof of a coherent adherent network within these oils; ordinary lipid coating remains the better reading after including the rosemary extract, antioxidant and complete fragrance declaration.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "PERSEA GRATISSIMA OIL"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 24,
+          "canonical_name": "BENZYL CINNAMATE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    }
+  },
+  "scenario_fit": [
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-prewash",
+      "role": "pre_wash_fibre_treatment",
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-prewash",
+        "source_id": "O27-maker",
+        "supported_role": "pre_wash_fibre_treatment",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-prewash",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "pre_wash_dry",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "usual_wash_day_routine",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "suitable",
+          "normal": "suitable",
+          "coarse": "suitable"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-prewash",
+      "role": "scalp_application",
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-prewash",
+        "source_id": "O27-maker",
+        "supported_role": "scalp_application",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-prewash",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "pre_wash_dry",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "usual_wash_day_routine",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "unknown",
+          "normal": "unknown",
+          "coarse": "unknown"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-leavein",
+      "role": "leave_on_fibre_conditioning",
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-leavein",
+        "source_id": "O27-maker",
+        "supported_role": "leave_on_fibre_conditioning",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-leavein",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "towel_dried",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "retained_by_styling_context",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Distribute on towel-dried hair and style."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "conditional",
+          "normal": "conditional",
+          "coarse": "suitable"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-finish",
+      "role": "dry_finish",
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-finish",
+        "source_id": "O27-maker",
+        "supported_role": "dry_finish",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-finish",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Apply as needed to dry mid-lengths and ends."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "conditional",
+            "reason": "greater_load_or_flattening_concern",
+            "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "conditional",
+          "normal": "conditional",
+          "coarse": "suitable"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-overnight",
+      "role": "pre_wash_fibre_treatment",
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-overnight",
+        "source_id": "O27-maker",
+        "supported_role": "pre_wash_fibre_treatment",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-overnight",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "overnight_pre_wash",
+          "dose": "unestablished",
+          "contact_time": "overnight",
+          "removal": "usual_wash_day_routine_next_day",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          },
+          "coarse": {
+            "value": "suitable",
+            "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "suitable",
+          "normal": "suitable",
+          "coarse": "suitable"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-overnight",
+      "role": "scalp_application",
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-overnight",
+        "source_id": "O27-maker",
+        "supported_role": "scalp_application",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-overnight",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "overnight_pre_wash",
+          "dose": "unestablished",
+          "contact_time": "overnight",
+          "removal": "usual_wash_day_routine_next_day",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "unknown",
+          "normal": "unknown",
+          "coarse": "unknown"
+        }
+      }
+    },
+    {
+      "source_id": "O27-maker",
+      "direction_id": "O27-scalp",
+      "role": "scalp_application",
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "O27",
+        "direction_id": "O27-scalp",
+        "source_id": "O27-maker",
+        "supported_role": "scalp_application",
+        "scenario": {
+          "source_id": "O27-maker",
+          "direction_id": "O27-scalp",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": [
+            "scalp"
+          ],
+          "stage": "unspecified",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "unestablished",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Massage into scalp."
+        },
+        "weight": "medium",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit",
+            "condition": null
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scalp_role_not_fibre_fit"
+          }
+        },
+        "alternative_weight": "rich",
+        "alternative_thickness": {
+          "fine": "unknown",
+          "normal": "unknown",
+          "coarse": "unknown"
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "import_kind": "historical",
+    "original_method": {
+      "run_id": "full-profile-completion-v0.1",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c",
+      "declared_version": null,
+      "unrecorded_note": "The selected consolidated container records no uniform method version; field-specific historical methods remain separately attributed."
+    },
+    "original_record": {
+      "case_id": "O27",
+      "product_key": "oil-persistence-27",
+      "identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "formula": {
+        "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate <ILN46770>",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Persea Gratissima (Avocado) Oil",
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Argania Spinosa Kernel Oil",
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Cocos Nucifera (Coconut) Oil",
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "raw_name": "Mangifera Indica (Mango) Seed Butter",
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          },
+          {
+            "rank": 9,
+            "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+            "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+          },
+          {
+            "rank": 10,
+            "raw_name": "Tocopherol",
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 11,
+            "raw_name": "Fragrance (Parfum)",
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          },
+          {
+            "rank": 12,
+            "raw_name": "Linalool",
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 13,
+            "raw_name": "Citral",
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 14,
+            "raw_name": "Geraniol",
+            "canonical_name": "GERANIOL"
+          },
+          {
+            "rank": 15,
+            "raw_name": "Hydroxycitronellal",
+            "canonical_name": "HYDROXYCITRONELLAL"
+          },
+          {
+            "rank": 16,
+            "raw_name": "Limonene",
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 17,
+            "raw_name": "Citronellol",
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 18,
+            "raw_name": "Amyl Cinnamal",
+            "canonical_name": "AMYL CINNAMAL"
+          },
+          {
+            "rank": 19,
+            "raw_name": "Benzyl Benzoate",
+            "canonical_name": "BENZYL BENZOATE"
+          },
+          {
+            "rank": 20,
+            "raw_name": "Farnesol",
+            "canonical_name": "FARNESOL"
+          },
+          {
+            "rank": 21,
+            "raw_name": "Cinnamal",
+            "canonical_name": "CINNAMAL"
+          },
+          {
+            "rank": 22,
+            "raw_name": "Benzyl Salicylate",
+            "canonical_name": "BENZYL SALICYLATE"
+          },
+          {
+            "rank": 23,
+            "raw_name": "Cinnamyl Alcohol",
+            "canonical_name": "CINNAMYL ALCOHOL"
+          },
+          {
+            "rank": 24,
+            "raw_name": "Benzyl Cinnamate",
+            "canonical_name": "BENZYL CINNAMATE"
+          }
+        ],
+        "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+        "selected_context": {
+          "mode": "retained_fibre",
+          "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+          "source_context_key": "O27",
+          "scenario_index": null,
+          "scenario": {
+            "text": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios."
+          },
+          "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+        }
+      },
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Persea Gratissima (Avocado) Oil",
+          "canonical_name": "PERSEA GRATISSIMA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Simmondsia Chinensis (Jojoba) Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "This ingredient participates in the principal architecture: The early sunflower/avocado/jojoba/argan/safflower/coconut sequence forms the principal botanical oil system; pomegranate and seed butter provide supporting retained lipids.",
+          "ambiguity": "Estimated functional role, not a known concentration or mass share."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Punica Granatum (Pomegranate) Seed Oil",
+          "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+          "dictionary_roles": [
+            "botanical_fixed_oil"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Recognized intact oil supplies a supporting nonvolatile conditioning route in the established backbone; it remains in the complete base inventory without a trace claim from position.",
+          "ambiguity": "Relative contribution and supplied grade are unquantified."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Mangifera Indica (Mango) Seed Butter",
+          "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+          "dictionary_roles": [
+            "botanical_seed_fat"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "The admitted botanical_seed_fat function supplies a supporting vehicle, film or structure contribution within the established architecture.",
+          "ambiguity": "Grade, loading and interactions are unknown; presence alone does not establish rich weight or another principal backbone."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact identity is retained, but the frozen function clues do not establish a specific formula role. A carrier or auxiliary function is not invented.",
+          "ambiguity": "Preparation/function and contribution remain unassessed; this rank blocks any auxiliary suffix spanning it."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized antioxidant supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance_composition supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Citral",
+          "canonical_name": "CITRAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Amyl Cinnamal",
+          "canonical_name": "AMYL CINNAMAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Benzyl Benzoate",
+          "canonical_name": "BENZYL BENZOATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 20,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamal",
+          "canonical_name": "CINNAMAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 22,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 23,
+          "raw_name": "Cinnamyl Alcohol",
+          "canonical_name": "CINNAMYL ALCOHOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized declared_fragrance_allergen supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        },
+        {
+          "rank": 24,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE",
+          "dictionary_roles": [
+            "fragrance"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance supplies auxiliary function in this architecture, without a concentration-threshold inference.",
+          "ambiguity": "Quantity and finished-formula impact are not established."
+        }
+      ],
+      "auxiliary_suffix": {
+        "start_rank": 10,
+        "markers": [
+          {
+            "rank": 10,
+            "canonical_name": "TOCOPHEROL",
+            "function": "antioxidant"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "FRAGRANCE (PARFUM)",
+            "function": "fragrance"
+          }
+        ],
+        "reason": "Earliest qualifying final suffix: two independent auxiliary functions occur in different ingredients after an established carrier. All later ranks are recognized auxiliaries or intact botanical oils; no later competing vehicle, synthetic emollient, structurant or unresolved function occurs. This is not a percentage boundary."
+      },
+      "base": {
+        "value": "plant_oil_blend",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          }
+        ],
+        "counter_signal": "Butter can change structure but does not create a second vehicle family; hybrid lacks affirmative evidence.",
+        "nearest_alternative": "hybrid",
+        "reason": "Seven intact botanical oils and a supporting botanical seed butter form the lipid system. Butter is a structural botanical lipid, not another oil or competing synthetic vehicle.",
+        "unresolved": "Oil/butter ratios and grades are unknown; rosemary-extract function is unassessed."
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          }
+        ],
+        "counter_signal": "Rich is credible if coconut/butter structures the remainder strongly. Light remains possible with dominant mobile-oil behavior but is less persuasive against the combined richer and structural signals.",
+        "nearest_alternative": "rich",
+        "reason": "B1/B3/B6: light-leading sunflower and fluid jojoba/safflower are countered by principal medium-prior avocado/argan, rich-prior coconut and supporting seed butter. The combined lipid argument supports intermediate coating rather than a simple light-leading tie-break. Predominantly fluid oil architecture opposes a rich floor from butter presence.",
+        "unresolved": "No amounts, grades, temperature or butter specification; no neat pomegranate prior is transferred to its unlisted parenthetical spelling."
+      },
+      "penetration_potential": {
+        "value": "penetration_potential",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          }
+        ],
+        "counter_signal": "The sunflower/avocado/jojoba/argan carrier system and supporting butter can sustain a surface coating. Unknown proportions and film interactions make surface_led credible, and positive potential does not establish a measured delivered fraction.",
+        "nearest_alternative": "surface_led",
+        "reason": "Corrected exact safflower rank 5 and coconut rank 6 are admitted positive anchors and already belong to the principal botanical conditioning-oil sequence. Their joint participation in that backbone supports a low-confidence positive estimate; no principal-role changes were introduced.",
+        "unresolved": "No exact-formula delivery measurement. The whole-oil anchor study used 1 g oil/g hair for 24 h at 40 C; botanical/grade and lab-to-ordinary-use transfer limit the estimate."
+      },
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+          "nearest_alternative": null,
+          "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+          "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+          "nearest_alternative": null,
+          "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+          "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+        },
+        "drying_alcohol": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+          "nearest_alternative": null,
+          "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+          "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 11,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "LINALOOL"
+            },
+            {
+              "rank": 13,
+              "canonical_name": "CITRAL"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "GERANIOL"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "HYDROXYCITRONELLAL"
+            },
+            {
+              "rank": 16,
+              "canonical_name": "LIMONENE"
+            },
+            {
+              "rank": 17,
+              "canonical_name": "CITRONELLOL"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "AMYL CINNAMAL"
+            },
+            {
+              "rank": 19,
+              "canonical_name": "BENZYL BENZOATE"
+            },
+            {
+              "rank": 20,
+              "canonical_name": "FARNESOL"
+            },
+            {
+              "rank": 21,
+              "canonical_name": "CINNAMAL"
+            },
+            {
+              "rank": 22,
+              "canonical_name": "BENZYL SALICYLATE"
+            },
+            {
+              "rank": 23,
+              "canonical_name": "CINNAMYL ALCOHOL"
+            },
+            {
+              "rank": 24,
+              "canonical_name": "BENZYL CINNAMATE"
+            }
+          ],
+          "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+          "nearest_alternative": null,
+          "reason": "All exact matches in the complete primary declaration are listed.",
+          "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": "None within the frozen exact-form dictionary; broader chemical/botanical similarities are not additional matches.",
+          "nearest_alternative": null,
+          "reason": "Every primary rank was checked against the closed exact-form dictionary; no recognized match occurs.",
+          "unresolved": "No unresolved match within the declared closed dictionary. The flag does not establish tolerance, permitted application or every possible sensory effect."
+        }
+      },
+      "named_oils": [
+        {
+          "hero_id": "pomegranate_oil",
+          "hero_name": "Pomegranate seed oil",
+          "matched_ranks": [
+            7
+          ],
+          "prominence": {
+            "value": "supporting",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "O27-maker",
+                "field": "heroes",
+                "hero_id": "pomegranate_oil"
+              },
+              {
+                "rank": 7,
+                "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+              }
+            ],
+            "counter_signal": "Supporting does not quantify amount, and a suffix alone cannot downgrade an already established secondary role.",
+            "nearest_alternative": "trace",
+            "reason": "Every matched hero ingredient has an affirmative secondary conditioning role in the sealed blind ledger. That role takes precedence over any overlapping auxiliary suffix.",
+            "unresolved": "Relative material loading and grade are unknown; no new role assignment was made after source reveal."
+          }
+        },
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Certified organic coconut oil",
+          "matched_ranks": [
+            6
+          ],
+          "prominence": {
+            "value": "leading",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "O27-maker",
+                "field": "heroes",
+                "hero_id": "coconut_oil"
+              },
+              {
+                "rank": 6,
+                "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+              }
+            ],
+            "counter_signal": "Ingredient order and functional role do not establish a concentration or delivered amount.",
+            "nearest_alternative": "supporting",
+            "reason": "Every matched hero ingredient already has a principal role in the sealed blind ledger. Source positioning identifies the hero but does not promote its formula role.",
+            "unresolved": "Prominence is a qualitative role estimate; ratios and batch composition are not measured."
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "pump",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "O27-maker",
+            "field": "packaging"
+          }
+        ],
+        "counter_signal": "No conflicting mechanism evidence is recorded for the selected package.",
+        "nearest_alternative": null,
+        "reason": "Maker selected30ml AWGM01 image visually inspected: exposed dispensing pump/nozzle, not spray/pipette.",
+        "unresolved": "Observed/documented mechanism for the selected source/package only; no dose-unit conversion or cross-variant transfer."
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "O27-maker",
+            "field": "claims.heat"
+          }
+        ],
+        "counter_signal": "Ingredient composition is not an additional heat-claim requirement; heated application or neighboring product claims do not qualify.",
+        "nearest_alternative": null,
+        "reason": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded.",
+        "unresolved": "This records an accepted exact-product manufacturer claim or completed absence review, not measured protection. False is absence of an accepted claim, not tested zero protection."
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "O27-maker",
+            "field": "claims.uv"
+          }
+        ],
+        "counter_signal": "No conflicting gate evidence remains in the supplied exact declaration and accepted claim review.",
+        "nearest_alternative": null,
+        "reason": "Accepted claim review: No explicit product-specific hairUV protection claim in reviewed sections. Exact recognized filter ranks: none. The required recognized-filter AND accepted-hair-UV-claim gate is not satisfied.",
+        "unresolved": "This is the defined research claim/filter gate, not measured protection, SPF, delivery or efficacy. No ingredient synonym or claim was added."
+      },
+      "supported_uses": [
+        "pre_wash_fibre_treatment",
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "scalp_application"
+      ],
+      "use_evidence": {
+        "value": [
+          "pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "scalp_application"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "O27-maker",
+            "field": "directions",
+            "direction_id": "O27-prewash"
+          },
+          {
+            "source_id": "O27-maker",
+            "field": "directions",
+            "direction_id": "O27-leavein"
+          },
+          {
+            "source_id": "O27-maker",
+            "field": "directions",
+            "direction_id": "O27-finish"
+          },
+          {
+            "source_id": "O27-maker",
+            "field": "directions",
+            "direction_id": "O27-overnight"
+          },
+          {
+            "source_id": "O27-maker",
+            "field": "directions",
+            "direction_id": "O27-scalp"
+          }
+        ],
+        "counter_signal": "Dry prewash is not dry_finish; scalp-only does not establish fibre use. General retained use does not establish a dry stage, and explicit dry-only finishing does not invent damp use.",
+        "nearest_alternative": null,
+        "reason": "Each role comes from an independently retained coherent source direction. Sites, stages, doses, contact times, removal and restrictions are copied from that direction without combining scenarios. Styling context may establish retention only where the packet explicitly records it.",
+        "unresolved": "Unspecified/unestablished fields remain literal gaps. Source-level limitations: Public current maker declaration; no physical batch proof or DE equivalence.; No list merging with search snippets, alternate markets or historical labels.; Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+      },
+      "application_scenarios": [
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-prewash",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "pre_wash_dry",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "usual_wash_day_routine",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+        },
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-leavein",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "towel_dried",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "retained_by_styling_context",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Distribute on towel-dried hair and style."
+        },
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-finish",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Apply as needed to dry mid-lengths and ends."
+        },
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-overnight",
+          "supported_roles": [
+            "pre_wash_fibre_treatment",
+            "scalp_application"
+          ],
+          "site": [
+            "scalp",
+            "hair_fibre",
+            "ends"
+          ],
+          "stage": "overnight_pre_wash",
+          "dose": "unestablished",
+          "contact_time": "overnight",
+          "removal": "usual_wash_day_routine_next_day",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+        },
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-scalp",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": [
+            "scalp"
+          ],
+          "stage": "unspecified",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "unestablished",
+          "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+          "text": "Massage into scalp."
+        }
+      ],
+      "persistence_potential": "moderate",
+      "persistence_trace_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+        "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8",
+        "record_key": "O27",
+        "reason": "Attributed research decision"
+      },
+      "field_authority": {
+        "formula": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+          "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+          "record_key": "O27",
+          "reason": "Attributed research decision"
+        },
+        "ingredient_ledger": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "auxiliary_suffix": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "base": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "weight": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "penetration_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "ingredient_flags": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+          "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+          "record_key": "O27",
+          "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+        },
+        "named_oils": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "dispenser": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "provides_heat_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "provides_uv_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "supported_uses": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "use_evidence": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "application_scenarios": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+          "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+          "record_key": "O27",
+          "reason": "Controlled source reveal after corrected blind seal."
+        },
+        "persistence_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+          "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+          "record_key": "oil-persistence-27",
+          "reason": "Unchanged current leave-on scalar; no legacy-label conversion."
+        }
+      },
+      "fit": {
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        }
+      },
+      "completion_status": "complete_research_with_permitted_gaps"
+    },
+    "original_record_sha256": "f5c2524762bdd4eaa0d0ee1585f5d0a89ab208b0e17f57031bdc44e59c70d713",
+    "field_authorities": {
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "record_key": "O27",
+        "reason": "Attributed research decision"
+      },
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+        "record_key": "O27",
+        "reason": "Controlled source reveal after corrected blind seal."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+        "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+        "record_key": "oil-persistence-27",
+        "reason": "Unchanged current leave-on scalar; no legacy-label conversion."
+      }
+    },
+    "dependencies": [
+      {
+        "kind": "selection_inventory",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/combined-profile-inventory.json",
+        "sha256": "7abad99eb94b66ecdd8c0700c25c1955314ecf87026fc87fbb4ca5ecd04d8a87"
+      },
+      {
+        "kind": "original_profile",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+        "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+        "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+        "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+        "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/input-manifest.json",
+        "sha256": "c30bde4b44fcf6978b001063ffbe5c791abff00a020e4ceb7fe00d309d210a6e"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-packet.json",
+        "sha256": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/function-dictionary.json",
+        "sha256": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/method.md",
+        "sha256": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection-schema.json",
+        "sha256": "70916637152b71ddb30ef40a09ee346f37a782e520038073eac4b19fe4e6b451"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/scope-decision.json",
+        "sha256": "306bc288887f60f33dafb9ee667a21ef6048b9aebc96d465ef766250899a8c62"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json",
+        "sha256": "1495771f7790df07b8a8d1f7d35e45b1754b5e0a11003e5939f3ebfb505e6816"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/historical-preservation-final.json",
+        "sha256": "1a7746353c8a5c6ea7c535332712fe25c4ffc17224564d10e0055f3d7620cafe"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-bindings-staged.json",
+        "sha256": "0e728187db91744a8d292deb3d827a9ac675da7977b4782b9cf08b5524444692"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/coverage-inventory.json",
+        "sha256": "d6ad82a2eca7df517054839ef90f38bdc7e0ab91d58c71aa7e7bc783fcadc093"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/blind-packet.json",
+        "sha256": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+        "sha256": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "sha256": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+        "sha256": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json",
+        "sha256": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "sha256": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json",
+        "sha256": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "sha256": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+        "sha256": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+        "sha256": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+        "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+        "sha256": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json",
+        "sha256": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/shared/persistence-pilot-v0.1/function-dictionary.json",
+        "sha256": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/shared/persistence-potential-v0.1.md",
+        "sha256": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/00_category-charter-v0.2.md",
+        "sha256": "c92f36d0294664dc05a9d7e74f4e63beac62f5ee0462b5856f00313e0f2fca72"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/01_property-set-v0.2.md",
+        "sha256": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md",
+        "sha256": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md",
+        "sha256": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md",
+        "sha256": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/blind-stage-seal.json",
+        "sha256": "09fb0b386e37022996535513267d768c4d1c81d166d7d46c0030eca1f548464b"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/input-manifest.json",
+        "sha256": "8174f6966b6979c33e9e6e614f86d2eefdddebfa834ee6b0573aa4d7c1bb7824"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/method.md",
+        "sha256": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-packet.json",
+        "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+        "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/material-weight-reference.json",
+        "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-seal.json",
+        "sha256": "43fd1b95faa2c41b21d8d40cc3992cb2585465717c3b7f0fef1111ecf1b56f6d"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/input-manifest.json",
+        "sha256": "11bd87d1068cca5a6134f5e21e42ab74a4fbad049cafcc14295fcb69bf24649c"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/method.md",
+        "sha256": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-packet.json",
+        "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+        "sha256": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/material-weight-reference.json",
+        "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md",
+        "sha256": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md",
+        "sha256": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+        "sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-manifest.json",
+        "sha256": "eef52890b4bf24b37e6c6463f1d60043ca7922bf27b7cdbe1e8dc5ae7915760c"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-seal.json",
+        "sha256": "fe60a757ae696fa9c07253fa9e01c9cbe243c601434d443822e6537fe56557ad"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-seal.json",
+        "sha256": "067a71938ab1bfbaa3eac3a2102394baa3f6a5bba48f68937bc8b4e03a6aa9be"
+      },
+      {
+        "kind": "source_packet",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-packet.json",
+        "sha256": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c"
+      },
+      {
+        "kind": "scenario_fit",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/scenario-fit.json",
+        "sha256": "7525fca4f38567180eea8a0820878e775b7ff0541d4233297229b90c9328fa21"
+      }
+    ],
+    "mapping_receipts": [
+      {
+        "kind": "field_authority_resolutions",
+        "records": [
+          {
+            "field": "formula",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+            "sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+            "record_key": "O27",
+            "reason": "Attributed research decision",
+            "original_method": {
+              "run_id": "oil-persistence-leave-on-replay-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "fedd50bb4b1076e0d74c90d78af62d70ef0c3f1d9929d15ac770d006cc147776"
+          },
+          {
+            "field": "ingredient_ledger",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "auxiliary_suffix",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "base",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "weight",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "penetration_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "ingredient_flags",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+            "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+            "record_key": "O27",
+            "reason": "Selected corrected-dictionary development derivation; predecessor retained.",
+            "original_method": {
+              "run_id": "oil-missing-direct-properties-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f4ab8a3777a569f9dc004261b23b69f72cb6e0a320604dac440b6db0c6297b32"
+          },
+          {
+            "field": "named_oils",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "dispenser",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "provides_heat_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "provides_uv_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "supported_uses",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "use_evidence",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "application_scenarios",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+            "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd",
+            "record_key": "O27",
+            "reason": "Controlled source reveal after corrected blind seal.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "a3ce30669e4c88af2c527417af615c0355b7ef8799a2850c86626c9092e74d7d"
+          },
+          {
+            "field": "persistence_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/projection.json",
+            "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b",
+            "record_key": "oil-persistence-27",
+            "reason": "Unchanged current leave-on scalar; no legacy-label conversion.",
+            "original_method": {
+              "run_id": null,
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "f1899dd29ee463f5dd017bbee659779e4641e8c756bacb5b755f5d28bb8b5620"
+          }
+        ]
+      },
+      {
+        "kind": "persistence_trace_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/lane-b/records.json",
+        "sha256": "b97eb34bbe589c6f91937016abd984aa331f3be42fb2ab3c368bf960e52983a8",
+        "record_key": "O27",
+        "reason": "Attributed research decision",
+        "resolved_record_sha256": "9e5d09dcde1bd52c915ddc6488c6cbf3151c382775a0ddf5dc04b512fe4dc4a5"
+      },
+      {
+        "kind": "scenario_fit_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/scenario-fit.json",
+        "policy_versions": [
+          "OE42-thickness-v0.1",
+          "OE43-pattern-v0.1",
+          "OE45-damage-v0.1"
+        ],
+        "rows": 7
+      },
+      {
+        "kind": "source_context",
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-packet.json",
+        "original": {
+          "case_id": "O27",
+          "identity": {
+            "brand": "Aveda",
+            "product": "Nutriplenish Multi-Use Hair Oil",
+            "market_size": "US maker; selected 1 fl oz / 30 ml"
+          },
+          "sources": [
+            {
+              "id": "O27-maker",
+              "url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+              "reviewed_at": "2026-10-09",
+              "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage",
+              "capture_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27"
+            }
+          ],
+          "source_precedence": {
+            "selected_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27",
+            "rule": "Root supplement supersedes A for O09/O10; A2 supersedes A for O11/O12/O14; B/C reviewed entries retained."
+          },
+          "historical_identity": {
+            "brand": "Aveda",
+            "product": "Nutriplenish Multi-Use Hair Oil",
+            "market_size": "US maker; selected 1 fl oz / 30 ml"
+          },
+          "selected_context_preserved": {
+            "mode": "retained_fibre",
+            "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+            "source_context_key": "O27",
+            "scenario_index": null,
+            "scenario": {
+              "text": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios."
+            },
+            "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+          },
+          "source_limits": [
+            "Public current maker declaration; no physical batch proof or DE equivalence.",
+            "No list merging with search snippets, alternate markets or historical labels.",
+            "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+          ],
+          "source_admission": {
+            "status": "confirmed_exact_ordered_declaration",
+            "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge.",
+            "basis_capture": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27"
+          },
+          "heroes": [
+            {
+              "hero_id": "pomegranate_oil",
+              "hero_name": "Pomegranate seed oil",
+              "canonical_ingredients": [
+                "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+              ],
+              "mapping_note": "Exact retained declared form.",
+              "source_id": "O27-maker"
+            },
+            {
+              "hero_id": "coconut_oil",
+              "hero_name": "Certified organic coconut oil",
+              "canonical_ingredients": [
+                "COCOS NUCIFERA (COCONUT) OIL"
+              ],
+              "mapping_note": "Reviewed parenthetical coconut spelling is normalized to existing canonical identity. Root exact preparation-preserving common-name parenthesis normalization into this packet’s canonical keys; original source spelling retained in staging.",
+              "source_id": "O27-maker"
+            }
+          ],
+          "hero_review": {
+            "review_complete": true,
+            "source_id": "O27-maker",
+            "reason": "Reviewed superfood complex, featured ingredients and productdescription. Mango is explicitly butter, not another named-oil claim."
+          },
+          "packaging": {
+            "value": "pump",
+            "status": "confirmed",
+            "source_id": "O27-maker",
+            "observation": "Maker selected30ml AWGM01 image visually inspected: exposed dispensing pump/nozzle, not spray/pipette.",
+            "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O27-front.jpg",
+            "image_sha256": "e770b0125f1326c9781b26d198b250f61f8c49159639ef1c7db524fc1fb233fd"
+          },
+          "claims": {
+            "heat": {
+              "accepted": false,
+              "review_complete": true,
+              "source_id": "O27-maker",
+              "reason": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded.",
+              "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27/claims/heat"
+            },
+            "uv": {
+              "accepted": false,
+              "review_complete": true,
+              "source_id": "O27-maker",
+              "reason": "No explicit product-specific hairUV protection claim in reviewed sections.",
+              "review_provenance": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json#O27/claims/uv"
+            }
+          },
+          "directions": [
+            {
+              "source_id": "O27-maker",
+              "dose": "unestablished",
+              "contact_time": "unspecified",
+              "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+              "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+              "direction_id": "O27-prewash",
+              "text": "Distribute on dry hair from scalp through ends, then follow usual washing.",
+              "site": [
+                "scalp",
+                "hair_fibre",
+                "ends"
+              ],
+              "stage": "pre_wash_dry",
+              "removal": "usual_wash_day_routine"
+            },
+            {
+              "source_id": "O27-maker",
+              "dose": "unestablished",
+              "contact_time": "unspecified",
+              "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+              "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+              "direction_id": "O27-leavein",
+              "text": "Distribute on towel-dried hair and style.",
+              "site": [
+                "hair_fibre"
+              ],
+              "stage": "towel_dried",
+              "removal": "retained_by_styling_context"
+            },
+            {
+              "source_id": "O27-maker",
+              "dose": "unestablished",
+              "contact_time": "unspecified",
+              "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+              "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+              "direction_id": "O27-finish",
+              "text": "Apply as needed to dry mid-lengths and ends.",
+              "site": [
+                "mid_lengths",
+                "ends"
+              ],
+              "stage": "dry_finish",
+              "removal": "leave_on"
+            },
+            {
+              "source_id": "O27-maker",
+              "dose": "unestablished",
+              "contact_time": "overnight",
+              "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+              "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+              "direction_id": "O27-overnight",
+              "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day.",
+              "site": [
+                "scalp",
+                "hair_fibre",
+                "ends"
+              ],
+              "stage": "overnight_pre_wash",
+              "removal": "usual_wash_day_routine_next_day"
+            },
+            {
+              "source_id": "O27-maker",
+              "dose": "unestablished",
+              "contact_time": "unspecified",
+              "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+              "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+              "direction_id": "O27-scalp",
+              "text": "Massage into scalp.",
+              "site": [
+                "scalp"
+              ],
+              "stage": "unspecified",
+              "removal": "unestablished"
+            }
+          ]
+        },
+        "directions": [
+          {
+            "source_id": "O27-maker",
+            "dose": "unestablished",
+            "contact_time": "unspecified",
+            "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+            "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+            "direction_id": "O27-prewash",
+            "text": "Distribute on dry hair from scalp through ends, then follow usual washing.",
+            "site": [
+              "scalp",
+              "hair_fibre",
+              "ends"
+            ],
+            "stage": "pre_wash_dry",
+            "removal": "usual_wash_day_routine"
+          },
+          {
+            "source_id": "O27-maker",
+            "dose": "unestablished",
+            "contact_time": "unspecified",
+            "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+            "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+            "direction_id": "O27-leavein",
+            "text": "Distribute on towel-dried hair and style.",
+            "site": [
+              "hair_fibre"
+            ],
+            "stage": "towel_dried",
+            "removal": "retained_by_styling_context"
+          },
+          {
+            "source_id": "O27-maker",
+            "dose": "unestablished",
+            "contact_time": "unspecified",
+            "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+            "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+            "direction_id": "O27-finish",
+            "text": "Apply as needed to dry mid-lengths and ends.",
+            "site": [
+              "mid_lengths",
+              "ends"
+            ],
+            "stage": "dry_finish",
+            "removal": "leave_on"
+          },
+          {
+            "source_id": "O27-maker",
+            "dose": "unestablished",
+            "contact_time": "overnight",
+            "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+            "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+            "direction_id": "O27-overnight",
+            "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day.",
+            "site": [
+              "scalp",
+              "hair_fibre",
+              "ends"
+            ],
+            "stage": "overnight_pre_wash",
+            "removal": "usual_wash_day_routine_next_day"
+          },
+          {
+            "source_id": "O27-maker",
+            "dose": "unestablished",
+            "contact_time": "unspecified",
+            "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+            "capture_ref": "Exact maker US30ml page USAGE reviewed by root2026-10-09; same ILN46770 formula.",
+            "direction_id": "O27-scalp",
+            "text": "Massage into scalp.",
+            "site": [
+              "scalp"
+            ],
+            "stage": "unspecified",
+            "removal": "unestablished"
+          }
+        ]
+      },
+      {
+        "kind": "declaration_admission",
+        "basis": "Complete frozen raw formula and ordered ingredients preserved under original source admission; no fresh source acquisition or physical batch verification."
+      }
+    ]
+  }
+}

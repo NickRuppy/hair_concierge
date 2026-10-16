@@ -1,0 +1,45 @@
+{
+  "all_tokens_mapped": true,
+  "all_five_flags_boolean": true,
+  "no_product_names_or_urls_in_neutral": true,
+  "old_dictionary_sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+  "prior_holdout_dictionary_sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1",
+  "unique_entries": 56,
+  "mapped_occurrences": 64,
+  "new_or_primary_updated_entries": [
+    "ALCOHOL",
+    "ARACHIS HYPOGAEA OIL",
+    "ARGANIA KERNEL OIL",
+    "BRASSICA CAMPESTRIS SEED OIL",
+    "CANANGA ODORATA FLOWER OIL",
+    "DIBUTYL ADIPATE",
+    "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE",
+    "DIMETHYL PHENETHYL ACETATE",
+    "ETHYLHEXYL TRIAZONE",
+    "FRUCTOOLIGOSACCHARIDES",
+    "INULIN",
+    "ISOEUGENYL ACETATE",
+    "PANTHENOL",
+    "PANTOLACTONE",
+    "QUATERNIUM-95",
+    "SODIUM CHLORIDE",
+    "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+    "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+  ],
+  "unresolved_function_entries": [
+    "SODIUM CHLORIDE",
+    "FRUCTOOLIGOSACCHARIDES",
+    "INULIN",
+    "PANTOLACTONE",
+    "ARGANIA KERNEL OIL",
+    "PROPANEDIOL",
+    "TRIFOLIUM PRATENSE FLOWER EXTRACT",
+    "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT"
+  ],
+  "admission_caveat": "Argania Kernel Oil species incomplete and unaliased. Root decides whether this secondary contribution is material to admission. Quaternium-95 standalone exact-filter proof not established; supplied blend evidence retained as clue only.",
+  "output_sha256": {
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "function-source-registry.json": "bf8c83ba2a96af66eca79ec9b0ee1f6f617420ebd37838e1d220b2b0279dc5ef",
+    "normalization-mapping.json": "a49edd40c0963c647679acfa9d1cd0b784da63077ee56e675bfa76fc29cb18e3"
+  }
+}

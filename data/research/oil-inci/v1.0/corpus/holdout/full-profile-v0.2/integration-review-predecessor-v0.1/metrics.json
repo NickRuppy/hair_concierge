@@ -1,0 +1,236 @@
+{
+  "scope": "Six project-new declarations, two fresh isolated neutral lanes. Repeatability, not measured sensory accuracy.",
+  "formula_fields": {
+    "base": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 5,
+      "known_matches": 5,
+      "lane_a_counts": {
+        "ester_alkane_led": 2,
+        "silicone_led": 2,
+        "unknown": 1,
+        "hybrid": 1
+      },
+      "lane_b_counts": {
+        "ester_alkane_led": 2,
+        "silicone_led": 2,
+        "unknown": 1,
+        "hybrid": 1
+      }
+    },
+    "weight": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 5,
+      "known_matches": 5,
+      "lane_a_counts": {
+        "light": 2,
+        "medium": 3,
+        "unknown": 1
+      },
+      "lane_b_counts": {
+        "light": 2,
+        "medium": 3,
+        "unknown": 1
+      }
+    },
+    "penetration_potential": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 5,
+      "known_matches": 5,
+      "lane_a_counts": {
+        "surface_led": 5,
+        "unknown": 1
+      },
+      "lane_b_counts": {
+        "surface_led": 5,
+        "unknown": 1
+      }
+    },
+    "persistence_potential": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "moderate": 4,
+        "high": 2
+      },
+      "lane_b_counts": {
+        "moderate": 4,
+        "high": 2
+      }
+    },
+    "silicones": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "False": 3,
+        "True": 3
+      },
+      "lane_b_counts": {
+        "False": 3,
+        "True": 3
+      },
+      "positive_conditioned": {
+        "matches": 3,
+        "denominator": 3
+      },
+      "negative_conditioned": {
+        "matches": 3,
+        "denominator": 3
+      }
+    },
+    "mineral_oil": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "False": 6
+      },
+      "lane_b_counts": {
+        "False": 6
+      },
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 6,
+        "denominator": 6
+      }
+    },
+    "drying_alcohol": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "False": 5,
+        "True": 1
+      },
+      "lane_b_counts": {
+        "False": 5,
+        "True": 1
+      },
+      "positive_conditioned": {
+        "matches": 1,
+        "denominator": 1
+      },
+      "negative_conditioned": {
+        "matches": 5,
+        "denominator": 5
+      }
+    },
+    "fragrance": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "True": 5,
+        "False": 1
+      },
+      "lane_b_counts": {
+        "True": 5,
+        "False": 1
+      },
+      "positive_conditioned": {
+        "matches": 5,
+        "denominator": 5
+      },
+      "negative_conditioned": {
+        "matches": 1,
+        "denominator": 1
+      }
+    },
+    "scalp_active_botanicals": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 6,
+      "known_matches": 6,
+      "lane_a_counts": {
+        "False": 6
+      },
+      "lane_b_counts": {
+        "False": 6
+      },
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 6,
+        "denominator": 6
+      }
+    }
+  },
+  "source_fields": {
+    "dispenser": {
+      "matches": 6,
+      "denominator": 6,
+      "disagreements": []
+    },
+    "provides_heat_protection": {
+      "matches": 6,
+      "denominator": 6,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      },
+      "negative_conditioned": {
+        "matches": 4,
+        "denominator": 4
+      }
+    },
+    "provides_uv_protection": {
+      "matches": 6,
+      "denominator": 6,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 6,
+        "denominator": 6
+      }
+    },
+    "supported_uses": {
+      "matches": 6,
+      "denominator": 6,
+      "disagreements": []
+    },
+    "named_oil_prominence": {
+      "matches": 13,
+      "denominator": 14,
+      "both_known": 11,
+      "disagreements": [
+        {
+          "case_id": "H04",
+          "hero_id": "H04-hero-3",
+          "lane_a": "unknown",
+          "lane_b": "supporting"
+        }
+      ]
+    }
+  },
+  "internal_formula_agreement_threshold_passed": true,
+  "selected_persistence_counts": {
+    "low": 0,
+    "moderate": 4,
+    "high": 2
+  },
+  "three_band_coverage": false,
+  "coverage_limits": [
+    "No source-complete aqueous/biphasic architecture in selected cohort.",
+    "n=6 and agreement thresholds do not certify adapter/readiness/general accuracy.",
+    "Earlier v0.1 attempt aborted before outputs due brand cue in dictionary comment; this v0.2 uses neutral reference IDs and new workers. Raw botanical common names remain unchanged."
+  ]
+}

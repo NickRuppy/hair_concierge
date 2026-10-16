@@ -1,0 +1,1509 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "lane": "B",
+  "records": [
+    {
+      "neutral_id": "BC01",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "principal",
+          "reason": "Admitted volatile silicone carrier supplies the distribution vehicle for the conditioning film and hydrocarbon carrier system.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL",
+          "dictionary_roles": [
+            "silicone_gum",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "reason": "Admitted silicone gum and conditioning film provides the identifiable retained side of the carrier/film architecture, not a rich floor from the gum name.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Admitted hydrocarbon carrier/emollient complements the silicone vehicle; no volatility or quantitative fraction is assigned from this entry.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted fragrance_composition function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "reason": "Intact medium-prior botanical emollient supplements the carrier/film backbone; its position after fragrance does not make it trace.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Ethylhexyl Methoxycinnamate",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted recognized_uv_filter function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Tetramethyl Acetyloctahydronaphthalenes",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Hexamethylindanopyran",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Acetyl Cedrene",
+          "canonical_name": "ACETYL CEDRENE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Vanillin",
+          "canonical_name": "VANILLIN",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Coumarin",
+          "canonical_name": "COUMARIN",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Fusanus Spicatus Wood Oil",
+          "canonical_name": "FUSANUS SPICATUS WOOD OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Citrus Limon Peel Oil",
+          "canonical_name": "CITRUS LIMON PEEL OIL",
+          "dictionary_roles": [
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted aromatic_auxiliary function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Pinene",
+          "canonical_name": "PINENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 20,
+          "raw_name": "Santalol",
+          "canonical_name": "SANTALOL",
+          "dictionary_roles": [
+            "fragrance"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted fragrance function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 21,
+          "raw_name": "Cinnamomum Zeylanicum Bark Oil",
+          "canonical_name": "CINNAMOMUM ZEYLANICUM BARK OIL",
+          "dictionary_roles": [
+            "fragrance",
+            "tonic"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted fragrance, tonic function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 22,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT",
+          "dictionary_roles": [
+            "fragrance_group",
+            "botanical_preparation_unspecified"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted fragrance-group function supports an auxiliary reading; unspecified botanical preparation remains unresolved and receives no fixed-oil prior.",
+          "ambiguity": "Fragrance group is admitted; exact oil/extract preparation and contribution remain unresolved."
+        },
+        {
+          "rank": 23,
+          "raw_name": "Eugenol",
+          "canonical_name": "EUGENOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 24,
+          "raw_name": "Farnesol",
+          "canonical_name": "FARNESOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 25,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        }
+      ],
+      "admitted_fixed_oil_inventory": [
+        {
+          "rank": 5,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "weight_prior": "medium"
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "No continuous auxiliary-only boundary.",
+        "markers": "Rank 4 PARFUM starts an auxiliary strand, but rank 5 ARGANIA SPINOSA KERNEL OIL is retained in the oil inventory and ranks 9-11/17 remain unresolved. Ranks 18-25 contain admitted aromatic/fragrance auxiliaries, with rank 22 preparation uncertainty."
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B5",
+          "B6",
+          "B7"
+        ],
+        "positive_evidence": [
+          {
+            "rank": 2,
+            "canonical_name": "DIMETHICONOL",
+            "reason": "The admitted conditioning-film/gum route is integral to the identified silicone carrier/film architecture."
+          },
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE",
+            "reason": "Volatile carrier plus conditioning film gives a coherent distribution-and-retained-film system rather than a wholly fixed rich oil base."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ISODODECANE",
+            "reason": "Complementary hydrocarbon carrier/emollient makes an intermediate film/carrier interpretation plausible."
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "reason": "Exact medium-prior intact botanical emollient supplies a further retained-oil route, without any assumed amount."
+          }
+        ],
+        "counter_signal": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE",
+            "reason": "Volatile vehicle is affirmative evidence for the light alternative if the retained film contributes little sensory load."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ISODODECANE",
+            "reason": "Hydrocarbon carrier/emollient supports a lighter distribution interpretation, without an admitted volatility claim."
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DIMETHICONOL",
+            "reason": "Gum identity is a heavier counter-signal, but alone cannot establish the principal structured load needed for rich."
+          }
+        ],
+        "reason": "Medium is the best B5 working estimate: the identified backbone combines a volatile distribution vehicle, an integral conditioning-gum route and a complementary hydrocarbon emollient, with intact argan oil in the retained system. Light loses narrowly because the positive architecture includes a principal retained conditioning-film route rather than an affirmatively secondary one. Rich loses because neither the gum name nor the botanical adjunct establishes an overriding structured retained system. The unreviewed declarations remain genuine gaps, but there is no affirmative competing backbone that balances this identified carrier/film reading.",
+        "deciding_assumption": "Rank 2 DIMETHICONOL is an integral conditioning-film component of the rank 1/3 carrier system. This is a qualitative role judgment, not evidence of its fraction, viscosity or measured coating.",
+        "unresolved": [
+          "Relative carrier/film/oil amounts, grades and actual modest-dose hair feel are unknown.",
+          "Ranks 9 HEXAMETHYLINDANOPYRAN, 10 ACETYL CEDRENE, 11 VANILLIN and 17 FUSANUS SPICATUS WOOD OIL have unreviewed functions; they are not assigned aroma, negligible load or a rich floor.",
+          "Rank 22 LAVANDULA OIL/EXTRACT preparation is unspecified; fragrance function does not settle its retained contribution."
+        ]
+      }
+    },
+    {
+      "neutral_id": "BC02",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "carthamus tinctorius (safflower) seed oil*",
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact light-prior fixed oil initiates a coherent botanical carrier sequence; the initial hypothesis follows B3 without claiming a majority.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 2,
+          "raw_name": "rosa canina (rosehip) fruit oil*",
+          "canonical_name": "ROSA CANINA FRUIT OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact fruit oil has a light material prior and forms a complementary botanical carrier with rank 1; no seed-oil substitution.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 3,
+          "raw_name": "argania spinosa (argan) kernel oil*",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Intact medium-prior oil participates in the botanical carrier system and is an affirmative counter-signal to the lighter oils.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 4,
+          "raw_name": "hippophae rhamnoides (sea buckthorn) seed oil*",
+          "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+          "dictionary_roles": [
+            "skin_protecting"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact seed-oil material entry supplies an intact fixed-oil identity and light prior within the botanical carrier sequence; generic skin-protecting function adds no hair-performance claim.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 5,
+          "raw_name": "rosa damascena (rose) flower oil*",
+          "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+        },
+        {
+          "rank": 6,
+          "raw_name": "pelargonium graveolens (rose geranium) flower oil*",
+          "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "dictionary_roles": [
+            "aromatic_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted aromatic_auxiliary function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 7,
+          "raw_name": "citrus sinensis (sweet orange) peel oil expressed*",
+          "canonical_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 8,
+          "raw_name": "cananga odorata (yang ylang) flower oil*",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted essential_oil, declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 9,
+          "raw_name": "pogostemon cablin (patchouli) leaf oil*",
+          "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 10,
+          "raw_name": "lycium barbarum (goji berry) fruit extract*",
+          "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+          "dictionary_roles": [
+            "botanical_extract"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted botanical-extract identity is a distinct preparation within the oil blend; no carrier identity, weight direction or negligible amount is inferred.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 11,
+          "raw_name": "styrax tonkinensis (benzoin) resin extract",
+          "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+          "dictionary_roles": [
+            "fragrance",
+            "skin_conditioning"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Exact fragrance and skin-conditioning functions support an adjunct reading; resin extract wording does not establish a structural resin or film backbone.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 12,
+          "raw_name": "rosmarinus officinalis (rosemary) extract*",
+          "canonical_name": "ROSMARINUS OFFICINALIS EXTRACT",
+          "dictionary_roles": [
+            "antimicrobial",
+            "refreshing",
+            "tonic"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted antimicrobial/refreshing/tonic functions support a functional adjunct reading, without a hair benefit or weight direction.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 13,
+          "raw_name": "cedrus atlantica (cedar) bark oil*",
+          "canonical_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 14,
+          "raw_name": "citrus aurantium (orange) flower oil*",
+          "canonical_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 15,
+          "raw_name": "anthemis nobilis (chamomile) flower oil*",
+          "canonical_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 16,
+          "raw_name": "helianthus annuus (sunflower) seed oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact seed oil remains in the fixed-oil inventory with its light prior despite later position; no concentration boundary is inferred.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 17,
+          "raw_name": "tocopherol (vitamin E)",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted antioxidant function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 18,
+          "raw_name": "citronellol**",
+          "canonical_name": "CITRONELLOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 19,
+          "raw_name": "limonene**",
+          "canonical_name": "LIMONENE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 20,
+          "raw_name": "geraniol**",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 21,
+          "raw_name": "linalool**",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 22,
+          "raw_name": "benzyl benzoate**",
+          "canonical_name": "BENZYL BENZOATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 23,
+          "raw_name": "citral**",
+          "canonical_name": "CITRAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 24,
+          "raw_name": "farnesol**",
+          "canonical_name": "FARNESOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 25,
+          "raw_name": "benzyl salicylate**",
+          "canonical_name": "BENZYL SALICYLATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 26,
+          "raw_name": "eugenol**",
+          "canonical_name": "EUGENOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        }
+      ],
+      "admitted_fixed_oil_inventory": [
+        {
+          "rank": 1,
+          "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ROSA CANINA FRUIT OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "weight_prior": "medium"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+          "weight_prior": "light"
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "Only ranks 17-26 form a continuous admitted auxiliary suffix; this is a functional description, not a concentration cutoff.",
+        "markers": "Earlier auxiliaries and unresolved preparations interleave with rank 16 HELIANTHUS ANNUUS SEED OIL. Asterisks mark source footnotes only."
+      },
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6",
+          "B7"
+        ],
+        "positive_evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+            "reason": "Light-prior fixed oil supplies B3 initial hypothesis."
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ROSA CANINA FRUIT OIL",
+            "reason": "Independent exact fruit-oil light prior coherently supports the same carrier tendency."
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+            "reason": "Exact seed-oil light prior is consistent with this botanical carrier architecture."
+          },
+          {
+            "rank": 16,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+            "reason": "Later exact sunflower seed oil remains a light-prior carrier contribution without being erased from inventory."
+          }
+        ],
+        "counter_signal": [
+          {
+            "rank": 3,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "reason": "Medium-prior argan participates as a principal botanical carrier and is the strongest affirmative medium signal."
+          },
+          {
+            "rank": 11,
+            "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+            "reason": "Fragrance/skin-conditioning resin extract remains a possible sensory contribution, but no admitted structural-film role establishes richness."
+          }
+        ],
+        "reason": "Light is the best B3 estimate from a coherent light-leading botanical carrier system: safflower seed oil and exact rosehip fruit oil establish the initial architecture, reinforced by exact sea-buckthorn seed oil, with sunflower seed oil still included. Medium loses narrowly because argan is a credible intermediate-load participant but the whole identified carrier system supports the lighter soft interpretation; this is not an oil count or a dominance claim. Rich lacks an admitted rich-leading or principal structural-film argument, and the resin-extract name alone supplies none. Unreviewed botanical preparations remain unresolved rather than being reclassified as trace aromatics; their presence does not by itself establish an equally persuasive contrary backbone.",
+        "deciding_assumption": "The identified opening fixed-oil sequence is the carrier backbone, and B3 light-leading/medium-companion reasoning remains more persuasive than a higher-load reading. The functions and quantities of the other botanical preparations could change that reading if established.",
+        "unresolved": [
+          "No proportions, batch grades or comparative hair-feel measurements are available.",
+          "Functions/preparations at ranks 5 ROSA DAMASCENA FLOWER OIL, 7 CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED, 9 POGOSTEMON CABLIN (PATCHOULI) LEAF OIL, 13 CEDRUS ATLANTICA (CEDAR) BARK OIL, 14 CITRUS AURANTIUM (ORANGE) FLOWER OIL and 15 ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL are not assessed. No deparenthesized alias, aromatic/fixed-oil role or negligible amount is assumed.",
+          "Rank 11 STYRAX TONKINENSIS RESIN EXTRACT has no admitted structural-film mechanics or retained quantity; rank 10 LYCIUM BARBARUM FRUIT EXTRACT and rank 12 ROSMARINUS OFFICINALIS EXTRACT lack preparation details."
+        ]
+      }
+    },
+    {
+      "neutral_id": "BC03",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "volatile_carrier"
+          ],
+          "formula_role": "principal",
+          "reason": "Admitted volatile silicone carrier provides the distribution vehicle for a mixed silicone/ester/oil architecture.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE",
+          "dictionary_roles": [
+            "silicone_carrier",
+            "conditioning_film"
+          ],
+          "formula_role": "principal",
+          "reason": "Admitted silicone carrier and conditioning film provides the identifiable retained conditioning route; grade and viscosity remain unspecified.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 Alkyl Benzoate",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Defined ester emollient is a complementary distribution/emollient carrier, providing the B4 lighter-architecture challenge without invented volatility.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Intact medium-prior botanical emollient complements the silicone/ester carrier sequence as part of the retained system, not merely a rank-based upgrade.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Keratin",
+          "canonical_name": "KERATIN",
+          "dictionary_roles": [
+            "hair_conditioning",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact hair/skin-conditioning functions identify an additional conditioning route; no film-forming function is borrowed from hydrolyzed keratin.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Hydrolyzed Keratin",
+          "canonical_name": "HYDROLYZED KERATIN",
+          "dictionary_roles": [
+            "antistatic",
+            "film_forming",
+            "hair_conditioning",
+            "humectant",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact antistatic, film-forming and conditioning functions identify a secondary conditioning route; no amount or film mechanics follows.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hydrolyzed Keratin PG-Propyl Methylsilanediol",
+          "canonical_name": "HYDROLYZED KERATIN PG-PROPYL METHYLSILANEDIOL",
+          "dictionary_roles": [
+            "hair_conditioning",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact conditioning functions identify a secondary route; methylsilanediol wording supplies no silicone-carrier or film inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Cocodimonium Hydroxypropyl Hydrolyzed Keratin",
+          "canonical_name": "COCODIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+          "dictionary_roles": [
+            "antistatic",
+            "hair_conditioning",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact antistatic and conditioning functions identify a secondary route, without transfer to another quaternized protein.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Laurdimonium Hydroxypropyl Hydrolyzed Keratin",
+          "canonical_name": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED KERATIN",
+          "dictionary_roles": [
+            "antistatic",
+            "hair_conditioning",
+            "skin_conditioning"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact antistatic and conditioning functions identify a secondary route; no family-wide film inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Rosa Canina Fruit Oil",
+          "canonical_name": "ROSA CANINA FRUIT OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact fruit oil contributes a light-prior fixed-oil route alongside the principal carrier system; it is not a seed-oil proxy.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Phosphatidylcholine",
+          "canonical_name": "PHOSPHATIDYLCHOLINE",
+          "dictionary_roles": [
+            "fragrance_functional",
+            "skin_conditioning",
+            "surfactant_emulsifying"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Exact surfactant-emulsifying, fragrance-functional and skin-conditioning functions support a formulation adjunct; no hair-conditioning or structural-lipid burden is imported.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Schinziophyton Rautanenii Kernel Oil",
+          "canonical_name": "SCHINZIOPHYTON RAUTANENII KERNEL OIL",
+          "dictionary_roles": [
+            "supplier_conditioning",
+            "supplier_moisturizing"
+          ],
+          "formula_role": "secondary",
+          "reason": "Supplier conditioning/moisturizing descriptors support a secondary adjunct reading only; the declared kernel oil is tracked without inventing a weight prior or hair mechanism.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Aleurites Moluccanus Seed Oil",
+          "canonical_name": "ALEURITES MOLUCCANUS SEED OIL",
+          "dictionary_roles": [
+            "intact_fixed_botanical_oil"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact admitted seed oil supplies an additional light-prior botanical route without assuming a negligible quantity.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Psidium Guajava Fruit Extract",
+          "canonical_name": "PSIDIUM GUAJAVA FRUIT EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 15,
+          "raw_name": "Aloe Barbadensis Leaf Juice",
+          "canonical_name": "ALOE BARBADENSIS LEAF JUICE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 16,
+          "raw_name": "Oenothera Biennis (Evening Primrose) Oil",
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+          "dictionary_roles": [
+            "fixed_oil_carrier"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact fixed-oil-carrier function supplies another botanical carrier route, but no material weight prior is available for this exact declaration.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 17,
+          "raw_name": "Tocopheryl Acetate",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "dictionary_roles": [
+            "antioxidant_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted antioxidant_auxiliary function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 18,
+          "raw_name": "Glycolipids",
+          "canonical_name": "GLYCOLIPIDS",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 19,
+          "raw_name": "Water/Aqua/Eau",
+          "canonical_name": "AQUA",
+          "dictionary_roles": [
+            "aqueous_vehicle"
+          ],
+          "formula_role": "secondary",
+          "reason": "Admitted aqueous vehicle supplies an additional vehicle route; it neither proves an aqueous backbone nor determines blend weight.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 20,
+          "raw_name": "Hydrogenated Castor Oil/Sebacic Acid Copolymer",
+          "canonical_name": "HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER",
+          "dictionary_roles": [
+            "hair_conditioning",
+            "skin_conditioning",
+            "skin_conditioning_emollient"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact hair-conditioning function supplies a secondary conditioning route; this derivative inherits neither castor-oil richness nor copolymer film formation.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 21,
+          "raw_name": "Arginine HCl",
+          "canonical_name": "ARGININE HCL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 22,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN",
+          "dictionary_roles": [
+            "humectant"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted humectant function supports a formulation adjunct; it does not establish a hair-load class.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 23,
+          "raw_name": "Thioctic Acid",
+          "canonical_name": "THIOCTIC ACID",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 24,
+          "raw_name": "Butyl Methoxydibenzoylmethane",
+          "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted recognized_uv_filter function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 25,
+          "raw_name": "Polyquaternium-55",
+          "canonical_name": "POLYQUATERNIUM-55",
+          "dictionary_roles": [
+            "film_forming",
+            "foam_stabilizing"
+          ],
+          "formula_role": "secondary",
+          "reason": "Exact film-forming function supplies a secondary route considered in uncertainty; supplier-grade mechanics, deposition and weight are not transferred.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 26,
+          "raw_name": "Sodium Hyaluronate",
+          "canonical_name": "SODIUM HYALURONATE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 27,
+          "raw_name": "Allantoin",
+          "canonical_name": "ALLANTOIN",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 28,
+          "raw_name": "Sodium Ascorbyl Phosphate",
+          "canonical_name": "SODIUM ASCORBYL PHOSPHATE",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 29,
+          "raw_name": "Benzoic Acid",
+          "canonical_name": "BENZOIC ACID",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. Unreviewed function is not evidence of negligible contribution, volatility, lightness or richness."
+        },
+        {
+          "rank": 30,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL",
+          "dictionary_roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted preservative function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 31,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE",
+          "dictionary_roles": [
+            "preservative"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted preservative function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 32,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 33,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 34,
+          "raw_name": "Fragrance/Parfum",
+          "canonical_name": "FRAGRANCE/PARFUM",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted fragrance_composition function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        }
+      ],
+      "admitted_fixed_oil_inventory": [
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "weight_prior": "medium"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "ROSA CANINA FRUIT OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "ALEURITES MOLUCCANUS SEED OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+          "weight_prior": "not_available_for_exact_declaration"
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "Ranks 30-34 form an admitted preservative/fragrance auxiliary suffix; no percentage boundary follows.",
+        "markers": "Earlier secondary, auxiliary and unresolved routes remain interleaved. No inferred 1 percent line."
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B4",
+          "B5",
+          "B6",
+          "B7"
+        ],
+        "positive_evidence": [
+          {
+            "rank": 2,
+            "canonical_name": "DIMETHICONE",
+            "reason": "Principal admitted silicone carrier/conditioning-film route supports B5 intermediate retained-film interpretation."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE",
+            "reason": "Defined ester emollient complements the silicone system, supporting an intermediate mobile-emollient/film architecture."
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "reason": "Exact medium-prior intact argan oil participates in the retained side of that carrier architecture."
+          },
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE",
+            "reason": "Volatile silicone distribution vehicle is compatible with a medium residual-film architecture; it does not erase its conditioning route."
+          }
+        ],
+        "counter_signal": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE",
+            "reason": "Affirmative volatile-carrier route supports light if the conditioning film is sensorially small."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE",
+            "reason": "Ester carrier furnishes the B4 lighter interpretation without establishing evaporation."
+          },
+          {
+            "rank": 10,
+            "canonical_name": "ROSA CANINA FRUIT OIL",
+            "reason": "Exact rosehip fruit-oil light prior challenges a heavier interpretation."
+          },
+          {
+            "rank": 13,
+            "canonical_name": "ALEURITES MOLUCCANUS SEED OIL",
+            "reason": "Exact kukui seed-oil light prior challenges a heavier interpretation."
+          },
+          {
+            "rank": 6,
+            "canonical_name": "HYDROLYZED KERATIN",
+            "reason": "Film-forming function is reviewed, but the secondary ingredient supplies no quantitative coating burden or rich floor."
+          },
+          {
+            "rank": 25,
+            "canonical_name": "POLYQUATERNIUM-55",
+            "reason": "Reviewed film-forming function leaves a possible heavier contribution unresolved, without proving substantial structured film."
+          }
+        ],
+        "reason": "Medium is the affirmative B5 working reading of a volatile silicone vehicle combined with a principal conditioning-silicone route and a mixed ester/intact-oil carrier system. Light loses because its mobile-carrier argument must also explain the integral DIMETHICONE conditioning route and the complementary retained botanical system; the selection is not an upgrade from argan rank alone. Rich loses because secondary film-function declarations do not establish an overriding structured retained backbone. The keratin variants, phosphatidylcholine, copolymer and supplier-described kernel oil receive only their exact admitted functions, not independent weight scores. Unspecified dimethicone grade and unreviewed adjuncts reduce robustness but do not displace the identified backbone with an equally persuasive incompatible one.",
+        "deciding_assumption": "DIMETHICONE is an integral conditioning carrier/film component rather than merely a secondary route within a decisively lighter architecture. The coherent silicone/ester/oil reading wins softly, without selecting a viscosity grade or summing protein/film ingredients.",
+        "unresolved": [
+          "DIMETHICONE grade, component fractions, supplier grades, distribution and actual modest-dose hair feel are unknown.",
+          "Ranks 14 PSIDIUM GUAJAVA FRUIT EXTRACT, 15 ALOE BARBADENSIS LEAF JUICE, 18 GLYCOLIPIDS, 21 ARGININE HCL, 23 THIOCTIC ACID, 26 SODIUM HYALURONATE, 27 ALLANTOIN, 28 SODIUM ASCORBYL PHOSPHATE and 29 BENZOIC ACID have unreviewed functions, not evidence of negligible or rich contributions.",
+          "Rank 12 SCHINZIOPHYTON RAUTANENII KERNEL OIL has supplier conditioning/moisturizing descriptors only, and rank 16 OENOTHERA BIENNIS (EVENING PRIMROSE) OIL has an admitted fixed-oil carrier function but no exact material weight prior.",
+          "Film-forming functions at ranks 6 HYDROLYZED KERATIN and 25 POLYQUATERNIUM-55 do not establish film quantity/mechanics; rank 20 HYDROGENATED CASTOR OIL/SEBACIC ACID COPOLYMER has no admitted film-forming role or inherited castor prior."
+        ]
+      }
+    },
+    {
+      "neutral_id": "BC04",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "Sesamum Indicum (Sesame) Seed Oil",
+          "canonical_name": "SESAMUM INDICUM SEED OIL",
+          "dictionary_roles": [
+            "fixed_oil_carrier"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact medium-prior seed oil initiates the continuous fixed-oil carrier sequence; B3 gives an initial tendency without implying majority.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 2,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact whole coconut oil participates in the carrier sequence with a rich prior; it is neither fractionated nor a derivative.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 3,
+          "raw_name": "Persea Americana (Avocado) Oil",
+          "canonical_name": "PERSEA GRATISSIMA OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Packet-scoped Americana-to-Gratissima reconciliation identifies the admitted medium-prior oil within the botanical backbone.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established. Raw-to-canonical mapping is accepted only from this source-scoped neutral packet; no universal alias is created."
+        },
+        {
+          "rank": 4,
+          "raw_name": "Prunus Dulcis (Sweet Almond) Oil",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Packet-scoped Dulcis-to-Amygdalus Dulcis reconciliation identifies the admitted light-prior oil, furnishing a lighter contribution to the shared carrier base.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established. Raw-to-canonical mapping is accepted only from this source-scoped neutral packet; no universal alias is created."
+        },
+        {
+          "rank": 5,
+          "raw_name": "Argania Spinosa (Argan) Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "reason": "Exact medium-prior intact oil completes the coherent botanical carrier sequence; its participation is qualitative, not a fraction inferred from rank.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 6,
+          "raw_name": "Brahmi Herpestis (Brahmi) Fruit Extract",
+          "canonical_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. Do not equate Brahmi Herpestis to Bacopa, Herpestis monnieri or another species/name; source typo remains unresolved."
+        },
+        {
+          "rank": 7,
+          "raw_name": "Jasminum Officinale (Jasmin Absolute) Oil",
+          "canonical_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL",
+          "dictionary_roles": [
+            "fragrance",
+            "moisturising",
+            "skin_conditioning",
+            "soothing"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Exact fragrance and skin-oriented functions support an adjunct reading; absolute wording receives no fixed-oil weight prior.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 8,
+          "raw_name": "Tocopherol (Vitamin E)",
+          "canonical_name": "TOCOPHEROL",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted antioxidant function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 9,
+          "raw_name": "Azadirachta Indica (Neem) Oil",
+          "canonical_name": "AZADIRACHTA INDICA (NEEM) OIL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "reason": "Exact declaration has no assessed function in the admitted dictionary. Role and sensory contribution remain unresolved; no negligible quantity, aromatic role or automatic richness is inferred.",
+          "ambiguity": "Role and contribution unreviewed; preserve exact declaration. Generic ingredient functions and rough pure-material tendencies only; no dose, grade, retained amount or measured finished-product performance. No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions. The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+        },
+        {
+          "rank": 10,
+          "raw_name": "Benzyl Benzoateε",
+          "canonical_name": "BENZYL BENZOATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 11,
+          "raw_name": "Linaloolε",
+          "canonical_name": "LINALOOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 12,
+          "raw_name": "Eugenolε",
+          "canonical_name": "EUGENOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 13,
+          "raw_name": "Benzyl Alcoholε",
+          "canonical_name": "BENZYL ALCOHOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        },
+        {
+          "rank": 14,
+          "raw_name": "Geraniolε",
+          "canonical_name": "GERANIOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "reason": "Admitted declared_fragrance_allergen function supports an auxiliary functional reading, without a concentration or weight-direction inference.",
+          "ambiguity": "Formula role is qualitative; amount and contribution are not established."
+        }
+      ],
+      "admitted_fixed_oil_inventory": [
+        {
+          "rank": 1,
+          "canonical_name": "SESAMUM INDICUM SEED OIL",
+          "weight_prior": "medium"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "COCOS NUCIFERA OIL",
+          "weight_prior": "rich"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "PERSEA GRATISSIMA OIL",
+          "weight_prior": "medium"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+          "weight_prior": "light"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "weight_prior": "medium"
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "Ranks 10-14 form the admitted fragrance-allergen auxiliary suffix; no concentration cutoff follows.",
+        "markers": "Rank 9 remains unresolved despite ranks 7-8 having auxiliary functions. Epsilon markers are source footnotes only."
+      },
+      "weight": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "rule_ids": [
+          "B0",
+          "B1",
+          "B3",
+          "B6",
+          "B7"
+        ],
+        "positive_evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "SESAMUM INDICUM SEED OIL",
+            "reason": "Medium-prior exact sesame seed oil supplies the B3 initial botanical tendency."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "PERSEA GRATISSIMA OIL",
+            "reason": "Medium-prior admitted avocado oil supports the intermediate fixed-oil architecture."
+          },
+          {
+            "rank": 4,
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+            "reason": "Light-prior admitted almond oil provides a lighter contribution within that same carrier base."
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+            "reason": "Medium-prior intact argan oil is consistent with an intermediate botanical load."
+          },
+          {
+            "rank": 2,
+            "canonical_name": "COCOS NUCIFERA OIL",
+            "reason": "Rich-prior whole coconut oil supplies affirmative additional burden, supporting medium over light in a mixed botanical base."
+          }
+        ],
+        "counter_signal": [
+          {
+            "rank": 2,
+            "canonical_name": "COCOS NUCIFERA OIL",
+            "reason": "Principal whole coconut oil with rich prior makes rich the closest alternative."
+          },
+          {
+            "rank": 4,
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+            "reason": "Light-prior almond leaves light plausible if its functional contribution and the softer carrier tendencies govern feel."
+          },
+          {
+            "rank": 1,
+            "canonical_name": "SESAMUM INDICUM SEED OIL",
+            "reason": "Sesame pure-material prior itself has light and rich alternatives and is only approximate."
+          }
+        ],
+        "reason": "Medium is an affirmative B3 estimate of an intermediate-leading fixed-oil architecture containing a meaningful rich-prior companion and a lighter-prior companion. Sesame, avocado and argan point to an intermediate tendency, while whole coconut raises the burden hypothesis and almond counters it; this is a qualitative architecture argument, not an average or count. Rich loses narrowly because coconut participation does not establish a rich-leading or overriding principal structured system across this coherent mixed-oil backbone. Light loses because the identified carrier system has an affirmative intermediate tendency plus whole-coconut burden, not a coherent low-load architecture. The two unreviewed declarations remain gaps but furnish no evidenced contrary backbone.",
+        "deciding_assumption": "The source-scoped exact identities and continuous fixed-oil carrier reading are sound, with coconut contributing to rather than overriding the intermediate-leading architecture. No quantity or structural state is inferred.",
+        "unresolved": [
+          "Carrier proportions, temperature/grade-dependent feel and modest-dose comparative performance are unknown.",
+          "Rank 6 BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT has unresolved source spelling and function; it is not corrected to another species.",
+          "Rank 9 AZADIRACHTA INDICA (NEEM) OIL has unreviewed function/preparation; its lookup candidate is not an admitted alias and it receives no presumed fixed-oil identity, aroma role, lightness or richness.",
+          "Rank 7 JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL receives its exact fragrance/skin-oriented functions only, without a fixed-oil material prior."
+        ]
+      }
+    }
+  ]
+}

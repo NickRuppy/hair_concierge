@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "completed_after_original_receipt": true,
+  "original_receipt_sha256": "4f2af3bee3d987d50b91f47cbda4199cd403ed5057a001febe8974d6a242011a",
+  "checks": [
+    "all 572 ledger representations across blind/final preserve raw tokens and dictionary roles",
+    "both independent final lanes preserve exact hero canonical matches/ranks",
+    "all original completion receipt file digests still match"
+  ],
+  "errors": []
+}

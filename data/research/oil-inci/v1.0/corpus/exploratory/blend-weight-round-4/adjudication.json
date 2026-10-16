@@ -1,0 +1,140 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "rows": [
+    {
+      "neutral_id": "Q01",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "light",
+      "reason": "Medium wins narrowly because the formula is a genuine fixed-oil/emollient co-carrier system rather than an established volatile-delivery system; this is not a known oil fraction. Light is credible.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Hazelnut seed oil has no material-weight prior; its amount/grade and retained contribution could shift the estimate.",
+        "Relative ester/ether/oil amounts and hair residual film are unknown; neither ingredient counts nor a mobile emollient proves a low residue.",
+        "Unreviewed names retained as unresolved roles: ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, ASCORBIC ACID, SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT, ACETYL CEDRENE, DIMETHYL PHENETHYL ACETATE, VANILLIN, PELARGONIUM GRAVEOLENS FLOWER OIL, ISOEUGENYL ACETATE. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q02",
+      "value": "light",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "medium",
+      "reason": "Choose the B3 light-leading botanical hypothesis with medium as the competing film interpretation; no independent hair feel measurement.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Sunflower/olive ratio, extraction carrier contribution and actual leave-on dose/film are undisclosed."
+      ]
+    },
+    {
+      "neutral_id": "Q03",
+      "value": "light",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "medium",
+      "reason": "After reviewing both interpretations, prefer the affirmative D5/solvent distribution route under B5. Dimethiconol remains a serious retained-film counter-signal; early position does not establish principal retained burden. This changes the root working class, not the sealed original judgment or policy.",
+      "choice_basis": "Post-lane root reconciliation; light/medium remains an evidentiary boundary, not a proven residue result.",
+      "unresolved": [
+        "Dimethiconol grade/loading, solvent residue, botanical shares and dose are unknown."
+      ]
+    },
+    {
+      "neutral_id": "Q04",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "rich",
+      "reason": "B3 medium is the positive competing-carrier hypothesis, not an average or missing-data default. Castor is not the leading fixed-oil declaration, and no principal wax structure establishes rich.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Castor and later fixed-oil proportions are unknown; malformed Ocimum/Basilicum and misspelled eucalyptus/tea-tree source literals have no repaired identity.",
+        "Aromatic/other unresolved preparations may affect film; no efficacy or trace assumption follows.",
+        "Unreviewed names retained as unresolved roles: MENTHA PIPERITA (PEPPERMINT) OIL, EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL, MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL, EQUISETUM ARVENSE (HORSETAIL) EXTRACT, ALOE BARBADENSIS EXTRACT, LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL, BENZYL NICOTINATE, BIOTIN, ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT, APIUM GRAVEOLENS (CELERY) SEED EXTRACT, CHOLECALCIFEROL (VITAMIN D), ASCORBIC ACID, OCIMUM, BASILICUM (BASIL) OIL, POGOSTEMON CABLIN (PATCHOULI) OIL, SALVIA OFFICINALIS (SAGE) OIL, URTICA DIOICA (NETTLE) EXTRACT. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q05",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "light",
+      "reason": "Medium follows the principal silicone-conditioning hypothesis with strong light alternative; the named active and botanical tally do not define weight.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Dimethicone grade, mobile/retained amounts and actual hair film are undisclosed; unassessed active/propanediol/beta-carotene cannot be assigned harmlessness.",
+        "Unreviewed names retained as unresolved roles: BIS-AMINOPROPYL DIGLYCOL DIMALEATE, PROPANEDIOL, BETA-CAROTENE. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q06",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "rich",
+      "reason": "Medium is the positive silicone-film hypothesis; a rich principal structure is plausible but unestablished, so the gum alone does not impose rich.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Dimethicone viscosity/volatility, dimethiconol grade/loading, oil amount and retained hair film unknown.",
+        "Unreviewed names retained as unresolved roles: VANILLIN. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q07",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "rich",
+      "reason": "Medium follows B3 for competing light/rich carriers. Rich lacks a positive leading-rich or established structured-system argument; not a numerical average.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Carrier ratios, lavender oil/extract preparation and actual dose/film are unresolved."
+      ]
+    },
+    {
+      "neutral_id": "Q08",
+      "value": "light",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "medium",
+      "reason": "Light narrowly wins B3. Cananga has a source-scoped aromatic preparation role rather than a fixed-oil prior; neither the unassessed extracts nor their count establishes a competing principal lipid structure.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Sunflower/sesame/almond proportions and extraction contributions unknown; Cananga oil versus extract is unresolved.",
+        "Many declared preparations lack reviewed functions. Their uncertainty is retained; no positive first-order structured backbone is established by the available functions.",
+        "Unreviewed names retained as unresolved roles: ONOSMA HISPIDUM ROOT EXTRACT, CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED), EMBLICA OFFICINALIS FRUIT EXTRACT, OCIMUM SANCTUM LEAF EXTRACT, BACOPA MONNIERI LEAF EXTRACT, CENTELLA ASIATICA LEAF EXTRACT, ECLIPTA ALBA LEAF EXTRACT, LAWSONIA INERMIS (HENNA) LEAF EXTRACT, ACACIA CONCINNA FRUIT EXTRACT, ALOE BARBADENSIS LEAF EXTRACT, SAPINDUS MUKOROSSI FRUIT EXTRACT, SYMPLOCOS RACEMOSA BARK EXTRACT, TRIGONELLA FOENUM-GRAECUM SEED EXTRACT, WITHANIA SOMNIFERA LEAF/ROOT EXTRACT, ALPHA-TERPINENE, TERPINOLENE. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q09",
+      "value": "medium",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "rich",
+      "reason": "Medium is the best retained-silicone/co-carrier hypothesis. Rich is a serious alternative but no grade/amount evidence makes the gum/resin structure dominant; light remains possible if mobile delivery leaves little film.",
+      "choice_basis": "Root architecture judgment; two independent interpretations considered, no vote/accuracy inference.",
+      "unresolved": [
+        "Silicone grades, resin/elastomer loading, volatile-pair retail equivalence and retained mass unknown; generic supplier functions do not identify grades.",
+        "Unreviewed names retained as unresolved roles: CAPSANTHIN/CAPSORUBIN, CARVONE, HEXAMETHYLINDANOPYRAN, ISOEUGENYL ACETATE, LAVANDULA (LAVENDER) OIL/EXTRACT, MENTHA VIRIDIS (SPEARMINT) LEAF OIL, VANILLIN. No tail-position trace rule used."
+      ]
+    },
+    {
+      "neutral_id": "Q10",
+      "value": "light",
+      "confidence": "low",
+      "estimate": true,
+      "nearest_alternative": "medium",
+      "reason": "Light narrowly wins the mobile-emollient architecture. No evaporation rate or low retained mass is claimed; the unassessed derivative could justify medium after formulation evidence.",
+      "choice_basis": "Retain OE28 approved light/low and root initial mobile-emollient interpretation. Both lanes choose medium from early avocado; user decision is not silently overridden. This is a policy tension, not evidence that the user class is sensory-correct.",
+      "unresolved": [
+        "Avocado fraction and sunflower plant part unknown; no seed-oil prior inherited. Modified castor function/loading and peptide/propanediol roles are unassessed; their apparent secondary involvement is a hypothesis.",
+        "Unreviewed names retained as unresolved roles: CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78. No tail-position trace rule used."
+      ]
+    }
+  ],
+  "post_lane_class_change": [
+    "Q03 main medium to working light; initial main remains sealed."
+  ],
+  "policy_changes_during_round": false,
+  "limits": "Working product estimates, not scientific validation or a runtime decision. Q10 disagreement preserved against OE28."
+}

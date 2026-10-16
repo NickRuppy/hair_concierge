@@ -1,0 +1,1658 @@
+{
+  "run_id": "oil-full-profile-source-group-b-v0.1",
+  "captured_at": "2026-10-09",
+  "scope": "Stage2 source completion only for O16,O17,O20,O21,O22,O23. No base/weight/persistence/penetration/prominence or efficacy classification.",
+  "actual_reviewed_count": 6,
+  "records": [
+    {
+      "case_id": "O16",
+      "identity": {
+        "brand": "Sunny Isle",
+        "product": "Rosemary Mint Hair and Strong Roots LITE Oil",
+        "size": "2 oz",
+        "market": "US"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O16",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "formula_key": "R02",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+          "ingredient_key": "R02",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "context_key": "R02"
+        },
+        "raw_inci_sha256": "de392e7b9c47aa07ce5d7edc6e1c1cca8c1a279f9093857eb155f4f1c3fdcc46",
+        "primary_inci_sha256": "de392e7b9c47aa07ce5d7edc6e1c1cca8c1a279f9093857eb155f4f1c3fdcc46",
+        "raw_inci": "Ricinus Communis (Castor) Seed Oil, Persea Gratissima (Avocado) Oil, Vitis Vinifera (Grape) Seed Oil, Cocos Nucifera (Coconut) Oil, Aloe Barbadensis leaf Oil, Vitamin E (Mixed Tocopherol) Oil, Mentha arvensis (Peppermint) Oil, Rosmarinus Officinalis Leaf (Rosemary) Oil, Biotin, Lavandula latifolia (Lavender) Oil, Eucalyptus Globulus Leaf (Eucalyptus) Oil, Glycine Soja (Soybean) Oil, Simmondsia Chinensis (Jojoba) Oil, Melaleuca Alternifolia (Tea Tree) Oil, Triticum Vulgare (Wheat) germ Oil, Carthamus Tinctorius (Safflower) seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Oenothera Biennis (Evening Primrose) Oil, Equisetum Arvense (Horsetail) Extract, Triticum Vulgare (Wheat) Germ Oil, Oryza Sativa (Rice) Bran Oil, Arctium Lappa (Burdock Root) Extract, Glycerin, Apium Graveolens (Celery) Seed Extract, Ascorbic Acid (Vitamin C), Ocimum Basilicum (Basil) Oil, Pogostemon Cablin (Patchouli) Oil, Salvia Officinalis (Sage) Oil, Urtica Dioica (Nettle) Extract, Argania spinosa kernel (Argan) Oil, Pimenta Officinalis (Pimento) Leaf Oil, Nigella Sativa Seed Oil",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Ricinus Communis (Castor) Seed Oil",
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Persea Gratissima (Avocado) Oil",
+            "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL"
+          },
+          {
+            "rank": 3,
+            "raw_name": "Vitis Vinifera (Grape) Seed Oil",
+            "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Cocos Nucifera (Coconut) Oil",
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Aloe Barbadensis leaf Oil",
+            "canonical_name": "ALOE BARBADENSIS LEAF OIL"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Vitamin E (Mixed Tocopherol) Oil",
+            "canonical_name": "VITAMIN E (MIXED TOCOPHEROL) OIL"
+          },
+          {
+            "rank": 7,
+            "raw_name": "Mentha arvensis (Peppermint) Oil",
+            "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL"
+          },
+          {
+            "rank": 8,
+            "raw_name": "Rosmarinus Officinalis Leaf (Rosemary) Oil",
+            "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          },
+          {
+            "rank": 9,
+            "raw_name": "Biotin",
+            "canonical_name": "BIOTIN"
+          },
+          {
+            "rank": 10,
+            "raw_name": "Lavandula latifolia (Lavender) Oil",
+            "canonical_name": "LAVANDULA LATIFOLIA (LAVENDER) OIL"
+          },
+          {
+            "rank": 11,
+            "raw_name": "Eucalyptus Globulus Leaf (Eucalyptus) Oil",
+            "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL"
+          },
+          {
+            "rank": 12,
+            "raw_name": "Glycine Soja (Soybean) Oil",
+            "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL"
+          },
+          {
+            "rank": 13,
+            "raw_name": "Simmondsia Chinensis (Jojoba) Oil",
+            "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) OIL"
+          },
+          {
+            "rank": 14,
+            "raw_name": "Melaleuca Alternifolia (Tea Tree) Oil",
+            "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL"
+          },
+          {
+            "rank": 15,
+            "raw_name": "Triticum Vulgare (Wheat) germ Oil",
+            "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+          },
+          {
+            "rank": 16,
+            "raw_name": "Carthamus Tinctorius (Safflower) seed Oil",
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 17,
+            "raw_name": "Prunus Amygdalus Dulcis (Sweet Almond) Oil",
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          },
+          {
+            "rank": 18,
+            "raw_name": "Oenothera Biennis (Evening Primrose) Oil",
+            "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+          },
+          {
+            "rank": 19,
+            "raw_name": "Equisetum Arvense (Horsetail) Extract",
+            "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT"
+          },
+          {
+            "rank": 20,
+            "raw_name": "Triticum Vulgare (Wheat) Germ Oil",
+            "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+          },
+          {
+            "rank": 21,
+            "raw_name": "Oryza Sativa (Rice) Bran Oil",
+            "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+          },
+          {
+            "rank": 22,
+            "raw_name": "Arctium Lappa (Burdock Root) Extract",
+            "canonical_name": "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT"
+          },
+          {
+            "rank": 23,
+            "raw_name": "Glycerin",
+            "canonical_name": "GLYCERIN"
+          },
+          {
+            "rank": 24,
+            "raw_name": "Apium Graveolens (Celery) Seed Extract",
+            "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT"
+          },
+          {
+            "rank": 25,
+            "raw_name": "Ascorbic Acid (Vitamin C)",
+            "canonical_name": "ASCORBIC ACID (VITAMIN C)"
+          },
+          {
+            "rank": 26,
+            "raw_name": "Ocimum Basilicum (Basil) Oil",
+            "canonical_name": "OCIMUM BASILICUM (BASIL) OIL"
+          },
+          {
+            "rank": 27,
+            "raw_name": "Pogostemon Cablin (Patchouli) Oil",
+            "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL"
+          },
+          {
+            "rank": 28,
+            "raw_name": "Salvia Officinalis (Sage) Oil",
+            "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL"
+          },
+          {
+            "rank": 29,
+            "raw_name": "Urtica Dioica (Nettle) Extract",
+            "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT"
+          },
+          {
+            "rank": 30,
+            "raw_name": "Argania spinosa kernel (Argan) Oil",
+            "canonical_name": "ARGANIA SPINOSA KERNEL (ARGAN) OIL"
+          },
+          {
+            "rank": 31,
+            "raw_name": "Pimenta Officinalis (Pimento) Leaf Oil",
+            "canonical_name": "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL"
+          },
+          {
+            "rank": 32,
+            "raw_name": "Nigella Sativa Seed Oil",
+            "canonical_name": "NIGELLA SATIVA SEED OIL"
+          }
+        ],
+        "contextual_declarations": [],
+        "source_limits_preserved": "US maker only; no DE equivalence. Preserve unusual Oil declarations and duplicated Wheat Germ entries. LITE label is not weight evidence.",
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O16",
+        "current_page": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US 2oz maker page retains all 32 entries in order, including duplicated wheat germ and unusual Aloe leaf Oil / Vitamin E Oil declarations. SKU SIROSMINTLITE, barcode 00850054732064.",
+        "current_declared_inci": "Ricinus Communis (Castor) Seed Oil, Persea Gratissima (Avocado) Oil, Vitis Vinifera (Grape) Seed Oil, Cocos Nucifera (Coconut) Oil, Aloe Barbadensis leaf Oil, Vitamin E (Mixed Tocopherol) Oil, Mentha arvensis (Peppermint) Oil, Rosmarinus Officinalis Leaf (Rosemary) Oil, Biotin, Lavandula latifolia (Lavender) Oil, Eucalyptus Globulus Leaf (Eucalyptus) Oil, Glycine Soja (Soybean) Oil, Simmondsia Chinensis (Jojoba) Oil, Melaleuca Alternifolia (Tea Tree) Oil, Triticum Vulgare (Wheat) germ Oil, Carthamus Tinctorius (Safflower) seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Oenothera Biennis (Evening Primrose) Oil, Equisetum Arvense (Horsetail) Extract, Triticum Vulgare (Wheat) Germ Oil, Oryza Sativa (Rice) Bran Oil, Arctium Lappa (Burdock Root) Extract, Glycerin, Apium Graveolens (Celery) Seed Extract, Ascorbic Acid (Vitamin C), Ocimum Basilicum (Basil) Oil, Pogostemon Cablin (Patchouli) Oil, Salvia Officinalis (Sage) Oil, Urtica Dioica (Nettle) Extract, Argania spinosa kernel (Argan) Oil, Pimenta Officinalis (Pimento) Leaf Oil, Nigella Sativa Seed Oil"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json",
+        "source_context_key": "O16",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker permits daily hair care and use with protective styles such as braids or weaves, separately mentioning hot-oil treatment. This admits retained protective-style fibre care; no numeric hair dose or damp/dry stage is inferred."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O16-maker",
+          "url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded."
+        },
+        {
+          "id": "O16-front",
+          "url": "https://jamaicanblackcastoroil.com/cdn/shop/files/Sunny-Isle-Rosemary-Mint-Hair-and-Strong-Roots-LITE-Oil-2oz.jpg?v=1696518574&width=1080",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact 2oz maker product image, visually inspected label and pipette.",
+          "local_file": "images/group-b/O16-front.jpg",
+          "sha256": "57dc43a19fd68a927d37958a3fe3ca2cce7d405779b9a326e02644fe63525c44"
+        },
+        {
+          "id": "O16-back",
+          "url": "https://jamaicanblackcastoroil.com/cdn/shop/files/Sunny-Isle-Rosemary-Mint-Hair-and-Strong-Roots-LITE-Oil-2oz-left.jpg?v=1696518575&width=1080",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact 2oz maker back-label image, visually inspected daily and hot-oil directions.",
+          "local_file": "images/group-b/O16-back.jpg",
+          "sha256": "a51f5b66e2d9b607cdcb5ba78a94edd1ced04bcd76171f8d6634988eb9ca1713"
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [
+        {
+          "hero_id": "rosemary_oil",
+          "hero_name": "Rosemary oil",
+          "source_id": "O16-maker",
+          "canonical_ingredients": [
+            "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          ],
+          "ingredient_ranks": [
+            8
+          ],
+          "mapping_note": "Named in title and product description; literal rosemary Oil declaration."
+        },
+        {
+          "hero_id": "mint_oil",
+          "hero_name": "Mint oil",
+          "source_id": "O16-maker",
+          "canonical_ingredients": [
+            "MENTHA ARVENSIS (PEPPERMINT) OIL"
+          ],
+          "ingredient_ranks": [
+            7
+          ],
+          "mapping_note": "Title Mint maps to literal Mentha arvensis (Peppermint) Oil; preserve arvensis, do not substitute Mentha piperita."
+        },
+        {
+          "hero_id": "jamaican_black_castor_oil",
+          "hero_name": "Jamaican black castor oil",
+          "source_id": "O16-maker",
+          "canonical_ingredients": [
+            "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          ],
+          "ingredient_ranks": [
+            1
+          ],
+          "mapping_note": "Maker highlights its Jamaican Black Castor Oil in this product; literal castor seed oil declaration. Geography/processing claim does not create a different INCI token."
+        }
+      ],
+      "non_oil_hero_features": [
+        {
+          "name": "Biotin",
+          "ingredient_ranks": [
+            9
+          ],
+          "note": "Featured non-oil ingredient; not a named botanical oil."
+        }
+      ],
+      "packaging": {
+        "value": "dropper",
+        "status": "confirmed",
+        "source_id": "O16-front",
+        "selected_package": "US 2oz SIROSMINTLITE",
+        "observation": "Black bulb attached to a glass pipette on exact maker front image.",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O16-maker",
+          "scope": "Full product page and front/back label reviewed; no explicit hair heat-protection claim. Hot-oil treatment instructs heating, which is not heat protection.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O16-maker",
+          "scope": "Full product page and front/back label reviewed; no explicit hair-UV protection claim.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O16-protective-style-retained",
+          "source_id": "O16-maker",
+          "text": "Daily hair care includes protective styles such as braids and weaves; retained fibre scenario preserved from the original supplement.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O16-daily-label",
+          "source_id": "O16-back",
+          "text": "Apply a small amount to scalp, comb through and style.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O16-hot-oil-label",
+          "source_id": "O16-back",
+          "text": "Apply generously to scalp and through ends; apply heat for 15 minutes, then shampoo and style.",
+          "site": [
+            "scalp",
+            "ends"
+          ],
+          "stage": "unspecified",
+          "dose": "generous amount",
+          "contact_time": "15 minutes with heat",
+          "removal": "shampoo",
+          "restrictions": "unestablished"
+        }
+      ],
+      "source_limits": [
+        "US maker scope only. Protective-style retained scenario does not inherit the hot-oil dose, heat or removal. Growth/repair and scalp efficacy claims are not assessed."
+      ],
+      "source_review_status": "completed"
+    },
+    {
+      "case_id": "O17",
+      "identity": {
+        "brand": "khadi",
+        "product": "After Color Haaröl Color Protect",
+        "size": "50 ml",
+        "market": "DE"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O17",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "formula_key": "R04",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+          "ingredient_key": "R04",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "context_key": "R04"
+        },
+        "raw_inci_sha256": "c61e9d9ba504ce484582aa93c9f03b308cad9db784697e7da8788e53ae335a36",
+        "primary_inci_sha256": "c61e9d9ba504ce484582aa93c9f03b308cad9db784697e7da8788e53ae335a36",
+        "raw_inci": "SESAMUM INDICUM (SESAME) SEED OIL, ORYZA SATIVA (RICE) BRAN OIL, BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL*, CAPRYLIC/CAPRIC TRIGLYCERIDE, ISOAMYL LAURATE, TRITICUM VULGARE (WHEAT) GERM OIL, PARFUM (FRAGRANCE)**, VITIS VINIFERA (GRAPE) SEED OIL, CITRUS AURANTIUM PEEL OIL**, LIMONENE**, MELIA AZADIRACHTA SEED OIL, ECLIPTA ALBA LEAF EXTRACT*, CASSIA AURICULATA LEAF EXTRACT, CENTELLA ASIATICA LEAF EXTRACT*, LAVANDULA OIL/ EXTRACT**, EUCALYPTUS GLOBULUS OIL**, AZADIRACHTA INDICA LEAF EXTRACT*, EMBLICA OFFICINALIS FRUIT EXTRACT*, LAWSONIA INERMIS (HENNA) LEAF EXTRACT*, PINENE**, LINALOOL**, CAMPHOR**, LINALYL ACETATE**, BETA-CARYOPHYLLENE**, EUGENIA CARYOPHYLLUS (CLOVE) OIL**, TERPINEOL**, EUGENOL**, MENTHOL**, VANILLIN***, CITRAL**, TERPINOLENE**, SANTALUM ALBUM (SANDALWOOD) OIL**",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL",
+            "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "raw_name": "ORYZA SATIVA (RICE) BRAN OIL",
+            "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL"
+          },
+          {
+            "rank": 3,
+            "raw_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL*",
+            "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+          },
+          {
+            "rank": 4,
+            "raw_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+            "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+          },
+          {
+            "rank": 5,
+            "raw_name": "ISOAMYL LAURATE",
+            "canonical_name": "ISOAMYL LAURATE"
+          },
+          {
+            "rank": 6,
+            "raw_name": "TRITICUM VULGARE (WHEAT) GERM OIL",
+            "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL"
+          },
+          {
+            "rank": 7,
+            "raw_name": "PARFUM (FRAGRANCE)**",
+            "canonical_name": "PARFUM (FRAGRANCE)"
+          },
+          {
+            "rank": 8,
+            "raw_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+            "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+          },
+          {
+            "rank": 9,
+            "raw_name": "CITRUS AURANTIUM PEEL OIL**",
+            "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+          },
+          {
+            "rank": 10,
+            "raw_name": "LIMONENE**",
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 11,
+            "raw_name": "MELIA AZADIRACHTA SEED OIL",
+            "canonical_name": "MELIA AZADIRACHTA SEED OIL"
+          },
+          {
+            "rank": 12,
+            "raw_name": "ECLIPTA ALBA LEAF EXTRACT*",
+            "canonical_name": "ECLIPTA ALBA LEAF EXTRACT"
+          },
+          {
+            "rank": 13,
+            "raw_name": "CASSIA AURICULATA LEAF EXTRACT",
+            "canonical_name": "CASSIA AURICULATA LEAF EXTRACT"
+          },
+          {
+            "rank": 14,
+            "raw_name": "CENTELLA ASIATICA LEAF EXTRACT*",
+            "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT"
+          },
+          {
+            "rank": 15,
+            "raw_name": "LAVANDULA OIL/ EXTRACT**",
+            "canonical_name": "LAVANDULA OIL/ EXTRACT"
+          },
+          {
+            "rank": 16,
+            "raw_name": "EUCALYPTUS GLOBULUS OIL**",
+            "canonical_name": "EUCALYPTUS GLOBULUS OIL"
+          },
+          {
+            "rank": 17,
+            "raw_name": "AZADIRACHTA INDICA LEAF EXTRACT*",
+            "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT"
+          },
+          {
+            "rank": 18,
+            "raw_name": "EMBLICA OFFICINALIS FRUIT EXTRACT*",
+            "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT"
+          },
+          {
+            "rank": 19,
+            "raw_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT*",
+            "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT"
+          },
+          {
+            "rank": 20,
+            "raw_name": "PINENE**",
+            "canonical_name": "PINENE"
+          },
+          {
+            "rank": 21,
+            "raw_name": "LINALOOL**",
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 22,
+            "raw_name": "CAMPHOR**",
+            "canonical_name": "CAMPHOR"
+          },
+          {
+            "rank": 23,
+            "raw_name": "LINALYL ACETATE**",
+            "canonical_name": "LINALYL ACETATE"
+          },
+          {
+            "rank": 24,
+            "raw_name": "BETA-CARYOPHYLLENE**",
+            "canonical_name": "BETA-CARYOPHYLLENE"
+          },
+          {
+            "rank": 25,
+            "raw_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL**",
+            "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL"
+          },
+          {
+            "rank": 26,
+            "raw_name": "TERPINEOL**",
+            "canonical_name": "TERPINEOL"
+          },
+          {
+            "rank": 27,
+            "raw_name": "EUGENOL**",
+            "canonical_name": "EUGENOL"
+          },
+          {
+            "rank": 28,
+            "raw_name": "MENTHOL**",
+            "canonical_name": "MENTHOL"
+          },
+          {
+            "rank": 29,
+            "raw_name": "VANILLIN***",
+            "canonical_name": "VANILLIN"
+          },
+          {
+            "rank": 30,
+            "raw_name": "CITRAL**",
+            "canonical_name": "CITRAL"
+          },
+          {
+            "rank": 31,
+            "raw_name": "TERPINOLENE**",
+            "canonical_name": "TERPINOLENE"
+          },
+          {
+            "rank": 32,
+            "raw_name": "SANTALUM ALBUM (SANDALWOOD) OIL**",
+            "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL"
+          }
+        ],
+        "contextual_declarations": [],
+        "source_limits_preserved": "DE maker 32-entry declaration; source organic/aroma footnotes removed by exact receipts, including literal VANILLIN***. Combined LAVANDULA OIL/ EXTRACT remains unresolved. Physical pack/batch unverified.",
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O17",
+        "current_page": "https://khadi.de/products/haare-haaroel-color-care",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current 50ml German maker page reproduces the 32-entry declaration including VANILLIN*** and combined LAVANDULA OIL/ EXTRACT. Current title Color Protect and body Color Care occur on the same page; no formula merge.",
+        "current_declared_inci": "SESAMUM INDICUM (SESAME) SEED OIL, ORYZA SATIVA (RICE) BRAN OIL, BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL*, CAPRYLIC/CAPRIC TRIGLYCERIDE, ISOAMYL LAURATE, TRITICUM VULGARE (WHEAT) GERM OIL, PARFUM (FRAGRANCE)**, VITIS VINIFERA (GRAPE) SEED OIL, CITRUS AURANTIUM PEEL OIL**, LIMONENE**, MELIA AZADIRACHTA SEED OIL, ECLIPTA ALBA LEAF EXTRACT*, CASSIA AURICULATA LEAF EXTRACT, CENTELLA ASIATICA LEAF EXTRACT*, LAVANDULA OIL/ EXTRACT**, EUCALYPTUS GLOBULUS OIL**, AZADIRACHTA INDICA LEAF EXTRACT*, EMBLICA OFFICINALIS FRUIT EXTRACT*, LAWSONIA INERMIS (HENNA) LEAF EXTRACT*, PINENE**, LINALOOL**, CAMPHOR**, LINALYL ACETATE**, BETA-CARYOPHYLLENE**, EUGENIA CARYOPHYLLUS (CLOVE) OIL**, TERPINEOL**, EUGENOL**, MENTHOL**, VANILLIN***, CITRAL**, TERPINOLENE**, SANTALUM ALBUM (SANDALWOOD) OIL**"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "2–3 pumps on dry lengths/ends before wash, 30–60 minutes or overnight; sparing leave-in daily use also permitted."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O17-maker",
+          "url": "https://khadi.de/products/haare-haaroel-color-care",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded."
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [
+        {
+          "hero_id": "broccoli_seed_oil",
+          "hero_name": "Broccoli seed oil",
+          "source_id": "O17-maker",
+          "canonical_ingredients": [
+            "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+          ],
+          "ingredient_ranks": [
+            3
+          ],
+          "mapping_note": "Explicitly highlighted in product description; botanical name matches primary declaration."
+        }
+      ],
+      "non_oil_hero_features": [
+        {
+          "name": "Senna",
+          "note": "Named plant feature, not an oil claim; no forced exact species mapping."
+        },
+        {
+          "name": "Centella",
+          "ingredient_ranks": [
+            14
+          ],
+          "note": "Leaf extract in INCI, not an oil."
+        },
+        {
+          "name": "khadi Color Care Elixier",
+          "note": "Advertised plant-extract mixture; no invented single INCI or concentration imported."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O17-maker",
+        "selected_package": "DE 50ml",
+        "observation": "Application gives Pumphübe; package disposal explicitly names Pumpspender.",
+        "observation_method": "explicit_mechanism_text",
+        "excerpt": "2- 3 Pumphübe"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O17-maker",
+          "scope": "Complete description, application, INCI and FAQ/recycling sections reviewed; no explicit heat-protection claim. Warm towel is treatment context.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O17-maker",
+          "scope": "Product description explicitly claims the plant layer protects hair from UV rays; this is claim evidence, not filter identification.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here.",
+          "excerpt": "bewahren es vor UV-Strahlen"
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O17-daily-retained",
+          "source_id": "O17-maker",
+          "text": "Daily leave-in use is separately permitted with sparing application.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "sparing",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O17-prewash",
+          "source_id": "O17-maker",
+          "text": "Earliest 24 hours after colouring, distribute 2–3 pumps over dry hair, especially coloured areas, lengths and ends; wrap in a towel, wait 30–60 minutes or overnight, then wash.",
+          "site": [
+            "hair_fibre",
+            "lengths",
+            "ends"
+          ],
+          "stage": "dry",
+          "dose": "2–3 pumps",
+          "contact_time": "30–60 minutes or overnight",
+          "removal": "wash",
+          "restrictions": "Prewash colour-care treatment: earliest 24 hours after colouring."
+        },
+        {
+          "direction_id": "O17-prewash-brush-alternative",
+          "source_id": "O17-maker",
+          "text": "As an alternative application route within the prewash treatment, brush the oil into scalp and hair.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "dry",
+          "dose": "same prewash treatment",
+          "contact_time": "30–60 minutes or overnight",
+          "removal": "wash",
+          "restrictions": "Alternative route within preceding prewash scenario, not an additional leave-on instruction."
+        }
+      ],
+      "source_limits": [
+        "Do not transfer numeric prewash dose, dry stage or dwell time to the separate daily leave-in permission. Public formula, not physical batch."
+      ],
+      "source_review_status": "completed"
+    },
+    {
+      "case_id": "O20",
+      "identity": {
+        "brand": "Schwarzkopf Professional",
+        "product": "Oil Ultime Rose Finishing Oil",
+        "size": "100 ml; IDH3050393; GTIN4067971053929",
+        "market": "FI/EU"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O20",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "formula_key": "R08",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+          "ingredient_key": "R08",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+          "context_key": "R08"
+        },
+        "raw_inci_sha256": "11c18b8d6a189db2016368beb68c41266676c32a4a5e36b20b59e6d9ae6951da",
+        "primary_inci_sha256": "11c18b8d6a189db2016368beb68c41266676c32a4a5e36b20b59e6d9ae6951da",
+        "raw_inci": "DIMETHICONE, DIMETHICONOL, ROSA CANINA FRUIT OIL, ROSA DAMASCENA FLOWER OIL, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, PARFUM (FRAGRANCE), GERANIOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRONELLOL, TRISILOXANE, DISILOXANE, BENZYL ALCOHOL, GERANYL ACETATE, EUGENOL, ROSE KETONES",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "DIMETHICONE",
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "raw_name": "DIMETHICONOL",
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 3,
+            "raw_name": "ROSA CANINA FRUIT OIL",
+            "canonical_name": "ROSA CANINA FRUIT OIL"
+          },
+          {
+            "rank": 4,
+            "raw_name": "ROSA DAMASCENA FLOWER OIL",
+            "canonical_name": "ROSA DAMASCENA FLOWER OIL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+            "canonical_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL"
+          },
+          {
+            "rank": 6,
+            "raw_name": "PARFUM (FRAGRANCE)",
+            "canonical_name": "PARFUM (FRAGRANCE)"
+          },
+          {
+            "rank": 7,
+            "raw_name": "GERANIOL",
+            "canonical_name": "GERANIOL"
+          },
+          {
+            "rank": 8,
+            "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+            "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+          },
+          {
+            "rank": 9,
+            "raw_name": "CITRONELLOL",
+            "canonical_name": "CITRONELLOL"
+          },
+          {
+            "rank": 10,
+            "raw_name": "TRISILOXANE",
+            "canonical_name": "TRISILOXANE"
+          },
+          {
+            "rank": 11,
+            "raw_name": "DISILOXANE",
+            "canonical_name": "DISILOXANE"
+          },
+          {
+            "rank": 12,
+            "raw_name": "BENZYL ALCOHOL",
+            "canonical_name": "BENZYL ALCOHOL"
+          },
+          {
+            "rank": 13,
+            "raw_name": "GERANYL ACETATE",
+            "canonical_name": "GERANYL ACETATE"
+          },
+          {
+            "rank": 14,
+            "raw_name": "EUGENOL",
+            "canonical_name": "EUGENOL"
+          },
+          {
+            "rank": 15,
+            "raw_name": "ROSE KETONES",
+            "canonical_name": "ROSE KETONES"
+          }
+        ],
+        "contextual_declarations": [],
+        "source_limits_preserved": "FI/EU official maker declaration. DE shop confirms SKU/size but not readable formula; no exact DE physical-pack equivalence claimed.",
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O20",
+        "current_page": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Exact FI official indexed page for IDH3050393 / GTIN4067971053929 reproduces the 15-entry declaration, including Tetramethyl Acetyloctahydronaphthalenes, Geranyl Acetate and Rose Ketones. Older linalool/hexyl-cinnamal variant excluded.",
+        "current_declared_inci": "DIMETHICONE, DIMETHICONOL, ROSA CANINA FRUIT OIL, ROSA DAMASCENA FLOWER OIL, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, PARFUM (FRAGRANCE), GERANIOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRONELLOL, TRISILOXANE, DISILOXANE, BENZYL ALCOHOL, GERANYL ACETATE, EUGENOL, ROSE KETONES"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R08",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount on towel-dried or dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O20-maker",
+          "url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact IDH/GTIN identity, description, benefits, full INCI, application and warnings in indexed official product page.",
+          "access_method": "Search-indexed full official product content",
+          "direct_access_result": "Web direct open and direct HTTP fetch failed (403); official indexed result reviewed on 2026-10-09, index indicated crawled four weeks earlier."
+        },
+        {
+          "id": "O20-brand",
+          "url": "https://www.schwarzkopf-professional.com/com/en/care/oil-ultime/rose-finishing-oil.html",
+          "reviewed_at": "2026-10-09",
+          "scope": "Official Rose product body and full FAQ; contemporary supporting use/claim evidence, not substitute INCI."
+        },
+        {
+          "id": "O20-official-pdf",
+          "url": "https://dm.henkel-dam.com/is/content/henkel/GB_OilUltime_0524_OnePager_041488",
+          "reviewed_at": "2026-10-09",
+          "scope": "Official 2024 Oil Ultime document: product range, heat claim and capped Rose 100ml pack image; text reviewed and page1 visually inspected.",
+          "local_file": "images/group-b/O20-official.pdf",
+          "sha256": "def82b8db045f361798a4e3505dbe79a7d37b04080ff6465de9f01877a9e0568"
+        },
+        {
+          "id": "O20-package-retailer",
+          "url": "https://www.haarshop.com/schwarzkopf-oil-ultime-rose-finishing-oil-100-ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Secondary exact-EAN4067971053929 / 100ml packaging corroboration ONLY; explicit pump verb; no retailer formula/claim transfer.",
+          "source_tier": "secondary"
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [
+        {
+          "hero_id": "rose_oil",
+          "hero_name": "Rose oil",
+          "source_id": "O20-maker",
+          "canonical_ingredients": [
+            "ROSA CANINA FRUIT OIL",
+            "ROSA DAMASCENA FLOWER OIL"
+          ],
+          "ingredient_ranks": [
+            3,
+            4
+          ],
+          "mapping_note": "Maker explicitly names rose oil as the combination of Rosa Canina fruit oil and Rosa Damascena flower oil; preserve both components, not one invented token."
+        }
+      ],
+      "packaging": {
+        "value": "unknown",
+        "status": "reviewed_primary_mechanism_unresolved",
+        "source_id": "O20-official-pdf",
+        "selected_package": "100ml IDH3050393 GTIN4067971053929 FI/EU",
+        "observation": "Official exact-range image shows capped Rose100ml bottle; outlet mechanism is concealed. Direct official shop images unavailable behind403.",
+        "observation_method": "visual_inspection",
+        "secondary_corroboration": {
+          "value": "pump",
+          "source_id": "O20-package-retailer",
+          "excerpt": "Pump a small amount of hair oil onto your hands",
+          "binding": "Same exact GTIN4067971053929 and100ml; secondary text only, not primary visual confirmation."
+        },
+        "resolution_needed": "Official uncapped image or explicit maker pump instruction for exact selected package. Secondary pump evidence available for owner decision."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O20-maker",
+          "scope": "Exact official indexed product benefits explicitly state heat protection up to230°C; official product FAQ corroborates the finishing oils claim. Temperature is manufacturer claim, not independently measured efficacy.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here.",
+          "excerpt": "heat protection up to 230°C"
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O20-maker",
+          "scope": "Complete indexed official product body/benefits/INCI/how-to/warnings and official brand FAQ reviewed; no explicit hairUV protection claim. Keep-out-of-sunlight warning is storage, not hair protection.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O20-retained",
+          "source_id": "O20-maker",
+          "text": "Apply a small amount to towel-dried or dry hair, then style as desired.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "towel_dried_or_dry",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O20-prewash",
+          "source_id": "O20-maker",
+          "text": "The maker separately permits use as a pre-shampoo treatment or overnight oiling.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "pre-shampoo or overnight",
+          "removal": "shampoo",
+          "restrictions": "Separate from retained finishing context; no invented numeric dose or heating."
+        }
+      ],
+      "source_limits": [
+        "Current exact official page available via indexed content, not successful direct fetch. No FI-to-DE physical-batch equivalence asserted. Primary dispenser mechanism remains genuinely unresolved; secondary exactGTIN pump text is not silently promoted."
+      ],
+      "source_review_status": "completed"
+    },
+    {
+      "case_id": "O21",
+      "identity": {
+        "brand": "JVN",
+        "product": "Complete Nourishing Shine Drops",
+        "size": "1.7 fl oz / 50 ml",
+        "market": "US maker/USD"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O21",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "formula_key": "N01",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "ingredient_key": "N01",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "context_key": "N01"
+        },
+        "raw_inci_sha256": "1fd649a1803b6f9deb105d18b2dcf65a5bc10c9ca7259bc0298f5e4e0ecc398d",
+        "primary_inci_sha256": "c00d445aca81bfd43e2636244d5b9c1b3dd37dfcae3f7a58ef4170cff35fc756",
+        "raw_inci": "Hydrogenated Farnesene*, Squalane, Jojoba Esters, Limnanthes Alba (Meadowfoam) Seed Oil, Meadowfoam Estolide, Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Sabdariffa Flower Extract, Eclipta Prostrata Extract, Moringa Oleifera Seed Oil, Tocopherol, Melia Azadirachta Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance/Parfum**; *Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Hydrogenated Farnesene*",
+            "canonical_name": "HYDROGENATED FARNESENE"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Squalane",
+            "canonical_name": "SQUALANE"
+          },
+          {
+            "rank": 3,
+            "raw_name": "Jojoba Esters",
+            "canonical_name": "JOJOBA ESTERS"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Limnanthes Alba (Meadowfoam) Seed Oil",
+            "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Meadowfoam Estolide",
+            "canonical_name": "MEADOWFOAM ESTOLIDE"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 7,
+            "raw_name": "Hibiscus Sabdariffa Flower Extract",
+            "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT"
+          },
+          {
+            "rank": 8,
+            "raw_name": "Eclipta Prostrata Extract",
+            "canonical_name": "ECLIPTA PROSTRATA EXTRACT"
+          },
+          {
+            "rank": 9,
+            "raw_name": "Moringa Oleifera Seed Oil",
+            "canonical_name": "MORINGA OLEIFERA SEED OIL"
+          },
+          {
+            "rank": 10,
+            "raw_name": "Tocopherol",
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 11,
+            "raw_name": "Melia Azadirachta Leaf Extract",
+            "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+          },
+          {
+            "rank": 12,
+            "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+            "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+          },
+          {
+            "rank": 13,
+            "raw_name": "Fragrance/Parfum**",
+            "canonical_name": "FRAGRANCE/PARFUM"
+          }
+        ],
+        "contextual_declarations": [
+          {
+            "type": "supplier_footnotes",
+            "raw": "*Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil",
+            "parent_rank": 13,
+            "ordering": "fragrance sublist has no primary concentration order",
+            "identity_gap": "Missing separator in first fragrance phrase preserved; not chemically repaired."
+          }
+        ],
+        "source_limits_preserved": [
+          "Public maker page declaration, not physical batch-label verification.",
+          "Market/size scope is literal page context; no cross-market formula join."
+        ],
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O21",
+        "current_page": "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US50ml maker page reproduces all13 primary entries plus the same separately marked fragrance sublist. Original missing separator within the fragrance phrase remains preserved; no nested primary ranks created.",
+        "current_declared_inci": "Hydrogenated Farnesene*, Squalane, Jojoba Esters, Limnanthes Alba (Meadowfoam) Seed Oil, Meadowfoam Estolide, Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Sabdariffa Flower Extract, Eclipta Prostrata Extract, Moringa Oleifera Seed Oil, Tocopherol, Melia Azadirachta Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance/Parfum**; *Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Few drops rubbed between palms, smoothed through damp or dry mid-lengths and ends; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O21-maker",
+          "url": "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded."
+        },
+        {
+          "id": "O21-package",
+          "url": "https://jvnhair.com/cdn/shop/files/ShineDrops_AwardSeal.jpg?v=1743711280&width=900",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact maker50ml product image; pipette/bulb visually inspected.",
+          "local_file": "images/group-b/O21-package.jpg",
+          "sha256": "15948d98eca4ac9b9ab5a6bdbddf871520c2ffb01a9957c2cb85346b453e419d"
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [],
+      "hero_absence_basis": "Completed description, key-ingredient, full-INCI and FAQ review: no intact named botanical oil is positioned as an oil hero. Featured Hemisqualane, Meadowfoam Ester and Hibiscus Extract are captured separately below; merely appearing in full INCI is not promotional positioning.",
+      "non_oil_hero_features": [
+        {
+          "name": "Hemisqualane",
+          "canonical_ingredients": [
+            "HYDROGENATED FARNESENE"
+          ],
+          "ingredient_ranks": [
+            1
+          ],
+          "mapping_note": "Maker INCI footnote explicitly identifies sugarcane-derived Hemisqualane."
+        },
+        {
+          "name": "Meadowfoam Ester",
+          "canonical_ingredients": [
+            "MEADOWFOAM ESTOLIDE"
+          ],
+          "ingredient_ranks": [
+            5
+          ],
+          "mapping_note": "Featured meadowfoam ester maps to the declared estolide derivative, not the separately declared Meadowfoam Seed Oil rank4."
+        },
+        {
+          "name": "Hibiscus Extract",
+          "canonical_ingredients": [
+            "HIBISCUS SABDARIFFA FLOWER EXTRACT"
+          ],
+          "ingredient_ranks": [
+            7
+          ],
+          "mapping_note": "Literal flower extract, not hibiscus seed oil."
+        }
+      ],
+      "packaging": {
+        "value": "dropper",
+        "status": "confirmed",
+        "source_id": "O21-package",
+        "selected_package": "US1.7fl oz50ml",
+        "observation": "Maker image shows dropper bulb and pipette tube for labelled50ml bottle.",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O21-maker",
+          "scope": "Full product details, benefits, clinical results, key/full ingredients, directions and FAQ reviewed; no explicit product heat-protection claim. Heat Protection navigation excluded.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O21-maker",
+          "scope": "Product details and clinical-results section explicitly claim hairUV protection. Claim acceptance does not establish a recognized UV filter.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here.",
+          "excerpt": "Provides 100% UV Protection of hair"
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O21-retained",
+          "source_id": "O21-maker",
+          "text": "Rub a few drops between palms and smooth through damp or dry mid-lengths and ends.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O21-finish",
+          "source_id": "O21-maker",
+          "text": "FAQ permits finishing after air-drying or diffusing to finish styling and break a cast.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "after_air_drying_or_diffusing",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "source_limits": [
+        "Claims are recorded as maker claims only; percentage is not an independent efficacy conclusion. Ingredient marketing does not prove UV-filter or heat-protection gates."
+      ],
+      "source_review_status": "completed"
+    },
+    {
+      "case_id": "O22",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Jojoba Oil Organic",
+        "size": "30 ml",
+        "market": "Maker EUR storefront; country unspecified"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O22",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "formula_key": "N02",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "ingredient_key": "N02",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "context_key": "N02"
+        },
+        "raw_inci_sha256": "936749b26ae3039cf57277f1946ebe2fcd6c53c9cf84323c6e251e03580a41b3",
+        "primary_inci_sha256": "79a7224fe58910812801fb2aad10f9a81f99557b799d156e3eb7d677a779b874",
+        "raw_inci": "Simmondsia Chinensis Seed Oil, from organic production.",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Simmondsia Chinensis Seed Oil",
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          }
+        ],
+        "contextual_declarations": [
+          {
+            "type": "organic_annotation",
+            "raw": "from organic production.",
+            "separator": ", ",
+            "ordering": "descriptive annotation, not another ingredient"
+          }
+        ],
+        "source_limits_preserved": [
+          "Public maker page declaration, not physical batch-label verification.",
+          "Market/size scope is literal page context; no cross-market formula join."
+        ],
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O22",
+        "current_page": "https://biopark-cosmetics.com/products/jojoba-oil-30ml",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current maker30ml page declares Simmondsia Chinensis Seed Oil with the same organic-production annotation; annotation is not an ingredient.",
+        "current_declared_inci": "Simmondsia Chinensis Seed Oil, from organic production."
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N02",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Hair/scalp treatment at least 30 minutes then shampoo; separate small amount on dry ends retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O22-maker",
+          "url": "https://biopark-cosmetics.com/products/jojoba-oil-30ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded."
+        },
+        {
+          "id": "O22-front",
+          "url": "https://biopark-cosmetics.com/cdn/shop/files/Biopark-Cosmetics-Organic-Jojoba_Oil_30ml.webp?v=1788451194&width=1200",
+          "reviewed_at": "2026-10-09",
+          "scope": "Maker30ml product image visually inspected: JOJOBINO OLJE label and pump actuator; image alt text erroneously names olive oil.",
+          "local_file": "images/group-b/O22-front.webp",
+          "sha256": "c18c3ca285075345e40a0745beeba9159cae2b9c76fb355324b75db00500a91a"
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [
+        {
+          "hero_id": "jojoba_oil",
+          "hero_name": "Jojoba oil",
+          "source_id": "O22-maker",
+          "canonical_ingredients": [
+            "SIMMONDSIA CHINENSIS SEED OIL"
+          ],
+          "ingredient_ranks": [
+            1
+          ],
+          "mapping_note": "Title and description explicitly position jojoba; single declared seed oil. Botanical identity mapping only, no physical-property classification."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O22-front",
+        "selected_package": "Maker30ml jojoba bottle",
+        "observation": "White pump actuator under transparent protective cap; visible bottle label identifies jojoba despite erroneous olive-oil alt text.",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O22-maker",
+          "scope": "Complete description, hair/skin use and ingredient sections reviewed; no explicit hair heat-protection claim.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "O22-maker",
+          "scope": "Complete description, hair/skin use and ingredient sections reviewed; no explicit hairUV protection claim. Skin benefits not transferred.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O22-prewash",
+          "source_id": "O22-maker",
+          "text": "Apply as hair/scalp treatment for at least30 minutes, then shampoo.",
+          "site": [
+            "scalp",
+            "hair_fibre"
+          ],
+          "stage": "unspecified",
+          "dose": "unspecified",
+          "contact_time": "at least30 minutes",
+          "removal": "shampoo",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O22-dry-ends-retained",
+          "source_id": "O22-maker",
+          "text": "Rub a small amount between palms and apply to dry ends.",
+          "site": [
+            "ends"
+          ],
+          "stage": "dry",
+          "dose": "small amount",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "source_limits": [
+        "EUR maker storefront country unspecified; no DE market or physical-batch equivalence assumed. Retained ends use is separate from scalp/prewash."
+      ],
+      "source_review_status": "completed"
+    },
+    {
+      "case_id": "O23",
+      "identity": {
+        "brand": "Bumble and bumble",
+        "product": "Hairdresser’s Invisible Oil Frizz Reducing Hair Oil",
+        "size": "Page options 3.4 fl oz / 0.85 fl oz; shared page declaration",
+        "market": "US maker"
+      },
+      "source_binding": {
+        "frozen_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json",
+        "frozen_packet_sha256": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+        "frozen_key": "O23",
+        "prior_source_refs": {
+          "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "formula_key": "N03",
+          "formula_key_field": "neutral_id",
+          "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "ingredient_key": "N03",
+          "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+          "context_key": "N03"
+        },
+        "raw_inci_sha256": "318aa9726dc4ffdf4c585dd2305907572e6dfd1d619fdceaf3231cb414217a31",
+        "primary_inci_sha256": "318aa9726dc4ffdf4c585dd2305907572e6dfd1d619fdceaf3231cb414217a31",
+        "raw_inci": "Dimethicone, Isododecane, Hydrogenated Ethylhexyl Olivate, Dimethiconol, Vitis Vinifera (Grape) Seed Extract, Gardenia Taitensis Flower Extract, Bis-Cetearyl Amodimethicone, Macadamia Ternifolia Seed Oil, Hydrogenated Olive Oil Unsaponifiables, Cocos Nucifera (Coconut) Oil, Vitis Vinifera (Grape) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Butyl Methoxydibenzoylmethane, Ethylhexyl Methoxycinnamate, Ethylhexyl Salicylate, Squalane, Linalool, Hexyl Cinnamal, Hydroxycitronellal, Limonene, Fragrance (Parfum), Tocopherol",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "Dimethicone",
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 2,
+            "raw_name": "Isododecane",
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "raw_name": "Hydrogenated Ethylhexyl Olivate",
+            "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE"
+          },
+          {
+            "rank": 4,
+            "raw_name": "Dimethiconol",
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "Vitis Vinifera (Grape) Seed Extract",
+            "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT"
+          },
+          {
+            "rank": 6,
+            "raw_name": "Gardenia Taitensis Flower Extract",
+            "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT"
+          },
+          {
+            "rank": 7,
+            "raw_name": "Bis-Cetearyl Amodimethicone",
+            "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+          },
+          {
+            "rank": 8,
+            "raw_name": "Macadamia Ternifolia Seed Oil",
+            "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+          },
+          {
+            "rank": 9,
+            "raw_name": "Hydrogenated Olive Oil Unsaponifiables",
+            "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES"
+          },
+          {
+            "rank": 10,
+            "raw_name": "Cocos Nucifera (Coconut) Oil",
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 11,
+            "raw_name": "Vitis Vinifera (Grape) Seed Oil",
+            "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+          },
+          {
+            "rank": 12,
+            "raw_name": "Prunus Amygdalus Dulcis (Sweet Almond) Oil",
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          },
+          {
+            "rank": 13,
+            "raw_name": "Argania Spinosa Kernel Oil",
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 14,
+            "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 15,
+            "raw_name": "Butyl Methoxydibenzoylmethane",
+            "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE"
+          },
+          {
+            "rank": 16,
+            "raw_name": "Ethylhexyl Methoxycinnamate",
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          },
+          {
+            "rank": 17,
+            "raw_name": "Ethylhexyl Salicylate",
+            "canonical_name": "ETHYLHEXYL SALICYLATE"
+          },
+          {
+            "rank": 18,
+            "raw_name": "Squalane",
+            "canonical_name": "SQUALANE"
+          },
+          {
+            "rank": 19,
+            "raw_name": "Linalool",
+            "canonical_name": "LINALOOL"
+          },
+          {
+            "rank": 20,
+            "raw_name": "Hexyl Cinnamal",
+            "canonical_name": "HEXYL CINNAMAL"
+          },
+          {
+            "rank": 21,
+            "raw_name": "Hydroxycitronellal",
+            "canonical_name": "HYDROXYCITRONELLAL"
+          },
+          {
+            "rank": 22,
+            "raw_name": "Limonene",
+            "canonical_name": "LIMONENE"
+          },
+          {
+            "rank": 23,
+            "raw_name": "Fragrance (Parfum)",
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          },
+          {
+            "rank": 24,
+            "raw_name": "Tocopherol",
+            "canonical_name": "TOCOPHEROL"
+          }
+        ],
+        "contextual_declarations": [],
+        "source_limits_preserved": [
+          "Public maker page declaration, not physical batch-label verification.",
+          "Market/size scope is literal page context; no cross-market formula join."
+        ],
+        "captured_formula_immutable": true
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/source-packet.json#O23",
+        "current_page": "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil",
+        "comparison_scope": "Public maker declaration against preserved ordered declaration; not physical batch verification.",
+        "evidence": "Current US maker page reproduces the original24-entry formula exactly. The shared page offers3.4fl oz and.85fl oz; selected pack observation is specifically3.4fl oz100ml and does not assert the mini dispenser.",
+        "current_declared_inci": "Dimethicone, Isododecane, Hydrogenated Ethylhexyl Olivate, Dimethiconol, Vitis Vinifera (Grape) Seed Extract, Gardenia Taitensis Flower Extract, Bis-Cetearyl Amodimethicone, Macadamia Ternifolia Seed Oil, Hydrogenated Olive Oil Unsaponifiables, Cocos Nucifera (Coconut) Oil, Vitis Vinifera (Grape) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Butyl Methoxydibenzoylmethane, Ethylhexyl Methoxycinnamate, Ethylhexyl Salicylate, Squalane, Linalool, Hexyl Cinnamal, Hydroxycitronellal, Limonene, Fragrance (Parfum), Tocopherol"
+      },
+      "selected_context_preserved": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N03",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Sparingly on damp hair before heat styling or smooth through dry hair for shine; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      },
+      "application_context_preserved": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "sources": [
+        {
+          "id": "O23-maker",
+          "url": "https://m.bumbleandbumble.com/product/19060/23196/style/oils/hairdressers-invisible-oil-frizz-reducing-hair-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Complete relevant product description, named ingredients, ordered INCI, directions, claims, FAQ where present; navigation/recommendations excluded."
+        },
+        {
+          "id": "O23-front",
+          "url": "https://m.bumbleandbumble.com/media/images/products/650x650/bb_sku_B1G701_44578_650x650_0.jpg",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact maker B1G7013.4fl oz100ml image; white pump and heat/UV label text visually inspected.",
+          "local_file": "images/group-b/O23-front.jpg",
+          "sha256": "5a41f8ff5056f41266f367c39245e6d9f78abf46b01d79de344b3187cd3db78b"
+        }
+      ],
+      "hero_positioning_review_complete": true,
+      "heroes": [
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Coconut oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA (COCONUT) OIL"
+          ],
+          "ingredient_ranks": [
+            10
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact coconut declaration."
+        },
+        {
+          "hero_id": "argan_oil",
+          "hero_name": "Argan oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "ingredient_ranks": [
+            13
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact argan kernel oil."
+        },
+        {
+          "hero_id": "grape_seed_oil",
+          "hero_name": "Grape seed oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "VITIS VINIFERA (GRAPE) SEED OIL"
+          ],
+          "ingredient_ranks": [
+            11
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; seed OIL rank11, not grape seed EXTRACT rank5."
+        },
+        {
+          "hero_id": "macadamia_oil",
+          "hero_name": "Macadamia oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "MACADAMIA TERNIFOLIA SEED OIL"
+          ],
+          "ingredient_ranks": [
+            8
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact Macadamia ternifolia seed oil."
+        },
+        {
+          "hero_id": "sweet_almond_oil",
+          "hero_name": "Sweet almond oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          ],
+          "ingredient_ranks": [
+            12
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact sweet almond oil."
+        },
+        {
+          "hero_id": "safflower_seed_oil",
+          "hero_name": "Safflower seed oil",
+          "source_id": "O23-maker",
+          "canonical_ingredients": [
+            "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          ],
+          "ingredient_ranks": [
+            14
+          ],
+          "mapping_note": "Explicit member of named6-oil blend; exact safflower seed oil."
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "O23-front",
+        "selected_package": "US3.4fl oz100ml B1G701",
+        "observation": "Visible white pump actuator on the exact100ml maker image.",
+        "observation_method": "visual_inspection"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O23-front",
+          "scope": "Exact selected maker label explicitly claims heat/UV damage protection. No temperature shown. Nearby450°F claims for primer/cream excluded.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here.",
+          "excerpt": "protects against heat/UV damage"
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "O23-maker",
+          "scope": "Exact oil body says UV filters help protect hair against sun drying; exact selected label also namesUV damage protection.",
+          "interpretation": "Source claim capture only; efficacy and formula/filter gates are not decided here."
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "O23-damp-retained",
+          "source_id": "O23-maker",
+          "text": "Apply sparingly to damp hair before heat styling.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "damp_before_heat_styling",
+          "dose": "sparing",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        },
+        {
+          "direction_id": "O23-dry-finish",
+          "source_id": "O23-maker",
+          "text": "Smooth through dry hair for shine, starting small and adding more when needed.",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry",
+          "dose": "small amount; add if necessary",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "excluded_or_separate_contexts": [
+        {
+          "source_id": "O23-maker",
+          "text": "Pro tip adds a few drops into conditioner.",
+          "reason": "Mixture context; do not reuse as a standalone retained oil application or assign conditioner removal rules to this oil."
+        }
+      ],
+      "source_limits": [
+        "Current shared page formula remains frozen source authority; physical batch not verified. Pack-specific claim/mechanism evidence limited to3.4fl oz100ml image. Page warns ingredient lists may change."
+      ],
+      "source_review_status": "completed"
+    }
+  ],
+  "verification": {
+    "record_count": 6,
+    "formula_matches": 6,
+    "retained_contexts_preserved": 6,
+    "completed_heat_reviews": 6,
+    "completed_uv_reviews": 6,
+    "completed_hero_reviews": 6,
+    "primary_confirmed_dispensers": 5,
+    "reviewed_primary_dispenser_gaps": [
+      "O20"
+    ],
+    "secondary_exact_gtin_pump_corroboration": [
+      "O20"
+    ],
+    "source_and_image_references_checked": true,
+    "verification_method": "JSON parse; exact six IDs; original raw INCI/context equality; all source IDs and local image hashes checked."
+  },
+  "remaining_uncertainty": [
+    "O20 primary-source dispenser mechanism hidden; exactGTIN secondary pump evidence retained separately. O20 official exact page only retrievable through indexed content during this capture."
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "run_id": "oil-build-up-round-7",
+  "records": [
+    {
+      "neutral_id": "N01",
+      "eligible": true,
+      "raw_inci": "Hydrogenated Farnesene*, Squalane, Jojoba Esters, Limnanthes Alba (Meadowfoam) Seed Oil, Meadowfoam Estolide, Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Sabdariffa Flower Extract, Eclipta Prostrata Extract, Moringa Oleifera Seed Oil, Tocopherol, Melia Azadirachta Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance/Parfum**; *Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil",
+      "primary_inci": "Hydrogenated Farnesene*, Squalane, Jojoba Esters, Limnanthes Alba (Meadowfoam) Seed Oil, Meadowfoam Estolide, Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Sabdariffa Flower Extract, Eclipta Prostrata Extract, Moringa Oleifera Seed Oil, Tocopherol, Melia Azadirachta Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance/Parfum**",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Hydrogenated Farnesene*",
+          "canonical_name": "HYDROGENATED FARNESENE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Squalane",
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Jojoba Esters",
+          "canonical_name": "JOJOBA ESTERS"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Limnanthes Alba (Meadowfoam) Seed Oil",
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Meadowfoam Estolide",
+          "canonical_name": "MEADOWFOAM ESTOLIDE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hibiscus Sabdariffa Flower Extract",
+          "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Eclipta Prostrata Extract",
+          "canonical_name": "ECLIPTA PROSTRATA EXTRACT"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Moringa Oleifera Seed Oil",
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Fragrance/Parfum**",
+          "canonical_name": "FRAGRANCE/PARFUM"
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "supplier_footnotes",
+          "raw": "*Sugarcane Derived Hemisqualane **Fragrance/Parfum: Prenyl Acetate 2,6-Dimethylheptan-2-ol, Octanal, Hexenyl Acetate, p-Cresol, Limonene, Benzyl Alcohol, Dipropylene Glycol, 2,6-Dimethyl-7-Octen-2-ol, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde, Allyl Caproate, Methyl Benzoate, Linalool, Phenethyl Alcohol, 2,4,6-Neocyclocitral, Benzyl Acetate, Terpineol, Methylbenzyl Acetate, Decanal, Citronellol, Isoamyl Allylglycolate, Linalyl Acetate, Anethole, Hydroxycitronellal, Heliotropine, 4-Tert-Butylcyclohexyl Acetate, Methyl Anthranilate, Terpineol Acetate, Gamma-Nonalactone, Geranyl Acetate, Phenethyl Butyrate, Lauraldehyde, Jasmacyclene, Allyl 3-cyclohexylpropionate, Alpha-Ionone, Coumarin, Eugenol, Methyl Ionones, Dimethyl Phenethyl Butyrate, Tricyclodecenyl Propionate, Methylenedioxyphenyl Methylpropanal, Gamma-Undecalactone, Amyl Cinnamal, Methyldihydrojasmonate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Methyl Cedryl Ketone, Phenethyl Phenyl Acetate, Isobutyl Methyl Tetrahydropyranol, Ethylene Brassylate, Cananga Odorata Flower Oil, Citrus Aurantium Dulcis (Orange) Peel Oil, Undecanal, Citrus Paradisi (Grapefruit) Peel Oil, Citrus Tangerina (Tangerine) Peel Oil",
+          "parent_rank": 13,
+          "ordering": "fragrance sublist has no primary concentration order",
+          "identity_gap": "Missing separator in first fragrance phrase preserved; not chemically repaired."
+        }
+      ]
+    },
+    {
+      "neutral_id": "N02",
+      "eligible": true,
+      "raw_inci": "Simmondsia Chinensis Seed Oil, from organic production.",
+      "primary_inci": "Simmondsia Chinensis Seed Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Simmondsia Chinensis Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "organic_annotation",
+          "raw": "from organic production.",
+          "separator": ", ",
+          "ordering": "descriptive annotation, not another ingredient"
+        }
+      ]
+    },
+    {
+      "neutral_id": "N03",
+      "eligible": true,
+      "raw_inci": "Dimethicone, Isododecane, Hydrogenated Ethylhexyl Olivate, Dimethiconol, Vitis Vinifera (Grape) Seed Extract, Gardenia Taitensis Flower Extract, Bis-Cetearyl Amodimethicone, Macadamia Ternifolia Seed Oil, Hydrogenated Olive Oil Unsaponifiables, Cocos Nucifera (Coconut) Oil, Vitis Vinifera (Grape) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Butyl Methoxydibenzoylmethane, Ethylhexyl Methoxycinnamate, Ethylhexyl Salicylate, Squalane, Linalool, Hexyl Cinnamal, Hydroxycitronellal, Limonene, Fragrance (Parfum), Tocopherol",
+      "primary_inci": "Dimethicone, Isododecane, Hydrogenated Ethylhexyl Olivate, Dimethiconol, Vitis Vinifera (Grape) Seed Extract, Gardenia Taitensis Flower Extract, Bis-Cetearyl Amodimethicone, Macadamia Ternifolia Seed Oil, Hydrogenated Olive Oil Unsaponifiables, Cocos Nucifera (Coconut) Oil, Vitis Vinifera (Grape) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Butyl Methoxydibenzoylmethane, Ethylhexyl Methoxycinnamate, Ethylhexyl Salicylate, Squalane, Linalool, Hexyl Cinnamal, Hydroxycitronellal, Limonene, Fragrance (Parfum), Tocopherol",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Isododecane",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Hydrogenated Ethylhexyl Olivate",
+          "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Vitis Vinifera (Grape) Seed Extract",
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Gardenia Taitensis Flower Extract",
+          "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Bis-Cetearyl Amodimethicone",
+          "canonical_name": "BIS-CETEARYL AMODIMETHICONE"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Macadamia Ternifolia Seed Oil",
+          "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Hydrogenated Olive Oil Unsaponifiables",
+          "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Cocos Nucifera (Coconut) Oil",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Vitis Vinifera (Grape) Seed Oil",
+          "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Prunus Amygdalus Dulcis (Sweet Almond) Oil",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Butyl Methoxydibenzoylmethane",
+          "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Ethylhexyl Methoxycinnamate",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Ethylhexyl Salicylate",
+          "canonical_name": "ETHYLHEXYL SALICYLATE"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Squalane",
+          "canonical_name": "SQUALANE"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Fragrance (Parfum)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Tocopherol",
+          "canonical_name": "TOCOPHEROL"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "neutral_id": "N04",
+      "eligible": true,
+      "raw_inci": "PROPYLENE GLYCOL, AQUA/WATER, CYCLOPENTASILOXANE, HEXYLENE GLYCOL, PHENYL TRIMETHICONE, DIMETHICONOL, PHENOXYETHANOL, CAPRYLYL GLYCOL, POLYACRYLAMIDE, C13-14 ISOPARAFFIN, MICA, PARFUM/FRAGRANCE, ETHYLHEXYL SALICYLATE, LAURETH-7, TITANIUM DIOXIDE (CI 77891), BUTYLENE GLYCOL, LINALOOL, HEXYL CINNAMAL, CITRONELLOL. F#500-2",
+      "primary_inci": "PROPYLENE GLYCOL, AQUA/WATER, CYCLOPENTASILOXANE, HEXYLENE GLYCOL, PHENYL TRIMETHICONE, DIMETHICONOL, PHENOXYETHANOL, CAPRYLYL GLYCOL, POLYACRYLAMIDE, C13-14 ISOPARAFFIN, MICA, PARFUM/FRAGRANCE, ETHYLHEXYL SALICYLATE, LAURETH-7, TITANIUM DIOXIDE (CI 77891), BUTYLENE GLYCOL, LINALOOL, HEXYL CINNAMAL, CITRONELLOL.",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "PROPYLENE GLYCOL",
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "AQUA/WATER",
+          "canonical_name": "AQUA/WATER"
+        },
+        {
+          "rank": 3,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "HEXYLENE GLYCOL",
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PHENYL TRIMETHICONE",
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "PHENOXYETHANOL",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "CAPRYLYL GLYCOL",
+          "canonical_name": "CAPRYLYL GLYCOL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "POLYACRYLAMIDE",
+          "canonical_name": "POLYACRYLAMIDE"
+        },
+        {
+          "rank": 10,
+          "raw_name": "C13-14 ISOPARAFFIN",
+          "canonical_name": "C13-14 ISOPARAFFIN"
+        },
+        {
+          "rank": 11,
+          "raw_name": "MICA",
+          "canonical_name": "MICA"
+        },
+        {
+          "rank": 12,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "ETHYLHEXYL SALICYLATE",
+          "canonical_name": "ETHYLHEXYL SALICYLATE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "LAURETH-7",
+          "canonical_name": "LAURETH-7"
+        },
+        {
+          "rank": 15,
+          "raw_name": "TITANIUM DIOXIDE (CI 77891)",
+          "canonical_name": "TITANIUM DIOXIDE (CI 77891)"
+        },
+        {
+          "rank": 16,
+          "raw_name": "BUTYLENE GLYCOL",
+          "canonical_name": "BUTYLENE GLYCOL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 19,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL"
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "formula_code",
+          "raw": "F#500-2",
+          "ordering": "not an ingredient"
+        }
+      ]
+    }
+  ]
+}

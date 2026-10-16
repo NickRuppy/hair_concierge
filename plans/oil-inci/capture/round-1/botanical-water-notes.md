@@ -1,0 +1,13 @@
+# Botanical/water source capture — 2026-10-01
+
+Scope: source observations for E01, E02 and E07 only. All three are `capture_ready`; this is acquisition status, not classification or frozen-run approval. Full raw declarations, source authors, claims and separate direction scenarios are in [botanical-water.json](botanical-water.json).
+
+- **E01:** Authorized Biopark cosmetic replacement captured. [Ecco Verde DE](https://www.ecco-verde.de/biopark-cosmetics/coconut-oil) supplies EAN **3830066651079**, 100 ml and jar identification. [Maker](https://biopark-cosmetics.com/products/organic-coconut-oil-100ml) supplies precise composition. Retailer ingredient display is shorter; retained as such. Jar maps to existing `other` with named mechanism. Maker and retailer after-wash instructions remain separate.
+- **E02:** [Cosmeterie DE](https://www.cosmeterie.de/neqi/smooth-strength-rosemary-oil) and maker asset identifier bind **75 ml / 4063528086280**. [Maker product page](https://neqi-hair.com/products/smooth-strength-rosemary-oil) is canonical. Lavandula oil/extract remains ambiguous raw text for lexicon review. An additional [German maker FAQ](https://neqi-hair.com/pages/faq) scenario explicitly includes fibres and dropper; it remains independent of product-page and retailer scenarios. Do not reduce the packet to scalp-only evidence or combine source-specific instructions.
+- **E07:** [German maker](https://neqi-hair.com/products/opulent-oil-hair-serum) is canonical for 75 ml and pump instructions. Literal heat claim retained without ingredient judgment. Exact-product hero review yields an empty list; shared range marketing does not establish a hero. [dm Poland](https://www.dm.pl/p/d/1455216/neqi-olejek-do-w-osow-opulent-oil) same-GTIN differences are fully retained without claiming a DE contradiction or version chronology.
+
+Heat/UV fields describe whether an admissible claim was found, not observed protection efficacy. No dandruff, hair-growth or fit property was emitted. No source scenario borrows dose, stage or removal facts from another.
+
+Verification: exact pages opened on capture date; identity/source binding and raw order compared; JSON syntax and source references checked. Ingredient lists are factual declarations; other source content is briefly paraphrased, with the one short literal heat excerpt marked. No code, database, commit or other file write belongs to this slice.
+
+Remaining freeze work: main-agent lexicon review of encountered exact forms, hashes and immutable packet construction. Direct physical DE label capture was unavailable in this bounded pass. This does not make a complete canonical web declaration incomplete; later contradictory local label evidence requires a new derivation.

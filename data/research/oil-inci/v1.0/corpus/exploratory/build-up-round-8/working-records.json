@@ -1,0 +1,351 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "scope": "Source-specific build-up only; formula-only estimates, not human adjudication or sensory validation",
+  "records": [
+    {
+      "neutral_id": "C01",
+      "identity": {
+        "brand": "Davines",
+        "product": "OI Oil",
+        "market_size": "US maker; 135 ml default page / 50 ml option"
+      },
+      "source_url": "https://us.davines.com/products/oi-oil",
+      "lane_values": {
+        "a": "elevated",
+        "b": "elevated"
+      },
+      "selected_lane": "b",
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DISILOXANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CYCLOHEXASILOXANE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "PARFUM"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "BIXA ORELLANA SEED EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "HEXAMETHYLINDANOPYRAN"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "ACETYL CEDRENE"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "METHYL SALICYLATE"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "The volatile-carrier functions at ranks 1 and 2 support a mobile-vehicle interpretation; if dimethiconol contributes only a small retained film, low would be the better result.",
+          "DIMETHICONOL at rank 3 is the sole explicit gum-conditioning anchor; its grade and actual film mass are not disclosed, and its rank cannot prove a substantial load.",
+          "The botanical fixed oils at ranks 8 and 10 have no assessed build-up priors and cannot be used to strengthen elevated merely by their presence."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Elevated is the more plausible rough choice because the admitted dimethiconol gum-film function is central to the carrier-plus-retained-conditioner architecture. The tipping assumption is that this gum supplies a material part of the conditioning residue after application. Low remains plausible if that assumption fails; carrier mobility alone cannot settle the residual question. This is an estimate of relative retained-film potential, not measured accumulation.",
+        "unresolved": [
+          "DIMETHICONOL (3) grade, deposition and retained-film load are unknown; proportions cannot be obtained from the declaration order.",
+          "BIXA ORELLANA SEED EXTRACT (9) preparation/carrier and residual function are unassessed; HEXAMETHYLINDANOPYRAN (11), ACETYL CEDRENE (13), and METHYL SALICYLATE (16) functions are unassessed.",
+          "LAVANDULA OIL/EXTRACT (17) does not resolve oil versus extract preparation or residual significance.",
+          "ETHYLHEXYL METHOXYCINNAMATE (5), fragrance composition (6), aromatic auxiliaries and named fragrance substances have no quantified retained contribution.",
+          "The fixed oils at ranks 8 and 10 have no assessed material persistence prior; finished carrier behavior and comparative repeat-application/shampoo residue are unmeasured."
+        ]
+      },
+      "selection_reason": "Both lanes select elevated. Select lane b because it anchors the estimate to the carrier-delivered Dimethiconol gum and explicitly declines to use the unassessed botanical oils as independent persistence support. Actual gum grade and deposited film load remain unresolved; low is a real operational rival.",
+      "status": "provisional_research_estimate_not_human_adjudicated"
+    },
+    {
+      "neutral_id": "C02",
+      "identity": {
+        "brand": "Verb",
+        "product": "Ghost Oil",
+        "market_size": "US maker; current shared product page"
+      },
+      "source_url": "https://www.verbproducts.com/products/ghost-oil",
+      "lane_values": {
+        "a": "elevated",
+        "b": "elevated"
+      },
+      "selected_lane": "b",
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "CYCLOPENTASILOXANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "DIMETHICONOL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "DIMETHICONE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "CAPRYLYL METHICONE"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "PHENYL TRIMETHICONE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "MORINGA OLEIFERA SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "ORYZA SATIVA BRAN OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "HYDROLYZED SOY PROTEIN"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "ETHYLHEXYLGLYCERIN"
+          },
+          {
+            "rank": 13,
+            "canonical_name": "GLYCERIN"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "DIMETHICONE CROSSPOLYMER"
+          },
+          {
+            "rank": 16,
+            "canonical_name": "POLYSILICONE-15"
+          },
+          {
+            "rank": 17,
+            "canonical_name": "GLYCERYL LINOLEATE"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "GLYCERYL LINOLENATE"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "PARFUM/FRAGRANCE"
+          },
+          {
+            "rank": 20,
+            "canonical_name": "PHENOXYETHANOL"
+          },
+          {
+            "rank": 21,
+            "canonical_name": "DISODIUM EDTA"
+          },
+          {
+            "rank": 22,
+            "canonical_name": "POTASSIUM SORBATE"
+          },
+          {
+            "rank": 23,
+            "canonical_name": "ACETYL CEDRENE"
+          },
+          {
+            "rank": 25,
+            "canonical_name": "AMYL SALICYLATE"
+          }
+        ],
+        "counter_signal": [
+          "The volatile vehicle at rank 1 and spreading emollient at rank 4 could deliver a modest residual load; neither their presence nor the order establishes how much film remains.",
+          "The grade of DIMETHICONOL (2) and the film-forming behavior of DIMETHICONE (3) and PHENYL TRIMETHICONE (5) are unknown; a predominantly fluid, less substantial deposit remains plausible.",
+          "DIMETHICONE CROSSPOLYMER (15) is a texture/rheology clue and POLYSILICONE-15 (16) an optical-filter/polymer clue; their names do not provide extra substantial conditioning-film evidence.",
+          "The protein conditioners, oils and lipid esters do not have demonstrated durable film loads in this specific formula."
+        ],
+        "nearest_alternative": "low",
+        "reason": "Elevated is the best rough estimate because the admitted gum function at rank 2 works coherently with the explicit conditioning-film functions at ranks 3 and 5. The tipping assumption is that these functions materially define the retained conditioning system, even though the deposited load is unknown. The low alternative would become more plausible if their actual grades and amounts yield a thin mobile residue. The judgment does not depend on silicone count, a late crosspolymer, or an inferred concentration boundary.",
+        "unresolved": [
+          "Actual grades, ratios and deposited mass of DIMETHICONOL (2), DIMETHICONE (3), CAPRYLYL METHICONE (4), and PHENYL TRIMETHICONE (5) are unknown.",
+          "BAMBUSA VULGARIS EXTRACT (9) and CAMELLIA SINENSIS LEAF EXTRACT (10) preparations/carriers and residual conditioning functions are unassessed; DISODIUM EDTA (21) and ACETYL CEDRENE (23) functions are unassessed.",
+          "HYDROLYZED SOY PROTEIN (11) and HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL (14) grades, film loads and residual behavior are unknown.",
+          "DIMETHICONE CROSSPOLYMER (15) texture behavior and POLYSILICONE-15 (16) retained contribution are not established for this complete formula.",
+          "Fixed-oil and lipid-ester contributions, humectant/conditioning auxiliaries, fragrance composition and other auxiliaries have no measured deposited load; no material prior applies to the fixed oils in this declaration.",
+          "Comparative repeated application and shampoo-removal measurements are unavailable."
+        ]
+      },
+      "selection_reason": "Both lanes select elevated. Select lane b for the coherent Dimethiconol/Dimethicone/Phenyl Trimethicone residual-system argument and its clear distinction between conditioning film, crosspolymer rheology and optical-filter polymer. The oils/proteins are possible contributors, not separate accumulation proof. Low remains plausible for thin, mobile actual grades.",
+      "status": "provisional_research_estimate_not_human_adjudicated"
+    },
+    {
+      "neutral_id": "C03",
+      "identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "source_url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+      "lane_values": {
+        "a": "low",
+        "b": "low"
+      },
+      "selected_lane": "b",
+      "build_up_potential": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "COCOS NUCIFERA (COCONUT) OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "TOCOPHEROL"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          }
+        ],
+        "counter_signal": [
+          "Every principal component is a retained lipid/emollient candidate; a fluid coating can still leave appreciable deposited mass and accumulate with reapplication.",
+          "MANGIFERA INDICA (MANGO) SEED BUTTER (8) is a real seed-fat clue that could materially structure the blend, supporting the elevated alternative even though its finished contribution is unknown.",
+          "The accepted whole-jojoba prior at rank 3 cannot settle a blend containing other oils and seed fat; those materials do not have assessed build-up priors.",
+          "Generic emollience and a hypothesized fluid state are weak clues, not measurements of persistence or washout."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "Low is a weak whole-system hypothesis: the oil/emollient architecture, with the narrow fluid-jojoba constituent clue, makes a less substantial coating marginally more plausible under comparable small applications. The tipping assumption is that MANGIFERA INDICA (MANGO) SEED BUTTER (8) does not impose a substantially structured residual system. Elevated is the nearest alternative if it does, or if the combined oils deposit more persistent mass than this qualitative reading anticipates. Prior consumed: oil-natural-build-up-v0.1 version 0.1, exact SIMMONDSIA CHINENSIS SEED OIL, material jojoba; OE51 accepted rough low prior and scoped HW001 liquid-wax/fluidity observation from natural-oil-weight-v0.10. This prior is only a constituent clue; no weight-to-build-up mapping or source follow-up was used.",
+        "unresolved": [
+          "Actual finished fluidity/structure and the grade, melting behavior and residual contribution of MANGIFERA INDICA (MANGO) SEED BUTTER (8) are unknown.",
+          "Blend proportions and deposited lipid mass are unknown; ranks are not concentration estimates.",
+          "Build-up priors for sunflower, avocado, argan, safflower, coconut and pomegranate oils remain unassessed; the mango seed fat has no admitted build-up prior.",
+          "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT (9) preparation/carrier and the fragrance composition (11) are unspecified; their actual retained contribution and that of other auxiliaries are unknown.",
+          "No controlled finished-formula repeated-application or comparative shampoo-residue measurement validates either binary class."
+        ]
+      },
+      "selection_reason": "Both lanes select low as a weak hypothesis. Select lane b because it explicitly challenges the mango seed-fat structure and all-retained lipid load. Its tipping assumption is a fluid oil mixture whose seed fat does not determine substantial deposited structure. The exact jojoba prior is a constituent clue only; coconut presence and oil count do not decide the blend. Elevated remains close without finished structure or wash-cycle observations.",
+      "status": "provisional_research_estimate_not_human_adjudicated"
+    },
+    {
+      "neutral_id": "C04",
+      "identity": {
+        "brand": "The Ordinary",
+        "product": "100% Cold-Pressed Virgin Marula Oil",
+        "market_size": "US maker; 30 ml"
+      },
+      "source_url": "https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html",
+      "lane_values": {
+        "a": "low",
+        "b": "low"
+      },
+      "selected_lane": "b",
+      "build_up_potential": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "SCLEROCARYA BIRREA SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "The whole applied system is retained fixed oil rather than an admitted volatile carrier; a small application can still leave a persistent lipid coating.",
+          "Generic emollient function does not establish mobility, low deposited mass or easy shampoo removal.",
+          "The natural-oil reference provides no assessed marula build-up prior, so the low direction lacks material-specific persistence validation."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "Low is the best available but weak rough judgment under B3/B4, tipped by the assumption that this sole fixed-oil/emollient forms a comparatively fluid and less substantial residue at the stipulated small application. Elevated remains plausible if its grade and deposition produce a more persistent lipid load. This is a forced practical comparison of two uncertain readings, not a low default for botanicals, an inherited jojoba decision, or a claim that marula persistence has been assessed.",
+        "unresolved": [
+          "Material grade and actual finished/deposited film behavior of SCLEROCARYA BIRREA SEED OIL (1) are unknown.",
+          "Marula is explicitly unassessed in oil-natural-build-up-v0.1 version 0.1; no exact matching accepted build-up prior is available.",
+          "The mobile, less substantial coating interpretation is an unverified assumption; no controlled comparative repeat-application or shampoo-residue evidence establishes its relative persistence."
+        ]
+      },
+      "selection_reason": "Both lanes select low as a weak forced binary hypothesis. Select lane b because it states that the entire application is retained fixed oil and that Marula remains unassessed in the native material reference. A relatively fluid, less substantial coating at comparable small applications is the explicit tipping assumption, not a material fact. Elevated remains plausible; no new reusable Marula prior is created.",
+      "status": "provisional_research_estimate_not_human_adjudicated"
+    }
+  ]
+}

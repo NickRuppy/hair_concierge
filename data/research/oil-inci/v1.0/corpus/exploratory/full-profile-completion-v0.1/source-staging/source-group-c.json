@@ -1,0 +1,360 @@
+{
+  "run_id": "oil-profile-source-group-c-v0.1",
+  "reviewed_at": "2026-10-09",
+  "records": [
+    {
+      "case_id": "O24",
+      "identity": {
+        "brand": "Color Wow",
+        "product": "Pop & Lock High Gloss Finish",
+        "size": "Selected travel 0.4 fl oz; page also offers full 1.8 fl oz",
+        "market": "US maker"
+      },
+      "sources": [
+        {
+          "id": "O24-maker-20261009",
+          "url": "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage"
+        }
+      ],
+      "formula_equality": {
+        "status": "confirmed_exact_ordered_declaration",
+        "raw_current_inci": "PROPYLENE GLYCOL, AQUA/WATER, CYCLOPENTASILOXANE, HEXYLENE GLYCOL, PHENYL TRIMETHICONE, DIMETHICONOL, PHENOXYETHANOL, CAPRYLYL GLYCOL, POLYACRYLAMIDE, C13-14 ISOPARAFFIN, MICA, PARFUM/FRAGRANCE, ETHYLHEXYL SALICYLATE, LAURETH-7, TITANIUM DIOXIDE (CI 77891), BUTYLENE GLYCOL, LINALOOL, HEXYL CINNAMAL, CITRONELLOL. F#500-2",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge."
+      },
+      "heroes": [],
+      "hero_review": "Reviewed product description, benefits, ingredients, lab note and FAQ: oil/serum language but no named botanical-oil hero.",
+      "packaging": {
+        "observed": null,
+        "observation": "Exact travel12ml manufacturer variant image inspected: capped outlet is hidden; mechanism unestablished. Do not inherit fullsize55ml pump.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O24-front.jpg",
+        "image_sha256": "a9e951805dd52a824265642347eb41205f89b87f9d2a1872f6aa7eb64e2b6d45",
+        "variant_binding": {
+          "product_json_url": "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum.js",
+          "variant_id": 41342159159488,
+          "image_url": "https://cdn.shopify.com/s/files/1/0587/5210/6688/files/CW213_Pop_Lock_12ml_pdp_main_image_2048x2048_39c1e68e-e9e9-405a-a585-4fac63559f32.jpg?v=1770219539"
+        }
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "source_id": "O24-maker-20261009",
+          "text": "Product header identifies heat protectant; benefits list heat protection; FAQ explicitly confirms."
+        },
+        "uv": {
+          "accepted": true,
+          "source_id": "O24-maker-20261009",
+          "text": "Benefits explicitly claim UV protection against hair color fade."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O24-maker",
+          "direction_id": "O24-direction-1",
+          "text": "Apply a few drops on wet or dry lower lengths and ends; retain.",
+          "site": [
+            "lower_lengths",
+            "ends"
+          ],
+          "stage": "wet_or_dry",
+          "dose": "few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "limits": "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    },
+    {
+      "case_id": "O25",
+      "identity": {
+        "brand": "Davines",
+        "product": "OI Oil",
+        "market_size": "US maker; 135 ml default page / 50 ml option"
+      },
+      "sources": [
+        {
+          "id": "O25-maker-20261009",
+          "url": "https://us.davines.com/products/oi-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage"
+        }
+      ],
+      "formula_equality": {
+        "status": "confirmed_exact_ordered_declaration",
+        "raw_current_inci": "CYCLOPENTASILOXANE, DISILOXANE, DIMETHICONOL, CYCLOHEXASILOXANE, ETHYLHEXYL METHOXYCINNAMATE, PARFUM / FRAGRANCE, TOCOPHEROL, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, BIXA ORELLANA SEED EXTRACT, MAURITIA FLEXUOSA FRUIT OIL, HEXAMETHYLINDANOPYRAN, EUCALYPTUS GLOBULUS OIL, ACETYL CEDRENE, TERPINEOL, CITRONELLOL, METHYL SALICYLATE, LAVANDULA OIL/EXTRACT, GERANIOL, ALPHA-ISOMETHYL IONONE, CAMPHOR, PELARGONIUM GRAVEOLENS FLOWER OIL, LINALOOL, LINALYL ACETATE, LIMONENE",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge."
+      },
+      "heroes": [
+        {
+          "hero_id": "roucou_oil",
+          "hero_name": "Roucou oil",
+          "canonical_ingredients": [],
+          "mapping_note": "Maker identifies Achiote seed-derived Roucou oil, but INCI declares BIXA ORELLANA SEED EXTRACT. Oil/extract equivalence not established; do not substitute MAURITIA FLEXUOSA FRUIT OIL."
+        },
+        {
+          "hero_id": "sunflower_oil",
+          "hero_name": "Sunflower seed oil",
+          "canonical_ingredients": [
+            "HELIANTHUS ANNUUS SEED OIL"
+          ],
+          "mapping_note": "Exact reviewed botanical parenthetical spelling in FAQ and formula."
+        }
+      ],
+      "hero_review": "Ingredient highlight and FAQ explicitly name Roucou oil; sunflower seed oil also discussed in FAQ.",
+      "packaging": {
+        "observed": "pump",
+        "observation": "Exact maker page packaging components explicitly lists pump and directions specify2\u20133pumps; selected135ml default."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "O25-maker-20261009",
+          "text": "Maker FAQ recommends separate true heat protectant; generic styling/environment protection is insufficient."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "O25-maker-20261009",
+          "text": "Full current product description/benefits/FAQ reviewed: no explicit hairUV claim; filter presence alone insufficient."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O25-maker",
+          "direction_id": "O25-direction-1",
+          "text": "Apply 2\u20133 pumps to towel-dried hair before styling.",
+          "site": [
+            "hair"
+          ],
+          "stage": "towel_dried_before_styling",
+          "dose": "2\u20133 pumps",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Fine hair starts with one pump."
+        },
+        {
+          "source_id": "O25-maker",
+          "direction_id": "O25-direction-2",
+          "text": "Use on dry lengths and ends to finish.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Fine hair starts with one pump."
+        }
+      ],
+      "limits": "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    },
+    {
+      "case_id": "O26",
+      "identity": {
+        "brand": "Verb",
+        "product": "Ghost Oil",
+        "market_size": "US maker; current shared product page"
+      },
+      "sources": [
+        {
+          "id": "O26-maker-20261009",
+          "url": "https://www.verbproducts.com/products/ghost-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage"
+        }
+      ],
+      "formula_equality": {
+        "status": "confirmed_exact_ordered_declaration",
+        "raw_current_inci": "Cyclopentasiloxane, Dimethiconol, Dimethicone, Caprylyl Methicone, Phenyl Trimethicone, Argania Spinosa Kernel Oil, Moringa Oleifera Seed Oil, Oryza Sativa Bran Oil, Bambusa Vulgaris Extract, Camellia Sinensis Leaf Extract, Hydrolyzed Soy Protein, Ethylhexylglycerin, Glycerin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Dimethicone Crosspolymer, Polysilicone-15, Glyceryl Linoleate, Glyceryl Linolenate, Parfum/Fragrance, Phenoxyethanol, Disodium EDTA, Potassium Sorbate, Acetyl Cedrene, Alpha-Isomethyl Ionone, Amyl Salicylate, Benzyl Cinnamate, Benzyl Salicylate, Citronellol, Limonene, Geraniol, Hexyl Cinnamal, Hydroxycitronellal, Linalool, Linalyl Acetate, Terpineol.",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge."
+      },
+      "heroes": [
+        {
+          "hero_id": "moringa_oil",
+          "hero_name": "Moringa Oil",
+          "canonical_ingredients": [
+            "MORINGA OLEIFERA SEED OIL"
+          ],
+          "mapping_note": "Literal seed-oil identity; other featured green tea extract/proteins not named oils."
+        }
+      ],
+      "hero_review": "Reviewed ingredients/key ingredients: named oil hero Moringa.",
+      "packaging": {
+        "observed": "pump",
+        "observation": "Maker directions explicitly instruct2\u20133pumps; US default2floz selected within prior shared-page identity."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "source_id": "O26-maker-20261009",
+          "text": "Maker claims450\u00b0F/232\u00b0C; manufacturer Q&A confirms heat protection."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "O26-maker-20261009",
+          "text": "Maker Q&A explicitly denies UV protection despite Polysilicone-15 in formula."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O26-maker",
+          "direction_id": "O26-direction-1",
+          "text": "Apply 2\u20133 pumps to mid-lengths and ends of damp or dry hair and comb to distribute; retain.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "2\u20133 pumps; more as needed",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "limits": "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    },
+    {
+      "case_id": "O27",
+      "identity": {
+        "brand": "Aveda",
+        "product": "Nutriplenish Multi-Use Hair Oil",
+        "market_size": "US maker; selected 1 fl oz / 30 ml"
+      },
+      "sources": [
+        {
+          "id": "O27-maker-20261009",
+          "url": "https://www.aveda.com/product/17753/71181/hair-care/hair-and-scalp-oils/nutriplenishtm-multi-use-hair-oil?size=1_fl_oz/30_ml",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage"
+        }
+      ],
+      "formula_equality": {
+        "status": "confirmed_exact_ordered_declaration",
+        "raw_current_inci": "Helianthus Annuus (Sunflower) Seed Oil, Persea Gratissima (Avocado) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Argania Spinosa Kernel Oil, Carthamus Tinctorius (Safflower) Seed Oil, Cocos Nucifera (Coconut) Oil, Punica Granatum (Pomegranate) Seed Oil, Mangifera Indica (Mango) Seed Butter, Rosmarinus Officinalis (Rosemary) Leaf Extract, Tocopherol, Fragrance (Parfum), Linalool, Citral, Geraniol, Hydroxycitronellal, Limonene, Citronellol, Amyl Cinnamal, Benzyl Benzoate, Farnesol, Cinnamal, Benzyl Salicylate, Cinnamyl Alcohol, Benzyl Cinnamate <ILN46770>",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge."
+      },
+      "heroes": [
+        {
+          "hero_id": "pomegranate_oil",
+          "hero_name": "Pomegranate seed oil",
+          "canonical_ingredients": [
+            "PUNICA GRANATUM (POMEGRANATE) SEED OIL"
+          ],
+          "mapping_note": "Exact retained declared form."
+        },
+        {
+          "hero_id": "coconut_oil",
+          "hero_name": "Certified organic coconut oil",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA OIL"
+          ],
+          "mapping_note": "Reviewed parenthetical coconut spelling is normalized to existing canonical identity."
+        }
+      ],
+      "hero_review": "Reviewed superfood complex, featured ingredients and productdescription. Mango is explicitly butter, not another named-oil claim.",
+      "packaging": {
+        "observed": "pump",
+        "observation": "Maker selected30ml AWGM01 image visually inspected: exposed dispensing pump/nozzle, not spray/pipette.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O27-front.jpg",
+        "image_sha256": "e770b0125f1326c9781b26d198b250f61f8c49159639ef1c7db524fc1fb233fd"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "O27-maker-20261009",
+          "text": "Full product-specific details/usage/ingredient/pack sections reviewed; no explicit heat-protection claim. Nearby otherproductnavigation is excluded."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "O27-maker-20261009",
+          "text": "No explicit product-specific hairUV protection claim in reviewed sections."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O27-maker",
+          "direction_id": "O27-direction-1",
+          "text": "Maker permits retained towel-dried hair care and dry mid-lengths/ends finishing.",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "towel_dried_or_dry_finish",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Pre-shampoo and overnight are separate scenarios."
+        }
+      ],
+      "limits": "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    },
+    {
+      "case_id": "O28",
+      "identity": {
+        "brand": "The Ordinary",
+        "product": "100% Cold-Pressed Virgin Marula Oil",
+        "market_size": "US maker; 30 ml"
+      },
+      "sources": [
+        {
+          "id": "O28-maker-20261009",
+          "url": "https://theordinary.com/en-us/100-cold-pressed-virgin-marula-face-oil-100389.html",
+          "reviewed_at": "2026-10-09",
+          "scope": "Exact current maker product-specific sections, complete INCI and stated selectedpackage"
+        }
+      ],
+      "formula_equality": {
+        "status": "confirmed_exact_ordered_declaration",
+        "raw_current_inci": "Sclerocarya Birrea Seed Oil.",
+        "basis": "Current page fullINCI read and manually compared with captured ordereddeclaration; sameformulacodes whereprinted. Case/punctuation only normalization; no reformulation merge."
+      },
+      "heroes": [
+        {
+          "hero_id": "marula_oil",
+          "hero_name": "100% Virgin Marula Seed Oil",
+          "canonical_ingredients": [
+            "SCLEROCARYA BIRREA SEED OIL"
+          ],
+          "mapping_note": "Literal single-ingredient identity."
+        }
+      ],
+      "hero_review": "Title/keyingredients/about explicitly identify100%marula seedoil. Skinclaims nottransferred tohair.",
+      "packaging": {
+        "observed": "dropper",
+        "observation": "Exact maker30ml image visually inspected: bulb/pipette closure. Facefewdrops nothairdose.",
+        "image_ref": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-c/O28-front.png",
+        "image_sha256": "a56e56dc84a8c5f0bb6f185a1d568e7ec9e5b12bf977e84ee4bcb8a7b7f30277"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "source_id": "O28-maker-20261009",
+          "text": "Complete currentproductdetails/highlights/usage reviewed; no explicit hairheat protection claim."
+        },
+        "uv": {
+          "accepted": false,
+          "source_id": "O28-maker-20261009",
+          "text": "No explicit hairUV protectionclaim; skinantioxidant/radiance language excluded."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O28-maker",
+          "direction_id": "O28-direction-1",
+          "text": "Maker instructs working through clean damp hair daily or as needed.",
+          "site": [
+            "hair"
+          ],
+          "stage": "clean_damp",
+          "dose": "unestablished",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "Face-dose directions do not transfer."
+        }
+      ],
+      "limits": "Publishedsource context; no physicalbatch verification or clinical efficacy inference."
+    }
+  ]
+}

@@ -184,10 +184,10 @@ test("captured outputs preserve unchanged categories; historical Shampoo require
   }
 })
 
-test("unchanged categories retain reviewed prompt bytes; Mask and Shampoo use their new contracts", () => {
+test("reviewed Oil v0.10 and Shampoo v1.6.2 prompt contracts retain their sealed bytes", () => {
   const unchanged = Object.fromEntries(
     Object.entries(normalizationSnapshot().prompt_contract_sha256).filter(
-      ([category]) => category !== "mask" && category !== "shampoo",
+      ([category]) => category !== "mask",
     ),
   )
   assert.deepEqual(unchanged, {
@@ -195,7 +195,10 @@ test("unchanged categories retain reviewed prompt bytes; Mask and Shampoo use th
     // Leave-In v1.2 heat activation (T21, 2026-10-09): v1.2 pins + heatActivation capture
     leave_in: "d2e828a6653b783a9649af9428afe037e3794c39e61efe063d92e0159c8d00af",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
-    oil: "b07faaf152f390227c6980959c89075f60f75e28403cd2546a050edba142be15",
+    // Reviewed Shampoo v1.6.2: isolated stages, full record and explicit human publication.
+    shampoo: "6f7ef93056f8e309044d1ec00ba8066dc876080df457704ef2f50058b50b8ca0",
+    // Oil v0.10: the reviewed lean schema, evidence instructions and manual matching boundary.
+    oil: "e48517923ab43c3e10d93d92d1f55e1327c99498cfb9f272c9549c4c985b72ee",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",
     deep_cleansing_shampoo: "6f0b700d503ce13691120d1f15cd87a0c54fedf1221034d2978dc6742c047dcc",
     heat_protectant: "810273e00ce7332cbd26810eb29ceaef87072cbc84a487fa75312a5d63cd301b",

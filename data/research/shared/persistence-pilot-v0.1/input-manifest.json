@@ -1,0 +1,32 @@
+{
+  "status": "frozen_before_dispatch",
+  "run_id": "canonical-persistence-pilot-v0.1",
+  "architecture_approved_at": "2026-10-07",
+  "frozen_at": "2026-10-09",
+  "run_inputs": {
+    "source-packet.json": "0c24838506e8ba997d425264d875e60a268d6dac08a7590fbc1f0259968003dd",
+    "blind-packet.json": "775864adbe63e20c8dcef69bd28880676cd052c7c6e7f7d956dff4d3aeebff80",
+    "function-dictionary.json": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f",
+    "method.md": "f827f75a01ff2813f46c08b4ad1a5e93aeb155b32c56a2f8777f339fbb4606c3",
+    "projection-schema.json": "057c43f10789d9879b311b95c262841abc9c731826f8a07010847818c3cc06dc",
+    "historical-preservation.json": "f759cd3e1a534f53a74d8ef94fa278474ffabb570c307f6a9541c8944d7e9740"
+  },
+  "dependencies": {
+    "data/research/conditioner-inci/v1.0/calibration-pilot-directions.json": "6f415bf068fb8266397e991584f5a81ebd2d755f7a5773d789e641ae3efdbd28",
+    "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json": "5e1037696ec04b9335f3ed43c4b4f9f2d64fa27ada412065a752ad9f32e92b3d",
+    "data/research/leave-in-inci/v1.0/corpus/gold-set/calibration-packet.json": "2d1055085c748853184c7c10b03b7383548665e4759d90140186f7b6b1cda3f4",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11",
+    "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+    "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "docs/research/oil-inci/v1.0/09_natural-oil-build-up-reference-v0.1.md": "e3d0cbc6773d3c16e485d34b074a31218819442136854c165852a9a3c8507cbb",
+    "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4"
+  },
+  "read_allowlist": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json"
+  ]
+}

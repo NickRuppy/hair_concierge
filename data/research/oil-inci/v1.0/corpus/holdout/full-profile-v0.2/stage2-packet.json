@@ -1,0 +1,631 @@
+{
+  "run_id": "oil-full-profile-holdout-v0.2",
+  "records": [
+    {
+      "case_id": "H01",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "5 Sens Enhancing Dry Oil for Hair and Body",
+        "market": "EN global maker page",
+        "size": "100 ml",
+        "gtin_if_verified": "3282770049275"
+      },
+      "sources": [
+        {
+          "id": "H01-maker",
+          "url": "https://www.renefurterer.com/en/p/5-sens-enhancing-dry-oil-for-hair-and-body-3282770049275-5e13c847",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H01-hero-1",
+          "hero_name": "Castor oil",
+          "canonical_ingredients": [
+            "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          ],
+          "source_id": "H01-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL) (rank 10)"
+        },
+        {
+          "hero_id": "H01-hero-2",
+          "hero_name": "Sweet Almond oil",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+          ],
+          "source_id": "H01-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (PRUNUS AMYGDALUS DULCIS OIL) (rank 9)"
+        },
+        {
+          "hero_id": "H01-hero-3",
+          "hero_name": "Jojoba oil",
+          "canonical_ingredients": [
+            "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+          ],
+          "source_id": "H01-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (SIMMONDSIA CHINENSIS SEED OIL) (rank 11)"
+        },
+        {
+          "hero_id": "H01-hero-4",
+          "hero_name": "Avocado oil",
+          "canonical_ingredients": [
+            "PERSEA GRATISSIMA (AVOCADO) OIL"
+          ],
+          "source_id": "H01-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: PERSEA GRATISSIMA (AVOCADO) OIL (PERSEA GRATISSIMA OIL) (rank 8)"
+        },
+        {
+          "hero_id": "H01-hero-5",
+          "hero_name": "Safflower oil",
+          "canonical_ingredients": [
+            "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+          ],
+          "source_id": "H01-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL (CARTHAMUS TINCTORIUS SEED OIL) (rank 7)"
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "spray",
+        "status": "confirmed",
+        "source_id": "H01-maker",
+        "observation": "maker names a spray bottle/micro-spray and directs spraying"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H01-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product description",
+              "benefits",
+              "detailed composition",
+              "five-oil ingredient section"
+            ],
+            "negative_basis": "No explicit heat-protection claim in the reviewed exact product body."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H01-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product description",
+              "benefits",
+              "detailed composition",
+              "five-oil ingredient section"
+            ],
+            "negative_basis": "No explicit hair-UV-protection claim in the reviewed exact product body."
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H01-direction-1",
+          "source_id": "H01-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "wet_or_dry",
+          "dose": "unestablished",
+          "removal": "explicit_leave_in",
+          "text": "Spray into palm or directly onto wet/dry hair; retain.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed product text"
+        }
+      ],
+      "source_limits": [
+        "Maker advises checking composition before purchase.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H01"
+    },
+    {
+      "case_id": "H02",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Ultimate Smooth Miracle Oil Serum",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "H02-maker",
+          "url": "https://www.wella.com/professional/en-US/products/hair-care/ultimate-smooth/ultimate-smooth-miracle-oil-serum",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H02-hero-1",
+          "hero_name": "Squalane",
+          "canonical_ingredients": [
+            "SQUALANE"
+          ],
+          "source_id": "H02-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: SQUALANE (rank 11)"
+        }
+      ],
+      "non_oil_features": [
+        {
+          "claim_name": "Omega-9",
+          "inci_mapping": "OLEIC ACID (rank 10) is present; Omega-9 is not itself an INCI name",
+          "maker_context": "Squalane and Omega-9 technology"
+        }
+      ],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "H02-maker",
+        "observation": "maker directions specify pumps"
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "H02-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "excerpt": "UV & Heat protection",
+            "scope": "exact hair product maker page"
+          }
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "H02-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "excerpt": "UV & Heat protection",
+            "scope": "exact hair product maker page"
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H02-direction-1",
+          "source_id": "H02-maker",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "damp_before_styling",
+          "dose": "1–3 pumps",
+          "removal": "retained_styling_context",
+          "text": "Distribute1–3pumps through damp lengths and ends before styling.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed instructions"
+        },
+        {
+          "direction_id": "H02-direction-2",
+          "source_id": "H02-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry_finish",
+          "dose": "small amount",
+          "removal": "retained_styling_context",
+          "text": "Apply a small amount on dry hair after styling.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed instructions"
+        }
+      ],
+      "source_limits": [
+        "Published maker declaration.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H02"
+    },
+    {
+      "case_id": "H03",
+      "identity": {
+        "brand": "Biossance",
+        "product": "100% Squalane Oil Jumbo Size",
+        "market": "US maker storefront",
+        "size": "250 ml / 8.4 oz",
+        "gtin_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "H03-maker",
+          "url": "https://www.biossance.com/p/100-percent-squalane-oil-jumbo-size/17626077/",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H03-hero-1",
+          "hero_name": "Squalane Oil",
+          "canonical_ingredients": [
+            "SQUALANE"
+          ],
+          "source_id": "H03-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: SQUALANE (sole declared ingredient)"
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "H03-maker",
+        "observation": "Current exact maker page image alt text identifies a dark green pump bottle; separate hair directions are outlet-neutral."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H03-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product description",
+              "FAQ",
+              "How To Use",
+              "full ingredient declaration"
+            ],
+            "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H03-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product description",
+              "FAQ",
+              "How To Use",
+              "full ingredient declaration"
+            ],
+            "negative_basis": "The page mentions post-sun use, but no explicit hair-UV-protection claim was found in reviewed exact maker content."
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H03-direction-1",
+          "source_id": "H03-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "wet_or_dry",
+          "dose": "small amount",
+          "removal": "retained_styling_context",
+          "text": "Smooth a small amount through wet or dry hair for shine and flyaways as needed.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed maker directions"
+        }
+      ],
+      "source_limits": [
+        "Maker frames the product primarily for skin and advises package-list confirmation; retained hair use is nevertheless explicit.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H03"
+    },
+    {
+      "case_id": "H04",
+      "identity": {
+        "brand": "Rahua",
+        "product": "Legendary Amazon Oil",
+        "market": "US maker storefront",
+        "size": "not established in retrieved maker text",
+        "gtin_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "H04-maker",
+          "url": "https://rahua.com/products/legendary-amazon-oil",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H04-hero-1",
+          "hero_name": "Rahua Oil",
+          "canonical_ingredients": [
+            "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL"
+          ],
+          "source_id": "H04-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL (rank 5)"
+        },
+        {
+          "hero_id": "H04-hero-2",
+          "hero_name": "Morete Oil",
+          "canonical_ingredients": [
+            "MAURITIA FLEXUOSA FRUIT OIL"
+          ],
+          "source_id": "H04-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: MAURITIA FLEXUOSA (MORETE) FRUIT OIL (rank 6)"
+        },
+        {
+          "hero_id": "H04-hero-3",
+          "hero_name": "Sacha Inchi",
+          "canonical_ingredients": [
+            "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+          ],
+          "source_id": "H04-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL (rank 7)"
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "H04-maker",
+        "observation": "drop directions do not establish the outlet mechanism"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H04-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product detail",
+              "key benefits",
+              "key ingredients",
+              "How to use",
+              "full ingredient list"
+            ],
+            "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+          }
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "H04-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "excerpt": "Morete Oil protects hair from damaging UVA rays while enhancing moisture.",
+            "scope": "Exact Rahua Legendary Amazon Oil US maker page; named Morete Oil ingredient subsection.",
+            "supporting_context": "Product details also says Morete oil helps defend against UV damage; key-ingredient list identifies Morete Oil as MAURITIA FLEXUOSA (MORETE) FRUIT OIL (rank 6)."
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H04-direction-1",
+          "source_id": "H04-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry_finish",
+          "dose": "1–3 drops",
+          "removal": "retained_styling_context",
+          "text": "Warm1–3drops in palms and work through dry hair; start small.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed maker directions",
+          "frequency": "daily"
+        }
+      ],
+      "source_limits": [
+        "Current maker page does not establish a selected size or dispenser mechanism. Drop-dose directions alone are not treated as mechanism evidence; no legacy-package inference is retained.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H04"
+    },
+    {
+      "case_id": "H05",
+      "identity": {
+        "brand": "Oribe",
+        "product": "Gold Lust Nourishing Hair Oil",
+        "market": "US maker storefront",
+        "size": "Standard 3.4 oz / 100 ml",
+        "gtin_if_verified": "840035204499"
+      },
+      "sources": [
+        {
+          "id": "H05-maker",
+          "url": "https://www.oribe.com/products/gold-lust-nourishing-hair-oil",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H05-hero-1",
+          "hero_name": "Argan Oil",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "source_id": "H05-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: ARGANIA SPINOSA KERNEL OIL (rank 9)"
+        },
+        {
+          "hero_id": "H05-hero-2",
+          "hero_name": "Cassis Seed Oil",
+          "canonical_ingredients": [
+            "RIBES NIGRUM SEED OIL"
+          ],
+          "source_id": "H05-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: RIBES NIGRUM (BLACK CURRANT) SEED OIL (rank 19)"
+        },
+        {
+          "hero_id": "H05-hero-3",
+          "hero_name": "Jasmine Oil",
+          "canonical_ingredients": [
+            "JASMINUM OFFICINALE (JASMINE) OIL"
+          ],
+          "source_id": "H05-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: JASMINUM OFFICINALE (JASMINE) OIL (rank 20)"
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "unknown",
+        "status": "unknown",
+        "source_id": "H05-maker",
+        "observation": "Current US maker product text and reviewed provided product-image URL did not yield sufficiently bound visible outlet evidence in this capture; retained as unknown rather than inferred."
+      },
+      "claims": {
+        "heat": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "H05-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "excerpt": "Provides heat protection and reduces dry time.",
+            "scope": "Exact Gold Lust Nourishing Hair Oil US maker page, BENEFITS."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H05-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current US product title/description",
+              "BENEFITS",
+              "HOW TO USE",
+              "INGREDIENTS and full INCI",
+              "current US page full-text literal-UV check"
+            ],
+            "negative_basis": "No literal UV occurs on the current US exact-product page, and no explicit hair-UV-protection statement was found. Other locale content was not transferred."
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H05-direction-1",
+          "source_id": "H05-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "damp",
+          "dose": "unestablished",
+          "removal": "retained_styling_context",
+          "text": "Distribute through damp hair.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in retrieved maker directions"
+        },
+        {
+          "direction_id": "H05-direction-2",
+          "source_id": "H05-maker",
+          "site": [
+            "ends"
+          ],
+          "stage": "post_styling_finish",
+          "dose": "additional amount; no numeric dose",
+          "removal": "retained_styling_context",
+          "text": "After styling apply an additional amount to ends.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in retrieved maker directions"
+        }
+      ],
+      "source_limits": [
+        "Maker structured product data supplies GTIN; ingredient list is published product content.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H05"
+    },
+    {
+      "case_id": "H06",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Light Luminous Reflective Oil",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "H06-maker",
+          "url": "https://www.wella.com/professional/en-US/products/hair-care/oil-reflections/oil-reflections-light-luminous-reflective-oil",
+          "scope": "Exact maker identity/formula/directions/claim review captured in source-packet.json; raw formula equality preserved."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "H06-hero-1",
+          "hero_name": "Camellia Seed Oil",
+          "canonical_ingredients": [
+            "CAMELLIA OLEIFERA SEED OIL"
+          ],
+          "source_id": "H06-maker",
+          "mapping_note": "Source-reviewed exact rank identity, including preparation-preserving parenthetical common-name normalization; raw source mapping: CAMELLIA OLEIFERA SEED OIL (rank 11)"
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "pump",
+        "status": "confirmed",
+        "source_id": "H06-maker",
+        "observation": "maker directions specify pumps"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H06-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product detail",
+              "FAQ",
+              "directions",
+              "ingredients"
+            ],
+            "negative_basis": "No explicit heat-protection claim in reviewed exact maker content."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "H06-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker product detail",
+              "FAQ",
+              "directions",
+              "ingredients"
+            ],
+            "negative_basis": "No explicit hair-UV-protection claim in reviewed exact maker content."
+          }
+        }
+      },
+      "directions": [
+        {
+          "direction_id": "H06-direction-1",
+          "source_id": "H06-maker",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried_before_styling",
+          "dose": "1–3 pumps",
+          "removal": "retained_styling_context",
+          "text": "Distribute1–3pumps through towel-dried lengths and ends before styling.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed maker directions"
+        },
+        {
+          "direction_id": "H06-direction-2",
+          "source_id": "H06-maker",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry_finish",
+          "dose": "small amount",
+          "removal": "retained_styling_context",
+          "text": "Apply a small amount to dry hair for finishing.",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed maker directions"
+        }
+      ],
+      "source_limits": [
+        "Published maker declaration.",
+        "No clinical efficacy, normal-dose performance or product-grade inference."
+      ],
+      "source_record_ref": "source-packet.json#H06"
+    }
+  ],
+  "normalization": "Root source-only scenario/hero assembly, frozen before formula label inspection; actual source captures remain attributed. No formula values."
+}

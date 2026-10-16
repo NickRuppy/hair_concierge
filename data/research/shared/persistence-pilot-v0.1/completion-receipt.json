@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-09",
+  "status": "passed",
+  "scope": "Complete uncommitted OE55 shared-contract/six-product increment, indexes and exact pilot Git visibility; earlier artifacts preservation-checked, not whole-branch publication readiness",
+  "branch": "codex/oil-inci",
+  "base": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "upstream": "5cf95d08bdba2c77ecdd61ad2b9fda1f56a2a252",
+  "content_fingerprint": "79d2bf5200aee6e7108380b818522bc26bbf429d9af4fe10fc4b21528e051c90",
+  "fingerprint_format": "SHA256 of sorted repository-relative path TAB content SHA256 newline manifest; completion receipt excluded to avoid self-reference",
+  "content_manifest": {
+    ".gitignore": "bcc8d478acbb71d6532405cbaeee7d09efed5aaa9fe2b41f0ef3d8472eb7240a",
+    "data/research/shared/persistence-pilot-v0.1/blind-packet.json": "775864adbe63e20c8dcef69bd28880676cd052c7c6e7f7d956dff4d3aeebff80",
+    "data/research/shared/persistence-pilot-v0.1/blind-stage-seal.json": "40f79ca9ad44fd27d10a834c4c8259e86cfde27367e48dec67364c6d3fd4c5d6",
+    "data/research/shared/persistence-pilot-v0.1/function-dictionary.json": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f",
+    "data/research/shared/persistence-pilot-v0.1/historical-preservation.json": "f759cd3e1a534f53a74d8ef94fa278474ffabb570c307f6a9541c8944d7e9740",
+    "data/research/shared/persistence-pilot-v0.1/input-manifest.json": "24510a1853e6d757f4b37b464e694ccf0c811abb6fdaea3537558826d9e69db7",
+    "data/research/shared/persistence-pilot-v0.1/integration-notes.json": "9c425e857f54d733a2718ac11051384be9a8ce46600d588bc233b6d9ce40580b",
+    "data/research/shared/persistence-pilot-v0.1/lane-a/notes.json": "eb9dec9d5f47568792bc62efdd488111100c9025efc2f8d653faad3a7e92cc5a",
+    "data/research/shared/persistence-pilot-v0.1/lane-a/records.json": "9d8cfb78a726d0566a05e14608d48d4f1233759a382b91a317cf0932e3a0dc96",
+    "data/research/shared/persistence-pilot-v0.1/lane-b/notes.json": "5651cae17ddc4c059c8be4af37ed02d9edb37e928d2f2c467d5cbe829fd42f78",
+    "data/research/shared/persistence-pilot-v0.1/lane-b/records.json": "f3c387eec5960931a0a07126f601a5018d70b0e9810362aa3b70a27ffd3a3fcb",
+    "data/research/shared/persistence-pilot-v0.1/method.md": "f827f75a01ff2813f46c08b4ad1a5e93aeb155b32c56a2f8777f339fbb4606c3",
+    "data/research/shared/persistence-pilot-v0.1/projection-schema.json": "057c43f10789d9879b311b95c262841abc9c731826f8a07010847818c3cc06dc",
+    "data/research/shared/persistence-pilot-v0.1/projection.json": "6b72b49d895c9da3e8e5e9ea0cc242671d936563cf9e9f1e8058b85ed765cbf7",
+    "data/research/shared/persistence-pilot-v0.1/research-decisions.json": "cae60943a4a8387c61b68ef5fa08ce14ffa7940cfe603f8cac21ad743c8a1154",
+    "data/research/shared/persistence-pilot-v0.1/results-for-review.md": "62ceeda82cfda6347b8842470093300dafaecbe4dd1a846909425d27cf9f9ab8",
+    "data/research/shared/persistence-pilot-v0.1/results.csv": "6ca70cdafff12dc1b32d60c79415fccb090c3252cbe971f5ef89a47f052b82e3",
+    "data/research/shared/persistence-pilot-v0.1/source-notes.md": "c5bf16a7c5c3f81a1c61a5975c6f154edb101e5e7b2f243c56e6d3e9609d97c3",
+    "data/research/shared/persistence-pilot-v0.1/source-packet.json": "0c24838506e8ba997d425264d875e60a268d6dac08a7590fbc1f0259968003dd",
+    "data/research/shared/persistence-pilot-v0.1/verification-receipt.json": "51d401dd98e1b5bd633816df579dcd84ad997146ecb8886a1920a285648defd8",
+    "docs/research/README.md": "15a485dc4d67ee57edce18f8bfd42515ec6494a242abfd95cab3aafdb3e4c7c7",
+    "docs/research/oil-inci/README.md": "d119f3853b575ff3a7833ebe8e74fed90537c853298a52096bbc8267703587fb",
+    "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+    "plans/oil-inci/canonical-persistence-pilot-plan.md": "fb0a8fdcf78c569d0d787161612388ad467cfb2493381da2c8036f32fd699e3c",
+    "plans/oil-inci/phase1-decision-coverage.md": "be8e88b0e261f8470763fc53cd2c4789368e8c3cf2d2c7c33c972f015c90f662",
+    "plans/oil-inci/reviews/canonical-persistence-plan-review-2026-10-09.md": "1935af2b582b4adcbed42376b1e3d755acd434004ea5293db1b22beb7eebcb8e",
+    "plans/oil-inci/verify-canonical-persistence-pilot.py": "a407f25252f3b70f056286577a6680482e58d5f3f8bedbe786e0a510c5ed63e4"
+  },
+  "decision_coverage": {
+    "status": "confirmed",
+    "coverage_acknowledgement": "Nick: yeah i think thats the smart architecture, 2026-10-07, after committed low/moderate/high without confidence/unknown and the shared six-product proposal",
+    "internal_revalidation": "2026-10-09: shared contract and six committed replay judgments complete; no category adapter/production migration or automatic native mapping",
+    "open_consequential_choices_affecting_pilot": []
+  },
+  "promised_outcomes": [
+    "Shared persistence meaning and three operational anchors written",
+    "Two source-bound products per category classified with one committed value",
+    "Both independent lanes sealed before parent inspection; all decisions reviewed and committed",
+    "Flat projection only product_key, policy_version, persistence_potential; reasons separate",
+    "Native-label differences visible; middle means ordinary retained coating, never indecision",
+    "576 previous artifacts unchanged; no native category standard/adapter/runtime mutation"
+  ],
+  "verification": {
+    "command": "python3 plans/oil-inci/verify-canonical-persistence-pilot.py",
+    "result": "passed",
+    "artifact_receipt": "verification-receipt.json",
+    "cases": 6,
+    "primary_ranks": 93,
+    "dictionary_identities": 71,
+    "historical_files_preserved": 576,
+    "negative_controls_rejected": [
+      "unknown_class",
+      "dropped_case",
+      "broken_evidence",
+      "confidence_field"
+    ],
+    "all_scope_json_parsed": true,
+    "verifier_ast_parsed": true,
+    "local_links_checked": 143,
+    "frozen_method_links_resolved_in_document_origin": 3,
+    "whitespace": "all increment text including untracked files and git diff --check passed",
+    "pilot_files_git_visible": true,
+    "unrelated_shared_data_still_ignored": true
+  },
+  "final_review": {
+    "router": "request-code-review",
+    "reviewer": "main Codex session, exact OE55 increment",
+    "correctness": "No blocking findings. Source/directions/rank/function binding, complete method, sealed reads/outputs, committed schema, intact selection, projection/CSV parity, native semantic differences and historical preservation reviewed.",
+    "structural": "Normal and structural lenses applied locally: 167-line stdlib verifier and explicit artifact contracts; no runtime abstraction, dependency, hidden confidence branch, ingredient-scoring lookup or broad ignore exception. No blocking structural findings.",
+    "counterpart_plan_review": "One read-only terminal Opus4.8/high review reconciled before dispatch; no repeated review needed for specification fixes and stronger two-lane verification.",
+    "verdict": "Shared draft and pilot complete; no measured-accuracy, native-engine migration or intake readiness claim"
+  },
+  "artifact_disposition": {
+    "durables": "Commit-intended, uncommitted",
+    "transient_counterpart_report": "Discarded after durable reconciliation",
+    "temporary_output_contract": "Discarded after frozen method carries its full content",
+    "unrelated_scope": "Existing oil .gitignore exceptions and old task artifacts preserved",
+    "publication": "None"
+  },
+  "skipped_checks": [
+    "Browser/chat/runtime/database checks: no corresponding seam changed",
+    "Measured repeated-application/removal tests: outside local classification compatibility scope",
+    "Whole-branch publication review: not requested; only OE55 increment reviewed"
+  ],
+  "residual_limits": [
+    "Two-lane 6/6 agreement is repeatability, not measured accuracy or unseen holdout success",
+    "Prior captured source snapshots reused; no live market or physical batch refresh",
+    "Read isolation contractual, not technical; neither lane reported recognized identity/access incident",
+    "Working anchors still require complete-formula research judgment; no concentration, dose or wash count inferred",
+    "Integration must explicitly replace/map native fields and consumers, and avoid contradictory active matching inputs"
+  ],
+  "next_step": "Integrate the shared property into oil research standard/consuming guides with explicit binary-field replacement and reclassification; then sibling-category consumers"
+}

@@ -1,0 +1,1281 @@
+{
+  "version": "oil-round-1-supplement-0.1.0-draft",
+  "reviewed_at": "2026-10-01",
+  "entries": [
+    {
+      "canonical_name": "MENTHA ARVENSIS LEAF OIL",
+      "aliases": [
+        "MENTHA ARVENSIS (WILD MINT) LEAF OIL"
+      ],
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "flags": [
+        "fragrance",
+        "scalp_active_botanicals"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 16194, PDF page 484",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://drugs.ncats.io/drug/1AEY1M553N",
+          "title": "NIH NCATS substance record",
+          "claim_supported": "Exact Mentha Arvensis Leaf Oil and Wild Mint Leaf Oil identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": ""
+    },
+    {
+      "canonical_name": "TERPINEOL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 28506, PDF page 811",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 28584, PDF page 813",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "JUNIPERUS VIRGINIANA OIL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 14115, PDF page 423",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6712, PDF page 219",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/reg/2023/1545/oj/eng",
+          "title": "EU 2023/1545, Annex III",
+          "claim_supported": "Exact named fragrance-allergen or label-group identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil."
+    },
+    {
+      "canonical_name": "AQUA",
+      "aliases": [
+        "AQUA [WATER]",
+        "WATER/AQUA/EAU"
+      ],
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 2112, PDF page 74",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://laws-lois.justice.gc.ca/eng/regulations/c.r.c.%2C_c._869/fulltext.html",
+          "title": "Canadian Cosmetic Regulations, equivalent-name schedule",
+          "claim_supported": "Aqua, Water and Eau identify water."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Explicit submitted bilingual wrappers, no general punctuation stripping. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PARFUM",
+      "aliases": [
+        "PARFUM [FRAGRANCE]",
+        "PARFUM/FRAGRANCE",
+        "PARFUM / FRAGRANCE"
+      ],
+      "roles": [
+        "fragrance_composition"
+      ],
+      "flags": [
+        "fragrance"
+      ],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 19071, PDF page 560",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/lift-me-gel-cream-2/",
+          "title": "Hallstar illustrative formulation",
+          "claim_supported": "Fragrance (Parfum) equivalence; wrapper punctuation does not introduce a new chemical identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": ""
+    },
+    {
+      "canonical_name": "POLYSORBATE 20",
+      "aliases": [],
+      "roles": [
+        "surfactant",
+        "emulsifier"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 22319, PDF page 645",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.crodabeauty.com/en-gb/products/product/70-tween_1_20",
+          "title": "Croda Tween 20",
+          "claim_supported": "Exact Polysorbate 20 ingredient; nonionic surfactant/emulsifier."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "ETHYLHEXYLGLYCERIN",
+      "aliases": [],
+      "roles": [
+        "conditioning_auxiliary",
+        "humectant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 10243, PDF page 320",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.schuelke.com/wMedia-25/docs/produkte/produkt/de-DE/P-912801/Industriehygiene_Katalog-prod_brochure-IH-DE_DE-SMDE.pdf",
+          "title": "Schuelke ingredient functions table",
+          "claim_supported": "Exact ingredient described as skin conditioning and moisture retaining."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "1,2-HEXANEDIOL",
+      "aliases": [],
+      "roles": [
+        "multifunctional_diol",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 107, PDF page 9",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.symrise.com/newsroom/article/symrise-presents-symdiolr-68-green-a-synergistic-combination-of-green-multifunctional-cosmetic-ing/",
+          "title": "Symrise SymDiol68 green technical announcement",
+          "claim_supported": "Exact diols in multifunctional ingredient system; no solvent-alcohol flag or unqualified preservation claim."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "aliases": [],
+      "roles": [
+        "multifunctional_diol",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 5400, PDF page 180",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.symrise.com/newsroom/article/symrise-presents-symdiolr-68-green-a-synergistic-combination-of-green-multifunctional-cosmetic-ing/",
+          "title": "Symrise SymDiol68 green technical announcement",
+          "claim_supported": "Exact diols in multifunctional ingredient system; no solvent-alcohol flag or unqualified preservation claim."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "MAGNESIUM SULFATE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 15818, PDF page 475",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CHLORPHENESIN",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6238, PDF page 204",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "SODIUM HYDROXIDE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 26674, PDF page 763",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PROPANEDIOL",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 23262, PDF page 669",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "BETA-CAROTENE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 3318, PDF page 115",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "VP/VA COPOLYMER",
+      "aliases": [],
+      "roles": [
+        "film_former",
+        "hair_fixative"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 30057, PDF page 852",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://promo.basf.com/campaign/Projetos/CaringForYou/Documentos/Geral/Luviskol%C2%AE%20VA%2064%20Powder.pdf",
+          "title": "BASF Luviskol VA64 Powder Technical Information",
+          "claim_supported": "Exact VP/VA Copolymer film-forming hair-fixative material; grade-specific performance."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "aliases": [
+        "PENTAERYTHRITYL TETRA-DI-T-BUTYLHYDROXYHYDROCINNAMATE"
+      ],
+      "roles": [
+        "antioxidant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU 2025/1175 glossary, entry 20319, PDF page 593",
+          "claim_supported": "Exact spaced antioxidant name."
+        },
+        {
+          "url": "https://www.cir-safety.org/sites/default/files/pentae122013tent.pdf",
+          "title": "CIR ingredient safety assessment, 2013",
+          "claim_supported": "Exact ingredient antioxidant function; no safety conclusion imported."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Submitted compact spelling differs only by the internal space before HYDROXYHYDROCINNAMATE. Specific lexical mapping, not a general spelling repair. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "AVENA SATIVA PEPTIDE",
+      "aliases": [
+        "AVENA SATIVA (OAT) PEPTIDE"
+      ],
+      "roles": [
+        "botanical_peptide"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 2748, PDF page 96",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://oatcosmetics.com/product/ecopep/",
+          "title": "Oat Cosmetics EcoPep ingredient",
+          "claim_supported": "Exact parenthetical Avena sativa (Oat) Peptide declaration; no efficacy claim adopted."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "aliases": [],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 10845, PDF page 336",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 15635, PDF page 470",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "MALVA SYLVESTRIS EXTRACT",
+      "aliases": [
+        "MALVA SYLVESTRIS (MALLOW) EXTRACT"
+      ],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 15941, PDF page 478",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.nativeextracts.com/products/mallow-cellular-extract",
+          "title": "Native Extracts Mallow Cellular Extract",
+          "claim_supported": "Supplier explicitly lists Malva sylvestris Extract / Malva sylvestris (Mallow) Extract."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "VANILLA PLANIFOLIA FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 29802, PDF page 845",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "AMARANTHUS CAUDATUS SEED EXTRACT",
+      "aliases": [],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 1647, PDF page 59",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "botanical_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 16878, PDF page 503",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+      "aliases": [],
+      "roles": [
+        "ferment_extract"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 23590, PDF page 678",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Preparation identity only; specific auxiliary function not assessed. Not the intact source oil, no inferred constituent allergens, no closed scalp-active-group match. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PPG-3 CAPRYLYL ETHER",
+      "aliases": [],
+      "roles": [
+        "polyether",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 23044, PDF page 664",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Ether identity; not ester, intact botanical oil or silicone. Carrier versus auxiliary function remains unassessed. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 4503, PDF page 153",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/product/hallstar-c1215-alkyl-benzoate-natural/",
+          "title": "Hallstar C1215 Alkyl Benzoate Natural",
+          "claim_supported": "Exact INCI and emollient ester identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "ISOAMYL LAURATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 13654, PDF page 411",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.evonik.com/en/products/cs/pr_52044993.html",
+          "title": "Evonik dermofeel sensolv MB",
+          "claim_supported": "Exact Isoamyl Laurate emollient."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "ETHYLENE/PROPYLENE/STYRENE COPOLYMER",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_gelling_polymer",
+        "structurant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 10165, PDF page 318",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://penreco.com/brochures/pharma/",
+          "title": "Penreco Versagel technical brochure",
+          "claim_supported": "Exact pair of polymers used to thicken and gel hydrocarbon substrates."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Polymers are distinct from their hydrocarbon substrates; no mineral-oil flag or finished-film load follows from polymer presence. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "BUTYLENE/ETHYLENE/STYRENE COPOLYMER",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_gelling_polymer",
+        "structurant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 4190, PDF page 143",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://penreco.com/brochures/pharma/",
+          "title": "Penreco Versagel technical brochure",
+          "claim_supported": "Exact pair of polymers used to thicken and gel hydrocarbon substrates."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Polymers are distinct from their hydrocarbon substrates; no mineral-oil flag or finished-film load follows from polymer presence. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "C9-12 ALKANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 4820, PDF page 162",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Exact hydrocarbon name; not liquid mineral oil. Source/grade-specific volatility and emollient function need technical evidence; no class-wide rate assumption. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "C13-14 ISOALKANE",
+      "aliases": [],
+      "roles": [
+        "hydrocarbon_carrier"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 4562, PDF page 155",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Exact hydrocarbon name; not liquid mineral oil. Source/grade-specific volatility and emollient function need technical evidence; no class-wide rate assumption. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "aliases": [
+        "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN) FRUIT OIL"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 12078, PDF page 369",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://en.sanmarkltd.com/Product_details/24.html",
+          "title": "Sanmark Sea Buckthorn Oil",
+          "claim_supported": "Separate exact fruit and seed oil identities and fatty-acid composition."
+        },
+        {
+          "url": "https://www.natureinbottle.com/product/sea_buckthorn_fruit_pulp_oil",
+          "title": "Nature in Bottle Sea Buckthorn Fruit Pulp Oil",
+          "claim_supported": "Exact parenthetical Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil INCI."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CITRULLUS LANATUS SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6636, PDF page 216",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.oand3.com/product/watermelon-seed-oil-refined/",
+          "title": "O&3 Watermelon Seed Oil Refined",
+          "claim_supported": "Exact seed-oil identity and refined vegetable oil."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 16901, PDF page 503",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.oand3.com/product/moringa-seed-oil-cold-pressed/",
+          "title": "O&3 Moringa Seed Oil Cold Pressed",
+          "claim_supported": "Exact INCI and fixed oil expressed from seeds."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 18367, PDF page 541",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.hallstarbeauty.com/formula/butter-for-you-beauty-balm/",
+          "title": "Hallstar illustrative Butter for You formulation",
+          "claim_supported": "Exact babassu seed oil assigned emollient function."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "ZEA MAYS OIL",
+      "aliases": [
+        "ZEA MAYS (CORN) OIL"
+      ],
+      "roles": [
+        "botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 30266, PDF page 858",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://drugs.ncats.io/drug/8470G57WFM",
+          "title": "NIH NCATS Corn Oil record",
+          "claim_supported": "Exact Zea Mays (Corn) Oil identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PUNICA GRANATUM SEED OIL",
+      "aliases": [],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 23710, PDF page 682",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.sophim.com/en/product/pomegranate-oil/",
+          "title": "Sophim Pomegranate Oil",
+          "claim_supported": "Exact seed-oil INCI; vegetable oil identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No admitted hair-penetration anchor or formula-weight inference. Preserve plant part and processing. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS OIL",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+      ],
+      "roles": [
+        "botanical_oil",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [],
+      "exclusions": [],
+      "validation_status": "pending",
+      "notes": "Do not silently add SEED or equate all botanical parts; exact form needs identity validation before seed-oil evidence transfer. No exact row found in full 2025 glossary; parent resolves exact oil material and intended SEED equivalence. Do not consume omitted flags as a completed negative while identity is pending."
+    },
+    {
+      "canonical_name": "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER",
+      "aliases": [],
+      "roles": [
+        "modified_oil_polymer",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 3948, PDF page 136",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Exact identity only; no repair, penetration, film, heat or benefit claim is adopted. Modified oil polymer is not intact source oils. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+      "aliases": [],
+      "roles": [
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 3515, PDF page 122",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Exact identity only; no repair, penetration, film, heat or benefit claim is adopted. Modified oil polymer is not intact source oils. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "SH-OLIGOPEPTIDE-78",
+      "aliases": [],
+      "roles": [
+        "peptide",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 25857, PDF page 741",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Exact identity only; no repair, penetration, film, heat or benefit claim is adopted. Modified oil polymer is not intact source oils. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "PHYTOSTERYL/OCTYLDODECYL LAUROYL GLUTAMATE",
+      "aliases": [],
+      "roles": [
+        "lipid_derivative",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 20933, PDF page 609",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.nipponseika-cosme.com/pdf/catalogue/Plandool_series.pdf",
+          "title": "Nippon Fine Chemical Plandool series",
+          "claim_supported": "Exact raw-material INCI; role detail remains unassessed in this narrow pass."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "DIISOSTEARYL MALATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 8797, PDF page 280",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.lubrizol.com/-/media/Lubrizol/Personal-Care/Documents/Literature/TOX-100-Schercemol-DISM-Ester.pdf",
+          "title": "Lubrizol Schercemol DISM Ester",
+          "claim_supported": "Exact INCI and ester identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "No toxicity or safety conclusion imported from technical sheet. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "aliases": [],
+      "roles": [
+        "modified_castor_derivative",
+        "not_assessed"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 5632, PDF page 186",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.industrialchemicals.gov.au/sites/default/files/PLC804%20Public%20Report%20PDF.pdf",
+          "title": "Australian NICNAS PLC804 public report",
+          "claim_supported": "Exact Castor Isostearate Succinate identity."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Not intact castor seed oil; film/conditioning role needs specific technical review. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "aliases": [],
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 5394, PDF page 179",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.personal-care.basf.com/docs/default-source/press-center-files/personal-care-in-the-media/2021/cosmetics-toiletries_antipollution_.pdf",
+          "title": "BASF technical article, Cetiol RLF",
+          "claim_supported": "Exact emollient identity; no skin-to-hair performance transfer."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "aliases": [
+        "COCOS NUCIFERA OIL / COCONUT OIL"
+      ],
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 7174, PDF page 232",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://www.interfat.com/vegetable-oils-cp-1-en",
+          "title": "Interfat vegetable oil identities",
+          "claim_supported": "Coconut oil mapped to Cocos Nucifera Oil; hydrogenated forms are separate."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Only translation wrapper added. Inherit seed scientific limitations; no Coconut Fruit Oil mapping added. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CI 47005",
+      "aliases": [
+        "CI 47005 [YELLOW 10]"
+      ],
+      "roles": [
+        "colourant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6421, PDF page 210",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://precision.fda.gov/uniisearch/srs/unii/35sw5usq3g",
+          "title": "FDA substance record",
+          "claim_supported": "Exact CI-to-US-color-name equivalence. Does not extend to lakes or certify product compliance."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Explicit CI/color translation wrapper only; no arbitrary lake or salt expansion. Colourants do not establish the auxiliary suffix boundary. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CI 19140",
+      "aliases": [
+        "CI 19140 / YELLOW 5"
+      ],
+      "roles": [
+        "colourant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6380, PDF page 209",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://precision.fda.gov/uniisearch/srs/unii/I753WB2F1M",
+          "title": "FDA substance record",
+          "claim_supported": "Exact CI-to-US-color-name equivalence. Does not extend to lakes or certify product compliance."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Explicit CI/color translation wrapper only; no arbitrary lake or salt expansion. Colourants do not establish the auxiliary suffix boundary. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    },
+    {
+      "canonical_name": "CI 17200",
+      "aliases": [
+        "CI 17200 / RED 33"
+      ],
+      "roles": [
+        "colourant"
+      ],
+      "flags": [],
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "sources": [
+        {
+          "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+          "title": "EU glossary Decision 2025/1175, entry 6373, PDF page 208",
+          "claim_supported": "Exact common ingredient name; identity only, no function or approval implied."
+        },
+        {
+          "url": "https://colormaterials.sunchemical.com/by-product/products/2318/suncroma-d-and-c-red-33-c17-a201/",
+          "title": "Sun Chemical D&C Red33",
+          "claim_supported": "Exact CI-to-US-color-name equivalence. Does not extend to lakes or certify product compliance."
+        }
+      ],
+      "exclusions": [],
+      "validation_status": "admitted",
+      "notes": "Explicit CI/color translation wrapper only; no arbitrary lake or salt expansion. Colourants do not establish the auxiliary suffix boundary. Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred."
+    }
+  ],
+  "unresolved_forms": [
+    {
+      "raw_form": "HELIANTHUS ANNUS (SUNFLOWER) SEED OIL",
+      "issue": "ANNUS versus ANNUUS spelling mismatch; no fuzzy repair admitted.",
+      "required_resolution": "Parent cross-source exact formula corroboration; retain raw token."
+    },
+    {
+      "raw_form": "COCO CAPRYLATE/CAPRATE",
+      "issue": "Submitted spelling omits canonical hyphen. Primary Alzo supplier uses this spelling; mapping remains parent-owned.",
+      "required_resolution": "Parent records explicit correction to COCO-CAPRYLATE/CAPRATE using supplier identity evidence.",
+      "sources": [
+        {
+          "url": "https://www.alzointernational.com/products/emollients-emulsifiers-conditioners-and-surfactants/emollient-esters",
+          "title": "Alzo Dermol CO-CA",
+          "claim_supported": "Supplier explicitly names Coco Caprylate/Caprate and ester role."
+        }
+      ]
+    }
+  ],
+  "source_archive_receipt": {
+    "url": "https://www.boe.es/doue/2025/1175/L00001-00862.pdf",
+    "sha256": "b1030a7863ccc27efbcd2e54a9e0fd0955a8477fcafbd6a45132f05982873dfe",
+    "bytes": 20803517,
+    "pages": 862,
+    "retrieval": "Downloaded into memory and parsed with pypdf; no PDF written outside owned scope."
+  }
+}

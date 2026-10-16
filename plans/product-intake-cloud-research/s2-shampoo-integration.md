@@ -354,14 +354,15 @@ parent setup complete.
       #691 head `75da3b16`. #682's adopted method/projector bytes remain unchanged.
 - [ ] Resolve #682's owner-PR disposition explicitly rather than silently closing
       or merging it. Complete full hosted CI and Security on the final #693 head.
-      The first exact-head run failed four stale inactive-Shampoo assertions,
-      three Linux subprocess cases and a Scanner journey already failing on main.
-      CodeQL reported a new high-severity water-synonym ReDoS plus the existing
-      medium operator-configured executable-path alert #34. Workflow success alone
-      is not a passing CodeQL check.
+      The original failures and their repairs are recorded below. Current-main CI
+      passed the Scanner journey; a separate Scanner CI owner is addressing its race.
+      Alert #34 is now fixed on main (read-only API refresh); rerun analysis on this
+      final head rather than treating workflow success alone as a passing CodeQL check.
 - [ ] Obtain exact merge, migration and disabled-release authorization. Apply
-      `20261016052958_product_intake_review_cycles.sql` before worker code; it is still
-      unapplied. Verify installed release/env/lease state and rollback preconditions.
+      `20261016052958_product_intake_review_cycles.sql` and successor
+      `20261016131141_product_intake_atomic_artifact_ids.sql`, together with the required
+      Oil binding migrations, before worker code. No migration was applied in this
+      completion pass. Verify installed release/env/lease state and rollback preconditions.
 - [ ] Complete private immutable review images, payload revisions, hash/revision-
       bound data/image approvals, authenticated D2 answers, guarded Admin publication,
       rework and notification-only recovery using the approved Admin journey.
@@ -398,7 +399,8 @@ config/image seams, stage and CLI proofs, and historical compatibility checks.
 Typecheck passes. Final source lint and counterpart delta review are recorded in
 the private verification receipt before push. Hosted confirmation remains required.
 The Scanner overlay failure also occurs on main `80b963a2` (run `38872955498`);
-no force-click or unrelated Scanner behavior change is included here. Existing
-medium CodeQL alert #34 remains visible and requires its own verified disposition.
+no force-click or unrelated Scanner behavior change is included here. The latest API refresh reports CodeQL alert #34 fixed on main; final-head analysis
+remains required. See [the completion record](s2-completion-2026-10-16.md) for the
+current-main reconciliation, atomic Oil compatibility repair and updated verification.
 Merge, migration application, deployment and automatic alert activation remain
 separate decisions for Nick.

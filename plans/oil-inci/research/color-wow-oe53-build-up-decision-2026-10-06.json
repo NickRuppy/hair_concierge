@@ -1,0 +1,186 @@
+{
+  "decision_id": "OE53",
+  "date": "2026-10-06",
+  "status": "human_accepted_product_estimate",
+  "authorization": "Nick: elevated",
+  "neutral_id": "N04",
+  "identity": {
+    "brand": "Color Wow",
+    "product": "Pop & Lock High Gloss Finish",
+    "size": "Selected travel 0.4 fl oz; page also offers full 1.8 fl oz",
+    "market": "US maker"
+  },
+  "source_url": "https://colorwowhair.com/products/pop-and-lock-frizzy-control-serum?variant=41342159159488",
+  "raw_inci": "PROPYLENE GLYCOL, AQUA/WATER, CYCLOPENTASILOXANE, HEXYLENE GLYCOL, PHENYL TRIMETHICONE, DIMETHICONOL, PHENOXYETHANOL, CAPRYLYL GLYCOL, POLYACRYLAMIDE, C13-14 ISOPARAFFIN, MICA, PARFUM/FRAGRANCE, ETHYLHEXYL SALICYLATE, LAURETH-7, TITANIUM DIOXIDE (CI 77891), BUTYLENE GLYCOL, LINALOOL, HEXYL CINNAMAL, CITRONELLOL. F#500-2",
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "AQUA/WATER"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "CYCLOPENTASILOXANE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "HEXYLENE GLYCOL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "DIMETHICONOL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "POLYACRYLAMIDE"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "C13-14 ISOPARAFFIN"
+      },
+      {
+        "rank": 11,
+        "canonical_name": "MICA"
+      },
+      {
+        "rank": 14,
+        "canonical_name": "LAURETH-7"
+      },
+      {
+        "rank": 15,
+        "canonical_name": "TITANIUM DIOXIDE (CI 77891)"
+      },
+      {
+        "rank": 16,
+        "canonical_name": "BUTYLENE GLYCOL"
+      }
+    ],
+    "counter_signal": [
+      "Phenyl trimethicone and dimethiconol provide an affirmative retained conditioning-film signal, so the aqueous/volatile vehicle does not establish low.",
+      "The admitted glycol/water/volatile-carrier portion makes a secondary gum/film subsystem plausible; the declaration alone does not establish that the retained film is substantial.",
+      "Polyacrylamide is supported as part of the aqueous rheology triad and cannot be counted as independent substantial hair-conditioning film evidence.",
+      "The unreviewed ingredient functions cannot be assumed negligible from their ranks or supplied from general chemical knowledge."
+    ],
+    "nearest_alternative": "elevated",
+    "reason": "The phenyl-trimethicone/dimethiconol pair supports elevated as the nearest alternative, but B2 requires a substantial conditioning-film architecture rather than mere gum presence. Here the carrier/aqueous architecture and unspecified film grades/load leave that distinction unresolved, while the rheology polymer does not add qualifying support. B3 also fails because weak film and the complete retained system are not established. The unreviewed functions are material to closing the whole-system assessment, though they are not affirmative elevated evidence.",
+    "unresolved": [
+      "PHENYL TRIMETHICONE rank 5 and DIMETHICONOL rank 6: grades, combined retained load and whether their conditioning film is substantial or secondary are unestablished; this is the decisive classification gap.",
+      "MICA rank 11, TITANIUM DIOXIDE (CI 77891) rank 15 and BUTYLENE GLYCOL rank 16 have unreviewed functions in the frozen supplement. Their retained-system contribution cannot be assigned or dismissed; this prevents affirmative whole-system weak-film closure.",
+      "CAPRYLYL GLYCOL rank 8 has an admitted multifunctional-diol role with function not assessed; no conditioning-film or negligible-residue inference is supplied.",
+      "The rheology triad supports a functional interpretation without establishing exact supplier grade or dose.",
+      "Fragrance mixture contribution, final phase structure, finished film persistence and repeated-wash behavior are unspecified."
+    ]
+  },
+  "approved_property": {
+    "value": "elevated",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "AQUA/WATER"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "CYCLOPENTASILOXANE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "HEXYLENE GLYCOL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "PHENYL TRIMETHICONE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "DIMETHICONOL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "POLYACRYLAMIDE"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "C13-14 ISOPARAFFIN"
+      },
+      {
+        "rank": 11,
+        "canonical_name": "MICA"
+      },
+      {
+        "rank": 14,
+        "canonical_name": "LAURETH-7"
+      },
+      {
+        "rank": 15,
+        "canonical_name": "TITANIUM DIOXIDE (CI 77891)"
+      },
+      {
+        "rank": 16,
+        "canonical_name": "BUTYLENE GLYCOL"
+      }
+    ],
+    "counter_signal": [
+      "The glycol/water/volatile-carrier portion could deliver only a thin, secondary conditioning film.",
+      "Phenyl Trimethicone supplier documentation also describes spreading/low-residue formulation benefits; nonvolatility alone does not prove accumulation.",
+      "Dimethiconol grade and dose are undisclosed; supplier gum blends establish plausible function, not this product's raw-material identity or proportions.",
+      "Polyacrylamide/C13-14 Isoparaffin/Laureth-7 is consistent with aqueous thickening/stabilizing, not an additional proven styling-film signal.",
+      "Particle, fragrance and diol contributions are not quantified and are not used to force the estimate."
+    ],
+    "nearest_alternative": "low",
+    "reason": "OE53 human-accepted elevated estimate under OE52 binary practical estimation. The Phenyl Trimethicone/Dimethiconol retained conditioning system makes a more substantial coating the more plausible direction. Exact grade and retained load are unresolved; water/glycol/volatile carrier and a thin secondary silicone film remain the low alternative. This is not a silicone-presence, rank-derived concentration, rheology-polymer or measured accumulation rule.",
+    "unresolved": [
+      "PHENYL TRIMETHICONE rank 5 and DIMETHICONOL rank 6: grades, combined retained load and whether their conditioning film is substantial or secondary are unestablished; this is the decisive classification gap.",
+      "MICA rank 11, TITANIUM DIOXIDE (CI 77891) rank 15 and BUTYLENE GLYCOL rank 16 have unreviewed functions in the frozen supplement. Their retained-system contribution cannot be assigned or dismissed; this prevents affirmative whole-system weak-film closure.",
+      "CAPRYLYL GLYCOL rank 8 has an admitted multifunctional-diol role with function not assessed; no conditioning-film or negligible-residue inference is supplied.",
+      "The rheology triad supports a functional interpretation without establishing exact supplier grade or dose.",
+      "Fragrance mixture contribution, final phase structure, finished film persistence and repeated-wash behavior are unspecified."
+    ]
+  },
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/working-records.json": "2837f5e6c2c9ad31a3ae54e6a49582ae155a6abf04d5fb6d24b3ed9a53957864",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-stage-seal.json": "926535884263d00a0b0cb7794eef3d50740ff5228eb67a97be74aa2b8daedcb2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/metrics.json": "11f8e96a97d1afddedd18dcbcfd625a7cb25a7cdc77625f22f91097e353606fe"
+  },
+  "research_proposal": {
+    "path": "plans/oil-inci/research/color-wow-build-up-proposal-2026-10-06.json",
+    "sha256": "c0c1c0a6c3e6a59a13f29a93a378eebc5bdebd86aa043cc728300fedd8622714"
+  },
+  "method": {
+    "path": "docs/research/oil-inci/v1.0/08_build-up-guidance-v0.3.md",
+    "sha256": "e6b6cbd57e7e361bbd49544760c89effd855a19ee2f8c2882460f71dcd731fed",
+    "decision_authority": "OE52"
+  },
+  "limits": [
+    "Undisclosed silicone grades and doses; no comparative repeated-wash residue evidence.",
+    "Polyacrylamide rheology system does not add proven styling-film evidence.",
+    "No weight/fit penalty, cleanser requirement, ingredient-wide prior or production action."
+  ],
+  "remaining_review": "Bumble and bumble original Invisible Oil already has a provisional elevated estimate; not yet human-adjudicated.",
+  "publication": "None"
+}

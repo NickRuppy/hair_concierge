@@ -698,6 +698,7 @@ test("oil decision resolves normalized request purpose before category logic run
   assert.equal(decision.noRecommendationReason, null)
   assert.deepEqual(decision.targetProfile, {
     purpose: "styling_finish",
+    weightRequest: "light",
     matcherSubtype: "styling-oel",
     adjunctScalpSupport: false,
     purposeSource: "request",

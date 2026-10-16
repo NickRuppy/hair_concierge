@@ -38,6 +38,7 @@ function buildOilNoRecommendationDecision(
   profile: NormalizedProfile,
   reason: NonNullable<RecommendationRequestContext["oilNoRecommendationReason"]>,
   purpose: RecommendationRequestContext["oilPurpose"] = null,
+  weightRequest: RecommendationRequestContext["oilWeightRequest"] = null,
 ): OilCategoryDecision {
   if (reason === "overload_risk") {
     const matcherSubtype = mapOilPurposeToSubtype(purpose)
@@ -51,6 +52,7 @@ function buildOilNoRecommendationDecision(
         purpose && matcherSubtype
           ? {
               purpose,
+              weightRequest,
               matcherSubtype,
               adjunctScalpSupport: false,
               purposeSource: "request",
@@ -118,11 +120,21 @@ export function buildOilCategoryDecision(
   const noRecommendationReason = requestContext.oilNoRecommendationReason
 
   if (noRecommendationReason) {
-    return buildOilNoRecommendationDecision(profile, noRecommendationReason, purpose)
+    return buildOilNoRecommendationDecision(
+      profile,
+      noRecommendationReason,
+      purpose,
+      requestContext.oilWeightRequest,
+    )
   }
 
   if (reset?.richOptionalCareRisk && reset.level === "strong") {
-    return buildOilNoRecommendationDecision(profile, "overload_risk", purpose)
+    return buildOilNoRecommendationDecision(
+      profile,
+      "overload_risk",
+      purpose,
+      requestContext.oilWeightRequest,
+    )
   }
 
   if (!purpose) {
@@ -140,7 +152,12 @@ export function buildOilCategoryDecision(
   }
 
   if (hasRoutineOverloadRisk(profile)) {
-    return buildOilNoRecommendationDecision(profile, "overload_risk", purpose)
+    return buildOilNoRecommendationDecision(
+      profile,
+      "overload_risk",
+      purpose,
+      requestContext.oilWeightRequest,
+    )
   }
 
   const matcherSubtype = mapOilPurposeToSubtype(purpose)
@@ -165,6 +182,7 @@ export function buildOilCategoryDecision(
     currentInventory: profile.routineInventory.oil,
     targetProfile: {
       purpose,
+      weightRequest: requestContext.oilWeightRequest ?? null,
       matcherSubtype,
       adjunctScalpSupport,
       purposeSource: "request",

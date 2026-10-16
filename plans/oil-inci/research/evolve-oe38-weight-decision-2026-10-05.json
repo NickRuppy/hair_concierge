@@ -1,0 +1,60 @@
+{
+  "decision_id": "OE38",
+  "decided_at": "2026-10-05",
+  "authorization": "Nick: Okay then stick to your recommendation. Recommendation: light, low confidence, medium alternative.",
+  "kind": "later_unblinded_human_product_adjudication",
+  "product_scope": {
+    "brand": "Evolve Organic Beauty",
+    "product": "Nourishing Hair Elixir – Dry Hair Serum",
+    "size": "30 ml",
+    "market": "UK GBP maker storefront",
+    "source_url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+    "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+    "accessed_at": "2026-10-04",
+    "physical_pack_verified": false
+  },
+  "source_run": "oil-blend-weight-round-5",
+  "neutral_id": "R06",
+  "material_reference": "natural-oil-weight-v0.10",
+  "blend_policy": "oil-blend-weight-policy-v0.2",
+  "weight": {
+    "value": "light",
+    "estimate": true,
+    "confidence": "low",
+    "nearest_alternative": "medium",
+    "alternatives": [
+      "medium"
+    ],
+    "rule_ids": [
+      "B0",
+      "B1",
+      "B4",
+      "B6"
+    ],
+    "evidence": [
+      "The leading liquid defined-ester carrier supports a lighter-distribution architecture; this is a qualitative load hypothesis, not measured evaporation or hair feel.",
+      "The reviewed declaration supplies no identified principal silicone conditioning-film, wax, gum or resin system that establishes a stronger retained-burden interpretation."
+    ],
+    "counter_signal": [
+      "Argan, baobab and coconut are a retained botanical co-carrier route; exact coconut has a rich rough material prior, making medium plausible.",
+      "The ester is not assumed to evaporate. Both ester and botanicals can remain on hair, with unknown amounts and grades."
+    ],
+    "reason": "Nick accepted light/low as the source-scoped working estimate after reviewing the medium argument. Botanical retention and coconut presence alone do not establish that the oil system outweighs the lighter ester architecture under B4. This is a later human decision on the borderline case, not a claim that the frozen trial was unanimous.",
+    "unresolved": [
+      "Relative carrier contributions, commercial grades, applied dose and deposited hair-film burden remain unmeasured.",
+      "The exact argan and baobab display names remain unmatched to material priors in this frozen reference; generic botanical role does not silently confer a species weight or alias.",
+      "Recorded literal function/preparation gaps from round-5 R06 remain visible; no unknown entry is assumed trace or harmless."
+    ]
+  },
+  "supersedes": {
+    "artifact": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/adjudication.json",
+    "neutral_id": "R06",
+    "prior_working_value": "unknown",
+    "scope": "Current accepted product decision only; immutable prior artifact stays unchanged."
+  },
+  "limits": [
+    "Applies only to the selected UK maker 30 ml, 22-entry formula captured 2026-10-04; other published lists, sizes/markets and physical batches are not equated.",
+    "No new independent run, policy/material revision, naming repair, confidence increase, thickness fit, other-property claim, runtime/catalog change or publication.",
+    "Frozen round-5 coverage 7/8 and lane equality 6/8 remain historical; later human choice is not added to trial metrics."
+  ]
+}

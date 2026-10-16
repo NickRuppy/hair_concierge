@@ -1,0 +1,54 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "policy_version": "oil-persistence-leave-on-v0.1",
+  "stage": "frozen_before_lane_dispatch",
+  "run_inputs": {
+    "source-packet.json": "25cf3c920e8d403e643fe04f9168ed19128c8d3003578694abb1e61950a02b49",
+    "blind-packet.json": "336abd8b25d7d63ea7e06253ab2de4cd57fe9011f012333c352acb62a17c64f2",
+    "function-dictionary.json": "5a440ee45d8ac0a1f2187fda63a8bd28c265cd9ec85060b2e3fe4b632aac70f2",
+    "method.md": "63dd577a72edbced21e8fb22c813bbaf9ca5968dff22a5a1a8c25c8683c55301",
+    "projection-schema.json": "70916637152b71ddb30ef40a09ee346f37a782e520038073eac4b19fe4e6b451",
+    "scope-decision.json": "306bc288887f60f33dafb9ee667a21ef6048b9aebc96d465ef766250899a8c62",
+    "leave-on-source-supplement.json": "1495771f7790df07b8a8d1f7d35e45b1754b5e0a11003e5939f3ebfb505e6816",
+    "historical-preservation-final.json": "1a7746353c8a5c6ea7c535332712fe25c4ffc17224564d10e0055f3d7620cafe",
+    "source-bindings-staged.json": "0e728187db91744a8d292deb3d827a9ac675da7977b4782b9cf08b5524444692",
+    "coverage-inventory.json": "d6ad82a2eca7df517054839ef90f38bdc7e0ab91d58c71aa7e7bc783fcadc093"
+  },
+  "dependencies": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/blind-packet.json": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f",
+    "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b",
+    "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10",
+    "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885",
+    "data/research/shared/persistence-pilot-v0.1/function-dictionary.json": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f",
+    "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+    "docs/research/oil-inci/v1.0/00_category-charter-v0.2.md": "c92f36d0294664dc05a9d7e74f4e63beac62f5ee0462b5856f00313e0f2fca72",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d"
+  },
+  "read_allowlist": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json"
+  ],
+  "worker_isolation": "contractual, not sandboxed",
+  "scope": {
+    "candidates": 28,
+    "included": 27,
+    "excluded_ids": [
+      "O02"
+    ]
+  }
+}

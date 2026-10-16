@@ -1,0 +1,10 @@
+{
+  "stage": "source",
+  "both_outputs_sealed_before_root_comparison": true,
+  "outputs": {
+    "lane-a/stage2-records.json": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+    "lane-a/stage2-notes.json": "2208c1973194cb1e4bd7a26af38015a26ef68fa8d1d43561d11dd4e29f70b8f3",
+    "lane-b/stage2-records.json": "ef14c8b6aa97953bf88b5556842f938db431ea4242b3e292e14c32e820696fc1",
+    "lane-b/stage2-notes.json": "78bc65b32a79919099231f3f6e65b69ddf252564d1362da46f5d7e9445e19ce8"
+  }
+}

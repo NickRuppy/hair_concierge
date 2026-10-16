@@ -1,0 +1,11 @@
+{
+  "run_id": "oil-natural-base-round-2",
+  "sealed_at": "2026-10-02",
+  "files": {
+    "lane-a/records.json": "0d98e984fff9db7c7f551973f90d3ba549b59d64435802ecd72d1da5500d954a",
+    "lane-a/notes.md": "b732fddd810b02db78d9d67c8b0148bc1e2979d697f778f9a98bb968d0e4b6c8",
+    "lane-b/records.json": "9370634d2a8dc3d01ed0874ab58b2254c150317c935c5b9117fa4029ccdee516",
+    "lane-b/notes.md": "8c82f4128f1fda565d58733a663019f3bf8da1aae05d460475176b81f82ab6f2"
+  },
+  "preservation": "Original independent lane outputs retained unchanged; main working interpretation is separate."
+}

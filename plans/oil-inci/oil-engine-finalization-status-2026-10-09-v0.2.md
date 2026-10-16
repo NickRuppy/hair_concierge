@@ -1,0 +1,19 @@
+# Oil engine finalization status v0.2
+
+2026-10-09. Supersedes the preserved preparation audit for current routing. Oil-only, source-supported leave-on fibre persistence is settled and implemented in local research. Current authorities: [charter v0.2](../../docs/research/oil-inci/v1.0/00_category-charter-v0.2.md), [property set v0.2](../../docs/research/oil-inci/v1.0/01_property-set-v0.2.md), [standard v0.8](../../docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md), [guidance v0.2](../../docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md), [operating guide v0.2](../../docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md).
+
+## Complete
+
+The [persistence replay](../../data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/results-for-review.md) covers 27 of 28 prepared exact formulas. O02 NEQI Rosemary has captured pre-wash/scalp-only directions and is excluded from this leave-on property pass, not assigned a fourth value. Dual-use products use captured retained fibre application. Every admitted formula has one committed low/moderate/high scalar: 15 moderate, 12 high, zero low. Rationale and evidence are separate. No confidence/unknown/indeterminate/alternative computation or conversion of old binary labels.
+
+Two independent assessments agree 27/27; root reviewed every reason. Formula familiarity was disclosed, so this is a source-hidden development replay, not an unseen test or measured persistence validation. The [verification receipt](../../data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/verification-receipt.json) passes 540 ingredient positions, 269 exact function identities, frozen source/context/dependency/output binding, 428 preserved historical files and four corruption controls.
+
+Other oil properties and fit are unchanged. Natural weight reference v0.10 remains 68 entries/108 names: 44 light, 14 medium, nine rich, one material unknown. That separate material identity gap is not an uncertainty state in the new formula persistence output. Shared six-case pilot and all historical artifacts remain intact. No sibling standard, runtime, adapter, catalog or database change.
+
+## Remaining gates
+
+1. Consolidate full profiles for the 27 admitted formulas. Existing research depth varies; completed persistence does not mean 27 complete profiles. Bind current weight decisions, direct-property reviews and role-specific fit overlays without rewriting history. Resolve the round6 Coconut Fruit Oil/studied-declaration penetration mapping, two dispenser observations and five hero-prominence gaps using exact sources or each property's declared policy. Review inherited base-effect wording as its own compact checkpoint.
+2. Pre-register calibration and a genuinely unseen holdout before selecting/judging new exact formulas. Include low-band coverage and structure-versus-conditioning-film challenges across natural, silicone, ester/hybrid and water-based oil-labelled forms. Freeze method and acceptance criteria; do not assign target classes in advance. Existing 27 declarations are development data. Agreement is repeatability, not measured accumulation or sensory accuracy.
+3. Design a deterministic oil projection/intake bridge after the research gates. Explicitly settle legacy field/role mapping, non-projectable cases, review ownership and activation. No adapter or production action is included here.
+
+The recommended next step is the full-profile gap/consolidation pass, followed by the unseen holdout. No further generic oil marketing survey or base-oil list rebuild is needed. Future [category impacts](../../docs/research/shared/persistence-category-impact-v0.1.md) are explanatory only: Leave-In's existing persistence projection affects replacement-capable versus booster-only roles; Conditioner accumulation is a different endpoint and cannot be renamed into this property.

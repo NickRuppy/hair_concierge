@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { hostname } from "node:os"
-import { createHash } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import { pathToFileURL } from "node:url"
 import * as Sentry from "@sentry/node"
 
@@ -21,6 +21,11 @@ import {
 } from "@/lib/product-intake/pipeline/commerce"
 import { createDmMcpClient } from "@/lib/scan/enrichment/dm-mcp-client"
 import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
+import { prepareOilResearchCompletion } from "@/lib/product-intake/pipeline/oil-completion"
+import {
+  OIL_PENDING_IDENTITY_ARTIFACT_ID,
+  type OilWorkerAdmissionContext,
+} from "@/lib/product-intake/oil-research-adapter"
 import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
 export type { BrandResolutionPromptContext } from "@/lib/product-intake/pipeline/identity"
 import {
@@ -404,7 +409,7 @@ export async function bindResearchJobEngine(
       const message = stringValue(rpcError?.message) ?? "Engine binding RPC failed"
       if (rpcError?.code === "PGRST202" || /Could not find the function/i.test(message)) {
         const infrastructureError = new Error(
-          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; continuing without binding for job ${job.id}: ${message}`,
+          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; ${key === "shampoo" ? "blocking sealed Shampoo research" : "continuing without binding"} for job ${job.id}: ${message}`,
         )
         try {
           console.error(infrastructureError.message)
@@ -416,6 +421,7 @@ export async function bindResearchJobEngine(
         } catch {
           /* Sentry is best effort. */
         }
+        if (key === "shampoo") throw infrastructureError
         return job
       }
       throw new Error(message)
@@ -801,6 +807,11 @@ export async function completeResearchPass(params: {
   }>
 }) {
   const { researchOutput, promptPacketPath } = params
+  const oilArtifactIds = prepareOilResearchCompletion({
+    job: params.job,
+    researchedPayload: researchOutput.researched_payload,
+    artifacts: researchOutput.artifacts,
+  })
   const reworkRequest =
     params.job.stage === "rework"
       ? (params.reworkRequest ?? activeReworkRequestFromProgress(params.job.progress))
@@ -837,6 +848,7 @@ export async function completeResearchPass(params: {
     targetSuccessfulJudgments: 0,
   }
   const finalArtifacts = researchOutput.artifacts.map((artifact) => ({
+    ...(oilArtifactIds.has(artifact) ? { id: oilArtifactIds.get(artifact)! } : {}),
     kind: artifact.kind,
     status: artifact.status ?? "proposed",
     confidence: artifact.confidence ?? null,
@@ -1315,6 +1327,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
               brandCatalog,
               expectedReviewCycleId: leasedJob.review_cycle_id,
+              currentResearchRun: { jobId: leasedJob.id, runId: randomUUID() },
             },
           )
           // Enabled by default; only the exact env value "false" disables commerce confirmation.
@@ -2215,6 +2228,7 @@ export function normalizeResearchOutputForCategory(
   options: InciStageOptions & {
     brandCatalog?: BrandResolutionCatalogInput
     expectedReviewCycleId?: string
+    currentResearchRun?: { jobId: string; runId: string }
   } = {},
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
@@ -2250,22 +2264,96 @@ export function normalizeResearchOutputForCategory(
     )
   }
   const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  if (categoryKey === "oil") {
+    const draft = normalizeRecord(researchedPayload.draft)
+    if (draft) delete draft.oil_research_binding
+    for (const artifact of artifacts) {
+      if (artifact.kind !== "property_synthesis") continue
+      // Only the current server admission may mint storage and review receipts.
+      // A rejected producer draft must not leave a model-authored wrapper that
+      // the persistence path could mistake for an admitted artifact.
+      for (const field of [
+        "oil_storage_version",
+        "oil_research_envelope",
+        "oil_research_envelope_json",
+        "oil_research_envelope_sha256",
+        "oil_admission_context",
+        "oil_admission_context_json",
+        "oil_admission_context_sha256",
+        "oil_production_projection",
+        "oil_projection_sha256",
+      ])
+        delete artifact.payload[field]
+    }
+  }
   let projected = false
+  let admittedOil: InciStageOptions["oilAdmission"] = null
   const projectionArtifact = artifacts.find(
     (artifact) =>
       artifact.kind === "property_synthesis" &&
       artifact.payload[`${categoryKey}_research_envelope`] != null,
   )
   if (final) {
+    const currentDraft = normalizeRecord(researchedPayload.draft)
+    const independentIdentity = normalizeRecord(currentDraft?.oil_identity)
+    const independentFormula = normalizeRecord(currentDraft?.oil_authoritative_formula)
+    const resolvedIdentityArtifact = artifacts.find(
+      (artifact) =>
+        artifact.kind === "identity_candidate" &&
+        artifact.status === "resolved" &&
+        artifact.payload.stage === "identity",
+    )
+    const oilContext: OilWorkerAdmissionContext | undefined =
+      categoryKey === "oil" &&
+      options.currentResearchRun &&
+      independentIdentity &&
+      independentFormula &&
+      resolvedIdentityArtifact
+        ? {
+            submissionId: expectedResearchId,
+            ...options.currentResearchRun,
+            identity: independentIdentity as OilWorkerAdmissionContext["identity"],
+            formula: independentFormula as OilWorkerAdmissionContext["formula"],
+            resolvedIdentityArtifact: resolvedIdentityArtifact.payload,
+            // Replaced with a server-allocated UUID in the atomic completion request.
+            // The pending sentinel is never persisted as a pointer.
+            resolvedIdentityArtifactId: OIL_PENDING_IDENTITY_ARTIFACT_ID,
+            identityBlocker,
+          }
+        : undefined
     const adapterResult = engine.apply({
       final,
       artifacts,
       expectedResearchId,
+      oilContext,
       expectedReviewCycleId: options.expectedReviewCycleId,
     })
     downstreamDecisions = adapterResult.downstreamDecisions ?? []
     blockers.push(...adapterResult.blockers)
     projected = adapterResult.blockers.length === 0
+    if (adapterResult.oilAdmission) {
+      const admitted = adapterResult.oilAdmission
+      admittedOil = {
+        raw_inci: admitted.storage.oil_research_envelope.formula.raw_inci,
+        normalized_ingredients: admitted.storage.oil_research_envelope.formula.ingredients.map(
+          (ingredient) => ingredient.canonical_name,
+        ),
+        normalized_sha256: admitted.normalized_sha256,
+      }
+      const admissionArtifact = artifacts.find(
+        (artifact) =>
+          artifact.kind === "property_synthesis" && artifact.payload.oil_admission_context != null,
+      )
+      const admissionContext = normalizeRecord(admissionArtifact?.payload.oil_admission_context)
+      const draft = normalizeRecord(researchedPayload.draft)
+      if (!admissionContext || !draft) {
+        blockers.push("oil research adapter: current admission context could not be retained")
+      } else {
+        // This is the server-accepted independently researched declaration,
+        // never copied from the envelope. The Lab export compares it again.
+        draft.oil_authoritative_formula = cloneJsonValue(admissionContext.formula)
+      }
+    }
     // Model-authored provenance cannot override the running server registry.
     delete final.engine
     const draft = normalizeRecord(researchedPayload?.draft)
@@ -2305,13 +2393,17 @@ export function normalizeResearchOutputForCategory(
         adapter: engine.adapter,
         state: engine.state,
         input_hash:
-          categoryKey === "bondbuilder"
-            ? stringValue(normalizeRecord(researchProfile?.method)?.output_sha256)
-            : stringValue(projection?.research_input_sha256),
+          categoryKey === "oil"
+            ? stringValue(artifact.payload.oil_admission_context_sha256)
+            : categoryKey === "bondbuilder"
+              ? stringValue(normalizeRecord(researchProfile?.method)?.output_sha256)
+              : stringValue(projection?.research_input_sha256),
         projection_hash:
-          categoryKey === "bondbuilder"
-            ? stringValue(normalizeRecord(researchProfile?.review)?.profile_sha256)
-            : stringValue(projection?.projection_sha256),
+          categoryKey === "oil"
+            ? stringValue(artifact.payload.oil_projection_sha256)
+            : categoryKey === "bondbuilder"
+              ? stringValue(normalizeRecord(researchProfile?.review)?.profile_sha256)
+              : stringValue(projection?.projection_sha256),
       }
     } else delete artifact.payload.engine
   }
@@ -2386,7 +2478,10 @@ export function normalizeResearchOutputForCategory(
       `${categoryKey === "shampoo" ? "schema_or_adapter_invalid: " : ""}missing final payload sections: ${missingFinalSections.join(", ")}`,
     )
   }
-  const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, options)
+  const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, {
+    ...options,
+    oilAdmission: admittedOil,
+  })
   if (inciBlocker) blockers.push(inciBlocker)
 
   return {

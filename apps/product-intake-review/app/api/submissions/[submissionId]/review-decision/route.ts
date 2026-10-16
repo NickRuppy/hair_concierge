@@ -53,6 +53,19 @@ export async function POST(request: Request, { params }: DecisionParams) {
     }
 
     const client = createServiceClient()
+    const current = await loadProductIntakeSubmissionDetail(client, submissionId)
+    if (
+      current?.category === "oil" &&
+      ((decision === "approved" && fieldPath === "final.properties") ||
+        decision === "publish_approved")
+    ) {
+      return NextResponse.json(
+        {
+          error: "Öl-Eigenschaften werden im Research Lab freigegeben und anschließend importiert.",
+        },
+        { status: 409 },
+      )
+    }
     const row = await saveReviewDecision(client, {
       submissionId,
       jobId: body.jobId ?? null,
@@ -221,6 +234,13 @@ async function approveProductIfReviewComplete(
 ) {
   const detail = await loadProductIntakeSubmissionDetail(client, submissionId)
   if (!detail) return null
+  if (detail.category === "oil") {
+    const { data, error } = await client.rpc("product_intake_complete_oil_review", {
+      p_submission_id: submissionId,
+    })
+    if (error) throw error
+    return data
+  }
 
   const processedImage = detail.artifacts.find(
     (artifact) =>

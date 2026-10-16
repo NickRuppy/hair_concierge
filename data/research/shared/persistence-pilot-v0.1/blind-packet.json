@@ -1,0 +1,537 @@
+{
+  "run_id": "canonical-persistence-pilot-v0.1",
+  "records": [
+    {
+      "case_id": "P01",
+      "category": "conditioner",
+      "application_context": "rinse_out_hair",
+      "raw_inci": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, Glycerin, Lactic Acid, Sodium Cetearyl Sulfate, Parfum, Sodium Benzoate, Aloe Barbadensis Leaf Juice Powder, Potassium Sorbate, Sodium Hyaluronate, Disodium Phosphate, Potassium Phosphate",
+      "primary_inci": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, Glycerin, Lactic Acid, Sodium Cetearyl Sulfate, Parfum, Sodium Benzoate, Aloe Barbadensis Leaf Juice Powder, Potassium Sorbate, Sodium Hyaluronate, Disodium Phosphate, Potassium Phosphate",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Cetearyl Alcohol",
+          "canonical_name": "CETEARYL ALCOHOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Stearamidopropyl Dimethylamine",
+          "canonical_name": "STEARAMIDOPROPYL DIMETHYLAMINE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lactic Acid",
+          "canonical_name": "LACTIC ACID"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Sodium Cetearyl Sulfate",
+          "canonical_name": "SODIUM CETEARYL SULFATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Sodium Benzoate",
+          "canonical_name": "SODIUM BENZOATE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Aloe Barbadensis Leaf Juice Powder",
+          "canonical_name": "ALOE BARBADENSIS LEAF JUICE POWDER"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Sodium Hyaluronate",
+          "canonical_name": "SODIUM HYALURONATE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Disodium Phosphate",
+          "canonical_name": "DISODIUM PHOSPHATE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Potassium Phosphate",
+          "canonical_name": "POTASSIUM PHOSPHATE"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "case_id": "P02",
+      "category": "conditioner",
+      "application_context": "rinse_out_hair",
+      "raw_inci": "Aqua, Cetyl Alcohol, Glycerin, Cetrimonium Chloride, Dicaprylyl Ether, Isopropyl Palmitate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Citric Acid, Niacinamide, Potassium Sorbate",
+      "primary_inci": "Aqua, Cetyl Alcohol, Glycerin, Cetrimonium Chloride, Dicaprylyl Ether, Isopropyl Palmitate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Citric Acid, Niacinamide, Potassium Sorbate",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Cetyl Alcohol",
+          "canonical_name": "CETYL ALCOHOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Cetrimonium Chloride",
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Dicaprylyl Ether",
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Isopropyl Palmitate",
+          "canonical_name": "ISOPROPYL PALMITATE"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Panthenol",
+          "canonical_name": "PANTHENOL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "canonical_name": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Sodium Benzoate",
+          "canonical_name": "SODIUM BENZOATE"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Citric Acid",
+          "canonical_name": "CITRIC ACID"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Niacinamide",
+          "canonical_name": "NIACINAMIDE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "case_id": "P03",
+      "category": "leave_in",
+      "application_context": "retained_hair",
+      "raw_inci": "Aqua, Betaine, Propylene Glycol, Cetrimonium Chloride, Inulin, Panthenol, Hydroxyacetophenone, 1,2-Hexanediol, Caprylyl Glycol, Citric Acid, Sodium Hydroxide",
+      "primary_inci": "Aqua, Betaine, Propylene Glycol, Cetrimonium Chloride, Inulin, Panthenol, Hydroxyacetophenone, 1,2-Hexanediol, Caprylyl Glycol, Citric Acid, Sodium Hydroxide",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Betaine",
+          "canonical_name": "BETAINE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Propylene Glycol",
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Cetrimonium Chloride",
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Inulin",
+          "canonical_name": "INULIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Panthenol",
+          "canonical_name": "PANTHENOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hydroxyacetophenone",
+          "canonical_name": "HYDROXYACETOPHENONE"
+        },
+        {
+          "rank": 8,
+          "raw_name": "1,2-Hexanediol",
+          "canonical_name": "1,2-HEXANEDIOL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Caprylyl Glycol",
+          "canonical_name": "CAPRYLYL GLYCOL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Citric Acid",
+          "canonical_name": "CITRIC ACID"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Sodium Hydroxide",
+          "canonical_name": "SODIUM HYDROXIDE"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "case_id": "P04",
+      "category": "leave_in",
+      "application_context": "retained_hair",
+      "raw_inci": "Aqua, Trisiloxane, Dimethicone, Prunus Armeniaca Kernel Oil, Phenyl Trimethicone, Hydrolyzed Keratin, Hydrolyzed Pearl, Dimethiconol, Polyquaternium-16, Cetyl PEG/PPG-10/1 Dimethicone, Cetrimonium Chloride, Parfum, Lactic Acid, Sodium Benzoate, Glycerin, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Potassium Sorbate, Phenoxyethanol, Geranyl Acetate",
+      "primary_inci": "Aqua, Trisiloxane, Dimethicone, Prunus Armeniaca Kernel Oil, Phenyl Trimethicone, Hydrolyzed Keratin, Hydrolyzed Pearl, Dimethiconol, Polyquaternium-16, Cetyl PEG/PPG-10/1 Dimethicone, Cetrimonium Chloride, Parfum, Lactic Acid, Sodium Benzoate, Glycerin, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Potassium Sorbate, Phenoxyethanol, Geranyl Acetate",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Aqua",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Trisiloxane",
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Prunus Armeniaca Kernel Oil",
+          "canonical_name": "PRUNUS ARMENIACA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Hydrolyzed Keratin",
+          "canonical_name": "HYDROLYZED KERATIN"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Hydrolyzed Pearl",
+          "canonical_name": "HYDROLYZED PEARL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Polyquaternium-16",
+          "canonical_name": "POLYQUATERNIUM-16"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Cetyl PEG/PPG-10/1 Dimethicone",
+          "canonical_name": "CETYL PEG/PPG-10/1 DIMETHICONE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Cetrimonium Chloride",
+          "canonical_name": "CETRIMONIUM CHLORIDE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Parfum",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Lactic Acid",
+          "canonical_name": "LACTIC ACID"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Sodium Benzoate",
+          "canonical_name": "SODIUM BENZOATE"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Tetramethyl Acetyloctahydronaphthalenes",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Citrus Aurantium Peel Oil",
+          "canonical_name": "CITRUS AURANTIUM PEEL OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Geranyl Acetate",
+          "canonical_name": "GERANYL ACETATE"
+        }
+      ],
+      "contextual_declarations": []
+    },
+    {
+      "case_id": "P05",
+      "category": "oil",
+      "application_context": "retained_hair",
+      "raw_inci": "Simmondsia Chinensis Seed Oil, from organic production.",
+      "primary_inci": "Simmondsia Chinensis Seed Oil",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Simmondsia Chinensis Seed Oil",
+          "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+        }
+      ],
+      "contextual_declarations": [
+        {
+          "type": "organic_annotation",
+          "raw": "from organic production.",
+          "separator": ", ",
+          "ordering": "descriptive annotation, not another ingredient"
+        }
+      ]
+    },
+    {
+      "case_id": "P06",
+      "category": "oil",
+      "application_context": "retained_hair",
+      "raw_inci": "Cyclopentasiloxane, Dimethiconol, Dimethicone, Caprylyl Methicone, Phenyl Trimethicone, Argania Spinosa Kernel Oil, Moringa Oleifera Seed Oil, Oryza Sativa Bran Oil, Bambusa Vulgaris Extract, Camellia Sinensis Leaf Extract, Hydrolyzed Soy Protein, Ethylhexylglycerin, Glycerin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Dimethicone Crosspolymer, Polysilicone-15, Glyceryl Linoleate, Glyceryl Linolenate, Parfum/Fragrance, Phenoxyethanol, Disodium EDTA, Potassium Sorbate, Acetyl Cedrene, Alpha-Isomethyl Ionone, Amyl Salicylate, Benzyl Cinnamate, Benzyl Salicylate, Citronellol, Limonene, Geraniol, Hexyl Cinnamal, Hydroxycitronellal, Linalool, Linalyl Acetate, Terpineol.",
+      "primary_inci": "Cyclopentasiloxane, Dimethiconol, Dimethicone, Caprylyl Methicone, Phenyl Trimethicone, Argania Spinosa Kernel Oil, Moringa Oleifera Seed Oil, Oryza Sativa Bran Oil, Bambusa Vulgaris Extract, Camellia Sinensis Leaf Extract, Hydrolyzed Soy Protein, Ethylhexylglycerin, Glycerin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Dimethicone Crosspolymer, Polysilicone-15, Glyceryl Linoleate, Glyceryl Linolenate, Parfum/Fragrance, Phenoxyethanol, Disodium EDTA, Potassium Sorbate, Acetyl Cedrene, Alpha-Isomethyl Ionone, Amyl Salicylate, Benzyl Cinnamate, Benzyl Salicylate, Citronellol, Limonene, Geraniol, Hexyl Cinnamal, Hydroxycitronellal, Linalool, Linalyl Acetate, Terpineol",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "Cyclopentasiloxane",
+          "canonical_name": "CYCLOPENTASILOXANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Caprylyl Methicone",
+          "canonical_name": "CAPRYLYL METHICONE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Phenyl Trimethicone",
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Moringa Oleifera Seed Oil",
+          "canonical_name": "MORINGA OLEIFERA SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Oryza Sativa Bran Oil",
+          "canonical_name": "ORYZA SATIVA BRAN OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Bambusa Vulgaris Extract",
+          "canonical_name": "BAMBUSA VULGARIS EXTRACT"
+        },
+        {
+          "rank": 10,
+          "raw_name": "Camellia Sinensis Leaf Extract",
+          "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT"
+        },
+        {
+          "rank": 11,
+          "raw_name": "Hydrolyzed Soy Protein",
+          "canonical_name": "HYDROLYZED SOY PROTEIN"
+        },
+        {
+          "rank": 12,
+          "raw_name": "Ethylhexylglycerin",
+          "canonical_name": "ETHYLHEXYLGLYCERIN"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Glycerin",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol",
+          "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "Dimethicone Crosspolymer",
+          "canonical_name": "DIMETHICONE CROSSPOLYMER"
+        },
+        {
+          "rank": 16,
+          "raw_name": "Polysilicone-15",
+          "canonical_name": "POLYSILICONE-15"
+        },
+        {
+          "rank": 17,
+          "raw_name": "Glyceryl Linoleate",
+          "canonical_name": "GLYCERYL LINOLEATE"
+        },
+        {
+          "rank": 18,
+          "raw_name": "Glyceryl Linolenate",
+          "canonical_name": "GLYCERYL LINOLENATE"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Parfum/Fragrance",
+          "canonical_name": "PARFUM/FRAGRANCE"
+        },
+        {
+          "rank": 20,
+          "raw_name": "Phenoxyethanol",
+          "canonical_name": "PHENOXYETHANOL"
+        },
+        {
+          "rank": 21,
+          "raw_name": "Disodium EDTA",
+          "canonical_name": "DISODIUM EDTA"
+        },
+        {
+          "rank": 22,
+          "raw_name": "Potassium Sorbate",
+          "canonical_name": "POTASSIUM SORBATE"
+        },
+        {
+          "rank": 23,
+          "raw_name": "Acetyl Cedrene",
+          "canonical_name": "ACETYL CEDRENE"
+        },
+        {
+          "rank": 24,
+          "raw_name": "Alpha-Isomethyl Ionone",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE"
+        },
+        {
+          "rank": 25,
+          "raw_name": "Amyl Salicylate",
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 26,
+          "raw_name": "Benzyl Cinnamate",
+          "canonical_name": "BENZYL CINNAMATE"
+        },
+        {
+          "rank": 27,
+          "raw_name": "Benzyl Salicylate",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 28,
+          "raw_name": "Citronellol",
+          "canonical_name": "CITRONELLOL"
+        },
+        {
+          "rank": 29,
+          "raw_name": "Limonene",
+          "canonical_name": "LIMONENE"
+        },
+        {
+          "rank": 30,
+          "raw_name": "Geraniol",
+          "canonical_name": "GERANIOL"
+        },
+        {
+          "rank": 31,
+          "raw_name": "Hexyl Cinnamal",
+          "canonical_name": "HEXYL CINNAMAL"
+        },
+        {
+          "rank": 32,
+          "raw_name": "Hydroxycitronellal",
+          "canonical_name": "HYDROXYCITRONELLAL"
+        },
+        {
+          "rank": 33,
+          "raw_name": "Linalool",
+          "canonical_name": "LINALOOL"
+        },
+        {
+          "rank": 34,
+          "raw_name": "Linalyl Acetate",
+          "canonical_name": "LINALYL ACETATE"
+        },
+        {
+          "rank": 35,
+          "raw_name": "Terpineol",
+          "canonical_name": "TERPINEOL"
+        }
+      ],
+      "contextual_declarations": []
+    }
+  ]
+}

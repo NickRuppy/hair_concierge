@@ -1,0 +1,18 @@
+{
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/blind-packet.json": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836",
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e",
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297",
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46",
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f",
+  "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067",
+  "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546",
+  "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+  "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659",
+  "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11",
+  "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca",
+  "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+  "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b",
+  "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10",
+  "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885",
+  "data/research/shared/persistence-pilot-v0.1/function-dictionary.json": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f"
+}

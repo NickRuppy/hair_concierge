@@ -1,0 +1,37 @@
+{
+  "lane": "B",
+  "allowed_inputs": [
+    {
+      "filename": "method-v0.2.md",
+      "sha256": "fc0ccd33c71cc76d04f4da3d495be89e3b2f9af529562168019930dd41c0080d"
+    },
+    {
+      "filename": "neutral-packet-v0.2.json",
+      "sha256": "4ea5f881780115519a68d4a11483e21e69d7db66d9cf04d334d8593fab461a00"
+    },
+    {
+      "filename": "function-dictionary.json",
+      "sha256": "2b239859c6eec60b4da1fcd1c02151d946c482ba5d2d1d50c760f22a5a8cd92d"
+    }
+  ],
+  "results": {
+    "filename": "lane-b/results.json",
+    "sha256": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+  },
+  "completed_ids": [
+    "PC01",
+    "PC02",
+    "PC03",
+    "PC04"
+  ],
+  "ingredient_rank_coverage": {
+    "PC01": 15,
+    "PC02": 29,
+    "PC03": 19,
+    "PC04": 26
+  },
+  "total_ingredient_ranks": 89,
+  "recognition_incidents": "none",
+  "access_incidents": "none",
+  "attestation": "Only method-v0.2.md, neutral-packet-v0.2.json and function-dictionary.json were read as research inputs. No brands, product labels, prior product decisions, peer results, browsing, repository searches, source files, databases, tests or nested reviewers were used. No brand recognition occurred or was attempted. Exact source identity, complete declaration and retained hair-fibre context were accepted as admitted. These four decisions were independently completed and frozen before handback; no class quota was imposed. Results bytes were hashed exactly as written, and no output was revised after sealing."
+}

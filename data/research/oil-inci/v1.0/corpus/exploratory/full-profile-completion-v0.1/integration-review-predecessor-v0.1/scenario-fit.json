@@ -1,0 +1,6134 @@
+{
+  "policy_versions": [
+    "OE42-thickness-v0.1",
+    "OE43-pattern-v0.1",
+    "OE45-damage-v0.1"
+  ],
+  "scope": "Role/scenario-specific research only. No product-wide eligibility or persistence penalty. Pre-wash is another supported-use fact, not persistence reference.",
+  "records": [
+    {
+      "case_id": "O01",
+      "direction_id": "F01-direction-1",
+      "source_id": "k-notino",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "k-notino",
+        "direction_id": "F01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_towel_dried_before_styling_or_dry_final_step",
+        "dose": "1–3 drops initially; increase if needed",
+        "contact_time": "unestablished in this local instruction",
+        "removal": "retained_by_explicit_styling_or_finishing_context",
+        "restrictions": "No four-minute wait or mid-lengths-only site imported from the separate manufacturer excerpt."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "W01",
+        "reason": "Human accepted OE28; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O01",
+      "direction_id": "F01-direction-1",
+      "source_id": "k-notino",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "k-notino",
+        "direction_id": "F01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_towel_dried_before_styling_or_dry_final_step",
+        "dose": "1–3 drops initially; increase if needed",
+        "contact_time": "unestablished in this local instruction",
+        "removal": "retained_by_explicit_styling_or_finishing_context",
+        "restrictions": "No four-minute wait or mid-lengths-only site imported from the separate manufacturer excerpt."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "W01",
+        "reason": "Human accepted OE28; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O01",
+      "direction_id": "F01-maker-damp-supplement",
+      "source_id": "k-uk-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "k-uk-maker",
+        "direction_id": "F01-maker-damp-supplement",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "damp_before_styling",
+        "dose": "unestablished in this manufacturer excerpt",
+        "contact_time": "4 minutes before styling",
+        "removal": "retained_by_explicit_styling_context",
+        "restrictions": "No local 1–3-drop dose imported. Advertised strengthening purpose is not adopted as a property."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "W01",
+        "reason": "Human accepted OE28; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O03",
+      "direction_id": "D05-direction-1",
+      "source_id": "D05-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F03",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O03",
+      "direction_id": "D05-direction-1",
+      "source_id": "D05-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F03",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O03",
+      "direction_id": "D05-direction-2",
+      "source_id": "D05-partner",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "D05-partner",
+        "direction_id": "D05-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake to mix phases"
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F03",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O04",
+      "direction_id": "D02-direction-1",
+      "source_id": "D02-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O04",
+      "direction_id": "D02-direction-1",
+      "source_id": "D02-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O04",
+      "direction_id": "D02-direction-2",
+      "source_id": "D02-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after_wash",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O05",
+      "direction_id": "F05-direction-2",
+      "source_id": "E05-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "E05-maker",
+        "direction_id": "F05-direction-2",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "after_heat_styling",
+        "dose": "unestablished for the separately described after-styling option",
+        "contact_time": "unestablished",
+        "removal": "retained_by_explicit_after_styling_context",
+        "restrictions": "Do not import the general damp/dry option's starting dose, hair sectioning, or repetition into this separate after-styling option."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F05",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O05",
+      "direction_id": "F05-post-seal-maker-damp-style",
+      "source_id": "E05-maker-damp-styling-context",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "E05-maker-damp-styling-context",
+        "direction_id": "F05-post-seal-maker-damp-style",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_before_styler_or_heat_protector",
+        "dose": "unestablished in this scenario",
+        "contact_time": "unestablished",
+        "removal": "retained_by_explicit_styling_context",
+        "restrictions": "No heat-protection property is inferred from the later styler. No dose/site restrictions imported from another scenario."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F05",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O06",
+      "direction_id": "E07-maker-towel-dried",
+      "source_id": "E07-maker-de",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "E07-maker-de",
+        "direction_id": "E07-maker-towel-dried",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "towel_dried",
+        "dose": "2–3 pumps",
+        "contact_time": "unestablished",
+        "removal": "explicit_no_rinse",
+        "restrictions": "Comb through; no dry-hair stage imported from finish positioning."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F06",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O07",
+      "direction_id": "F07-direction-1",
+      "source_id": "ol-local-brand",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "ol-local-brand",
+        "direction_id": "F07-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_or_dry; before_heat_styling_or_after_styling permitted",
+        "dose": "2–3 drops",
+        "contact_time": "unestablished",
+        "removal": "retained_by_explicit_styling_or_finishing_context",
+        "restrictions": "Remove cap, invert bottle and tap base for individual drops. No overnight, scalp or rinse role inferred.",
+        "frequency": "daily_permitted"
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "W09",
+        "reason": "Human accepted OE27; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O07",
+      "direction_id": "F07-direction-1",
+      "source_id": "ol-local-brand",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "ol-local-brand",
+        "direction_id": "F07-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_or_dry; before_heat_styling_or_after_styling permitted",
+        "dose": "2–3 drops",
+        "contact_time": "unestablished",
+        "removal": "retained_by_explicit_styling_or_finishing_context",
+        "restrictions": "Remove cap, invert bottle and tap base for individual drops. No overnight, scalp or rinse role inferred.",
+        "frequency": "daily_permitted"
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "W09",
+        "reason": "Human accepted OE27; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O08",
+      "direction_id": "O08-boozy-towel-dried-ends-leave-on",
+      "source_id": "O08-boozy-de",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "direction_id": "O08-boozy-towel-dried-ends-leave-on",
+        "source_id": "O08-boozy-de",
+        "site": [
+          "ends"
+        ],
+        "stage": "clean_towel_dried",
+        "dose": "3–4 drops",
+        "contact_time": "not_stated",
+        "removal": "leave_on",
+        "restrictions": "No fine-hair or scalp rule imported from dm; no dwell time or heat step supplied.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O08",
+      "direction_id": "O08-boozy-dry-ends-leave-on",
+      "source_id": "O08-boozy-de",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "direction_id": "O08-boozy-dry-ends-leave-on",
+        "source_id": "O08-boozy-de",
+        "site": [
+          "ends"
+        ],
+        "stage": "clean_dry",
+        "dose": "3–4 drops",
+        "contact_time": "not_stated",
+        "removal": "leave_on",
+        "restrictions": "No fine-hair or scalp rule imported from dm; no dwell time or heat step supplied.",
+        "supported_roles": [
+          "dry_finish"
+        ]
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+        "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1",
+        "record_key": "F08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O09",
+      "direction_id": "O09-hair-1",
+      "source_id": "O09-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O09-maker",
+        "direction_id": "O09-hair-1",
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "unspecified",
+        "dose": "a few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Warm a few drops in hands and apply to lengths and ends as often as necessary."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "Q01",
+        "reason": "Human accepted OE34; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O10",
+      "direction_id": "O10-towel-dried-retained",
+      "source_id": "O10-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O10-maker",
+        "direction_id": "O10-towel-dried-retained",
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "towel_dried",
+        "dose": "1–3 pumps",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Apply 1–3 pumps to hands, distribute on towel-dried lengths and ends, then style."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "Q03",
+        "reason": "Human accepted OE32; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O10",
+      "direction_id": "O10-dry-finish",
+      "source_id": "O10-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O10-maker",
+        "direction_id": "O10-dry-finish",
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "Use a small amount on dry lengths and ends for finishing."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md",
+        "sha256": "91e3c054f8bf438f7320d1e1f0d189a3387414d24276c52a5e46d3dab522bf92",
+        "record_key": "Q03",
+        "reason": "Human accepted OE32; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O11",
+      "direction_id": "O11-scalp-combed-ends-retained",
+      "source_id": "O11-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O11-maker",
+        "direction_id": "O11-scalp-combed-ends-retained",
+        "site": [
+          "scalp",
+          "ends"
+        ],
+        "stage": "unspecified",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "scalp_application"
+        ],
+        "text": "Apply a small amount directly to scalp, massage, comb through ends, leave in and style."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O11",
+      "direction_id": "O11-scalp-combed-ends-retained",
+      "source_id": "O11-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O11-maker",
+        "direction_id": "O11-scalp-combed-ends-retained",
+        "site": [
+          "scalp",
+          "ends"
+        ],
+        "stage": "unspecified",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "scalp_application"
+        ],
+        "text": "Apply a small amount directly to scalp, massage, comb through ends, leave in and style."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O11",
+      "direction_id": "O11-capped-ends-washout",
+      "source_id": "O11-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O11-maker",
+        "direction_id": "O11-capped-ends-washout",
+        "site": [
+          "ends"
+        ],
+        "stage": "treatment",
+        "dose": "unspecified",
+        "contact_time": "10 minutes",
+        "removal": "rinse_then_shampoo",
+        "restrictions": "Cover ends for this treatment; separate from retained scalp/ends scenario.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "text": "Apply as a separate capped ends treatment; after 10 minutes rinse, then shampoo."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O12",
+      "direction_id": "O12-direction-1",
+      "source_id": "O12-historical-directions",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O12-historical-directions",
+        "direction_id": "O12-direction-1",
+        "site": [
+          "hair"
+        ],
+        "stage": "wet_or_damp_before_styling",
+        "dose": "one pump",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "avoid roots",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Apply one pump to wet or damp hair, avoiding roots; air-dry or style."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q06",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O12",
+      "direction_id": "O12-direction-2",
+      "source_id": "O12-historical-directions",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O12-historical-directions",
+        "direction_id": "O12-direction-2",
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_finish",
+        "dose": "a few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "Use a few drops on dry hair for frizz."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q06",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O13",
+      "direction_id": "O13-daily-retained",
+      "source_id": "O13-maker-root-successor",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O13-maker-root-successor",
+        "direction_id": "O13-daily-retained",
+        "site": [
+          "hair"
+        ],
+        "stage": "daily_leave_on",
+        "dose": "sparing amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "No prewash numeric dose or timing transferred.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Daily leave-in use is separately permitted at a sparing dose."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O13",
+      "direction_id": "O13-prewash",
+      "source_id": "O13-maker-root-successor",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O13-maker-root-successor",
+        "direction_id": "O13-prewash",
+        "site": [
+          "scalp",
+          "lengths",
+          "ends"
+        ],
+        "stage": "pre_wash",
+        "dose": "2–3 pumps",
+        "contact_time": "30–60 minutes or overnight",
+        "removal": "shampoo",
+        "restrictions": "1–2 times weekly; brush application is an alternative within this prewash scenario.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply2–3 pumps to scalp, then lengths and ends, or reverse that order. Keep hair warm in a towel; wash after30–60 minutes or overnight."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O13",
+      "direction_id": "O13-prewash",
+      "source_id": "O13-maker-root-successor",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O13-maker-root-successor",
+        "direction_id": "O13-prewash",
+        "site": [
+          "scalp",
+          "lengths",
+          "ends"
+        ],
+        "stage": "pre_wash",
+        "dose": "2–3 pumps",
+        "contact_time": "30–60 minutes or overnight",
+        "removal": "shampoo",
+        "restrictions": "1–2 times weekly; brush application is an alternative within this prewash scenario.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply2–3 pumps to scalp, then lengths and ends, or reverse that order. Keep hair warm in a towel; wash after30–60 minutes or overnight."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O14",
+      "direction_id": "O14-direction-1",
+      "source_id": "O14-historical-directions",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O14-historical-directions",
+        "direction_id": "O14-direction-1",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_towel_dried_or_dry",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a small amount from mid-lengths to ends of clean towel-dried hair; blow-dry or air-dry, or apply to dry hair."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q09",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O14",
+      "direction_id": "O14-direction-1",
+      "source_id": "O14-historical-directions",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O14-historical-directions",
+        "direction_id": "O14-direction-1",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_towel_dried_or_dry",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a small amount from mid-lengths to ends of clean towel-dried hair; blow-dry or air-dry, or apply to dry hair."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+        "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+        "record_key": "Q09",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O15",
+      "direction_id": "D03-direction-1",
+      "source_id": "D03-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R01",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O15",
+      "direction_id": "D03-direction-1",
+      "source_id": "D03-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R01",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O15",
+      "direction_id": "D03-direction-2",
+      "source_id": "D03-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "shampoo",
+        "restrictions": "Maker FAQ advises no direct scalp application."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R01",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O16",
+      "direction_id": "O16-protective-style-retained",
+      "source_id": "O16-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O16-maker",
+        "direction_id": "O16-protective-style-retained",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Daily hair care includes protective styles such as braids and weaves; retained fibre scenario preserved from the original supplement."
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R02",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O16",
+      "direction_id": "O16-daily-label",
+      "source_id": "O16-back",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O16-back",
+        "direction_id": "O16-daily-label",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "scalp_application"
+        ],
+        "text": "Apply a small amount to scalp, comb through and style."
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R02",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O16",
+      "direction_id": "O16-daily-label",
+      "source_id": "O16-back",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O16-back",
+        "direction_id": "O16-daily-label",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "scalp_application"
+        ],
+        "text": "Apply a small amount to scalp, comb through and style."
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R02",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O16",
+      "direction_id": "O16-hot-oil-label",
+      "source_id": "O16-back",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O16-back",
+        "direction_id": "O16-hot-oil-label",
+        "site": [
+          "scalp",
+          "ends"
+        ],
+        "stage": "unspecified",
+        "dose": "generous amount",
+        "contact_time": "15 minutes with heat",
+        "removal": "shampoo",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply generously to scalp and through ends; apply heat for 15 minutes, then shampoo and style."
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R02",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O16",
+      "direction_id": "O16-hot-oil-label",
+      "source_id": "O16-back",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O16-back",
+        "direction_id": "O16-hot-oil-label",
+        "site": [
+          "scalp",
+          "ends"
+        ],
+        "stage": "unspecified",
+        "dose": "generous amount",
+        "contact_time": "15 minutes with heat",
+        "removal": "shampoo",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply generously to scalp and through ends; apply heat for 15 minutes, then shampoo and style."
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R02",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O17",
+      "direction_id": "O17-daily-retained",
+      "source_id": "O17-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O17-maker",
+        "direction_id": "O17-daily-retained",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "sparing",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Daily leave-in use is separately permitted with sparing application."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O17",
+      "direction_id": "O17-prewash",
+      "source_id": "O17-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O17-maker",
+        "direction_id": "O17-prewash",
+        "site": [
+          "hair_fibre",
+          "lengths",
+          "ends"
+        ],
+        "stage": "dry",
+        "dose": "2–3 pumps",
+        "contact_time": "30–60 minutes or overnight",
+        "removal": "wash",
+        "restrictions": "Prewash colour-care treatment: earliest 24 hours after colouring.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "text": "Earliest 24 hours after colouring, distribute 2–3 pumps over dry hair, especially coloured areas, lengths and ends; wrap in a towel, wait 30–60 minutes or overnight, then wash."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O17",
+      "direction_id": "O17-prewash-brush-alternative",
+      "source_id": "O17-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O17-maker",
+        "direction_id": "O17-prewash-brush-alternative",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "dry",
+        "dose": "same prewash treatment",
+        "contact_time": "30–60 minutes or overnight",
+        "removal": "wash",
+        "restrictions": "Alternative route within preceding prewash scenario, not an additional leave-on instruction.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "As an alternative application route within the prewash treatment, brush the oil into scalp and hair."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O17",
+      "direction_id": "O17-prewash-brush-alternative",
+      "source_id": "O17-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O17-maker",
+        "direction_id": "O17-prewash-brush-alternative",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "dry",
+        "dose": "same prewash treatment",
+        "contact_time": "30–60 minutes or overnight",
+        "removal": "wash",
+        "restrictions": "Alternative route within preceding prewash scenario, not an additional leave-on instruction.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "As an alternative application route within the prewash treatment, brush the oil into scalp and hair."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R04",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O18",
+      "direction_id": "D06-direction-1",
+      "source_id": "D06-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "10–15 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R05",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O18",
+      "direction_id": "D06-direction-2",
+      "source_id": "D06-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_or_damp_before_wash",
+        "dose": "1–3 tablespoons",
+        "contact_time": "1–3 hours or overnight",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R05",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O18",
+      "direction_id": "D06-direction-3",
+      "source_id": "D06-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-3",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "a dab",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "weight": "rich",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R05",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": null,
+      "alternative_thickness": null
+    },
+    {
+      "case_id": "O19",
+      "direction_id": "D01-direction-1",
+      "source_id": "D01-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json",
+        "sha256": "545ad74cc5a2f1d7fe4a039ae76a5d1d38c843449bdbc81a9d8579eee545b91e",
+        "record_key": "OE38",
+        "reason": "Human accepted OE38; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O19",
+      "direction_id": "D01-direction-1",
+      "source_id": "D01-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "plans/oil-inci/research/evolve-oe38-weight-decision-2026-10-05.json",
+        "sha256": "545ad74cc5a2f1d7fe4a039ae76a5d1d38c843449bdbc81a9d8579eee545b91e",
+        "record_key": "OE38",
+        "reason": "Human accepted OE38; prior lane diagnostics do not override."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O20",
+      "direction_id": "O20-retained",
+      "source_id": "O20-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O20-maker",
+        "direction_id": "O20-retained",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "towel_dried_or_dry",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a small amount to towel-dried or dry hair, then style as desired."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O20",
+      "direction_id": "O20-retained",
+      "source_id": "O20-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O20-maker",
+        "direction_id": "O20-retained",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "towel_dried_or_dry",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a small amount to towel-dried or dry hair, then style as desired."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O20",
+      "direction_id": "O20-prewash",
+      "source_id": "O20-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O20-maker",
+        "direction_id": "O20-prewash",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "pre-shampoo or overnight",
+        "removal": "shampoo",
+        "restrictions": "Separate from retained finishing context; no invented numeric dose or heating.",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "text": "The maker separately permits use as a pre-shampoo treatment or overnight oiling."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+        "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4",
+        "record_key": "R08",
+        "reason": "Existing working weight retains authority, not upgraded to human acceptance."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O21",
+      "direction_id": "O21-retained",
+      "source_id": "O21-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O21-maker",
+        "direction_id": "O21-retained",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Rub a few drops between palms and smooth through damp or dry mid-lengths and ends."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O21",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O21",
+      "direction_id": "O21-retained",
+      "source_id": "O21-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O21-maker",
+        "direction_id": "O21-retained",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Rub a few drops between palms and smooth through damp or dry mid-lengths and ends."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O21",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O21",
+      "direction_id": "O21-finish",
+      "source_id": "O21-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O21-maker",
+        "direction_id": "O21-finish",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "after_air_drying_or_diffusing",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "FAQ permits finishing after air-drying or diffusing to finish styling and break a cast."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O21",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O22",
+      "direction_id": "O22-prewash",
+      "source_id": "O22-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O22-maker",
+        "direction_id": "O22-prewash",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "at least30 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply as hair/scalp treatment for at least30 minutes, then shampoo."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O22",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O22",
+      "direction_id": "O22-prewash",
+      "source_id": "O22-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O22-maker",
+        "direction_id": "O22-prewash",
+        "site": [
+          "scalp",
+          "hair_fibre"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "at least30 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "text": "Apply as hair/scalp treatment for at least30 minutes, then shampoo."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O22",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O22",
+      "direction_id": "O22-dry-ends-retained",
+      "source_id": "O22-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O22-maker",
+        "direction_id": "O22-dry-ends-retained",
+        "site": [
+          "ends"
+        ],
+        "stage": "dry",
+        "dose": "small amount",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "Rub a small amount between palms and apply to dry ends."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O22",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O23",
+      "direction_id": "O23-damp-retained",
+      "source_id": "O23-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O23-maker",
+        "direction_id": "O23-damp-retained",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "damp_before_heat_styling",
+        "dose": "sparing",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Apply sparingly to damp hair before heat styling."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O23",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O23",
+      "direction_id": "O23-dry-finish",
+      "source_id": "O23-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O23-maker",
+        "direction_id": "O23-dry-finish",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "dry",
+        "dose": "small amount; add if necessary",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "Smooth through dry hair for shine, starting small and adding more when needed."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O23",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O24",
+      "direction_id": "O24-direction-1",
+      "source_id": "O24-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O24-maker",
+        "direction_id": "O24-direction-1",
+        "site": [
+          "lower_lengths",
+          "ends"
+        ],
+        "stage": "wet_or_dry",
+        "dose": "few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "For extensions, avoid bonds/attachment areas; maker FAQ.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a few drops on wet or dry lower lengths and ends; retain."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O24",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O24",
+      "direction_id": "O24-direction-1",
+      "source_id": "O24-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O24-maker",
+        "direction_id": "O24-direction-1",
+        "site": [
+          "lower_lengths",
+          "ends"
+        ],
+        "stage": "wet_or_dry",
+        "dose": "few drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "For extensions, avoid bonds/attachment areas; maker FAQ.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply a few drops on wet or dry lower lengths and ends; retain."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O24",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O25",
+      "direction_id": "O25-direction-1",
+      "source_id": "O25-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O25-maker",
+        "direction_id": "O25-direction-1",
+        "site": [
+          "hair"
+        ],
+        "stage": "towel_dried_before_styling",
+        "dose": "2–3 pumps",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Fine hair starts with one pump.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Apply 2–3 pumps to towel-dried hair before styling."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O25",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O25",
+      "direction_id": "O25-direction-2",
+      "source_id": "O25-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O25-maker",
+        "direction_id": "O25-direction-2",
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Fine-hair one-pump statement recorded in the separate damp/styling instruction; no dose imported here.",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "text": "Use on dry lengths and ends to finish."
+      },
+      "weight": "light",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O25",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "medium",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O26",
+      "direction_id": "O26-direction-1",
+      "source_id": "O26-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O26-maker",
+        "direction_id": "O26-direction-1",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "2–3 pumps; more as needed",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply 2–3 pumps to mid-lengths and ends of damp or dry hair and comb to distribute; retain."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O26",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O26",
+      "direction_id": "O26-direction-1",
+      "source_id": "O26-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O26-maker",
+        "direction_id": "O26-direction-1",
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "2–3 pumps; more as needed",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "text": "Apply 2–3 pumps to mid-lengths and ends of damp or dry hair and comb to distribute; retain."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O26",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "light",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "conditional"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-prewash",
+      "source_id": "O27-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-prewash",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "pre_wash_dry",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "usual_wash_day_routine",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-prewash",
+      "source_id": "O27-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-prewash",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "pre_wash_dry",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "usual_wash_day_routine",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Distribute on dry hair from scalp through ends, then follow usual washing."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-leavein",
+      "source_id": "O27-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-leavein",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "towel_dried",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "retained_by_styling_context",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Distribute on towel-dried hair and style."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-finish",
+      "source_id": "O27-maker",
+      "supported_role": "dry_finish",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-finish",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Apply as needed to dry mid-lengths and ends."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-overnight",
+      "source_id": "O27-maker",
+      "supported_role": "pre_wash_fibre_treatment",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-overnight",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "overnight_pre_wash",
+        "dose": "unestablished",
+        "contact_time": "overnight",
+        "removal": "usual_wash_day_routine_next_day",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "no_weight_only_exclusion_in_shampooed_prewash",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "suitable",
+        "normal": "suitable",
+        "coarse": "suitable"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-overnight",
+      "source_id": "O27-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-overnight",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "scalp",
+          "hair_fibre",
+          "ends"
+        ],
+        "stage": "overnight_pre_wash",
+        "dose": "unestablished",
+        "contact_time": "overnight",
+        "removal": "usual_wash_day_routine_next_day",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Before sleep distribute through dry hair from scalp to ends; retain overnight and follow usual washing the next day."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O27",
+      "direction_id": "O27-scalp",
+      "source_id": "O27-maker",
+      "supported_role": "scalp_application",
+      "scenario": {
+        "source_id": "O27-maker",
+        "direction_id": "O27-scalp",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "unspecified",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "unestablished",
+        "restrictions": "General maker note: for fine hair use a small amount and work from ends to mid-lengths; scope of this note across specialized routes is unclarified.",
+        "text": "Massage into scalp."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+        "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+        "record_key": "O27",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scalp_role_not_fibre_fit"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "unknown",
+        "normal": "unknown",
+        "coarse": "unknown"
+      }
+    },
+    {
+      "case_id": "O28",
+      "direction_id": "O28-direction-1",
+      "source_id": "O28-maker",
+      "supported_role": "leave_on_fibre_conditioning",
+      "scenario": {
+        "source_id": "O28-maker",
+        "direction_id": "O28-direction-1",
+        "site": [
+          "hair"
+        ],
+        "stage": "clean_damp",
+        "dose": "unestablished",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Face-dose directions do not transfer.",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "text": "Maker instructs working through clean damp hair daily or as needed."
+      },
+      "weight": "medium",
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+        "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31",
+        "record_key": "O28",
+        "reason": "Selected corrected-dictionary development derivation; predecessor retained."
+      },
+      "weight_confidence": "low",
+      "estimate": true,
+      "thickness": {
+        "fine": {
+          "value": "conditional",
+          "reason": "greater_load_or_flattening_concern",
+          "condition": "Controlled application within the exact published directions and site; no invented numeric dose."
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "alternative_weight": "rich",
+      "alternative_thickness": {
+        "fine": "conditional",
+        "normal": "conditional",
+        "coarse": "suitable"
+      }
+    }
+  ]
+}

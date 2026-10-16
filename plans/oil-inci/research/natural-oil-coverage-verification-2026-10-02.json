@@ -1,0 +1,99 @@
+{
+  "receipt_id": "natural-oil-coverage-verification-2026-10-02",
+  "prepared_at": "2026-10-02",
+  "status": "passed",
+  "authority": "Local research artifact verification; no scientific validation, publication or production authority.",
+  "new_reference_checks": {
+    "status": "passed",
+    "verification_scope": "identity/provenance/accounting invariants; no sensory accuracy claim",
+    "material_entries": 64,
+    "fixed_botanical_oils": 63,
+    "source_records": 89,
+    "exact_names_and_aliases": 103,
+    "weight_counts": {
+      "light": 39,
+      "medium": 11,
+      "rich": 6,
+      "unknown": 8
+    },
+    "old_entries_unchanged": 25,
+    "observed_gap_groups": 14,
+    "matched_gap_groups": 13,
+    "literal_declaration_results": {
+      "generic_exact_match": 12,
+      "source_scoped_display_resolution": 4,
+      "identity_review_required": 1
+    },
+    "source_scoped_display_cases": 4,
+    "catalog_evidence_products": 85,
+    "catalog_total_products": 371
+  },
+  "historical_preservation_checks": {
+    "status": "passed",
+    "scope": "artifact invariants; no scientific accuracy assertion",
+    "reference_materials": 25,
+    "source_records": 26,
+    "reviewed_aliases": 38,
+    "old_fixed_oil_identities": 15,
+    "historical_files_unchanged": 28,
+    "sealed_input_files": 6,
+    "material_cases": 8,
+    "synthetic_probes": 6,
+    "mode": "inputs_and_sealed_lanes",
+    "lane_records_verified": 28
+  },
+  "negative_probes": [
+    {
+      "probe": "omitted_observed_oil",
+      "result": "rejected_for_expected_contract",
+      "reason": "Researched material omitted: Zea Mays Oil"
+    },
+    {
+      "probe": "false_derivative_alias",
+      "result": "rejected_for_expected_contract",
+      "reason": "False generic identity: PEG-40 HYDROGENATED CASTOR OIL"
+    },
+    {
+      "probe": "excluded_species_as_positive",
+      "result": "rejected_for_expected_contract",
+      "reason": "Excluded identity used positively"
+    },
+    {
+      "probe": "historical_prior_rewrite",
+      "result": "rejected_for_expected_contract",
+      "reason": "Historical entry silently changed: grapeseed"
+    },
+    {
+      "probe": "unknown_confidence_inflation",
+      "result": "rejected_for_expected_contract",
+      "reason": "Unknown without explicit gap"
+    }
+  ],
+  "ci_scope": {
+    "chat_eval": false,
+    "retrieval_eval": false,
+    "playwright_smoke": false,
+    "security_scan": false,
+    "personal_plan_journey": false,
+    "full_ci": false
+  },
+  "verification_limits": [
+    "No runtime/migration/browser suite required for docs/data/plan artifact change.",
+    "Finite stored ingredient evidence is incomplete and not newly verified full-product INCI.",
+    "Supplier evidence cannot validate hair-weight accuracy."
+  ],
+  "artifact_sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.3.json": "708f1f8e70bced33d629680731c311ae4c5453cda3c9e6d8d968ecc349f3160f",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.3.md": "4fca6c45c3358a3f59a7c83342be3ee4259e70f340d6e5d463585d8eca890d0f",
+    "plans/oil-inci/research/natural-oil-coverage-display-resolution-2026-10-02.json": "fdffbe57472e9e4b4d9a3ac5edf8954153a5c22cb9785ebc387d64044227c15f",
+    "plans/oil-inci/research/natural-oil-coverage-catalog-evidence-2026-10-02.json": "315a221e1baee5a7e164daa9ba62a64aac5d21e5a131ed466a56d329cbcadf69",
+    "plans/oil-inci/research/natural-oil-coverage-local-inventory-2026-10-02.json": "4ae806e4cbfd64a48655835aabeabe72584e473feae85946dfdc9aaf08e31ea1",
+    "plans/oil-inci/research/natural-oil-coverage-observed-declarations-2026-10-02.json": "e9c4ba13a82863d43ad34c515de2823cc9f216992400bc59bbb4ce26e3732b4c"
+  },
+  "local_link_and_new_file_whitespace_checks": {
+    "status": "passed",
+    "markdown_files": 13,
+    "new_or_current_files_checked": 24
+  },
+  "git_diff_check": "passed"
+}

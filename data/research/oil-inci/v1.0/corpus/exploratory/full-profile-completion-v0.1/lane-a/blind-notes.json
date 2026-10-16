@@ -1,0 +1,55 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "577187244a1d34caec9a9fd41cf1706eb4cb1001206894907e81ceb8885dd386",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "disclosure": "The multi-oil/ester ingredient sequence felt familiar as a commercial formula pattern. No exact identity was established, looked up, or used; no prior product labels were consulted."
+    },
+    {
+      "case_id": "O11",
+      "disclosure": "The soybean/castor/rosemary/mint sequence prompted spontaneous familiarity with a commercial formula pattern. Identity inference was not pursued and no remembered answer or product label was used."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "Only the four declared files were opened. Method was read first in full; all packet records/contextual declarations, all 269 dictionary entries and metadata, and all 68 material entries plus carrier-dependent guidance were reviewed. Repeated dictionary values were losslessly compacted for display; initially truncated displays were recovered by complete smaller recursive-delta ranges. No referenced provenance source was opened.",
+    "This is only the missing-property blind slice. No persistence values or previous blend labels were read or emitted; no source-only final properties, brands, fit, claims, directions or production actions were assessed.",
+    "Every blend weight is an estimate with low confidence. The two sole-oil estimates retain their material-reference low-confidence ceilings. Quantities, actual grades, sensory performance and normal-dose penetration remain unverified.",
+    "Exact frozen dictionary admission governs penetration. Parenthetical coconut and safflower entries are not admitted even though separate non-parenthetical entries are; candidate direct/indirect/none tags do not decide the property. O09 contains the sole explicitly admitted anchor in these records, in a supporting role.",
+    "Exact frozen flag booleans were applied without repairs or synonym expansion. Notably ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL has essential/aromatic roles but false fragrance/scalp flags, and several parenthetical essential-oil forms are scalp-positive but fragrance-negative. Those dictionary inconsistencies/limits were preserved rather than silently amended.",
+    "O21 fragrance footnote has no primary concentration order and an admitted missing separator. Its existing positive parent fragrance rank is used; no sublist member receives an invented rank, no chemical repair is made, and the supplier term does not establish volatility.",
+    "Unassessed exact functions remain unresolved in the ledger, which deliberately prevents many auxiliary suffixes. Material-prior aliases are not borrowed from dictionary identity similarity; pomegranate and several variant botanical spellings lack a corresponding exact weight-prior alias.",
+    "Complete reviewed flag-list coverage means confidence in this dictionary-based declaration result, not analytical absence, tolerance, efficacy or application permission."
+  ]
+}

@@ -1,0 +1,28 @@
+case_id,brand,product,base,weight,penetration_potential,persistence_potential,dispenser,heat,uv,supported_uses,unknown_fields
+O01,K18,Molecular Repair Hair Oil,ester_alkane_led,light,surface_led,moderate,dropper,True,False,leave_on_fibre_conditioning|dry_finish,
+O03,Kérastase,Soleil Huile Sirène,water_based,medium,surface_led,high,spray,False,True,leave_on_fibre_conditioning|dry_finish,
+O04,Biopark Cosmetics,Organic Coconut Oil,pure_plant_oil,rich,penetration_potential,moderate,other,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|scalp_application,
+O05,Living Proof,No Frizz Vanishing Oil,ester_alkane_led,medium,surface_led,moderate,dropper,False,False,leave_on_fibre_conditioning|dry_finish,
+O06,NEQI,Opulent Oil Hair Serum,water_based,medium,surface_led,high,pump,True,False,leave_on_fibre_conditioning,
+O07,OLAPLEX,No.7 Bonding Oil,hybrid,medium,surface_led,moderate,metered_drop,True,False,leave_on_fibre_conditioning|dry_finish,
+O08,OGX,Coconut Miracle Oil Extra Strength Penetrating Oil,silicone_led,medium,surface_led,high,unknown,False,False,leave_on_fibre_conditioning|dry_finish,dispenser
+O09,NUXE,Huile Prodigieuse original,ester_alkane_led,light,surface_led,moderate,unknown,False,False,leave_on_fibre_conditioning,dispenser|hero:nuxe_tsubaki|hero:nuxe_camellia
+O10,Wella Professionals,Oil Reflections Luminous Smoothing Oil,silicone_led,medium,surface_led,high,pump,False,False,leave_on_fibre_conditioning|dry_finish,
+O11,Mielle,Rosemary Mint Scalp & Hair Strengthening Oil (Original),plant_oil_blend,medium,unknown,moderate,unknown,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|scalp_application,penetration_potential|dispenser|hero:rosemary_mint
+O12,John Frieda,Der Bändiger – Extra Strong Serum,silicone_led,medium,surface_led,high,pump,True,False,leave_on_fibre_conditioning|dry_finish,
+O13,khadi,Strong Amla Haaröl,plant_oil_blend,light,unknown,moderate,pump,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|scalp_application,penetration_potential
+O14,Moroccanoil,Behandlung Original,silicone_led,medium,surface_led,high,unknown,True,False,leave_on_fibre_conditioning|dry_finish,dispenser
+O15,Kérastase,Elixir Ultime L’Huile Originale Nachfüllbar,silicone_led,medium,surface_led,high,pump,True,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|dry_finish,hero:french_camellia|hero:wild_camellia
+O16,Sunny Isle,Rosemary Mint Hair and Strong Roots LITE Oil,plant_oil_blend,rich,penetration_potential,moderate,dropper,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|scalp_application,hero:rosemary_oil|hero:mint_oil
+O17,khadi,After Color Haaröl Color Protect,hybrid,medium,unknown,moderate,pump,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|scalp_application,penetration_potential
+O18,Aroma-Zone,Haircare Oil With 7 Precious Oils,plant_oil_blend,rich,penetration_potential,moderate,pour,False,False,pre_wash_fibre_treatment|dry_finish|scalp_application,hero:amla_macerate
+O19,Evolve Organic Beauty,Nourishing Hair Elixir – Dry Hair Serum,ester_alkane_led,light,surface_led,moderate,dropper,False,False,leave_on_fibre_conditioning|dry_finish,hero:gardenia_monoi
+O20,Schwarzkopf Professional,Oil Ultime Rose Finishing Oil,silicone_led,medium,surface_led,high,pump,True,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|dry_finish,hero:rose_oil
+O21,JVN,Complete Nourishing Shine Drops,ester_alkane_led,light,surface_led,moderate,dropper,False,False,leave_on_fibre_conditioning|dry_finish,
+O22,Biopark Cosmetics,Jojoba Oil Organic,pure_plant_oil,light,unknown,moderate,pump,False,False,pre_wash_fibre_treatment|dry_finish|scalp_application,penetration_potential
+O23,Bumble and bumble,Hairdresser’s Invisible Oil Frizz Reducing Hair Oil,silicone_led,medium,surface_led,high,pump,True,True,leave_on_fibre_conditioning|dry_finish,
+O24,Color Wow,Pop & Lock High Gloss Finish,water_based,medium,surface_led,high,unknown,True,True,leave_on_fibre_conditioning|dry_finish,dispenser
+O25,Davines,OI Oil,silicone_led,light,surface_led,high,pump,False,False,leave_on_fibre_conditioning|dry_finish,hero:roucou_oil
+O26,Verb,Ghost Oil,silicone_led,medium,surface_led,high,pump,True,False,leave_on_fibre_conditioning|dry_finish,
+O27,Aveda,Nutriplenish Multi-Use Hair Oil,plant_oil_blend,medium,penetration_potential,moderate,pump,False,False,pre_wash_fibre_treatment|leave_on_fibre_conditioning|dry_finish|scalp_application,
+O28,The Ordinary,100% Cold-Pressed Virgin Marula Oil,pure_plant_oil,medium,unknown,moderate,dropper,False,False,leave_on_fibre_conditioning,penetration_potential

@@ -1,0 +1,18 @@
+# Oil research charter v0.3
+
+2026-10-15. Local research successor documenting the owner-approved persistence boundaries. Scope remains oil only, source-supported retained leave-on fibre application. Pre-wash removal does not determine this value. Other category standards/adapters remain unchanged.
+Current routing successor to the [historical charter](00_category_charter.md). It consolidates settled decisions; it does not broaden product eligibility or authorize production.
+
+Version boundary: these documents govern new local v0.9 research. The existing 37-profile Lab dataset and local adapter/projection remain pinned to v0.8; this documentation neither repins nor revalidates them. Historical sources, records and methods remain immutable. The [disclosed boundary anchors](12_persistence-boundaries-v0.1.md) are operator-only developmental calibration evidence; never include that document or its labels in a blind packet.
+
+Scope: cosmetic products sold for hair/scalp use as oils or oil-labelled serums, including plant, silicone/emollient, hybrid and water-based forms. A genuine hair-use multi-use oil may enter; multi-use is not a fit tag. Material-only cosmetic benchmarks, hypothetical formula probes, food oils and ordinary adjacent products do not become eligible finished hair oils simply because they contain an oil. Resolve exact market/variant/package and one complete published declaration; do not merge declarations or assume market/batch equivalence. Non-DE development examples retain their original source scope.
+
+Authority: [property set v0.3](01_property-set-v0.3.md), [classification standard v0.9](02_classification-standard-v0.9.md), [operating guide v0.3](11_operating-guide-v0.3.md), weight reference v0.10/blend policy v0.2, and fit standards 05/06/07 v0.1. Canonical persistence replaces binary build-up for new research and is the sole scalar exception to legacy property metadata. Source/context defects block admission; complete admitted formulas receive one low/moderate/high persistence value. The wider [category impact map](../../shared/persistence-category-impact-v0.1.md) does not migrate sibling engines.
+
+Freeze exact source/ranked evidence, method/dictionary and narrow neutral persistence context before independent formula-first research. Seal outputs before controlled identity/claim/full-direction unblinding or lane comparison. Preserve source authors versus hosts, conflicting captures, annotations and exact material identities. Rationale and provenance are review evidence, not another persistence computation. New evidence/rules create a successor/run, never changes to frozen inputs/results.
+
+Derived fit follows source-supported scenarios and approved independent axes: thickness conditions remain binding; pattern/damage add no preference. Scalp-role fibre fit remains outside fibre matching. No growth/tolerance/dandruff treatment, repair, protein/moisture, main strengths, toning, porosity or multi-use fit tag. Inherited base descriptions remain a wording checkpoint.
+
+This is local research. Exploratory replay and lane agreement establish neither measured accuracy nor a genuinely unseen holdout. Existing v0.8 local full-profile/adapter artifacts retain their own receipts. Any v0.9 intake use needs its own calibration/verification and explicit bridge-version decision, followed by separate activation approval. No Supabase/catalog/runtime/publication change is authorized by this charter.
+
+The new persistence boundary work preserves one scalar, separate prose reasoning and unchanged fit. No low-class quota is required; plausible low candidates should be researched, and lack of a confirmed case reported as coverage rather than universal absence.

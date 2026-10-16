@@ -1,0 +1,234 @@
+{
+  "count": 37,
+  "distinct_product_keys": 37,
+  "persistence_counts": {
+    "low": 0,
+    "moderate": 23,
+    "high": 14
+  },
+  "records": [
+    {
+      "product_key": "oil-persistence-01",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-03",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-04",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-05",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-06",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-07",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-08",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-09",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-10",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-11",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-12",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-13",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-14",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-15",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-16",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-17",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-18",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-19",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-20",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-21",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-22",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-23",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-24",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-25",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-26",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-27",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-persistence-28",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "product_key": "oil-holdout-h01",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-holdout-h02",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-holdout-h03",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-holdout-h04",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-holdout-h05",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-holdout-h06",
+      "persistence_potential": "high",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "product_key": "oil-targeted-t01",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+    },
+    {
+      "product_key": "oil-targeted-t02",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+    },
+    {
+      "product_key": "oil-targeted-t04",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+    },
+    {
+      "product_key": "oil-targeted-t06",
+      "persistence_potential": "moderate",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+    }
+  ],
+  "exclusion": "Original targeted T02 current profile is superseded, not counted a second time."
+}

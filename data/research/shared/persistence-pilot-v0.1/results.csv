@@ -1,0 +1,7 @@
+case_id,brand,product,application_context,lane_a,lane_b,decision
+P01,Balea,Balea Professional Aqua Hyaluron Conditioner,rinse_out_hair,moderate,moderate,moderate
+P02,Balea,Balea Med Ultra Sensitive Conditioner,rinse_out_hair,high,high,high
+P03,Balea,Leichtkämmspray Pure Styling,retained_hair,low,low,low
+P04,Schwarzkopf GLISS,Sprüh-Conditioner Express-Repair Ultimate Repair,retained_hair,high,high,high
+P05,Biopark Cosmetics,Jojoba Oil Organic,retained_hair,moderate,moderate,moderate
+P06,Verb,Ghost Oil,retained_hair,high,high,high

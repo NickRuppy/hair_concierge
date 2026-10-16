@@ -1,0 +1,25 @@
+{
+  "run_id": "oil-weight-application-round-3",
+  "files": {
+    "results-for-review.md": "7a4f4fb56dab757631d56b16cb0cd178b8a249adafde3261ef8b2fa897068446",
+    "main-working-weights-v0.7.json": "b89f056510580a9f82a032dcd2437ecd257f8344098dc07d683bf0492f6a00bd",
+    "method.md": "e173afe45712a1afe50bff3d75086464284c7c412b64981e2fb3253b9fcdefa4",
+    "input-manifest.json": "4221fd663d8bea5135efb054e2e2924ebdc8497d79749e5b9baefc6c511c8974",
+    "source-capture.json": "474e95cd2f07ab476466e64631da970773c49f2e0ef87e29cd2f8634f6dc34ca",
+    "historical-baseline.json": "a71b19ae34053cd31cf0c6c158eba7e00357fd66ab92dff831eb5590482450e1",
+    "identity-map.json": "cbed2836c7980f6e242f08e973606c749fa81979f6645f4cd363c405f0a7fe55",
+    "comparison.json": "e83b8296d3a65cc966f96355ad81db3308a0a72b305d83324f2ad7cb704cead1",
+    "README.md": "3df9175d588cd30f17e8dc29bb0a03e5948ba8fe7e65093359d2ede9a991150c",
+    "display-receipts.json": "bf2ff279166e0e996d7db87f7156bb95702a40a0bf0ff398ffb5f4ef340baa68",
+    "complete-list-review.json": "641437ee8e260dee8f69380b98cccaf3cca2902919ed0bb898d99c98012a3dd5",
+    "verification-receipt.json": "8c9e219245d464e267c0187bd46f1cee2cf30fa844d378e5948010db1f3c8296",
+    "material-reference.json": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068",
+    "blind-packet.json": "3e28c57931f770791d9fa183f861fc1e2752bbaa72c64be510688d1769f5830c",
+    "role-lexicon.json": "2cd08138a1890f8e61103e6a0c0a36d9ede18c451248dc172e536bf8e74bc09e",
+    "working-weight-sheet.csv": "9629df308070e887fa0105f10e46b7fcadad64f171bd47d5d1eb97519f63c6c4",
+    "lane-a/records.json": "60401e3843e48a3f2fa640519fc10076ffd05a09c1bcb6f1d7e91ebb2afb2bdc",
+    "lane-a/notes.md": "298c7427d0bf637cb2d9c53591245d7eb6486bfe51c0406b948ccf68a7bf0001",
+    "lane-b/records.json": "9c42c2d36ca5c3450319e7151d45e2d97f603c050cc9ff3027dd6d8eae4cdb08",
+    "lane-b/notes.md": "599d399291240e6561178156b45d1c77d9f155a47979925ece591fc142be581c"
+  }
+}

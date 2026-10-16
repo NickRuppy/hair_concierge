@@ -1,0 +1,347 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "records": [
+    {
+      "case_id": "T01",
+      "identity": {
+        "brand": "NUXE",
+        "product": "Feuchtigkeitsspendendes Sonnenschutz-Haar-Öl",
+        "market": "DE maker",
+        "size": "100 ml",
+        "identifier_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "T01-maker",
+          "url": "https://de.nuxe.com/products/feuchtigkeitsspendendes-sonnenschutz-haar-l",
+          "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "T01-hero-1",
+          "hero_name": "Bio-Kokosnussöl",
+          "canonical_ingredients": [
+            "COCOS NUCIFERA OIL"
+          ],
+          "source_id": "T01-maker",
+          "mapping_note": "Exact source/ordered ingredient identity reviewed; preparation retained."
+        },
+        {
+          "hero_id": "T01-hero-2",
+          "hero_name": "Jojobaöl",
+          "canonical_ingredients": [
+            "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+          ],
+          "source_id": "T01-maker",
+          "mapping_note": "Exact source/ordered ingredient identity reviewed; preparation retained."
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "spray",
+        "status": "confirmed",
+        "source_id": "T01-maker",
+        "observation": "Maker text explicitly describes spray/misting."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T01-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+          }
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "T01-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "basis": "Explicit protection of hair from UV; UV filters also declared."
+          }
+        }
+      },
+      "directions": [
+        {
+          "source_id": "T01-maker",
+          "dose": "spray from approximately 20 cm; amount unestablished",
+          "contact_time": "unestablished",
+          "restrictions": "Not suitable as sun protection for face or body.",
+          "direction_id": "T01-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry_or_damp",
+          "removal": "retention_by_sun_swimming_protection_context",
+          "shake": "before application",
+          "frequency": "reapply every two hours and after swimming",
+          "text": "Shake and spray dry or damp hair before/during swimming or sun exposure; reapply as directed."
+        }
+      ],
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "N4803/B is formula code, excluded from ingredients."
+      ],
+      "source_record_ref": "source-packet.json#T01"
+    },
+    {
+      "case_id": "T02",
+      "identity": {
+        "brand": "OGX",
+        "product": "Argan Oil of Morocco Weightless Healing Dry Oil",
+        "market": "US maker",
+        "size": "4 fl oz",
+        "identifier_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "T02-maker",
+          "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil?phrase=2024",
+          "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "canonical_ingredients": [
+            "ARGANIA KERNEL OIL"
+          ],
+          "source_id": "T02-maker",
+          "mapping_note": "Literal species-incomplete source token only; no argan species alias or material prior."
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "spray",
+        "status": "confirmed",
+        "source_id": "T02-maker",
+        "observation": "Maker text explicitly describes spray/misting."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T02-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T02-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "basis": "No explicit hair UV claim in reviewed maker description, benefits or directions."
+          }
+        }
+      },
+      "directions": [
+        {
+          "source_id": "T02-maker",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed exact product text",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "removal": "retention_by_styling_context",
+          "text": "Finish style by misting all over for shine and frizz control; no explicit damp/dry instruction."
+        }
+      ],
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "Different Arabia OGX nine-item formula excluded; Argania Kernel Oil literal species-incomplete token preserved."
+      ],
+      "source_record_ref": "source-packet.json#T02"
+    },
+    {
+      "case_id": "T04",
+      "identity": {
+        "brand": "Weleda",
+        "product": "Intensiv pflegendes Haaröl",
+        "market": "Germany maker storefront",
+        "size": "50 ml",
+        "identifier_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "T04-maker",
+          "url": "https://www.weleda.de/produkt/intensiv-pflegendes-haaroel-g009362",
+          "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "T04-hero-1",
+          "hero_name": "Rosmarinöl",
+          "canonical_ingredients": [
+            "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+          ],
+          "source_id": "T04-maker",
+          "mapping_note": "Exact source/ordered ingredient identity reviewed; preparation retained."
+        },
+        {
+          "hero_id": "T04-hero-2",
+          "hero_name": "Lavendelöl",
+          "canonical_ingredients": [],
+          "source_id": "T04-maker",
+          "mapping_note": "Maker names lavender oil scent, but no separately declared lavender material matches after full formula review; species not invented."
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "unknown",
+        "status": "unestablished",
+        "source_id": "T04-maker",
+        "observation": "No dispenser mechanism was stated in the reviewed maker text."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T04-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker description",
+              "complete INCI",
+              "application tips"
+            ],
+            "negative_basis": "No explicit heat-protection claim was observed."
+          }
+        },
+        "uv": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T04-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "reviewed_sections": [
+              "current maker description",
+              "complete INCI",
+              "application tips"
+            ],
+            "negative_basis": "No explicit UV-protection claim was observed. 'Schützt vor schädigenden Umwelteinflüssen' is retained as general environmental wording only and is not converted into a UV claim."
+          }
+        }
+      },
+      "directions": [
+        {
+          "source_id": "T04-maker",
+          "dose": "distribute evenly through lengths; knead into ends for intensive care; amount unestablished",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed exact product text",
+          "direction_id": "T04-direction-1",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "post_wash_damp_or_dry",
+          "removal": "retention_by_postwash_care_context",
+          "text": "After washing, distribute through lengths on damp or dry hair; knead into ends for intensive care."
+        },
+        {
+          "source_id": "T04-maker",
+          "dose": "generously massage into scalp",
+          "contact_time": "1–2 hours",
+          "restrictions": "Maker describes this route for dry/irritated scalp; no medical treatment or tolerance inference.",
+          "direction_id": "T04-direction-2",
+          "site": [
+            "scalp"
+          ],
+          "stage": "pre_wash",
+          "removal": "wash_hair_thoroughly",
+          "text": "Before washing, massage generously into dry/irritated scalp; leave 1–2 hours then wash hair thoroughly."
+        }
+      ],
+      "source_limits": [
+        "Maker says online INCI can in individual cases differ from the packaging and directs users to check the packaging before use; this packet preserves the current online German maker declaration only."
+      ],
+      "source_record_ref": "source-packet.json#T04"
+    },
+    {
+      "case_id": "T06",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "Solaire Schützendes Sommeröl",
+        "market": "DE-CH maker",
+        "size": "100 ml",
+        "identifier_if_verified": null
+      },
+      "sources": [
+        {
+          "id": "T06-maker",
+          "url": "https://www.renefurterer.com/de-ch/p/solaire-solaire-schuetzendes-sommeroel-3282770038453-e9ccef5d",
+          "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "T06-hero-1",
+          "hero_name": "Sesamöl",
+          "canonical_ingredients": [
+            "SESAMUM INDICUM SEED OIL"
+          ],
+          "source_id": "T06-maker",
+          "mapping_note": "Exact source/ordered ingredient identity reviewed; preparation retained."
+        }
+      ],
+      "non_oil_features": [],
+      "packaging": {
+        "value": "spray",
+        "status": "confirmed",
+        "source_id": "T06-maker",
+        "observation": "Maker text explicitly describes spray/misting."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "review_complete": true,
+          "source_id": "T06-maker",
+          "reason": {
+            "accepted_explicit": false,
+            "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+          }
+        },
+        "uv": {
+          "accepted": true,
+          "review_complete": true,
+          "source_id": "T06-maker",
+          "reason": {
+            "accepted_explicit": true,
+            "basis": "Explicit protection of hair from UV; UV filters also declared."
+          }
+        }
+      },
+      "directions": [
+        {
+          "source_id": "T06-maker",
+          "dose": "unestablished",
+          "contact_time": "unestablished",
+          "restrictions": "none stated in reviewed exact product text",
+          "direction_id": "T06-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "sun_exposure_wet_dry_unestablished",
+          "removal": "explicit_leave_in",
+          "text": "For sun-exposed hair; product may remain in hair. Dose and detailed wet/dry procedure not stated."
+        }
+      ],
+      "source_limits": [
+        "Current online formula only; packaging may differ.",
+        "KPF marketing index is not SPF or measured normal-dose protection."
+      ],
+      "source_record_ref": "source-packet.json#T06"
+    }
+  ],
+  "normalization": "Source-only assembly before root reads any blind output; no blind values included."
+}

@@ -1,0 +1,3169 @@
+{
+  "run_id": "oil-curl-pattern-approved-v0.1",
+  "date": "2026-10-05",
+  "status": "approved_local_research_pattern_fit",
+  "approval_scope": "OE43: Nick okk sounds good yes to no extra curl-pattern preference. Damage remains pending.",
+  "policy_id": "oil-curl-pattern-fit-standard-v0.1_OE43",
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/approved-scenario-overlay.json": "a32c26ec25df4d93ede59f362ef462bb40308eab8d304c6a87929c71fe99d63d",
+    "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.3.md": "b417432f6d879916e12d43604b554bd45d98b21d4c2974dd77da0b3040399d74"
+  },
+  "thickness_context_overlay": "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/approved-scenario-overlay.json",
+  "counts": {
+    "products": 6,
+    "source_scenarios": 11,
+    "role_scenarios": 15,
+    "pattern_cells": 60,
+    "values": {
+      "suitable": 48,
+      "conditional": 0,
+      "not_suitable": 0,
+      "unknown": 12
+    }
+  },
+  "records": [
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D01",
+      "source_id": "D01-maker",
+      "direction_id": "D01-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D01-maker",
+        "direction_id": "D01-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "mid_lengths",
+          "ends"
+        ],
+        "stage": "clean_wet_or_dry",
+        "dose": "3–4 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D01",
+          "direction_id": "D01-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-1",
+        "supported_roles": [
+          "pre_wash_fibre_treatment",
+          "scalp_application"
+        ],
+        "site": [
+          "hair",
+          "scalp"
+        ],
+        "stage": "dry_before_wash",
+        "dose": "unspecified",
+        "contact_time": "at least 30 minutes; overnight offered",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after_wash",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after_wash",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after_wash",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D02",
+      "source_id": "D02-maker",
+      "direction_id": "D02-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D02-maker",
+        "direction_id": "D02-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "after_wash",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D02",
+          "direction_id": "D02-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "lengths",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "1–2 drops",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "shampoo",
+        "restrictions": "Maker FAQ advises no direct scalp application."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "shampoo",
+        "restrictions": "Maker FAQ advises no direct scalp application."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "shampoo",
+        "restrictions": "Maker FAQ advises no direct scalp application."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D03",
+      "source_id": "D03-maker",
+      "direction_id": "D03-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D03-maker",
+        "direction_id": "D03-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "shampoo",
+        "restrictions": "Maker FAQ advises no direct scalp application."
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D03",
+          "direction_id": "D03-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D04",
+      "source_id": "D04-maker",
+      "direction_id": "D04-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D04-maker",
+        "direction_id": "D04-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "dry_or_damp_before_shampoo",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "at least 10 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D04",
+      "source_id": "D04-maker",
+      "direction_id": "D04-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D04-maker",
+        "direction_id": "D04-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "dry_or_damp_before_shampoo",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "at least 10 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D04",
+      "source_id": "D04-maker",
+      "direction_id": "D04-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D04-maker",
+        "direction_id": "D04-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "dry_or_damp_before_shampoo",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "at least 10 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D04",
+      "source_id": "D04-maker",
+      "direction_id": "D04-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D04-maker",
+        "direction_id": "D04-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "dry_or_damp_before_shampoo",
+        "dose": "small amount; unit unspecified",
+        "contact_time": "at least 10 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D04",
+          "direction_id": "D04-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-maker",
+      "direction_id": "D05-direction-1",
+      "supported_role": "dry_finish",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D05-maker",
+        "direction_id": "D05-direction-1",
+        "supported_roles": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "site": [
+          "hair",
+          "ends"
+        ],
+        "stage": "damp_or_dry",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake well"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-1",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-partner",
+      "direction_id": "D05-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D05-partner",
+        "direction_id": "D05-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake to mix phases"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-partner",
+      "direction_id": "D05-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D05-partner",
+        "direction_id": "D05-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake to mix phases"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-partner",
+      "direction_id": "D05-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D05-partner",
+        "direction_id": "D05-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake to mix phases"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D05",
+      "source_id": "D05-partner",
+      "direction_id": "D05-direction-2",
+      "supported_role": "leave_on_fibre_conditioning",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D05-partner",
+        "direction_id": "D05-direction-2",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "unspecified",
+        "dose": "unspecified",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished",
+        "shake": "Shake to mix phases"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D05",
+          "direction_id": "D05-direction-2",
+          "supported_role": "leave_on_fibre_conditioning",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "10–15 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "10–15 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "10–15 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-1",
+      "supported_role": "scalp_application",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-1",
+        "supported_roles": [
+          "scalp_application"
+        ],
+        "site": [
+          "scalp"
+        ],
+        "stage": "before_wash",
+        "dose": "unspecified",
+        "contact_time": "10–15 minutes",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "unknown",
+        "reason": "scalp_role_not_fibre_fit",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-1",
+          "supported_role": "scalp_application",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_or_damp_before_wash",
+        "dose": "1–3 tablespoons",
+        "contact_time": "1–3 hours or overnight",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_or_damp_before_wash",
+        "dose": "1–3 tablespoons",
+        "contact_time": "1–3 hours or overnight",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_or_damp_before_wash",
+        "dose": "1–3 tablespoons",
+        "contact_time": "1–3 hours or overnight",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-2",
+      "supported_role": "pre_wash_fibre_treatment",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-2",
+        "supported_roles": [
+          "pre_wash_fibre_treatment"
+        ],
+        "site": [
+          "hair"
+        ],
+        "stage": "dry_or_damp_before_wash",
+        "dose": "1–3 tablespoons",
+        "contact_time": "1–3 hours or overnight",
+        "removal": "shampoo",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-2",
+          "supported_role": "pre_wash_fibre_treatment",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-3",
+      "supported_role": "dry_finish",
+      "pattern": "straight",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-3",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "a dab",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-3",
+      "supported_role": "dry_finish",
+      "pattern": "wavy",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-3",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "a dab",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-3",
+      "supported_role": "dry_finish",
+      "pattern": "curly",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-3",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "a dab",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    },
+    {
+      "neutral_id": "D06",
+      "source_id": "D06-maker",
+      "direction_id": "D06-direction-3",
+      "supported_role": "dry_finish",
+      "pattern": "coily",
+      "scenario": {
+        "source_id": "D06-maker",
+        "direction_id": "D06-direction-3",
+        "supported_roles": [
+          "dry_finish"
+        ],
+        "site": [
+          "ends"
+        ],
+        "stage": "dry_finish",
+        "dose": "a dab",
+        "contact_time": "unspecified",
+        "removal": "leave_on",
+        "restrictions": "unestablished"
+      },
+      "fit": {
+        "value": "suitable",
+        "reason": "no_additional_pattern_gate",
+        "condition": null
+      },
+      "estimate": true,
+      "confidence": "low",
+      "policy_status": "approved_research_policy_OE43",
+      "thickness_context_refs": [
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "fine"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "normal"
+        },
+        {
+          "neutral_id": "D06",
+          "direction_id": "D06-direction-3",
+          "supported_role": "dry_finish",
+          "thickness": "coarse"
+        }
+      ],
+      "does_not_override_other_axis_conditions": true
+    }
+  ],
+  "limitations": [
+    "Suitable is no additional pattern gate, not measured overall suitability or curl-definition efficacy.",
+    "Thickness caveats and source restrictions still apply; no universal product aggregation.",
+    "Damage remains policy_not_defined; no production activation."
+  ]
+}

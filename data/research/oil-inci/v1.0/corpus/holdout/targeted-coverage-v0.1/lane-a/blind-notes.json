@@ -1,0 +1,32 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json"
+  ],
+  "input_hashes": {
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "blind-packet.json": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241",
+    "function-dictionary.json": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+  },
+  "completed_ids": [
+    "T01",
+    "T02",
+    "T04",
+    "T06"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limitations": [
+    "Exactly the four allowlisted input files were read in full. No repository, identity, source-staging, browser, memory, prior-output, peer or nested-reviewer access occurred; generated outputs were validated in memory without semantic rereads.",
+    "No exact formula or product identity was spontaneously recognized. General familiarity with common ingredient identities and carrier architectures did not involve lookup or brand inference.",
+    "The allowed material reference includes an unrelated named carrier-guidance example; it was read as required, not used to infer identities in this packet.",
+    "Top-of-method case_id schemas control over older embedded neutral_id examples. All 64 primary ranks are preserved; the contextual formula code remains outside the ingredient ledger.",
+    "All formula estimates remain research judgments. Blend weights use estimate true and low confidence. Closed flags include every exact positive; false flags rest on completed exact-form review.",
+    "T01 retains unassessed functions at ranks 12, 15, 17 and 19; T02 preserves species-incomplete rank 4 without an Argania Spinosa alias or prior; T04 preserves extract-role gaps and permitted unknown base/penetration; T06 preserves rank-17 and cationic-grade gaps.",
+    "Persistence is one committed scalar for each case, with all ranks and admitted application context retained only in the separate research trace. Material binary build-up values were not used. No Stage 2/source reveal or fit/claim classification was performed."
+  ]
+}

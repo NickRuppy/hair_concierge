@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "scope": "v0.8 artifact integrity and bounded coverage; not sensory validation",
+  "identities": 66,
+  "exact_names": 105,
+  "counts": {
+    "light": 43,
+    "rich": 8,
+    "medium": 14,
+    "unknown": 1
+  },
+  "unchanged_predecessor_entries": 65,
+  "immutable_files_unchanged": 110,
+  "guide_table_rows": 66,
+  "fixed_oil_packet_occurrences_matched": 36,
+  "fixed_oil_packet_distinct_identities_matched": 23,
+  "missing_admitted_fixed_oil_priors": [],
+  "retained_unspecified_plant_part_gaps": [
+    {
+      "case": "Q10",
+      "rank": 4,
+      "name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+    }
+  ],
+  "checked_docs": 8,
+  "new_runs": 0,
+  "decision": "OE33",
+  "reference": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.8.json",
+  "guide": "docs/research/oil-inci/v1.0/03_weight-reference-v0.8.md",
+  "frozen_verifiers": [
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "status": "passed"
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-weight-application-round-3.py",
+      "status": "passed"
+    }
+  ],
+  "whitespace_check": "passed (git diff --check plus explicit edited-document scan)",
+  "local_links": "passed",
+  "verified_artifact_sha256": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.8.json": "5fdc2d9022a76e0febf0e1b690caa6a536dfbcb231325b76285b3ff9e3105995",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.8.md": "0f15ca12e7c22ef8bc898538b433b9ab5c768a8517ba3a1bbc576bed2bacf420",
+    "docs/research/oil-inci/README.md": "a6b24e3ad5239a4df298902a1fd626b497b93ee528f05282f0b3203c7333ad79",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "9099b9847e983b484f02a11a5d6bdb13c989289007e6e3868e2cc1fe67a7f9f2",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.md": "fb5b14436645098914e0309052a9614d3ce0e70ab2fade3b0d2cf9c02089eb84",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.1.md": "4e24b01d018970748d1fbb554ef6fae8bc61c6e39b996ef3577638d4eeb431ef",
+    "plans/oil-inci/phase1-decision-coverage.md": "496681c9faa1cbf728a11335dc9a32c80eee8e67b928aea73269e2a2d2dc79d8",
+    "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md": "7c43a459b35e0c78a516e65a2ae0d7f1ec8adfbea59848f4a4d9a7b8f7480e09",
+    "plans/oil-inci/research/hair-weight-v0.8-hazelnut-addition-2026-10-03.md": "d66dfb0f104eb5adbb307f9148d92dd8513f308c5640fd13939fa559a4cef418"
+  }
+}

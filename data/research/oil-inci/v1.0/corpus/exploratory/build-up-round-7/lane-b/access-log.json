@@ -1,0 +1,11 @@
+{
+  "lane": "b",
+  "read_files": [
+    "method.md",
+    "blind-packet.json",
+    "blind-lexicon.json"
+  ],
+  "independence_attestation": "I classified N01-N04 independently from only method.md, blind-packet.json and blind-lexicon.json in this run directory. I did not browse, inspect source identities or URLs, explore repository files or AGENTS.md, inspect earlier runs or accepted labels, read peer outputs, dispatch subagents, or use manufacturer claims. Exact roles are copied from the frozen lexicon. Contextual declarations remain separate from primary ranks. All outputs are provisional research judgments, not sensory validation or measured accumulation. The parent-provided scope and output contract were followed.",
+  "recognition": [],
+  "incidents": []
+}

@@ -1,0 +1,135 @@
+{
+  "run_id": "oil-blend-weight-round-4",
+  "verified_at": "2026-10-03",
+  "status": "passed",
+  "commands": [
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py --inputs-only",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "Artifact contracts, not scientific/sensory accuracy",
+        "cases": 10,
+        "fresh": 6,
+        "replay": 4,
+        "materials": 65,
+        "exact_material_names": 104,
+        "historical_files_unchanged": 80,
+        "read_scope_limit": "Self-report, not sandbox proof",
+        "mode": "inputs_only"
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "Artifact contracts, not scientific/sensory accuracy",
+        "cases": 10,
+        "fresh": 6,
+        "replay": 4,
+        "materials": 65,
+        "exact_material_names": 104,
+        "historical_files_unchanged": 80,
+        "read_scope_limit": "Self-report, not sandbox proof",
+        "mode": "complete",
+        "cohorts": {
+          "fresh": {
+            "total": 6,
+            "lane_pair_raw_equal": 6,
+            "lane_pair_known_equal": 6,
+            "lane_pair_both_known": 6,
+            "classified_by_lane": {
+              "a": 6,
+              "b": 6,
+              "main": 6
+            }
+          },
+          "replay": {
+            "total": 4,
+            "lane_pair_raw_equal": 4,
+            "lane_pair_known_equal": 4,
+            "lane_pair_both_known": 4,
+            "classified_by_lane": {
+              "a": 4,
+              "b": 4,
+              "main": 4
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-weight-application-round-3.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "artifact contracts, not scientific accuracy",
+        "materials_reviewed": 65,
+        "exact_names": 104,
+        "input_cases": 10,
+        "single_material_products": 5,
+        "blended_products": 4,
+        "raw_material_benchmarks": 1,
+        "historical_files_unchanged": 59,
+        "v0_7_pin_verified": true,
+        "read_scope_limit": "declared files and recorded hashes; no proof of hidden recognition/access",
+        "mode": "sealed_outputs",
+        "independent_lane_records": 20,
+        "main_records": 10,
+        "declared_read_scope_verified": true,
+        "comparison_denominators_verified": true
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-natural-weight-artifacts.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "artifact invariants; no scientific accuracy assertion",
+        "reference_materials": 25,
+        "source_records": 26,
+        "reviewed_aliases": 38,
+        "old_fixed_oil_identities": 15,
+        "historical_files_unchanged": 28,
+        "sealed_input_files": 6,
+        "material_cases": 8,
+        "synthetic_probes": 6,
+        "mode": "inputs_and_sealed_lanes",
+        "lane_records_verified": 28
+      }
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed"
+    }
+  ],
+  "negative_controls": {
+    "count": 8,
+    "status": "passed",
+    "receipt": "negative-control-receipt.json"
+  },
+  "scope": "Local research artifact/provenance contracts; not sensory validity or general intake readiness.",
+  "skipped": [
+    {
+      "command": "node scripts/check-changed.mjs --dry-run -- …",
+      "reason": "Generic test-audit example script is absent from this repository (MODULE_NOT_FOUND). Actual repository-appropriate Python artifact checks and whitespace check pass."
+    },
+    {
+      "command": "Runtime/UI/DB suites",
+      "reason": "No runtime, UI or database change in this pass."
+    }
+  ],
+  "review": {
+    "normal_findings": "Display transform, named gap, replay source-identity omissions corrected and independently delta-reviewed. Missing receipt identified during completion; this file resolves it.",
+    "external_plan": "Claude Opus 4.8/high Approve with revisions; reconciled in plan review receipt."
+  },
+  "limits": [
+    "All blend classes are low-confidence estimates.",
+    "Material reference includes a recognized named Calendula development example; other signature recognition possible. Formula-focused independent application, not clean cognitive blinding/holdout.",
+    "Read scope is declared and hash-checked, not sandbox proof.",
+    "K18 approved light remains despite lane medium; B4/B5 boundary and hazelnut missing prior remain explicit."
+  ],
+  "artifact_disposition": "Retain durable local research files for eventual authorized commit. No publication or production action."
+}

@@ -1,0 +1,1841 @@
+{
+  "artifact": "oil-holdout-function-dictionary-staging",
+  "version": "v0.1-staging",
+  "base_dictionary": "../../exploratory/full-profile-completion-v0.1/function-dictionary.json",
+  "scope": "New exact identities only; all other tokens reuse the frozen base dictionary by exact canonical name or explicitly recorded reviewed alias.",
+  "source_coverage": {
+    "new_identity_count": 29,
+    "confirmed_new_function_entries": 0,
+    "pending_exact_function_entries": 29,
+    "source_standard": "CosIng or primary supplier; this staging file deliberately does not promote unverified functions."
+  },
+  "entries": [
+    {
+      "canonical_name": "AROMA",
+      "aliases": [],
+      "roles": [
+        "fragrance_declaration"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": true,
+          "matches": [
+            "AROMA"
+          ],
+          "reviewed_exclusions": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ASCORBYL PALMITATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ASTROCARYUM MURUMURU SEED BUTTER",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "BHT",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM BERGAMIA (BERGAMOT) PEEL OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "COCONUT ALKANES",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "CRAMBE ABYSSINICA SEED OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "DICAPRYLYL CARBONATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "DIISOPROPYL ADIPATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "GLYCERYL OLEATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "HEXADECANOLACTONE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "HYDROGENATED PALM GLYCERIDES CITRATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ISODECYL NEOPENTANOATE",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "JASMINUM OFFICINALE (JASMINE) OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "LECITHIN",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "LITCHI CHINENSIS FRUIT EXTRACT",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "MALIC ACID",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "OLEIC ACID",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ORBIGNYA SPECIOSA KERNEL OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "RIBES NIGRUM (BLACK CURRANT) SEED OIL",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    },
+    {
+      "canonical_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT",
+      "aliases": [],
+      "roles": [
+        "unresolved_function"
+      ],
+      "flags": {
+        "silicones": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed silicone family."
+          ]
+        },
+        "mineral_oil": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed mineral-oil family."
+          ]
+        },
+        "drying_alcohol": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed drying-alcohol family."
+          ]
+        },
+        "fragrance": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed fragrance family."
+          ]
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "matches": [],
+          "reviewed_exclusions": [
+            "No exact match to the frozen closed scalp-active botanical family."
+          ]
+        }
+      },
+      "uv_filter": false,
+      "penetration_evidence": "not_assessed",
+      "admitted_penetration_anchor": false,
+      "penetration_form_exclusions": [
+        "No new anchor admitted; only the existing three exact forms remain admissible."
+      ],
+      "penetration_notes": "No admitted penetration evidence for this exact form; no negative inference.",
+      "source_refs": [
+        {
+          "ref": "https://ec.europa.eu/growth/tools-databases/cosing/",
+          "accessed_at": "2026-10-09",
+          "claim_supported": "Official cosmetic-ingredient database selected for pending exact-function review; no function is asserted here."
+        },
+        {
+          "ref": "../source-staging/source-packet-v0.2.json",
+          "claim_supported": "Exact product declaration containing this identity."
+        }
+      ],
+      "notes": "Staging-only identity. Role remains unresolved pending exact CosIng or primary-supplier function confirmation; no carrier, sensory, weight, film, base, or persistence inference."
+    }
+  ]
+}

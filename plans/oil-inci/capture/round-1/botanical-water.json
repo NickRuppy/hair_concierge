@@ -1,0 +1,384 @@
+{
+  "capture_date": "2026-10-01",
+  "scope": "Source observations only; no ingredient-property or fit classification. capture_ready is acquisition readiness, not a frozen derivation.",
+  "records": [
+    {
+      "slot": "E01",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3830066651079",
+        "gtin_source_id": "E01-retailer-de",
+        "selection_note": "Authorized cosmetic replacement for the original dmBio food-oil slot; original selection history remains in preflight."
+      },
+      "sources": [
+        {
+          "id": "E01-maker",
+          "url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+          "source_author": "Biopark Cosmetics",
+          "host_role": "manufacturer",
+          "tier": "exact_manufacturer_international_with_DE_pack_corroboration",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 100 ml cosmetics product; composition, instructions, physical form and product-image jar identification reviewed. English page; DE corroboration is separate."
+        },
+        {
+          "id": "E01-retailer-de",
+          "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+          "source_author": "Ecco Verde / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE 100 ml pack, EAN 3830066651079, article BPC-BIOP071. Manufacturer listed as Zin d.o.o.; that listing does not make all retailer prose manufacturer-authored."
+        }
+      ],
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "canonical_source_id": "E01-maker",
+      "formula_capture_notes": "Manufacturer composition names one oil; organic-production wording is a sourcing annotation. Retailer uses a shortened linked ingredient name, preserved below rather than replacing the maker declaration.",
+      "directions": [
+        {
+          "id": "E01-maker-before-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "Massage into dry hair; leave at least 30 minutes or overnight, then shampoo. Scalp massage is also instructed in this wash-out context.",
+          "site": ["hair", "scalp"],
+          "stage": "dry_before_wash",
+          "dose": "unspecified",
+          "contact_time": "at least 30 minutes; overnight offered",
+          "removal": "shampoo",
+          "restrictions": "Scalp instruction appears beside a dandruff claim; no dandruff efficacy property is adopted."
+        },
+        {
+          "id": "E01-maker-after-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "After washing, put a small amount on the ends and retain it.",
+          "site": ["ends"],
+          "stage": "after_wash; damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "no_rinse"
+        },
+        {
+          "id": "E01-retailer-after-drying",
+          "source_id": "E01-retailer-de",
+          "verbatim": false,
+          "text": "Following the shampooed mask and drying, massage a small amount into the ends.",
+          "site": ["ends"],
+          "stage": "after_wash_and_drying",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "retained_by_context"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "other",
+        "mechanism_detail": "Jar with removable lid; contents accessed directly through jar opening.",
+        "source_id": "E01-retailer-de",
+        "corroborating_source_id": "E01-maker",
+        "confidence": "high",
+        "evidence": "Exact retailer pack is identified as a jar; manufacturer product image alternative text also identifies a jar. No scoop, metering or pour mechanism established."
+      },
+      "physical_observations": [
+        {
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "Semisolid; becomes liquid when warmed."
+        }
+      ],
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Product description and instructions contain no explicit hair heat-protection claim."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Maker discusses skin care after sun exposure, not hair UV protection. Retailer sun-protection taxonomy is not manufacturer claim evidence."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E01-maker",
+          "wording": "The exact product is presented as organic coconut oil.",
+          "verbatim": false
+        }
+      ],
+      "conflict_captures": [
+        {
+          "kind": "ingredient_display_specificity",
+          "source_id": "E01-retailer-de",
+          "raw_inci": "Cocos Nucifera (Coconut)",
+          "disposition": "Shortened retailer ingredient link is not a different multi-ingredient formula and is not expanded by guesswork. Exact named 100 ml coconut pack corroborates manufacturer identity; manufacturer supplies canonical declared form."
+        },
+        {
+          "kind": "directions_specificity",
+          "source_ids": ["E01-maker", "E01-retailer-de"],
+          "disposition": "Dry-after-wash specificity belongs only to the retailer scenario. Do not insert it into manufacturer instructions."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "No physical label photograph transcribed; canonical composition is international maker text corroborated by the exact DE cosmetic pack."
+    },
+    {
+      "slot": "E02",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528086280",
+        "gtin_source_id": "E02-retailer-de",
+        "manufacturer_code": "NQ-HO-RO-201"
+      },
+      "sources": [
+        {
+          "id": "E02-maker-de",
+          "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German product page; exact-product description, application and full declaration reviewed. Shared range panel excluded from hero-oil evidence."
+        },
+        {
+          "id": "E02-retailer-de",
+          "url": "https://www.cosmeterie.de/neqi/smooth-strength-rosemary-oil",
+          "source_author": "Cosmeterie / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, EAN 4063528086280, manufacturer code NQ-HO-RO-201. Retailer-authored page; rinse wording is not attributed to the maker."
+        },
+        {
+          "id": "E02-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/SS_Rosemary_Oil_4063528086280_1.png?v=1730108189&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Linked directly by German product page; asset filename corroborates EAN. No back-label transcription inferred."
+        },
+        {
+          "id": "E02-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "German FAQ exact named Rosemary application paragraph specifies dropper and a broader pre-wash scenario."
+        }
+      ],
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "canonical_source_id": "E02-maker-de",
+      "formula_capture_notes": "Retain exact spelling and compound Lavandula oil/extract. No expansion to a species, plant part or definite oil/extract form. Encountered identity aliases remain for main lexicon review.",
+      "directions": [
+        {
+          "id": "E02-maker-product-scalp",
+          "source_id": "E02-maker-de",
+          "verbatim": false,
+          "text": "Apply a small amount via hands or directly to scalp, massage, wait at least 10 minutes, then shampoo. Dry or damp application is allowed.",
+          "site": ["scalp"],
+          "stage": "dry_or_damp_before_shampoo",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "shampoo",
+          "restrictions": "No overnight instruction or fibre distribution in this application paragraph."
+        },
+        {
+          "id": "E02-maker-faq-before-wash",
+          "source_id": "E02-maker-faq-de",
+          "verbatim": false,
+          "text": "Use once or twice weekly before washing. Dispense with dropper into hands or onto scalp, massage using fingers or scalp brush, distribute through lengths and ends, wait at least 10 minutes, then rinse thoroughly.",
+          "site": ["scalp", "lengths", "ends"],
+          "stage": "before_wash; damp_or_dry_unspecified",
+          "dose": "unspecified; dropper mechanism does not establish a drop count",
+          "frequency": "1–2 times per week",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse; application explicitly before hair washing",
+          "restrictions": "Separate maker scenario; no imported shampoo-specific instruction or damp/dry statement."
+        },
+        {
+          "id": "E02-retailer-scalp",
+          "source_id": "E02-retailer-de",
+          "verbatim": false,
+          "text": "Apply a small amount to hands or scalp, massage with fingertips, wait at least 10 minutes, then rinse well.",
+          "site": ["scalp"],
+          "stage": "damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "dropper",
+        "source_id": "E02-maker-faq-de",
+        "confidence": "high",
+        "evidence": "Exact named product instructions expressly identify a dropper; current pack is bound by DE retailer and maker asset identifier."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": ["E02-maker-faq-de"],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary heat-protection declaration in reviewed product page or FAQ. Other named products' claims do not transfer."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": ["E02-maker-faq-de"],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary hair-UV declaration. Hair-perfume UV wording elsewhere in FAQ is for other products."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {"name": "rosemary oil", "source_id": "E02-maker-de", "wording": "Named in exact-product positioning and ingredient highlights.", "verbatim": false},
+        {"name": "castor oil", "source_id": "E02-maker-de", "wording": "Named in exact-product positioning and ingredient highlights.", "verbatim": false},
+        {"name": "sweet almond oil", "source_id": "E02-maker-de", "wording": "Named in exact-product positioning and ingredient highlights.", "verbatim": false}
+      ],
+      "conflict_captures": [
+        {
+          "kind": "ingredient_display_wording",
+          "source_id": "E02-retailer-de",
+          "raw_inci": "Prunus Amygdalus Dulcis (Sweet Almond) Oil, Ricinus Communis Seed Oil, Carthamus Tinctorius (Safflower) Seed Oil, Rosmarinus Officinalis Leaf Oil, Mentha Arvensis (Cornmint) Leaf Oil, Lavandula Oil/Extract, Camphor, Menthol, Tocopherylacetat, Beta-Caryophyllene, Pinene, Terpineol, Geranyl Acetate, Linalyl Acetate, Geraniol, Limonene, Linalool",
+          "disposition": "Same ordered 17-entry sequence; common-name/case differences and retailer Tocopherylacetat retained raw. Manufacturer remains canonical; no silent normalization of the retailer text."
+        },
+        {
+          "kind": "directions_scope_and_removal",
+          "source_ids": ["E02-maker-de", "E02-maker-faq-de", "E02-retailer-de"],
+          "disposition": "Product page supplies scalp then shampoo; FAQ independently supplies scalp plus fibres before washing then rinse; retailer supplies scalp then rinse. Keep all three complete scenarios distinct."
+        },
+        {
+          "kind": "obsolete_size_assumption",
+          "disposition": "Earlier 150 ml selection assumption rejected. This capture is the directly corroborated DE 75 ml pack."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "Lavandula oil/extract is an ambiguous declared preparation, not missing text. Lexicon review must preserve that ambiguity and validate encountered aliases before freezing."
+    },
+    {
+      "slot": "E07",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Opulent Oil Hair Serum",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528078520",
+        "gtin_source_id": "E07-maker-pack-asset",
+        "gtin_corroborating_source_id": "E07-retailer-pl"
+      },
+      "sources": [
+        {
+          "id": "E07-maker-de",
+          "url": "https://neqi-hair.com/products/opulent-oil-hair-serum",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German 75 ml page co-presents formula, directions and heat claim. Shared range panel is excluded from exact-product hero-oil evidence."
+        },
+        {
+          "id": "E07-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/Hair_Oil_4063528078520.jpg?v=1746525784&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Direct product-page image link contains identifier 4063528078520; identifier independently corroborated by dm Poland. Not a readable back-label capture."
+        },
+        {
+          "id": "E07-retailer-pl",
+          "url": "https://www.dm.pl/p/d/1455216/neqi-olejek-do-w-osow-opulent-oil",
+          "source_author": "dm Poland",
+          "host_role": "retailer",
+          "tier": "cross_market_retailer_conflict_only",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, GTIN 4063528078520. Different formula retained as cross-market evidence; no DE equivalence assumed. Retailer description incorrectly also names LaQ, reducing prose reliability."
+        },
+        {
+          "id": "E07-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "Names Opulent Oil among products with heat protection; unrelated Dry Oil and hair-perfume paragraphs are not Opulent instructions or claims."
+        }
+      ],
+      "raw_inci": "Aqua [Water], Polyquaternium-10, Polysorbate 20, Glycerin, PEG-40 hydrogenated castor oil, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Phenoxyethanol, PPG-3 caprylyl ether, Ethylhexylglycerin, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexyl methoxycinnamate, Propylene glycol, Citric acid, Linalyl acetate, CI 47005 [Yellow 10], 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Limonene, Hexyl cinnamal, Linalool",
+      "canonical_source_id": "E07-maker-de",
+      "formula_capture_notes": "27 declared ingredients; preserve internal comma in 1,2-Hexanediol when tokenizing. No Poland ingredient replacement or tail append.",
+      "directions": [
+        {
+          "id": "E07-maker-towel-dried",
+          "source_id": "E07-maker-de",
+          "verbatim": false,
+          "text": "Spread two to three pump doses between hands and work through towel-dried lengths and ends. Comb through and retain without rinsing.",
+          "site": ["lengths", "ends"],
+          "stage": "towel_dried",
+          "dose": "2–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "no_rinse",
+          "restrictions": "No dry-hair application inferred from finish positioning."
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pump",
+        "source_id": "E07-maker-de",
+        "confidence": "high",
+        "evidence": "Exact 75 ml instructions dose the product in pump strokes."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": ["E07-maker-faq-de"],
+          "claim_excerpt": "Hitzeschutz bis 230°C",
+          "verbatim": true,
+          "review_notes": "Literal maker claim captured; temperature is source text, not a new property or independently verified performance."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": ["E07-maker-faq-de"],
+          "claim_excerpt": null,
+          "review_notes": "No explicit Opulent hair-UV claim in reviewed product page or FAQ. Ingredient presence and other products' claims do not supply one."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [],
+      "advertised_oils_review_notes": "Product-specific title, description and benefits name no botanical hero oil. Shared Signature Blend copy names extracts across the range; it does not establish an exact-product advertised oil.",
+      "conflict_captures": [
+        {
+          "kind": "cross_market_formula",
+          "source_id": "E07-retailer-pl",
+          "raw_inci": "Aqua [Water], Polysorbate 20, Polyquaternium-10, Glycerin, PEG-40 hydrogenated castor oil, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Phenoxyethanol, PPG-3 caprylyl ether, Ethylhexylglycerin, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexyl methoxycinnamate, Propylene glycol, Citric acid, Linalyl acetate, CI 19140 [Yellow 5], 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Hexyl cinnamal, Limonene, Linalool, Geraniol.",
+          "differences": ["Polysorbate 20 and Polyquaternium-10 order reversed", "CI 19140 [Yellow 5] instead of CI 47005 [Yellow 10]", "Hexyl cinnamal and Limonene order reversed", "Additional terminal Geraniol"],
+          "disposition": "Current exact DE manufacturer declaration is canonical. Same GTIN does not prove current cross-market formula equivalence; do not merge. No contradictory current DE label was observed in this bounded capture."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "Physical DE pack label not independently transcribed; cross-market ordering, colourant and tail differences remain visible without an assumed older/newer explanation."
+    }
+  ]
+}

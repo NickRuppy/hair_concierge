@@ -1,0 +1,34 @@
+{
+  "upstream_hashes": {
+    ".gitignore": "bcc8d478acbb71d6532405cbaeee7d09efed5aaa9fe2b41f0ef3d8472eb7240a",
+    "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+    "docs/research/shared/persistence-category-impact-v0.1.md": "c7bc02a0ccf7c3ccd4aa6392cd85c3681e4701344921909750b25b88a1fce639",
+    "data/research/shared/persistence-pilot-v0.1/results-for-review.md": "62ceeda82cfda6347b8842470093300dafaecbe4dd1a846909425d27cf9f9ab8",
+    "data/research/shared/persistence-pilot-v0.1/verification-receipt.json": "51d401dd98e1b5bd633816df579dcd84ad997146ecb8886a1920a285648defd8",
+    "docs/research/oil-inci/v1.0/00_category-charter-v0.2.md": "c92f36d0294664dc05a9d7e74f4e63beac62f5ee0462b5856f00313e0f2fca72",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+    "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+    "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+    "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391"
+  },
+  "weight_only_derivation": {
+    "source": "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json",
+    "source_sha256": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "output_sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "selected_entry_keys": [
+      "canonical_inci",
+      "aliases",
+      "material_family",
+      "weight_prior",
+      "identity_limits"
+    ],
+    "provenance": "Byte-identical copy of previous neutral weight-only reference; verify selected key parity, no binary buildup prior."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "productId": "01-hask-argan-oil-sachet",
+  "referenceSha256": "a66063346051fd33fbb29aa4f565f10db6e4daebcc36b656a82dc6f504ffe0c1",
+  "blindSha256": "0b178fb6ad39958e44310d23eaa11ecf4be495d38c623b7b94547bcdf81e2725",
+  "fields": {
+    "g0": {
+      "reason": "Nach der Haarwäsche bis zu 10 Minuten einwirken lassen und ausspülen: Das entspricht einer Ausspülkur.",
+      "warning": "",
+      "a": "Nach der Haarwäsche bis zu 10 Minuten einwirken lassen und ausspülen: Das entspricht einer Ausspülkur.",
+      "b": "Nach der Haarwäsche einwirken lassen und ausspülen; kein anderer Anwendungsmodus. Daher innerhalb der Masken-Kategorie.",
+      "comparisonNote": ""
+    },
+    "conditioningLevel": {
+      "reason": "Zwei kationische Pflegestoffe (Cetrimonium Chloride, Quaternium-18) plus Fettalkohol (Cetearyl Alcohol) vor der Parfum-Marke erfüllen gemeinsam die Kriterien für ein hohes Pflegelevel.",
+      "warning": "Quaternium-18 ist grenznah und entscheidend; die Konfidenz bleibt deshalb mittel.",
+      "a": "Zwei kationische Pflegestoffe (Cetrimonium Chloride, Quaternium-18) plus Fettalkohol (Cetearyl Alcohol) vor der Parfum-Marke erfüllen gemeinsam die Kriterien für ein hohes Pflegelevel.",
+      "b": "Cetrimonium Chloride und Quaternium-18 erfüllen das Kationik-Kriterium, Cetearyl Alcohol ergänzt die Fettalkoholbasis: hoch. Quaternium-18 ist grenznah und entscheidend; Konfidenz daher mittel.",
+      "comparisonNote": ""
+    },
+    "weightPotential": {
+      "reason": "Das schwere Lipid Lanolin und der früh gelistete Fettalkohol (Cetearyl Alcohol) erfüllen zusammen die Kriterien für ein hohes Gewichtspotenzial.",
+      "warning": "",
+      "a": "Das schwere Lipid Lanolin und der früh gelistete Fettalkohol (Cetearyl Alcohol) erfüllen zusammen die Kriterien für ein hohes Gewichtspotenzial.",
+      "b": "Lanolin bildet den schweren Lipidkern; Cetearyl Alcohol an Position 2 ergänzt die dichte Basis. Beide Kriterien sind klar erfüllt; Quaternium-18 ist für diesen Wert nicht entscheidend.",
+      "comparisonNote": "Unterschied: A begrenzt die Konfidenz wegen der INCI-Ersatzquelle. B begründet „hoch“ mit den klar erfüllten Formelkriterien. Gleicher Wert bedeutet daher keine gleiche Konfidenz."
+    },
+    "careDirection": {
+      "reason": "Vor der Parfum-Marke stehen Fettalkohol (Cetearyl Alcohol), Lipid (Lanolin) und kationische Pflegestoffe (Cetrimonium Chloride, Quaternium-18), aber keine Proteine. Nach dem Standard ergibt das die Richtung Feuchtigkeit.",
+      "warning": "Proteinmix im hinteren INCI-Bereich prüfen.",
+      "a": "Vor der Parfum-Marke stehen Fettalkohol (Cetearyl Alcohol), Lipid (Lanolin) und kationische Pflegestoffe (Cetrimonium Chloride, Quaternium-18), aber keine Proteine. Nach dem Standard ergibt das die Richtung Feuchtigkeit.",
+      "b": "Cetearyl Alcohol, Lanolin, Cetrimonium Chloride und Quaternium-18 bilden eine Pflegebasis ohne Proteinroute vor Parfum: Feuchtigkeit. Der Proteinmix dahinter begrenzt die Konfidenz auf mittel.",
+      "comparisonNote": ""
+    },
+    "repairSupportLevel": {
+      "reason": "Eine Bond-Route ist nicht belegt. Die Proteine Hydrolyzed Collagen, Hydrolyzed Keratin und Hydrolyzed Soy Protein liegen hinter der Parfum-Marke und begründen daher keine höhere Reparatur-Einstufung.",
+      "warning": "",
+      "a": "Eine Bond-Route ist nicht belegt. Die Proteine Hydrolyzed Collagen, Hydrolyzed Keratin und Hydrolyzed Soy Protein liegen hinter der Parfum-Marke und begründen daher keine höhere Reparatur-Einstufung.",
+      "b": "Keine Bond-Route und keine Proteinroute vor Parfum; Hydrolyzed Collagen, Hydrolyzed Keratin und Hydrolyzed Soy Protein liegen dahinter. Daher geringe Reparatur-Unterstützung bei hoher Konfidenz.",
+      "comparisonNote": "Die abweichende Konfidenz ist gespeichert. Warum A hier nur „mittel“ vergibt, wird im Referenzfeld nicht ausdrücklich erklärt."
+    },
+    "primaryFocus": {
+      "reason": "Keine Spezialroute erfüllt ihre Kriterien. Daher bleibt allgemeine Pflege der primäre Fokus.",
+      "warning": "",
+      "a": "Keine Spezialroute erfüllt ihre Kriterien. Daher bleibt allgemeine Pflege der primäre Fokus.",
+      "b": "Keine Spezialroute qualifiziert sich. Lanolin und die kationische Basis bilden nur einen gemeinsamen Pflegemechanismus; deshalb allgemeine Pflege statt eines Spezialfokus.",
+      "comparisonNote": ""
+    },
+    "secondaryFocus": {
+      "reason": "Keine Spezialroute trägt einen eigenständigen Zusatznutzen. Ein sekundärer Fokus würde eine bereits verworfene Route wieder aufnehmen.",
+      "warning": "",
+      "a": "Keine Spezialroute trägt einen eigenständigen Zusatznutzen. Ein sekundärer Fokus würde eine bereits verworfene Route wieder aufnehmen.",
+      "b": "Ohne Feuchthaltemittel-Gruppe oder eigenständige Glanz-/Glättungsroute vor Parfum qualifiziert sich kein zweiter Fokus.",
+      "comparisonNote": ""
+    }
+  }
+}

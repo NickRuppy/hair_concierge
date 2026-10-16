@@ -1,0 +1,60 @@
+{
+  "snapshot_id": "natural-oil-coverage-catalog-counts-2026-10-02",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "read_only": true,
+  "query": "SELECT category_key,count(*) AS catalog_products,count(*) FILTER(WHERE is_active) AS active_products FROM public.products GROUP BY category_key ORDER BY category_key",
+  "rows": [
+    {
+      "category_key": "bondbuilder",
+      "catalog_products": 5,
+      "active_products": 3
+    },
+    {
+      "category_key": "conditioner",
+      "catalog_products": 75,
+      "active_products": 73
+    },
+    {
+      "category_key": "deep_cleansing_shampoo",
+      "catalog_products": 15,
+      "active_products": 5
+    },
+    {
+      "category_key": "dry_shampoo",
+      "catalog_products": 10,
+      "active_products": 10
+    },
+    {
+      "category_key": "heat_protectant",
+      "catalog_products": 7,
+      "active_products": 7
+    },
+    {
+      "category_key": "leave_in",
+      "catalog_products": 68,
+      "active_products": 65
+    },
+    {
+      "category_key": "mask",
+      "catalog_products": 58,
+      "active_products": 55
+    },
+    {
+      "category_key": "oil",
+      "catalog_products": 54,
+      "active_products": 53
+    },
+    {
+      "category_key": "scalp_care",
+      "catalog_products": 8,
+      "active_products": 8
+    },
+    {
+      "category_key": "shampoo",
+      "catalog_products": 71,
+      "active_products": 68
+    }
+  ],
+  "total_products": 371,
+  "total_active": 347
+}

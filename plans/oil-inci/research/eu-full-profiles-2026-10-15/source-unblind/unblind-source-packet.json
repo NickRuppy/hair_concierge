@@ -1,0 +1,818 @@
+{
+  "schema_version": "eu-full-profile-unblind-source-packet-v0.1",
+  "captured_at_utc": "2026-10-15T07:17:35.733845+00:00",
+  "scope": "Source facts only; stage2after blind formula seal. No formula classifications, matching tags, fit, production payload or database writes.",
+  "contract": "Oil exploratory standardv0.9",
+  "frozen_binding_reference": {
+    "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+    "sha256": "7dc9eb6d776d6e482a85b6e727bd5462b0173b88e47608d76d8e553bb95177ff"
+  },
+  "source_registry": [
+    {
+      "source_id": "EUFP-PC01-S01",
+      "url": "https://www.schwarzkopf-professional.com/de/de/pflege/oil-ultime/argan-finishing-oil.html",
+      "market": "DE",
+      "kind": "manufacturer_product_page",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "exact product title",
+        "overview and benefits",
+        "complete directions and overnight expert tip",
+        "technology",
+        "complete ingredient declaration",
+        "product FAQ"
+      ],
+      "short_verbatim_excerpts": [
+        "Hitzeschutz bis 230°C",
+        "100% natürlichem, veredeltem Arganöl"
+      ],
+      "factual_paraphrase": "DE producer names Argan Finishing Oil, claims heat protection up to230°C, names argan kernel oil, and supports small-amount towel-dried/dry hair styling plus a separate overnight intensive-care tip. General environmental protection is not explicitly UV protection.",
+      "web_reference": "turn709view0"
+    },
+    {
+      "source_id": "EUFP-PC01-S02",
+      "url": "https://shop.schwarzkopf-professional.de/en/c/Oil-Ultime-Finishing-Oil/p/3050391",
+      "market": "DE",
+      "kind": "manufacturer_product_page",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "selected exact100ml product",
+        "IDH and GTIN",
+        "key benefits",
+        "technology",
+        "full ingredients",
+        "how to use",
+        "warnings"
+      ],
+      "short_verbatim_excerpts": [
+        "Oil Ultime Argan Finishing Oil 100ml",
+        "Keep out of direct sunlight and hot temperatures."
+      ],
+      "factual_paraphrase": "Manufacturer shop binds IDH3050391 and GTIN4067971053844 to100ml; identical15-ingredient declaration and leave-on designation. Sun/heat warning concerns product storage, not hairUVprotection.",
+      "web_reference": "turn705view0"
+    },
+    {
+      "source_id": "EUFP-PC01-I01",
+      "url": "https://dm.henkel-dam.com/is/image/henkel/2963837_Oil_Ultime_Argan_100ml_01?&qlt=100&wid=504&hei=504&fmt=png-alpha",
+      "market": "DE",
+      "kind": "manufacturer_linked_product_image",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "exact maker-shop product image exposed in its Product JSON-LD"
+      ],
+      "short_verbatim_excerpts": [],
+      "factual_paraphrase": "Chrome image observation: amber100ml Oil Ultime Argan bottle; long dip-tube visible inside, but cap fully covers actuator and outlet. Pump versus spray cannot be established from this image.",
+      "web_reference": "chrome:1280031977:image-observation"
+    },
+    {
+      "source_id": "EUFP-PC02-S01",
+      "url": "https://www.lorealprofessionnel.nl/haarverzorging/metal-detox/oil-metal-detox-oil",
+      "market": "NL",
+      "kind": "manufacturer_product_page",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "selected50ml product title and GTIN",
+        "ingredients and precautions",
+        "Glicoamine technology",
+        "benefit and test text",
+        "complete HOWTO"
+      ],
+      "short_verbatim_excerpts": [
+        "warmtebescherming tot 230°C",
+        "Warm 1 of 2 pompjes"
+      ],
+      "factual_paraphrase": "Exact NL50ml product and GTIN3474637090609. Producer explicitly claims230°C heat protection. Daily1–2pumps warmed in palms and distributed mid-lengths to ends on dry/towel-dried hair; do not rinse; then blow-dry or air-dry. No specific precaution needed under normal/reasonably foreseeable use. No named botanical-oil hero or explicit hairUVclaim found in reviewed product sections.",
+      "web_reference": "turn704view1"
+    },
+    {
+      "source_id": "EUFP-PC03-S01",
+      "url": "https://www.drhauschka.de/haarpflege/haaroel/",
+      "market": "DE",
+      "kind": "manufacturer_product_page",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "exact selected75ml product",
+        "description plus expanded More information",
+        "German ingredient summary and full INCI",
+        "complete application",
+        "tips and quality",
+        "linked product gallery (not customer reviews)"
+      ],
+      "short_verbatim_excerpts": [
+        "vor Sonne oder Salzwasser",
+        "Weizenkeimöl und Rosmarin",
+        "Vor Gebrauch schütteln."
+      ],
+      "factual_paraphrase": "Manufacturer describes protecting hair from sun/salt water, but does not explicitly refer to UV/rays/UVcolor protection. Marketing describes rosemary; full current INCI instead includes generic Lavandula Oil/Extract and Camphor. Do not insert rosemary into formula. Directions separately provide prewash lengths/ends, prewash scalp, and retained very-small-dose postwash ends.",
+      "web_reference": "turn704view2"
+    },
+    {
+      "source_id": "EUFP-PC03-I01",
+      "url": "https://picture.drhauschka.de/dprj6oup9/image/private/s--88aeO0Jf--/media/7e/28/fb/1762929098/3219618-.jpg?_a=BAAAV6H8",
+      "market": "DE",
+      "kind": "manufacturer_linked_product_image",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "manufacturer selected75ml product gallery full image"
+      ],
+      "short_verbatim_excerpts": [],
+      "factual_paraphrase": "Chrome image observation: Dr.Hauschka Haaröl/HairOil bottle with a white press actuator and short lateral outlet; pump mechanism visible, not inferred from a closed cap. Source page calls it a dosing dispenser.",
+      "web_reference": "chrome:1280031977:image-observation"
+    },
+    {
+      "source_id": "EUFP-PC04-S01",
+      "url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html",
+      "market": "FR",
+      "kind": "manufacturer_product_page",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "selected50ml exactSKU11HI050G24",
+        "product description",
+        "complete Conseils application",
+        "hero ingredients including essential oil group",
+        "complete INCI",
+        "results",
+        "product routine; reviews excluded"
+      ],
+      "short_verbatim_excerpts": [
+        "Chauffez 3 - 4 gouttes",
+        "Extrait de Tournesol aux Céramides Végétaux",
+        "Cocktail de 5 huiles essentielles"
+      ],
+      "factual_paraphrase": "50ml exact FRSKU11HI050G24. Separate3–4drops retained application to damp/dry lengths/ends and generous overnight lengths/ends application followed by washing on waking. Named hero group comprises Angelica,YlangYlang,sweetorange,lavender,geranium essential oils. Sunflower hero is explicitly an extract; do not substitute sunflower seed oil. No explicit heat or hairUVprotection claim in reviewed exact-product copy.",
+      "web_reference": "turn705view1"
+    },
+    {
+      "source_id": "EUFP-PC04-I01",
+      "url": "https://fr.loccitane.com/dw/image/v2/BCDQ_PRD/on/demandware.static/-/Sites-occ_master/default/dwf358060c/RECT/11HI050G24.png?sh=1110&sm=fit&sw=880",
+      "market": "FR",
+      "kind": "manufacturer_linked_product_image",
+      "reviewed_at_utc": "2026-10-15T07:17:35.733845+00:00",
+      "reviewed_scope": [
+        "first image linked from exact selected50ml product gallery"
+      ],
+      "short_verbatim_excerpts": [],
+      "factual_paraphrase": "Chrome image observation:50ml label, rubber-bulb screw closure and internal glass pipette visible through neck/oil. This is a pipette/dropper assembly, not a generic cap-shape guess. Pipette is inside the bottle; open tip itself is not photographed.",
+      "web_reference": "chrome:1280031977:image-observation"
+    }
+  ],
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "identity": {
+        "brand": "Schwarzkopf Professional Oil Ultime",
+        "product_name": "Argan Finishing Oil",
+        "market": "DE",
+        "size_ml": 100,
+        "gtin": "4067971053844",
+        "producer_product_id": "3050391"
+      },
+      "raw_inci": "Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Argania Spinosa Kernel Oil, Helianthus Annuus (Sunflower) Seed Oil, Tocopherol, Parfum (Fragrance), Linalool, Anise Alcohol, Linalyl Acetate, Trisiloxane, Disiloxane, CI 40800 (Beta-Carotene)",
+      "raw_inci_sha256": "606eb0a9c0f38737881af6edf7e9d72af800bf160ed0d36a2bc13fc5a0928667",
+      "frozen_formula_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "source_id": "PA01-F01",
+        "raw_string_byte_equal": true,
+        "live_names_order_equal": true,
+        "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+      },
+      "prior_selected_persistence_context": "Retained leave-on hair-fibre application; small amount on towel-dried or dry hair; style as usual. No scalp or shampoo-removal assessment.",
+      "formula_conflicts": [
+        "DE maker and DE maker shop agree on this 15-ingredient declaration. A separately encountered NL/Greek maker version omits Linalyl Acetate; no EU-wide formula equivalence is asserted."
+      ],
+      "source_limits": [
+        "Public German producer declaration, not a photographed current batch. Formula is bound to DE page and matching German maker-shop identity only.",
+        "Source says towel-dried/dry hair without explicit lengths/ends restriction; declaration labels hair treatment leave-on. No scalp-only or pre-wash inference."
+      ],
+      "source_ids": [
+        "EUFP-PC01-S01",
+        "EUFP-PC01-S02",
+        "EUFP-PC01-I01"
+      ],
+      "heroes": [
+        {
+          "hero_id": "PC01-H-ARGAN",
+          "hero_name": "Arganöl",
+          "hero_kind": "fixed_botanical_oil",
+          "source_id": "EUFP-PC01-S01",
+          "matched_ranks": [
+            6
+          ],
+          "exact_inci_names": [
+            "Argania Spinosa Kernel Oil"
+          ],
+          "mapping_status": "exact producer technology mapping",
+          "source_words": "Arganöl (Argania Spinosa Kernel Oil)"
+        }
+      ],
+      "non_oil_heroes": [],
+      "packaging_observation": {
+        "source_ids": [
+          "EUFP-PC01-S02",
+          "EUFP-PC01-I01"
+        ],
+        "observed_mechanism": "unestablished",
+        "permitted_dispenser_value": "unknown",
+        "observation": "Exact100ml bottle image has a closed cap over the outlet/actuator. A dip tube is visible, which does not distinguish pump from spray. Directions say small amount without a mechanism.",
+        "unresolved": [
+          "Outlet/actuator mechanism not visible in admitted exact package image."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC01-USE-DAMP",
+          "source_id": "EUFP-PC01-S01",
+          "direction_id": "EUFP-PC01-D01",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "hair; no narrower site restriction printed",
+          "stage": "towel-dried hair, then style",
+          "dose": "small amount",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "retained_by_explicit_product_designation_and_styling_context",
+            "source_id": "EUFP-PC01-S02",
+            "detail": "Ingredient prefix identifies Haarkur leave on; directions end with styling."
+          },
+          "restrictions": []
+        },
+        {
+          "scenario_id": "PC01-USE-DRY",
+          "source_id": "EUFP-PC01-S01",
+          "direction_id": "EUFP-PC01-D01",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "hair; no narrower site restriction printed",
+          "stage": "dry hair, then style",
+          "dose": "small amount",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "retained_by_explicit_product_designation_and_styling_context",
+            "source_id": "EUFP-PC01-S02",
+            "detail": "Ingredient prefix identifies Haarkur leave on; directions end with styling."
+          },
+          "restrictions": []
+        }
+      ],
+      "supplemental_directions": [
+        {
+          "source_id": "EUFP-PC01-S01",
+          "direction_id": "EUFP-PC01-D02",
+          "paraphrase": "Separate expert tip permits overnight intensive care and says pillow-safe; it prints no dose, specific hair site or subsequent wash instruction. Do not turn this into prewash permission or merge missing details from another branch.",
+          "scenario_completeness": "supplemental only"
+        }
+      ],
+      "storage_restrictions": [
+        {
+          "source_id": "EUFP-PC01-S02",
+          "text": "Keep product out of direct sunlight and hot temperatures."
+        }
+      ],
+      "heat_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC01-S01"
+        ],
+        "accepted_manufacturer_explicit_heat_claim": true,
+        "accepted_quote": "Hitzeschutz bis 230°C",
+        "temperature_source_text": "230°C",
+        "absence_scope": null
+      },
+      "uv_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC01-S01"
+        ],
+        "accepted_manufacturer_explicit_hair_uv_claim": false,
+        "accepted_quote": null,
+        "reviewed_nearby_nonqualifying_text": "General environmental protection, free-radical discussion and storage sunlight warning.",
+        "absence_scope": "Full DE overview/benefits/technology/directions/FAQ plus manufacturer-shop keybenefits/howto/warnings; general environmental protection and antioxidant text do not explicitly claim hairUVprotection.",
+        "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+      }
+    },
+    {
+      "neutral_id": "PC02",
+      "identity": {
+        "brand": "L’Oréal Professionnel",
+        "product_name": "Metal Detox Beschermende geconcentreerde olie",
+        "market": "NL",
+        "size_ml": 50,
+        "gtin": "3474637090609"
+      },
+      "raw_inci": "ISODODECANE • AQUA / WATER • DIPROPYLENE GLYCOL • DIMETHICONE • ALCOHOL DENAT. • DIMETHICONOL • GLYCERIN • PEG-14 DIMETHICONE • HYDROXYETHYL UREA • PHENOXYETHANOL • PEG-60 HYDROGENATED CASTOR OIL • LIMONENE • POLYACRYLAMIDE • C13-14 ISOPARAFFIN • PROPYLENE GLYCOL • HEXYL CINNAMAL • LINALOOL • LAURETH-7 • CARAMEL • CITRAL • GLYCINE • GERANIOL • COUMARIN • CI 19140 / YELLOW 5 • POLYQUATERNIUM-7 • CI 15985 / YELLOW 6 • PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE • SODIUM BENZOATE • PARFUM / FRAGRANCE",
+      "raw_inci_sha256": "6630eb1b849b7cdc14cdda91c5320eabd370c1e958e6841b1942f08575069702",
+      "frozen_formula_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "source_id": "PA02-F01",
+        "raw_string_byte_equal": true,
+        "live_names_order_equal": true,
+        "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+      },
+      "prior_selected_persistence_context": "Retained leave-on hair-fibre application; 1–2 pumps warmed in palms, applied from mid-lengths to ends on dry or towel-dried hair; do not rinse, then blow-dry or air-dry. No scalp or shampoo-removal assessment.",
+      "formula_conflicts": [
+        "German maker product named Metal DX exists but exposes no complete INCI in retrieved page; do not join DE identity or infer same formula from that page.",
+        "NL declaration includes AQUA / WATER, not US/UK EAU wording; NL source is independently complete and primary. No cross-market equality needed."
+      ],
+      "source_limits": [
+        "Primary current Netherlands producer page, not a photographed batch. Suitable EU source identity; not a proven German package.",
+        "Producer headline claims are captured only for identity/use; not persistence evidence. 10% Glicoamine text nearby is technology marketing and must not be translated into ingredient concentration."
+      ],
+      "source_ids": [
+        "EUFP-PC02-S01"
+      ],
+      "heroes": [],
+      "hero_review": {
+        "source_id": "EUFP-PC02-S01",
+        "complete": true,
+        "detail": "No named botanical-oil hero in complete product technology/benefits; Glicoamine is a non-oil marketed active, excluded from named oils."
+      },
+      "non_oil_heroes": [
+        {
+          "name": "Glicoamine",
+          "source_id": "EUFP-PC02-S01",
+          "reason": "not a named botanical oil; no concentration inference"
+        }
+      ],
+      "packaging_observation": {
+        "source_ids": [
+          "EUFP-PC02-S01"
+        ],
+        "observed_mechanism": "press pump established by authoritative pump-unit dosing",
+        "permitted_dispenser_value": "pump",
+        "observation": "Exact NL directions specify1or2pump actions into palms. A spray application or pipette is not inferred.",
+        "unresolved": []
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC02-USE-DAMP",
+          "source_id": "EUFP-PC02-S01",
+          "direction_id": "EUFP-PC02-D01",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "mid-lengths to ends",
+          "stage": "towel-dried hair, then blow-dry or air-dry",
+          "dose": "1or2pump actions warmed in palms",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_rinse",
+            "detail": "Niet uitspoelen."
+          },
+          "restrictions": [],
+          "frequency": "daily"
+        },
+        {
+          "scenario_id": "PC02-USE-DRY",
+          "source_id": "EUFP-PC02-S01",
+          "direction_id": "EUFP-PC02-D01",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "mid-lengths to ends",
+          "stage": "dry hair, then blow-dry or air-dry",
+          "dose": "1or2pump actions warmed in palms",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_rinse",
+            "detail": "Niet uitspoelen."
+          },
+          "restrictions": [],
+          "frequency": "daily"
+        }
+      ],
+      "supplemental_directions": [],
+      "storage_restrictions": [],
+      "heat_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC02-S01"
+        ],
+        "accepted_manufacturer_explicit_heat_claim": true,
+        "accepted_quote": "warmtebescherming tot 230°C",
+        "temperature_source_text": "230°C",
+        "absence_scope": null
+      },
+      "uv_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC02-S01"
+        ],
+        "accepted_manufacturer_explicit_hair_uv_claim": false,
+        "accepted_quote": null,
+        "reviewed_nearby_nonqualifying_text": "Colorintensity and metal-deposition discussion, without explicit UVprotection.",
+        "absence_scope": "Entire exact NL product-specific technology/benefits/instrumentaltest/directions/ingredients/precautions block; color maintenance is not explicitly attributed toUV.",
+        "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+      }
+    },
+    {
+      "neutral_id": "PC03",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "raw_inci": "Arachis Hypogaea Oil, Melia Azadirachta Leaf Extract, Triticum Vulgare Germ Oil, Chamomilla Recutita Flower Extract, Lecithin, Alcohol, Parfum*, Helianthus Annuus Seed Oil, Lavandula Oil/Extract, Pinene*, Camphor*, Linalool*, Beta-Caryophyllene*, Limonene*, Terpineol*, Linalyl Acetate*, Citronellol*, Citral*, Alpha-Terpinene*.",
+      "raw_inci_sha256": "f66b825b6a6782c423aaf56cd6d4875df9143123b38a79a2daed8cff9c3e726b",
+      "frozen_formula_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "source_id": "PSB-S01",
+        "raw_string_byte_equal": true,
+        "live_names_order_equal": true,
+        "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+      },
+      "prior_selected_persistence_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+      "formula_conflicts": [],
+      "source_limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "source_ids": [
+        "EUFP-PC03-S01",
+        "EUFP-PC03-I01"
+      ],
+      "heroes": [
+        {
+          "hero_id": "PC03-H-WHEATGERM",
+          "hero_name": "Weizenkeimöl",
+          "hero_kind": "fixed_botanical_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            3
+          ],
+          "exact_inci_names": [
+            "Triticum Vulgare Germ Oil"
+          ],
+          "mapping_status": "source name and exact declared germ oil"
+        },
+        {
+          "hero_id": "PC03-H-ROSEMARY",
+          "hero_name": "ätherisches Rosmarinöl",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [],
+          "exact_inci_names": [],
+          "mapping_status": "explicit advertised oil; no exact recognized rosemary oil in frozen declaration",
+          "ambiguity": "Description names rosemary; current declaration names generic Lavandula Oil/Extract. Do not map rosemary to lavender, fragrance or Camphor. This is a source-copy/declaration mismatch."
+        }
+      ],
+      "non_oil_heroes": [
+        {
+          "name": "Neem",
+          "kind": "leaf extract",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            2
+          ],
+          "reason": "marketed extract rather than named oil"
+        },
+        {
+          "name": "Kamille",
+          "kind": "flower extract",
+          "source_id": "EUFP-PC03-S01",
+          "matched_ranks": [
+            4
+          ],
+          "reason": "marketed extract rather than named oil"
+        }
+      ],
+      "packaging_observation": {
+        "source_ids": [
+          "EUFP-PC03-S01",
+          "EUFP-PC03-I01"
+        ],
+        "observed_mechanism": "press pump with short lateral outlet",
+        "permitted_dispenser_value": "pump",
+        "observation": "Uncapped producer bottle image exposes pump head and side outlet; product description confirms dosing dispenser.",
+        "unresolved": []
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC03-USE-PREWASH-FIBRE",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D01",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": "lengths and ends",
+          "stage": "dampen hair before washing",
+          "dose": "unestablished",
+          "contact_time": "at least20minutes; overnight alternative for very stressed hair",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-PREWASH-SCALP",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D02",
+          "supported_roles": [
+            "scalp_application"
+          ],
+          "site": "scalp; massage with fingertips",
+          "stage": "dampen scalp before washing",
+          "dose": "unestablished",
+          "contact_time": "under towel about20minutes; overnight alternative for very stressed scalp",
+          "removal": {
+            "kind": "explicit_wash_after_contact",
+            "detail": "Wash twice afterwards."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-DAMP-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "ends only",
+          "stage": "after washing, slightly damp hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        },
+        {
+          "scenario_id": "PC03-USE-DRY-ENDS",
+          "source_id": "EUFP-PC03-S01",
+          "direction_id": "EUFP-PC03-D03",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "ends only",
+          "stage": "after washing, dry hair",
+          "dose": "very little",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "explicit_do_not_wash_out",
+            "detail": "Do not wash out."
+          },
+          "restrictions": [],
+          "shake_before_use": true,
+          "frequency": "once weekly; more often if needed"
+        }
+      ],
+      "supplemental_directions": [],
+      "storage_restrictions": [],
+      "heat_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC03-S01"
+        ],
+        "accepted_manufacturer_explicit_heat_claim": false,
+        "accepted_quote": "",
+        "temperature_source_text": null,
+        "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label."
+      },
+      "uv_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC03-S01"
+        ],
+        "accepted_manufacturer_explicit_hair_uv_claim": false,
+        "accepted_quote": null,
+        "reviewed_nearby_nonqualifying_text": "Hair protection from sun or saltwater is stated, but no explicit UV/radiation/hair-color-from-UV wording.",
+        "absence_scope": "All manufacturer product description including expanded text, application, tips, ingredient and quality sections; no accepted heat or explicit hairUVclaim. Product-specific image inspected only for mechanism, not a readable rear label.",
+        "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+      }
+    },
+    {
+      "neutral_id": "PC04",
+      "identity": {
+        "brand": "L’Occitane en Provence",
+        "product": "Huile Cheveux Réparation Intense",
+        "market": "FR",
+        "size_ml": 50,
+        "gtin": null,
+        "sku": "11HI050G24",
+        "producer_url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html"
+      },
+      "raw_inci": "ISOPROPYL PALMITATE - COCO-CAPRYLATE/CAPRATE - C13-15 ALKANE - ETHYLHEXYL PALMITATE - PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL - OCTYLDODECANOL - HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT - DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT - RICINUS COMMUNIS (CASTOR) SEED OIL - HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL - CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL - PELARGONIUM GRAVEOLENS LEAF OIL - LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL - CANANGA ODORATA FLOWER OIL - ANGELICA ARCHANGELICA SEED OIL - ANGELICA ARCHANGELICA ROOT OIL - GLYCINE SOJA (SOYBEAN) OIL - HYDROGENATED COCO-GLYCERIDES - TOCOPHEROL - TOCOPHERYL ACETATE - PARFUM/FRAGRANCE - BENZYL BENZOATE - LIMONENE - LINALOOL - CITRONELLOL - GERANIOL",
+      "raw_inci_sha256": "9129e7d72e79eb11d77e7af3cdd316b50663d595477091a59a6d0c45d322d777",
+      "frozen_formula_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/persistence-contrast-v0.1/source-bindings-v0.2.json",
+        "source_id": "PSB-S02",
+        "raw_string_byte_equal": true,
+        "live_names_order_equal": true,
+        "comparison_note": "Frozen raw string retained exactly. Live producer full declaration checked for the same names/order; HTML whitespace and separators do not create a new formula."
+      },
+      "prior_selected_persistence_context": "Retained leave-on hair-fibre application; 3–4 drops warmed between hands, applied to lengths and ends of damp or dry hair. No scalp or shampoo-removal assessment; separate overnight pre-wash scenario excluded.",
+      "formula_conflicts": [],
+      "source_limits": [
+        "GTIN not captured. Exact URL SKU and 50 ml current selected size; 100 ml alternate is not assumed package-identical.",
+        "Same directions section separately permits a generous overnight use followed by washing. The initial 3-4 drops damp/dry branch is the retained styling application selected; exclude overnight prewash branch.",
+        "No repair/bond or thermoprotection claim evidence supplied to formula classifier.",
+        "Hyphens around ingredients are source separators; the internal hyphen in C13-15 is part of the exact ingredient name."
+      ],
+      "source_ids": [
+        "EUFP-PC04-S01",
+        "EUFP-PC04-I01"
+      ],
+      "heroes": [
+        {
+          "hero_id": "PC04-H-ANGELICA",
+          "hero_name": "huiles essentielles de semences et racines d’Angélique",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            15,
+            16
+          ],
+          "exact_inci_names": [
+            "ANGELICA ARCHANGELICA SEED OIL",
+            "ANGELICA ARCHANGELICA ROOT OIL"
+          ],
+          "mapping_status": "producer explicitly names seed and root oils; declaration preserves separate forms"
+        },
+        {
+          "hero_id": "PC04-H-YLANGYLANG",
+          "hero_name": "Ylang-Ylang",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            14
+          ],
+          "exact_inci_names": [
+            "CANANGA ODORATA FLOWER OIL"
+          ],
+          "mapping_status": "named essentialoil group to declared botanical form"
+        },
+        {
+          "hero_id": "PC04-H-SWEETORANGE",
+          "hero_name": "Orange douce",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            11
+          ],
+          "exact_inci_names": [
+            "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL"
+          ],
+          "mapping_status": "named essentialoil group to declared botanical form"
+        },
+        {
+          "hero_id": "PC04-H-LAVENDER",
+          "hero_name": "Lavande",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            13
+          ],
+          "exact_inci_names": [
+            "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL"
+          ],
+          "mapping_status": "named essentialoil group to declared botanical form"
+        },
+        {
+          "hero_id": "PC04-H-GERANIUM",
+          "hero_name": "Géranium",
+          "hero_kind": "essential_oil",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            12
+          ],
+          "exact_inci_names": [
+            "PELARGONIUM GRAVEOLENS LEAF OIL"
+          ],
+          "mapping_status": "named essentialoil group to declared botanical form"
+        }
+      ],
+      "non_oil_heroes": [
+        {
+          "name": "Extrait de Tournesol aux Céramides Végétaux",
+          "kind": "sunflower seed extract",
+          "source_id": "EUFP-PC04-S01",
+          "matched_ranks": [
+            7
+          ],
+          "exact_inci_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+          "reason": "Source explicitly markets an extract, not rank10 sunflower seed oil. Do not promote extract to fixed-oil hero."
+        }
+      ],
+      "packaging_observation": {
+        "source_ids": [
+          "EUFP-PC04-S01",
+          "EUFP-PC04-I01"
+        ],
+        "observed_mechanism": "rubber bulb and internal glass pipette assembly",
+        "permitted_dispenser_value": "dropper",
+        "observation": "Producer-selected50ml image shows pipette through bottle neck and bulb closure. Exact open tip not photographed; evidence is the assembly plus source drop dosing.",
+        "unresolved": []
+      },
+      "application_scenarios": [
+        {
+          "scenario_id": "PC04-USE-DAMP",
+          "source_id": "EUFP-PC04-S01",
+          "direction_id": "EUFP-PC04-D01",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ],
+          "site": "lengths and ends",
+          "stage": "damp hair",
+          "dose": "3–4drops warmed between hands",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "retained_by_styling_application_context",
+            "detail": "Ordinary damp/dry standalone oil application is separate from explicit overnightwash branch; no rinse command added."
+          },
+          "restrictions": []
+        },
+        {
+          "scenario_id": "PC04-USE-DRY",
+          "source_id": "EUFP-PC04-S01",
+          "direction_id": "EUFP-PC04-D01",
+          "supported_roles": [
+            "dry_finish"
+          ],
+          "site": "lengths and ends",
+          "stage": "dry hair",
+          "dose": "3–4drops warmed between hands",
+          "contact_time": "unestablished",
+          "removal": {
+            "kind": "retained_by_styling_application_context",
+            "detail": "Ordinary damp/dry standalone oil application is separate from explicit overnightwash branch; no rinse command added."
+          },
+          "restrictions": []
+        },
+        {
+          "scenario_id": "PC04-USE-OVERNIGHT-PREWASH",
+          "source_id": "EUFP-PC04-S01",
+          "direction_id": "EUFP-PC04-D02",
+          "supported_roles": [
+            "pre_wash_fibre_treatment"
+          ],
+          "site": "lengths and ends",
+          "stage": "overnight before next wash; damp/dry state not specified for this separatebranch",
+          "dose": "generous amount",
+          "contact_time": "all night",
+          "removal": {
+            "kind": "explicit_wash_on_waking",
+            "detail": "Wash hair on waking."
+          },
+          "restrictions": []
+        }
+      ],
+      "supplemental_directions": [],
+      "storage_restrictions": [],
+      "heat_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC04-S01"
+        ],
+        "accepted_manufacturer_explicit_heat_claim": false,
+        "accepted_quote": "",
+        "temperature_source_text": null,
+        "absence_scope": "Complete exactFR product description, directions, hero ingredient explanations, results and routine; no accepted heat or explicit hairUVclaim.50ml image inspected for package identity/mechanism, no rearlabel claims inferred."
+      },
+      "uv_claim_review": {
+        "review_complete": true,
+        "source_ids": [
+          "EUFP-PC04-S01"
+        ],
+        "accepted_manufacturer_explicit_hair_uv_claim": false,
+        "accepted_quote": null,
+        "reviewed_nearby_nonqualifying_text": null,
+        "absence_scope": "Complete exactFR product description, directions, hero ingredient explanations, results and routine; no accepted heat or explicit hairUVclaim.50ml image inspected for package identity/mechanism, no rearlabel claims inferred.",
+        "filter_matching": "Not performed in source lane; exact formula filter matching belongs to root. No finished-product UV boolean emitted."
+      }
+    }
+  ],
+  "exceptions": [
+    {
+      "neutral_id": "PC01",
+      "kind": "dispenser_observation_gap",
+      "detail": "Exact100ml maker image keeps outlet under closed cap. Unknown is an allowed observed-property result; do not guess."
+    },
+    {
+      "neutral_id": "PC03",
+      "kind": "advertised_hero_declaration_mismatch",
+      "detail": "Rosemary oil advertised but absent from current frozen declaration; preserve both facts and exactform distinction."
+    },
+    {
+      "neutral_id": "PC04",
+      "kind": "oil_vs_extract_and_aromatic_materials",
+      "detail": "All five marketed oil heroes are essential oils. Sunflower marketed hero is extract, not intact seed oil. Root must preserve evidence ceiling when applying namedoil prominence; this lane does not decide it."
+    }
+  ],
+  "source_access_note": "IAB startup unavailable. Chrome read-only fallback visually inspected producerlinked package images. Source tab ephemeral; no external writes/downloadedmedia/browserpermission changes.",
+  "completion": "complete_source_packet_with_documented_observation_gaps"
+}

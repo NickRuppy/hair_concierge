@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "scope": "artifact completeness/coherence, not scientific accuracy",
+  "date": "2026-10-02",
+  "materials": 64,
+  "canonical_names_and_aliases": 103,
+  "counts": {
+    "light": 45,
+    "rich": 7,
+    "medium": 11,
+    "unknown": 1
+  },
+  "substantive_confidence": {
+    "low": 61,
+    "moderate": 2
+  },
+  "validated_hair_weight_entries": 0,
+  "source_records": 80,
+  "all_entry_and_exclusion_source_references_resolve": true,
+  "guide_json_agreement": true,
+  "historical_hashes_verified": {
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.5.json": "7c538a118eb1d1fa1c3bfa57d5b92c7144da2746395eb2877023c9d318ca98ba",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.5.md": "8784e11c73f8d9d79b500f27dcc339118472c282b9b0113e4675dff908d1dbed",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.4.json": "7ad2d960c008290687938a7b32be00598b6782f21b9d604cc13821266f02ddb2",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.4.md": "b95f173e506b608fc2a53283c987e55e25511a72853bea3094eae174ac3fd8b0",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.3.json": "708f1f8e70bced33d629680731c311ae4c5453cda3c9e6d8d968ecc349f3160f",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.3.md": "4fca6c45c3358a3f59a7c83342be3ee4259e70f340d6e5d463585d8eca890d0f"
+  },
+  "approved_sunflower_marula_preserved": true,
+  "new_product_calibration": false,
+  "candidate_reference_sha256": "2d250e05d1a3dbcb6e3960351c99a74ccc4e00a743b4e790dc356e4c460fca34",
+  "candidate_guide_sha256": "fd56b023f3067ef017f925b203bb77f8dab1b82c68743c774c0eea8d6eb4e7ed"
+}

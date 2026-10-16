@@ -1,0 +1,41 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "status": "passed",
+  "checks": {
+    "frozen_inputs_and_both_seals_sha256": true,
+    "read_allowlist_and_incident_attestations": true,
+    "99_source_ranks_per_lane_and_formula_hashes": true,
+    "exact_dictionary_roles_and_closed_output_shapes": true,
+    "4of4_value_agreement": true,
+    "parent_evening_primrose_alias_correction": true,
+    "brand_blinding_and_relative_report_links": true,
+    "json_parse": true,
+    "previous_lab_research_paths_unchanged": 959
+  },
+  "critical_decisions": [],
+  "rule_changes": [],
+  "heavy_app_checks": "Not run: research/data-only additions; no executable app behavior changed. No tests/typecheck/lint/build launched.",
+  "verification_method": "Root light Python JSON/hash/rank/schema/source/alias/link assertions after both seals; independent preflight/frozen-input/output audits retained.",
+  "limits": [
+    "US/UK maker web declarations; no DE/EU physical package or cross-market equivalence",
+    "Fushi/Tabitha new exact product/variant formulas; other products/variants from these brands were encountered before",
+    "Fushi source typo Brahmi Herpestis remains unresolved and uncorrected",
+    "Sebastian package size unavailable; research-scoped formula, not intake-ready identity",
+    "Only weight assessed, no other product property, eligibility, matching, persistence or efficacy derived",
+    "No rich case in this contrast and no measured dose/retention/sensory endpoint",
+    "Generic function/identity supplements are local to this batch, no new global alias or material-weight prior"
+  ],
+  "publication": "No commit, push, activation, DB/catalog write or Lab mutation.",
+  "canonical_content_fingerprint": "6df86c11e46d5fbcab6dbbe71958b3b7b9fc3fe5ddbb45cafde6ca0e3945c43d",
+  "manifest_paths": 33,
+  "independent_audits": [
+    "preflight-audit.json",
+    "frozen-input-audit.json",
+    "output-audit.json"
+  ],
+  "decision_coverage": {
+    "status": "confirmed",
+    "authorization": "Okay sounds good, let's test the blend weight rules on a few fresh products. Use subagents and only come back to me if there's a critical decision.",
+    "internal_revalidation": "Scope remains weight-only under existing rules, source-scoped evidence, no consequential new assumption or critical decision."
+  }
+}

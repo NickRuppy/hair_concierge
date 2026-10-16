@@ -1,0 +1,1322 @@
+{
+  "reference_version": "v0.10",
+  "scope": "pure-material tendencies only; never percentages or finished-formula labels",
+  "entries": [
+    {
+      "id": "jojoba",
+      "canonical_inci": "SIMMONDSIA CHINENSIS SEED OIL",
+      "aliases": [
+        "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match Jojoba Esters, Hydrolyzed Jojoba Esters, Hydrogenated Jojoba Oil, Isopropyl Jojobate or PEG derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "grapeseed",
+      "canonical_inci": "VITIS VINIFERA SEED OIL",
+      "aliases": [
+        "VITIS VINIFERA (GRAPE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude seed extract and hydrogenated/PEG derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "c8_c10_mct",
+      "canonical_inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "aliases": [],
+      "material_family": "processed_triglyceride_emollient",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "moderate",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not whole Cocos Nucifera Oil; not Triheptanoin (C7), Caprylic/Capric/Succinic Triglyceride, caprylate esters or generic fractionated coconut oil without exact INCI.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sweet_almond",
+      "canonical_inci": "PRUNUS AMYGDALUS DULCIS OIL",
+      "aliases": [
+        "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude seed extract, bitter almond essential oil, almond butter and hydrogenated carrier blends.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "apricot_kernel",
+      "canonical_inci": "PRUNUS ARMENIACA KERNEL OIL",
+      "aliases": [
+        "PRUNUS ARMENIACA (APRICOT) KERNEL OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Kernel oil only; not fruit extract, kernel extract or butter.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "safflower",
+      "canonical_inci": "CARTHAMUS TINCTORIUS SEED OIL",
+      "aliases": [
+        "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude safflower oleosomes, phospholipid derivatives and extracts. INCI does not identify chemotype.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "castor",
+      "canonical_inci": "RICINUS COMMUNIS SEED OIL",
+      "aliases": [
+        "RICINUS COMMUNIS (CASTOR) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "moderate",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Never transfer to Hydrogenated Castor Oil, PEG-40/60 Hydrogenated Castor Oil, Ricinoleates, castor copolymers or Triheptanoin.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "coconut_whole",
+      "canonical_inci": "COCOS NUCIFERA OIL",
+      "aliases": [
+        "COCOS NUCIFERA (COCONUT) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude MCT/fractionated derivatives, Coconut Alkanes, Coco-Caprylate/Caprate, hydrogenated coconut oil and coconut extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "argan",
+      "canonical_inci": "ARGANIA SPINOSA KERNEL OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows."
+      },
+      "identity_limits": "Exclude kernel extract, argan butter and modified esters.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "olive",
+      "canonical_inci": "OLEA EUROPAEA FRUIT OIL",
+      "aliases": [
+        "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Fruit oil only; exclude leaf extract, olive squalane, olivates, hydrogenated olive oil and unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "avocado",
+      "canonical_inci": "PERSEA GRATISSIMA OIL",
+      "aliases": [
+        "PERSEA GRATISSIMA (AVOCADO) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude avocado extract, butter, unsaponifiables and hydrogenated oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sunflower",
+      "canonical_inci": "HELIANTHUS ANNUUS SEED OIL",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude seed wax, extract, hydrogenated oil and high-oleic assumption from plain INCI.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "macadamia",
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Macadamia Ternifolia Seed Oil is a distinct declared species, not an exact alias; similar prior requires an explicit separate mapping. Exclude Ethyl Macadamiate and hydrogenated derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "hemp",
+      "canonical_inci": "CANNABIS SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude Cannabis Sativa Extract, CBD/cannabinoids and essential oils.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "marula",
+      "canonical_inci": "SCLEROCARYA BIRREA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "rich",
+        "alternatives": [
+          "rich",
+          "light"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude marula esters, extracts and alkane blends.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "baobab",
+      "canonical_inci": "ADANSONIA DIGITATA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude extract, hydrolyzed seed protein and modified derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "camellia_japonica",
+      "canonical_inci": "CAMELLIA JAPONICA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not alias Camellia Sinensis Leaf Extract or any leaf extract. Japonica, oleifera and sinensis seed oils are separate botanical identities.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "black_seed",
+      "canonical_inci": "NIGELLA SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows."
+      },
+      "identity_limits": "Only intact fixed seed oil; not essential oil, Nigella extract, thymoquinone or Carum Carvi Seed Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "wheat_germ",
+      "canonical_inci": "TRITICUM VULGARE GERM OIL",
+      "aliases": [
+        "TRITICUM VULGARE (WHEAT) GERM OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Exclude germ extract, hydrolyzed wheat protein and Wheat Germ Glycerides.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sea_buckthorn_fruit",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "aliases": [
+        "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not transfer to Hippophae Rhamnoides Seed Oil, extracts or carrier macerates. Pulp Oil wording needs documented INCI identity.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "watermelon_seed",
+      "canonical_inci": "CITRULLUS LANATUS SEED OIL",
+      "aliases": [
+        "CITRULLUS LANATUS (WATERMELON) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; not fruit extract; common watermelon and Kalahari materials may differ by cultivar/grade.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "moringa",
+      "canonical_inci": "MORINGA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light"
+        ],
+        "unresolved": "No equal-dose comparative hair-weight protocol or independently verified sheet authorship is available. Grade, dose and distribution can change feel; light remains credible. No thickness eligibility follows."
+      },
+      "identity_limits": "Seed oil only; exclude leaf/seed extracts, hydrogenated or modified oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "babassu",
+      "canonical_inci": "ORBIGNYA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "No comparative neat leave-on hair-heaviness endpoint. This is a weak family/temperature hypothesis: ordinary application can be liquid, colder lengths can differ, and grade/dose/spreading can support light or rich."
+      },
+      "identity_limits": "Exact Orbignya Oleifera identity only; not automatic Orbignya Speciosa/Attalea synonym expansion or babassu esters.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "pomegranate_seed",
+      "canonical_inci": "PUNICA GRANATUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Seed oil only; exclude fruit extract, seed extract and modified derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "camellia_oleifera",
+      "canonical_inci": "CAMELLIA OLEIFERA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not alias Camellia Japonica Seed Oil, Camellia Sinensis Seed Oil or any leaf extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "corn_germ",
+      "canonical_inci": "ZEA MAYS GERM OIL",
+      "aliases": [
+        "ZEA MAYS (CORN) GERM OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Zea Mays Oil, Zea Mays Germ Extract, Zea Mays Oil Unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "corn_oil",
+      "canonical_inci": "ZEA MAYS OIL",
+      "aliases": [
+        "ZEA MAYS (CORN) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Zea Mays Germ Oil, Zea Mays Oil Unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "soybean",
+      "canonical_inci": "GLYCINE SOJA OIL",
+      "aliases": [
+        "GLYCINE SOJA (SOYBEAN) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Hydrogenated Soybean Oil, Glycine Soja Sterols, Glycine Soja Oil Unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sesame",
+      "canonical_inci": "SESAMUM INDICUM SEED OIL",
+      "aliases": [
+        "SESAMUM INDICUM (SESAME) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Sesamum Indicum Seed Extract, Sesame Oil Unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rice_bran",
+      "canonical_inci": "ORYZA SATIVA BRAN OIL",
+      "aliases": [
+        "ORYZA SATIVA (RICE) BRAN OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Oryza Sativa Germ Oil, Oryza Sativa Bran Wax, Oryza Sativa Bran Extract, Oryza Sativa Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "oat_kernel",
+      "canonical_inci": "AVENA SATIVA KERNEL OIL",
+      "aliases": [
+        "AVENA SATIVA (OAT) KERNEL OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Avena Sativa Kernel Extract, Avena Sativa Kernel Flour, Avena Sativa Kernel Lipids.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rapeseed_campestris",
+      "canonical_inci": "BRASSICA CAMPESTRIS SEED OIL",
+      "aliases": [
+        "BRASSICA CAMPESTRIS (RAPESEED) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Brassica Napus Seed Oil, Canola Oil, Hydrogenated Rapeseed Oil, Brassica Oleracea Italica Seed Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rapeseed_napus",
+      "canonical_inci": "BRASSICA NAPUS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Study botanical species/grade not specified; cosmetic Napus and high-erucic grades may differ."
+      },
+      "identity_limits": "Do not match: Brassica Campestris Seed Oil, Canola Oil, Brassica Rapa Seed Oil, Hydrogenated Rapeseed Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "canola_declaration",
+      "canonical_inci": "CANOLA OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "30 C food-grade viscosity is not a room-temperature cosmetic hair test; ordinary intact canola only."
+      },
+      "identity_limits": "Do not match: Brassica Campestris Seed Oil, Brassica Napus Seed Oil, Hydrogenated Canola Oil, Canola Oil Unsaponifiables.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "flax_linseed",
+      "canonical_inci": "LINUM USITATISSIMUM SEED OIL",
+      "aliases": [
+        "LINUM USITATISSIMUM (LINSEED) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "No dose, hair type or comparative panel disclosed; cold-pressed grades may differ."
+      },
+      "identity_limits": "Do not match: Linum Usitatissimum Seed Extract, boiled linseed oil, polymerized linseed oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "evening_primrose",
+      "canonical_inci": "OENOTHERA BIENNIS OIL",
+      "aliases": [
+        "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Single supplier batch; remaining surface oil and strand clumping not measured; MEDIUM plausible."
+      },
+      "identity_limits": "Do not match: Oenothera Biennis Extract, Oenothera Biennis Flower Extract, Oenothera Biennis Seed Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "borage",
+      "canonical_inci": "BORAGO OFFICINALIS SEED OIL",
+      "aliases": [
+        "BORAGO OFFICINALIS (BORAGE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Unusually low measured value is one supplier sample; do not claim all borage grades share it or infer evaporation/absorption."
+      },
+      "identity_limits": "Do not match: Borago Officinalis Extract, Borago Officinalis Seed Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "camelina",
+      "canonical_inci": "CAMELINA SATIVA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial advice includes mixing and very small dosage, so no equal-dose neat-oil validation."
+      },
+      "identity_limits": "Do not match: Camelina Sativa Seed Extract, hydrogenated or esterified camelina derivatives.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "chia",
+      "canonical_inci": "SALVIA HISPANICA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Material from an engineering study rather than cosmetic hair test; spreading on hair remains inferred."
+      },
+      "identity_limits": "Do not match: Salvia Hispanica Seed Extract, Salvia Hispanica Seed Butter.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "blackcurrant",
+      "canonical_inci": "RIBES NIGRUM SEED OIL",
+      "aliases": [
+        "RIBES NIGRUM (BLACK CURRANT) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Supercritical extraction and 40 C are imperfect proxies for cold-pressed/refined room-temperature cosmetic oil; MEDIUM plausible."
+      },
+      "identity_limits": "Do not match: Ribes Nigrum Fruit Extract, Ribes Nigrum Seed Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sunflower_hybrid",
+      "canonical_inci": "HELIANTHUS ANNUUS HYBRID OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Hybrid cultivar and grade variation can shift residual coating; approved ordinary sunflower remains a separate entry."
+      },
+      "identity_limits": "Do not match: Helianthus Annuus Seed Oil, Helianthus Annuus Seed Cera.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "macadamia_ternifolia",
+      "canonical_inci": "MACADAMIA TERNIFOLIA SEED OIL",
+      "aliases": [
+        "MACADAMIA TERNIFOLIA (MACADAMIA) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "80 mPa.s is integrifolia/tetraphylla family data, not measured ternifolia; refined ternifolia could be LIGHT. Difference from integrifolia is not established."
+      },
+      "identity_limits": "Do not match: Macadamia Integrifolia Seed Oil, Macadamia Integrifolia/Tetraphylla Seed Oil, Ethyl Macadamiate.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "macadamia_hybrid",
+      "canonical_inci": "MACADAMIA INTEGRIFOLIA/TETRAPHYLLA SEED OIL",
+      "aliases": [
+        "MACADAMIA INTEGRIFOLIA / TETRAPHYLLA SEED OIL",
+        "MACADAMIA INTEGRIFOLIA TETRAPHYLLA SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Producer says integrifolia and/or tetraphylla, not certified botanical hybrid; family inference only, and qualitative low viscosity conflicts with a strict boundary."
+      },
+      "identity_limits": "Do not match: Macadamia Integrifolia Seed Oil, Macadamia Ternifolia Seed Oil, Macadamia Tetraphylla Seed Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "cottonseed_hirsutum",
+      "canonical_inci": "GOSSYPIUM HIRSUTUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Study lacks species declaration; Hirsutum transfer is family-level inference and depends on refining/winterization."
+      },
+      "identity_limits": "Do not match: Gossypium Herbaceum Seed Oil, Hydrogenated Cottonseed Oil, Gossypium Hirsutum Seed Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "buriti",
+      "canonical_inci": "MAURITIA FLEXUOSA FRUIT OIL",
+      "aliases": [
+        "MAURITIA FLEXUOSA (BURITI) FRUIT OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Uncontrolled supplier advice and grade variation; comparison establishes heavier than jojoba, not a validated RICH cutoff."
+      },
+      "identity_limits": "Do not match: Mauritia Flexuosa Seed Oil, buriti extracts, finished blends.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "meadowfoam",
+      "canonical_inci": "LIMNANTHES ALBA SEED OIL",
+      "aliases": [
+        "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "No neat equal-dose hair sensory test; LIGHT remains plausible for well-distributed modest application."
+      },
+      "identity_limits": "Do not match: Hydrogenated Meadowfoam Seed Oil, meadowfoam estolides, dimethicone copolyol meadowfoamate, fermented meadowfoam oils.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rosehip_canina_fruit",
+      "canonical_inci": "ROSA CANINA FRUIT OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Source offers alternate rosehip declarations; no exact-batch hair test and no blanket transfer from Rubiginosa."
+      },
+      "identity_limits": "Do not match: Rosa Canina Seed Oil, Rosa Rubiginosa Seed Oil, Rosa Moschata Seed Oil, rose essential oil, rosehip extracts.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rosehip_rubiginosa_seed",
+      "canonical_inci": "ROSA RUBIGINOSA SEED OIL",
+      "aliases": [
+        "ROSA RUBIGINOSA (ROSE HIP) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Producer writes Rosa aff. Rubiginosa and alternative Canina declaration; inference is family/supplied-grade, not exact species equivalence."
+      },
+      "identity_limits": "Do not match: Rosa Canina Fruit Oil, Rosa Canina Seed Oil, Rosa Moschata Seed Oil, rose essential oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "rosehip_moschata_seed",
+      "canonical_inci": "ROSA MOSCHATA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Rosa Canina Fruit Oil, Rosa Canina Seed Oil, Rosa Rubiginosa Seed Oil, rose essential oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "passionfruit",
+      "canonical_inci": "PASSIFLORA EDULIS SEED OIL",
+      "aliases": [
+        "PASSIFLORA EDULIS (PASSIONFRUIT) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Passiflora Incarnata Seed Oil, passionflower extracts.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "prickly_pear",
+      "canonical_inci": "OPUNTIA FICUS INDICA SEED OIL",
+      "aliases": [
+        "OPUNTIA FICUS INDICA (PRICKLY PEAR) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Opuntia Ficus-Indica Fruit Extract, flower macerates, cactus extracts.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "tamanu",
+      "canonical_inci": "CALOPHYLLUM INOPHYLLUM SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Calophyllum Tacamahaca Seed Oil, tamanu extracts, unresolved Calophyllum species.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "brazil_nut",
+      "canonical_inci": "BERTHOLLETIA EXCELSA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Brazil nut extracts, Nut Oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "kukui",
+      "canonical_inci": "ALEURITES MOLUCCANUS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Aleurites Moluccana Nut Oil, Aleurites Moluccana Seed Oil, kukui extracts.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sacha_inchi",
+      "canonical_inci": "PLUKENETIA VOLUBILIS SEED OIL",
+      "aliases": [
+        "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: sacha inchi proteins, Plukenetia Volubilis Seed Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "plum",
+      "canonical_inci": "PRUNUS DOMESTICA SEED OIL",
+      "aliases": [
+        "PRUNUS DOMESTICA (PLUM) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Prunus Domestica Fruit Extract, other Prunus oils.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "raspberry",
+      "canonical_inci": "RUBUS IDAEUS SEED OIL",
+      "aliases": [
+        "RUBUS IDAEUS (RASPBERRY) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Rubus Occidentalis Seed Oil, Rubus Idaeus Fruit Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "coffee",
+      "canonical_inci": "COFFEA ARABICA SEED OIL",
+      "aliases": [
+        "COFFEA ARABICA (COFFEE) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Coffea Canephora Seed Oil, Coffea Arabica Seed Extract, coffee fragrance oils, coffee macerates.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "cranberry",
+      "canonical_inci": "VACCINIUM MACROCARPON SEED OIL",
+      "aliases": [
+        "VACCINIUM MACROCARPON (CRANBERRY) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Vaccinium Vitis-Idaea Seed Oil, Vaccinium Macrocarpon Fruit Extract.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "camellia_sinensis",
+      "canonical_inci": "CAMELLIA SINENSIS SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match: Camellia Oleifera Seed Oil, Camellia Japonica Seed Oil, Camellia Sinensis Leaf Extract, tea tree essential oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "broccoli_seed",
+      "canonical_inci": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "aliases": [
+        "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not broccoli extract, other Brassica species, hydrogenated oil or copolymer.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "peanut",
+      "canonical_inci": "ARACHIS HYPOGAEA OIL",
+      "aliases": [
+        "ARACHIS HYPOGAEA (PEANUT) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "medium",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "light",
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Do not match peanut flour, extract, hydrogenated oil or a proprietary oil blend.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sea_buckthorn_fruit_seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES FRUIT/SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "nearest_alternative": null,
+        "alternatives": [
+          "light",
+          "rich"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Separate from fruit-only, seed-only, extracts and mixtures with other carriers.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sea_buckthorn_seed",
+      "canonical_inci": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Commercial grade, applied dose, hair condition and temperature can change the estimate; no standardized hair-weight comparison establishes this class."
+      },
+      "identity_limits": "Not fruit/pulp oil, fruit/seed combination, Kernel Extract, or CO2 extract blend unless exact INCI independently reconciled.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "cacay",
+      "canonical_inci": "CARYODENDRON ORINOCENSE SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium",
+          "light"
+        ],
+        "unresolved": "Practical sheet guidance only; no measured hair-weight class. Dose, grade and distribution may support lighter outcomes; medium and light remain alternatives."
+      },
+      "identity_limits": "Exact seed-oil declaration only. Do not match Cacay trade names, extracts, blends, derivatives or a different species/plant part as this neat fixed oil.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "hazelnut_seed",
+      "canonical_inci": "CORYLUS AVELLANA SEED OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "No controlled comparative hair-weight endpoint was found in the bounded search. Grade, processing, applied dose, distribution and hair condition can affect the estimate; no precise oil ranking or automatic thickness eligibility."
+      },
+      "identity_limits": "Exact Corylus Avellana Seed Oil only. No new generic parenthetical alias. Do not match hazelnut trade names, seed extract, other species/plant parts, macerates, derivatives or finished blends. Product-specific display normalization remains a separate exact receipt.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "coconut_fruit_oil_declaration",
+      "canonical_inci": "COCOS NUCIFERA FRUIT OIL",
+      "aliases": [],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "rich",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "Source-backed transfer from the existing whole-coconut tendency, not a universal regulatory/analytical equivalence. Physical batch, exact supplier grade and standardized comparative hair weight are unverified. Conflicting preparation evidence in a particular product still requires review."
+      },
+      "identity_limits": "Match only exact Cocos Nucifera Fruit Oil. No generic alias to Cocos Nucifera Oil and no parenthetical alias is added. Exclude Fruit Extract, juice/water, macerates, hydrogenated/modified derivatives and processed C8/C10 MCT. Conflicting supplier preparation evidence remains a product-specific review gap.",
+      "validated_hair_weight": false
+    },
+    {
+      "id": "sunflower_oil_declaration",
+      "canonical_inci": "HELIANTHUS ANNUUS OIL",
+      "aliases": [
+        "HELIANTHUS ANNUUS (SUNFLOWER) OIL"
+      ],
+      "material_family": "intact_fixed_botanical_oil",
+      "weight_prior": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "nearest_alternative": "medium",
+        "alternatives": [
+          "medium"
+        ],
+        "unresolved": "The literal omission of Seed is resolved for these two exact spellings; supplier grade, extraction/refining, oleic composition and comparative hair feel are unverified. Conflicting material evidence in a specific product still requires review."
+      },
+      "identity_limits": "Match only Helianthus Annuus Oil and the listed exact parenthetical spelling. Keep the existing Seed Oil and Hybrid Oil entries distinct. No removal of plant-part/form words or generic synonym normalization. Exclude flower/leaf/stem/sprout/seed extracts, wax, butter, unsaponifiables and modified/hydrogenated derivatives. Do not infer high-oleic grade or all-batch equivalence.",
+      "validated_hair_weight": false
+    }
+  ]
+}

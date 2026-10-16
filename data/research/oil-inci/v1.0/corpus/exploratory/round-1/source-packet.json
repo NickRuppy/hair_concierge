@@ -1,0 +1,1157 @@
+{
+  "captured_at": "2026-10-01",
+  "scope": "Exact published German-market declarations; corroborated manufacturer sources. No physical batch verification. Canonical capture is never assembled by merging alternatives.",
+  "records": [
+    {
+      "slot": "E01",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3830066651079",
+        "gtin_source_id": "E01-retailer-de",
+        "selection_note": "Authorized cosmetic replacement for the original dmBio food-oil slot; original selection history remains in preflight."
+      },
+      "sources": [
+        {
+          "id": "E01-maker",
+          "url": "https://biopark-cosmetics.com/products/organic-coconut-oil-100ml",
+          "source_author": "Biopark Cosmetics",
+          "host_role": "manufacturer",
+          "tier": "exact_manufacturer_international_with_DE_pack_corroboration",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 100 ml cosmetics product; composition, instructions, physical form and product-image jar identification reviewed. English page; DE corroboration is separate."
+        },
+        {
+          "id": "E01-retailer-de",
+          "url": "https://www.ecco-verde.de/biopark-cosmetics/coconut-oil",
+          "source_author": "Ecco Verde / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE 100 ml pack, EAN 3830066651079, article BPC-BIOP071. Manufacturer listed as Zin d.o.o.; that listing does not make all retailer prose manufacturer-authored."
+        }
+      ],
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "canonical_source_id": "E01-maker",
+      "formula_capture_notes": "Manufacturer composition names one oil; organic-production wording is a sourcing annotation. Retailer uses a shortened linked ingredient name, preserved below rather than replacing the maker declaration.",
+      "directions": [
+        {
+          "id": "E01-maker-before-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "Massage into dry hair; leave at least 30 minutes or overnight, then shampoo. Scalp massage is also instructed in this wash-out context.",
+          "site": [
+            "hair",
+            "scalp"
+          ],
+          "stage": "dry_before_wash",
+          "dose": "unspecified",
+          "contact_time": "at least 30 minutes; overnight offered",
+          "removal": "shampoo",
+          "restrictions": "Scalp instruction appears beside a dandruff claim; no dandruff efficacy property is adopted."
+        },
+        {
+          "id": "E01-maker-after-wash",
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "After washing, put a small amount on the ends and retain it.",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash; damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "no_rinse"
+        },
+        {
+          "id": "E01-retailer-after-drying",
+          "source_id": "E01-retailer-de",
+          "verbatim": false,
+          "text": "Following the shampooed mask and drying, massage a small amount into the ends.",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash_and_drying",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "retained_by_context"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "other",
+        "mechanism_detail": "Jar with removable lid; contents accessed directly through jar opening.",
+        "source_id": "E01-retailer-de",
+        "corroborating_source_id": "E01-maker",
+        "confidence": "high",
+        "evidence": "Exact retailer pack is identified as a jar; manufacturer product image alternative text also identifies a jar. No scoop, metering or pour mechanism established."
+      },
+      "physical_observations": [
+        {
+          "source_id": "E01-maker",
+          "verbatim": false,
+          "text": "Semisolid; becomes liquid when warmed."
+        }
+      ],
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Product description and instructions contain no explicit hair heat-protection claim."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Biopark Cosmetics",
+          "source_id": "E01-maker",
+          "claim_excerpt": null,
+          "review_notes": "Maker discusses skin care after sun exposure, not hair UV protection. Retailer sun-protection taxonomy is not manufacturer claim evidence."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E01-maker",
+          "wording": "The exact product is presented as organic coconut oil.",
+          "verbatim": false
+        }
+      ],
+      "conflict_captures": [
+        {
+          "kind": "ingredient_display_specificity",
+          "source_id": "E01-retailer-de",
+          "raw_inci": "Cocos Nucifera (Coconut)",
+          "disposition": "Shortened retailer ingredient link is not a different multi-ingredient formula and is not expanded by guesswork. Exact named 100 ml coconut pack corroborates manufacturer identity; manufacturer supplies canonical declared form."
+        },
+        {
+          "kind": "directions_specificity",
+          "source_ids": [
+            "E01-maker",
+            "E01-retailer-de"
+          ],
+          "disposition": "Dry-after-wash specificity belongs only to the retailer scenario. Do not insert it into manufacturer instructions."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "No physical label photograph transcribed; canonical composition is international maker text corroborated by the exact DE cosmetic pack."
+    },
+    {
+      "slot": "E02",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528086280",
+        "gtin_source_id": "E02-retailer-de",
+        "manufacturer_code": "NQ-HO-RO-201"
+      },
+      "sources": [
+        {
+          "id": "E02-maker-de",
+          "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German product page; exact-product description, application and full declaration reviewed. Shared range panel excluded from hero-oil evidence."
+        },
+        {
+          "id": "E02-retailer-de",
+          "url": "https://www.cosmeterie.de/neqi/smooth-strength-rosemary-oil",
+          "source_author": "Cosmeterie / niceshops GmbH",
+          "host_role": "retailer",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, EAN 4063528086280, manufacturer code NQ-HO-RO-201. Retailer-authored page; rinse wording is not attributed to the maker."
+        },
+        {
+          "id": "E02-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/SS_Rosemary_Oil_4063528086280_1.png?v=1730108189&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Linked directly by German product page; asset filename corroborates EAN. No back-label transcription inferred."
+        },
+        {
+          "id": "E02-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "German FAQ exact named Rosemary application paragraph specifies dropper and a broader pre-wash scenario."
+        }
+      ],
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "canonical_source_id": "E02-maker-de",
+      "formula_capture_notes": "Retain exact spelling and compound Lavandula oil/extract. No expansion to a species, plant part or definite oil/extract form. Encountered identity aliases remain for main lexicon review.",
+      "directions": [
+        {
+          "id": "E02-maker-product-scalp",
+          "source_id": "E02-maker-de",
+          "verbatim": false,
+          "text": "Apply a small amount via hands or directly to scalp, massage, wait at least 10 minutes, then shampoo. Dry or damp application is allowed.",
+          "site": [
+            "scalp"
+          ],
+          "stage": "dry_or_damp_before_shampoo",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "shampoo",
+          "restrictions": "No overnight instruction or fibre distribution in this application paragraph."
+        },
+        {
+          "id": "E02-maker-faq-before-wash",
+          "source_id": "E02-maker-faq-de",
+          "verbatim": false,
+          "text": "Use once or twice weekly before washing. Dispense with dropper into hands or onto scalp, massage using fingers or scalp brush, distribute through lengths and ends, wait at least 10 minutes, then rinse thoroughly.",
+          "site": [
+            "scalp",
+            "lengths",
+            "ends"
+          ],
+          "stage": "before_wash; damp_or_dry_unspecified",
+          "dose": "unspecified; dropper mechanism does not establish a drop count",
+          "frequency": "1–2 times per week",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse; application explicitly before hair washing",
+          "restrictions": "Separate maker scenario; no imported shampoo-specific instruction or damp/dry statement."
+        },
+        {
+          "id": "E02-retailer-scalp",
+          "source_id": "E02-retailer-de",
+          "verbatim": false,
+          "text": "Apply a small amount to hands or scalp, massage with fingertips, wait at least 10 minutes, then rinse well.",
+          "site": [
+            "scalp"
+          ],
+          "stage": "damp_or_dry_unspecified",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "at least 10 minutes",
+          "removal": "rinse"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "dropper",
+        "source_id": "E02-maker-faq-de",
+        "confidence": "high",
+        "evidence": "Exact named product instructions expressly identify a dropper; current pack is bound by DE retailer and maker asset identifier."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": [
+            "E02-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary heat-protection declaration in reviewed product page or FAQ. Other named products' claims do not transfer."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E02-maker-de",
+          "additional_reviewed_source_ids": [
+            "E02-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No exact Rosemary hair-UV declaration. Hair-perfume UV wording elsewhere in FAQ is for other products."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [
+        {
+          "name": "rosemary oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false
+        },
+        {
+          "name": "castor oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false
+        },
+        {
+          "name": "sweet almond oil",
+          "source_id": "E02-maker-de",
+          "wording": "Named in exact-product positioning and ingredient highlights.",
+          "verbatim": false
+        }
+      ],
+      "conflict_captures": [
+        {
+          "kind": "ingredient_display_wording",
+          "source_id": "E02-retailer-de",
+          "raw_inci": "Prunus Amygdalus Dulcis (Sweet Almond) Oil, Ricinus Communis Seed Oil, Carthamus Tinctorius (Safflower) Seed Oil, Rosmarinus Officinalis Leaf Oil, Mentha Arvensis (Cornmint) Leaf Oil, Lavandula Oil/Extract, Camphor, Menthol, Tocopherylacetat, Beta-Caryophyllene, Pinene, Terpineol, Geranyl Acetate, Linalyl Acetate, Geraniol, Limonene, Linalool",
+          "disposition": "Same ordered 17-entry sequence; common-name/case differences and retailer Tocopherylacetat retained raw. Manufacturer remains canonical; no silent normalization of the retailer text."
+        },
+        {
+          "kind": "directions_scope_and_removal",
+          "source_ids": [
+            "E02-maker-de",
+            "E02-maker-faq-de",
+            "E02-retailer-de"
+          ],
+          "disposition": "Product page supplies scalp then shampoo; FAQ independently supplies scalp plus fibres before washing then rinse; retailer supplies scalp then rinse. Keep all three complete scenarios distinct."
+        },
+        {
+          "kind": "obsolete_size_assumption",
+          "disposition": "Earlier 150 ml selection assumption rejected. This capture is the directly corroborated DE 75 ml pack."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "Lavandula oil/extract is an ambiguous declared preparation, not missing text. Lexicon review must preserve that ambiguity and validate encountered aliases before freezing."
+    },
+    {
+      "slot": "E07",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Opulent Oil Hair Serum",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528078520",
+        "gtin_source_id": "E07-maker-pack-asset",
+        "gtin_corroborating_source_id": "E07-retailer-pl"
+      },
+      "sources": [
+        {
+          "id": "E07-maker-de",
+          "url": "https://neqi-hair.com/products/opulent-oil-hair-serum",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "exact_local_manufacturer",
+          "accessed_at": "2026-10-01",
+          "notes": "German 75 ml page co-presents formula, directions and heat claim. Shared range panel is excluded from exact-product hero-oil evidence."
+        },
+        {
+          "id": "E07-maker-pack-asset",
+          "url": "https://neqi-hair.com/cdn/shop/files/Hair_Oil_4063528078520.jpg?v=1746525784&width=128",
+          "source_author": "NEQI",
+          "host_role": "manufacturer_asset",
+          "tier": "exact_local_manufacturer_pack_asset",
+          "accessed_at": "2026-10-01",
+          "notes": "Direct product-page image link contains identifier 4063528078520; identifier independently corroborated by dm Poland. Not a readable back-label capture."
+        },
+        {
+          "id": "E07-retailer-pl",
+          "url": "https://www.dm.pl/p/d/1455216/neqi-olejek-do-w-osow-opulent-oil",
+          "source_author": "dm Poland",
+          "host_role": "retailer",
+          "tier": "cross_market_retailer_conflict_only",
+          "accessed_at": "2026-10-01",
+          "notes": "75 ml, GTIN 4063528078520. Different formula retained as cross-market evidence; no DE equivalence assumed. Retailer description incorrectly also names LaQ, reducing prose reliability."
+        },
+        {
+          "id": "E07-maker-faq-de",
+          "url": "https://neqi-hair.com/pages/faq",
+          "source_author": "NEQI",
+          "host_role": "manufacturer",
+          "tier": "local_manufacturer_exact_named_product_FAQ",
+          "accessed_at": "2026-10-01",
+          "notes": "Names Opulent Oil among products with heat protection; unrelated Dry Oil and hair-perfume paragraphs are not Opulent instructions or claims."
+        }
+      ],
+      "raw_inci": "Aqua [Water], Polyquaternium-10, Polysorbate 20, Glycerin, PEG-40 hydrogenated castor oil, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Phenoxyethanol, PPG-3 caprylyl ether, Ethylhexylglycerin, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexyl methoxycinnamate, Propylene glycol, Citric acid, Linalyl acetate, CI 47005 [Yellow 10], 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Limonene, Hexyl cinnamal, Linalool",
+      "canonical_source_id": "E07-maker-de",
+      "formula_capture_notes": "27 declared ingredients; preserve internal comma in 1,2-Hexanediol when tokenizing. No Poland ingredient replacement or tail append.",
+      "directions": [
+        {
+          "id": "E07-maker-towel-dried",
+          "source_id": "E07-maker-de",
+          "verbatim": false,
+          "text": "Spread two to three pump doses between hands and work through towel-dried lengths and ends. Comb through and retain without rinsing.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried",
+          "dose": "2–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "no_rinse",
+          "restrictions": "No dry-hair application inferred from finish positioning."
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pump",
+        "source_id": "E07-maker-de",
+        "confidence": "high",
+        "evidence": "Exact 75 ml instructions dose the product in pump strokes."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": [
+            "E07-maker-faq-de"
+          ],
+          "claim_excerpt": "Hitzeschutz bis 230°C",
+          "verbatim": true,
+          "review_notes": "Literal maker claim captured; temperature is source text, not a new property or independently verified performance."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "NEQI",
+          "source_id": "E07-maker-de",
+          "additional_reviewed_source_ids": [
+            "E07-maker-faq-de"
+          ],
+          "claim_excerpt": null,
+          "review_notes": "No explicit Opulent hair-UV claim in reviewed product page or FAQ. Ingredient presence and other products' claims do not supply one."
+        }
+      },
+      "advertised_oils_reviewed": true,
+      "advertised_oils": [],
+      "advertised_oils_review_notes": "Product-specific title, description and benefits name no botanical hero oil. Shared Signature Blend copy names extracts across the range; it does not establish an exact-product advertised oil.",
+      "conflict_captures": [
+        {
+          "kind": "cross_market_formula",
+          "source_id": "E07-retailer-pl",
+          "raw_inci": "Aqua [Water], Polysorbate 20, Polyquaternium-10, Glycerin, PEG-40 hydrogenated castor oil, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Phenoxyethanol, PPG-3 caprylyl ether, Ethylhexylglycerin, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexyl methoxycinnamate, Propylene glycol, Citric acid, Linalyl acetate, CI 19140 [Yellow 5], 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Hexyl cinnamal, Limonene, Linalool, Geraniol.",
+          "differences": [
+            "Polysorbate 20 and Polyquaternium-10 order reversed",
+            "CI 19140 [Yellow 5] instead of CI 47005 [Yellow 10]",
+            "Hexyl cinnamal and Limonene order reversed",
+            "Additional terminal Geraniol"
+          ],
+          "disposition": "Current exact DE manufacturer declaration is canonical. Same GTIN does not prove current cross-market formula equivalence; do not merge. No contradictory current DE label was observed in this bounded capture."
+        }
+      ],
+      "status": "capture_ready",
+      "remaining_uncertainty": "Physical DE pack label not independently transcribed; cross-market ordering, colourant and tail differences remain visible without an assumed older/newer explanation."
+    },
+    {
+      "slot": "E04",
+      "identity": {
+        "brand": "OGX",
+        "product": "Coconut Miracle Oil Extra Strength Penetrating Oil",
+        "size_ml": 100,
+        "market": "DE",
+        "gtin_if_verified": "3574661563398"
+      },
+      "sources": [
+        {
+          "id": "E04-dm",
+          "url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "dm DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact name, 100 ml and GTIN; canonical German retailer ingredient declaration and directions."
+        },
+        {
+          "id": "E04-pack-front",
+          "url": "https://www.rossmann.de/media-neu/179/MAM_17990661/MAM_17990661_SHOP_IMAGE_2.0.png?auto=webp&canvas=550%2C550&dpr=1&fit=bounds&format=webply&height=550&quality=85&width=550",
+          "source_author": "OGX package reproduced by Rossmann DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Opened image linked from Rossmann exact-GTIN product page; 100 ml, hinged cap seam and front positioning visually inspected."
+        },
+        {
+          "id": "E04-pack-back",
+          "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_440%2Cw_500/v1787002790/assets/pas/images/86a15b53-8ac7-4ff6-8812-99ef82a1606e/ogx-haaroel-coconut-miracle-oil",
+          "source_author": "OGX package reproduced by dm DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Back photo visually inspected; barcode 3574661563398 visible. Small-print resolution limits transcription; use dm declaration for raw INCI."
+        },
+        {
+          "id": "E04-US-blog-excluded",
+          "url": "https://www.ogxbeauty.com/blog/coconut-oil-hair-benefits-uses",
+          "source_author": "OGX US",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Foreign-market named-product heat and overnight wording found but excluded from exact DE facts: no established formula/package equivalence."
+        }
+      ],
+      "raw_inci": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, Argania Spinosa Kernel Oil, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis Flower Extract, Vanilla Planifolia Fruit Extract, Carthamus Tinctorius (Safflower) Seed Oil, Tocopheryl Acetate, Parfum/Fragrance, Benzyl Benzoate, Linalool, Benzyl Salicylate, Limonene, Benzyl Alcohol, Coumarin",
+      "canonical_source_id": "E04-dm",
+      "directions": [
+        {
+          "source_id": "E04-dm",
+          "verbatim": false,
+          "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+          "stage": "towel_dried",
+          "site": "hair_to_ends",
+          "dose": "a few drops",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "flip-top bottle; pour/drop opening",
+        "source_id": "E04-pack-front",
+        "confidence": "moderate",
+        "notes": "Hinged cap shape/seam observed on closed pack; internal outlet not visible."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OGX via exact DE package images",
+          "source_id": "E04-pack-back",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "No accepted heat/UV protection claim in reviewed exact DE pack/front, back and dm product facts. Absence of accepted claim is not an efficacy assertion."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "coconut oil",
+          "source_id": "E04-pack-front",
+          "wording": "coconut oil",
+          "verbatim": true
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "notes": "Front also highlights tiare essence and vanilla bean extract; these are not advertised oils. Argan/safflower presence alone does not make them heroes."
+      },
+      "conflict_captures": [
+        {
+          "kind": "foreign_market_claim_not_transferred",
+          "source_id": "E04-US-blog-excluded",
+          "disposition": "Excluded from German claim/use record; retain evidence that global heat-positive wording exists."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_sha256": "514034a70c1594f31913a5e35a2c45a1990ee7bf5d0a918672c9361150e625b5",
+      "ingredient_count": 17
+    },
+    {
+      "slot": "E05",
+      "identity": {
+        "brand": "Living Proof",
+        "product": "No Frizz Vanishing Oil",
+        "size_ml": 50,
+        "market": "DE",
+        "gtin_if_verified": "840216931084"
+      },
+      "sources": [
+        {
+          "id": "E05-cosmeterie",
+          "url": "https://www.cosmeterie.de/living-proof/no-frizz-vanishing-oil",
+          "source_author": "Cosmeterie DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact 50 ml/EAN 840216931084 and maker code LIP-NF-ST-106; canonical complete local ordered list, including printed spelling."
+        },
+        {
+          "id": "E05-maker",
+          "url": "https://www.livingproof.com/collections/no-frizz/products/no-frizz-vanishing-oil",
+          "source_author": "Living Proof",
+          "tier": 4,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Global exact named product 1.7 oz; ordered main formula converges with local listing after explicit spelling/format aliases. FAQ reviewed separately. Additional fragrance disclosure is separate from main INCI."
+        },
+        {
+          "id": "E05-niche",
+          "url": "https://www.niche-beauty.com/de-de/produkte/living-proof-no-frizz-vanishing-oil/887-033",
+          "source_author": "Niche Beauty DE",
+          "tier": 3,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Exact named 50 ml product positioning names five oils; used for advertised oils, not claim authority."
+        },
+        {
+          "id": "E05-pack",
+          "url": "https://media.niche-beauty.com/images/generated/det/40/15/living-proof-no-frizz-vanishing-oil.jpg",
+          "source_author": "Living Proof package reproduced by Niche Beauty DE",
+          "tier": 1,
+          "accessed_at": "2026-10-01T08:15:24Z",
+          "notes": "Visually inspected 50 ml/1.7 fl oz front pack with pipette bulb; source page binds exact named 50 ml product."
+        }
+      ],
+      "raw_inci": "C13‐15 Alkane, Isohexadecane, Isododecane, Isoamyl Laurate, Ethylene/Propylene/Styrene Copolymer, C9-12 Alkane, Hippophae Rhamnoides (Sea Buckthorn) Fruit Oil, Helianthus Annus (Sunflower) Seed Oil, Coco Caprylate/Caprate, Brassica Campestris/Aleurites Fordi Oil Copolymer, Citrullus Lanatus Seed Oil, Moringa Oleifera Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Orbignya Oleifera Seed Oil, Phytosteryl/Octyldodecyl Lauroyl Glutamate, Butylene/Ethylene/Styrene Copolymer, Amaranthus Caudatus Seed Extract, Diisostearyl Malate, Pentaerythrityl Tetra-Di-T-Butylhydroxyhydrocinnamate, Parfum, Citronellol, Limonene, Citral, Linalool",
+      "canonical_source_id": "E05-cosmeterie",
+      "directions": [
+        {
+          "source_id": "E05-cosmeterie",
+          "verbatim": false,
+          "text": "Mit wenig Öl auf feuchtem oder trockenem Haar beginnen; bei Bedarf erneut anwenden. Bei feinem Haar sparsam an den Spitzen, bei kräftigerem Haar auch in den Längen verteilen. Täglich nach Bedarf.",
+          "stage": "damp_or_dry",
+          "site": "lengths_and_ends",
+          "dose": "small amount; no numerical dose in local directions",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        },
+        {
+          "source_id": "E05-maker",
+          "verbatim": false,
+          "text": "Der Hersteller nennt ein bis zwei Tropfen als Anfangsmenge, verteilt im abgeteilten feuchten oder trockenen Haar; Wiederholung nach Bedarf. Anwendung auch nach Hitzestyling beschrieben.",
+          "stage": "damp_or_dry; separate explicit after_heat_styling option",
+          "site": "hair_sections",
+          "dose": "1–2 drops initially",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "pipette/dropper",
+        "source_id": "E05-pack",
+        "confidence": "high"
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No Frizz Vanishing Oil alone does not protect against heat.",
+          "verbatim": true
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Living Proof",
+          "source_id": "E05-maker",
+          "claim_excerpt": "No, frizz Vanishing Oil does not protect against UV rays.",
+          "verbatim": true
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "sea buckthorn oil",
+          "source_id": "E05-niche",
+          "wording": "Sanddornöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "jojoba oil",
+          "source_id": "E05-niche",
+          "wording": "Jojobaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "watermelon oil",
+          "source_id": "E05-niche",
+          "wording": "Wassermelonenöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "babassu oil",
+          "source_id": "E05-niche",
+          "wording": "Babassuöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        },
+        {
+          "name": "moringa oil",
+          "source_id": "E05-niche",
+          "wording": "Moringaöl in der hervorgehobenen Ölmischung",
+          "verbatim": false
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "notes": "Manufacturer describes a five-oil blend; German retailer names its five oils. Amaranth is advertised as extract, not oil. No feedstock-derived oils invented."
+      },
+      "conflict_captures": [
+        {
+          "kind": "orthography_and_display_aliases",
+          "source_id": "E05-maker",
+          "raw_inci": "C13-15 Alkane, Isohexadecane, Isododecane, Isoamyl Laurate, Ethylene/Propylene/Styrene Copolymer, C9-12 Alkane, Hippophae Rhamnoides Fruit Oil, Helianthus Annuus (Sunflower) Seed Oil, Coco-Caprylate/Caprate, Brassica Campestris/Aleurites Fordi Oil Copolymer, Citrullus Lanatus (Watermelon) Seed Oil, Moringa Oleifera Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Orbignya Oleifera Seed Oil, Phytosteryl/Octyldodecyl Lauroyl Glutamate, Butylene/Ethylene/Styrene Copolymer, Amaranthus Caudatus Seed Extract, Diisostearyl Malate, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Fragrance/Parfum, Citronellol, Limonene, Citral, Linalool",
+          "disposition": "Canonical stays exact DE retailer declaration. Same 24 positions, with Annus/Annuus, hyphenation, common-name parentheticals, antioxidant spacing and Parfum/Fragrance differences. Preserve raw; lexicon must explicitly resolve aliases."
+        },
+        {
+          "kind": "separate_manufacturer_fragrance_disclosure",
+          "source_id": "E05-maker",
+          "raw_additional_fragrance_ingredients": "Ethyl Linalool, Methyldihydrojasmonate, Citronellol, Amyl Salicylate, Ionone, Tetramethyl Acetyloctahydronaphthalenes, Cyclamen Aldehyde, Ethylene Brassylate, Citrus Sinensis Peel Oil Expressed, Isopropyl Myristate, Methylbenzyl Acetate, Illicium Verum (Anise) Fruit/Seed Oil, Citral, Geranyl Acetate, 2,4-Dimethyl-3-Cyclohexene Carboxaldehyde",
+          "disposition": "Not appended to canonical DE INCI; separate additional-fragrance disclosure does not supply ordered DE label positions."
+        },
+        {
+          "kind": "foreign_market_alternative_not_transferred",
+          "source_url": "https://www.sephora.co.uk/p/living-proof-no-frizz-vanishing-oil",
+          "disposition": "Search surfaced UK list beginning Isododecane and containing Octafluoropentyl Methacrylate and Lagenaria Sphaerica Seed Oil. Not same exact DE GTIN evidence; excluded, not merged or dated as old."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_sha256": "c1dd2dbaf452e4fe9e01a81c69059c0b82cf7a0eb0420bbffee588bc6153676b",
+      "ingredient_count": 24
+    },
+    {
+      "slot": "E08",
+      "identity": {
+        "brand": "Kérastase",
+        "product": "Soleil Huile Sirène",
+        "size_ml": 150,
+        "market": "DE",
+        "gtin_if_verified": "3474636695324"
+      },
+      "sources": [
+        {
+          "id": "E08-maker-DE",
+          "url": "https://www.kerastase.de/alle-produkte/huile-sirene-ol/3474636695324.html",
+          "source_author": "Kérastase DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Complete indexed primary product body inspected: exact 150 ml identity, all 19 ingredients, formula code C227530/1, benefits, highlighted ingredients and application. Search retrieval supplies complete sections, not reconstructed snippet fragments. Direct-open metadata returned 826 lines; subsequent direct fetches timeout."
+        },
+        {
+          "id": "E08-partner-DE",
+          "url": "https://de.lorealpartnershop.com/de/soleil-huile-sir%C3%A8ne/DE3474636695324.html",
+          "source_author": "L’Oréal Partner Shop DE",
+          "tier": 2,
+          "accessed_at": "2026-10-01T08:18:00Z",
+          "notes": "Direct full body inspected: exact 150ML/article number 3474636695324; matching 19-ingredient list; Babassu oil positioning; independent shake/hand-application/no-rinse directions. The earlier incompatible FR snippet is not this valid DE page."
+        }
+      ],
+      "raw_inci": "Aqua / Water, Isopropyl Myristate, Isododecane, Dimethicone, Vp/Va Copolymer, Magnesium Sulfate, Phenoxyethanol, Chlorphenesin, Caprylyl Glycol, Cocos Nucifera Oil / Coconut Oil, Ethylhexyl Salicylate, Benzyl Alcohol, Orbignya Oleifera Seed Oil, Tocopherol, Citric Acid, Ci 19140 / Yellow 5, Ci 17200 / Red 33, Sodium Hydroxide, Parfum / Fragrance",
+      "canonical_source_id": "E08-maker-DE",
+      "directions": [
+        {
+          "source_id": "E08-maker-DE",
+          "verbatim": false,
+          "text": "Vor Gebrauch gut schütteln. Ins feuchte oder trockene Haar sprühen, vor allem auf die Spitzen. Anschließend an der Luft trocknen lassen.",
+          "stage": "damp_or_dry",
+          "site": "hair_with_focus_on_ends",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "not_stated; air_dry_after_application explicitly directed",
+          "shake": "shake_well"
+        },
+        {
+          "source_id": "E08-partner-DE",
+          "verbatim": false,
+          "text": "Die zwei Phasen durch gründliches Schütteln mischen. In die Hände sprühen, dann im Haar verteilen und im Haar belassen.",
+          "stage": "not_stated",
+          "site": "hair",
+          "dose": "not_stated",
+          "contact_time": "not_stated",
+          "rinse": "do_not_rinse",
+          "shake": "shake_well"
+        }
+      ],
+      "dispenser": {
+        "observed_mechanism": "spray",
+        "source_id": "E08-maker-DE",
+        "confidence": "high",
+        "notes": "Explicit manufacturer spray direction; no count of spray actuations specified."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": false,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": null,
+          "verbatim": false,
+          "review_scope": "Exact product benefits, highlighted ingredients and application reviewed; no heat-protection claim found. Generic recommendation widgets excluded."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": true,
+          "author": "Kérastase DE",
+          "source_id": "E08-maker-DE",
+          "claim_excerpt": "Bietet Sonnenschutz für das Haar. Absorbiert UV-Strahlen und minimiert ihren Effekt auf die Haarfaser.",
+          "verbatim": true,
+          "excerpt_note": "Two distinct short passages: product benefit and UV-filter key-ingredient description."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "babassu oil",
+          "source_id": "E08-partner-DE",
+          "wording": "Mit Babassu-Öl angereichert",
+          "verbatim": true
+        }
+      ],
+      "advertised_oils_review": {
+        "reviewed": true,
+        "source_id": "E08-maker-DE",
+        "notes": "German consumer page highlights coconut water, vitamin E and UV filter; separate exact German official partner page explicitly highlights Babassu oil. Coconut water is not coconut oil. No coconut-oil hero inferred from INCI."
+      },
+      "conflict_captures": [
+        {
+          "kind": "unreliable_partner_formula_excluded",
+          "source_url": "https://fr.lorealpartnershop.com/fr/huile-sirene/FR3474636695324.html",
+          "disposition": "Preflight reported incompatible shampoo INCI in partner search result. Do not import any such list; canonical formula is complete German manufacturer section."
+        },
+        {
+          "kind": "retrieval_limitation",
+          "source_url": "https://www.kerastase.de/alle-produkte/huile-sirene/KER_00054.html?dwvar_KER__00054_size=150_ml",
+          "disposition": "Direct fetch repeated timeout/403; full indexed German primary body recovered via alternate exact EAN URL and independently inspected by capture agent."
+        }
+      ],
+      "status": "capture_ready",
+      "raw_inci_format_note": "Original uses a displayed bullet list; transcribed in displayed order with comma separators. Trailing C227530/1 is a formula identifier, not an ingredient.",
+      "formula_code": "C227530/1",
+      "other_advertised_materials": [
+        {
+          "name": "coconut water",
+          "source_id": "E08-maker-DE",
+          "wording": "Kokosnusswasser",
+          "verbatim": true
+        },
+        {
+          "name": "vitamin E",
+          "source_id": "E08-maker-DE",
+          "wording": "Vitamin E",
+          "verbatim": true
+        },
+        {
+          "name": "UV filter",
+          "source_id": "E08-maker-DE",
+          "wording": "UV-Filter",
+          "verbatim": true
+        }
+      ],
+      "corroborating_inci": [
+        {
+          "source_id": "E08-partner-DE",
+          "raw_inci": "AQUA / WATER • ISOPROPYL MYRISTATE • ISODODECANE • DIMETHICONE • VP/VA COPOLYMER • MAGNESIUM SULFATE • PHENOXYETHANOL • CHLORPHENESIN • CAPRYLYL GLYCOL • COCOS NUCIFERA OIL / COCONUT OIL • ETHYLHEXYL SALICYLATE • BENZYL ALCOHOL • ORBIGNYA OLEIFERA SEED OIL • TOCOPHEROL • CITRIC ACID • CI 19140 / YELLOW 5 • CI 17200 / RED 33 • SODIUM HYDROXIDE • PARFUM / FRAGRANCE"
+        }
+      ],
+      "raw_inci_sha256": "9c1bb5f4e619e3569b52a3bc2a2d52c45ab8a310feff259c8933b214a23399fe",
+      "ingredient_count": 19
+    },
+    {
+      "slot": "E03",
+      "identity": {
+        "brand": "OLAPLEX",
+        "product": "No.7 Bonding Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "0850045076085",
+        "gtin_source_id": "ol-apotheke",
+        "gtin_limit": "Identifier corroborates named 30ml pack, not canonical formula version; no readable batch label captured."
+      },
+      "sources": [
+        {
+          "id": "ol-zalando",
+          "url": "https://www.zalando.de/olaplex-no7-bonding-oil-haarpflege-olh34h00q-s11.html",
+          "source_author": "Zalando DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE-market listing; 30 ml pack. Canonical declaration also exposed by indexed size=75C URL. Some direct reopens redirected to en.zalando.de and failed; capture uses retrieved indexed listing, not an inspected physical pack."
+        },
+        {
+          "id": "ol-maker",
+          "url": "https://olaplex.com/products/olaplex-n-7-bonding-oil-30ml",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml selected; global/US storefront. Entire 21-entry sequence matches canonical declaration; retained only as corroboration and exact-product manufacturer claim authority, not substituted as DE INCI."
+        },
+        {
+          "id": "ol-local-brand",
+          "url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+          "source_author": "OLAPLEX DE / New Flag GmbH",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml option; shorter declaration corroborated, but Wasser/Aqua/Eau and Parfüm (Parfum) are translated tokens. Kept verbatim separately; operator verified in imprint, not misidentified as OLAPLEX Inc."
+        },
+        {
+          "id": "ol-apotheke",
+          "url": "https://www.shop-apotheke.com/beauty/upmKWKK44/olaplex-no-7-bonding-oel.htm",
+          "source_author": "Shop Apotheke DE marketplace",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml, EAN 0850045076085. Divergent translated declaration and UV/heat promotional image; not assigned to canonical formula version."
+        },
+        {
+          "id": "ol-old-uv",
+          "url": "https://olaplex.com/blogs/news/healthy-hair-beach-day-tips-for-every-hair-type",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_historical_claim",
+          "accessed_at": "2026-10-01",
+          "notes": "2021 article includes No.7 UV claim; no ingredient-version binding to current shorter declaration. Excluded from current-version claim authority."
+        },
+        {
+          "id": "ol-imprint",
+          "url": "https://olaplex.de/pages/impressum",
+          "source_author": "New Flag GmbH",
+          "tier": "site_identity",
+          "accessed_at": "2026-10-01",
+          "notes": "Verifies operator of German OLAPLEX storefront."
+        }
+      ],
+      "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Water/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Fragrance (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+      "canonical_source_id": "ol-zalando",
+      "directions": {
+        "verbatim": false,
+        "source_id": "ol-local-brand",
+        "text": "Remove cap, invert bottle, and tap its base to release individual drops. Apply 2–3 drops to damp or dry hair and style. The source permits daily use on wet/dry hair, before heat styling or after styling.",
+        "dose": "2–3 drops",
+        "contact_time": "not specified",
+        "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+      },
+      "dispenser": {
+        "observed_mechanism": "Inverted bottle dispenses metered drops when base is tapped; not a pipette or pump.",
+        "source_id": "ol-local-brand",
+        "confidence": "high",
+        "observation_basis": "Explicit dispensing instructions; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "OLAPLEX Inc.",
+          "source_id": "ol-maker",
+          "claim_excerpt": "450ºF/232ºC heat protection",
+          "verbatim": true,
+          "local_corroboration_source_id": "ol-local-brand"
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OLAPLEX Inc. / OLAPLEX DE",
+          "source_id": "ol-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "ol-maker",
+            "ol-local-brand",
+            "ol-old-uv",
+            "ol-apotheke"
+          ],
+          "notes": "No UV claim on current matched product pages. Historical manufacturer blog is positive but cannot be bound to the selected shorter declaration; retailer UV graphic belongs to conflicting packet. positive=false means no accepted current-version claim, not no historical claim."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "Sunflower seed oil",
+          "source_id": "ol-local-brand",
+          "wording": "Sonnenblumenkernöl",
+          "verbatim": true
+        }
+      ],
+      "other_advertised_ingredient_mentions": [
+        {
+          "name": "Coconut-derived emollient",
+          "source_id": "ol-local-brand",
+          "wording": "Kokosnuss-Emollient",
+          "verbatim": true,
+          "note": "Do not silently translate into an advertised intact coconut oil."
+        }
+      ],
+      "conflict_captures": [
+        {
+          "url": "https://www.shop-apotheke.com/beauty/upmKWKK44/olaplex-no-7-bonding-oel.htm",
+          "source_id": "ol-apotheke",
+          "raw_inci": "Dimethicon, Isohexadecan, C13-14 Isoparaffin, Coco-Caprylat, Phenyltrimethicon, Bis-Aminopropyl-Diglycoldimaleat, Propandiol, Zea Mays (Mais) Öl, Beta-Carotin, Helianthus Annuus (Sonnenblume) Samenöl, Moringa Oleifera Samenöl, Punica Granatum Samenöl, Wasser, Morinda Citrifolia Fruchtpulver, Duftstoffe , Hexyl Zimt, Eclipta Prostrata Extrakt, Ethylhexyl Methoxycinnamat, Limonen, Tocopherol, Citral, Linalool, Melia Azadirachta Blattextrakt, Citronellol, Pseudozyma Epicola/Camellia Sinensis Samen (Grüner Tee) Ölferment-Extrakt-Filtrat.",
+          "differences": "25 entries versus21; extra Moringa oil, Eclipta extract, Ethylhexyl Methoxycinnamat and Melia leaf extract; C13-14 Isoparaffin wording, Morinda fruit powder versus extract, translated forms and reordered tail.",
+          "disposition": "Excluded from canonical packet; retained unresolved alternative. Convergence of local brand, DE retailer and global manufacturer supports selected shorter declaration. Age/reformulation cause not proven; not a fragrance-tail-only change."
+        },
+        {
+          "url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+          "source_id": "ol-local-brand",
+          "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Wasser/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Parfüm (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+          "differences": "Same21 positions but Wasser/Aqua/Eau and Parfüm (Parfum) localized; no aliases silently substituted.",
+          "disposition": "Local corroboration, not canonical token source."
+        },
+        {
+          "url": "https://olaplex.com/blogs/news/healthy-hair-beach-day-tips-for-every-hair-type",
+          "source_id": "ol-old-uv",
+          "claim_excerpt": "OLAPLEX Nº.7 Bonding Oil protects against UV rays",
+          "verbatim": true,
+          "disposition": "Historical manufacturer-positive UV capture; excluded from current-version authority due to missing formula binding."
+        }
+      ],
+      "status": "capture_ready",
+      "capture_scope": "Single DE online declaration corroborated by current local branded site and matching global manufacturer. Does not cover all stock, reformulations, historical claims, or physical batch identity.",
+      "remaining_limits": [
+        "No physical package/batch label inspected.",
+        "Shop Apotheke variant cause and chronology unresolved; never merged."
+      ],
+      "raw_inci_sha256": "f2cf36c05776f5e6d9202358439382ec7bdb5e62620fae6f5ac5e5d9a009d76e",
+      "declared_ingredient_count": 21
+    },
+    {
+      "slot": "E06",
+      "identity": {
+        "brand": "K18",
+        "product": "Molecular Repair Hair Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "858511001500",
+        "gtin_source_id": "k-flaconi",
+        "gtin_limit": "Also corroborated by local K18-branded shop; barcode alone does not establish formulation version."
+      },
+      "sources": [
+        {
+          "id": "k-notino",
+          "url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+          "source_author": "Notino DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml listing, complete 17-entry declaration; page itself advises checking received packaging for changes."
+        },
+        {
+          "id": "k-flaconi",
+          "url": "https://www.flaconi.de/haare/k18/molecular-repair/k18-molecular-repair-hair-oil-haaroel.html?variant=90007597-0011676",
+          "source_author": "Flaconi DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml/EAN 858511001500. Same 17 ingredients/order as Notino ignoring capitalization. Initial direct retrieval succeeded; later reopen failed; indexed page also exposes full declaration and identifier."
+        },
+        {
+          "id": "k-uk-maker",
+          "url": "https://k18hair.co.uk/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair UK",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL manufacturer page; 17-entry declaration matches DE retailers ignoring case, with heat claim and directions. Corroboration, not proof of chemical identity or universal market/batch equivalence."
+        },
+        {
+          "id": "k-global-maker",
+          "url": "https://www.k18hair.com/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL global/US page; 22-entry declaration has five extra fragrance-tail names. Retain separately; do not append to DE canonical declaration."
+        },
+        {
+          "id": "k-de-brand",
+          "url": "https://k18-hair.de/k18-hair/k18-oil/K18MolecularRepairHairOil30ml.aspx",
+          "source_author": "Kevin Murphy GmbH / K18-branded DE storefront",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact30ml/EAN858511001500 and local directions/heat positioning. Ingredient section contains only a dot; not admissible as formula source or as independent manufacturer attestation."
+        },
+        {
+          "id": "ec-fragrance",
+          "url": "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-products-specific-topics/fragrance-allergens-labelling_en?prefLang=uk",
+          "source_author": "European Commission",
+          "tier": "primary_regulatory_context",
+          "accessed_at": "2026-10-01",
+          "notes": "Expanded individual fragrance disclosure can lengthen labels. General context only; does not establish the reason for this product difference."
+        }
+      ],
+      "raw_inci": "CAPRYLYL CAPRYLATE/CAPRATE, SQUALANE, PERSEA GRATISSIMA (AVOCADO) OIL, HELIANTHUS ANNUUS (SUNFLOWER) OIL, C13-15 ALKANE, UNDECANE, BENZYL ALCOHOL, TRIDECANE, CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78, FRAGRANCE (PARFUM), TOCOPHEROL, CINNAMAL, HEXYL CINNAMAL, LIMONENE, LINALOOL.",
+      "canonical_source_id": "k-notino",
+      "directions": {
+        "verbatim": false,
+        "source_id": "k-notino",
+        "text": "Begin with 1–3 drops, increasing if needed. Apply to towel-dried damp hair before styling, or use on dry hair as the final step.",
+        "dose": "1–3 drops initially; increase if needed",
+        "contact_time": "not specified in canonical local directions",
+        "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+      },
+      "supplemental_direction_capture": {
+        "source_id": "k-uk-maker",
+        "verbatim": false,
+        "text": "Manufacturer adds mid-lengths-to-ends placement on damp hair and a four-minute wait before styling for its strengthening claim. This timing is a separate source capture, not silently inserted into the Notino instructions."
+      },
+      "dispenser": {
+        "observed_mechanism": "Pipette",
+        "source_id": "k-notino",
+        "confidence": "high",
+        "observation_basis": "Explicit exact-product local description; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "K18 Hair UK",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": "450°F (232°C) heat protection",
+          "verbatim": true,
+          "local_corroboration_source_ids": [
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Manufacturer exact30ml with same declared17-entry sequence; accepted product claim for this scoped packet, not US/DE chemical equivalence."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "K18 Hair UK / K18 Hair",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "k-uk-maker",
+            "k-global-maker",
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Product descriptions, benefits, ingredient hero sections and product FAQs reviewed; no accepted hair-UV-protection claim found. Generic colour positioning is not such a claim."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "Avocado oil",
+          "source_id": "k-notino",
+          "wording": "Avocadoöl",
+          "verbatim": true
+        },
+        {
+          "name": "Sunflower oil",
+          "source_id": "k-notino",
+          "wording": "Sonnenblumenöl",
+          "verbatim": true
+        }
+      ],
+      "other_advertised_ingredient_mentions": [
+        {
+          "name": "Squalane",
+          "source_id": "k-notino",
+          "wording": "Squalan",
+          "verbatim": true
+        },
+        {
+          "name": "Hemisqualane",
+          "source_id": "k-notino",
+          "wording": "Hemisqualan",
+          "verbatim": true
+        }
+      ],
+      "corroborating_declarations": [
+        {
+          "source_id": "k-uk-maker",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima (Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane, Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool."
+        },
+        {
+          "source_id": "k-flaconi",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima (Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane, Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool."
+        }
+      ],
+      "conflict_captures": [
+        {
+          "url": "https://www.k18hair.com/products/molecular-repair-hair-oil",
+          "source_id": "k-global-maker",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima(Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane,Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool, Linalyl Acetate, Pinene, Rose Ketones, Terpineol, Tetramethyl Acetyloctahydronaphthalenes.",
+          "differences": "Same first17 ingredient identities/order ignoring case and spacing; adds Linalyl Acetate, Pinene, Rose Ketones, Terpineol, Tetramethyl Acetyloctahydronaphthalenes after Linalool.",
+          "disposition": "Separate global/US declaration. Expanded fragrance disclosure is plausible, but no product-specific manufacturer statement or dated label proves disclosure-only change or rules out reformulation. Never appended to local canonical list.",
+          "evidence_source_ids": [
+            "k-notino",
+            "k-flaconi",
+            "k-uk-maker",
+            "k-global-maker",
+            "ec-fragrance"
+          ]
+        }
+      ],
+      "status": "capture_ready",
+      "capture_scope": "Classification input is the dated DE-retailer17-entry declaration, corroborated by another DE retailer and matching UK manufacturer declaration. No universal current-formula or chemical equivalence assertion.",
+      "remaining_limits": [
+        "Reason and timing of global22-entry versus local/UK17-entry divergence unresolved.",
+        "No current DE batch label inspected; cannot claim every current DE pack has this declaration.",
+        "Any request for global-market or newest-production-batch authority remains blocked pending product-specific manufacturer/pack evidence."
+      ],
+      "raw_inci_sha256": "48ff98d511f87ee302e4950a89179452020fef271f0abddfeba85feed5b2b47d",
+      "declared_ingredient_count": 17
+    }
+  ]
+}
