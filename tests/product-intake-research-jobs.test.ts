@@ -92,14 +92,7 @@ const researchRouteSource = readFileSync(
   "apps/product-intake-review/app/api/submissions/[submissionId]/research/route.ts",
   "utf8",
 )
-const reworkRouteSource = readFileSync(
-  "apps/product-intake-review/app/api/submissions/[submissionId]/rework/route.ts",
-  "utf8",
-)
-const reviewDecisionRouteSource = readFileSync(
-  "apps/product-intake-review/app/api/submissions/[submissionId]/review-decision/route.ts",
-  "utf8",
-)
+
 const retryRouteSource = readFileSync(
   "apps/product-intake-review/app/api/jobs/[jobId]/retry/route.ts",
   "utf8",
@@ -457,13 +450,7 @@ test("review cockpit kicks the local Codex worker after enqueueing work", () => 
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_POLL_MS/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL/)
 
-  for (const source of [
-    researchRouteSource,
-    reworkRouteSource,
-    reviewDecisionRouteSource,
-    retryRouteSource,
-    submissionQueueRouteSource,
-  ]) {
+  for (const source of [researchRouteSource, retryRouteSource, submissionQueueRouteSource]) {
     assert.match(source, /kickLocalCodexWorker/)
     assert.match(source, /workerKick/)
     assert.match(source, /workerKick\.ready|workerKick\?\.ready/)
@@ -1036,56 +1023,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /expectedLockedAt: job\.locked_at/)
   assert.match(workerScript, /--fail-test/)
   assert.doesNotMatch(workerScript, /createAdminClient/)
-})
-
-test("publish route is fail-closed and leaves final writes to the CLI handoff", () => {
-  const publishRouteSource = readFileSync(
-    "apps/product-intake-review/app/api/submissions/[submissionId]/publish/route.ts",
-    "utf8",
-  )
-  const preflightRouteSource = readFileSync(
-    "apps/product-intake-review/app/api/submissions/[submissionId]/publish-preflight/route.ts",
-    "utf8",
-  )
-
-  assert.match(repositorySource, /latest_image_decision/)
-  assert.match(repositorySource, /latest_publish_decision/)
-  assert.match(repositorySource, /Finales Bild wurde noch nicht freigegeben/)
-  assert.match(repositorySource, /Finaler Produkt-Handoff wurde noch nicht freigegeben/)
-  assert.match(publishRouteSource, /Finaler Supabase-Handoff ist im Review Center gesperrt/)
-  assert.match(publishRouteSource, /products:intake:approve-package/)
-  assert.doesNotMatch(publishRouteSource, /approveSubmissionById/)
-  assert.doesNotMatch(publishRouteSource, /apply: true/)
-  assert.doesNotMatch(publishRouteSource, /confirm: true/)
-  assert.doesNotMatch(publishRouteSource, /appendResearchArtifact/)
-  assert.doesNotMatch(publishRouteSource, /Produkt wurde in Supabase freigegeben/)
-  assert.match(preflightRouteSource, /publishRouteEnabled: false/)
-  assert.match(preflightRouteSource, /validateSubmissionReady/)
-  assert.match(preflightRouteSource, /approval_validation_failed/)
-})
-
-test("review decisions validate image and publish field paths", () => {
-  assert.match(reviewDecisionRouteSource, /validateDecisionFieldPath/)
-  assert.match(reviewDecisionRouteSource, /raw\.image/)
-  assert.match(reviewDecisionRouteSource, /final\.image/)
-  assert.match(reviewDecisionRouteSource, /final\.product/)
-  assert.match(reviewDecisionRouteSource, /final_image_ready/)
-  assert.match(reviewDecisionRouteSource, /transparent_background_detected/)
-  assert.match(reviewDecisionRouteSource, /booleanValue/)
-  assert.match(reviewDecisionRouteSource, /kickLocalCodexWorker/)
-  assert.match(reviewDecisionRouteSource, /workerKick/)
-  assert.match(
-    reviewDecisionRouteSource,
-    /Bildverarbeitung ist eingereiht und der lokale Worker ist bereit/,
-  )
-  assert.match(reviewDecisionRouteSource, /markLatestProcessedImageAccepted/)
-  assert.match(reviewDecisionRouteSource, /finalImageOverride/)
-  assert.match(reviewDecisionRouteSource, /human_qa_override/)
-  assert.match(reviewDecisionRouteSource, /Nick accepted the processed image/)
-  assert.match(
-    reviewDecisionRouteSource,
-    /Bild-Entscheidungen muessen auf raw\.image oder final\.image/,
-  )
 })
 
 test("queue overview keeps active and completed submissions filterable", () => {

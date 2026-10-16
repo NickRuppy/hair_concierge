@@ -11,10 +11,6 @@ import {
   validatePromotableProduct,
 } from "../scripts/product-intake/promote"
 import {
-  deriveSuitableThicknessesFromSpecOperations,
-  resolveSuitableThicknessesForApprovedProduct,
-} from "../scripts/product-intake/approve"
-import {
   buildQueueReport,
   matchesQueueFilters,
   projectQueueRow,
@@ -208,7 +204,6 @@ test("destructive review scripts default to dry-run and require explicit confirm
   assert.doesNotMatch(researchQueueScript, /\.delete\(/)
   assert.doesNotMatch(researchQueueScript, /--apply/)
   assert.match(approvePackageScript, /Approve-package writes require --confirm/)
-  assert.match(approvePackageScript, /approveSubmissionById/)
   assert.match(approvePackageScript, /saveResearchedPayload/)
   assert.doesNotMatch(approvePackageScript, /product_intake_link_existing_product/)
   assert.match(queueScript, /REVIEW_LANE_STATUSES = \[/)
@@ -247,7 +242,6 @@ test("destructive review scripts default to dry-run and require explicit confirm
   assert.match(linkExistingScript, /flushProductIntakeSentry/)
   assert.match(requestInfoScript, /flushProductIntakeSentry/)
   assert.doesNotMatch(notifyPendingScript, /stage:\s*"notify_pending"/)
-  assert.match(notifyPendingScript, /flushProductIntakeSentry/)
 })
 
 test("product intake CLI preserves inline flag values containing equals signs", () => {
@@ -1345,65 +1339,4 @@ test("needs-more-info notifications ignore malformed missing fields", () => {
   )
 
   assert.deepEqual(context.product_intake_offer?.missing_fields, ["Produktname", "Barcodefoto"])
-})
-
-test("approval derives suitable thicknesses from category spec operations", () => {
-  assert.deepEqual(
-    deriveSuitableThicknessesFromSpecOperations([
-      {
-        type: "upsert",
-        table: "product_conditioner_specs",
-        rows: [
-          { product_id: "p1", thickness: "fine", protein_moisture_balance: "snaps" },
-          { product_id: "p1", thickness: "normal", protein_moisture_balance: "snaps" },
-          { product_id: "p1", thickness: "fine", protein_moisture_balance: "stretches_stays" },
-        ],
-      },
-      {
-        type: "upsert",
-        table: "product_conditioner_rerank_specs",
-        rows: [{ product_id: "p1", weight: "medium" }],
-      },
-    ] as never),
-    ["fine", "normal"],
-  )
-
-  assert.deepEqual(
-    deriveSuitableThicknessesFromSpecOperations([
-      {
-        type: "upsert",
-        table: "product_leave_in_eligibility",
-        rows: [
-          { product_id: "p2", thickness: "coarse", need_bucket: "repair" },
-          { product_id: "p2", thickness: "invalid-value", need_bucket: "repair" },
-        ],
-      },
-    ] as never),
-    ["coarse"],
-  )
-
-  assert.deepEqual(
-    deriveSuitableThicknessesFromSpecOperations([
-      {
-        type: "upsert",
-        table: "product_mask_specs",
-        rows: [{ product_id: "p3", weight: "light" }],
-      },
-    ] as never),
-    [],
-  )
-
-  assert.deepEqual(
-    resolveSuitableThicknessesForApprovedProduct({
-      reviewedThicknesses: ["coarse", "normal", "coarse"],
-      specOperations: [
-        {
-          type: "upsert",
-          table: "product_conditioner_specs",
-          rows: [{ product_id: "p4", thickness: "fine", protein_moisture_balance: "snaps" }],
-        },
-      ] as never,
-    }),
-    ["coarse", "fine", "normal"],
-  )
 })

@@ -18,6 +18,50 @@ steps once their gates pass. Proceed with independent implementation and
 reviewed follow-ups. Final catalog
 publication remains approval of an exact product/package, not blanket approval.
 
+## Current checkpoint — 2026-10-16
+
+This checkpoint supersedes the dated baseline and milestone checklist below.
+Nick's later instruction requires alignment before every PR merge, migration or
+production deployment. Automatic Admin alerts remain disabled; the test email
+has been reviewed by Nick and looked right.
+
+- [x] Current release + one rollback retained; fresh read at 14:02 UTC found
+  `20261015-201339-7c00ca4a76c6` and `20261007-92bfe95862eb`, healthy worker/review,
+  60% disk use and about 15 GB free. Research, images and configuration retained.
+- [x] Admin queue/detail and default view deployed through #689.
+- [x] Customer.io template, dedicated private sending configuration and isolated
+  test delivered and accepted. Live outbox has zero rows; alerts remain false.
+- [x] Safety/rework and Shampoo implementations are in draft #691/#693. Current
+  #693 head `e6e87439012ff0446359f0b8c050f6d54ed5c417`: Security passes; CI still
+  fails only the Scanner welcome journey (plus its dependent summary gate).
+- [x] Immutable images/revisions are in draft #694 at
+  `ec81aaa8516a19c0a072e0145b58e9470c091b47`; Security passes; same Scanner CI
+  blocker. Its base needs reconciliation with the newer #693 head before merge.
+- [x] Admin separate approvals, explicit publication, dispositions and durable
+  notification-only recovery implemented and verified locally. See
+  [S4 publication](s4-admin-publication.md) and its desktop/mobile proof.
+- [x] Scanner blocker repaired locally with real denied-camera and working-camera
+  checks, including the header bookmark. Its separate main-based draft is the
+  first code merge candidate once hosted checks pass and Nick approves.
+- [ ] Complete exact-head hosted CI for the reviewed Scanner/Admin increments.
+  Retarget/reconcile the dependency stack; rerun affected checks on final bases.
+- [ ] Align surgical migrations and ordered merges with Nick: review cycles
+  `20261016052958`, image/revision evidence `20261016104506`, and publication
+  `20261016131659` remain unapplied. Include the newer #693 atomic-artifact
+  migration in that refreshed dependency inventory; do not use blind db push.
+- [ ] Align and deploy the verified worker/Admin release; verify authenticated
+  actions, private/public Storage and rollback using the exact reviewed heads.
+- [ ] Activate and prove shared host resource controls and monitoring. Current
+  worker/review have no MemoryMax and no observed shared heavy-work lock.
+- [ ] Approve exact backlog dispositions and the ten-case live cohort. Run bounded
+  research/image proof and review exact products before publication/customer chat.
+- [ ] Decide separately whether to enable automatic images/rework and Admin alerts
+  after the approved live proof. Current switches remain false/default off.
+
+Fresh production read at 14:04 UTC: zero queued/running/rework jobs, zero Admin
+alert outbox rows; only outbox migration `20261015200636` is applied among the
+four listed intake increments. No retry, migration, deploy or publication ran.
+
 ## Verified baseline (read-only, 2026-10-15, about 14:02 UTC)
 
 - Root base `72e64e3ba16bfc089fc2dbb6c42062a5a6835dba`; clean `main`.

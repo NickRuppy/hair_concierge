@@ -11,7 +11,7 @@ import {
   type ProductReviewQueueEntry,
 } from "@/lib/product-intake/admin-review-model"
 import type { ProductReviewDetail } from "@/lib/product-intake/admin-review-repository"
-import { ProductReviewImages } from "./review-images"
+import { ProductReviewActions } from "./review-actions"
 
 const categoryLabels: Record<string, string> = {
   shampoo: "Shampoo",
@@ -158,7 +158,7 @@ export function ProductReviewDetailView({
 }) {
   const { submission, job, artifacts, decisions } = detail
   const payload = productReviewRecord(submission.researched_payload)
-  const final = productReviewRecord(payload?.final)
+  const final = productReviewRecord(detail.publication_review?.proposed_final ?? payload?.final)
   const engine = productReviewRecord(payload?.engine)
   const protocol = productReviewRecord(payload?.draft)?.protocol
   const protocolRows = productReviewRecord(final?.category_specs)?.product_application_protocols
@@ -312,32 +312,15 @@ export function ProductReviewDetailView({
           </section>
         </div>
         <div className="min-w-0 space-y-5">
-          <section className={card}>
-            <h2 className="text-lg font-semibold">Bild prüfen</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Vergleiche Rohbild, Magenta-Prüfung und Katalogbild für diese Version. Hier kann noch
-              kein Bild freigegeben werden.
-            </p>
-            <ProductReviewImages
-              images={detail.images}
-              reloadHref={
-                queuePath.startsWith("/labs/")
-                  ? `${queuePath}?detail=${submission.id}`
-                  : `/admin/produkt-intake/${submission.id}`
-              }
-            />
-          </section>
-          <section className={card}>
-            <h2 className="text-lg font-semibold">Prüfung &amp; Abschluss</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Diese Ansicht ist derzeit nur lesend. Versionsgebundene Daten- und Bildfreigaben sowie
-              die abschließende Veröffentlichung werden als Nächstes angebunden.
-            </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Für diesen Eintrag bleibt der bestehende Prüfablauf verfügbar. Es wurde durch das
-              Öffnen dieser Seite nichts freigegeben.
-            </p>
-          </section>
+          <ProductReviewActions
+            key={`${submission.id}:${submission.payload_revision}:${job?.review_cycle_id}`}
+            detail={detail}
+            reloadHref={
+              queuePath.startsWith("/labs/")
+                ? `${queuePath}?detail=${submission.id}`
+                : `/admin/produkt-intake/${submission.id}`
+            }
+          />
           {(comments.length > 0 || job?.last_error) && (
             <section className={card}>
               <h2 className="text-lg font-semibold">Noch zu klären</h2>

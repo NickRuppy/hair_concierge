@@ -7,17 +7,26 @@ function ReviewImage({
   image,
   label,
   reloadHref,
+  onRendered,
 }: {
   image?: ProductReviewImage
   label: string
   reloadHref: string
+  onRendered?: (kind: string, available: boolean) => void
 }) {
   const [failed, setFailed] = useState(false)
-  const imageRef = useCallback((node: HTMLImageElement | null) => {
-    // A signed URL can fail before hydration attaches onError. Check the
-    // already-loaded DOM image when React attaches, too.
-    if (node?.complete && node.naturalWidth === 0) setFailed(true)
-  }, [])
+  const imageRef = useCallback(
+    (node: HTMLImageElement | null) => {
+      // A signed URL can fail before hydration attaches onError. Check the
+      // already-loaded DOM image when React attaches, too.
+      if (node?.complete) {
+        const loaded = node.naturalWidth > 0
+        if (!loaded) setFailed(true)
+        if (image) onRendered?.(image.kind, loaded)
+      }
+    },
+    [image, onRendered],
+  )
   const available = image?.signed_url && !failed
   return (
     <figure className="min-w-0 rounded-lg border bg-muted/20 p-2">
@@ -38,7 +47,11 @@ function ReviewImage({
             src={image.signed_url!}
             alt={label}
             referrerPolicy="no-referrer"
-            onError={() => setFailed(true)}
+            onLoad={() => onRendered?.(image.kind, true)}
+            onError={() => {
+              setFailed(true)
+              onRendered?.(image.kind, false)
+            }}
             className="h-44 w-full rounded object-contain outline outline-1 outline-black/10"
           />
         </a>
@@ -66,9 +79,11 @@ function ReviewImage({
 export function ProductReviewImages({
   images = [],
   reloadHref,
+  onRendered,
 }: {
   images?: ProductReviewImage[]
   reloadHref: string
+  onRendered?: (kind: string, available: boolean) => void
 }) {
   return (
     <div className="mt-4 grid grid-cols-3 gap-2">
@@ -84,6 +99,7 @@ export function ProductReviewImages({
           image={images.find((image) => image.kind === kind)}
           label={label}
           reloadHref={reloadHref}
+          onRendered={onRendered}
         />
       ))}
     </div>

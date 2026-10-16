@@ -1,3 +1,4 @@
+import { loadReviewPublicationPreflight } from "../../src/lib/product-intake/review-publication"
 import {
   createSupabaseClientFromEnv,
   flag,
@@ -10,62 +11,13 @@ import {
   captureProductIntakeException,
   flushProductIntakeSentry,
 } from "@/lib/observability/product-intake"
-import type { ProductIntakeTargetSpecOperation } from "@/lib/product-intake/category-validators"
 import {
   appendProductAdditionRecord,
   approveReviewedSubmission,
   loadSubmission,
-  notifyReviewResult,
   productAdditionRecordPathForDate,
   validateSubmissionReady,
 } from "./review-actions"
-
-export function deriveSuitableThicknessesFromSpecOperations(
-  specOperations: readonly ProductIntakeTargetSpecOperation[],
-): string[] {
-  const thicknesses = new Set<string>()
-  for (const operation of specOperations) {
-    for (const row of operation.rows) {
-      const thickness = (row as { thickness?: unknown }).thickness
-      if (thickness === "fine" || thickness === "normal" || thickness === "coarse") {
-        thicknesses.add(thickness)
-      }
-    }
-  }
-  return [...thicknesses].sort()
-}
-
-export function resolveSuitableThicknessesForApprovedProduct(params: {
-  reviewedThicknesses: readonly string[]
-  specOperations: readonly ProductIntakeTargetSpecOperation[]
-}): string[] {
-  return [
-    ...new Set([
-      ...params.reviewedThicknesses.filter(
-        (value) => value === "fine" || value === "normal" || value === "coarse",
-      ),
-      ...deriveSuitableThicknessesFromSpecOperations(params.specOperations),
-    ]),
-  ].sort()
-}
-
-async function writeSuitableThicknessesForApprovedProduct(params: {
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>
-  productId: string
-  reviewedThicknesses: readonly string[]
-  specOperations: readonly ProductIntakeTargetSpecOperation[]
-}): Promise<void> {
-  const thicknesses = resolveSuitableThicknessesForApprovedProduct({
-    reviewedThicknesses: params.reviewedThicknesses,
-    specOperations: params.specOperations,
-  })
-  if (thicknesses.length === 0) return
-  const { error } = await params.supabase
-    .from("products")
-    .update({ suitable_thicknesses: thicknesses })
-    .eq("id", params.productId)
-  if (error) throw error
-}
 
 export async function approveSubmissionById(params: {
   submissionId: string
@@ -76,6 +28,11 @@ export async function approveSubmissionById(params: {
 }) {
   const supabase = createSupabaseClientFromEnv()
   const submission = await loadSubmission(supabase, params.submissionId)
+  const preflight = await loadReviewPublicationPreflight(supabase, params.submissionId)
+  if (preflight.publication) {
+    printJson({ submission_id: submission.id, publication: preflight.publication, replay: true })
+    return { product_id: preflight.publication.product_id, publication: preflight.publication }
+  }
   const validation = validateSubmissionReady(submission)
 
   if (!validation.ok) {
@@ -95,8 +52,9 @@ export async function approveSubmissionById(params: {
   const reviewedAt = new Date().toISOString()
   const dryRunPayload = {
     submission_id: submission.id,
-    ok: true,
-    product: validation.normalizedPayload.final.product,
+    ok: preflight.ok,
+    preflight,
+    product: preflight.proposed_final?.product ?? validation.normalizedPayload.final.product,
     identifiers: validation.normalizedPayload.final.identifiers,
     spec_operations: validation.targetSpecOperations,
     usage_link: {
@@ -113,6 +71,7 @@ export async function approveSubmissionById(params: {
   }
 
   if (!params.apply) {
+    if (!preflight.ok) process.exitCode = 1
     printJson(dryRunPayload)
     console.log("Dry-run only. Re-run with --apply --confirm to approve.")
     return null
@@ -121,6 +80,8 @@ export async function approveSubmissionById(params: {
   if (!params.confirm) {
     throw new Error("Approval writes require --confirm")
   }
+
+  if (!preflight.ok) throw new Error(`review_preflight_failed: ${preflight.blockers.join(", ")}`)
 
   const approval = await approveReviewedSubmission({
     supabase,
@@ -131,21 +92,6 @@ export async function approveSubmissionById(params: {
     reviewedAt,
     reviewNotes: params.reviewNotes,
   })
-
-  try {
-    await writeSuitableThicknessesForApprovedProduct({
-      supabase,
-      productId: approval.product_id,
-      reviewedThicknesses:
-        validation.normalizedPayload.final.product.suitable_thicknesses ?? [],
-      specOperations: validation.targetSpecOperations,
-    })
-  } catch (error) {
-    console.error(
-      `Approved, but failed to write suitable_thicknesses for product ${approval.product_id}:`,
-      error,
-    )
-  }
 
   let additionRecordPath: string | null = null
   try {
@@ -177,10 +123,9 @@ export async function approveSubmissionById(params: {
     console.error(
       `Approved in DB, but failed to write addition record. Regenerate for submission ${submission.id}.`,
     )
-    throw error
   }
 
-  const notification = await notifyReviewResult(supabase, approval.submission)
+  const notification = { status: approval.publication.notification_status }
 
   printJson({
     ...dryRunPayload,

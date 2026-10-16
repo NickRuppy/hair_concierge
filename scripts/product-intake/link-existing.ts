@@ -7,7 +7,7 @@ import {
   requireFlag,
 } from "./cli"
 import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
-import { linkExistingProduct, notifyReviewResult } from "./review-actions"
+import { linkExistingProduct } from "./review-actions"
 
 async function main() {
   const args = parseArgs()
@@ -49,7 +49,7 @@ async function main() {
     reviewedAt,
     reviewNotes: flag(args, "review-notes"),
   })
-  const notification = await notifyReviewResult(supabase, result.submission)
+  const notification = result.notification
 
   printJson({
     ...dryRunPayload,

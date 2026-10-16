@@ -1,3 +1,4 @@
+import { loadReviewAuthorityPreflight } from "./publication"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type {
@@ -363,50 +364,25 @@ export async function buildPublishPreflight(
   submissionId: string,
   options: { publishRouteEnabled?: boolean } = {},
 ): Promise<PublishPreflightResult> {
+  const authority = await loadReviewAuthorityPreflight(client, submissionId)
   const detail = await loadProductIntakeSubmissionDetail(client, submissionId)
-  if (!detail) {
-    throw new Error(`Submission ${submissionId} wurde nicht gefunden.`)
-  }
-
-  const unresolved = detail.decisions.filter(
-    (decision) => decision.decision === "change_requested" && !decision.resolved_at,
-  )
-  const latestImageDecision = latestDecisionForField(detail.decisions, "final.image")
-  const latestPublishDecision = latestDecisionForField(detail.decisions, "final.product")
-  const finalPayload = normalizeRecord(detail.payload?.final)
-  const blockers: string[] = []
-
-  if (!finalPayload) blockers.push("Kein finaler Research-Payload vorhanden.")
-  if (detail.status !== "ready_for_review") {
-    blockers.push(`Submission ist noch nicht ready_for_review (${detail.status}).`)
-  }
-  if (unresolved.length > 0) blockers.push(`${unresolved.length} Review-Kommentar(e) sind offen.`)
-  if (latestImageDecision !== "image_approved") {
-    blockers.push("Finales Bild wurde noch nicht freigegeben.")
-  }
-  if (latestPublishDecision !== "publish_approved") {
-    blockers.push("Finaler Produkt-Handoff wurde noch nicht freigegeben.")
-  }
-  if (detail.job?.status !== "waiting_for_review") {
-    blockers.push("Aktueller Job ist noch nicht review-bereit.")
-  }
-
   return {
     submission_id: submissionId,
-    ok: blockers.length === 0,
-    blockers,
-    unresolved_decisions: unresolved.length,
-    latest_image_decision: latestImageDecision,
-    latest_publish_decision: latestPublishDecision,
-    proposed_product: finalPayload,
+    ok: authority.ok,
+    blockers: authority.blockers,
+    unresolved_decisions: authority.blockers.includes("unresolved_review_questions") ? 1 : 0,
+    latest_image_decision:
+      detail?.decisions.find((decision) => decision.id === authority.image_decision_id)?.decision ??
+      null,
+    latest_publish_decision:
+      detail?.decisions.find((decision) => decision.id === authority.data_decision_id)?.decision ??
+      null,
+    proposed_product: normalizeRecord(detail?.payload?.final),
     publish_requires_confirm: true,
     publish_route_enabled: options.publishRouteEnabled ?? false,
-    next_action:
-      blockers.length === 0
-        ? options.publishRouteEnabled
-          ? "Publish ist fachlich vorbereitet. Finales Schreiben braucht explizite Bestaetigung."
-          : "Publish ist fachlich vorbereitet, aber serverseitig noch gesperrt."
-        : "Blocker klaeren und Preflight erneut starten.",
+    next_action: authority.ok
+      ? "Freigaben sind aktuell. Die Veröffentlichung benötigt eine ausdrückliche Bestätigung."
+      : "Blocker klären und Preflight erneut starten.",
   }
 }
 
@@ -595,11 +571,4 @@ function nullableString(value: unknown): string | null {
 
 function normalizeRecord(value: unknown): JsonRecord | null {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : null
-}
-
-function latestDecisionForField(
-  decisions: ProductIntakeReviewDecisionRow[],
-  fieldPath: string,
-): ProductIntakeReviewDecision | null {
-  return decisions.find((decision) => decision.field_path === fieldPath)?.decision ?? null
 }

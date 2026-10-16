@@ -14,6 +14,10 @@ import {
   type ProductReviewSubmission,
 } from "./admin-review-model"
 import { signProductReviewAsset } from "./review-assets"
+import {
+  loadReviewPublicationPreflight,
+  type ReviewPublicationPreflight,
+} from "./review-publication"
 
 export type ProductReviewReadClient = Pick<SupabaseClient, "from" | "storage">
 export type ProductReviewImage = Pick<ProductIntakeReviewAsset, "id" | "kind" | "sha256"> & {
@@ -25,6 +29,7 @@ export type ProductReviewDetail = {
   artifacts: ProductIntakeResearchArtifact[]
   decisions: ProductIntakeReviewDecisionRow[]
   images?: ProductReviewImage[]
+  publication_review?: ReviewPublicationPreflight | null
 }
 
 // Keyset pagination avoids offset shifts when an earlier submission closes.
@@ -124,6 +129,7 @@ export async function loadAdminProductReviewDetail(
     ...(typeof data.payload_revision === "number"
       ? { payload_revision: data.payload_revision }
       : {}),
+    ...(typeof data.payload_sha256 === "string" ? { payload_sha256: data.payload_sha256 } : {}),
   }
   const manifests =
     revision === undefined
@@ -149,10 +155,27 @@ export async function loadAdminProductReviewDetail(
         return { id: asset.id, kind: asset.kind, sha256: asset.sha256, signed_url }
       }),
   )
+  const currentJob = latestProductReviewJob(jobs)
+  let publication_review: ReviewPublicationPreflight | null = null
+  try {
+    const current = await loadReviewPublicationPreflight(client as SupabaseClient, id)
+    // A concurrent pass can intervene between reads. Never combine one version's
+    // values/images with another version's action tokens or approval indicators.
+    if (
+      current.payload_revision === submission.payload_revision &&
+      current.payload_sha256 === submission.payload_sha256 &&
+      current.job_id === (currentJob?.id ?? null) &&
+      current.review_cycle_id === (currentJob?.review_cycle_id ?? null)
+    )
+      publication_review = current
+  } catch {
+    // Keep the evidence readable while an unavailable authority fails actions closed.
+  }
   return {
     submission,
     images,
-    job: latestProductReviewJob(jobs),
+    publication_review,
+    job: currentJob,
     artifacts: artifacts.sort(
       (a, b) => b.created_at.localeCompare(a.created_at) || b.id.localeCompare(a.id),
     ),

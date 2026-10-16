@@ -1226,7 +1226,9 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                   (artifact) =>
                     artifact.kind === "formula" &&
                     artifact.job_id === job.id &&
-                    artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND,
+                    artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND &&
+                    normalizeRecord(artifact.payload.proof)?.reviewCycleId ===
+                      leasedJob.review_cycle_id,
                 )
                 .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
               const stages = await withResearchModelCycle(reserveModel, () =>
@@ -2314,6 +2316,37 @@ export function normalizeResearchOutputForCategory(
             : stringValue(projection?.projection_sha256),
       }
     } else delete artifact.payload.engine
+  }
+
+  if (categoryKey === "shampoo" && downstreamDecisions.length) {
+    const currentEngine = normalizeRecord(projectionArtifact?.payload.engine)
+    const answered = reviewDecisions.find((decision) => {
+      const pinned = normalizeRecord(decision.proposed_value?.engine)
+      const choice = decision.reviewer_value?.choice
+      return (
+        decision.submission_id === expectedResearchId &&
+        decision.field_path === "research.separate_deep_cleanser_listing" &&
+        decision.review_source === "admin" &&
+        decision.review_action === "answer" &&
+        decision.decision === "approved" &&
+        Boolean(decision.request_id) &&
+        (choice === "keep_regular_only" || choice === "review_extra_separately") &&
+        typeof currentEngine?.input_hash === "string" &&
+        /^[a-f0-9]{64}$/.test(currentEngine.input_hash) &&
+        ["id", "methodology", "input_hash"].every((key) => pinned?.[key] === currentEngine[key])
+      )
+    })
+    if (answered) {
+      downstreamDecisions = []
+      // Keep the explicit follow-up choice as audit evidence. It never creates
+      // another listing and does not clear formula/readiness/Sol defects.
+      if (projectionArtifact)
+        projectionArtifact.payload.downstream_review = {
+          decision_id: answered.id,
+          choice: answered.reviewer_value?.choice,
+          engine: currentEngine,
+        }
+    }
   }
 
   // Read AFTER the category adapter: applyLeaveInResearchAdapter reassigns

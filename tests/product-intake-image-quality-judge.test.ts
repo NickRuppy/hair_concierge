@@ -5,7 +5,10 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
 import sharp from "sharp"
-import type { ProductIntakeResearchJob } from "@chaarlie/product-intake-core"
+import type {
+  ProductIntakeResearchJob,
+  ProductIntakeSubmissionDetail,
+} from "@chaarlie/product-intake-core"
 
 import {
   buildImageQualityJudgePrompt,
@@ -18,6 +21,155 @@ import {
   shouldAutoPrepareImage,
 } from "../scripts/product-intake/codex-research-worker"
 import { processApprovedImageForReview } from "../src/lib/product-intake/pipeline/image"
+import { loadApprovedRawImageForProcessing } from "../src/lib/product-intake/pipeline/review-raw-image"
+
+test("approved raw-image processing refuses incomplete, stale, or tampered immutable pins before any byte download", async () => {
+  const submissionId = "11111111-1111-4111-8111-111111111111"
+  const rawAssetId = "22222222-2222-4222-8222-222222222222"
+  const differentAssetId = "33333333-3333-4333-8333-333333333333"
+  const rawSha256 = "a".repeat(64)
+  const decisionId = "44444444-4444-4444-8444-444444444444"
+  const job = (progress: Record<string, unknown>): ProductIntakeResearchJob => ({
+    id: "55555555-5555-4555-8555-555555555555",
+    submission_id: submissionId,
+    status: "running",
+    stage: "image_judging",
+    priority: 0,
+    attempt_count: 0,
+    max_attempts: 3,
+    locked_by: "worker",
+    locked_at: "2026-10-16T10:00:00.000Z",
+    started_at: "2026-10-16T10:00:00.000Z",
+    completed_at: null,
+    next_run_at: "2026-10-16T10:00:00.000Z",
+    last_error: null,
+    progress,
+    created_at: "2026-10-16T10:00:00.000Z",
+    updated_at: "2026-10-16T10:00:00.000Z",
+  })
+  const completePin = {
+    source: "admin_review",
+    next_step: "process_image_for_final_review",
+    approved_raw_asset_id: rawAssetId,
+    approved_raw_asset_sha256: rawSha256,
+    approved_raw_payload_revision: 4,
+    review_decision_id: decisionId,
+  }
+  const detail = (
+    currentJob: ProductIntakeResearchJob,
+    payloadRevision = 4,
+  ): ProductIntakeSubmissionDetail => ({
+    id: submissionId,
+    payload_revision: payloadRevision,
+    status: "researching",
+    category: "mask",
+    brand: "Chaarlie",
+    product_name: "Test Mask",
+    source: "catalog_scan",
+    payload: null,
+    created_at: currentJob.created_at,
+    updated_at: currentJob.updated_at,
+    job: currentJob,
+    artifacts: [],
+    decisions: [
+      {
+        id: decisionId,
+        submission_id: submissionId,
+        job_id: currentJob.id,
+        field_path: "raw.image",
+        decision: "image_approved",
+        proposed_value: null,
+        reviewer_value: null,
+        comment: null,
+        reviewed_by: "nick",
+        reviewed_at: currentJob.created_at,
+        resolved_at: null,
+        created_at: currentJob.created_at,
+        payload_revision: 4,
+        payload_sha256: null,
+        approved_asset_sha256: rawSha256,
+        review_cycle_id: "previous-cycle",
+        request_id: null,
+        review_source: "admin",
+        review_action: "approve_raw",
+      },
+    ],
+  })
+  let manifestQueries = 0
+  let byteDownloads = 0
+  const client = {
+    from() {
+      manifestQueries += 1
+      return {
+        select() {
+          return this
+        },
+        eq() {
+          return this
+        },
+        maybeSingle: async () => ({
+          data: {
+            id: differentAssetId,
+            submission_id: submissionId,
+            payload_revision: 4,
+            job_id: "55555555-5555-4555-8555-555555555555",
+            kind: "raw",
+            sha256: rawSha256,
+            storage_key: `${submissionId}/4/${rawSha256}`,
+            media_type: "image/png",
+            byte_length: 10,
+            created_at: "2026-10-16T10:00:00.000Z",
+          },
+          error: null,
+        }),
+      }
+    },
+    storage: {
+      from() {
+        return {
+          download: async () => {
+            byteDownloads += 1
+            throw new Error("must not download an invalid manifest")
+          },
+        }
+      },
+    },
+  }
+
+  const missingStep = job({ ...completePin, next_step: undefined })
+  await assert.rejects(
+    loadApprovedRawImageForProcessing({
+      supabase: client as never,
+      job: missingStep,
+      detail: detail(missingStep),
+    }),
+    /approved_raw_image_pin_invalid/,
+  )
+  assert.equal(manifestQueries, 0)
+
+  const staleRevision = job(completePin)
+  await assert.rejects(
+    loadApprovedRawImageForProcessing({
+      supabase: client as never,
+      job: staleRevision,
+      detail: detail(staleRevision, 5),
+    }),
+    /approved_raw_image_revision_invalid/,
+  )
+  assert.equal(manifestQueries, 0)
+
+  const tamperedAsset = job(completePin)
+  await assert.rejects(
+    loadApprovedRawImageForProcessing({
+      supabase: client as never,
+      job: tamperedAsset,
+      detail: detail(tamperedAsset),
+    }),
+    /approved_raw_image_manifest_invalid/,
+  )
+  assert.equal(manifestQueries, 1)
+  assert.equal(byteDownloads, 0)
+})
 
 test("Codex image judge attaches current images and retained references in stable order", () => {
   const args = codexResearchExecArgs({
@@ -290,10 +442,52 @@ test("transparent image completion commits the ready notification snapshot with 
     ])
     .png()
     .toBuffer()
+  const mutableRemote = await sharp(source)
+    .composite([
+      {
+        input: Buffer.from(
+          '<svg width="320" height="400" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="1" height="1" fill="#000000"/></svg>',
+        ),
+      },
+    ])
+    .png()
+    .toBuffer()
   const commits: Array<Record<string, unknown>> = []
   const artifacts: Array<Record<string, unknown>> = []
   const uploads: Array<{ key: string; bytes: Buffer }> = []
+  const downloads: string[] = []
+  const rawAssetId = randomUUID()
+  const rawSha256 = createHash("sha256").update(source).digest("hex")
+  const rawStorageKey = `${submissionId}/4/${rawSha256}`
   const storageClient = {
+    from(table: string) {
+      assert.equal(table, "product_intake_review_assets")
+      return {
+        select() {
+          return this
+        },
+        eq(column: string, value: string) {
+          assert.equal(column, "id")
+          assert.equal(value, rawAssetId)
+          return this
+        },
+        maybeSingle: async () => ({
+          data: {
+            id: rawAssetId,
+            submission_id: submissionId,
+            payload_revision: 4,
+            job_id: "image-job-1",
+            kind: "raw",
+            sha256: rawSha256,
+            storage_key: rawStorageKey,
+            media_type: "image/png",
+            byte_length: source.length,
+            created_at: "2026-10-15T12:00:00.000Z",
+          },
+          error: null,
+        }),
+      }
+    },
     storage: {
       from(bucket: string) {
         assert.equal(bucket, "product-intake-review")
@@ -302,6 +496,11 @@ test("transparent image completion commits the ready notification snapshot with 
             assert.equal(options.upsert, false)
             uploads.push({ key, bytes: Buffer.from(bytes) })
             return { data: { path: key }, error: null }
+          },
+          download: async (key: string) => {
+            downloads.push(key)
+            assert.equal(key, rawStorageKey)
+            return { data: new Blob([source]), error: null }
           },
         }
       },
@@ -321,7 +520,15 @@ test("transparent image completion commits the ready notification snapshot with 
     completed_at: null,
     next_run_at: "2026-10-15T12:00:00.000Z",
     last_error: null,
-    progress: { readiness_check: "passed" },
+    progress: {
+      readiness_check: "passed",
+      next_step: "process_image_for_final_review",
+      source: "admin_review",
+      approved_raw_asset_id: rawAssetId,
+      approved_raw_asset_sha256: rawSha256,
+      approved_raw_payload_revision: 4,
+      review_decision_id: "raw-decision-1",
+    },
     created_at: "2026-10-15T11:50:00.000Z",
     updated_at: "2026-10-15T12:00:00.000Z",
   }
@@ -329,9 +536,13 @@ test("transparent image completion commits the ready notification snapshot with 
   process.env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR = outputRoot
   process.env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED = "false"
   process.env.PRODUCT_INTAKE_REMBG_ENABLED = "false"
+  let mutableRemoteFetches = 0
   globalThis.fetch = (async (url: string | URL | Request) => {
+    mutableRemoteFetches += 1
     assert.equal(String(url), "https://images.example.test/transparent-product.png")
-    return new Response(source, { headers: { "content-type": "image/png" } })
+    return new Response(mutableRemote, {
+      headers: { "content-type": "image/png" },
+    })
   }) as typeof fetch
   const deps = {
     appendResearchArtifact: async (_client: unknown, params: Record<string, unknown>) => {
@@ -383,7 +594,29 @@ test("transparent image completion commits the ready notification snapshot with 
           updated_at: job.updated_at,
           job,
           artifacts: [],
-          decisions: [],
+          decisions: [
+            {
+              id: "raw-decision-1",
+              submission_id: submissionId,
+              job_id: job.id,
+              field_path: "raw.image",
+              decision: "image_approved",
+              proposed_value: null,
+              reviewer_value: null,
+              comment: null,
+              reviewed_by: "nick",
+              reviewed_at: "2026-10-15T12:00:00.000Z",
+              resolved_at: null,
+              created_at: "2026-10-15T12:00:00.000Z",
+              payload_revision: 4,
+              payload_sha256: null,
+              approved_asset_sha256: rawSha256,
+              review_cycle_id: "prior-cycle",
+              request_id: null,
+              review_source: "admin",
+              review_action: "approve_raw",
+            },
+          ],
         },
         workerId: "codex-image-worker",
         promptPacketPath: "/tmp/product-intake-image-stage.json",
@@ -412,6 +645,8 @@ test("transparent image completion commits the ready notification snapshot with 
       ["raw", "magenta", "neutral", "final", "search_thumbnail"],
     )
     assert.equal(uploads.length, 5)
+    assert.deepEqual(downloads, [rawStorageKey])
+    assert.equal(mutableRemoteFetches, 0)
     assert.deepEqual(uploads[0].bytes, source)
     for (const [index, asset] of manifest.entries()) {
       assert.equal(asset.storage_key, `${submissionId}/5/${asset.sha256}`)
@@ -438,7 +673,10 @@ test("transparent image completion commits the ready notification snapshot with 
       ...job,
       id: "image-job-2",
       submission_id: incompleteSubmissionId,
-      progress: {},
+      progress: {
+        source: "admin_review",
+        review_decision_id: "generic-rework-decision",
+      },
     }
     await processApprovedImageForReview(
       {
@@ -474,6 +712,7 @@ test("transparent image completion commits the ready notification snapshot with 
       deps as never,
     )
     const missingReadinessCommit = commits[1]!
+    assert.equal(mutableRemoteFetches, 1)
     assert.equal(missingReadinessCommit.reviewOutcome, "needs_nick")
     assert.deepEqual(
       (missingReadinessCommit.notificationPayload as Record<string, unknown>).question_1,

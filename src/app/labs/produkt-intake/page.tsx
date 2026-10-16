@@ -99,6 +99,7 @@ export default async function ProductIntakeLab({
         submission: {
           ...entry,
           payload_revision: 3,
+          payload_sha256: "a".repeat(64),
           researched_payload: {
             engine: { id: "conditioner-standard", methodology: "v1.6", adapter: "v1" },
             final: {
@@ -129,7 +130,27 @@ export default async function ProductIntakeLab({
             },
           },
         },
-        job: entry.job,
+        job: entry.job
+          ? { ...entry.job, review_cycle_id: "77777777-7777-4777-8777-777777777777" }
+          : null,
+        publication_review: {
+          submission_id: entry.id,
+          payload_revision: 3,
+          payload_sha256: "a".repeat(64),
+          job_id: entry.job?.id ?? null,
+          review_cycle_id: "77777777-7777-4777-8777-777777777777",
+          data_decision_id: null,
+          image_decision_id: null,
+          approved_asset_sha256: "a".repeat(64),
+          ok: false,
+          blockers: ["data_approval_missing", "image_approval_missing"],
+          no_image: false,
+          can_approve_no_image: false,
+          publication: null,
+          legacy_package: false,
+          proposed_final: null,
+          validation_blockers: [],
+        },
         images:
           query.bilder === "missing"
             ? []
@@ -163,7 +184,8 @@ export default async function ProductIntakeLab({
   return (
     <AdminLayout>
       <p className="mx-auto mb-6 max-w-6xl rounded-lg bg-primary/10 p-3 text-sm text-primary">
-        Lokale Vorschau mit erfundenen Recherchepaketen. Hier werden keine Produkte freigegeben.
+        Lokale Vorschau mit erfundenen Recherchepaketen. Alle Aktionen bleiben in dieser Vorschau;
+        Katalog und Kunden werden nicht verändert.
       </p>
       {query.fehler ? (
         <ProductReviewUnavailable href={basePath} />

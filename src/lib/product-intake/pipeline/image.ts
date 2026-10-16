@@ -25,6 +25,7 @@ import {
   type ImageQualityReferenceSet,
   type ImageQualityVerdict,
 } from "./image-quality"
+import { loadApprovedRawImageForProcessing } from "./review-raw-image"
 import {
   hasFinalResearchPayload,
   normalizeRecord,
@@ -72,24 +73,15 @@ export async function processApprovedImageForReview(
     throw new Error("review_payload_revision_missing")
   let leasedJob = params.job
   const finalArtifacts: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId">> = []
-  const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
-  if (!sourceImageUrl) {
-    throw new Error("No approved source image URL found for image processing.")
-  }
-
-  const response = await fetch(sourceImageUrl, {
-    headers: {
-      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
-      // local Sharp/libvips build can read metadata but fail during pixel decode.
-      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
-      "user-agent": "ChaarlieProductIntakeReview/1.0",
-    },
+  const pinnedRaw = await loadApprovedRawImageForProcessing({
+    supabase: params.supabase,
+    job: params.job,
+    detail: params.detail,
   })
-  if (!response.ok) {
-    throw new Error(`Download approved image failed: HTTP ${response.status}`)
-  }
-
-  const sourceBytes = Buffer.from(await response.arrayBuffer())
+  const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
+  const sourceUrls = sourceImageUrl ? [sourceImageUrl] : []
+  const response = pinnedRaw ? null : await fetchRemoteApprovedSourceImage(sourceImageUrl)
+  const sourceBytes = pinnedRaw ? pinnedRaw.bytes : Buffer.from(await response!.arrayBuffer())
   const sourceSha256 = createHash("sha256").update(sourceBytes).digest("hex")
   const sourceAlphaStats = await processedImageAlphaStats(sourceBytes)
   const sourceAlreadyTransparent = sourceAlphaStats.transparentRatio > 0.05
@@ -103,7 +95,10 @@ export async function processApprovedImageForReview(
   const cutoutDir = join(workDir, "selected-nobg")
   mkdirSync(sourceDir, { recursive: true })
   mkdirSync(cutoutDir, { recursive: true })
-  const sourceExt = imageExtension(response.headers.get("content-type"), sourceImageUrl)
+  const sourceExt = imageExtension(
+    pinnedRaw?.asset.media_type ?? response?.headers.get("content-type") ?? null,
+    sourceImageUrl ?? pinnedRaw?.asset.storage_key ?? "raw-image",
+  )
   const sourceSlug = slugForProcessedImage(params.detail)
   const sourceFile = join(sourceDir, `${sourceSlug}-${sourceSha256.slice(0, 12)}.${sourceExt}`)
   writeFileSync(sourceFile, sourceBytes)
@@ -135,7 +130,7 @@ export async function processApprovedImageForReview(
         notes:
           "Source image has no usable alpha and automatic Vision background removal did not produce a cutout. Use Vision/rembg manually or select a cleaner image before final image review.",
       },
-      sourceUrls: [sourceImageUrl],
+      sourceUrls,
       model: "local-image-finalizer",
       promptVersion: "product_intake_image_finalization_v1",
     }
@@ -261,7 +256,7 @@ export async function processApprovedImageForReview(
         deterministic_quality_gate: finalized.qualityGate,
         human_approval_required: true,
       },
-      sourceUrls: [sourceImageUrl],
+      sourceUrls,
       model: judgeConfig.model,
       promptVersion: "product_intake_image_quality_judge_v1",
     })
@@ -326,7 +321,7 @@ export async function processApprovedImageForReview(
           ? "The isolated Hetzner rembg worker produced an isnet-general-use cutout. The final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
           : "Vision produced a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background.",
     },
-    sourceUrls: [sourceImageUrl],
+    sourceUrls,
     model: "local-image-finalizer",
     promptVersion: "product_intake_image_finalization_v1",
   }
@@ -416,6 +411,20 @@ export async function processedImageAlphaStats(bytes: Buffer) {
     transparentRatio: total > 0 ? transparent / total : 0,
     opaqueRatio: total > 0 ? opaque / total : 0,
   }
+}
+
+async function fetchRemoteApprovedSourceImage(sourceImageUrl: string | null): Promise<Response> {
+  if (!sourceImageUrl) throw new Error("No approved source image URL found for image processing.")
+  const response = await fetch(sourceImageUrl, {
+    headers: {
+      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
+      // local Sharp/libvips build can read metadata but fail during pixel decode.
+      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
+      "user-agent": "ChaarlieProductIntakeReview/1.0",
+    },
+  })
+  if (!response.ok) throw new Error(`Download approved image failed: HTTP ${response.status}`)
+  return response
 }
 
 export function shouldAutoPrepareImage(params: {

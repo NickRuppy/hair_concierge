@@ -149,6 +149,10 @@ export type ProductIntakeReviewDecisionRow = {
   payload_revision?: number | null
   payload_sha256?: string | null
   approved_asset_sha256?: string | null
+  review_cycle_id?: string | null
+  request_id?: string | null
+  review_source?: "admin" | "legacy_package" | null
+  review_action?: string | null
 }
 
 export const PRODUCT_INTAKE_REVIEW_ASSET_KINDS = [

@@ -157,6 +157,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
   let reserved = 0
   const calls: Array<{ name: string; body: Record<string, unknown> }> = []
   const artifacts: Record<string, unknown>[] = []
+  const decisions: Record<string, unknown>[] = []
   const commits: Record<string, any>[] = []
   let payload: unknown = null
   let payloadRevision = 1
@@ -274,14 +275,10 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       return reply([{ id: randomUUID(), canonical_name: "Xylozent", normalized_name: "xylozent" }])
     if (req.method === "GET" && table === "product_intake_research_artifacts")
       return reply(artifacts)
+    if (req.method === "GET" && table === "product_intake_review_decisions") return reply(decisions)
     if (
       req.method === "GET" &&
-      [
-        "product_intake_review_decisions",
-        "brand_aliases",
-        "product_lines",
-        "product_intake_admin_notifications",
-      ].includes(table)
+      ["brand_aliases", "product_lines", "product_intake_admin_notifications"].includes(table)
     )
       return reply([])
     return reply({ message: "unexpected" }, 500)
@@ -347,6 +344,14 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
     job,
     cycleId,
     submissionId,
+    decisions,
+    startNewCycle: () => {
+      reserved = 0
+      job.reserved_model_runs = 0
+      job.auto_rework_count = 0
+      job.review_cycle_id = randomUUID()
+      job.stage = "rework"
+    },
     launched: () =>
       readFileSync(log, "utf8")
         .trim()
@@ -460,6 +465,57 @@ test(
     assert.equal(
       f.calls.some((c) => c.name === "product_intake_claim_admin_notification"),
       false,
+    )
+  },
+)
+
+test(
+  "Shampoo uses only the durable answer matching its formula and method, and retains other Sol blockers",
+  { timeout: 30_000 },
+  async (t) => {
+    const f = await workerFixture(t, "U2")
+    const first = await f.run([], false)
+    const engine = first.research_artifacts.find((a: any) => a.kind === "property_synthesis")
+      .payload.engine
+    f.decisions.push({
+      id: randomUUID(),
+      submission_id: f.submissionId,
+      job_id: f.job.id,
+      field_path: "research.separate_deep_cleanser_listing",
+      decision: "approved",
+      reviewed_by: "nick",
+      reviewed_at: new Date().toISOString(),
+      review_source: "admin",
+      review_action: "answer",
+      request_id: randomUUID(),
+      proposed_value: { engine },
+      reviewer_value: { choice: "review_extra_separately" },
+    })
+    f.startNewCycle()
+    const answered = await f.run([], false)
+    assert.equal(
+      answered.review_outcome,
+      "ready_for_review",
+      JSON.stringify(answered.next_progress),
+    )
+    assert.deepEqual(answered.next_progress.downstream_decisions, [])
+    f.startNewCycle()
+    const otherBlocker = await f.run(
+      [{ code: "schema_or_adapter_invalid", field: "final.sources", reason: "Quelle fehlt." }],
+      false,
+    )
+    assert.notEqual(otherBlocker.review_outcome, "ready_for_review")
+    assert.doesNotMatch(
+      JSON.stringify(otherBlocker.notification_payload),
+      /Auch als Tiefenreiniger anlegen/,
+    )
+    f.decisions[0].proposed_value = { engine: { ...engine, input_hash: "f".repeat(64) } }
+    f.startNewCycle()
+    const changedFormula = await f.run([], false)
+    assert.equal(changedFormula.review_outcome, "needs_nick")
+    assert.match(
+      JSON.stringify(changedFormula.notification_payload),
+      /Auch als Tiefenreiniger anlegen/,
     )
   },
 )
