@@ -8,9 +8,10 @@ import {
 } from "@/components/discovery/cockpit/format"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import { listDiscoveryCallIntakes, type DiscoveryCockpitAdminClient } from "@/lib/discovery/cockpit"
-import { listDiscoveryEnrollments } from "@/lib/discovery/enrollment"
+import { listDiscoveryEnrollmentsForAdmin } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
 import { discoveryPublicSiteUrl, projectDiscoveryAdminInvite } from "@/lib/discovery/invite-link"
+import { listDiscoveryQuizProgress } from "@/lib/discovery/quiz-progress"
 import { discoveryEnrollmentSigningSecret } from "@/lib/discovery/token"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -36,16 +37,20 @@ const EMPTY = "Noch keine Einladungen."
 const STATE_REVOKED = "widerrufen"
 const STATE_INVITED = "eingeladen"
 const STATE_CLAIMED = "eingelöst"
-const CHECKLIST_NONE = "nicht begonnen"
-const CHECKLIST_DRAFT = "offen"
+const QUIZ_NONE = "Haarquiz: noch nicht abgeschlossen"
+const QUIZ_UNAVAILABLE = "Haarquiz: gerade nicht lesbar"
+const QUIZ_COMPLETE = "Haarquiz abgeschlossen"
+const CHECKLIST_NONE = "Produkte: noch nicht begonnen"
+const CHECKLIST_DRAFT = "Produkte: offen"
 const OPEN_LABEL = "Öffnen"
 
 export type DiscoveryCockpitListDependencies = {
   flagEnabled: () => boolean
   requireAdmin: typeof requireAdmin
   createAdminClient: () => DiscoveryCockpitAdminClient
-  listEnrollments: typeof listDiscoveryEnrollments
+  listEnrollments: typeof listDiscoveryEnrollmentsForAdmin
   listIntakes: typeof listDiscoveryCallIntakes
+  listQuizProgress: typeof listDiscoveryQuizProgress
   signingSecret: () => string
   siteUrl: () => string
 }
@@ -54,8 +59,9 @@ const DEFAULTS: DiscoveryCockpitListDependencies = {
   flagEnabled: isDiscoveryCallToolkitEnabled,
   requireAdmin,
   createAdminClient,
-  listEnrollments: listDiscoveryEnrollments,
+  listEnrollments: listDiscoveryEnrollmentsForAdmin,
   listIntakes: listDiscoveryCallIntakes,
+  listQuizProgress: listDiscoveryQuizProgress,
   signingSecret: () => discoveryEnrollmentSigningSecret(),
   siteUrl: () => discoveryPublicSiteUrl(),
 }
@@ -75,6 +81,14 @@ export function createDiscoveryCockpitListPage(
       deps.listEnrollments(admin),
       deps.listIntakes(admin),
     ])
+    let quizProgress: Awaited<ReturnType<typeof deps.listQuizProgress>> | null = null
+    try {
+      quizProgress = await deps.listQuizProgress(enrollments, admin)
+    } catch {
+      // Progress evidence is read-only. A failed lead read is not evidence that
+      // the participant never completed the quiz.
+      quizProgress = null
+    }
     const intakeByEnrollment = new Map(intakes.map((intake) => [intake.enrollmentId, intake]))
     // Without the signing secret the page still lists everything; only the link
     // controls disappear (the create route answers 503 with the reason).
@@ -110,6 +124,7 @@ export function createDiscoveryCockpitListPage(
               <tbody>
                 {enrollments.map((enrollment) => {
                   const intake = intakeByEnrollment.get(enrollment.id) ?? null
+                  const quiz = quizProgress?.get(enrollment.id) ?? null
                   return (
                     <tr key={enrollment.id} className="border-b last:border-0">
                       <td className="px-4 py-3 font-medium text-foreground">
@@ -126,11 +141,20 @@ export function createDiscoveryCockpitListPage(
                             : STATE_INVITED}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
-                        {!intake
-                          ? CHECKLIST_NONE
-                          : intake.state === "submitted"
-                            ? formatDiscoveryTimestamp(intake.submittedAt)
-                            : CHECKLIST_DRAFT}
+                        <div>
+                          {quiz
+                            ? `${QUIZ_COMPLETE}: ${formatDiscoveryTimestamp(quiz.completedAt)}`
+                            : quizProgress
+                              ? QUIZ_NONE
+                              : QUIZ_UNAVAILABLE}
+                        </div>
+                        <div>
+                          {!intake
+                            ? CHECKLIST_NONE
+                            : intake.state === "submitted"
+                              ? `Produkte: abgeschickt ${formatDiscoveryTimestamp(intake.submittedAt)}`
+                              : CHECKLIST_DRAFT}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
                         {formatDiscoveryTimestamp(intake?.callFinalizedAt ?? null)}

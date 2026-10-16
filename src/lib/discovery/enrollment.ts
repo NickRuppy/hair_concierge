@@ -32,6 +32,11 @@ export type DiscoveryEnrollmentRow = {
   created_at: string
 }
 
+/** Server-only admin-list projection; CLI receipts deliberately omit account IDs. */
+export type DiscoveryEnrollmentListRow = DiscoveryEnrollmentRow & {
+  claimed_user_id?: string | null
+}
+
 type DiscoveryEnrollmentJourneyRow = DiscoveryEnrollmentRow & { claimed_user_id: string | null }
 
 export type DiscoveryEnrollment = {
@@ -330,6 +335,19 @@ export async function listDiscoveryEnrollments(
     .limit(250)
   if (error) throw error
   return (data as DiscoveryEnrollmentRow[] | null) ?? []
+}
+
+/** Server-only admin list projection; keeps account IDs out of CLI receipts. */
+export async function listDiscoveryEnrollmentsForAdmin(
+  client: DiscoveryAdminClient = createAdminClient(),
+): Promise<DiscoveryEnrollmentListRow[]> {
+  const { data, error } = await client
+    .from(TABLE)
+    .select(DISCOVERY_ENROLLMENT_JOURNEY_COLUMNS)
+    .order("created_at", { ascending: false })
+    .limit(250)
+  if (error) throw error
+  return (data as DiscoveryEnrollmentListRow[] | null) ?? []
 }
 
 export async function createDiscoveryEnrollment(
