@@ -2746,20 +2746,24 @@ export async function runCodexJson(
   if (!Number.isFinite(remainingMs) || remainingMs <= 0)
     throw new ResearchModelReservationError("cycle_deadline")
   const timeoutMs = Math.min(CODEX_RESEARCH_TIMEOUT_MS, remainingMs)
+  // Linux limits each argv entry to 128 KiB. Locked research standards can
+  // exceed that on their own; preserve the complete prompt through stdin.
+  const promptViaStdin = Buffer.byteLength(params.prompt, "utf8") > 64 * 1024
 
   const run = await spawn(
     codexBinary,
     codexResearchExecArgs({
       cwd: params.cwd ?? process.cwd(),
       outputPath: params.outputPath,
-      prompt: params.prompt,
+      prompt: promptViaStdin ? "-" : params.prompt,
       runtimeConfig: params.runtimeConfig,
       webSearch: params.webSearch,
       imagePaths: params.imagePaths,
     }),
     {
       encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: [promptViaStdin ? "pipe" : "ignore", "pipe", "pipe"],
+      ...(promptViaStdin ? { input: params.prompt } : {}),
       maxBuffer: 1024 * 1024 * 20,
       timeout: timeoutMs,
     },

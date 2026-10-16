@@ -350,9 +350,15 @@ parent setup complete.
       auto-rework is unset/default disabled. Two installed releases, disk 60% used.
 - [x] Safety PR #691 remains at reviewed `75da3b16`, draft/open with required CI
       successful. Offline projector #682 remains draft/open at `f790ab5d`, unchanged.
-- [ ] Authorize publication of this verified Shampoo increment and reconcile its
-      base with #691. Resolve #682's owner-PR disposition explicitly rather than
-      silently closing or merging it. Run full hosted CI for the published increment.
+- [x] Nick authorized publication; draft #693 is published, stacked on the exact
+      #691 head `75da3b16`. #682's adopted method/projector bytes remain unchanged.
+- [ ] Resolve #682's owner-PR disposition explicitly rather than silently closing
+      or merging it. Complete full hosted CI and Security on the final #693 head.
+      The first exact-head run failed four stale inactive-Shampoo assertions,
+      three Linux subprocess cases and a Scanner journey already failing on main.
+      CodeQL reported a new high-severity water-synonym ReDoS plus the existing
+      medium operator-configured executable-path alert #34. Workflow success alone
+      is not a passing CodeQL check.
 - [ ] Obtain exact merge, migration and disabled-release authorization. Apply
       `20261016052958_product_intake_review_cycles.sql` before worker code; it is still
       unapplied. Verify installed release/env/lease state and rollback preconditions.
@@ -370,3 +376,29 @@ parent setup complete.
 - [ ] Automatic alert activation remains a separate later decision. Nick approved
       the received test email; keep sends disabled and never flush the backlog by
       implication. Automatic images/rework also stay off during this setup.
+
+## CI and Security repair — 2026-10-16
+
+The ReDoS regression exercises real source validation in an interruptible child:
+old source times out, the linear scanner returns promptly with the same synonym
+grammar. Frozen historical captures are unchanged; assertions now require sealed
+Shampoo research and reject legacy unsealed classifications.
+
+The Linux subprocess failure has a concrete transport cause: the locked standard
+is 165,970 bytes, exceeding Linux's 128 KiB per-argument limit. A harmless Linux
+spawn probe reproduced errno 7. Large prompts now use the documented `codex exec -`
+stdin interface, with asynchronous full-byte delivery and explicit EOF; short
+prompts still have stdin closed. The independent Unicode/real-child regression
+fails with `E2BIG` on the previous implementation and verifies SHA-256 byte identity
+after the fix. The existing CLI proofs exercise full blind/reveal and repair over
+this transport. No method truncation, extra model run or reservation refund.
+
+Focused verification: 113 tests pass, including transport/heartbeat/cycle/model
+config/image seams, stage and CLI proofs, and historical compatibility checks.
+Typecheck passes. Final source lint and counterpart delta review are recorded in
+the private verification receipt before push. Hosted confirmation remains required.
+The Scanner overlay failure also occurs on main `80b963a2` (run `38872955498`);
+no force-click or unrelated Scanner behavior change is included here. Existing
+medium CodeQL alert #34 remains visible and requires its own verified disposition.
+Merge, migration application, deployment and automatic alert activation remain
+separate decisions for Nick.

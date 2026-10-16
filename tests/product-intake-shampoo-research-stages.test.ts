@@ -1,8 +1,11 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { existsSync, readFileSync, readdirSync } from "node:fs"
+import { execFile } from "node:child_process"
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
 import path from "node:path"
 import test from "node:test"
+import { promisify } from "node:util"
 
 import {
   runShampooResearchStages,
@@ -160,6 +163,14 @@ test("seals a real isolated lane before reveal, uses locked fingerprint and clea
     model: fakeModel((request, output) => {
       requests.push(request)
       assert.ok(existsSync(request.cwd))
+      if (request.stage === "source_freeze") {
+        // Same ingredient as the canonical parenthetical spelling, including
+        // slash-separated label synonyms; the fingerprint stays canonical.
+        ;((output.freeze_packet as JsonRecord).sources as JsonRecord[])[0].inciVerbatim = [
+          "Aqua/Water/Eau",
+          ...canonicalInci.slice(1),
+        ].join(", ")
+      }
       if (request.stage === "blind_formula") {
         for (const forbidden of [
           "Quellora",
@@ -272,6 +283,42 @@ test("incomplete or mismatched source and blind evidence never reaches reveal", 
     assert.ok(!stages.includes("revealed_final"), scenario)
   }
 })
+
+test(
+  "source validation returns promptly for adversarial water-synonym input",
+  { timeout: 15_000 },
+  async (t) => {
+    const root = mkdtempSync(path.join(tmpdir(), "shampoo-source-redos-"))
+    t.after(() => rmSync(root, { recursive: true, force: true }))
+    const evidence = source()
+    const attack = `eau(eau${"\t(eau".repeat(40)}${")".repeat(41)}X`
+    evidence.freeze_packet.canonicalInci = [attack, "Parfum"]
+    evidence.freeze_packet.sources[0].inciVerbatim = `${attack}, Parfum`
+    evidence.freeze_packet.inciFingerprintSha256 = createHash("sha256")
+      .update(`${attack.toLowerCase().replace(/\s+/g, " ")}|parfum`)
+      .digest("hex")
+    const script = path.join(root, "probe.mjs")
+    writeFileSync(
+      script,
+      `
+    import { runShampooResearchStages } from ${JSON.stringify(new URL("../src/lib/product-intake/shampoo-research-stages.ts", import.meta.url).href)};
+    let calls = 0;
+    const result = await runShampooResearchStages({
+      ...${JSON.stringify(params())},
+      model: async request => { calls++; return request.stage === "source_freeze" ? ${JSON.stringify(evidence)} : {}; }
+    });
+    console.log(JSON.stringify({ calls, blocked: result.output.researched_payload === null }));
+  `,
+    )
+    // A child timeout can interrupt a synchronous regex; a node:test timeout cannot.
+    const { stdout } = await promisify(execFile)(
+      process.execPath,
+      ["--conditions=react-server", "--import", "tsx", script],
+      { timeout: 8_000, env: { ...process.env, TMPDIR: root } },
+    )
+    assert.deepEqual(JSON.parse(stdout), { calls: 2, blocked: true })
+  },
+)
 
 test("repair reuses the immutable frozen assessment with one model call, including missing final schema", async () => {
   const first = await runShampooResearchStages({

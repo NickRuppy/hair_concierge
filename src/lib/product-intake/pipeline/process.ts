@@ -17,7 +17,13 @@ export function runWorkerProcess(
   options: SpawnSyncOptionsWithStringEncoding,
 ): Promise<SpawnSyncReturns<string>> {
   return new Promise((resolveResult) => {
-    const { timeout, maxBuffer = 1024 * 1024, encoding: _encoding, ...spawnOptions } = options
+    const {
+      timeout,
+      maxBuffer = 1024 * 1024,
+      input,
+      encoding: _encoding,
+      ...spawnOptions
+    } = options
     void _encoding
     const stdout: Buffer[] = []
     const stderr: Buffer[] = []
@@ -32,7 +38,7 @@ export function runWorkerProcess(
     const child = spawn(command, args, {
       ...spawnOptions,
       detached: true,
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: [input === undefined ? "ignore" : "pipe", "pipe", "pipe"],
     })
     const signalGroup = (signal: NodeJS.Signals) => {
       try {
@@ -66,7 +72,7 @@ export function runWorkerProcess(
       settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), 2_000)
     }
     const terminate = (failure: Error) => {
-      if (error) return
+      if (error || settled) return
       error = failure
       terminated = true
       signalGroup("SIGTERM")
@@ -104,6 +110,12 @@ export function runWorkerProcess(
         () => terminate(Object.assign(new Error(`${command} ETIMEDOUT`), { code: "ETIMEDOUT" })),
         timeout,
       )
+    }
+    if (input !== undefined) {
+      child.stdin?.on("error", terminate)
+      // end() streams all bytes with backpressure and closes stdin, so Codex
+      // cannot wait indefinitely for additional prompt input.
+      child.stdin?.end(input)
     }
   })
 }

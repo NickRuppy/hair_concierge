@@ -107,13 +107,38 @@ function sourceIngredients(raw: string): string[] {
   values.push(current)
   return values.map((v) => v.replace(/\*/g, "").trim()).filter(Boolean)
 }
+// Consume the synonym grammar once. Overlapping whitespace repetitions in a
+// regex can backtrack exponentially on a malformed source ingredient.
+function isWaterSynonymSequence(value: string): boolean {
+  let index = 0
+  const word = () => {
+    for (const synonym of ["aqua", "water", "eau"])
+      if (value.startsWith(synonym, index)) {
+        index += synonym.length
+        return true
+      }
+    return false
+  }
+  const spaces = () => {
+    while (value[index] === " ") index++
+  }
+  if (!word()) return false
+  while (index < value.length) {
+    spaces()
+    if (value[index] !== "/" && value[index] !== "(" && value[index] !== ",") return false
+    index++
+    spaces()
+    if (!word()) return false
+    spaces()
+    if (value[index] === ")") index++
+  }
+  return true
+}
 function formulaKey(list: string[]): string {
   // Accept equivalent water synonym spellings only; never merge unrelated INCI entries.
   return list
     .map((v) => v.toLowerCase().replace(/\*/g, "").replace(/\s+/g, " ").trim())
-    .map((v) =>
-      /^(?:aqua|water|eau)(?:\s*[/(,]\s*(?:water|eau|aqua)\s*\)?)*$/.test(v) ? "aqua" : v,
-    )
+    .map((v) => (isWaterSynonymSequence(v) ? "aqua" : v))
     .filter((v, i, all) => !(v === "aqua" && i > 0 && all[i - 1] === "aqua"))
     .join("|")
 }

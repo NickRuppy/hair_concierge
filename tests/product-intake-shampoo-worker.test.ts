@@ -146,7 +146,7 @@ async function workerFixture(t: TestContext, record = "A01") {
   writeFileSync(
     binary,
     `#!/usr/bin/env node
-const fs=require('node:fs'); const a=process.argv.slice(2); const out=a[a.indexOf('--output-last-message')+1]; const prompt=a.at(-1); process.chdir(a[a.indexOf('--cd')+1]); fs.appendFileSync(process.env.SHAMPOO_FAKE_LOG,JSON.stringify({args:a,cwd:process.cwd(),prompt64:Buffer.from(prompt).toString('base64')})+'\\n'); const data=JSON.parse(fs.readFileSync(process.env.SHAMPOO_FAKE_OUTPUTS,'utf8')); let v;
+const fs=require('node:fs'); const a=process.argv.slice(2); const out=a[a.indexOf('--output-last-message')+1]; const prompt=a.at(-1)==='-' ? fs.readFileSync(0,'utf8') : a.at(-1); process.chdir(a[a.indexOf('--cd')+1]); fs.appendFileSync(process.env.SHAMPOO_FAKE_LOG,JSON.stringify({args:a,cwd:process.cwd(),prompt64:Buffer.from(prompt).toString('base64')})+'\\n'); const data=JSON.parse(fs.readFileSync(process.env.SHAMPOO_FAKE_OUTPUTS,'utf8')); let v;
 if(prompt.includes('Resolve the exact German Shampoo identity')) v=data.source;
 else if(prompt.includes('Perform only the blind formula pass')) { const p=JSON.parse(prompt.split('\\nFORMULA\\n')[1].split('\\nSTANDARD\\n')[0]); v={blindId:p.blindId,inciFingerprintSha256:p.inciFingerprintSha256,formulaFacts:{surfactants:['SLES @2']},unresolvedMaterialIngredients:[],directProperties:data.blindProperties}; }
 else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=data.final; fs.writeFileSync(out,JSON.stringify(v));`,
@@ -246,6 +246,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       return reply({ message: table }, 500)
     }
     if (req.method === "POST" && table === "product_intake_research_artifacts") {
+      calls.push({ name: table, body })
       artifacts.push({ ...body, id: randomUUID(), created_at: new Date().toISOString() })
       return reply({ id: randomUUID(), ...body })
     }
@@ -328,6 +329,10 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
       },
     )
     assert.equal(result.status, 0, result.stderr)
+    assert.ok(
+      commits.length,
+      JSON.stringify({ jobs: result.stdout, stderr: result.stderr, job, calls, artifacts }),
+    )
     return commits.at(-1)!
   }
   return {
@@ -356,7 +361,7 @@ test(
   async (t) => {
     const f = await workerFixture(t)
     const committed = await f.run()
-    assert.equal(f.job.reserved_model_runs, 4)
+    assert.equal(f.job.reserved_model_runs, 4, JSON.stringify(committed.next_progress))
     assert.equal(committed.review_outcome, "ready_for_review")
     assert.equal(committed.expected_review_cycle_id, f.cycleId)
     assert.equal(f.commits.length, 1)
@@ -393,7 +398,7 @@ test(
   async (t) => {
     const f = await workerFixture(t, "U2")
     const committed = await f.run([], true)
-    assert.equal(f.job.reserved_model_runs, 4)
+    assert.equal(f.job.reserved_model_runs, 4, JSON.stringify(committed.next_progress))
     assert.equal(committed.review_outcome, "needs_nick")
     assert.equal(committed.next_status, "blocked")
     assert.equal(committed.request_auto_rework, false)
