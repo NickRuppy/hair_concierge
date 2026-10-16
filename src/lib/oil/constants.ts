@@ -1,5 +1,29 @@
 import type { HairThickness } from "@/lib/vocabulary"
 
+export const OIL_WEIGHTS = ["light", "medium", "rich"] as const
+export type OilWeight = (typeof OIL_WEIGHTS)[number]
+export const OIL_WEIGHT_LABELS: Record<OilWeight, string> = {
+  light: "Leicht",
+  medium: "Mittel",
+  rich: "Reichhaltig",
+}
+export const OIL_FIBRE_ROLES = [
+  "pre_wash_fibre_treatment",
+  "leave_on_fibre_conditioning",
+  "dry_finish",
+] as const
+export type OilFibreRole = (typeof OIL_FIBRE_ROLES)[number]
+export const OIL_FIBRE_ROLE_LABELS: Record<OilFibreRole, string> = {
+  pre_wash_fibre_treatment: "Pflege vor dem Waschen",
+  leave_on_fibre_conditioning: "Pflege im feuchten Haar",
+  dry_finish: "Finish im trockenen Haar",
+}
+export interface ProductOilSpecs {
+  product_id: string
+  weight: OilWeight | null
+  role_support: readonly string[] | null
+}
+
 export const OIL_INGREDIENT_FLAGS = [
   "silicones",
   "polymers",

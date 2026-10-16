@@ -32,7 +32,23 @@ import type {
   ProductLeaveInSpecs,
 } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
-import { OIL_PURPOSE_LABELS, type OilPurpose, type OilSubtype } from "@/lib/oil/constants"
+import {
+  OIL_FIBRE_ROLES,
+  OIL_FIBRE_ROLE_LABELS,
+  OIL_WEIGHTS,
+  OIL_WEIGHT_LABELS,
+  isOilCategory,
+  type OilFibreRole,
+  type ProductOilSpecs,
+} from "@/lib/oil/constants"
+import { getOilLeaveOnWeightTargets } from "@/lib/oil/weight"
+import { evaluateFit } from "@/lib/personal-plan/products/authority/fit-evaluator"
+import {
+  THICKNESSES,
+  WEIGHTS,
+  thicknessReason,
+  weightReason,
+} from "@/lib/personal-plan/products/authority/fit-criteria"
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
 import {
   buildProductCandidateScope,
@@ -45,7 +61,7 @@ import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   matchConditionerProducts,
   matchLeaveInProducts,
-  matchOilProducts,
+  rankProductsForDeterministicMatch,
   matchShampooProducts,
   matchProducts,
   type MatchedProduct,
@@ -173,13 +189,6 @@ type LeaveInRerankSpec = ProductLeaveInSpecs
 interface ProductShampooSpecRow extends ShampooFitSpec {
   product_id: string
   thickness: NonNullable<HairProfile["thickness"]>
-}
-
-interface ProductOilEligibilityRow {
-  product_id: string
-  thickness: NonNullable<HairProfile["thickness"]>
-  oil_subtype: OilSubtype
-  oil_purpose: OilPurpose | null
 }
 
 function toBaseScore(product: MatchedProduct): number {
@@ -893,72 +902,16 @@ export function rerankShampooProductsWithEngine(params: {
 
 function buildOilUsageHint(decision: OilCategoryDecision): string {
   if (decision.targetProfile?.purpose === "pre_wash_oiling") {
-    if (decision.targetProfile.adjunctScalpSupport) {
-      return "Vor dem Waschen sparsam auf trockene Kopfhaut und Längen geben, 30-45 Minuten einwirken lassen und anschließend auswaschen. Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primäre Hebel."
-    }
-
-    return "Vor dem Waschen sparsam auf trockene Kopfhaut und/oder Längen geben, 30-45 Minuten einwirken lassen und anschließend auswaschen."
+    return "Vor dem Waschen sparsam in trockene Längen und Spitzen geben und gemäß Produkthinweisen auswaschen."
   }
-
-  if (decision.targetProfile?.purpose === "light_finish") {
-    return "Sehr sparsam in trockene Längen und Spitzen geben, damit das Haar leicht bleibt und nicht fettig wirkt."
-  }
-
-  return "Sparsam als Finish in trockene oder fast trockene Längen und Spitzen geben, um Frizz zu bändigen und Glanz zu geben."
-}
-
-function buildOilTopReasons(
-  decision: OilCategoryDecision,
-  params?: {
-    exactPurposeMatch: boolean
-    finishBridgeMatch: boolean
-    classicSubtypeMatch: boolean
-  },
-): { positives: string[]; tradeoffs: string[] } {
-  const positives: string[] = []
-  const tradeoffs: string[] = []
-
-  if (decision.targetProfile?.purpose) {
-    positives.push(
-      `Die Auswahl folgt dem angefragten Zweck ${OIL_PURPOSE_LABELS[decision.targetProfile.purpose].toLowerCase()}.`,
-    )
-  }
-
-  if (decision.targetProfile?.adjunctScalpSupport) {
-    tradeoffs.push(
-      "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primäre Hebel.",
-    )
-  }
-
-  if (params?.exactPurposeMatch) {
-    positives.push("Der hinterlegte Öl-Zweck passt auch in der Katalogpflege exakt zur Anfrage.")
-  } else if (params?.finishBridgeMatch) {
-    tradeoffs.push(
-      "Der Fit kommt über die angrenzende Finish-Rolle, nicht über einen exakten Öl-Zweck-Match.",
-    )
-  } else if (params?.classicSubtypeMatch) {
-    tradeoffs.push(
-      "Der Katalogfit kommt über den klassischen Öl-Subtyp; ein eigener Öl-Zweck ist für diesen Treffer noch nicht hinterlegt.",
-    )
-  }
-
-  return {
-    positives: positives.slice(0, 3),
-    tradeoffs: tradeoffs.slice(0, 3),
-  }
-}
-
-function getFinishBridgePurpose(purpose: OilPurpose | null): OilPurpose | null {
-  if (purpose === "styling_finish") return "light_finish"
-  if (purpose === "light_finish") return "styling_finish"
-  return null
+  return "Sparsam als Finish in trockene Längen und Spitzen geben; bei beschwertem Haar die Menge reduzieren und den Ansatz aussparen."
 }
 
 export function rerankOilProductsWithEngine(params: {
   candidates: MatchedProduct[]
+  specs: ProductOilSpecs[]
   decision: OilCategoryDecision
   hairProfile: HairProfile | null
-  eligibilityRows?: ProductOilEligibilityRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
@@ -966,135 +919,117 @@ export function rerankOilProductsWithEngine(params: {
 }): MatchedProduct[] {
   const {
     candidates,
+    specs,
     decision,
     hairProfile,
-    eligibilityRows = [],
     runtime,
     includeProductIds,
     preserveProductIds,
     orderBeforeCut,
   } = params
-  if (!decision.relevant || !decision.targetProfile) return []
-  const targetProfile = decision.targetProfile
-  const careBalanceRow = getCareBalanceRow(runtime, "oil")
-  const preferLightOil = hasCareBalanceReason(careBalanceRow, "daily_oil_use")
-  const bridgePurpose = getFinishBridgePurpose(targetProfile.purpose)
-  const eligibilityByProductId = new Map<string, ProductOilEligibilityRow[]>()
+  if (!decision.relevant || !decision.targetProfile?.purpose || !hairProfile?.thickness) return []
+  const target = decision.targetProfile
+  const role: OilFibreRole =
+    target.purpose === "pre_wash_oiling" ? "pre_wash_fibre_treatment" : "dry_finish"
+  const leaveOn = role === "dry_finish"
+  const loadSensitive =
+    target.overloadRisk ||
+    hasCareBalanceReason(getCareBalanceRow(runtime, "oil"), "daily_oil_use") ||
+    hairProfile.concerns.includes("low_volume_or_weighed_down")
+  const acceptedWeights =
+    target.purpose === "light_finish" || target.weightRequest === "light"
+      ? ["light"]
+      : getOilLeaveOnWeightTargets(hairProfile.thickness, loadSensitive).acceptedTargets
+  const specsById = new Map(specs.map((row) => [row.product_id, row]))
+  const scope = buildProductCandidateScope(includeProductIds)
+  const scored: ScoredEngineProduct[] = []
 
-  for (const row of eligibilityRows) {
-    eligibilityByProductId.set(row.product_id, [
-      ...(eligibilityByProductId.get(row.product_id) ?? []),
-      row,
-    ])
-  }
-
-  const exactPurposeProductIds = new Set(
-    eligibilityRows
-      .filter((row) => row.oil_purpose === targetProfile.purpose)
-      .map((row) => row.product_id),
-  )
-  const finishBridgeProductIds = new Set(
-    eligibilityRows
-      .filter((row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose)
-      .map((row) => row.product_id),
-  )
-  const classicSubtypeProductIds = new Set(
-    eligibilityRows
-      .filter((row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype)
-      .map((row) => row.product_id),
-  )
-  const eligibleCandidates =
-    eligibilityRows.length === 0
-      ? candidates
-      : exactPurposeProductIds.size >= SELECTION_LIMIT
-        ? candidates.filter((product) => exactPurposeProductIds.has(product.id))
-        : candidates.filter(
-            (product) =>
-              exactPurposeProductIds.has(product.id) ||
-              finishBridgeProductIds.has(product.id) ||
-              classicSubtypeProductIds.has(product.id),
-          )
-  const visibleCandidates = filterUnverifiedOwnedAssessmentCandidates(
-    eligibleCandidates,
-    includeProductIds,
-    (productId) => (eligibilityByProductId.get(productId)?.length ?? 0) > 0,
-  )
-
-  const scored: ScoredEngineProduct[] = visibleCandidates.map((product) => {
-    const productEligibility = eligibilityByProductId.get(product.id) ?? []
-    const exactPurposeMatch = productEligibility.some(
-      (row) => row.oil_purpose === targetProfile.purpose,
-    )
-    const finishBridgeMatch = productEligibility.some(
-      (row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose,
-    )
-    const classicSubtypeMatch = productEligibility.some(
-      (row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype,
-    )
-    const lightOilFit = productEligibility.some(
-      (row) => row.oil_purpose === "light_finish" || row.oil_subtype === "trocken-oel",
-    )
-    const { positives, tradeoffs } = buildOilTopReasons(decision, {
-      exactPurposeMatch,
-      finishBridgeMatch,
-      classicSubtypeMatch,
+  for (const product of candidates) {
+    const spec = specsById.get(product.id)
+    if (!spec || !isOilCategory(product.category)) continue
+    const fit = evaluateFit({
+      gates: [
+        {
+          id: "oil.role",
+          label: "Öl-Rolle",
+          outcome:
+            spec.role_support == null
+              ? "unknown"
+              : spec.role_support.includes(role)
+                ? "pass"
+                : "fail",
+        },
+      ],
+      axes: [
+        {
+          id: "oil.thickness",
+          label: "Haardicke",
+          scale: THICKNESSES,
+          productValues: product.suitable_thicknesses,
+          targetValue: hairProfile.thickness,
+          reason: thicknessReason,
+        },
+        ...(leaveOn
+          ? [
+              {
+                id: "oil.weight",
+                label: "Formelgewicht",
+                scale: WEIGHTS,
+                productValues: spec.weight ? [spec.weight] : null,
+                acceptedTargets: acceptedWeights,
+                reason: weightReason,
+              },
+            ]
+          : []),
+      ],
     })
-    const careBalanceBonus = preferLightOil && lightOilFit ? 64 : 0
-    const score =
-      toBaseScore(product) +
-      (exactPurposeMatch
-        ? 28
-        : finishBridgeMatch
-          ? -8
-          : classicSubtypeMatch
-            ? -8
-            : productEligibility.length > 0
-              ? -30
-              : 0) +
-      careBalanceBonus
-    const careBalanceReason =
-      careBalanceBonus > 0
-        ? "care_balance daily_oil_use: bei täglichem Öl oder Build-up-Druck leichter, nicht schwerer Öl-Fit."
-        : null
-
-    const recommendationMeta: OilRecommendationMetadata = {
+    if (fit.verdict !== "ideal" && fit.verdict !== "supportive") continue
+    if (!isProductEligibleForCandidateScope(product, scope, { hasVerifiedSpecs: true })) continue
+    const weight = OIL_WEIGHTS.find((value) => value === spec.weight) ?? null
+    const score = toBaseScore(product) + (fit.verdict === "ideal" ? 28 : 8)
+    const tradeoffs = [...fit.reasons]
+    if (target.scalpCaution)
+      tradeoffs.push(
+        "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primäre Hebel.",
+      )
+    const meta: OilRecommendationMetadata = {
       category: "oil",
       score: Math.round(score * 10) / 10,
-      top_reasons:
-        positives.length > 0 || careBalanceReason
-          ? [...new Set([careBalanceReason, ...positives].filter(Boolean) as string[])].slice(0, 3)
-          : [
-              targetProfile.purpose
-                ? `Die Auswahl folgt dem Öl-Zweck ${OIL_PURPOSE_LABELS[targetProfile.purpose].toLowerCase()}.`
-                : "Passt zum aktuellen Öl-Zweck.",
-            ],
-      tradeoffs,
+      top_reasons: [
+        `Bestätigte Anwendung: ${OIL_FIBRE_ROLE_LABELS[role]}.`,
+        ...(leaveOn && weight ? [`Formelgewicht: ${OIL_WEIGHT_LABELS[weight]}.`] : []),
+      ],
+      tradeoffs: tradeoffs.slice(0, 3),
       usage_hint: buildOilUsageHint(decision),
-      matched_profile: {
-        thickness: hairProfile?.thickness ?? null,
-      },
-      matched_subtype: targetProfile.matcherSubtype,
-      use_mode: targetProfile.purpose,
-      adjunct_scalp_support: targetProfile.adjunctScalpSupport,
-      fit_status: exactPurposeMatch
-        ? "ideal"
-        : finishBridgeMatch || classicSubtypeMatch
-          ? "supportive"
-          : "unknown",
-      purpose_fit: exactPurposeMatch ? "exact" : finishBridgeMatch ? "bridge" : "unknown",
-      scalp_caution: targetProfile.scalpCaution,
-      density_weight_caution: targetProfile.densityWeightCaution,
-      overload_caution: targetProfile.overloadRisk,
+      matched_profile: { thickness: hairProfile.thickness },
+      // The request's legacy purpose is retained; no subtype is asserted as a formula fact.
+      matched_subtype: null,
+      use_mode: target.purpose,
+      product_weight: weight,
+      product_roles: OIL_FIBRE_ROLES.filter((value) => spec.role_support?.includes(value)),
+      selected_role: role,
+      adjunct_scalp_support: false,
+      fit_status: fit.verdict,
+      purpose_fit: "exact",
+      scalp_caution: target.scalpCaution,
+      density_weight_caution: target.densityWeightCaution,
+      overload_caution: target.overloadRisk,
     }
-
-    return {
+    scored.push({
       ...product,
-      recommendation_meta: recommendationMeta,
+      recommendation_meta: meta,
       _engineScore: score,
-    }
-  })
+      _fitStatus: fit.verdict,
+    })
+  }
 
-  scored.sort(compareScoredProducts)
+  scored.sort(
+    (left, right) =>
+      Number(left._fitStatus !== "ideal") - Number(right._fitStatus !== "ideal") ||
+      compareScoredProducts(left, right) ||
+      left.sort_order - right.sort_order ||
+      left.id.localeCompare(right.id),
+  )
   return stripScore(
     sliceWithIncludedProductIds(
       orderedPool(orderBeforeCut, scored),
@@ -2382,70 +2317,48 @@ export async function selectOilProductsWithEngine(params: {
   ) {
     return []
   }
-  const targetPurpose = decision.targetProfile.purpose
-
-  const subtypeCandidates = await matchOilProducts({
-    query: message,
-    thickness: hairProfile.thickness,
-    oilSubtype: decision.targetProfile.matcherSubtype,
-    count: CANDIDATE_COUNT,
+  const supabase = createAdminClient()
+  type OilSpecProductRow = ProductOilSpecs & { products: Product | Product[] | null }
+  const rows: OilSpecProductRow[] = []
+  // Page canonical rows before ranking. A legacy purpose/subtype window must not
+  // hide a supported Oil, including an explicitly included owned product.
+  const pageSize = 500
+  for (let offset = 0; ; offset += pageSize) {
+    const { data, error } = await supabase
+      .from("product_oil_specs")
+      .select("product_id, weight, role_support, products(*)")
+      .order("product_id", { ascending: true })
+      .range(offset, offset + pageSize - 1)
+    if (error) {
+      console.error("Failed to load canonical oil facts for recommendation engine:", error)
+      return []
+    }
+    const page = (data ?? []) as OilSpecProductRow[]
+    rows.push(...page)
+    if (page.length < pageSize) break
+  }
+  const products = rows.flatMap((row) => {
+    const product = Array.isArray(row.products) ? row.products[0] : row.products
+    return product && isOilCategory(product.category)
+      ? [
+          {
+            ...product,
+            suitable_thicknesses: product.suitable_thicknesses ?? [],
+            suitable_concerns: product.suitable_concerns ?? [],
+          },
+        ]
+      : []
   })
-
-  const genericCandidates = await matchProducts({
-    query: message,
+  const candidates = rankProductsForDeterministicMatch(products, {
     thickness: hairProfile.thickness,
-    category: "oil",
-    count: CANDIDATE_COUNT * 2,
+    count: products.length,
     includeProductIds: params.includeProductIds,
   })
-
-  let candidates = dedupeById([...subtypeCandidates, ...genericCandidates])
-  if (candidates.length === 0) return []
-
-  const supabase = createAdminClient()
-  const { data: eligibilityRows, error } = await supabase
-    .from("product_oil_eligibility")
-    .select("product_id, thickness, oil_subtype, oil_purpose")
-    .eq("thickness", hairProfile.thickness)
-    .in(
-      "product_id",
-      candidates.map((candidate) => candidate.id),
-    )
-
-  if (error) {
-    console.error("Failed to load oil eligibility for recommendation engine:", error)
-    return rerankOilProductsWithEngine({
-      candidates,
-      decision,
-      hairProfile,
-      runtime,
-      includeProductIds: params.includeProductIds,
-      preserveProductIds: params.preserveProductIds,
-      orderBeforeCut: params.orderBeforeCut,
-    })
-  }
-
-  const typedEligibilityRows = (eligibilityRows ?? []) as ProductOilEligibilityRow[]
-  const exactPurposeProductIds = new Set(
-    typedEligibilityRows
-      .filter((row) => row.oil_purpose === targetPurpose)
-      .map((row) => row.product_id),
-  )
-
-  if (exactPurposeProductIds.size >= SELECTION_LIMIT) {
-    const exactPurposeCandidates = candidates.filter((candidate) =>
-      exactPurposeProductIds.has(candidate.id),
-    )
-    if (exactPurposeCandidates.length > 0) {
-      candidates = exactPurposeCandidates
-    }
-  }
-
   return rerankOilProductsWithEngine({
     candidates,
+    specs: rows,
     decision,
     hairProfile,
-    eligibilityRows: typedEligibilityRows,
     runtime,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,

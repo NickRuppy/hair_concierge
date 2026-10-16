@@ -103,6 +103,7 @@ export interface RecommendationRequestContext {
   leaveInConditionerRelationshipRequest: LeaveInConditionerRelationship | null
   leaveInRequestedFormats: LeaveInFormat[]
   oilPurpose: OilPurpose | null
+  oilWeightRequest?: "light" | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
   dryShampooBridgeNeedReasonCodes?: string[]
   dryShampooCautionReasonCodes?: string[]
@@ -516,6 +517,7 @@ export type OilPurposeFit = "exact" | "bridge" | "unknown"
 
 export interface OilTargetProfile {
   purpose: OilPurpose | null
+  weightRequest?: "light" | null
   matcherSubtype: OilSubtype | null
   adjunctScalpSupport: boolean
   purposeSource: OilPurposeSource
