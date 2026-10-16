@@ -1,0 +1,9 @@
+{
+  "status": "aborted_before_output_inspection",
+  "reason": "Both isolated workers reported a brand identity cue in an allowed dictionary source paraphrase for AROMA. No source was opened. Raw botanical common names remain legitimate ingredient text. Root interrupted both before reading any judgments, preserves original inputs, and dispatches new isolated workers with source-reference IDs and neutral comments.",
+  "outputs_present_at_abort": [],
+  "input_manifest_sha256": "b092389e57b13c0b6694257db60bc40d89f6061922a1f8f87d9371ad193b7280",
+  "worker_reports": [
+    "lane-a and lane-b independently disclosed the cue; no forbidden lookup reported."
+  ]
+}

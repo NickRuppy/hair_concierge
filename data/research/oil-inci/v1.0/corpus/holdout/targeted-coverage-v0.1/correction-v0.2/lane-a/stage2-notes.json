@@ -1,0 +1,28 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "stage2-packet.json",
+    "lane-a/blind-records.json",
+    "method.md",
+    "function-dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "5b27d15d1537553c059149643645d3c5bb41e4b3707bdc3025049a3df072bdf1",
+    "lane-a/blind-records.json": "b9e32f2da1d2939551e98bdeb00d6bdd484ca63b53aba48b3edb4075c2256cd9",
+    "method.md": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726",
+    "function-dictionary.json": "4cb416b844706777e191a6b262dcb61b04498b222e30f1289cc07d16a1e224ad"
+  },
+  "completed_ids": [
+    "T02"
+  ],
+  "access_incidents": [],
+  "blind_preservation": "Stage 1 blind-records.json was read only. No formula fields were rewritten or emitted in the Stage 2 record. Source facts were used only for the seven source-stage fields.",
+  "isolation": "Stage 2 read exactly the four listed inputs. No browsing, peer outputs, memory files, prior source-stage results, source-staging, or additional files were accessed. No reviewer or agent was dispatched.",
+  "limitations": [
+    "Current maker online formula and source facts are not package/batch verification.",
+    "Literal species-incomplete hero mapping preserves the frozen unresolved ingredient role.",
+    "The finishing direction does not specify wet or dry hair; no explicit dry stage was inferred.",
+    "Initial combined display truncated method text; method.md was reread completely as a permitted input before output creation.",
+    "JSON and source bindings were validated in memory before writing; no semantic output reread was performed."
+  ]
+}

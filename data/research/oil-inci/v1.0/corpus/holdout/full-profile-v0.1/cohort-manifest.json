@@ -1,0 +1,80 @@
+{
+  "run_id": "oil-full-profile-holdout-v0.1",
+  "cohort": [
+    {
+      "case_id": "H01",
+      "source_key": "V2-S01",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "5 Sens Enhancing Dry Oil for Hair and Body",
+        "market": "EN global maker page",
+        "size": "100 ml",
+        "gtin_if_verified": "3282770049275"
+      }
+    },
+    {
+      "case_id": "H02",
+      "source_key": "V2-S02",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Ultimate Smooth Miracle Oil Serum",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      }
+    },
+    {
+      "case_id": "H03",
+      "source_key": "V2-S03",
+      "identity": {
+        "brand": "Biossance",
+        "product": "100% Squalane Oil Jumbo Size",
+        "market": "US maker storefront",
+        "size": "250 ml / 8.4 oz",
+        "gtin_if_verified": null
+      }
+    },
+    {
+      "case_id": "H04",
+      "source_key": "V2-S04",
+      "identity": {
+        "brand": "Rahua",
+        "product": "Legendary Amazon Oil",
+        "market": "US maker storefront",
+        "size": "not established in retrieved maker text",
+        "gtin_if_verified": null
+      }
+    },
+    {
+      "case_id": "H05",
+      "source_key": "V2-S05",
+      "identity": {
+        "brand": "Oribe",
+        "product": "Gold Lust Nourishing Hair Oil",
+        "market": "US maker storefront",
+        "size": "Standard 3.4 oz / 100 ml",
+        "gtin_if_verified": "840035204499"
+      }
+    },
+    {
+      "case_id": "H06",
+      "source_key": "V2-S06",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Light Luminous Reflective Oil",
+        "market": "US maker storefront",
+        "size": "100 ml / 3.38 fl oz",
+        "gtin_if_verified": null
+      }
+    }
+  ],
+  "source_registration": {
+    "path": "source-staging/selection-registration-v0.2.json",
+    "sha256": "3bce24096449d5f00d0c1ac191f61d771be0cde3bb7b9b6b0a3d17cab724c516"
+  },
+  "limitations": [
+    "Project-new ordered formulas only; not proof of model unfamiliarity.",
+    "Aqueous/biphasic archetype source-complete candidate not recovered; deterministic registered fallback selected.",
+    "No required label prevalence; low persistence coverage remains an empirical result."
+  ]
+}

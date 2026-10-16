@@ -1,0 +1,19 @@
+{
+  "frozen_at": "2026-10-03",
+  "files": {
+    "README.md": "7975fa045c2f3b4966ff38c87a8150722f261f5ac17976db9ce3f34db0ada498",
+    "adjudication.json": "4f517ea4c87b7b58df7a17a13bca90685c6008efaaf7e74578af1606de17dc8c",
+    "main-working.json": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a",
+    "main-before-lanes-seal.json": "cbadc9ec450fb7f74c7ad6b9ab8cbdfc08a131387537ee8e4bc0fd5fb407aa00",
+    "comparison.json": "c3d67ef7c117e2a973df6b21ef0c3d84e80087ca02d524862dafe485dac9e49f",
+    "results-for-review.md": "759a86ed4dd2fecd8e166983546f6a59507b6add0fe80332bf6e01bcfcde8be1",
+    "working-weights.csv": "b6fc2c6bf7507482dc669e87ed18a5045077c87e399c28c6525717b0db207879",
+    "negative-control-receipt.json": "20a774ae208e21dc2090f8826421b831ec66da9d192edbfd83ca73fa7d443860",
+    "lane-a/records.json": "61083689496080a07a7165fff778e7892baa2dd2e647f6c8104dfc96226be601",
+    "lane-a/notes.md": "89faf398300272dff2518f75c4a5df9a5e87c417639af7c0b3ba7ccee0190fed",
+    "lane-b/records.json": "f1e322e330f788274f4db907ea40a43981f57868370a2f61dacd5204bce1d367",
+    "lane-b/notes.md": "3ab599b1c8519676c6cfe84f75572e904776630cde054342a581140f123bc211",
+    "verification-receipt.json": "56a76177223e4ef9caae0bc19756092cf272f86fe9cb21289e845e7d73d43814"
+  },
+  "completion_receipt_sealed": true
+}

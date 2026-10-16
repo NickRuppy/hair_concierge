@@ -1,0 +1,271 @@
+{
+  "run_id": "oil-blend-weight-round-5",
+  "policy_changes_during_round": false,
+  "rows": [
+    {
+      "neutral_id": "R01",
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "The hydrocarbon solvent and the dimethicone/dimethiconol conditioning-film pair form a coherent carrier-plus-retained-film hypothesis. B5 supports medium when that film is principal.",
+        "Supporting fixed oils add a retained emollient route; the gum identity is not alone a rich-floor rule."
+      ],
+      "counter_signal": [
+        "The hydrocarbon carrier and light material tendencies offer a credible smaller-load interpretation; unspecified silicone grade prevents quantifying residue."
+      ],
+      "nearest_alternative": "light",
+      "alternatives": [
+        "light"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B5",
+        "B6"
+      ],
+      "reason": "Medium follows the principal conditioning system argument. A mobile carrier does not erase its deliberately retained silicone-film route, while neither a gum nor later oils justify rich without stronger whole-system evidence.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: COUMARIN; CAMELLIA JAPONICA FLOWER EXTRACT; PHYLLANTHUS EMBLICA FRUIT EXTRACT. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace.",
+        "No exact material-weight prior for: PENTACLETHRA MACROLOBA SEED OIL. Generic fixed-oil function is not a material alias or hidden weight."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    },
+    {
+      "neutral_id": "R02",
+      "value": "rich",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "A rich castor-led intact botanical carrier system includes a separate rich coconut tendency and a medium avocado contribution. This supports the rich-leading retained-oil hypothesis under B3/B6.",
+        "No admitted ester/alkane/mobile diluent architecture supplies an affirmative lighter whole-system route."
+      ],
+      "counter_signal": [
+        "Grape, soybean and other admitted light fixed oils can soften the retained load. Rank does not give the ratio, and unresolved preparations may change the burden."
+      ],
+      "nearest_alternative": "medium",
+      "alternatives": [
+        "medium"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B3",
+        "B6"
+      ],
+      "reason": "The castor-led retained botanical backbone is the stronger soft hypothesis. This is not a count of rich oils, a viscosity assigned to the finished blend or evidence of percentages; medium remains plausible with substantial lighter carriers.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: ALOE BARBADENSIS LEAF OIL; VITAMIN E (MIXED TOCOPHEROL) OIL; MENTHA ARVENSIS (PEPPERMINT) OIL; ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL; BIOTIN; LAVANDULA LATIFOLIA (LAVENDER) OIL; EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL; MELALEUCA ALTERNIFOLIA (TEA TREE) OIL; EQUISETUM ARVENSE (HORSETAIL) EXTRACT; ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT; APIUM GRAVEOLENS (CELERY) SEED EXTRACT; ASCORBIC ACID (VITAMIN C); OCIMUM BASILICUM (BASIL) OIL; POGOSTEMON CABLIN (PATCHOULI) OIL; SALVIA OFFICINALIS (SAGE) OIL; URTICA DIOICA (NETTLE) EXTRACT; PIMENTA OFFICINALIS (PIMENTO) LEAF OIL. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace.",
+        "No exact material-weight prior for: SIMMONDSIA CHINENSIS (JOJOBA) OIL; ARGANIA SPINOSA KERNEL (ARGAN) OIL. Generic fixed-oil function is not a material alias or hidden weight."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    },
+    {
+      "neutral_id": "R03",
+      "value": "light",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "The defined ester plus squalane and the alkane/undecane/tridecane route supports a coherent lighter-distribution carrier hypothesis.",
+        "The exact shorter sunflower declaration now has its own admitted light prior. This is lookup context, not the deciding formula signal."
+      ],
+      "counter_signal": [
+        "Avocado is an admitted medium tendency and the modified castor derivative has unresolved function/retained-film impact. Nonvolatile emollients remain load counter-signals."
+      ],
+      "nearest_alternative": "medium",
+      "alternatives": [
+        "medium"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B4"
+      ],
+      "reason": "The combined ester/hydrocarbon carrier route supplies the positive light architecture. Early avocado alone does not establish a substantial retained burden or outweigh that route under B4; the derivative uncertainty is retained without inheriting castor weight.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: CASTOR ISOSTEARATE SUCCINATE; PROPANEDIOL; SH-OLIGOPEPTIDE-78. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": true,
+      "role_corrections": [
+        {
+          "rank": 4,
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) OIL",
+          "original_main_role": "auxiliary",
+          "working_role": "secondary",
+          "reason": "The admitted botanical/emollient identity is a supporting retained carrier contribution, not an affirmative ancillary function. This corrects the original main annotation without editing its pre-lane seal or transferring Seed Oil identity.",
+          "weight_change": false
+        }
+      ]
+    },
+    {
+      "neutral_id": "R04",
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "The admitted sesame-led botanical matrix supplies a medium starting hypothesis with retained wheat-germ rich counterweight within the emollient system.",
+        "Rice/broccoli and MCT/ester provide light distribution alternatives, but the system also has a continuous unmodified botanical oil route rather than a demonstrated evaporating vehicle."
+      ],
+      "counter_signal": [
+        "The MCT and isoamyl-laurate contributions plus light rice/broccoli could make the finished blend light. There is no measured retained ratio; a sesame name or rank alone cannot settle it."
+      ],
+      "nearest_alternative": "light",
+      "alternatives": [
+        "light"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B3",
+        "B4"
+      ],
+      "reason": "Medium is the softer competing-botanical interpretation of a sesame-led retained oil matrix with a rich wheat-germ contribution, balanced by MCT/ester. It does not impose a medium floor on all early medium oils. A larger effective lighter-carrier share would support light.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: MELIA AZADIRACHTA SEED OIL; ECLIPTA ALBA LEAF EXTRACT; CASSIA AURICULATA LEAF EXTRACT; CENTELLA ASIATICA LEAF EXTRACT; LAVANDULA OIL/ EXTRACT; AZADIRACHTA INDICA LEAF EXTRACT; EMBLICA OFFICINALIS FRUIT EXTRACT; LAWSONIA INERMIS (HENNA) LEAF EXTRACT; EUGENIA CARYOPHYLLUS (CLOVE) OIL; VANILLIN; TERPINOLENE; SANTALUM ALBUM (SANDALWOOD) OIL. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    },
+    {
+      "neutral_id": "R05",
+      "value": "rich",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "The castor-led fixed-oil matrix has rich coconut plus medium olive/avocado tendencies and no admitted lighter processed-carrier route.",
+        "Its rich hypothesis comes from the coherent retained-oil architecture, not one oil name or the number of botanicals."
+      ],
+      "counter_signal": [
+        "Jojoba, broccoli and sunflower light tendencies can reduce load; mustard has no material prior and the amla preparation is unresolved. Relative contributions are unknown."
+      ],
+      "nearest_alternative": "medium",
+      "alternatives": [
+        "medium"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B3",
+        "B6"
+      ],
+      "reason": "B3/B6 support rich for this rich-leading retained botanical backbone. The light participating oils remain a real medium alternative, but there is no affirmative mobile/other carrier architecture that currently wins.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: EMBLICA OFFICINALIS FRUIT POWDER. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace.",
+        "No exact material-weight prior for: BRASSICA NIGRA SEED OIL. Generic fixed-oil function is not a material alias or hidden weight."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    },
+    {
+      "neutral_id": "R06",
+      "value": "unknown",
+      "estimate": false,
+      "confidence": "low",
+      "evidence": [
+        "Liquid defined-ester carrier supports a B4 light hypothesis.",
+        "The ester/whole-oil retained matrix and admitted rich coconut contribution support a medium alternative. Neither establishes a measured final burden."
+      ],
+      "counter_signal": [
+        "A generic liquid ester does not alone prove a small residual load.",
+        "Intact-oil participation, a rich coconut prior and lack of demonstrated evaporation do not alone prove that retained oils outweigh the lighter ester interpretation. Nonvolatile blends can be light."
+      ],
+      "nearest_alternative": "light",
+      "alternatives": [
+        "light",
+        "medium"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B4",
+        "B6",
+        "B7"
+      ],
+      "reason": "The initial interpretations split light (A), unknown (B) and medium (main). Reviewing the arguments leaves the organizing liquid-ester route and retained botanical matrix comparably persuasive. No formula-specific retained-burden observation establishes a winning interpretation. Apply B7 here without making missing amounts a universal default or changing B4.",
+      "unresolved": [
+        "B7 deciding gap: actual ester-to-botanical contribution to deposited hair film and source-specific preparations/grades. No winning whole-system argument from the frozen inputs.",
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: GARDENIA TAHITENSIS FLOWER EXTRACT; VANILLIN; CITRUS AURANTIUM BERGAMIA PEEL OIL; CITRUS LIMON PEEL OIL; MENTHA PIPERITA OIL; PELARGONIUM GRAVEOLENS FLOWER OIL; POGOSTEMON CABLIN OIL. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace.",
+        "No exact material-weight prior for: ARGANIA SPINOSA (ARGAN) KERNEL OIL; ADANSONIA DIGITATA (BAOBAB) SEED OIL. Generic fixed-oil function is not a material alias or hidden weight."
+      ],
+      "choice_basis": "Argument-based adjudication, not majority voting. A does not provide a quantified/specific lighter residual route; main does not establish a stronger retained burden. B7 balanced-backbone abstention is therefore retained. This new product has no human label approval.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    },
+    {
+      "neutral_id": "R07",
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "The volatile silicone carrier distributes a dimethiconol retained conditioning film, which is principal to the carrier/film interpretation under B5.",
+        "The coconut/macadamia/avocado route is a credible additional retained contribution, although no amount is inferred from its later positions."
+      ],
+      "counter_signal": [
+        "Cyclopentasiloxane and solvent alcohol could leave a small conditioning-film load; treating dimethiconol as secondary would support light."
+      ],
+      "nearest_alternative": "light",
+      "alternatives": [
+        "light"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B5",
+        "B6"
+      ],
+      "reason": "Medium reflects the principal film route and supporting retained emollients; it does not follow from silicone presence alone. Light remains a strong alternative if the actual gum/plant-oil deposition is small.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation."
+      ],
+      "choice_basis": "Retain the existing scoped human OE32 medium/low choice, supported again by main and lane A principal-film reading. Lane B light reading remains intact. No inference that agreement outweighs a volatile route or validates residue.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": true
+    },
+    {
+      "neutral_id": "R08",
+      "value": "medium",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        "A dimethicone/dimethiconol carrier-plus-gum pair supplies the principal retained conditioning-film architecture.",
+        "Rosehip/apricot admitted light tendencies do not erase that film system; the formulation is not classified by counting plant oils."
+      ],
+      "counter_signal": [
+        "Trisiloxane is an admitted volatile-carrier route; disiloxane function is not assessed here. A light silicone grade and small gum fraction could support lower deposited load."
+      ],
+      "nearest_alternative": "light",
+      "alternatives": [
+        "light"
+      ],
+      "rule_ids": [
+        "B0",
+        "B1",
+        "B5",
+        "B6"
+      ],
+      "reason": "Medium is the supported B5 estimate for a principal conditioning-film base. Rich cannot be concluded from a gum alone, and the competing light interpretation depends on grade/retained amount not measured here.",
+      "unresolved": [
+        "Unknown concentrations, commercial grades, applied dose and retained hair-film burden; no comparative sensory validation.",
+        "Function/preparation remains unassessed: ROSA DAMASCENA FLOWER OIL; DISILOXANE; ROSE KETONES. These uncertainties do not currently overturn the identified principal carrier hypothesis; their deciding potential requires real amounts/functions, not presumed trace."
+      ],
+      "choice_basis": "Independent architectures agree on the selected class; retain original low confidence and actual alternatives, not agreement-as-validation.",
+      "status": "exploratory_working_only",
+      "human_replay_decision_preserved": false
+    }
+  ],
+  "limits": "Working reconciliation is separate from original judgments and material-reference approval. New products are not automatically approved reference targets or production weights."
+}

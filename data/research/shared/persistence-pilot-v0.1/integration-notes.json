@@ -1,0 +1,34 @@
+{
+  "records": [
+    {
+      "case_id": "P01",
+      "selected_from": "b",
+      "reason": "Choose lane B: moderate is a positive post-rinse conditioner-residue judgment anchored in fatty alcohol and acid-associated amidoamine, with actual pH not invented. No durable polymer/gum route is promoted from unassessed auxiliaries."
+    },
+    {
+      "case_id": "P02",
+      "selected_from": "b",
+      "reason": "Choose lane B: high is supported by an integrated fatty-alcohol/quat/emollient conditioning system containing cationic guar, after challenging whether the guar is merely rheology. Intended rinsing is included, not treated as a zero-residue guarantee; polymer presence alone is insufficient."
+    },
+    {
+      "case_id": "P03",
+      "selected_from": "b",
+      "reason": "Choose lane B: low is a committed whole-system judgment for the aqueous humectant/monomeric-quat formula, with no admitted coherent supporting lipid/gum/polymer film. This deliberately does not mechanically inherit native mechanism-only moderate. Unassessed inulin is not assumed absent or residue-free."
+    },
+    {
+      "case_id": "P04",
+      "selected_from": "b",
+      "reason": "Choose lane B: high follows the coherent retained silicone fluid/gum/cationic-polymer conditioning architecture, with emulsifier and protein clues kept distinct. Whole architecture, not spray form or the strongest ingredient alone, tips the choice."
+    },
+    {
+      "case_id": "P05",
+      "selected_from": "b",
+      "reason": "Choose lane B: moderate describes the directly applied whole fluid liquid-wax coating, without an admitted particularly adherent/cohesive route. This uses the new three-value definition, not a conversion of the accepted old binary low build-up label. Organic annotation has no mechanism role."
+    },
+    {
+      "case_id": "P06",
+      "selected_from": "b",
+      "reason": "Choose lane B: high follows the integrated Dimethiconol/Dimethicone/Phenyl Trimethicone conditioning remainder with lipid contributions. Crosspolymer texture and filter polymer are not independent high-persistence triggers. Carrier/spreading clues do not cancel the admitted gum film."
+    }
+  ]
+}

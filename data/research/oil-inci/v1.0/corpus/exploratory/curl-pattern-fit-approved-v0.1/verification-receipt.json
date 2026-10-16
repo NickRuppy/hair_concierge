@@ -1,0 +1,49 @@
+{
+  "status": "passed_local_research_verification",
+  "decision": "OE43",
+  "scope": "Faithful neutral-pattern compatibility policy; damage remains pending. No production actions.",
+  "counts": {
+    "products": 6,
+    "source_scenarios": 11,
+    "role_scenarios": 15,
+    "pattern_cells": 60,
+    "values": {
+      "suitable": 48,
+      "conditional": 0,
+      "not_suitable": 0,
+      "unknown": 12
+    }
+  },
+  "checks": {
+    "source_policy_hashes": "passed",
+    "unique_complete_role_pattern_coverage": "passed",
+    "source_scenario_copy_and_fibre_permission": "passed",
+    "neutral_pattern_rule_and_scalp_unknowns": "passed",
+    "other_axis_references_and_non_override": "passed",
+    "CSV_JSON_consistency": "passed",
+    "unchanged_direct_method_blocks": "passed",
+    "historical_files_unchanged": 219,
+    "prior_thickness_receipt_intentionally_changed_guides_only": [
+      "docs/research/oil-inci/README.md",
+      "plans/oil-inci/phase1-decision-coverage.md"
+    ],
+    "canonical_frozen_fit_unchanged": "passed",
+    "round6_structural_verifier": "passed",
+    "local_links_checked": 75
+  },
+  "files_sha256": {
+    "docs/research/oil-inci/README.md": "687bffc391c559012bd872aebd83af93156625a2ec586afe527e7aa397bdadda",
+    "plans/oil-inci/phase1-decision-coverage.md": "d6ec429aa051cc0ad0a4bd1cae941a036cbce369a3bcad7e6442f9daaf664058",
+    "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.3.md": "b417432f6d879916e12d43604b554bd45d98b21d4c2974dd77da0b3040399d74",
+    "plans/oil-inci/research/curl-pattern-oe43-decision-2026-10-05.md": "0ffa7ffbba9d3c61005d437b794e65f5a34e0441b704d389ae830fc37be12924",
+    "data/research/oil-inci/v1.0/corpus/exploratory/curl-pattern-fit-approved-v0.1/approved-pattern-overlay.json": "240857647be9ec63d7978a262d9c83d89747e474c5c11425b7cf03c527f429fa",
+    "data/research/oil-inci/v1.0/corpus/exploratory/curl-pattern-fit-approved-v0.1/approved-pattern-sheet.csv": "e1e03ccddb4306fdb30992b8c8b2fa34133eb122798a0e52085184c0a1562dc9"
+  },
+  "limitations": [
+    "No measured curl efficacy or universal overall suitability.",
+    "Thickness conditions and source restrictions still apply.",
+    "Damage and global product aggregation remain undefined.",
+    "Earlier receipts remain dated evidence of their own guide versions."
+  ]
+}

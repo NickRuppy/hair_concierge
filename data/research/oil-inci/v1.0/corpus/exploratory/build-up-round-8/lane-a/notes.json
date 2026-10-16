@@ -1,0 +1,41 @@
+{
+  "run_id": "oil-build-up-round-8",
+  "lane": "a",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/method.md",
+      "sha256": "0a2579c41ff0d2c64b0bfde27eb8c572867f3075be05eeaca091a48c82c494d5"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-packet.json",
+      "sha256": "12146506e1f1566c1abe3064f1c3e36608d0b784679c36d719b2a444b8383c6f"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+      "sha256": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/natural-oil-build-up-v0.1.json",
+      "sha256": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2"
+    }
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "completed_ids": [
+    "C01",
+    "C02",
+    "C03",
+    "C04"
+  ],
+  "limits": [
+    "All and only the four declared input files were read as research inputs. Source references and links were not followed; no browsing, peer outputs, identity packets, accepted product answers or other repository files were accessed.",
+    "No exact product identity was recognized or searched for. Isolation was contractual rather than a technical sandbox.",
+    "The first combined tool display truncated part of the lexicon; the same allowed lexicon was reread as complete canonical-name, roles and notes entries before estimation. No input-access expansion occurred.",
+    "All four complete-formula binary outputs are provisional estimates with low confidence; they are not sensory validation, measured repeated accumulation or human approval.",
+    "All 84 primary ranks are covered exactly once, with literal raw/canonical names and roles copied from the inputs. Explicitly unassessed functions remain unresolved. The C03 formula code is retained separately as context.",
+    "Rank is qualitative order only. No material amounts, quantity boundaries, product identities, marketing claims, user-fit properties or additional product properties were inferred.",
+    "The only consumed accepted material prior is exact whole jojoba at C03 rank 3, reference oil-natural-build-up-v0.1 version 0.1, OE51 and HW001. It is used solely as a constituent clue; the other material tendencies remain unassessed.",
+    "The frozen v0.3 method requires an opposite binary alternative even when earlier material-reference language mentions unknown. Complete-formula uncertainty therefore remains in the named assumptions, counter-signals and unresolved gaps.",
+    "Nonsemantic verification checks JSON serialization, required schema keys and types, complete neutral-ID and rank coverage, exact copied names/roles, valid evidence references, opposite binary alternatives and exact allowed-input SHA256 values. It does not validate the scientific judgments."
+  ]
+}

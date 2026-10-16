@@ -1,0 +1,74 @@
+{
+  "status": "passed",
+  "executed_at": "2026-10-04T08:52:59.013157+00:00",
+  "commands": [
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-5.py --inputs-only",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-5.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "Artifact contracts, not scientific/sensory accuracy",
+        "cases": 8,
+        "fresh": 6,
+        "replay": 2,
+        "read_scope_limit": "Self-report, not sandbox proof",
+        "mode": "complete",
+        "cohorts": {
+          "fresh": {
+            "total": 6,
+            "lane_pair_raw_equal": 5,
+            "lane_pair_known_equal": 5,
+            "lane_pair_both_known": 5,
+            "classified_by_lane": {
+              "a": 6,
+              "b": 5,
+              "main": 6
+            }
+          },
+          "replay": {
+            "total": 2,
+            "lane_pair_raw_equal": 1,
+            "lane_pair_known_equal": 1,
+            "lane_pair_both_known": 2,
+            "classified_by_lane": {
+              "a": 2,
+              "b": 2,
+              "main": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-5.py --negative-controls",
+      "exit_code": 0,
+      "controls": 14
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "exit_code": 0,
+      "cases": 10
+    },
+    {
+      "command": "python3 -m py_compile plans/oil-inci/verify-blend-weight-round-5.py",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "historical_files_unchanged": 127,
+  "verifier_sha256": "ce205312c8298f925ed4abc2c9fb0cfebeeee8f4a3dd729a480b42d8ed9713fe",
+  "claims_limit": "Artifact fidelity, repeatability and preservation only; not sensory/scientific accuracy, user fit, generic flag coverage or production readiness.",
+  "post_review_repairs": [
+    "Required exact seven-file provenance set and pinned nonempty predecessor history coverage.",
+    "Raw eight-unique adjudication rows before indexing.",
+    "CSV must match identity, original lane/main values and separate adjudication.",
+    "K18 initial root ancillary-role error preserved and corrected separately; no weights change."
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "decision_id": "OE52",
+  "date": "2026-10-06",
+  "status": "human_accepted_product_estimate",
+  "authorization": "Nick: we want no unknowns - so lets do low here htne",
+  "neutral_id": "N01",
+  "identity": {
+    "brand": "JVN",
+    "product": "Complete Nourishing Shine Drops",
+    "size": "1.7 fl oz / 50 ml",
+    "market": "US maker/USD"
+  },
+  "source_url": "https://jvnhair.com/collections/shop-all/products/complete-nourishing-shine-drops",
+  "raw_inci": "Hydrogenated Farnesene*, Squalane, Jojoba Esters, Limnanthes Alba (Meadowfoam) Seed Oil, Meadowfoam Estolide, Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Sabdariffa Flower Extract, Eclipta Prostrata Extract, Moringa Oleifera Seed Oil, Tocopherol, Melia Azadirachta Leaf Extract, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance/Parfum**",
+  "original_property": {
+    "value": "unknown",
+    "estimate": false,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "HYDROGENATED FARNESENE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "SQUALANE"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "JOJOBA ESTERS"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "MEADOWFOAM ESTOLIDE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "MORINGA OLEIFERA SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "The hydrocarbon emollient/solvent portion makes a fluid-emollient interpretation plausible, but the frozen lexicon does not establish a coherent weak-film system.",
+      "Grade-dependent wax at rank 3 is a rival to low; it is not affirmative evidence that a substantial wax grade is actually used.",
+      "No admitted substantial gum/resin/polymer conditioning architecture resolves the result as elevated; botanical oil count and liquid state cannot resolve it either."
+    ],
+    "nearest_alternative": "low",
+    "reason": "B0/B3/B4 require unknown because the jojoba ester grade can materially change the residual architecture, the estolide grade is unspecified, and the remaining emollient functions do not establish weak film. Low is the closest conditional alternative given the hydrocarbon emollient/solvent architecture, but it would require affirmative fluid-grade and whole-system weak-film support; it is not the current estimate.",
+    "unresolved": [
+      "JOJOBA ESTERS rank 3: liquid, paste or hard-wax grade is not established; this is a decisive architecture gap.",
+      "MEADOWFOAM ESTOLIDE rank 5: derivative grade and contribution to residual conditioning film are unspecified.",
+      "Whole fixed oils have admitted emollient roles without affirmative weak/substantial-film evidence for this complete formula.",
+      "Extract preparations/carriers and the fragrance composition contribution are incompletely established; no additional film functions are assigned.",
+      "No quantitative finished-formula film load or repeated-application/wash evidence is supplied."
+    ]
+  },
+  "approved_property": {
+    "value": "low",
+    "estimate": true,
+    "confidence": "low",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "HYDROGENATED FARNESENE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "SQUALANE"
+      },
+      {
+        "rank": 3,
+        "canonical_name": "JOJOBA ESTERS"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "MEADOWFOAM ESTOLIDE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "MORINGA OLEIFERA SEED OIL"
+      }
+    ],
+    "counter_signal": [
+      "Jojoba Esters at rank3 may represent a wax-grade contribution; the grade is undisclosed.",
+      "Squalane, estolide and intact botanical oils supply retained emollience; fluidity does not measure repeated accumulation.",
+      "Neither a liquid finished product, absence of gum/resin nor silicone-free positioning proves low."
+    ],
+    "nearest_alternative": "elevated",
+    "reason": "OE52 human-selected practical low estimate for this exact published JVN formula. The farnesene/squalane-led emollient reading favors a spreading finish, but does not establish low persistent coating. Following explanation of that weakness, Nick explicitly chose low and requested no unknown build-up classifications. This is a low-confidence judgment, not verified weak-film or washout evidence.",
+    "unresolved": [
+      "Exact JVN jojoba-ester and estolide grades, retained-film load and repeated shampoo behavior are unestablished."
+    ]
+  },
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/working-records.json": "2837f5e6c2c9ad31a3ae54e6a49582ae155a6abf04d5fb6d24b3ed9a53957864",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-stage-seal.json": "926535884263d00a0b0cb7794eef3d50740ff5228eb67a97be74aa2b8daedcb2",
+    "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/metrics.json": "11f8e96a97d1afddedd18dcbcfd625a7cb25a7cdc77625f22f91097e353606fe",
+    "data/research/oil-inci/v1.0/reference/natural-oil-build-up-v0.1.json": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2"
+  },
+  "research_proposal": {
+    "path": "plans/oil-inci/research/jvn-build-up-material-review-2026-10-06.json",
+    "sha256": "de0fc7d032e490fa5562eb75f93f3daef7ccdfa57d3b8daeb30231dfd5099784"
+  },
+  "policy_direction": "For future complete-formula build-up estimates choose low or elevated, retain low confidence and named gaps; do not use unknown to avoid a rough judgment. Missing product identity or incomplete declaration still blocks research completion; other properties are outside this focused decision.",
+  "limits": [
+    "Spreading/light sensory evidence does not prove low persistent film.",
+    "Jojoba Esters grade and proportions remain undisclosed.",
+    "No derivative material prior, quantitative residue evidence or sensory validation."
+  ],
+  "remaining_case": "Color Wow Pop & Lock",
+  "publication": "None"
+}

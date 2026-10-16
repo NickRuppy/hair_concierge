@@ -1,0 +1,333 @@
+{
+  "captured_at": "2026-10-01",
+  "purpose": "Exact source capture only; no classification or fit outputs.",
+  "status_semantics": "capture_ready means a single explicitly scoped local source declaration is admissible for exploratory input capture, not that competing market/batch formulations are resolved or the run is frozen.",
+  "records": [
+    {
+      "slot": "E03",
+      "identity": {
+        "brand": "OLAPLEX",
+        "product": "No.7 Bonding Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "0850045076085",
+        "gtin_source_id": "ol-apotheke",
+        "gtin_limit": "Identifier corroborates named 30ml pack, not canonical formula version; no readable batch label captured."
+      },
+      "sources": [
+        {
+          "id": "ol-zalando",
+          "url": "https://www.zalando.de/olaplex-no7-bonding-oil-haarpflege-olh34h00q-s11.html",
+          "source_author": "Zalando DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "DE-market listing; 30 ml pack. Canonical declaration also exposed by indexed size=75C URL. Some direct reopens redirected to en.zalando.de and failed; capture uses retrieved indexed listing, not an inspected physical pack."
+        },
+        {
+          "id": "ol-maker",
+          "url": "https://olaplex.com/products/olaplex-n-7-bonding-oil-30ml",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml selected; global/US storefront. Entire 21-entry sequence matches canonical declaration; retained only as corroboration and exact-product manufacturer claim authority, not substituted as DE INCI."
+        },
+        {
+          "id": "ol-local-brand",
+          "url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+          "source_author": "OLAPLEX DE / New Flag GmbH",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml option; shorter declaration corroborated, but Wasser/Aqua/Eau and Parfüm (Parfum) are translated tokens. Kept verbatim separately; operator verified in imprint, not misidentified as OLAPLEX Inc."
+        },
+        {
+          "id": "ol-apotheke",
+          "url": "https://www.shop-apotheke.com/beauty/upmKWKK44/olaplex-no-7-bonding-oel.htm",
+          "source_author": "Shop Apotheke DE marketplace",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml, EAN 0850045076085. Divergent translated declaration and UV/heat promotional image; not assigned to canonical formula version."
+        },
+        {
+          "id": "ol-old-uv",
+          "url": "https://olaplex.com/blogs/news/healthy-hair-beach-day-tips-for-every-hair-type",
+          "source_author": "OLAPLEX Inc.",
+          "tier": "manufacturer_historical_claim",
+          "accessed_at": "2026-10-01",
+          "notes": "2021 article includes No.7 UV claim; no ingredient-version binding to current shorter declaration. Excluded from current-version claim authority."
+        },
+        {
+          "id": "ol-imprint",
+          "url": "https://olaplex.de/pages/impressum",
+          "source_author": "New Flag GmbH",
+          "tier": "site_identity",
+          "accessed_at": "2026-10-01",
+          "notes": "Verifies operator of German OLAPLEX storefront."
+        }
+      ],
+      "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Water/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Fragrance (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+      "canonical_source_id": "ol-zalando",
+      "directions": {
+        "verbatim": false,
+        "source_id": "ol-local-brand",
+        "text": "Remove cap, invert bottle, and tap its base to release individual drops. Apply 2–3 drops to damp or dry hair and style. The source permits daily use on wet/dry hair, before heat styling or after styling.",
+        "dose": "2–3 drops",
+        "contact_time": "not specified",
+        "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+      },
+      "dispenser": {
+        "observed_mechanism": "Inverted bottle dispenses metered drops when base is tapped; not a pipette or pump.",
+        "source_id": "ol-local-brand",
+        "confidence": "high",
+        "observation_basis": "Explicit dispensing instructions; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "OLAPLEX Inc.",
+          "source_id": "ol-maker",
+          "claim_excerpt": "450ºF/232ºC heat protection",
+          "verbatim": true,
+          "local_corroboration_source_id": "ol-local-brand"
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "OLAPLEX Inc. / OLAPLEX DE",
+          "source_id": "ol-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "ol-maker",
+            "ol-local-brand",
+            "ol-old-uv",
+            "ol-apotheke"
+          ],
+          "notes": "No UV claim on current matched product pages. Historical manufacturer blog is positive but cannot be bound to the selected shorter declaration; retailer UV graphic belongs to conflicting packet. positive=false means no accepted current-version claim, not no historical claim."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "Sunflower seed oil",
+          "source_id": "ol-local-brand",
+          "wording": "Sonnenblumenkernöl",
+          "verbatim": true
+        }
+      ],
+      "other_advertised_ingredient_mentions": [
+        {
+          "name": "Coconut-derived emollient",
+          "source_id": "ol-local-brand",
+          "wording": "Kokosnuss-Emollient",
+          "verbatim": true,
+          "note": "Do not silently translate into an advertised intact coconut oil."
+        }
+      ],
+      "conflict_captures": [
+        {
+          "url": "https://www.shop-apotheke.com/beauty/upmKWKK44/olaplex-no-7-bonding-oel.htm",
+          "source_id": "ol-apotheke",
+          "raw_inci": "Dimethicon, Isohexadecan, C13-14 Isoparaffin, Coco-Caprylat, Phenyltrimethicon, Bis-Aminopropyl-Diglycoldimaleat, Propandiol, Zea Mays (Mais) Öl, Beta-Carotin, Helianthus Annuus (Sonnenblume) Samenöl, Moringa Oleifera Samenöl, Punica Granatum Samenöl, Wasser, Morinda Citrifolia Fruchtpulver, Duftstoffe , Hexyl Zimt, Eclipta Prostrata Extrakt, Ethylhexyl Methoxycinnamat, Limonen, Tocopherol, Citral, Linalool, Melia Azadirachta Blattextrakt, Citronellol, Pseudozyma Epicola/Camellia Sinensis Samen (Grüner Tee) Ölferment-Extrakt-Filtrat.",
+          "differences": "25 entries versus21; extra Moringa oil, Eclipta extract, Ethylhexyl Methoxycinnamat and Melia leaf extract; C13-14 Isoparaffin wording, Morinda fruit powder versus extract, translated forms and reordered tail.",
+          "disposition": "Excluded from canonical packet; retained unresolved alternative. Convergence of local brand, DE retailer and global manufacturer supports selected shorter declaration. Age/reformulation cause not proven; not a fragrance-tail-only change."
+        },
+        {
+          "url": "https://olaplex.de/collections/glanz-shine/products/olaplex-no-7-bonding-oil",
+          "source_id": "ol-local-brand",
+          "raw_inci": "Dimethicone, Isohexadecane, C13-14 Isoalkane, Coco-Caprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Punica Granatum Seed Oil, Wasser/Aqua/Eau, Morinda Citrifolia Fruit Extract, Tocopherol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Parfüm (Parfum), Citral, Linalool, Limonene, Citronellol, Hexyl Cinnamal",
+          "differences": "Same21 positions but Wasser/Aqua/Eau and Parfüm (Parfum) localized; no aliases silently substituted.",
+          "disposition": "Local corroboration, not canonical token source."
+        },
+        {
+          "url": "https://olaplex.com/blogs/news/healthy-hair-beach-day-tips-for-every-hair-type",
+          "source_id": "ol-old-uv",
+          "claim_excerpt": "OLAPLEX Nº.7 Bonding Oil protects against UV rays",
+          "verbatim": true,
+          "disposition": "Historical manufacturer-positive UV capture; excluded from current-version authority due to missing formula binding."
+        }
+      ],
+      "status": "capture_ready",
+      "capture_scope": "Single DE online declaration corroborated by current local branded site and matching global manufacturer. Does not cover all stock, reformulations, historical claims, or physical batch identity.",
+      "remaining_limits": [
+        "No physical package/batch label inspected.",
+        "Shop Apotheke variant cause and chronology unresolved; never merged."
+      ],
+      "raw_inci_sha256": "f2cf36c05776f5e6d9202358439382ec7bdb5e62620fae6f5ac5e5d9a009d76e",
+      "declared_ingredient_count": 21
+    },
+    {
+      "slot": "E06",
+      "identity": {
+        "brand": "K18",
+        "product": "Molecular Repair Hair Oil",
+        "size_ml": 30,
+        "market": "DE",
+        "gtin_if_verified": "858511001500",
+        "gtin_source_id": "k-flaconi",
+        "gtin_limit": "Also corroborated by local K18-branded shop; barcode alone does not establish formulation version."
+      },
+      "sources": [
+        {
+          "id": "k-notino",
+          "url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+          "source_author": "Notino DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml listing, complete 17-entry declaration; page itself advises checking received packaging for changes."
+        },
+        {
+          "id": "k-flaconi",
+          "url": "https://www.flaconi.de/haare/k18/molecular-repair/k18-molecular-repair-hair-oil-haaroel.html?variant=90007597-0011676",
+          "source_author": "Flaconi DE",
+          "tier": "exact_local_retailer",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 ml/EAN 858511001500. Same 17 ingredients/order as Notino ignoring capitalization. Initial direct retrieval succeeded; later reopen failed; indexed page also exposes full declaration and identifier."
+        },
+        {
+          "id": "k-uk-maker",
+          "url": "https://k18hair.co.uk/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair UK",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL manufacturer page; 17-entry declaration matches DE retailers ignoring case, with heat claim and directions. Corroboration, not proof of chemical identity or universal market/batch equivalence."
+        },
+        {
+          "id": "k-global-maker",
+          "url": "https://www.k18hair.com/products/molecular-repair-hair-oil",
+          "source_author": "K18 Hair",
+          "tier": "manufacturer_other_market",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact 30 mL global/US page; 22-entry declaration has five extra fragrance-tail names. Retain separately; do not append to DE canonical declaration."
+        },
+        {
+          "id": "k-de-brand",
+          "url": "https://k18-hair.de/k18-hair/k18-oil/K18MolecularRepairHairOil30ml.aspx",
+          "source_author": "Kevin Murphy GmbH / K18-branded DE storefront",
+          "tier": "local_brand_site_distributor_operated",
+          "accessed_at": "2026-10-01",
+          "notes": "Exact30ml/EAN858511001500 and local directions/heat positioning. Ingredient section contains only a dot; not admissible as formula source or as independent manufacturer attestation."
+        },
+        {
+          "id": "ec-fragrance",
+          "url": "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-products-specific-topics/fragrance-allergens-labelling_en?prefLang=uk",
+          "source_author": "European Commission",
+          "tier": "primary_regulatory_context",
+          "accessed_at": "2026-10-01",
+          "notes": "Expanded individual fragrance disclosure can lengthen labels. General context only; does not establish the reason for this product difference."
+        }
+      ],
+      "raw_inci": "CAPRYLYL CAPRYLATE/CAPRATE, SQUALANE, PERSEA GRATISSIMA (AVOCADO) OIL, HELIANTHUS ANNUUS (SUNFLOWER) OIL, C13-15 ALKANE, UNDECANE, BENZYL ALCOHOL, TRIDECANE, CASTOR ISOSTEARATE SUCCINATE, PROPANEDIOL, SH-OLIGOPEPTIDE-78, FRAGRANCE (PARFUM), TOCOPHEROL, CINNAMAL, HEXYL CINNAMAL, LIMONENE, LINALOOL.",
+      "canonical_source_id": "k-notino",
+      "directions": {
+        "verbatim": false,
+        "source_id": "k-notino",
+        "text": "Begin with 1–3 drops, increasing if needed. Apply to towel-dried damp hair before styling, or use on dry hair as the final step.",
+        "dose": "1–3 drops initially; increase if needed",
+        "contact_time": "not specified in canonical local directions",
+        "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+      },
+      "supplemental_direction_capture": {
+        "source_id": "k-uk-maker",
+        "verbatim": false,
+        "text": "Manufacturer adds mid-lengths-to-ends placement on damp hair and a four-minute wait before styling for its strengthening claim. This timing is a separate source capture, not silently inserted into the Notino instructions."
+      },
+      "dispenser": {
+        "observed_mechanism": "Pipette",
+        "source_id": "k-notino",
+        "confidence": "high",
+        "observation_basis": "Explicit exact-product local description; no physical bottle inspected."
+      },
+      "claims": {
+        "heat": {
+          "reviewed": true,
+          "positive": true,
+          "author": "K18 Hair UK",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": "450°F (232°C) heat protection",
+          "verbatim": true,
+          "local_corroboration_source_ids": [
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Manufacturer exact30ml with same declared17-entry sequence; accepted product claim for this scoped packet, not US/DE chemical equivalence."
+        },
+        "uv": {
+          "reviewed": true,
+          "positive": false,
+          "author": "K18 Hair UK / K18 Hair",
+          "source_id": "k-uk-maker",
+          "claim_excerpt": null,
+          "review_scope": [
+            "k-uk-maker",
+            "k-global-maker",
+            "k-notino",
+            "k-de-brand"
+          ],
+          "notes": "Product descriptions, benefits, ingredient hero sections and product FAQs reviewed; no accepted hair-UV-protection claim found. Generic colour positioning is not such a claim."
+        }
+      },
+      "advertised_oils": [
+        {
+          "name": "Avocado oil",
+          "source_id": "k-notino",
+          "wording": "Avocadoöl",
+          "verbatim": true
+        },
+        {
+          "name": "Sunflower oil",
+          "source_id": "k-notino",
+          "wording": "Sonnenblumenöl",
+          "verbatim": true
+        }
+      ],
+      "other_advertised_ingredient_mentions": [
+        {
+          "name": "Squalane",
+          "source_id": "k-notino",
+          "wording": "Squalan",
+          "verbatim": true
+        },
+        {
+          "name": "Hemisqualane",
+          "source_id": "k-notino",
+          "wording": "Hemisqualan",
+          "verbatim": true
+        }
+      ],
+      "corroborating_declarations": [
+        {
+          "source_id": "k-uk-maker",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima (Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane, Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool."
+        },
+        {
+          "source_id": "k-flaconi",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima (Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane, Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool."
+        }
+      ],
+      "conflict_captures": [
+        {
+          "url": "https://www.k18hair.com/products/molecular-repair-hair-oil",
+          "source_id": "k-global-maker",
+          "raw_inci": "Caprylyl Caprylate/Caprate, Squalane, Persea Gratissima(Avocado) Oil, Helianthus Annuus (Sunflower) Oil, C13-15 Alkane,Undecane, Benzyl Alcohol, Tridecane, Castor Isostearate Succinate, Propanediol, sh-Oligopeptide-78, Fragrance (Parfum), Tocopherol, Cinnamal, Hexyl Cinnamal, Limonene, Linalool, Linalyl Acetate, Pinene, Rose Ketones, Terpineol, Tetramethyl Acetyloctahydronaphthalenes.",
+          "differences": "Same first17 ingredient identities/order ignoring case and spacing; adds Linalyl Acetate, Pinene, Rose Ketones, Terpineol, Tetramethyl Acetyloctahydronaphthalenes after Linalool.",
+          "disposition": "Separate global/US declaration. Expanded fragrance disclosure is plausible, but no product-specific manufacturer statement or dated label proves disclosure-only change or rules out reformulation. Never appended to local canonical list.",
+          "evidence_source_ids": [
+            "k-notino",
+            "k-flaconi",
+            "k-uk-maker",
+            "k-global-maker",
+            "ec-fragrance"
+          ]
+        }
+      ],
+      "status": "capture_ready",
+      "capture_scope": "Classification input is the dated DE-retailer17-entry declaration, corroborated by another DE retailer and matching UK manufacturer declaration. No universal current-formula or chemical equivalence assertion.",
+      "remaining_limits": [
+        "Reason and timing of global22-entry versus local/UK17-entry divergence unresolved.",
+        "No current DE batch label inspected; cannot claim every current DE pack has this declaration.",
+        "Any request for global-market or newest-production-batch authority remains blocked pending product-specific manufacturer/pack evidence."
+      ],
+      "raw_inci_sha256": "48ff98d511f87ee302e4950a89179452020fef271f0abddfeba85feed5b2b47d",
+      "declared_ingredient_count": 17
+    }
+  ]
+}

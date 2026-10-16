@@ -1,0 +1,572 @@
+{
+  "run_id": "oil-targeted-coverage-v0.1",
+  "lane_id": "a",
+  "records": [
+    {
+      "case_id": "T01",
+      "named_oils": [
+        {
+          "hero_id": "T01-hero-1",
+          "hero_name": "Bio-Kokosnussöl",
+          "matched_ranks": [
+            13
+          ],
+          "prominence": {
+            "value": "supporting",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "T01-maker",
+                "section": "hero:T01-hero-1"
+              },
+              {
+                "rank": 13,
+                "canonical_name": "COCOS NUCIFERA OIL"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": "trace",
+            "reason": "The exact packet mapping matches the preserved blind secondary conditioning role. This supports supporting prominence without a concentration or rank-cutoff inference; source hero emphasis does not revise that role.",
+            "unresolved": [
+              "No quantitative formula composition; the prominence is the frozen functional estimate."
+            ]
+          }
+        },
+        {
+          "hero_id": "T01-hero-2",
+          "hero_name": "Jojobaöl",
+          "matched_ranks": [
+            11
+          ],
+          "prominence": {
+            "value": "supporting",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "T01-maker",
+                "section": "hero:T01-hero-2"
+              },
+              {
+                "rank": 11,
+                "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": "trace",
+            "reason": "The exact packet mapping matches the preserved blind secondary conditioning role. This supports supporting prominence without a concentration or rank-cutoff inference; source hero emphasis does not revise that role.",
+            "unresolved": [
+              "No quantitative formula composition; the prominence is the frozen functional estimate."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T01-maker",
+            "section": "packaging"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T01-maker",
+            "section": "claims.heat"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T01-maker",
+            "section": "claims.uv"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "ETHYLHEXYL TRIAZONE"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "The completed maker review accepts explicit hair-UV protection and the exact declaration contains the listed recognized UV filters; both required gates are satisfied. No SPF, normal-dose performance or protection level is inferred.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning",
+        "dry_finish"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning",
+          "dry_finish"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T01-maker",
+            "direction_id": "T01-direction-1"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": [],
+        "reason": "The coherent instruction explicitly permits dry or damp hair and establishes retention through sun/swimming protection context, supporting both retained fibre roles. The shake, spray distance, reapplication frequency and face/body restriction stay within this same scenario.",
+        "unresolved": [
+          "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T01-maker",
+          "direction_id": "T01-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "dry_or_damp",
+          "dose": "spray from approximately 20 cm; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_sun_swimming_protection_context",
+          "restrictions": "Not suitable as sun protection for face or body.",
+          "supported_roles": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ],
+          "shake": "before application",
+          "frequency": "reapply every two hours and after swimming"
+        }
+      ]
+    },
+    {
+      "case_id": "T02",
+      "named_oils": [
+        {
+          "hero_id": "T02-hero-1",
+          "hero_name": "Moroccan argan oil",
+          "matched_ranks": [
+            4
+          ],
+          "prominence": {
+            "value": "unknown",
+            "estimate": false,
+            "confidence": "low",
+            "evidence": [
+              {
+                "source_id": "T02-maker",
+                "section": "hero:T02-hero-1"
+              },
+              {
+                "rank": 4,
+                "canonical_name": "ARGANIA KERNEL OIL"
+              }
+            ],
+            "counter_signal": [
+              "Source hero mapping establishes the literal token, but not a complete species or a resolved functional role."
+            ],
+            "nearest_alternative": "supporting",
+            "reason": "The source maps the hero only to literal ARGANIA KERNEL OIL at rank 4. Its blind role remains unresolved, so neither leading nor supporting nor trace is established. Source positioning cannot add the missing species or overwrite the ledger.",
+            "unresolved": [
+              "Species and formula contribution remain unresolved; no qualified auxiliary suffix permits trace."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "section": "packaging"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "section": "claims.heat"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "section": "claims.uv"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product review supplies no accepted explicit hair-UV claim and the exact declaration supplies no recognized UV filter. False records the two-part gate, not a measured zero effect.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T02-maker",
+            "direction_id": "T02-direction-1"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": [],
+        "reason": "The styling instruction establishes retained general fibre use. Wet/dry stage is explicitly unestablished, so finishing the style does not establish dry_finish. No scalp or wash-out fibre instruction is supplied.",
+        "unresolved": [
+          "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T02-maker",
+          "direction_id": "T02-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "finish_style_unspecified_wet_dry",
+          "dose": "mist all over; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_styling_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "T04",
+      "named_oils": [
+        {
+          "hero_id": "T04-hero-1",
+          "hero_name": "Rosmarinöl",
+          "matched_ranks": [
+            5
+          ],
+          "prominence": {
+            "value": "unknown",
+            "estimate": false,
+            "confidence": "low",
+            "evidence": [
+              {
+                "source_id": "T04-maker",
+                "section": "hero:T04-hero-1"
+              },
+              {
+                "rank": 5,
+                "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL"
+              }
+            ],
+            "counter_signal": [
+              "The recognized aromatic auxiliary role is present, but an auxiliary role alone is not a qualified suffix."
+            ],
+            "nearest_alternative": "trace",
+            "reason": "The rosemary hero exactly matches the preserved aromatic auxiliary at rank 5. The blind record has no qualified two-function auxiliary suffix, so trace cannot be established; no principal or secondary role supports leading or supporting.",
+            "unresolved": [
+              "The required qualified suffix evidence for trace is absent; amount remains unknown."
+            ]
+          }
+        },
+        {
+          "hero_id": "T04-hero-2",
+          "hero_name": "Lavendelöl",
+          "matched_ranks": [],
+          "prominence": {
+            "value": "absent",
+            "estimate": false,
+            "confidence": "high",
+            "evidence": [
+              {
+                "source_id": "T04-maker",
+                "section": "hero:T04-hero-2"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": "unknown",
+            "reason": "The source-reviewed hero mapping has no separately declared matching material after complete exact-formula review. No species or ingredient alias is invented; fragrance wording cannot establish a ranked lavender oil.",
+            "unresolved": [
+              "Absence is scoped to separately declared exact ingredients, not analytical absence from the fragrance composition."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "source_id": "T04-maker",
+            "section": "packaging"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "No dispenser mechanism was stated in the reviewed maker text.",
+        "unresolved": [
+          "An observed outlet or explicit dispensing mechanism is unavailable; no pour, metered-drop or other mechanism is inferred."
+        ]
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T04-maker",
+            "section": "claims.heat"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T04-maker",
+            "section": "claims.uv"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product review supplies no accepted explicit hair-UV claim and the exact declaration supplies no recognized UV filter. False records the two-part gate, not a measured zero effect. General environmental-protection wording does not satisfy the explicit UV-claim gate.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning",
+        "dry_finish",
+        "scalp_application"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning",
+          "dry_finish",
+          "scalp_application"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T04-maker",
+            "direction_id": "T04-direction-1"
+          },
+          {
+            "source_id": "T04-maker",
+            "direction_id": "T04-direction-2"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": [],
+        "reason": "The post-wash damp-or-dry lengths/ends instruction supports both retained fibre roles. The separate pre-wash route explicitly targets scalp and includes its own 1–2 hour contact and thorough washing; it supports scalp_application only and does not establish pre_wash_fibre_treatment.",
+        "unresolved": [
+          "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T04-maker",
+          "direction_id": "T04-direction-1",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "post_wash_damp_or_dry",
+          "dose": "distribute evenly through lengths; knead into ends for intensive care; amount unestablished",
+          "contact_time": "unestablished",
+          "removal": "retention_by_postwash_care_context",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        {
+          "source_id": "T04-maker",
+          "direction_id": "T04-direction-2",
+          "site": [
+            "scalp"
+          ],
+          "stage": "pre_wash",
+          "dose": "generously massage into scalp",
+          "contact_time": "1–2 hours",
+          "removal": "wash_hair_thoroughly",
+          "restrictions": "Maker describes this route for dry/irritated scalp; no medical treatment or tolerance inference.",
+          "supported_roles": [
+            "scalp_application"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "T06",
+      "named_oils": [
+        {
+          "hero_id": "T06-hero-1",
+          "hero_name": "Sesamöl",
+          "matched_ranks": [
+            7
+          ],
+          "prominence": {
+            "value": "supporting",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "T06-maker",
+                "section": "hero:T06-hero-1"
+              },
+              {
+                "rank": 7,
+                "canonical_name": "SESAMUM INDICUM SEED OIL"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": "trace",
+            "reason": "The exact packet mapping matches the preserved blind secondary conditioning role. This supports supporting prominence without a concentration or rank-cutoff inference; source hero emphasis does not revise that role.",
+            "unresolved": [
+              "No quantitative formula composition; the prominence is the frozen functional estimate."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "packaging"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "claims.heat"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "claims.uv"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "The completed maker review accepts explicit hair-UV protection and the exact declaration contains the listed recognized UV filters; both required gates are satisfied. No SPF, normal-dose performance or protection level is inferred. Quaternium-95 is excluded from the exact-filter evidence; KPF is not converted to SPF.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "direction_id": "T06-direction-1"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": [],
+        "reason": "The exact instruction establishes hair-fibre use and explicitly permits leaving the product in. Wet/dry stage and dose remain unestablished; neither the product positioning nor spray mechanism supplies dry_finish or a dosing instruction.",
+        "unresolved": [
+          "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T06-maker",
+          "direction_id": "T06-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "sun_exposure_wet_dry_unestablished",
+          "dose": "unestablished",
+          "contact_time": "unestablished",
+          "removal": "explicit_leave_in",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ]
+    }
+  ]
+}

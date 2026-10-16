@@ -1,0 +1,34 @@
+{
+  "run_id": "canonical-persistence-pilot-v0.1",
+  "lane": "b",
+  "read_inputs": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/method.md",
+      "sha256": "f827f75a01ff2813f46c08b4ad1a5e93aeb155b32c56a2f8777f339fbb4606c3"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/blind-packet.json",
+      "sha256": "775864adbe63e20c8dcef69bd28880676cd052c7c6e7f7d956dff4d3aeebff80"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci/data/research/shared/persistence-pilot-v0.1/function-dictionary.json",
+      "sha256": "2bd95fbeedd7076d38a4cbdaee38bc1a06f26ffb7f184c6524a0f22c55bc980f"
+    }
+  ],
+  "completed_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06"
+  ],
+  "recognized_formulas": [],
+  "access_incidents": [],
+  "limits": [
+    "Judgments use only the frozen method, complete blind declarations with application context, and admitted function dictionary; no native labels, identity packets, linked sources, browsing, peer outputs or reviewers were accessed.",
+    "Concentrations, grades, deposited loads and measured removal behavior are not established. Ingredient order supplies no concentration boundary, and these judgments do not establish repeated-use accumulation or wash counts.",
+    "All unassessed material functions remain unassessed; their presence is neither persistent-film proof nor evidence of negligible residue.",
+    "Each complete formula receives one committed class from its whole conditioning architecture without a distribution target; the organic annotation in P05 is contextual and not independently ranked."
+  ]
+}

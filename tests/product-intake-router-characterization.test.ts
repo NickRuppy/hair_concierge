@@ -170,7 +170,7 @@ test("all 52 captured production outputs retain reviewed results apart from Mask
   }
 })
 
-test("unchanged categories retain their reviewed prompt bytes; Mask has a separate envelope contract", () => {
+test("reviewed category prompt bytes include current Oil v0.10; Mask has a separate envelope contract", () => {
   const unchanged = Object.fromEntries(
     Object.entries(normalizationSnapshot().prompt_contract_sha256).filter(
       ([category]) => category !== "mask",
@@ -182,7 +182,8 @@ test("unchanged categories retain their reviewed prompt bytes; Mask has a separa
     leave_in: "d2e828a6653b783a9649af9428afe037e3794c39e61efe063d92e0159c8d00af",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
     shampoo: "dc511c24cb88c76fe66fbb60dadda2bbe52f246314bc582c7278af1ad97c99a7",
-    oil: "b07faaf152f390227c6980959c89075f60f75e28403cd2546a050edba142be15",
+    // Oil v0.10: the reviewed lean schema, evidence instructions and manual matching boundary.
+    oil: "e48517923ab43c3e10d93d92d1f55e1327c99498cfb9f272c9549c4c985b72ee",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",
     deep_cleansing_shampoo: "6f0b700d503ce13691120d1f15cd87a0c54fedf1221034d2978dc6742c047dcc",
     heat_protectant: "810273e00ce7332cbd26810eb29ceaef87072cbc84a487fa75312a5d63cd301b",

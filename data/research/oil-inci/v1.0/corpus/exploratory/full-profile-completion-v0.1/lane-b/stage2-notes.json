@@ -1,0 +1,138 @@
+{
+  "lane_id": "b",
+  "files_read": [
+    "stage2-packet.json",
+    "derivation-v0.2/lane-b/blind-records.json",
+    "derivation-v0.2/method.md",
+    "derivation-v0.2/function-dictionary.json"
+  ],
+  "input_hashes": {
+    "stage2-packet.json": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c",
+    "derivation-v0.2/lane-b/blind-records.json": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+    "derivation-v0.2/method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "derivation-v0.2/function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "blind_preserved": {
+    "value": true,
+    "source": "derivation-v0.2/lane-b/blind-records.json",
+    "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92",
+    "attestation": "All sealed formula properties, ingredient roles and auxiliary suffixes were used read-only and remain unchanged. Stage2 records contain only source-derived additions. No blind/source writeback or revised formulation judgment occurred."
+  },
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "familiarity": "Prior blind dry-oil pattern familiarity was already disclosed; identity is now explicitly supplied by the authorized Stage2 packet."
+    },
+    {
+      "case_id": "O11",
+      "familiarity": "Prior soybean/castor/aromatic pattern familiarity was already disclosed; identity is now supplied by the authorized packet."
+    },
+    {
+      "case_id": "O16",
+      "familiarity": "Prior castor-led botanical pattern familiarity was already disclosed; identity is now supplied by the authorized packet."
+    },
+    {
+      "case_id": "all_17",
+      "familiarity": "This is source reveal after sealed corrected blind classification and a development replay, not an unseen or identity-blind evaluation. No external lookup, peer result or other corpus was accessed."
+    }
+  ],
+  "access_incidents": [],
+  "issues": [
+    {
+      "case_id": "O09",
+      "field": "named_oils.nuxe_tsubaki",
+      "reason": "Japanese camellia named Tsubaki; exact species correspondence needs independent maker identity binding for final prominence. Candidate correspondence retained from root supplement, not an established species alias."
+    },
+    {
+      "case_id": "O09",
+      "field": "named_oils.nuxe_camellia",
+      "reason": "Maker separately names Tsubaki/Kamelie; correspondence remains explicit mapping limit. Candidate correspondence retained from root supplement, not an established species alias."
+    },
+    {
+      "case_id": "O09",
+      "field": "dispenser",
+      "reason": "30 ml page image/product format; no explicit outlet mechanism or use-direction dispensing verb establishes pump/dropper/spray."
+    },
+    {
+      "case_id": "O11",
+      "field": "named_oils.rosemary_mint",
+      "reason": "The mapped ingredients are auxiliary, but no qualified suffix covers them. The method does not permit a trace claim from auxiliary identity alone or a supporting claim invented after source reveal."
+    },
+    {
+      "case_id": "O11",
+      "field": "dispenser",
+      "reason": "Maker page asset was located but its outlet was not visually inspected in this capture; no dispenser value inferred."
+    },
+    {
+      "case_id": "O14",
+      "field": "dispenser",
+      "reason": "Exact 100 ml maker outlet was not visually inspected; page text does not establish a mechanism."
+    },
+    {
+      "case_id": "O16",
+      "field": "named_oils.rosemary_oil",
+      "reason": "The mapped ingredients are auxiliary, but no qualified suffix covers them. The method does not permit a trace claim from auxiliary identity alone or a supporting claim invented after source reveal."
+    },
+    {
+      "case_id": "O16",
+      "field": "named_oils.mint_oil",
+      "reason": "The mapped ingredients are auxiliary, but no qualified suffix covers them. The method does not permit a trace claim from auxiliary identity alone or a supporting claim invented after source reveal."
+    },
+    {
+      "case_id": "O20",
+      "field": "named_oils.rose_oil",
+      "reason": "The matched ingredients have conflicting or unresolved sealed roles: secondary, unresolved. The method does not permit a trace claim from auxiliary identity alone or a supporting claim invented after source reveal."
+    },
+    {
+      "case_id": "O20",
+      "field": "dispenser",
+      "reason": "Accepted exact-GTIN secondary mechanism text; primary image remains capped and official shop direct access was unavailable in source capture."
+    },
+    {
+      "case_id": "O24",
+      "field": "dispenser",
+      "reason": "Exact travel12ml manufacturer variant image inspected: capped outlet is hidden; mechanism unestablished. Do not inherit fullsize55ml pump."
+    },
+    {
+      "case_id": "O25",
+      "field": "named_oils.roucou_oil",
+      "reason": "Maker identifies Achiote seed-derived Roucou oil, but INCI declares BIXA ORELLANA SEED EXTRACT. Oil/extract equivalence not established; do not substitute MAURITIA FLEXUOSA FRUIT OIL."
+    }
+  ],
+  "limitations": [
+    "Only the four files listed here were read in this Stage2 turn. Method and corrected dictionary hashes match their fully reviewed versions from the preceding authorized turn. Source URLs, images, capture_ref, manifest entries and other provenance pointers were not opened.",
+    "The Stage2 packet status string says assembled_pending_root_seal_and_review, while the parent explicitly authorized this source reveal after sealing both corrected blind lanes. No independent source recapture or stage transition was invented.",
+    "All 17 records and all 34 supplied direction scenarios are retained. Exact scenario source_id/direction_id/site/stage/dose/contact_time/removal/restrictions and supplied optional text/shake/frequency are preserved. No historical/current dose or direction splicing occurred.",
+    "O27 retains five separate routes. Overnight with next-day washing is pre_wash_fibre_treatment plus scalp_application, not dry_finish. The scalp-only route supports scalp_application despite unestablished removal and adds no fibre role.",
+    "O22 dry-ends retained use supports dry_finish only; damp leave-on is not invented. Its prewash fibre/scalp use remains separate. O28 retains unestablished hair dose without importing face-drop quantities.",
+    "use_evidence.value is the exact supported_uses array, keeping the eight-key property object without inventing an additional evidence-status vocabulary.",
+    "O09 candidate camellia species correspondences remain unknown. matched_ranks there records only exact candidate canonical-token matches, expressly not resolved hero identity. O25 Roucou remains unknown with no matched ranks because oil/extract equivalence is unresolved, not absent.",
+    "O11 combined rosemary/mint and O16 rosemary/mint heroes remain unknown in prominence: auxiliary roles without a qualified suffix cannot establish trace. O20 combined rose hero remains unknown because one mapped component is secondary and the other unresolved.",
+    "O10 macadamia and avocado are trace/low only under the sealed qualified suffix; both fragrance and antioxidant marker ranks/names are retained in each property evidence. O12 rice oil is supporting despite overlapping the suffix, because its sealed secondary role takes precedence.",
+    "Reviewed empty hero arrays for O13, O21 and O24 remain empty. Extracts, esters, proteins and butter are not silently promoted to named oil heroes.",
+    "Unknown mechanisms for O09/O11/O14/O24 are preserved. O20 pump uses specifically admitted exact-GTIN secondary text with moderate confidence, not a primary outlet observation. No full-size mechanism transfers to O24 travel size.",
+    "UV true only for O23 and O24: each has accepted exact hair-UV claim plus recognized filter(s). O17/O21 accepted claims without filters remain false; O25/O26 filters without accepted claims remain false. Heat is decided solely by the accepted exact-product manufacturer claim review.",
+    "Claim acceptance is not independently measured efficacy. Temperatures remain source claim text only. Product-level source limits are retained in use_evidence.unresolved without rewriting or combining scenario restriction fields.",
+    "In-memory validation checked exact keys, 17 IDs, all 34 scenario copies and coherent role maps, all hero mappings/matches, both trace markers, composite/candidate gaps, full UV-filter identities, source evidence references, eight-key property shapes, immutable blind equality, input SHA256 hashes and JSON round trips before writing only the two owned Stage2 outputs. No output reread followed writing.",
+    "No formula changes, persistence, old build-up, fit, eligibility, production write or other category assessment was emitted."
+  ]
+}

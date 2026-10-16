@@ -1,0 +1,2850 @@
+{
+  "version": "oil-research-envelope-v1",
+  "research_id": "oil:oil-targeted-t06",
+  "submission_id": null,
+  "research_method": {
+    "purpose": "consolidation_serialization",
+    "policy_pins": {
+      "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+      "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+      "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+      "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+      "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+      "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+      "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+      "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+      "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+      "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+      "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+      "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+    }
+  },
+  "identity": {
+    "brand": "René Furterer",
+    "product": "Solaire Schützendes Sommeröl",
+    "market": "DE-CH maker",
+    "variant": null,
+    "package": {
+      "size_text": "100 ml",
+      "size_ml": null,
+      "combined_declaration": null
+    },
+    "identifier": null,
+    "category": "hair_oil",
+    "original": {
+      "brand": "René Furterer",
+      "product": "Solaire Schützendes Sommeröl",
+      "market": "DE-CH maker",
+      "size": "100 ml",
+      "identifier_if_verified": null
+    },
+    "mapping_receipt": [
+      {
+        "rule": "Literal approved historical identity mapping; no unit conversion, market split, or inferred variant.",
+        "fields": {
+          "brand": "original.brand",
+          "product": "original.product",
+          "market": "original.market",
+          "market_size": null,
+          "size": "original.size",
+          "size_ml": null,
+          "variant": null,
+          "gtin_if_verified": null,
+          "identifier_if_verified": "original.identifier_if_verified"
+        },
+        "source_path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-packet.json",
+        "source_record_key": "T06"
+      }
+    ],
+    "source_ids": [
+      "T06-maker"
+    ],
+    "conflicts": []
+  },
+  "formula": {
+    "raw_inci": "ISODODECANE. ALCOHOL DENAT.. C12-15 ALKYL BENZOATE. HEXYLENE GLYCOL. ETHYLHEXYL METHOXYCINNAMATE. QUATERNIUM-95. SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL). FRAGRANCE (PARFUM). RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL). TOCOPHERYL ACETATE. AMYL SALICYLATE. BENZYL SALICYLATE. BHT. CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT). GERANYL ACETATE. PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE. PROPANEDIOL. TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.\nTRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL. VANILLIN",
+    "ingredients": [
+      {
+        "rank": 1,
+        "raw_name": "ISODODECANE",
+        "canonical_name": "ISODODECANE"
+      },
+      {
+        "rank": 2,
+        "raw_name": "ALCOHOL DENAT.",
+        "canonical_name": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 ALKYL BENZOATE",
+        "canonical_name": "C12-15 ALKYL BENZOATE"
+      },
+      {
+        "rank": 4,
+        "raw_name": "HEXYLENE GLYCOL",
+        "canonical_name": "HEXYLENE GLYCOL"
+      },
+      {
+        "rank": 5,
+        "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+        "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+      },
+      {
+        "rank": 6,
+        "raw_name": "QUATERNIUM-95",
+        "canonical_name": "QUATERNIUM-95"
+      },
+      {
+        "rank": 7,
+        "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+        "canonical_name": "SESAMUM INDICUM SEED OIL"
+      },
+      {
+        "rank": 8,
+        "raw_name": "FRAGRANCE (PARFUM)",
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      },
+      {
+        "rank": 9,
+        "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+        "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+      },
+      {
+        "rank": 10,
+        "raw_name": "TOCOPHERYL ACETATE",
+        "canonical_name": "TOCOPHERYL ACETATE"
+      },
+      {
+        "rank": 11,
+        "raw_name": "AMYL SALICYLATE",
+        "canonical_name": "AMYL SALICYLATE"
+      },
+      {
+        "rank": 12,
+        "raw_name": "BENZYL SALICYLATE",
+        "canonical_name": "BENZYL SALICYLATE"
+      },
+      {
+        "rank": 13,
+        "raw_name": "BHT",
+        "canonical_name": "BHT"
+      },
+      {
+        "rank": 14,
+        "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+        "canonical_name": "CANANGA ODORATA FLOWER OIL"
+      },
+      {
+        "rank": 15,
+        "raw_name": "GERANYL ACETATE",
+        "canonical_name": "GERANYL ACETATE"
+      },
+      {
+        "rank": 16,
+        "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+      },
+      {
+        "rank": 17,
+        "raw_name": "PROPANEDIOL",
+        "canonical_name": "PROPANEDIOL"
+      },
+      {
+        "rank": 18,
+        "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 19,
+        "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+        "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+      },
+      {
+        "rank": 20,
+        "raw_name": "VANILLIN",
+        "canonical_name": "VANILLIN"
+      }
+    ],
+    "raw_sha256": "8e3552172700c6539fea9f2753453a6f22d9b427288c87e35e69f90360ee6ece",
+    "normalized_sha256": "189e796dba40c35b8c48b418e20b5ff50d0a3dbda0f740f5a1e8f2b1c448148b",
+    "normalization_receipt": [
+      {
+        "rank": 1,
+        "raw_name": "ISODODECANE",
+        "canonical_name": "ISODODECANE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 2,
+        "raw_name": "ALCOHOL DENAT.",
+        "canonical_name": "ALCOHOL DENAT.",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 ALKYL BENZOATE",
+        "canonical_name": "C12-15 ALKYL BENZOATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 4,
+        "raw_name": "HEXYLENE GLYCOL",
+        "canonical_name": "HEXYLENE GLYCOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 5,
+        "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+        "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 6,
+        "raw_name": "QUATERNIUM-95",
+        "canonical_name": "QUATERNIUM-95",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 7,
+        "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+        "canonical_name": "SESAMUM INDICUM SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 8,
+        "raw_name": "FRAGRANCE (PARFUM)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 9,
+        "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+        "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 10,
+        "raw_name": "TOCOPHERYL ACETATE",
+        "canonical_name": "TOCOPHERYL ACETATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 11,
+        "raw_name": "AMYL SALICYLATE",
+        "canonical_name": "AMYL SALICYLATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 12,
+        "raw_name": "BENZYL SALICYLATE",
+        "canonical_name": "BENZYL SALICYLATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 13,
+        "raw_name": "BHT",
+        "canonical_name": "BHT",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 14,
+        "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+        "canonical_name": "CANANGA ODORATA FLOWER OIL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 15,
+        "raw_name": "GERANYL ACETATE",
+        "canonical_name": "GERANYL ACETATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 16,
+        "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 17,
+        "raw_name": "PROPANEDIOL",
+        "canonical_name": "PROPANEDIOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 18,
+        "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 19,
+        "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+        "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      },
+      {
+        "rank": 20,
+        "raw_name": "VANILLIN",
+        "canonical_name": "VANILLIN",
+        "reason": "Literal historical raw/canonical mapping retained from the exact formula authority and its run mapping dependencies."
+      }
+    ],
+    "source_ids": [
+      "T06-maker"
+    ],
+    "declaration_status": "complete",
+    "conflicts": [],
+    "contextual_declarations": []
+  },
+  "profile": {
+    "case_id": "T06",
+    "ingredient_ledger": [
+      {
+        "rank": 1,
+        "raw_name": "ISODODECANE",
+        "canonical_name": "ISODODECANE",
+        "dictionary_roles": [
+          "hydrocarbon_carrier",
+          "emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "Hydrocarbon carrier establishes the nonaqueous distribution route together with the alcohol and ester.",
+        "ambiguity": "No proportions or measured evaporation fraction."
+      },
+      {
+        "rank": 2,
+        "raw_name": "ALCOHOL DENAT.",
+        "canonical_name": "ALCOHOL DENAT.",
+        "dictionary_roles": [
+          "solvent_alcohol"
+        ],
+        "formula_role": "principal",
+        "role_reason": "Alcohol solvent participates in the carrier architecture.",
+        "ambiguity": "No concentration or retained-fraction estimate."
+      },
+      {
+        "rank": 3,
+        "raw_name": "C12-15 ALKYL BENZOATE",
+        "canonical_name": "C12-15 ALKYL BENZOATE",
+        "dictionary_roles": [
+          "defined_ester_emollient"
+        ],
+        "formula_role": "principal",
+        "role_reason": "Defined ester emollient provides the mobile nonvolatile emollient route within the carrier backbone.",
+        "ambiguity": "Mobility is a qualitative blend reading, not measured residue."
+      },
+      {
+        "rank": 4,
+        "raw_name": "HEXYLENE GLYCOL",
+        "canonical_name": "HEXYLENE GLYCOL",
+        "dictionary_roles": [
+          "solvent",
+          "emulsifying_auxiliary"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Solvent and emulsifying-auxiliary roles support distribution of the mixed carrier and conditioning system.",
+        "ambiguity": "No grade or exact phase behavior."
+      },
+      {
+        "rank": 5,
+        "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+        "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+        "dictionary_roles": [
+          "recognized_uv_filter"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized UV filter is retained as a distinct auxiliary function.",
+        "ambiguity": "Does not establish finished-product UV protection or coherent conditioning film."
+      },
+      {
+        "rank": 6,
+        "raw_name": "QUATERNIUM-95",
+        "canonical_name": "QUATERNIUM-95",
+        "dictionary_roles": [
+          "cationic_conditioning_clue"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Recognized cationic conditioning clue contributes to the residual conditioning reading.",
+        "ambiguity": "Exact grade, architecture and substantivity are not established; not automatically a polymer or high-persistence film."
+      },
+      {
+        "rank": 7,
+        "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+        "canonical_name": "SESAMUM INDICUM SEED OIL",
+        "dictionary_roles": [
+          "fixed_oil_carrier"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Exact fixed seed-oil carrier contributes retained lipid conditioning within the synthetic-carrier system.",
+        "ambiguity": "No proportion or trace assumption."
+      },
+      {
+        "rank": 8,
+        "raw_name": "FRAGRANCE (PARFUM)",
+        "canonical_name": "FRAGRANCE (PARFUM)",
+        "dictionary_roles": [
+          "fragrance_composition"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 9,
+        "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+        "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+        "dictionary_roles": [
+          "intact_botanical_fixed_oil",
+          "emollient"
+        ],
+        "formula_role": "secondary",
+        "role_reason": "Exact intact castor oil supplies a richer retained-lipid counter-signal to the mobile carrier reading.",
+        "ambiguity": "No inferred concentration and no automatic rich floor."
+      },
+      {
+        "rank": 10,
+        "raw_name": "TOCOPHERYL ACETATE",
+        "canonical_name": "TOCOPHERYL ACETATE",
+        "dictionary_roles": [
+          "antioxidant_auxiliary"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized antioxidant auxiliary contributes to formula maintenance.",
+        "ambiguity": "No amount or absence of retained contribution inferred."
+      },
+      {
+        "rank": 11,
+        "raw_name": "AMYL SALICYLATE",
+        "canonical_name": "AMYL SALICYLATE",
+        "dictionary_roles": [
+          "fragrance",
+          "skin_conditioner"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 12,
+        "raw_name": "BENZYL SALICYLATE",
+        "canonical_name": "BENZYL SALICYLATE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 13,
+        "raw_name": "BHT",
+        "canonical_name": "BHT",
+        "dictionary_roles": [
+          "antioxidant"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized antioxidant function supports an auxiliary reading.",
+        "ambiguity": "No concentration inference."
+      },
+      {
+        "rank": 14,
+        "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+        "canonical_name": "CANANGA ODORATA FLOWER OIL",
+        "dictionary_roles": [
+          "essential_oil",
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 15,
+        "raw_name": "GERANYL ACETATE",
+        "canonical_name": "GERANYL ACETATE",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 16,
+        "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "dictionary_roles": [
+          "antioxidant"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized antioxidant function supports an auxiliary reading.",
+        "ambiguity": "No concentration inference."
+      },
+      {
+        "rank": 17,
+        "raw_name": "PROPANEDIOL",
+        "canonical_name": "PROPANEDIOL",
+        "dictionary_roles": [
+          "not_assessed"
+        ],
+        "formula_role": "unresolved",
+        "role_reason": "Exact identity retained, but dictionary function is not assessed.",
+        "ambiguity": "Cannot treat it as a solvent, negligible residue or suffix-compatible auxiliary."
+      },
+      {
+        "rank": 18,
+        "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 19,
+        "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+        "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      },
+      {
+        "rank": 20,
+        "raw_name": "VANILLIN",
+        "canonical_name": "VANILLIN",
+        "dictionary_roles": [
+          "declared_fragrance_allergen"
+        ],
+        "formula_role": "auxiliary",
+        "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+        "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+      }
+    ],
+    "auxiliary_suffix": {
+      "boundary": "none",
+      "start_rank": "none",
+      "markers": [],
+      "reason": "No qualified boundary: the unresolved rank 17 invalidates candidate suffixes containing the antioxidant and fragrance markers. Ranks 18-20 supply fragrance exposure only."
+    },
+    "ingredient_flags": {
+      "silicones": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Every primary ingredient was reviewed against the closed silicones family; no exact recognized positive match.",
+        "unresolved": []
+      },
+      "mineral_oil": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Every primary ingredient was reviewed against the closed mineral_oil family; no exact recognized positive match.",
+        "unresolved": []
+      },
+      "drying_alcohol": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 2,
+            "canonical_name": "ALCOHOL DENAT."
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "All exact positive matches in the closed reviewed drying_alcohol family are included; no substring or ingredient-family expansion.",
+        "unresolved": []
+      },
+      "fragrance": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "rank": 8,
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          },
+          {
+            "rank": 11,
+            "canonical_name": "AMYL SALICYLATE"
+          },
+          {
+            "rank": 12,
+            "canonical_name": "BENZYL SALICYLATE"
+          },
+          {
+            "rank": 14,
+            "canonical_name": "CANANGA ODORATA FLOWER OIL"
+          },
+          {
+            "rank": 15,
+            "canonical_name": "GERANYL ACETATE"
+          },
+          {
+            "rank": 18,
+            "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+          },
+          {
+            "rank": 19,
+            "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+          },
+          {
+            "rank": 20,
+            "canonical_name": "VANILLIN"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "All exact positive matches in the closed reviewed fragrance family are included; no substring or ingredient-family expansion.",
+        "unresolved": []
+      },
+      "scalp_active_botanicals": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "Every primary ingredient was reviewed against the closed scalp_active_botanicals family; no exact recognized positive match.",
+        "unresolved": []
+      }
+    },
+    "base": {
+      "value": "ester_alkane_led",
+      "estimate": true,
+      "confidence": "moderate",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        }
+      ],
+      "counter_signal": [
+        "Sesame, castor and the cationic conditioning clue supply a retained conditioning route."
+      ],
+      "nearest_alternative": "hybrid",
+      "reason": "The hydrocarbon/alcohol distribution route and defined ester form a coherent principal vehicle/emollient system. Botanical oils and the conditioning clue are secondary; mixed ingredients alone do not establish joint backbone dominance.",
+      "unresolved": [
+        "No proportions, cationic grade/substantivity or assessed function at rank 17."
+      ]
+    },
+    "weight": {
+      "value": "light",
+      "estimate": true,
+      "confidence": "low",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        }
+      ],
+      "counter_signal": [
+        "Sesame has a medium/low tendency, castor a rich/moderate tendency, and rank 6 supplies a conditioning clue."
+      ],
+      "nearest_alternative": "medium",
+      "reason": "B1/B4 favor the coherent mobile carrier/ester architecture. The retained botanical and cationic components are meaningful counter-signals, but no affirmative principal cohesive or structured film is established to outweigh this route. Medium remains the closest rival; B6 rich is not justified by secondary castor presence alone.",
+      "unresolved": [
+        "No proportions, cationic grade/substantivity or exact retained-load observations; rank 17 function unresolved."
+      ]
+    },
+    "penetration_potential": {
+      "value": "surface_led",
+      "estimate": true,
+      "confidence": "moderate",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        }
+      ],
+      "counter_signal": [
+        "Botanical oils participate in the retained conditioning system; missing studies do not prove nonpenetration."
+      ],
+      "nearest_alternative": "unknown",
+      "reason": "The hydrocarbon/ester emollient route with a secondary cationic conditioning clue provides affirmative surface-conditioning architecture. No admitted studied oil forms the principal plant-conditioning backbone. This estimates the blend route, not universal nonpenetration of its ingredients.",
+      "unresolved": [
+        "No exact-formula study, known proportions or assessed rank-17 function; cationic grade unknown."
+      ]
+    },
+    "persistence_potential": "moderate",
+    "named_oils": [
+      {
+        "hero_id": "T06-hero-1",
+        "hero_name": "Sesamöl",
+        "matched_ranks": [
+          7
+        ],
+        "prominence": {
+          "value": "supporting",
+          "estimate": true,
+          "confidence": "moderate",
+          "evidence": [
+            {
+              "source_id": "T06-maker",
+              "section": "hero:T06-hero-1"
+            },
+            {
+              "rank": 7,
+              "canonical_name": "SESAMUM INDICUM SEED OIL"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": "trace",
+          "reason": "The exact packet mapping matches the preserved blind secondary conditioning role. This supports supporting prominence without a concentration or rank-cutoff inference; source hero emphasis does not revise that role.",
+          "unresolved": [
+            "No quantitative formula composition; the prominence is the frozen functional estimate."
+          ]
+        }
+      }
+    ],
+    "dispenser": {
+      "value": "spray",
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T06-maker",
+          "section": "packaging"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": "unknown",
+      "reason": "Maker text explicitly describes spray/misting.",
+      "unresolved": []
+    },
+    "provides_heat_protection": {
+      "value": false,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T06-maker",
+          "section": "claims.heat"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": true,
+      "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+      "unresolved": []
+    },
+    "provides_uv_protection": {
+      "value": true,
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T06-maker",
+          "section": "claims.uv"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": false,
+      "reason": "The completed maker review accepts explicit hair-UV protection and the exact declaration contains the listed recognized UV filters; both required gates are satisfied. No SPF, normal-dose performance or protection level is inferred. Quaternium-95 is excluded from the exact-filter evidence; KPF is not converted to SPF.",
+      "unresolved": []
+    },
+    "supported_uses": [
+      "leave_on_fibre_conditioning"
+    ],
+    "use_evidence": {
+      "value": [
+        "leave_on_fibre_conditioning"
+      ],
+      "estimate": false,
+      "confidence": "high",
+      "evidence": [
+        {
+          "source_id": "T06-maker",
+          "direction_id": "T06-direction-1"
+        }
+      ],
+      "counter_signal": [],
+      "nearest_alternative": [],
+      "reason": "The exact instruction establishes hair-fibre use and explicitly permits leaving the product in. Wet/dry stage and dose remain unestablished; neither the product positioning nor spray mechanism supplies dry_finish or a dosing instruction.",
+      "unresolved": [
+        "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+      ]
+    },
+    "application_scenarios": [
+      {
+        "source_id": "T06-maker",
+        "direction_id": "T06-direction-1",
+        "site": [
+          "hair_fibre"
+        ],
+        "stage": "sun_exposure_wet_dry_unestablished",
+        "dose": "unestablished",
+        "contact_time": "unestablished",
+        "removal": "explicit_leave_in",
+        "restrictions": "none stated in reviewed exact product text",
+        "supported_roles": [
+          "leave_on_fibre_conditioning"
+        ]
+      }
+    ],
+    "product_key": "oil-targeted-t06",
+    "identity": {
+      "brand": "René Furterer",
+      "product": "Solaire Schützendes Sommeröl",
+      "market": "DE-CH maker",
+      "size": "100 ml",
+      "identifier_if_verified": null
+    },
+    "formula": {
+      "raw_inci": "ISODODECANE. ALCOHOL DENAT.. C12-15 ALKYL BENZOATE. HEXYLENE GLYCOL. ETHYLHEXYL METHOXYCINNAMATE. QUATERNIUM-95. SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL). FRAGRANCE (PARFUM). RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL). TOCOPHERYL ACETATE. AMYL SALICYLATE. BENZYL SALICYLATE. BHT. CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT). GERANYL ACETATE. PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE. PROPANEDIOL. TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.\nTRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL. VANILLIN",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 ALKYL BENZOATE",
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "HEXYLENE GLYCOL",
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "QUATERNIUM-95",
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 8,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 11,
+          "raw_name": "AMYL SALICYLATE",
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 12,
+          "raw_name": "BENZYL SALICYLATE",
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 13,
+          "raw_name": "BHT",
+          "canonical_name": "BHT"
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE",
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "raw_name": "PROPANEDIOL",
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 19,
+          "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+          "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+        },
+        {
+          "rank": 20,
+          "raw_name": "VANILLIN",
+          "canonical_name": "VANILLIN"
+        }
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+    },
+    "field_authority": {
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+        "record_key": "T06",
+        "reason": "Attributed research decision"
+      }
+    },
+    "persistence_trace_reference": {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/persistence-research-trace.json",
+      "sha256": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1",
+      "record_key": "T06",
+      "reason": "Attributed research decision"
+    },
+    "fit": {
+      "thickness": {
+        "fine": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "normal": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coarse": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "wavy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "curly": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "coily": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "moderately_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        },
+        "highly_damaged": {
+          "value": "unknown",
+          "reason": "scenario_specific_fit"
+        }
+      }
+    },
+    "completion_status": "complete_research_with_permitted_gaps"
+  },
+  "sources": [
+    {
+      "source_id": "T06-maker",
+      "url": "https://www.renefurterer.com/de-ch/p/solaire-solaire-schuetzendes-sommeroel-3282770038453-e9ccef5d",
+      "url_note": null,
+      "original": {
+        "id": "T06-maker",
+        "url": "https://www.renefurterer.com/de-ch/p/solaire-solaire-schuetzendes-sommeroel-3282770038453-e9ccef5d",
+        "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+      },
+      "directions": [
+        {
+          "direction_id": "T06-direction-1",
+          "text": "For sun-exposed hair; product may remain in hair. Dose and detailed wet/dry procedure not stated."
+        }
+      ]
+    }
+  ],
+  "persistence_trace": {
+    "reason": "The defined ester with sesame and castor supplies a retained fluid/lipid remainder, supplemented by a cationic conditioning clue. The hydrocarbon/alcohol distribution route does not cancel it, making low less persuasive. The reviewed quaternary clue does not establish grade, molecular architecture or substantivity sufficient for high; UV-filter, solvent/emulsifying, antioxidant and aromatic contributions were considered without converting one ingredient into a cohesive conditioning-film verdict. Rank 17 remains functionally unassessed.",
+    "evidence": [
+      {
+        "rank": 1,
+        "canonical_name": "ISODODECANE"
+      },
+      {
+        "rank": 2,
+        "canonical_name": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "canonical_name": "C12-15 ALKYL BENZOATE"
+      },
+      {
+        "rank": 4,
+        "canonical_name": "HEXYLENE GLYCOL"
+      },
+      {
+        "rank": 5,
+        "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+      },
+      {
+        "rank": 6,
+        "canonical_name": "QUATERNIUM-95"
+      },
+      {
+        "rank": 7,
+        "canonical_name": "SESAMUM INDICUM SEED OIL"
+      },
+      {
+        "rank": 8,
+        "canonical_name": "FRAGRANCE (PARFUM)"
+      },
+      {
+        "rank": 9,
+        "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+      },
+      {
+        "rank": 10,
+        "canonical_name": "TOCOPHERYL ACETATE"
+      },
+      {
+        "rank": 11,
+        "canonical_name": "AMYL SALICYLATE"
+      },
+      {
+        "rank": 12,
+        "canonical_name": "BENZYL SALICYLATE"
+      },
+      {
+        "rank": 13,
+        "canonical_name": "BHT"
+      },
+      {
+        "rank": 14,
+        "canonical_name": "CANANGA ODORATA FLOWER OIL"
+      },
+      {
+        "rank": 15,
+        "canonical_name": "GERANYL ACETATE"
+      },
+      {
+        "rank": 16,
+        "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+      },
+      {
+        "rank": 17,
+        "canonical_name": "PROPANEDIOL"
+      },
+      {
+        "rank": 18,
+        "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 19,
+        "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+      },
+      {
+        "rank": 20,
+        "canonical_name": "VANILLIN"
+      }
+    ],
+    "considered_ranks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "tipping_assumption": "Commit to ordinary retained emollient/lipid conditioning with a secondary cationic contribution, rather than inferring a high-adherence film from Quaternium-95 alone or a low remainder from the carrier route.",
+    "tipping_assumption_note": null,
+    "context": {
+      "source_id": "T06-maker",
+      "direction_id": "T06-direction-1",
+      "role": "leave_on_fibre_conditioning"
+    },
+    "original": {
+      "case_id": "T06",
+      "reason": "The defined ester with sesame and castor supplies a retained fluid/lipid remainder, supplemented by a cationic conditioning clue. The hydrocarbon/alcohol distribution route does not cancel it, making low less persuasive. The reviewed quaternary clue does not establish grade, molecular architecture or substantivity sufficient for high; UV-filter, solvent/emulsifying, antioxidant and aromatic contributions were considered without converting one ingredient into a cohesive conditioning-film verdict. Rank 17 remains functionally unassessed.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "HEXYLENE GLYCOL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "QUATERNIUM-95"
+        },
+        {
+          "rank": 7,
+          "canonical_name": "SESAMUM INDICUM SEED OIL"
+        },
+        {
+          "rank": 8,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        },
+        {
+          "rank": 9,
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+        },
+        {
+          "rank": 10,
+          "canonical_name": "TOCOPHERYL ACETATE"
+        },
+        {
+          "rank": 11,
+          "canonical_name": "AMYL SALICYLATE"
+        },
+        {
+          "rank": 12,
+          "canonical_name": "BENZYL SALICYLATE"
+        },
+        {
+          "rank": 13,
+          "canonical_name": "BHT"
+        },
+        {
+          "rank": 14,
+          "canonical_name": "CANANGA ODORATA FLOWER OIL"
+        },
+        {
+          "rank": 15,
+          "canonical_name": "GERANYL ACETATE"
+        },
+        {
+          "rank": 16,
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+        },
+        {
+          "rank": 17,
+          "canonical_name": "PROPANEDIOL"
+        },
+        {
+          "rank": 18,
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+        },
+        {
+          "rank": 19,
+          "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+        },
+        {
+          "rank": 20,
+          "canonical_name": "VANILLIN"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "Commit to ordinary retained emollient/lipid conditioning with a secondary cationic contribution, rather than inferring a high-adherence film from Quaternium-95 alone or a low remainder from the carrier route."
+    }
+  },
+  "scenario_fit": [
+    {
+      "source_id": "T06-maker",
+      "direction_id": "T06-direction-1",
+      "role": "leave_on_fibre_conditioning",
+      "thickness": {
+        "fine": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "normal": {
+          "value": "suitable",
+          "reason": "thickness_weight_preference",
+          "condition": null
+        },
+        "coarse": {
+          "value": "conditional",
+          "reason": "lighter_finish_may_be_less_substantial",
+          "condition": "An option when a lighter finish is desired; no invented dose increase."
+        }
+      },
+      "texture": {
+        "straight": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "wavy": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "curly": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        },
+        "coily": {
+          "value": "suitable",
+          "reason": "no_additional_pattern_gate"
+        }
+      },
+      "damage": {
+        "healthy": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "moderately_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        },
+        "highly_damaged": {
+          "value": "suitable",
+          "reason": "no_additional_damage_gate"
+        }
+      },
+      "weight_authority": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "policy_pins": {
+        "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+        "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+        "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+      },
+      "original": {
+        "case_id": "T06",
+        "direction_id": "T06-direction-1",
+        "source_id": "T06-maker",
+        "supported_role": "leave_on_fibre_conditioning",
+        "scenario": {
+          "source_id": "T06-maker",
+          "direction_id": "T06-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "sun_exposure_wet_dry_unestablished",
+          "dose": "unestablished",
+          "contact_time": "unestablished",
+          "removal": "explicit_leave_in",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        },
+        "weight": "light",
+        "weight_authority": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "weight_confidence": "low",
+        "estimate": true,
+        "thickness": {
+          "fine": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "normal": {
+            "value": "suitable",
+            "reason": "thickness_weight_preference",
+            "condition": null
+          },
+          "coarse": {
+            "value": "conditional",
+            "reason": "lighter_finish_may_be_less_substantial",
+            "condition": "An option when a lighter finish is desired; no invented dose increase."
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "wavy": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "curly": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          },
+          "coily": {
+            "value": "suitable",
+            "reason": "no_additional_pattern_gate"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "moderately_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          },
+          "highly_damaged": {
+            "value": "suitable",
+            "reason": "no_additional_damage_gate"
+          }
+        },
+        "alternative_weight": "medium",
+        "alternative_thickness": {
+          "fine": "conditional",
+          "normal": "suitable",
+          "coarse": "suitable"
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "import_kind": "historical",
+    "original_method": {
+      "run_id": "current-view-v0.2",
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+      "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa",
+      "declared_version": null,
+      "unrecorded_note": "The selected consolidated container records no uniform method version; field-specific historical methods remain separately attributed."
+    },
+    "original_record": {
+      "case_id": "T06",
+      "ingredient_ledger": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE",
+          "dictionary_roles": [
+            "hydrocarbon_carrier",
+            "emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Hydrocarbon carrier establishes the nonaqueous distribution route together with the alcohol and ester.",
+          "ambiguity": "No proportions or measured evaporation fraction."
+        },
+        {
+          "rank": 2,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT.",
+          "dictionary_roles": [
+            "solvent_alcohol"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Alcohol solvent participates in the carrier architecture.",
+          "ambiguity": "No concentration or retained-fraction estimate."
+        },
+        {
+          "rank": 3,
+          "raw_name": "C12-15 ALKYL BENZOATE",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "dictionary_roles": [
+            "defined_ester_emollient"
+          ],
+          "formula_role": "principal",
+          "role_reason": "Defined ester emollient provides the mobile nonvolatile emollient route within the carrier backbone.",
+          "ambiguity": "Mobility is a qualitative blend reading, not measured residue."
+        },
+        {
+          "rank": 4,
+          "raw_name": "HEXYLENE GLYCOL",
+          "canonical_name": "HEXYLENE GLYCOL",
+          "dictionary_roles": [
+            "solvent",
+            "emulsifying_auxiliary"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Solvent and emulsifying-auxiliary roles support distribution of the mixed carrier and conditioning system.",
+          "ambiguity": "No grade or exact phase behavior."
+        },
+        {
+          "rank": 5,
+          "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+          "dictionary_roles": [
+            "recognized_uv_filter"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized UV filter is retained as a distinct auxiliary function.",
+          "ambiguity": "Does not establish finished-product UV protection or coherent conditioning film."
+        },
+        {
+          "rank": 6,
+          "raw_name": "QUATERNIUM-95",
+          "canonical_name": "QUATERNIUM-95",
+          "dictionary_roles": [
+            "cationic_conditioning_clue"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Recognized cationic conditioning clue contributes to the residual conditioning reading.",
+          "ambiguity": "Exact grade, architecture and substantivity are not established; not automatically a polymer or high-persistence film."
+        },
+        {
+          "rank": 7,
+          "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+          "canonical_name": "SESAMUM INDICUM SEED OIL",
+          "dictionary_roles": [
+            "fixed_oil_carrier"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact fixed seed-oil carrier contributes retained lipid conditioning within the synthetic-carrier system.",
+          "ambiguity": "No proportion or trace assumption."
+        },
+        {
+          "rank": 8,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "dictionary_roles": [
+            "fragrance_composition"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "dictionary_roles": [
+            "intact_botanical_fixed_oil",
+            "emollient"
+          ],
+          "formula_role": "secondary",
+          "role_reason": "Exact intact castor oil supplies a richer retained-lipid counter-signal to the mobile carrier reading.",
+          "ambiguity": "No inferred concentration and no automatic rich floor."
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "dictionary_roles": [
+            "antioxidant_auxiliary"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized antioxidant auxiliary contributes to formula maintenance.",
+          "ambiguity": "No amount or absence of retained contribution inferred."
+        },
+        {
+          "rank": 11,
+          "raw_name": "AMYL SALICYLATE",
+          "canonical_name": "AMYL SALICYLATE",
+          "dictionary_roles": [
+            "fragrance",
+            "skin_conditioner"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 12,
+          "raw_name": "BENZYL SALICYLATE",
+          "canonical_name": "BENZYL SALICYLATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 13,
+          "raw_name": "BHT",
+          "canonical_name": "BHT",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized antioxidant function supports an auxiliary reading.",
+          "ambiguity": "No concentration inference."
+        },
+        {
+          "rank": 14,
+          "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+          "canonical_name": "CANANGA ODORATA FLOWER OIL",
+          "dictionary_roles": [
+            "essential_oil",
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE",
+          "canonical_name": "GERANYL ACETATE",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 16,
+          "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+          "dictionary_roles": [
+            "antioxidant"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized antioxidant function supports an auxiliary reading.",
+          "ambiguity": "No concentration inference."
+        },
+        {
+          "rank": 17,
+          "raw_name": "PROPANEDIOL",
+          "canonical_name": "PROPANEDIOL",
+          "dictionary_roles": [
+            "not_assessed"
+          ],
+          "formula_role": "unresolved",
+          "role_reason": "Exact identity retained, but dictionary function is not assessed.",
+          "ambiguity": "Cannot treat it as a solvent, negligible residue or suffix-compatible auxiliary."
+        },
+        {
+          "rank": 18,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 19,
+          "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+          "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        },
+        {
+          "rank": 20,
+          "raw_name": "VANILLIN",
+          "canonical_name": "VANILLIN",
+          "dictionary_roles": [
+            "declared_fragrance_allergen"
+          ],
+          "formula_role": "auxiliary",
+          "role_reason": "Recognized fragrance composition, declared allergen or aromatic function; not an intact fixed conditioning-oil carrier.",
+          "ambiguity": "Presence establishes declared exposure only; no amount, intentional perfuming, volatility or negligible-residue inference."
+        }
+      ],
+      "auxiliary_suffix": {
+        "boundary": "none",
+        "start_rank": "none",
+        "markers": [],
+        "reason": "No qualified boundary: the unresolved rank 17 invalidates candidate suffixes containing the antioxidant and fragrance markers. Ranks 18-20 supply fragrance exposure only."
+      },
+      "ingredient_flags": {
+        "silicones": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every primary ingredient was reviewed against the closed silicones family; no exact recognized positive match.",
+          "unresolved": []
+        },
+        "mineral_oil": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every primary ingredient was reviewed against the closed mineral_oil family; no exact recognized positive match.",
+          "unresolved": []
+        },
+        "drying_alcohol": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 2,
+              "canonical_name": "ALCOHOL DENAT."
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All exact positive matches in the closed reviewed drying_alcohol family are included; no substring or ingredient-family expansion.",
+          "unresolved": []
+        },
+        "fragrance": {
+          "value": true,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [
+            {
+              "rank": 8,
+              "canonical_name": "FRAGRANCE (PARFUM)"
+            },
+            {
+              "rank": 11,
+              "canonical_name": "AMYL SALICYLATE"
+            },
+            {
+              "rank": 12,
+              "canonical_name": "BENZYL SALICYLATE"
+            },
+            {
+              "rank": 14,
+              "canonical_name": "CANANGA ODORATA FLOWER OIL"
+            },
+            {
+              "rank": 15,
+              "canonical_name": "GERANYL ACETATE"
+            },
+            {
+              "rank": 18,
+              "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            },
+            {
+              "rank": 19,
+              "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+            },
+            {
+              "rank": 20,
+              "canonical_name": "VANILLIN"
+            }
+          ],
+          "counter_signal": [],
+          "nearest_alternative": false,
+          "reason": "All exact positive matches in the closed reviewed fragrance family are included; no substring or ingredient-family expansion.",
+          "unresolved": []
+        },
+        "scalp_active_botanicals": {
+          "value": false,
+          "estimate": false,
+          "confidence": "high",
+          "evidence": [],
+          "counter_signal": [],
+          "nearest_alternative": true,
+          "reason": "Every primary ingredient was reviewed against the closed scalp_active_botanicals family; no exact recognized positive match.",
+          "unresolved": []
+        }
+      },
+      "base": {
+        "value": "ester_alkane_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ALCOHOL DENAT."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Sesame, castor and the cationic conditioning clue supply a retained conditioning route."
+        ],
+        "nearest_alternative": "hybrid",
+        "reason": "The hydrocarbon/alcohol distribution route and defined ester form a coherent principal vehicle/emollient system. Botanical oils and the conditioning clue are secondary; mixed ingredients alone do not establish joint backbone dominance.",
+        "unresolved": [
+          "No proportions, cationic grade/substantivity or assessed function at rank 17."
+        ]
+      },
+      "weight": {
+        "value": "light",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ALCOHOL DENAT."
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Sesame has a medium/low tendency, castor a rich/moderate tendency, and rank 6 supplies a conditioning clue."
+        ],
+        "nearest_alternative": "medium",
+        "reason": "B1/B4 favor the coherent mobile carrier/ester architecture. The retained botanical and cationic components are meaningful counter-signals, but no affirmative principal cohesive or structured film is established to outweigh this route. Medium remains the closest rival; B6 rich is not justified by secondary castor presence alone.",
+        "unresolved": [
+          "No proportions, cationic grade/substantivity or exact retained-load observations; rank 17 function unresolved."
+        ]
+      },
+      "penetration_potential": {
+        "value": "surface_led",
+        "estimate": true,
+        "confidence": "moderate",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 9,
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Botanical oils participate in the retained conditioning system; missing studies do not prove nonpenetration."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "The hydrocarbon/ester emollient route with a secondary cationic conditioning clue provides affirmative surface-conditioning architecture. No admitted studied oil forms the principal plant-conditioning backbone. This estimates the blend route, not universal nonpenetration of its ingredients.",
+        "unresolved": [
+          "No exact-formula study, known proportions or assessed rank-17 function; cationic grade unknown."
+        ]
+      },
+      "persistence_potential": "moderate",
+      "named_oils": [
+        {
+          "hero_id": "T06-hero-1",
+          "hero_name": "Sesamöl",
+          "matched_ranks": [
+            7
+          ],
+          "prominence": {
+            "value": "supporting",
+            "estimate": true,
+            "confidence": "moderate",
+            "evidence": [
+              {
+                "source_id": "T06-maker",
+                "section": "hero:T06-hero-1"
+              },
+              {
+                "rank": 7,
+                "canonical_name": "SESAMUM INDICUM SEED OIL"
+              }
+            ],
+            "counter_signal": [],
+            "nearest_alternative": "trace",
+            "reason": "The exact packet mapping matches the preserved blind secondary conditioning role. This supports supporting prominence without a concentration or rank-cutoff inference; source hero emphasis does not revise that role.",
+            "unresolved": [
+              "No quantitative formula composition; the prominence is the frozen functional estimate."
+            ]
+          }
+        }
+      ],
+      "dispenser": {
+        "value": "spray",
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "packaging"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "unknown",
+        "reason": "Maker text explicitly describes spray/misting.",
+        "unresolved": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "claims.heat"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": true,
+        "reason": "The completed exact-product maker review contains no accepted explicit heat-protection claim. False records the claim gate, not measured absence of protection.",
+        "unresolved": []
+      },
+      "provides_uv_protection": {
+        "value": true,
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "section": "claims.uv"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": false,
+        "reason": "The completed maker review accepts explicit hair-UV protection and the exact declaration contains the listed recognized UV filters; both required gates are satisfied. No SPF, normal-dose performance or protection level is inferred. Quaternium-95 is excluded from the exact-filter evidence; KPF is not converted to SPF.",
+        "unresolved": []
+      },
+      "supported_uses": [
+        "leave_on_fibre_conditioning"
+      ],
+      "use_evidence": {
+        "value": [
+          "leave_on_fibre_conditioning"
+        ],
+        "estimate": false,
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_id": "T06-maker",
+            "direction_id": "T06-direction-1"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": [],
+        "reason": "The exact instruction establishes hair-fibre use and explicitly permits leaving the product in. Wet/dry stage and dose remain unestablished; neither the product positioning nor spray mechanism supplies dry_finish or a dosing instruction.",
+        "unresolved": [
+          "Unestablished dose, contact time or wet/dry detail remains exactly as supplied in each source scenario; no missing application instruction is invented."
+        ]
+      },
+      "application_scenarios": [
+        {
+          "source_id": "T06-maker",
+          "direction_id": "T06-direction-1",
+          "site": [
+            "hair_fibre"
+          ],
+          "stage": "sun_exposure_wet_dry_unestablished",
+          "dose": "unestablished",
+          "contact_time": "unestablished",
+          "removal": "explicit_leave_in",
+          "restrictions": "none stated in reviewed exact product text",
+          "supported_roles": [
+            "leave_on_fibre_conditioning"
+          ]
+        }
+      ],
+      "product_key": "oil-targeted-t06",
+      "identity": {
+        "brand": "René Furterer",
+        "product": "Solaire Schützendes Sommeröl",
+        "market": "DE-CH maker",
+        "size": "100 ml",
+        "identifier_if_verified": null
+      },
+      "formula": {
+        "raw_inci": "ISODODECANE. ALCOHOL DENAT.. C12-15 ALKYL BENZOATE. HEXYLENE GLYCOL. ETHYLHEXYL METHOXYCINNAMATE. QUATERNIUM-95. SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL). FRAGRANCE (PARFUM). RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL). TOCOPHERYL ACETATE. AMYL SALICYLATE. BENZYL SALICYLATE. BHT. CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT). GERANYL ACETATE. PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE. PROPANEDIOL. TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.\nTRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL. VANILLIN",
+        "ingredients": [
+          {
+            "rank": 1,
+            "raw_name": "ISODODECANE",
+            "canonical_name": "ISODODECANE"
+          },
+          {
+            "rank": 2,
+            "raw_name": "ALCOHOL DENAT.",
+            "canonical_name": "ALCOHOL DENAT."
+          },
+          {
+            "rank": 3,
+            "raw_name": "C12-15 ALKYL BENZOATE",
+            "canonical_name": "C12-15 ALKYL BENZOATE"
+          },
+          {
+            "rank": 4,
+            "raw_name": "HEXYLENE GLYCOL",
+            "canonical_name": "HEXYLENE GLYCOL"
+          },
+          {
+            "rank": 5,
+            "raw_name": "ETHYLHEXYL METHOXYCINNAMATE",
+            "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE"
+          },
+          {
+            "rank": 6,
+            "raw_name": "QUATERNIUM-95",
+            "canonical_name": "QUATERNIUM-95"
+          },
+          {
+            "rank": 7,
+            "raw_name": "SESAMUM INDICUM (SESAME) SEED OIL (SESAMUM INDICUM SEED OIL)",
+            "canonical_name": "SESAMUM INDICUM SEED OIL"
+          },
+          {
+            "rank": 8,
+            "raw_name": "FRAGRANCE (PARFUM)",
+            "canonical_name": "FRAGRANCE (PARFUM)"
+          },
+          {
+            "rank": 9,
+            "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+            "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL"
+          },
+          {
+            "rank": 10,
+            "raw_name": "TOCOPHERYL ACETATE",
+            "canonical_name": "TOCOPHERYL ACETATE"
+          },
+          {
+            "rank": 11,
+            "raw_name": "AMYL SALICYLATE",
+            "canonical_name": "AMYL SALICYLATE"
+          },
+          {
+            "rank": 12,
+            "raw_name": "BENZYL SALICYLATE",
+            "canonical_name": "BENZYL SALICYLATE"
+          },
+          {
+            "rank": 13,
+            "raw_name": "BHT",
+            "canonical_name": "BHT"
+          },
+          {
+            "rank": 14,
+            "raw_name": "CANANGA ODORATA FLOWER OIL (CANANGA ODORATA OIL/EXTRACT)",
+            "canonical_name": "CANANGA ODORATA FLOWER OIL"
+          },
+          {
+            "rank": 15,
+            "raw_name": "GERANYL ACETATE",
+            "canonical_name": "GERANYL ACETATE"
+          },
+          {
+            "rank": 16,
+            "raw_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+            "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE"
+          },
+          {
+            "rank": 17,
+            "raw_name": "PROPANEDIOL",
+            "canonical_name": "PROPANEDIOL"
+          },
+          {
+            "rank": 18,
+            "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+            "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+          },
+          {
+            "rank": 19,
+            "raw_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+            "canonical_name": "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL"
+          },
+          {
+            "rank": 20,
+            "raw_name": "VANILLIN",
+            "canonical_name": "VANILLIN"
+          }
+        ],
+        "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment"
+      },
+      "field_authority": {
+        "ingredient_ledger": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "auxiliary_suffix": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "base": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "weight": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "penetration_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "ingredient_flags": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "persistence_potential": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+          "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+          "record_key": "T06",
+          "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+        },
+        "named_oils": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "dispenser": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "provides_heat_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "provides_uv_protection": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "supported_uses": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "use_evidence": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "application_scenarios": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+          "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+          "record_key": "T06",
+          "reason": "Controlled source stage after both blind outputs sealed."
+        },
+        "formula": {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+          "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+          "record_key": "T06",
+          "reason": "Attributed research decision"
+        }
+      },
+      "persistence_trace_reference": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/persistence-research-trace.json",
+        "sha256": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1",
+        "record_key": "T06",
+        "reason": "Attributed research decision"
+      },
+      "fit": {
+        "thickness": {
+          "fine": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "normal": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coarse": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "texture": {
+          "straight": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "wavy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "curly": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "coily": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        },
+        "damage": {
+          "healthy": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "moderately_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          },
+          "highly_damaged": {
+            "value": "unknown",
+            "reason": "scenario_specific_fit"
+          }
+        }
+      },
+      "completion_status": "complete_research_with_permitted_gaps"
+    },
+    "original_record_sha256": "29cd04ffd54198e5dcde373a19b93d2c668a14271b281426d50928b5a7e75923",
+    "field_authorities": {
+      "ingredient_ledger": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "auxiliary_suffix": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "base": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "weight": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "penetration_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "ingredient_flags": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "persistence_potential": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+        "record_key": "T06",
+        "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes."
+      },
+      "named_oils": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "dispenser": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "provides_heat_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "provides_uv_protection": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "supported_uses": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "use_evidence": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "application_scenarios": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+        "record_key": "T06",
+        "reason": "Controlled source stage after both blind outputs sealed."
+      },
+      "formula": {
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+        "record_key": "T06",
+        "reason": "Attributed research decision"
+      }
+    },
+    "dependencies": [
+      {
+        "kind": "selection_inventory",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/combined-profile-inventory.json",
+        "sha256": "7abad99eb94b66ecdd8c0700c25c1955314ecf87026fc87fbb4ca5ecd04d8a87"
+      },
+      {
+        "kind": "original_profile",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/profiles.json",
+        "sha256": "737bbcccf68550056fcbe0d4033f22b2e73c1efabc75ad105ccfe05e1f3433fa"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+        "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+        "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+        "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92"
+      },
+      {
+        "kind": "authority",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/persistence-research-trace.json",
+        "sha256": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/input-manifest.json",
+        "sha256": "8337bf4408d41e3cec0d0f16dcc553ffcbedf3b795c1c3d095663f1934cd673d"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/method.md",
+        "sha256": "d3574b9b59b9214ea2c47827e361707b8b69b003b586e1244e1ba8c0df48a726"
+      },
+      {
+        "kind": "normalization_mapping",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-packet.json",
+        "sha256": "e6c0e101c6adb066179a4a0076b53f224d795a3c021105831843d1f65b1fe241"
+      },
+      {
+        "kind": "function_dictionary",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+        "sha256": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69"
+      },
+      {
+        "kind": "manifest_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/material-weight-reference.json",
+        "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+      },
+      {
+        "kind": "run_dependency",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-manifest.json",
+        "sha256": "fb47122c7dd4239e18f73d70a4748154ecffe889a8c7dedfafae9a8634e3ed5f"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/blind-seal.json",
+        "sha256": "bcf44e0787d8269fd45f6b6b8e3aaeb17e4f9220b4d648b0cc06558816022984"
+      },
+      {
+        "kind": "stage_seal",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-seal.json",
+        "sha256": "4d9158dd52500df547afd8dc1d22804c72c685e784a18096871a52c393e59c77"
+      },
+      {
+        "kind": "source_packet",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-packet.json",
+        "sha256": "2a4f18234d03bcb7bdcdc08bfe8299caff23969f28fee3312b464a1d81ca4c6e"
+      },
+      {
+        "kind": "scenario_fit",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/scenario-fit.json",
+        "sha256": "1fc140b189f72e3957fed37613daafe8f44e61dcc214725f8146ba3fe2670cc2"
+      }
+    ],
+    "mapping_receipts": [
+      {
+        "kind": "field_authority_resolutions",
+        "records": [
+          {
+            "field": "ingredient_ledger",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "auxiliary_suffix",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "base",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "weight",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "penetration_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "ingredient_flags",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "persistence_potential",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/blind-records.json",
+            "sha256": "c0f3e343bb4d12314e4d2b47b218593a54f85456abb82620ab283b392fe18cea",
+            "record_key": "T06",
+            "reason": "Select coherent laneA mobile carrier plus secondary oils/cationic clue: light/low, medium alternative, surface-led and moderate persistence. No standalone Quaternium95 filter/adherence/grade inferred. LaneB agrees on direct classes.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e31cfc645796379e3102e5f3a83a5172b182f979a3d36f80c3cb75239ec9c0b5"
+          },
+          {
+            "field": "named_oils",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "dispenser",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "provides_heat_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "provides_uv_protection",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "supported_uses",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "use_evidence",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "application_scenarios",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/stage2-records.json",
+            "sha256": "fd09ff069be3be4b4e1616af07db48d337f4f7e5fa1dccaac4ab8f150216093f",
+            "record_key": "T06",
+            "reason": "Controlled source stage after both blind outputs sealed.",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "e18818b33fddfe609e1b866ab0ae2ef5fa19199e782a087ded30d7737dfaae6a"
+          },
+          {
+            "field": "formula",
+            "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/source-packet.json",
+            "sha256": "38278813aadcbbfe316a774d381e2a59b4e82ce866406b830c8b80e55f808c92",
+            "record_key": "T06",
+            "reason": "Attributed research decision",
+            "original_method": {
+              "run_id": "oil-targeted-coverage-v0.1",
+              "declared_version": null,
+              "note": "Original declaration only; absence is not replaced with the consolidation method."
+            },
+            "resolved_record_sha256": "c435bc1c7c0e184f446a0c857800997d9c6781dca2507babefa6e3ffad167eec"
+          }
+        ]
+      },
+      {
+        "kind": "persistence_trace_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/lane-a/persistence-research-trace.json",
+        "sha256": "d247b19a0b68a0ecf9fe1302799d8ca8cd15b27e27fab420f12de9dbc464b8c1",
+        "record_key": "T06",
+        "reason": "Attributed research decision",
+        "resolved_record_sha256": "e47ce1b3ffdafb044af0384d08fdaa36c50585752e01948fee21a0f7f461ffa3"
+      },
+      {
+        "kind": "scenario_fit_resolution",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/current-view-v0.2/scenario-fit.json",
+        "policy_versions": [
+          "OE42-thickness-v0.1",
+          "OE43-pattern-v0.1",
+          "OE45-damage-v0.1"
+        ],
+        "rows": 1
+      },
+      {
+        "kind": "source_context",
+        "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/stage2-packet.json",
+        "original": {
+          "case_id": "T06",
+          "identity": {
+            "brand": "René Furterer",
+            "product": "Solaire Schützendes Sommeröl",
+            "market": "DE-CH maker",
+            "size": "100 ml",
+            "identifier_if_verified": null
+          },
+          "sources": [
+            {
+              "id": "T06-maker",
+              "url": "https://www.renefurterer.com/de-ch/p/solaire-solaire-schuetzendes-sommeroel-3282770038453-e9ccef5d",
+              "scope": "Exact maker online formula, product text, directions, packaging mechanism and accepted claim review; not package/batch verification."
+            }
+          ],
+          "heroes": [
+            {
+              "hero_id": "T06-hero-1",
+              "hero_name": "Sesamöl",
+              "canonical_ingredients": [
+                "SESAMUM INDICUM SEED OIL"
+              ],
+              "source_id": "T06-maker",
+              "mapping_note": "Exact source/ordered ingredient identity reviewed; preparation retained."
+            }
+          ],
+          "non_oil_features": [],
+          "packaging": {
+            "value": "spray",
+            "status": "confirmed",
+            "source_id": "T06-maker",
+            "observation": "Maker text explicitly describes spray/misting."
+          },
+          "claims": {
+            "heat": {
+              "accepted": false,
+              "review_complete": true,
+              "source_id": "T06-maker",
+              "reason": {
+                "accepted_explicit": false,
+                "negative_basis": "No explicit heat protection claim in reviewed maker description, benefits or directions."
+              }
+            },
+            "uv": {
+              "accepted": true,
+              "review_complete": true,
+              "source_id": "T06-maker",
+              "reason": {
+                "accepted_explicit": true,
+                "basis": "Explicit protection of hair from UV; UV filters also declared."
+              }
+            }
+          },
+          "directions": [
+            {
+              "source_id": "T06-maker",
+              "dose": "unestablished",
+              "contact_time": "unestablished",
+              "restrictions": "none stated in reviewed exact product text",
+              "direction_id": "T06-direction-1",
+              "site": [
+                "hair_fibre"
+              ],
+              "stage": "sun_exposure_wet_dry_unestablished",
+              "removal": "explicit_leave_in",
+              "text": "For sun-exposed hair; product may remain in hair. Dose and detailed wet/dry procedure not stated."
+            }
+          ],
+          "source_limits": [
+            "Current online formula only; packaging may differ.",
+            "KPF marketing index is not SPF or measured normal-dose protection."
+          ],
+          "source_record_ref": "source-packet.json#T06"
+        },
+        "directions": [
+          {
+            "source_id": "T06-maker",
+            "dose": "unestablished",
+            "contact_time": "unestablished",
+            "restrictions": "none stated in reviewed exact product text",
+            "direction_id": "T06-direction-1",
+            "site": [
+              "hair_fibre"
+            ],
+            "stage": "sun_exposure_wet_dry_unestablished",
+            "removal": "explicit_leave_in",
+            "text": "For sun-exposed hair; product may remain in hair. Dose and detailed wet/dry procedure not stated."
+          }
+        ]
+      },
+      {
+        "kind": "declaration_admission",
+        "basis": "Complete frozen raw formula and ordered ingredients preserved under original source admission; no fresh source acquisition or physical batch verification."
+      }
+    ]
+  }
+}

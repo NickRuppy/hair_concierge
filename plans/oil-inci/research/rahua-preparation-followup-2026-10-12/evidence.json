@@ -1,0 +1,338 @@
+{
+  "schema_version": "1.0",
+  "status": "DONE_WITH_CONCERNS",
+  "reviewed_on": "2026-10-12",
+  "case_id": "H04",
+  "scope": "Source completion only: exact preparation identities and carrier/function dependencies for Rahua Legendary Amazon Oil. No classification output or aliases admitted.",
+  "context_files": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/source-packet.json",
+      "sha256": "6fb120c79d58590644dcf18f8eff81d776962975e60b918bcd3b9fa0721eb940"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+      "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1"
+    }
+  ],
+  "identity": {
+    "brand": "Rahua",
+    "product": "Legendary Amazon Oil",
+    "market": "US maker storefront",
+    "size": "not established in retrieved maker text",
+    "gtin_if_verified": null
+  },
+  "h04_raw_inci": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL, ORGANIC DECOLORIZED ALOE BARBADENSIS LEAF OIL, ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL, ORGANIC ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL, MAURITIA FLEXUOSA (MORETE) FRUIT OIL, PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL, AROMA, GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL.",
+  "formula_match": {
+    "standalone_us_maker": "matches H04 after case normalization; live HTTP and web retrieval agree",
+    "selected_physical_package_or_batch_verified": false,
+    "same_maker_conflict": true,
+    "conflict_differences": [
+      "Aloe Leaf Oil/decolorized versus Aloe Leaf Extract",
+      "Coconut Fruit Oil versus Coconut Oil",
+      "Rahua Oil versus Ungurahua Fruit Oil",
+      "Morete and Rahua order reversed",
+      "Gardenia Jasminoides Enfleurage Oil versus Gardenia Florida Oil",
+      "Aroma before Gardenia versus Fragrance/Parfum after Gardenia"
+    ],
+    "conflict_interpretation": "No dated formula-change or same-batch equivalence evidence found. Preserve H04 and keep alternate declaration separate."
+  },
+  "sources": [
+    {
+      "id": "R01",
+      "url": "https://rahua.com/products/legendary-amazon-oil",
+      "publisher": "Rahua",
+      "kind": "exact_product_maker",
+      "match": "Exact product and US maker storefront; full declaration matches H04 after case normalization. No selected batch or GTIN established.",
+      "locator": "Full ingredient list; How to use; Key Ingredients / Rahua Oil",
+      "facts": [
+        "Current standalone declaration retains all nine H04 ingredients in the same order.",
+        "Rahua subsection calls its oil tree-nut-derived; Sacha Inchi subsection identifies seed oil."
+      ],
+      "does_not_establish": [
+        "Preparation carriers, extraction methods, ingredient quantities, named-oil purity, hair sensory measurements."
+      ],
+      "live_html_sha256": "6c1c994844a7baffbd39fa47b8e2bc22b2626d4ed0b67f8ae60d71304d126c03",
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R02",
+      "url": "https://rahua.com/products/classic-set",
+      "publisher": "Rahua",
+      "kind": "same_maker_conflicting_product_declaration",
+      "match": "US bundle includes Legendary Amazon Oil 1.6 oz, but its declaration differs from H04; not accepted as a replacement formula.",
+      "locator": "Full ingredient list / Legendary Amazon Oil",
+      "facts": [
+        "Same named oil is declared differently from the standalone product page."
+      ],
+      "does_not_establish": [
+        "Which declaration applies to the same physical batch; reformulation versus nomenclature update versus editorial error."
+      ],
+      "live_html_sha256": "b635ff0a9d3033484c86d24daf40939cac03c4850f20a3221a30f2ec0575fc40",
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R03",
+      "url": "https://rahua.com/pages/ingredients",
+      "publisher": "Rahua",
+      "kind": "maker_cross_product_ingredient_description",
+      "match": "Maker material-family evidence; no formula or lot binding.",
+      "locator": "Rahua Oil; Sacha Inchi; Gardenia; Coconut Oil; Rosemary; FAQ / What is rahua oil?",
+      "facts": [
+        "Maker identifies Rahua as oil processed from ungurahua fruit and Sacha Inchi as seed oil.",
+        "Gardenia is described as obtained by enfleurage for scent."
+      ],
+      "does_not_establish": [
+        "A fruit-versus-seed INCI correction for H04, extraction medium, carrier retained after processing, or formula-specific function.",
+        "Generic Coconut cleansing and Rosemary scalp descriptions do not establish their roles in this retained finishing oil."
+      ],
+      "live_html_sha256": "4708b746011a287e0e04e62dca86722ca284df2ff668d586fe1c083e179b2606",
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R04",
+      "url": "https://rahua.com/blogs/beauty-is-power/smoothing-hair-balm-launch",
+      "publisher": "Rahua",
+      "kind": "other_product_historical_maker_process",
+      "published_on": "2019-03-26",
+      "match": "Smoothing Hair Balm, not Legendary Amazon Oil; historical process context only.",
+      "locator": "Gardenia paragraph",
+      "facts": [
+        "Maker describes enfleurage using vegetable butters for the other product."
+      ],
+      "does_not_establish": [
+        "Butter identity or retention, or transfer of the preparation to H04."
+      ],
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R05",
+      "url": "https://calendula.cl/producto/10/aceite-de-calendula",
+      "publisher": "Caléndula Cosmética Natural",
+      "kind": "unlinked_supplier_material",
+      "match": "Supplier uses Calendula Officinalis Flower Oil wording for its own macerate; no Rahua sourcing link.",
+      "locator": "Características / INCI and Método de obtención",
+      "facts": [
+        "Own material uses dried calendula flowers macerated in sunflower oil."
+      ],
+      "does_not_establish": [
+        "Rahua carrier, maceration method, specification, proportions or hair weight."
+      ],
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R06",
+      "url": "https://www.all-organic-treasures.com/cosmetic-raw-materials/aloe-vera-oel-mazerat-bio.html",
+      "publisher": "All Organic Treasures",
+      "kind": "unlinked_supplier_material",
+      "match": "Own Aloe oil macerate; composite INCI differs from H04 Decolorized Aloe Leaf Oil; no Rahua sourcing link.",
+      "locator": "INCI; Available quality; Product Description; Application cosmetics",
+      "facts": [
+        "Supplier names sunflower seed oil and aloe leaf extract, and specifies refined sunflower carrier."
+      ],
+      "does_not_establish": [
+        "Rahua carrier, decolorization process, identity equivalence or hair sensory behavior.",
+        "Supplier skin absorption statements are not hair-weight evidence."
+      ],
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R07",
+      "url": "https://www.florihana.com/en/module/axproductattachments/export?file=FLV020FT.pdf&reference=FLV020&type=Fiche+technique",
+      "publisher": "JE International / Distillerie Florihana",
+      "kind": "unlinked_supplier_technical_data_sheet",
+      "document_revision": "2025-02-26",
+      "match": "FLV020 Sacha Inchi, Plukenetia Volubilis Seed Oil; botanical/plant-part overlap only, not a Rahua grade match.",
+      "locator": "Page 1, sections 2 and 3",
+      "facts": [
+        "Own product is a vegetable oil cold-pressed from Plukenetia volubilis seeds."
+      ],
+      "does_not_establish": [
+        "Rahua extraction process, supplier, purity, concentration or hair weight."
+      ],
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R08",
+      "url": "https://chemquestint.com/product/unrefined-pataua-oil/",
+      "publisher": "ChemQuest International",
+      "kind": "unlinked_supplier_material",
+      "match": "Own unrefined Pataua oil; Fruit Oil wording differs from H04 part-unspecified Rahua declaration; no Rahua sourcing link.",
+      "locator": "Description; FAQ / INCI name and use",
+      "facts": [
+        "Supplier describes fruit-derived Oenocarpus bataua oil for conditioning and emollient use."
+      ],
+      "does_not_establish": [
+        "Rahua grade, actual extraction route, preparation carrier, or independent hair-weight measurements."
+      ],
+      "reviewed_on": "2026-10-12"
+    },
+    {
+      "id": "R09",
+      "url": "https://www.praannaturals.com/downloads/specsheets/SPEC-Ungurahui-Oil-OILUNGURAPR664.pdf",
+      "publisher": "Praan Naturals / Natural Sourcing",
+      "kind": "unlinked_supplier_specification",
+      "document_date": "2024-06-19",
+      "match": "OILUNGURAPR664 uses Oenocarpus Bataua (Ungurahui) Oil; no Rahua link and no plant part on specification.",
+      "locator": "Page 1, product identification and specifications",
+      "facts": [
+        "Specification identifies an oil and reports analytical properties for its own material."
+      ],
+      "does_not_establish": [
+        "Seed/fruit specificity, alias equivalence, Rahua preparation or hair sensory behavior."
+      ],
+      "reviewed_on": "2026-10-12"
+    }
+  ],
+  "preparation_records": [
+    {
+      "rank": 1,
+      "exact_h04_declaration": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL",
+      "plant_part_evidence": "flower",
+      "form_boundary": "oil declaration; maceration not established for H04",
+      "source_ids": [
+        "R01",
+        "R05"
+      ],
+      "supported": "Exact Calendula flower-oil wording is verified; an unlinked supplier shows that this wording can designate a macerate.",
+      "unresolved": "Actual extraction method, carrier identity, component declarations and supplied grade."
+    },
+    {
+      "rank": 2,
+      "exact_h04_declaration": "ORGANIC DECOLORIZED ALOE BARBADENSIS LEAF OIL",
+      "plant_part_evidence": "leaf",
+      "form_boundary": "decolorized leaf-oil declaration; not interchangeable with extract/juice",
+      "source_ids": [
+        "R01",
+        "R02",
+        "R06"
+      ],
+      "supported": "Exact Aloe leaf-oil wording is verified. The maker bundle and external supplier use different forms.",
+      "unresolved": "Carrier/solvent, preparation method, decolorization specification and which declaration applies to H04."
+    },
+    {
+      "rank": 3,
+      "exact_h04_declaration": "ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL",
+      "plant_part_evidence": "fruit in H04 wording",
+      "form_boundary": "oil declaration; grade and carrier relationship unproven",
+      "source_ids": [
+        "R01",
+        "R02",
+        "R03"
+      ],
+      "supported": "Coconut fruit-oil declaration is verified; same-maker bundle omits Fruit.",
+      "unresolved": "Whether neat, fractionated, modified or carrier for another preparation; no Cocos Nucifera Oil or Caprylic/Capric Triglyceride substitution authorized."
+    },
+    {
+      "rank": 4,
+      "exact_h04_declaration": "ORGANIC ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "plant_part_evidence": "leaf",
+      "form_boundary": "extract; not essential-oil equivalence",
+      "source_ids": [
+        "R01",
+        "R03"
+      ],
+      "supported": "Rosemary leaf-extract declaration is verified.",
+      "unresolved": "Extraction solvent, carrier, grade and actual role in H04; generic antioxidant/scalp copy does not establish formula preservation or conditioning."
+    },
+    {
+      "rank": 5,
+      "exact_h04_declaration": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL",
+      "plant_part_evidence": "unspecified in H04; fruit and tree nut in maker prose",
+      "form_boundary": "botanical oil declaration with maker plant-part inconsistency",
+      "source_ids": [
+        "R01",
+        "R02",
+        "R03",
+        "R08",
+        "R09"
+      ],
+      "supported": "Maker explicitly links Rahua/Ungurahua to Oenocarpus bataua in H04; fruit-oil evidence exists, but exact plant-part resolution remains qualified.",
+      "unresolved": "Resolve maker fruit/tree-nut wording; establish tissue, extraction, grade, additives and supplier binding before any exact alias or functional promotion."
+    },
+    {
+      "rank": 7,
+      "exact_h04_declaration": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL",
+      "plant_part_evidence": "seed",
+      "form_boundary": "botanical seed-oil declaration",
+      "source_ids": [
+        "R01",
+        "R03",
+        "R07"
+      ],
+      "supported": "H04 explicitly links Sacha Inchi to Plukenetia volubilis seed oil; independent supplier TDS supports this botanical seed-oil material identity.",
+      "unresolved": "Actual supplied grade, extraction and carrier/additive composition, retained contribution and hair sensory evidence. No supplier pure-material specification is transferred."
+    },
+    {
+      "rank": 9,
+      "exact_h04_declaration": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL",
+      "plant_part_evidence": "not explicit in H04; flower in maker Gardenia context",
+      "form_boundary": "enfleurage-labelled preparation; not neat-oil equivalence",
+      "source_ids": [
+        "R01",
+        "R02",
+        "R03",
+        "R04"
+      ],
+      "supported": "H04 names Gardenia jasminoides enfleurage oil; maker context supports a scent-related extraction process.",
+      "unresolved": "Extraction medium and retained carrier; reconcile Gardenia Florida declaration; do not transfer another product's vegetable butters or infer essential oil."
+    }
+  ],
+  "hair_weight_evidence": {
+    "exact_formula_measured_sensory_evidence_found": false,
+    "scope_of_negative": "No such evidence identified in this bounded primary maker/material search; not proof none exists.",
+    "rejected_proxies": [
+      "Finished-product fast-absorption or lightweight marketing as measured efficacy",
+      "Supplier skin feel and absorption as hair weight",
+      "Fatty-acid profile or density as hair sensory proof",
+      "Ingredient order as concentration or mixture proportion",
+      "Unlinked supplier preparations as Rahua carriers"
+    ]
+  },
+  "open_dependencies": [
+    "Maker confirmation tied to current US package/lot resolving the two declarations.",
+    "Technical descriptions or named supplier grades for Calendula, decolorized Aloe, coconut and Gardenia preparations, including extraction media and retained carriers.",
+    "Rosemary extraction system and intended formulation function.",
+    "Rahua precise plant part and preparation; Sacha Inchi supplied material specification.",
+    "Hair-relevant evidence appropriate to any later weight assessment; no label supplied in this follow-up."
+  ],
+  "search_scope": {
+    "maker_queries": [
+      "site.rahua.com calendula macerated carrier",
+      "site.rahua.com aloe oil coconut infused",
+      "Rahua calendula macerat",
+      "Rahua aloe carrier oil",
+      "Rahua gardenia enfleurage coconut",
+      "site.rahua.com Legendary Amazon Oil macerate",
+      "site.rahua.com Decolorized Aloe preparation",
+      "site.rahua.com rosemary extract antioxidant"
+    ],
+    "material_queries": [
+      "aloe barbadensis leaf oil supplier carrier",
+      "calendula officinalis flower oil supplier macerated",
+      "Rahua supplier oil technical data sheet",
+      "Plukenetia Volubilis Seed Oil supplier technical data sheet",
+      "Oenocarpus Bataua supplier fruit oil technical data"
+    ],
+    "outcome": "No supplier-to-Rahua preparation link found in reviewed primary sources. Indexed retailer/ingredient-database claims were not accepted as material-function authority."
+  },
+  "constraints_respected": {
+    "historical_files_edited": false,
+    "classifications_added": false,
+    "aliases_added": false,
+    "production_access": false,
+    "external_messages_sent": false
+  },
+  "verification": {
+    "checked_on": "2026-10-12",
+    "json_and_source_ids": "pass",
+    "rank_identity_binding": "7/7 pass",
+    "context_hashes_unchanged": "3/3 pass",
+    "live_standalone_formula_case_normalized_match": "pass",
+    "live_verification_html_sha256": "2d4b6e5a6116acb57eff7e45ef7a889cdeb94dcec521098611121487800e4b12",
+    "runtime_tests": "not applicable; research artifacts only"
+  }
+}

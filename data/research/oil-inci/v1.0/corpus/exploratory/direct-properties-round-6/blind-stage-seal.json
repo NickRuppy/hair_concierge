@@ -1,0 +1,25 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "sealed_at": "2026-10-05T09:03:35.165338+00:00",
+  "files": [
+    {
+      "path": "lane-a/blind-records.json",
+      "sha256": "2fdb3648a91caff7137d659bd0344803fbee24809c533e57f5684c1602a6e30b"
+    },
+    {
+      "path": "lane-a/blind-notes.md",
+      "sha256": "8b85ad5ba797f0bb523d3b017618c97c12b983bf2f6bfbd8de28b508cb86b6b9"
+    },
+    {
+      "path": "lane-b/blind-records.json",
+      "sha256": "f21624c7fdee1c2126e479198e28d7cfc766744918c1423bc69b3ae89992206a"
+    },
+    {
+      "path": "lane-b/blind-notes.md",
+      "sha256": "668b7eb224af258f319da19a7249000313749c2fcdb22d86657b91d5eec8635b"
+    }
+  ],
+  "access_receipts_reviewed": true,
+  "stage2_authorized_only_after_this_seal": true,
+  "limitations": "Prompt/read-scope contract, prior development exposure; no enforced sandbox or unseen holdout. Own-output mechanical correction authorized before seal in lane-a, no values changed."
+}

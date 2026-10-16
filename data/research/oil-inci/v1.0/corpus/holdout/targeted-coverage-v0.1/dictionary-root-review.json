@@ -1,0 +1,15 @@
+{
+  "status": "accepted_before_labels",
+  "neutral_sha256": "b8db54b6dfc6534b9fe2c4e4be2009c2ded2cfb8b0c0439617194009e64f6a69",
+  "changes": [
+    "Primary EC exact-name fragrance corrections accepted for this new run only.",
+    "Quaternium95 conditioning clue accepted; standalone exact UV-filter not admitted from blend source.",
+    "Species-incomplete Argania token retained literally; no alias/material prior."
+  ],
+  "root_primary_sources_verified": [
+    "EC AnnexIII entries334/370",
+    "BASF exact filters",
+    "Croda exact two-component declaration"
+  ],
+  "no_historical_rewrite": true
+}

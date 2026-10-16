@@ -1,0 +1,1485 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "meaning": "Independent researcher agreement/repeatability, not accuracy. Mutual unknowns excluded from substantive metric.",
+  "overall": {
+    "raw_agreements": 116,
+    "raw_denominator": 118,
+    "substantive_agreements": 111,
+    "substantive_denominator": 112,
+    "unknown_a": 6,
+    "unknown_b": 5,
+    "mutual_unknown": 5
+  },
+  "architecture_estimates": {
+    "raw_agreements": 31,
+    "raw_denominator": 32,
+    "substantive_agreements": 28,
+    "substantive_denominator": 28,
+    "unknown_a": 4,
+    "unknown_b": 3,
+    "mutual_unknown": 3
+  },
+  "per_field": {
+    "base": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "weight": {
+      "raw_agreements": 7,
+      "raw_denominator": 8,
+      "substantive_agreements": 7,
+      "substantive_denominator": 7,
+      "unknown_a": 1,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "penetration_potential": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "build_up_potential": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 5,
+      "substantive_denominator": 5,
+      "unknown_a": 3,
+      "unknown_b": 3,
+      "mutual_unknown": 3
+    },
+    "dispenser": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 7,
+      "substantive_denominator": 7,
+      "unknown_a": 1,
+      "unknown_b": 1,
+      "mutual_unknown": 1
+    },
+    "provides_heat_protection": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "provides_uv_protection": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "ingredient_flags.silicones": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "ingredient_flags.mineral_oil": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "ingredient_flags.drying_alcohol": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "ingredient_flags.fragrance": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "ingredient_flags.scalp_active_botanicals": {
+      "raw_agreements": 8,
+      "raw_denominator": 8,
+      "substantive_agreements": 8,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "supported_uses": {
+      "raw_agreements": 7,
+      "raw_denominator": 8,
+      "substantive_agreements": 7,
+      "substantive_denominator": 8,
+      "unknown_a": 0,
+      "unknown_b": 0,
+      "mutual_unknown": 0
+    },
+    "named_oils.prominence": {
+      "raw_agreements": 14,
+      "raw_denominator": 14,
+      "substantive_agreements": 13,
+      "substantive_denominator": 13,
+      "unknown_a": 1,
+      "unknown_b": 1,
+      "mutual_unknown": 1
+    }
+  },
+  "boolean_prevalence": {
+    "provides_heat_protection": {
+      "positive_a": 3,
+      "positive_b": 3,
+      "negative_a": 5,
+      "negative_b": 5,
+      "positive_conditioned_agreements": 3,
+      "positive_conditioned_denominator": 3,
+      "negative_conditioned_agreements": 5,
+      "negative_conditioned_denominator": 5,
+      "positive_unexercised": false
+    },
+    "provides_uv_protection": {
+      "positive_a": 1,
+      "positive_b": 1,
+      "negative_a": 7,
+      "negative_b": 7,
+      "positive_conditioned_agreements": 1,
+      "positive_conditioned_denominator": 1,
+      "negative_conditioned_agreements": 7,
+      "negative_conditioned_denominator": 7,
+      "positive_unexercised": false
+    },
+    "ingredient_flags.silicones": {
+      "positive_a": 3,
+      "positive_b": 3,
+      "negative_a": 5,
+      "negative_b": 5,
+      "positive_conditioned_agreements": 3,
+      "positive_conditioned_denominator": 3,
+      "negative_conditioned_agreements": 5,
+      "negative_conditioned_denominator": 5,
+      "positive_unexercised": false
+    },
+    "ingredient_flags.mineral_oil": {
+      "positive_a": 0,
+      "positive_b": 0,
+      "negative_a": 8,
+      "negative_b": 8,
+      "positive_conditioned_agreements": 0,
+      "positive_conditioned_denominator": 0,
+      "negative_conditioned_agreements": 8,
+      "negative_conditioned_denominator": 8,
+      "positive_unexercised": true
+    },
+    "ingredient_flags.drying_alcohol": {
+      "positive_a": 0,
+      "positive_b": 0,
+      "negative_a": 8,
+      "negative_b": 8,
+      "positive_conditioned_agreements": 0,
+      "positive_conditioned_denominator": 0,
+      "negative_conditioned_agreements": 8,
+      "negative_conditioned_denominator": 8,
+      "positive_unexercised": true
+    },
+    "ingredient_flags.fragrance": {
+      "positive_a": 7,
+      "positive_b": 7,
+      "negative_a": 1,
+      "negative_b": 1,
+      "positive_conditioned_agreements": 7,
+      "positive_conditioned_denominator": 7,
+      "negative_conditioned_agreements": 1,
+      "negative_conditioned_denominator": 1,
+      "positive_unexercised": false
+    },
+    "ingredient_flags.scalp_active_botanicals": {
+      "positive_a": 1,
+      "positive_b": 1,
+      "negative_a": 7,
+      "negative_b": 7,
+      "positive_conditioned_agreements": 1,
+      "positive_conditioned_denominator": 1,
+      "negative_conditioned_agreements": 7,
+      "negative_conditioned_denominator": 7,
+      "positive_unexercised": false
+    }
+  },
+  "disagreements": [
+    {
+      "neutral_id": "F05",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "dry_finish"
+      ],
+      "slot": "E05",
+      "agreement": false,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "weight",
+      "a": "unknown",
+      "b": "medium",
+      "slot": "E07",
+      "agreement": false,
+      "unknown_a": true,
+      "unknown_b": false
+    }
+  ],
+  "fit_policy_gap_cells": {
+    "per_lane": 80,
+    "excluded_from_metrics": true
+  },
+  "pairs": [
+    {
+      "neutral_id": "F01",
+      "field": "base",
+      "a": "ester_alkane_led",
+      "b": "ester_alkane_led",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "weight",
+      "a": "medium",
+      "b": "medium",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "build_up_potential",
+      "a": "unknown",
+      "b": "unknown",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": true,
+      "unknown_b": true
+    },
+    {
+      "neutral_id": "F01",
+      "field": "dispenser",
+      "a": "dropper",
+      "b": "dropper",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "provides_heat_protection",
+      "a": true,
+      "b": true,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "ingredient_flags.silicones",
+      "a": false,
+      "b": false,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "named_oils.avocado_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F01",
+      "field": "named_oils.sunflower_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E06",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "base",
+      "a": "plant_oil_blend",
+      "b": "plant_oil_blend",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "weight",
+      "a": "rich",
+      "b": "rich",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "penetration_potential",
+      "a": "penetration_potential",
+      "b": "penetration_potential",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "build_up_potential",
+      "a": "unknown",
+      "b": "unknown",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": true,
+      "unknown_b": true
+    },
+    {
+      "neutral_id": "F02",
+      "field": "dispenser",
+      "a": "dropper",
+      "b": "dropper",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "provides_heat_protection",
+      "a": false,
+      "b": false,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "ingredient_flags.silicones",
+      "a": false,
+      "b": false,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": true,
+      "b": true,
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "supported_uses",
+      "a": [
+        "pre_wash_fibre_treatment",
+        "scalp_application"
+      ],
+      "b": [
+        "pre_wash_fibre_treatment",
+        "scalp_application"
+      ],
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "named_oils.rosemary_oil",
+      "a": "unknown",
+      "b": "unknown",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": true,
+      "unknown_b": true
+    },
+    {
+      "neutral_id": "F02",
+      "field": "named_oils.castor_oil",
+      "a": "leading",
+      "b": "leading",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F02",
+      "field": "named_oils.sweet_almond_oil",
+      "a": "leading",
+      "b": "leading",
+      "slot": "E02",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "base",
+      "a": "water_based",
+      "b": "water_based",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "weight",
+      "a": "medium",
+      "b": "medium",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "build_up_potential",
+      "a": "elevated",
+      "b": "elevated",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "dispenser",
+      "a": "spray",
+      "b": "spray",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "provides_heat_protection",
+      "a": false,
+      "b": false,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "provides_uv_protection",
+      "a": true,
+      "b": true,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "ingredient_flags.silicones",
+      "a": true,
+      "b": true,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F03",
+      "field": "named_oils.babassu_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E08",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "base",
+      "a": "pure_plant_oil",
+      "b": "pure_plant_oil",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "weight",
+      "a": "rich",
+      "b": "rich",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "penetration_potential",
+      "a": "penetration_potential",
+      "b": "penetration_potential",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "build_up_potential",
+      "a": "elevated",
+      "b": "elevated",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "dispenser",
+      "a": "other",
+      "b": "other",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "provides_heat_protection",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "ingredient_flags.silicones",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "ingredient_flags.fragrance",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning",
+        "pre_wash_fibre_treatment",
+        "scalp_application"
+      ],
+      "b": [
+        "dry_finish",
+        "leave_on_fibre_conditioning",
+        "pre_wash_fibre_treatment",
+        "scalp_application"
+      ],
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F04",
+      "field": "named_oils.coconut_oil",
+      "a": "leading",
+      "b": "leading",
+      "slot": "E01",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "base",
+      "a": "ester_alkane_led",
+      "b": "ester_alkane_led",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "weight",
+      "a": "medium",
+      "b": "medium",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "build_up_potential",
+      "a": "elevated",
+      "b": "elevated",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "dispenser",
+      "a": "dropper",
+      "b": "dropper",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "provides_heat_protection",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "ingredient_flags.silicones",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "dry_finish"
+      ],
+      "slot": "E05",
+      "agreement": false,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "named_oils.sea_buckthorn_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "named_oils.jojoba_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "named_oils.watermelon_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "named_oils.babassu_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F05",
+      "field": "named_oils.moringa_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E05",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "base",
+      "a": "water_based",
+      "b": "water_based",
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "weight",
+      "a": "unknown",
+      "b": "medium",
+      "slot": "E07",
+      "agreement": false,
+      "unknown_a": true,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "build_up_potential",
+      "a": "unknown",
+      "b": "unknown",
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": true,
+      "unknown_b": true
+    },
+    {
+      "neutral_id": "F06",
+      "field": "dispenser",
+      "a": "pump",
+      "b": "pump",
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "provides_heat_protection",
+      "a": true,
+      "b": true,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "ingredient_flags.silicones",
+      "a": false,
+      "b": false,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F06",
+      "field": "supported_uses",
+      "a": [
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "leave_on_fibre_conditioning"
+      ],
+      "slot": "E07",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "base",
+      "a": "hybrid",
+      "b": "hybrid",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "weight",
+      "a": "medium",
+      "b": "medium",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "build_up_potential",
+      "a": "low",
+      "b": "low",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "dispenser",
+      "a": "metered_drop",
+      "b": "metered_drop",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "provides_heat_protection",
+      "a": true,
+      "b": true,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "ingredient_flags.silicones",
+      "a": true,
+      "b": true,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "supported_uses",
+      "a": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "b": [
+        "dry_finish",
+        "leave_on_fibre_conditioning"
+      ],
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F07",
+      "field": "named_oils.sunflower_seed_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E03",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "base",
+      "a": "silicone_led",
+      "b": "silicone_led",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "weight",
+      "a": "medium",
+      "b": "medium",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "penetration_potential",
+      "a": "surface_led",
+      "b": "surface_led",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "build_up_potential",
+      "a": "elevated",
+      "b": "elevated",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "dispenser",
+      "a": "unknown",
+      "b": "unknown",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": true,
+      "unknown_b": true
+    },
+    {
+      "neutral_id": "F08",
+      "field": "provides_heat_protection",
+      "a": false,
+      "b": false,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "provides_uv_protection",
+      "a": false,
+      "b": false,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "ingredient_flags.silicones",
+      "a": true,
+      "b": true,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "ingredient_flags.mineral_oil",
+      "a": false,
+      "b": false,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "ingredient_flags.drying_alcohol",
+      "a": false,
+      "b": false,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "ingredient_flags.fragrance",
+      "a": true,
+      "b": true,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "ingredient_flags.scalp_active_botanicals",
+      "a": false,
+      "b": false,
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "supported_uses",
+      "a": [],
+      "b": [],
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    },
+    {
+      "neutral_id": "F08",
+      "field": "named_oils.coconut_oil",
+      "a": "supporting",
+      "b": "supporting",
+      "slot": "E04",
+      "agreement": true,
+      "unknown_a": false,
+      "unknown_b": false
+    }
+  ]
+}

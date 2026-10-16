@@ -1,0 +1,32 @@
+{
+  "run_id": "oil-blend-weight-round-5",
+  "cohorts": {
+    "fresh": {
+      "total": 6,
+      "lane_pair_raw_equal": 5,
+      "lane_pair_known_equal": 5,
+      "lane_pair_both_known": 5,
+      "classified_by_lane": {
+        "a": 6,
+        "b": 5,
+        "main": 6
+      }
+    },
+    "replay": {
+      "total": 2,
+      "lane_pair_raw_equal": 1,
+      "lane_pair_known_equal": 1,
+      "lane_pair_both_known": 2,
+      "classified_by_lane": {
+        "a": 2,
+        "b": 2,
+        "main": 2
+      }
+    }
+  },
+  "disagreements": [
+    "R06",
+    "R07"
+  ],
+  "limits": "Raw and substantive known-class agreement are repeatability only; fresh/replay denominators separate. Source-exposed main judgment is not a third blind lane. Recognition and preloaded general memory context limit cognitive isolation; six-file reads are self-reported."
+}

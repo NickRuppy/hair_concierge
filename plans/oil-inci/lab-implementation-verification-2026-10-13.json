@@ -1,0 +1,143 @@
+{
+  "version": "oil-lab-implementation-verification-v1",
+  "branch": "codex/oil-review-lab",
+  "base": "10f2f9726978a18c52acb3ee12569d63023feabd",
+  "canonical_content_fingerprint": "ea2d0cab81ca6d47abc2585fb001f59e8d3ea6b010538b775e0bb4c627e65c8b",
+  "manifest": "lab-implementation-content-manifest-2026-10-13.sha256",
+  "manifest_paths": 959,
+  "excluded_self_attestations": [
+    "plans/oil-inci/lab-implementation-content-manifest-2026-10-13.sha256",
+    "plans/oil-inci/lab-implementation-status-2026-10-13.md",
+    "plans/oil-inci/lab-implementation-verification-2026-10-13.json",
+    "plans/oil-inci/reviews/lab-implementation-review-2026-10-13.md"
+  ],
+  "decision_coverage": {
+    "status": "confirmed",
+    "original_acknowledgement": "Okay good, let's implement the oil connection in the review lab then. Use subagents please.",
+    "settled": [
+      "Existing Mask-shell Research Lab",
+      "Manual matching suggestions, Nick approves or requests rework",
+      "Exactly three engine-owned projected fields",
+      "Full richer research and conditional fit retained",
+      "Local approval is not catalog publication",
+      "Registry remains unavailable until separate activation"
+    ],
+    "internal_revalidation": "Root inspected all delegated changes, reconciled Claude findings against actual omitted callers, and ran integrated and final delta checks. No consequential assumption changed."
+  },
+  "checks": [
+    {
+      "command": "OIL_LAB_POSTGRES_TEST=1 node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-*.test.ts tests/oil-*.test.tsx tests/shared-research-*.test.ts tests/shared-research-*.test.tsx",
+      "result": "124 passed, 0 failed, 0 skipped",
+      "log": "/private/tmp/oil-lab-final-integrated.log"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/product-intake-approve-package.test.ts tests/product-intake-research-package.test.ts tests/product-intake-review-scripts.test.ts tests/product-intake-review-workflow.test.ts tests/product-intake-review-app.test.ts tests/product-intake-worker-reliability.test.ts tests/product-intake-worker-heartbeat.test.ts tests/product-intake-worker-commerce-wiring.test.ts tests/product-intake-pipeline-*.test.ts tests/product-intake-category-research-router.test.ts tests/product-intake-router-characterization.test.ts tests/product-intake-readiness-gaps.test.ts tests/product-intake-research-readiness-self-check.test.ts",
+      "result": "362 passed, 0 failed, 0 skipped",
+      "log": "/private/tmp/oil-lab-final-intake.log"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-research-lab-dom.test.tsx tests/shared-research-lab-dom.test.tsx tests/oil-lab-publication.test.ts",
+      "result": "18 passed after test typing/render-key fix",
+      "log": "/private/tmp/oil-lab-final-delta.log"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/oil-research-lab-api.test.ts tests/oil-research-lab-dom.test.tsx tests/shared-research-lab-dom.test.tsx",
+      "result": "16 passed after duplicate-bundle guard",
+      "log": "/private/tmp/oil-lab-final-native.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed after PGlite result typing correction",
+      "log": "/private/tmp/oil-lab-final-typecheck.log"
+    },
+    {
+      "command": "npm run lint",
+      "result": "passed; 0 errors, 21 warnings",
+      "log": "/private/tmp/oil-lab-final-lint.log"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed on final source tree, including TypeScript and 230-page generation",
+      "log": "/private/tmp/oil-lab-final-build.log"
+    },
+    {
+      "command": "npm run research:oil:verify-resolved-records -- data/research/oil-inci/v1.0/record-resolution-v0.1",
+      "result": "37 ready, 0 refused, 4 corrected, 1 owner provisional; no errors",
+      "log": "/private/tmp/oil-lab-final-preservation.log"
+    },
+    {
+      "command": "npm run product-intake:oil-lab -- --help",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "red_proof": [
+    "Post-commerce identity name/brand/package drift before any insert",
+    "Exact context bytes/mirror and UUID refusal",
+    "Small-number SQL/JS hash mismatch and 128KiB boundary",
+    "Actual package-validator output current-image preflight",
+    "Missing/empty manual thickness suggestions",
+    "Malformed intake bundle queue 500",
+    "Duplicate intake bundle queue failure",
+    "Duplicate React annotation keys",
+    "Historical current-identity payload drift",
+    "SQL null-safe guards and legacy publication bypass",
+    "Two-session image rejection/publication serialization"
+  ],
+  "preservation": {
+    "compared_existing_oil_data_and_reference_files": 630,
+    "changed": 0,
+    "prior_frozen_dependency_check": 671,
+    "note": "Existing data/research/oil-inci and docs/research/oil-inci excluding routing README matched source worktree. New fresh-intake-v1 documentation is additive. Verifier independently validates frozen dependency closure."
+  },
+  "browser": {
+    "method": "CUA fallback after IAB bootstrap unavailable",
+    "verified": [
+      "37-product historical queue and full evidence",
+      "Disposable fresh intake fixture manual matching approval/completion",
+      "Nacharbeit persists and blocks completion",
+      "390px viewport fits without horizontal overflow",
+      "Primary button readable after class conflict fix"
+    ],
+    "evidence": [
+      "evidence/oil-lab-matching-approved.png",
+      "evidence/oil-lab-mobile.png",
+      "evidence/oil-lab-overview.png"
+    ],
+    "limits": "Overview screenshot precedes final duplicate-key fix; owner DOM regression proves fix. After final server restart browser-generated data:error URL was blocked by browser policy; no workaround attempted. HTTP localhost response independently 200 before final rebuild; user-facing server restarted after build."
+  },
+  "review": {
+    "router": "request-code-review",
+    "lanes": [
+      "normal correctness/integrity",
+      "structural maintainability: new native state, SQL and handoff boundaries"
+    ],
+    "counterpart": "Claude Opus/high, terminal read-only fixed packet; whole-delta findings and bounded hardening follow-up reconciled",
+    "receipt": "reviews/lab-implementation-review-2026-10-13.md",
+    "hardening_packet_sha256": "1dd98231149bac52997c4d34f8dffe27bf67125d6861a2f5721eb88a0571a239",
+    "hardening_report_sha256": "dc60b0f413aabb020260ce2475aa3cf33bfd718db17bf14c5b5b4458e62794be",
+    "root_verdict": "No blocking verified findings; locally review-ready, production activation and full migration-history proof remain separate."
+  },
+  "artifact_disposition": {
+    "commit_intended": "All 959 in-scope source/research/plan/evidence paths and these concise self-attestation receipts; no staging or commit performed",
+    "archive": "Superseded cockpit proposal retained as explicitly historical planning evidence, not acceptance evidence",
+    "discard": "Transient Claude prompt/report files and disposable QA bundle/state after concise ledger retained",
+    "intentional_runtime": "Normal task dev server retained for local review. Colima remains running because unrelated hosted-proof/mobile containers are active; no foreign container touched."
+  },
+  "limits": [
+    "Registry inactive, no live worker run",
+    "No live database migration/import/catalog write",
+    "No commit/push/PR/deploy",
+    "PostgreSQL17 concurrency proof uses minimal predecessor fixture, not full production migration history",
+    "Historical research repeatability is not measured sensory validation",
+    "No chat eval required: no changed chat/RAG/routines/eval-chat paths"
+  ],
+  "catalog_impact": {
+    "added": 0,
+    "updated": 0,
+    "local_research_profiles": 37
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "files": {
+    "source-capture.json": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297",
+    "identity-map.json": "aceaf80ee40cc16a60ec3fa14498d52240d34f638c725a6608f0e1c9326df350",
+    "display-receipts.json": "43377161f2c0c4a8230610dd5d86fe029bd4571fac7c28e44bc496df1a754e0d",
+    "historical-baseline.json": "70be8a3aed030720cadf7b5d01303e2f144bb0f9e93d25ad1c3f6f4e392cc767",
+    "preflight-receipt.json": "036555fa000560c7863bbf263fc0837068b6bb5a9e065936e9f75f03dfd8da62",
+    "input-manifest.json": "80f280c3c4c88115dc38da92e1b8840d73dfb47096501ef8cceaf48b105287f6"
+  },
+  "frozen_at": "2026-10-03",
+  "scope": "Nonblind provenance; immutable before independent classification."
+}

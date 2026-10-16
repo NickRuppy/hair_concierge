@@ -18,6 +18,8 @@ const eslintConfig = defineConfig([
     "scripts/**",
     // Retained source-render builders for approved planning evidence, not application modules.
     "plans/scanner-funnel-consolidation/preview/build*.cjs",
+    // Historical assembly bytes are pinned by the immutable Oil candidate bundles.
+    "plans/oil-inci/research/eu-full-profiles-2026-10-15/assemble.ts",
     "tests/**",
     "test-results/**",
     "tests/results/**",

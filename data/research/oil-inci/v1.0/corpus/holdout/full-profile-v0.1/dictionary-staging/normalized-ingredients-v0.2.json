@@ -1,0 +1,625 @@
+{
+  "artifact": "oil-holdout-normalized-ingredients",
+  "version": "v0.2-staging",
+  "predecessor": "normalized-ingredients.json (v0.1-staging; preserved, not amended)",
+  "source_packet": "../source-staging/source-packet-v0.2.json",
+  "tokenization_rule": "Split only commas at parenthesis depth zero; preserve raw parenthetical aliases as one ordered token.",
+  "normalization_scope": "Exact raw-token identity reconciliation only. Organic and processing qualifiers are retained as metadata. No product-level classification or performance result.",
+  "records": [
+    {
+      "source_key": "V2-S01",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIISOPROPYL ADIPATE",
+          "canonical_name": "DIISOPROPYL ADIPATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ISODECYL NEOPENTANOATE",
+          "canonical_name": "ISODECYL NEOPENTANOATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DICAPRYLYL CARBONATE",
+          "canonical_name": "DICAPRYLYL CARBONATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 5,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 6,
+          "raw_name": "C12-15 ALKYL BENZOATE",
+          "canonical_name": "C12-15 ALKYL BENZOATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 7,
+          "raw_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL (CARTHAMUS TINCTORIUS SEED OIL)",
+          "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 8,
+          "raw_name": "PERSEA GRATISSIMA (AVOCADO) OIL (PERSEA GRATISSIMA OIL)",
+          "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 9,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL (PRUNUS AMYGDALUS DULCIS OIL)",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 10,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL (RICINUS COMMUNIS SEED OIL)",
+          "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL (SIMMONDSIA CHINENSIS SEED OIL)",
+          "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 12,
+          "raw_name": "BHT",
+          "canonical_name": "BHT",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 13,
+          "raw_name": "FRAGRANCE (PARFUM)",
+          "canonical_name": "FRAGRANCE (PARFUM)",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 14,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANYL ACETATE",
+          "canonical_name": "GERANYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 16,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL (HELIANTHUS ANNUUS SEED OIL)",
+          "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 17,
+          "raw_name": "HEXADECANOLACTONE",
+          "canonical_name": "HEXADECANOLACTONE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 19,
+          "raw_name": "ISOEUGENYL ACETATE",
+          "canonical_name": "ISOEUGENYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 20,
+          "raw_name": "LINALYL ACETATE",
+          "canonical_name": "LINALYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 21,
+          "raw_name": "POGOSTEMON CABLIN OIL (POGOSTEMON CABLIN LEAF OIL)",
+          "canonical_name": "POGOSTEMON CABLIN OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 22,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 23,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        }
+      ]
+    },
+    {
+      "source_key": "V2-S02",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 3,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT.",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 4,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 5,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 6,
+          "raw_name": "GLYCERYL OLEATE",
+          "canonical_name": "GLYCERYL OLEATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 7,
+          "raw_name": "MALIC ACID",
+          "canonical_name": "MALIC ACID",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 8,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 9,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 10,
+          "raw_name": "OLEIC ACID",
+          "canonical_name": "OLEIC ACID",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 11,
+          "raw_name": "SQUALANE",
+          "canonical_name": "SQUALANE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 12,
+          "raw_name": "LECITHIN",
+          "canonical_name": "LECITHIN",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 13,
+          "raw_name": "ASCORBYL PALMITATE",
+          "canonical_name": "ASCORBYL PALMITATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 14,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 15,
+          "raw_name": "HYDROGENATED PALM GLYCERIDES CITRATE",
+          "canonical_name": "HYDROGENATED PALM GLYCERIDES CITRATE",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        }
+      ]
+    },
+    {
+      "source_key": "V2-S03",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "SQUALANE",
+          "canonical_name": "SQUALANE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        }
+      ]
+    },
+    {
+      "source_key": "V2-S04",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ORGANIC CALENDULA OFFICINALIS FLOWER OIL",
+          "canonical_name": "CALENDULA OFFICINALIS FLOWER OIL",
+          "mapping_basis": "organic_qualifier_removed_identity_only",
+          "identity_metadata": {
+            "organic_qualifier_present": true,
+            "processing_or_preparation_qualifier": null,
+            "normalization_limit": "Identity normalized only; carrier/preparation remains unresolved."
+          }
+        },
+        {
+          "rank": 2,
+          "raw_name": "ORGANIC DECOLORIZED ALOE BARBADENSIS LEAF OIL",
+          "canonical_name": "ALOE BARBADENSIS LEAF OIL",
+          "mapping_basis": "organic_and_processing_qualifiers_removed_existing_identity",
+          "identity_metadata": {
+            "organic_qualifier_present": true,
+            "processing_or_preparation_qualifier": "DECOLORIZED",
+            "normalization_limit": "Qualifier removed only for identity reconciliation; no function or material transfer."
+          }
+        },
+        {
+          "rank": 3,
+          "raw_name": "ORGANIC COCOS NUCIFERA (COCONUT) FRUIT OIL",
+          "canonical_name": "COCOS NUCIFERA (COCONUT) FRUIT OIL",
+          "mapping_basis": "organic_qualifier_removed_identity_only",
+          "identity_metadata": {
+            "organic_qualifier_present": true,
+            "processing_or_preparation_qualifier": null,
+            "normalization_limit": "Distinct fruit-oil declaration; not normalized to COCOS NUCIFERA OIL."
+          }
+        },
+        {
+          "rank": 4,
+          "raw_name": "ORGANIC ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+          "mapping_basis": "organic_qualifier_removed_existing_identity",
+          "identity_metadata": {
+            "organic_qualifier_present": true,
+            "processing_or_preparation_qualifier": null,
+            "normalization_limit": "Qualifier removed only for identity reconciliation; no function or material transfer."
+          }
+        },
+        {
+          "rank": 5,
+          "raw_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL",
+          "canonical_name": "OENOCARPUS BATAUA (RAHUA UNGURAHUA) OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 6,
+          "raw_name": "MAURITIA FLEXUOSA (MORETE) FRUIT OIL",
+          "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 7,
+          "raw_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL",
+          "canonical_name": "PLUKENETIA VOLUBILIS (SACHA INCHI) SEED OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 8,
+          "raw_name": "AROMA",
+          "canonical_name": "AROMA",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 9,
+          "raw_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL",
+          "canonical_name": "GARDENIA JASMINOIDES (GARDENIA ENFLEURAGE) OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        }
+      ]
+    },
+    {
+      "source_key": "V2-S05",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCONUT ALKANES",
+          "canonical_name": "COCONUT ALKANES",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 4,
+          "raw_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 5,
+          "raw_name": "CRAMBE ABYSSINICA SEED OIL",
+          "canonical_name": "CRAMBE ABYSSINICA SEED OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 6,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 7,
+          "raw_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+          "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 8,
+          "raw_name": "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+          "canonical_name": "BUTYROSPERMUM PARKII BUTTER",
+          "mapping_basis": "reviewed_parenthetical_identity_alias_primary_supplier_review"
+        },
+        {
+          "rank": 9,
+          "raw_name": "ARGANIA SPINOSA KERNEL OIL",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 10,
+          "raw_name": "TOCOPHEROL",
+          "canonical_name": "TOCOPHEROL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 11,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 12,
+          "raw_name": "ORBIGNYA SPECIOSA KERNEL OIL",
+          "canonical_name": "ORBIGNYA SPECIOSA KERNEL OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYSILICONE-15",
+          "canonical_name": "POLYSILICONE-15",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 14,
+          "raw_name": "ASTROCARYUM MURUMURU SEED BUTTER",
+          "canonical_name": "ASTROCARYUM MURUMURU SEED BUTTER",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 15,
+          "raw_name": "CITRUS LIMON (LEMON) PEEL OIL",
+          "canonical_name": "CITRUS LIMON PEEL OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 16,
+          "raw_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT",
+          "canonical_name": "SANTALUM ALBUM (SANDALWOOD) WOOD EXTRACT",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 17,
+          "raw_name": "OLEA EUROPAEA (OLIVE) FRUIT OIL",
+          "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+          "mapping_basis": "reviewed_alias_material_weight_reference"
+        },
+        {
+          "rank": 18,
+          "raw_name": "CITRULLUS LANATUS (WATERMELON) SEED OIL",
+          "canonical_name": "CITRULLUS LANATUS SEED OIL",
+          "mapping_basis": "reviewed_parenthetical_alias"
+        },
+        {
+          "rank": 19,
+          "raw_name": "RIBES NIGRUM (BLACK CURRANT) SEED OIL",
+          "canonical_name": "RIBES NIGRUM SEED OIL",
+          "mapping_basis": "reviewed_alias_material_weight_reference"
+        },
+        {
+          "rank": 20,
+          "raw_name": "JASMINUM OFFICINALE (JASMINE) OIL",
+          "canonical_name": "JASMINUM OFFICINALE (JASMINE) OIL",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 21,
+          "raw_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT",
+          "canonical_name": "LEONTOPODIUM ALPINUM FLOWER/LEAF EXTRACT",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 22,
+          "raw_name": "LITCHI CHINENSIS FRUIT EXTRACT",
+          "canonical_name": "LITCHI CHINENSIS FRUIT EXTRACT",
+          "mapping_basis": "new_exact_identity_requires_function_review"
+        },
+        {
+          "rank": 23,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 24,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 25,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 26,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 27,
+          "raw_name": "CITRAL",
+          "canonical_name": "CITRAL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 28,
+          "raw_name": "HEXAMETHYLINDANOPYRAN",
+          "canonical_name": "HEXAMETHYLINDANOPYRAN",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 29,
+          "raw_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 30,
+          "raw_name": "CITRUS AURANTIUM BERGAMIA (BERGAMOT) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+          "mapping_basis": "reviewed_parenthetical_alias_existing_dictionary"
+        }
+      ]
+    },
+    {
+      "source_key": "V2-S06",
+      "ingredients": [
+        {
+          "rank": 1,
+          "raw_name": "CYCLOPENTASILOXANE",
+          "canonical_name": "CYCLOPENTASILOXANE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 2,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER",
+          "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM/FRAGRANCE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 6,
+          "raw_name": "TOCOPHERYL ACETATE",
+          "canonical_name": "TOCOPHERYL ACETATE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 7,
+          "raw_name": "HEXYL CINNAMAL",
+          "canonical_name": "HEXYL CINNAMAL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 8,
+          "raw_name": "LINALOOL",
+          "canonical_name": "LINALOOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 9,
+          "raw_name": "ALPHA-ISOMETHYL IONONE",
+          "canonical_name": "ALPHA-ISOMETHYL IONONE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 10,
+          "raw_name": "COUMARIN",
+          "canonical_name": "COUMARIN",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 11,
+          "raw_name": "CAMELLIA OLEIFERA SEED OIL",
+          "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 12,
+          "raw_name": "LIMONENE",
+          "canonical_name": "LIMONENE",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 13,
+          "raw_name": "CITRONELLOL",
+          "canonical_name": "CITRONELLOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 14,
+          "raw_name": "FARNESOL",
+          "canonical_name": "FARNESOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        },
+        {
+          "rank": 15,
+          "raw_name": "GERANIOL",
+          "canonical_name": "GERANIOL",
+          "mapping_basis": "exact_existing_dictionary_entry"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "product_count": 6,
+    "raw_token_count": 93,
+    "unique_canonical_identities": 73,
+    "reused_frozen_base_canonicals": 46,
+    "successor_review_entries": 27
+  }
+}

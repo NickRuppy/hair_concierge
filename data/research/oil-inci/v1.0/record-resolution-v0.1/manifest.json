@@ -1,0 +1,489 @@
+{
+  "version": "oil-record-resolution-replay-v0.1",
+  "run_id": "oil-record-resolution-v0.1",
+  "predecessor_manifest": {
+    "path": "data/research/oil-inci/v1.0/adapter-replay-v0.2/manifest.json",
+    "sha256": "3bbdf12c5effaa9595abbb7c319c76e71e3f93492f7b462ed67be2d493f6c868"
+  },
+  "files": [
+    {
+      "path": "envelopes/oil-persistence-01.json",
+      "sha256": "b3f67d99ebdc959ea236e1901572dae8c4862eab0b235e84bbf9f4a9242fdd93"
+    },
+    {
+      "path": "envelopes/oil-persistence-03.json",
+      "sha256": "646cbc6ee81b4dbd74783e4b2e71bd89c7f6ced9d939e0612300861b891892d3"
+    },
+    {
+      "path": "envelopes/oil-persistence-04.json",
+      "sha256": "f8045beaeb4de02a725ffb0b8c19c6e22ef4eedd44a481cc8857a8e22d1a41a2"
+    },
+    {
+      "path": "envelopes/oil-persistence-05.json",
+      "sha256": "674f061d63e83499aec043daafdcbb2ab9b645443e70b2c5f907b48ae6d7b8da"
+    },
+    {
+      "path": "envelopes/oil-persistence-06.json",
+      "sha256": "52e1c291a5f81ca305301457869caac643aff747992fc66b36df1bca5ff310c5"
+    },
+    {
+      "path": "envelopes/oil-persistence-07.json",
+      "sha256": "56c7d8d7ba69b7a353d79397bbdf826b38079efc39f9e0462acded408fbd5e33"
+    },
+    {
+      "path": "envelopes/oil-persistence-08.json",
+      "sha256": "9d49e28f1f4cbeb42548c896e70f4d40902e81a29747dbd82bd106e85b361fb2"
+    },
+    {
+      "path": "envelopes/oil-persistence-09.json",
+      "sha256": "5a56aedc0352cc64b40b752ce200be1dbf940fe410a74bd263e04130a4ad2b36"
+    },
+    {
+      "path": "envelopes/oil-persistence-10.json",
+      "sha256": "df0a196cd951565e116ae7180bda0f5780babb6d4414f215ef781d9bcfcd21a7"
+    },
+    {
+      "path": "envelopes/oil-persistence-11.json",
+      "sha256": "f59034202659797aaef9f411b320fa24f4854515112c63b3377c003078581880"
+    },
+    {
+      "path": "envelopes/oil-persistence-12.json",
+      "sha256": "b34954250f580a65e919d8c425627c4d044ee041c18e58f6232828857fabcaf2"
+    },
+    {
+      "path": "envelopes/oil-persistence-13.json",
+      "sha256": "645a7112f60f900a60a6a13d9d36d85e64ae39b9432410c5274a81b592c1737e"
+    },
+    {
+      "path": "envelopes/oil-persistence-14.json",
+      "sha256": "3af2eba21382aceb2cef2622271154ac6a8dadea183c51222b62a559b3a1b2f7"
+    },
+    {
+      "path": "envelopes/oil-persistence-15.json",
+      "sha256": "2b8ce7ea0d62df81387e4adbc2bafaba5d0c1708920058e1553db4acb1306b58"
+    },
+    {
+      "path": "envelopes/oil-persistence-16.json",
+      "sha256": "0cf7c9ba252ea17223f72ce65492447ec6d453cb69a78eb321007dbf19a7db22"
+    },
+    {
+      "path": "envelopes/oil-persistence-17.json",
+      "sha256": "5f1cd5edd4395b58a44826bdc8df088a7591b505951ab28dfcb23e9eec03493a"
+    },
+    {
+      "path": "envelopes/oil-persistence-18.json",
+      "sha256": "709aeba2d0ab0d35c86d6804b392ccbf654a4cf5ff2a7ab5a2d3c0b9e46a7910"
+    },
+    {
+      "path": "envelopes/oil-persistence-19.json",
+      "sha256": "1b2445ee515db64e9e005937bbd1ad89f15fa663674db836eaeced1bb23d3972"
+    },
+    {
+      "path": "envelopes/oil-persistence-20.json",
+      "sha256": "c0dcbd8eaf4f27108da03442dd9983c92d1b4ab862550e84256965fc7545a9e9"
+    },
+    {
+      "path": "envelopes/oil-persistence-21.json",
+      "sha256": "cc30035c73a996eb5c23e6636c96c73eca4e1bb29a21528c829b7943d1261645"
+    },
+    {
+      "path": "envelopes/oil-persistence-22.json",
+      "sha256": "d5c295ac73bd76fa112c13b547b4effd32d497258248d8fdcf9339dac647db1d"
+    },
+    {
+      "path": "envelopes/oil-persistence-23.json",
+      "sha256": "3321904ec4141573c0721ece696e5ba49c6d7335ece6800ffd77677d38bab217"
+    },
+    {
+      "path": "envelopes/oil-persistence-24.json",
+      "sha256": "319757677a418316b9b6f16c03e55563743b86f570c702654eace23b58fdcc44"
+    },
+    {
+      "path": "envelopes/oil-persistence-25.json",
+      "sha256": "c57733bd25903ca6cddcfb6d0f1d9de190cd74623b8c40b5d58080900b6fdcff"
+    },
+    {
+      "path": "envelopes/oil-persistence-26.json",
+      "sha256": "fe7dafa8d848e90997a8813f4e9f7fcc4cae31d59fcc582a2cfbc8f513a29024"
+    },
+    {
+      "path": "envelopes/oil-persistence-27.json",
+      "sha256": "939593a6a2e61681828e6749bab11c17ba882b652db4645eb1907ce68793c08a"
+    },
+    {
+      "path": "envelopes/oil-persistence-28.json",
+      "sha256": "681e38626ec3960a4a5db8262bafafc88d48355502f6f0edc0fb1cec63cc9f86"
+    },
+    {
+      "path": "envelopes/oil-holdout-h01.json",
+      "sha256": "d125adfd96d6e1b450bc68cd47a61172cecbbedac13e19703dbcd512772f4e56"
+    },
+    {
+      "path": "envelopes/oil-holdout-h02.json",
+      "sha256": "5812dbc1cefec488c3ad698b506fd3adec8a0fcf4eb36d9d39ae3e9a36253b31"
+    },
+    {
+      "path": "envelopes/oil-holdout-h03.json",
+      "sha256": "28872ddf062a020bfe2a6583a497f9662c9eaca586b82e1cd7500ba2b7dea423"
+    },
+    {
+      "path": "envelopes/oil-holdout-h04.json",
+      "sha256": "920c015508a09bca21533fc742297347022d6946840d45f2ccf369bfba6ed23c"
+    },
+    {
+      "path": "envelopes/oil-holdout-h05.json",
+      "sha256": "5c2acfecc266564a2c434d4b408b204901978e88940d91226ded4b8732be9676"
+    },
+    {
+      "path": "envelopes/oil-holdout-h06.json",
+      "sha256": "b5aaba0d9a3428c6ac0cef3bc87d524d464335d0e254e632cc97a61272105277"
+    },
+    {
+      "path": "envelopes/oil-targeted-t01.json",
+      "sha256": "df91c4142290c320f3f5159506c268a8c4e4214e10fdbb8794b2e67f225dcc6c"
+    },
+    {
+      "path": "envelopes/oil-targeted-t02.json",
+      "sha256": "79ae4a519ab926cedd52d31401e6d2cdfaa811be72a269d84d0725c2ca1f7829"
+    },
+    {
+      "path": "envelopes/oil-targeted-t04.json",
+      "sha256": "40eb56b6163c8119da025d12cac436a9c18db103783ad2339cfcea928140f618"
+    },
+    {
+      "path": "envelopes/oil-targeted-t06.json",
+      "sha256": "5b521d924d051099ce59e969e56c7587c90b36771da8a1d86a798cec6c6ee4b1"
+    },
+    {
+      "path": "resolution-authorities.json",
+      "sha256": "6a9255853f3b5f26ab52b55e222d8c6fa2142079441fbe539c6e2d3ddda16069"
+    },
+    {
+      "path": "profiles.json",
+      "sha256": "ebe972352f9073e60b36011ecbbb4f658fc01e5b8ff163a0c5321742c0205c8f"
+    },
+    {
+      "path": "persistence-traces.json",
+      "sha256": "3579234b377ca12bb883f0bb4d55d9c7f2055fa1c6a5ba36e4ed66f084169c60"
+    },
+    {
+      "path": "scenario-fit.json",
+      "sha256": "9bce05a8e80650168abb7db03442859342d7b831666d91daa77a891c02ad4051"
+    }
+  ],
+  "records": [
+    {
+      "case_id": "O01",
+      "product_key": "oil-persistence-01",
+      "envelope_path": "envelopes/oil-persistence-01.json",
+      "sha256": "b3f67d99ebdc959ea236e1901572dae8c4862eab0b235e84bbf9f4a9242fdd93",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O03",
+      "product_key": "oil-persistence-03",
+      "envelope_path": "envelopes/oil-persistence-03.json",
+      "sha256": "646cbc6ee81b4dbd74783e4b2e71bd89c7f6ced9d939e0612300861b891892d3",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O04",
+      "product_key": "oil-persistence-04",
+      "envelope_path": "envelopes/oil-persistence-04.json",
+      "sha256": "f8045beaeb4de02a725ffb0b8c19c6e22ef4eedd44a481cc8857a8e22d1a41a2",
+      "status": "ready",
+      "corrected": true
+    },
+    {
+      "case_id": "O05",
+      "product_key": "oil-persistence-05",
+      "envelope_path": "envelopes/oil-persistence-05.json",
+      "sha256": "674f061d63e83499aec043daafdcbb2ab9b645443e70b2c5f907b48ae6d7b8da",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O06",
+      "product_key": "oil-persistence-06",
+      "envelope_path": "envelopes/oil-persistence-06.json",
+      "sha256": "52e1c291a5f81ca305301457869caac643aff747992fc66b36df1bca5ff310c5",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O07",
+      "product_key": "oil-persistence-07",
+      "envelope_path": "envelopes/oil-persistence-07.json",
+      "sha256": "56c7d8d7ba69b7a353d79397bbdf826b38079efc39f9e0462acded408fbd5e33",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O08",
+      "product_key": "oil-persistence-08",
+      "envelope_path": "envelopes/oil-persistence-08.json",
+      "sha256": "9d49e28f1f4cbeb42548c896e70f4d40902e81a29747dbd82bd106e85b361fb2",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O09",
+      "product_key": "oil-persistence-09",
+      "envelope_path": "envelopes/oil-persistence-09.json",
+      "sha256": "5a56aedc0352cc64b40b752ce200be1dbf940fe410a74bd263e04130a4ad2b36",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O10",
+      "product_key": "oil-persistence-10",
+      "envelope_path": "envelopes/oil-persistence-10.json",
+      "sha256": "df0a196cd951565e116ae7180bda0f5780babb6d4414f215ef781d9bcfcd21a7",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O11",
+      "product_key": "oil-persistence-11",
+      "envelope_path": "envelopes/oil-persistence-11.json",
+      "sha256": "f59034202659797aaef9f411b320fa24f4854515112c63b3377c003078581880",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O12",
+      "product_key": "oil-persistence-12",
+      "envelope_path": "envelopes/oil-persistence-12.json",
+      "sha256": "b34954250f580a65e919d8c425627c4d044ee041c18e58f6232828857fabcaf2",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O13",
+      "product_key": "oil-persistence-13",
+      "envelope_path": "envelopes/oil-persistence-13.json",
+      "sha256": "645a7112f60f900a60a6a13d9d36d85e64ae39b9432410c5274a81b592c1737e",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O14",
+      "product_key": "oil-persistence-14",
+      "envelope_path": "envelopes/oil-persistence-14.json",
+      "sha256": "3af2eba21382aceb2cef2622271154ac6a8dadea183c51222b62a559b3a1b2f7",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O15",
+      "product_key": "oil-persistence-15",
+      "envelope_path": "envelopes/oil-persistence-15.json",
+      "sha256": "2b8ce7ea0d62df81387e4adbc2bafaba5d0c1708920058e1553db4acb1306b58",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O16",
+      "product_key": "oil-persistence-16",
+      "envelope_path": "envelopes/oil-persistence-16.json",
+      "sha256": "0cf7c9ba252ea17223f72ce65492447ec6d453cb69a78eb321007dbf19a7db22",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O17",
+      "product_key": "oil-persistence-17",
+      "envelope_path": "envelopes/oil-persistence-17.json",
+      "sha256": "5f1cd5edd4395b58a44826bdc8df088a7591b505951ab28dfcb23e9eec03493a",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O18",
+      "product_key": "oil-persistence-18",
+      "envelope_path": "envelopes/oil-persistence-18.json",
+      "sha256": "709aeba2d0ab0d35c86d6804b392ccbf654a4cf5ff2a7ab5a2d3c0b9e46a7910",
+      "status": "ready",
+      "corrected": true
+    },
+    {
+      "case_id": "O19",
+      "product_key": "oil-persistence-19",
+      "envelope_path": "envelopes/oil-persistence-19.json",
+      "sha256": "1b2445ee515db64e9e005937bbd1ad89f15fa663674db836eaeced1bb23d3972",
+      "status": "ready",
+      "corrected": true
+    },
+    {
+      "case_id": "O20",
+      "product_key": "oil-persistence-20",
+      "envelope_path": "envelopes/oil-persistence-20.json",
+      "sha256": "c0dcbd8eaf4f27108da03442dd9983c92d1b4ab862550e84256965fc7545a9e9",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O21",
+      "product_key": "oil-persistence-21",
+      "envelope_path": "envelopes/oil-persistence-21.json",
+      "sha256": "cc30035c73a996eb5c23e6636c96c73eca4e1bb29a21528c829b7943d1261645",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O22",
+      "product_key": "oil-persistence-22",
+      "envelope_path": "envelopes/oil-persistence-22.json",
+      "sha256": "d5c295ac73bd76fa112c13b547b4effd32d497258248d8fdcf9339dac647db1d",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O23",
+      "product_key": "oil-persistence-23",
+      "envelope_path": "envelopes/oil-persistence-23.json",
+      "sha256": "3321904ec4141573c0721ece696e5ba49c6d7335ece6800ffd77677d38bab217",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O24",
+      "product_key": "oil-persistence-24",
+      "envelope_path": "envelopes/oil-persistence-24.json",
+      "sha256": "319757677a418316b9b6f16c03e55563743b86f570c702654eace23b58fdcc44",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O25",
+      "product_key": "oil-persistence-25",
+      "envelope_path": "envelopes/oil-persistence-25.json",
+      "sha256": "c57733bd25903ca6cddcfb6d0f1d9de190cd74623b8c40b5d58080900b6fdcff",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O26",
+      "product_key": "oil-persistence-26",
+      "envelope_path": "envelopes/oil-persistence-26.json",
+      "sha256": "fe7dafa8d848e90997a8813f4e9f7fcc4cae31d59fcc582a2cfbc8f513a29024",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O27",
+      "product_key": "oil-persistence-27",
+      "envelope_path": "envelopes/oil-persistence-27.json",
+      "sha256": "939593a6a2e61681828e6749bab11c17ba882b652db4645eb1907ce68793c08a",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "O28",
+      "product_key": "oil-persistence-28",
+      "envelope_path": "envelopes/oil-persistence-28.json",
+      "sha256": "681e38626ec3960a4a5db8262bafafc88d48355502f6f0edc0fb1cec63cc9f86",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "H01",
+      "product_key": "oil-holdout-h01",
+      "envelope_path": "envelopes/oil-holdout-h01.json",
+      "sha256": "d125adfd96d6e1b450bc68cd47a61172cecbbedac13e19703dbcd512772f4e56",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "H02",
+      "product_key": "oil-holdout-h02",
+      "envelope_path": "envelopes/oil-holdout-h02.json",
+      "sha256": "5812dbc1cefec488c3ad698b506fd3adec8a0fcf4eb36d9d39ae3e9a36253b31",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "H03",
+      "product_key": "oil-holdout-h03",
+      "envelope_path": "envelopes/oil-holdout-h03.json",
+      "sha256": "28872ddf062a020bfe2a6583a497f9662c9eaca586b82e1cd7500ba2b7dea423",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "H04",
+      "product_key": "oil-holdout-h04",
+      "envelope_path": "envelopes/oil-holdout-h04.json",
+      "sha256": "920c015508a09bca21533fc742297347022d6946840d45f2ccf369bfba6ed23c",
+      "status": "ready",
+      "corrected": true,
+      "adjudication_kind": "owner_provisional_weight",
+      "estimate": true,
+      "confidence": "low",
+      "nearest_alternative": "rich",
+      "caveat": "Leading carrier/preparation identities and measured hair-weight performance remain undisclosed.",
+      "authority": {
+        "path": "data/research/oil-inci/v1.0/record-resolution-v0.1/resolution-authorities.json",
+        "sha256": "6a9255853f3b5f26ab52b55e222d8c6fa2142079441fbe539c6e2d3ddda16069",
+        "json_pointer": "/records/3"
+      }
+    },
+    {
+      "case_id": "H05",
+      "product_key": "oil-holdout-h05",
+      "envelope_path": "envelopes/oil-holdout-h05.json",
+      "sha256": "5c2acfecc266564a2c434d4b408b204901978e88940d91226ded4b8732be9676",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "H06",
+      "product_key": "oil-holdout-h06",
+      "envelope_path": "envelopes/oil-holdout-h06.json",
+      "sha256": "b5aaba0d9a3428c6ac0cef3bc87d524d464335d0e254e632cc97a61272105277",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "T01",
+      "product_key": "oil-targeted-t01",
+      "envelope_path": "envelopes/oil-targeted-t01.json",
+      "sha256": "df91c4142290c320f3f5159506c268a8c4e4214e10fdbb8794b2e67f225dcc6c",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "T02",
+      "product_key": "oil-targeted-t02",
+      "envelope_path": "envelopes/oil-targeted-t02.json",
+      "sha256": "79ae4a519ab926cedd52d31401e6d2cdfaa811be72a269d84d0725c2ca1f7829",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "T04",
+      "product_key": "oil-targeted-t04",
+      "envelope_path": "envelopes/oil-targeted-t04.json",
+      "sha256": "40eb56b6163c8119da025d12cac436a9c18db103783ad2339cfcea928140f618",
+      "status": "ready",
+      "corrected": false
+    },
+    {
+      "case_id": "T06",
+      "product_key": "oil-targeted-t06",
+      "envelope_path": "envelopes/oil-targeted-t06.json",
+      "sha256": "5b521d924d051099ce59e969e56c7587c90b36771da8a1d86a798cec6c6ee4b1",
+      "status": "ready",
+      "corrected": false
+    }
+  ],
+  "totals": {
+    "records": 37,
+    "ready": 37,
+    "refused": 0,
+    "corrected": 4,
+    "owner_provisional": 1
+  }
+}

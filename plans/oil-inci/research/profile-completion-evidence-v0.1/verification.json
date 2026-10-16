@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-09",
+  "checks": {
+    "eight_distinct_fields": true,
+    "three_resolved_five_unknown": true,
+    "all_source_references_exist": true,
+    "six_base_descriptions": true,
+    "frozen_input_hashes_match": true,
+    "image_hashes_match": true,
+    "raw_formula_hashes_match": true
+  },
+  "result": "pass",
+  "evidence_sha256": "1c8f8286bf426df7b95a988a7fb819c669e20b6433550c8ce189e6df326e6cac",
+  "report_sha256": "2006e09ca98eccf4f7916fa747b2c5bf61ad050ebbb50dc01f6b785964d39001",
+  "limits": "Artifact integrity, not empirical property validation or full repository readiness."
+}

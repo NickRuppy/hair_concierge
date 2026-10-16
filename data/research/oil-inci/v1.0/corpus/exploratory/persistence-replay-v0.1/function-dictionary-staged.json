@@ -1,0 +1,2819 @@
+{
+  "scope": "Function evidence only; no material weight/binary build-up values or targets",
+  "entries": [
+    {
+      "canonical_name": "1,2-HEXANEDIOL",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ACETYL CEDRENE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact declared identity; function requires source review. No assumed coating role or negligible residue.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALCOHOL DENAT.",
+      "roles": [
+        "solvent_alcohol"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALOE BARBADENSIS LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ALPHA-TERPINENE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AMARANTHUS CAUDATUS SEED EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AMYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AMYL SALICYLATE",
+      "roles": [
+        "fragrance",
+        "skin_conditioner"
+      ],
+      "notes": "Exact fragrance/skin-conditioning functions; no measured residual contribution.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "APIUM GRAVEOLENS (CELERY) SEED EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AQUA",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "notes": "Water vehicle does not decide residual architecture.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "AQUA/WATER",
+      "roles": [
+        "aqueous_vehicle"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK ROOT) EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ARCTIUM LAPPA (BURDOCK) ROOT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL (ARGAN) OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ASCORBIC ACID",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ASCORBIC ACID (VITAMIN C)",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AVENA SATIVA PEPTIDE",
+      "roles": [
+        "botanical_peptide"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "AZADIRACHTA INDICA LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BACOPA MONNIERI LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BAMBUSA VULGARIS EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BASILICUM (BASIL) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL ALCOHOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL BENZOATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL CINNAMATE",
+      "roles": [
+        "fragrance"
+      ],
+      "notes": "Exact fragrance identity; not assigned a substantial conditioning-film function.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL NICOTINATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BENZYL SALICYLATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BETA-CAROTENE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BIOTIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BIS-CETEARYL AMODIMETHICONE",
+      "roles": [
+        "silicone_conditioning_polymer",
+        "conditioning_film"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BIXA ORELLANA SEED EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BORAGO OFFICINALIS SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BRASSICA CAMPESTRIS/ALEURITES FORDI OIL COPOLYMER",
+      "roles": [
+        "modified_oil_polymer",
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BRASSICA NIGRA SEED OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA (BROCCOLI) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BUTYLENE GLYCOL",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "BUTYLENE/ETHYLENE/STYRENE COPOLYMER",
+      "roles": [
+        "hydrocarbon_gelling_polymer",
+        "structurant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "C12-15 ALKYL BENZOATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "C13-14 ISOALKANE",
+      "roles": [
+        "hydrocarbon_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "roles": [
+        "hydrocarbon_carrier",
+        "rheology_system_component"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "C13-15 ALKANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "C9-12 ALKANE",
+      "roles": [
+        "hydrocarbon_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMELINA SATIVA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMELLIA JAPONICA FLOWER EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMELLIA JAPONICA SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMELLIA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMELLIA SINENSIS LEAF EXTRACT",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact botanical extract identity supported; preparation/carrier and residual conditioning function unassessed. Not an intact oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAMPHOR",
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CANANGA ODORATA OIL/EXTRACT",
+      "roles": [
+        "aromatic_botanical_preparation"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL CAPRYLATE/CAPRATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "roles": [
+        "multifunctional_diol",
+        "not_assessed"
+      ],
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPRYLYL METHICONE",
+      "roles": [
+        "silicone_emollient"
+      ],
+      "notes": "Supplier exact identity supports spreading emollient function; skin sensory wording is not hair residue. Grade/retained load unestablished.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CAPSANTHIN/CAPSORUBIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CARVONE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CASSIA AURICULATA LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CASTOR ISOSTEARATE SUCCINATE",
+      "roles": [
+        "modified_castor_derivative",
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CHLORPHENESIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CHOLECALCIFEROL (VITAMIN D)",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CI 17200",
+      "roles": [
+        "colourant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CI 19140",
+      "roles": [
+        "colourant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CI 47005",
+      "roles": [
+        "colourant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CINNAMYL ALCOHOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRIC ACID",
+      "roles": [
+        "acid",
+        "ph_adjustment_clue"
+      ],
+      "notes": "No finished pH or persistence inferred.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CITRONELLOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRULLUS LANATUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS AURANTIUM PEEL OIL",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "CITRUS LIMON PEEL OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "COCO-CAPRYLATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "COCO-CAPRYLATE/CAPRATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "COCOS NUCIFERA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CORYLUS AVELLANA SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "COUMARIN",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CYCLOHEXASILOXANE",
+      "roles": [
+        "silicone_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "notes": "Volatile D5; no blend-residue inference.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DICAPRYLYL ETHER",
+      "roles": [
+        "emollient"
+      ],
+      "notes": "Emollience does not itself prove low persistence.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "DIETHYLHEXYL SODIUM SULFOSUCCINATE",
+      "roles": [
+        "surfactant",
+        "emulsifier",
+        "wetting_agent"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIISOSTEARYL MALATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Previously reviewed exact material functions copied; no weight, penetration or product build-up answer is included. Grade/dose/residual load remain unestablished.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE CROSSPOLYMER",
+      "roles": [
+        "silicone_elastomer",
+        "texture_rheology_modifier"
+      ],
+      "notes": "Supplier elastomer blend used in haircare; thickening/texture role. Not automatically an independent substantial conditioning film; no grade or blend percentages transfer.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONE/VINYL DIMETHICONE CROSSPOLYMER",
+      "roles": [
+        "silicone_elastomer",
+        "structurant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHICONOL",
+      "roles": [
+        "silicone_gum",
+        "conditioning_film"
+      ],
+      "notes": "Gum/residual-film signal; finished load and durability require architecture and grade.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DIMETHYL PHENETHYL ACETATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DISILOXANE",
+      "roles": [
+        "silicone_carrier",
+        "volatile_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "DISODIUM EDTA",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact declared identity; function requires source review. No assumed coating role or negligible residue.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ECLIPTA PROSTRATA EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EQUISETUM ARVENSE (HORSETAIL) EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLENE/PROPYLENE/STYRENE COPOLYMER",
+      "roles": [
+        "hydrocarbon_gelling_polymer",
+        "structurant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "roles": [
+        "recognized_uv_filter"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ETHYLHEXYLGLYCERIN",
+      "roles": [
+        "conditioning_auxiliary",
+        "humectant"
+      ],
+      "notes": " Flag-scope review: this exact identity is not a silicone, liquid mineral oil, listed solvent alcohol, enumerated declared fragrance/allergen, or member of the closed scalp-active group. Natural odor or unknown trace constituents are not inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBOLUS (EUCALYPTUS) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS LEAF (EUCALYPTUS) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EUCALYPTUS GLOBULUS OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EUGENIA CARYOPHYLLUS (CLOVE) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "EUGENOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "FARNESOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GARDENIA TAHITENSIS FLOWER EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GERANIOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GERANYL ACETATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERIN",
+      "roles": [
+        "humectant"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLEATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "notes": "Exact lipid ester; no generic weight or build-up class.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GLYCERYL LINOLENATE",
+      "roles": [
+        "lipid_ester_emollient"
+      ],
+      "notes": "Exact lipid ester/emollient function; not a generic weight/build-up class.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "GLYCINE SOJA (SOYBEAN) OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS OIL",
+      "roles": [
+        "botanical_oil_plant_part_unspecified",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HEXAMETHYLINDANOPYRAN",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HEXYL CINNAMAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HEXYLENE GLYCOL",
+      "roles": [
+        "solvent",
+        "emulsifying_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE",
+      "roles": [
+        "derived_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED FARNESENE",
+      "roles": [
+        "hydrocarbon_emollient",
+        "solvent_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+      "roles": [
+        "derived_emollient",
+        "hair_conditioning"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED SOY PROTEIN",
+      "roles": [
+        "hydrolyzed_protein_conditioner"
+      ],
+      "notes": "Exact hydrolyzed protein conditioning clue; actual molecular-weight, grade, film load and behavior unestablished. No repair/protein-direction property.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+      "roles": [
+        "modified_protein_conditioner"
+      ],
+      "notes": "Exact modified ingredient distinct from plain vegetable protein. Functional clue only; no actual grade/film load or repair flag.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ISOAMYL LAURATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ISODODECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ISOEUGENYL ACETATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ISOHEXADECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ISOPROPYL MYRISTATE",
+      "roles": [
+        "defined_ester_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "JOJOBA ESTERS",
+      "roles": [
+        "jojoba_derived_ester_emollient",
+        "grade_dependent_wax"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "JUNIPERUS VIRGINIANA OIL",
+      "roles": [
+        "declared_fragrance_allergen",
+        "essential_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAURETH-7",
+      "roles": [
+        "emulsifying_auxiliary",
+        "rheology_system_component"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA (LAVENDER) OIL/EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA LATIFOLIA (LAVENDER) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/ EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAVANDULA OIL/EXTRACT",
+      "roles": [
+        "fragrance_group",
+        "botanical_preparation_unspecified"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LIMONENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LINALOOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LINALYL ACETATE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Declared exposure regardless of perfuming intent. Benzyl Alcohol is not drying_alcohol; Benzyl Salicylate is not an admitted Annex VI UV filter. Named substances/groups only; this seed is not exhaustive.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MACADAMIA INTEGRIFOLIA SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MAGNESIUM SULFATE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MALVA SYLVESTRIS EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MANGIFERA INDICA (MANGO) SEED BUTTER",
+      "roles": [
+        "botanical_seed_fat"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MAURITIA FLEXUOSA FRUIT OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MEADOWFOAM ESTOLIDE",
+      "roles": [
+        "derived_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MELALEUCA ALTERNIFOLIA (TEA TREE) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MELALUECA ALTERNIFOLIA (TEA TREE) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MELIA AZADIRACHTA SEED OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHA ARVENSIS (PEPPERMINT) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHA ARVENSIS LEAF OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHA PIPERITA (PEPPERMINT) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHA PIPERITA OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHA VIRIDIS (SPEARMINT) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MENTHOL",
+      "roles": [
+        "cooling_or_aromatic_auxiliary",
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "METHYL SALICYLATE",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MICA",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MORINDA CITRIFOLIA FRUIT EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "NIGELLA SATIVA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OCIMUM",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OCIMUM BASILICUM (BASIL) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OCTYLDODECANOL",
+      "roles": [
+        "emollient",
+        "solvent"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OENOTHERA BIENNIS (EVENING PRIMROSE) OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "OLEA EUROPAEA FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ONOSMA HISPIDUM ROOT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ORBIGNYA OLEIFERA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ORYZA SATIVA (RICE) BRAN OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ORYZA SATIVA BRAN OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Exact intact botanical fixed-oil identity and generic emollient function only. No measured hair persistence, grade, concentration, weight class or penetration inference. Modified derivatives and extracts remain distinct.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM (FRAGRANCE)",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM (NATURALLY DERIVED FRAGRANCE)",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "roles": [
+        "fragrance_composition"
+      ],
+      "notes": "Mixture composition unspecified; not automatically volatile or negligible.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PEG-40 HYDROGENATED CASTOR OIL",
+      "roles": [
+        "solubilizer",
+        "surfactant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PENTACLETHRA MACROLOBA SEED OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+      "roles": [
+        "antioxidant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA (AVOCADO) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PERSEA GRATISSIMA OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHENOXYETHANOL",
+      "roles": [
+        "preservative"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "roles": [
+        "silicone_carrier",
+        "conditioning_film"
+      ],
+      "notes": "Exact hair-conditioning silicone; film load, grade and repeated washout unspecified.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHENYLPROPYLDIMETHYLSILOXYSILICATE",
+      "roles": [
+        "conditioning_film",
+        "film_former"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHYLLANTHUS EMBLICA FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PHYTOSTERYL/OCTYLDODECYL LAUROYL GLUTAMATE",
+      "roles": [
+        "lipid_derivative",
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PIMENTA OFFICINALIS (PIMENTO) LEAF OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PINENE",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN (PATCHOULI) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POGOSTEMON CABLIN OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYACRYLAMIDE",
+      "roles": [
+        "rheology_polymer"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYGLYCERYL-3 DIISOSTEARATE",
+      "roles": [
+        "emulsifier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYQUATERNIUM-10",
+      "roles": [
+        "cationic_conditioning_polymer",
+        "conditioning_film"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYSILICONE-15",
+      "roles": [
+        "recognized_uv_filter",
+        "silicone_polymer"
+      ],
+      "notes": "Optical filter/function recognition only. No current regulatory-compliance certification, SPF, dose, hair efficacy or manufacturer claim is inferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POLYSORBATE 20",
+      "roles": [
+        "surfactant",
+        "emulsifier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "POTASSIUM SORBATE",
+      "roles": [
+        "preservative"
+      ],
+      "notes": "No concentration boundary follows from rank. Exact function is context-dependent; no generic alcohol, silicone, botanical-oil or UV substring mapping.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PPG-3 CAPRYLYL ETHER",
+      "roles": [
+        "polyether",
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PROPANEDIOL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PROPYLENE GLYCOL",
+      "roles": [
+        "humectant",
+        "solvent"
+      ],
+      "notes": "Water-associated auxiliary; whole residual system decides.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+      "roles": [
+        "ferment_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PUNICA GRANATUM (POMEGRANATE) SEED OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "PUNICA GRANATUM SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "RICINUS COMMUNIS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSA CANINA FRUIT OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSA DAMASCENA FLOWER OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSE KETONES",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF (ROSEMARY) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ROSMARINUS OFFICINALIS LEAF OIL",
+      "roles": [
+        "essential_oil",
+        "aromatic_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SALVIA OFFICINALIS (SAGE) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SANTALUM ALBUM (SANDALWOOD) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SCLEROCARYA BIRREA SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM (SESAME) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SESAMUM INDICUM SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SH-OLIGOPEPTIDE-78",
+      "roles": [
+        "peptide",
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SILICA",
+      "roles": [
+        "particulate_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) OIL",
+      "roles": [
+        "botanical_fixed_oil"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Exact whole jojoba is a fluid liquid-wax material; this physical clue supplies no finished persistence value. No weight or old build-up label is transferred.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+        "docs/research/oil-inci/v1.0/09_natural-oil-build-up-reference-v0.1.md"
+      ]
+    },
+    {
+      "canonical_name": "SODIUM HYDROXIDE",
+      "roles": [
+        "ph_adjustment_clue"
+      ],
+      "notes": "No finished pH or film inferred.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "SOLANUM LYCOPERSICUM (TOMATO) FRUIT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SQUALANE",
+      "roles": [
+        "hydrocarbon_emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "SYMPLOCOS RACEMOSA BARK EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TERPINEOL",
+      "roles": [
+        "declared_fragrance_allergen"
+      ],
+      "notes": "Fragrance exposure independent of perfuming intent; outside agreed closed scalp-active botanical group. Citrus group does not identify the particular bitter/sweet orange oil.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TERPINOLENE",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "roles": [
+        "function_not_assessed"
+      ],
+      "notes": "Exact auxiliary function not assessed here; no negligible-residue or film assumption.",
+      "function_source_refs": [
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "TITANIUM DIOXIDE (CI 77891)",
+      "roles": [
+        "unreviewed_function"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHEROL",
+      "roles": [
+        "antioxidant"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TOCOPHERYL ACETATE",
+      "roles": [
+        "antioxidant_auxiliary"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TRIDECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "TRISILOXANE",
+      "roles": [
+        "silicone_carrier"
+      ],
+      "notes": "Carrier identity does not establish finished evaporation.",
+      "function_source_refs": [
+        "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+        "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md"
+      ]
+    },
+    {
+      "canonical_name": "TRITICUM VULGARE (WHEAT) GERM OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "UNDECANE",
+      "roles": [
+        "hydrocarbon_carrier",
+        "possible_volatile_vehicle_in_reviewed_pair"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "URTICA DIOICA (NETTLE) EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VANILLA PLANIFOLIA FRUIT EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VANILLIN",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VITAMIN E (MIXED TOCOPHEROL) OIL",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+      "roles": [
+        "botanical_extract"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "roles": [
+        "fixed_oil_carrier"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "VP/VA COPOLYMER",
+      "roles": [
+        "film_former",
+        "hair_fixative"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT",
+      "roles": [
+        "not_assessed"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ZEA MAYS GERM OIL",
+      "roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json"
+      ]
+    },
+    {
+      "canonical_name": "ZEA MAYS OIL",
+      "roles": [
+        "botanical_fixed_oil",
+        "emollient"
+      ],
+      "notes": "Reviewed exact ingredient-function clues only. Grade, quantity and finished-film behavior are not established; no native product label or weight prior is supplied.",
+      "function_source_refs": [
+        "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json"
+      ]
+    }
+  ]
+}

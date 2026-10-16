@@ -1,0 +1,907 @@
+{
+  "schema_version": "research-evidence-a/1",
+  "created_on": "2026-10-02",
+  "status": "advisory research only; parent decides final labels",
+  "scope": "Assigned common fixed oils plus separately requested exact hybrid/corn declarations; not market completeness",
+  "rules": [
+    "All proposed weights are rough priors, not validated hair heaviness.",
+    "Confidence describes confidence in weight estimate, not identity. All currently low.",
+    "Skin feel, supplier hair descriptors, viscosity, spreading and measured hair heaviness are separate evidence kinds.",
+    "No default medium; no density, fatty-acid, penetration or viscosity threshold conversion.",
+    "aliases are reviewed label spelling forms only; identity_exclusions prohibit automatic merging.",
+    "Do not transfer a supplier-grade result to modified oils, extracts or essential oils."
+  ],
+  "excluded_from_assignment": [
+    "Cannabis Sativa Seed Oil: already covered by parent"
+  ],
+  "sources": {
+    "A01": {
+      "url": "https://www.heessoils.com/fileadmin/spezifikationen/314031-Corn-oil-_Maize_oil_-refined-solvent-extracted-ph-eur.pdf",
+      "title": "Gustav Heess: Corn oil refined Ph. Eur. 12, Sp314031g",
+      "locator": "p1, INCI Name and Description",
+      "short_paraphrase": "One refined corn grade lists both Zea Mays Oil and Zea Mays Germ Oil.",
+      "limitations": "Same-grade alternate declarations do not authorize a universal alias. No sensory assessment.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A02": {
+      "url": "https://www.legislation.gov.uk/eudn/1996/335/pdfs/eudn_19960335_2006-02-09_en.pdf",
+      "title": "EU cosmetic ingredient inventory, consolidated 2006",
+      "locator": "ZEA MAYS GERM OIL and ZEA MAYS OIL entries",
+      "short_paraphrase": "Germ Oil is germ-derived fixed oil; Oil is defined as refined fixed oil from wet milling corn.",
+      "limitations": "Historical identity evidence only; not a current regulatory determination or weight evidence.",
+      "access": "primary inventory retrieved in search, 2026-10-02"
+    },
+    "A03": {
+      "url": "https://www.oand3.com/product/maize-seed-oil-refined-corn-oil/",
+      "title": "O&3: Maize Seed Oil, Refined, K0275",
+      "locator": "INCI Listing; Functionality / Easily-Absorbed",
+      "short_paraphrase": "Exact Germ Oil declaration; light and non-greasy skin description.",
+      "limitations": "Sensory phrase is repeated verbatim across many oils; weak evidence, no hair weight assessment.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A04": {
+      "url": "https://www.oand3.com/product/soyabean-oil-refined-organic/",
+      "title": "O&3: Soyabean Oil, Refined Organic, K1325",
+      "locator": "INCI Listing; Hair Benefits",
+      "short_paraphrase": "Glycine Soja Oil; supplier specifically describes a lightweight contribution to hair formulations.",
+      "limitations": "Commercial claim without hair panel, dose or comparator; refined organic grade.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A05": {
+      "url": "https://www.ellemental.com/sesame-oil-organic",
+      "title": "Ellemental: Sesame oil Organic, D-1653",
+      "locator": "Characteristics; Ingredients; Details / Texture",
+      "short_paraphrase": "Cold-pressed unrefined Sesamum Indicum Seed Oil has medium texture; viscosity is separately described as medium.",
+      "limitations": "Skin/material descriptor, not measured hair heaviness. Do not use viscosity alone.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A06": {
+      "url": "https://www.ellemental.com/rice-bran-oil",
+      "title": "Ellemental: Rice bran oil, D-1678",
+      "locator": "Characteristics; Ingredients; Hair care / Practical recommendations",
+      "short_paraphrase": "Oryza Sativa Bran Oil has light texture; supplier describes a few leave-in drops without weighing hair down.",
+      "limitations": "Lightly refined/dewaxed grade; commercial hair claim without measured heaviness panel.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A07": {
+      "url": "https://oatcosmetics.com/product/oat-lipid-e/",
+      "title": "Oat Cosmetics: Oat Lipid e",
+      "locator": "Skin/Haircare Claims; Ingredient Nomenclature; oil extraction paragraph",
+      "short_paraphrase": "Avena Sativa Kernel Oil grade has non-greasy skin feel and low viscosity; hair claims concern detangling and silkiness.",
+      "limitations": "Ethanol-extracted specialty grade; rich refers also to lipids and colour. No measured hair heaviness.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A08": {
+      "url": "https://www.oand3.com/product/rapeseed-oil-canola-oil-cold-pressed/",
+      "title": "O&3: Rapeseed Oil (Canola Oil), Cold Pressed",
+      "locator": "opening description; INCI Listing",
+      "short_paraphrase": "Brassica Campestris Seed Oil grade is described as light and non-greasy.",
+      "limitations": "Commercial skin-oriented descriptor; cannot alias all rapeseed species or modified canola derivatives.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A09": {
+      "url": "https://ota-oil.co.jp/business/cosmetic-materials/brassica/",
+      "title": "Ota Oil: Domestic refined rapeseed oil",
+      "locator": "INCI NAME; production description",
+      "short_paraphrase": "Supplier specifies Brassica Napus Seed Oil, expressed then refined.",
+      "limitations": "Identity only; pale colour and fatty-acid measurements are not weight evidence.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A10": {
+      "url": "https://www.aarnavglobal.com/bulk-carrier-oil.html",
+      "title": "Aarnav Global: Brassica Napus Seed Oil bulk",
+      "locator": "Brassica Napus Seed Oil product section",
+      "short_paraphrase": "Supplier calls exact Brassica Napus Seed Oil a lightweight cosmetic carrier.",
+      "limitations": "Low-quality commercial copy with inconsistent surrounding food/pharma fields; no panel or technical sensory method.",
+      "access": "primary supplier product section retrieved in search, 2026-10-02"
+    },
+    "A11": {
+      "url": "https://hub.aakpersonalcare.com/hubfs/Portal%20documents/AAK%20Product%20Brochure.pdf?hsLang=en",
+      "title": "AAK Personal Care Product Catalogue",
+      "locator": "pp10-11, What is in a name / canola portfolio",
+      "short_paraphrase": "AAK permits Canola Oil or Brassica Campestris Seed Oil naming for its canola materials.",
+      "limitations": "Portfolio contains processed oils and concentrates. Identity relationship is supplier-specific, not universal sensory equivalence.",
+      "access": "primary supplier brochure retrieved in search, 2026-10-02"
+    },
+    "A12": {
+      "url": "https://www.oand3.com/product/linseed-oil-refined/",
+      "title": "O&3: Linseed Oil, Refined, K0738",
+      "locator": "INCI Listing; Hair Benefits",
+      "short_paraphrase": "Linum Usitatissimum Seed Oil grade has explicit lightweight hair moisturization wording.",
+      "limitations": "Unquantified supplier claim for refined oil; no proof for all cold-pressed grades.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A13": {
+      "url": "https://www.newdirectionsaromatics.com/oils/carrier-oils/evening-primrose-carrier-oil-cosmetic-grade-refined",
+      "title": "NDA: Evening Primrose Carrier Oil, Cosmetic Grade Refined",
+      "locator": "More About / Color-Consistency and Absorption; suggested usage",
+      "short_paraphrase": "Refined seed oil leaves oily skin residue; supplier describes medium viscosity and low-percentage hair use without heaviness.",
+      "limitations": "Diluted hair-use claim cannot establish neat oil weight; no panel. Medium viscosity is not a medium-weight rule.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A14": {
+      "url": "https://www.oand3.com/product/evening-primrose-oil-cold-pressed-organic/",
+      "title": "O&3: Evening Primrose Oil, Cold Pressed Organic, K0182",
+      "locator": "INCI Listing; Easily-Absorbed",
+      "short_paraphrase": "Oenothera Biennis Oil; non-greasy/light skin wording.",
+      "limitations": "Repeated functionality template; conflicts with NDA residual-feel description; different processing.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A15": {
+      "url": "https://www.newdirectionsaromatics.com/oils/carrier-oils/borage-carrier-oil-rbdw",
+      "title": "NDA: Borage Carrier Oil RBDW",
+      "locator": "Botanical Name, seeds; Absorption",
+      "short_paraphrase": "Refined borage seed oil leaves oily skin feel.",
+      "limitations": "No calibrated richness or hair-weight assessment; supplier FAQ also mislabels linoleic acid as omega-3, reducing copy reliability.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A16": {
+      "url": "https://gyalabs.com/products/borage-carrier-oil",
+      "title": "Gya Labs: Organic Borage Oil",
+      "locator": "About this oil / Benefits",
+      "short_paraphrase": "Cold-pressed borage oil is described as lightweight with little heaviness on skin.",
+      "limitations": "Brand commercial description; contrasts with refined NDA oil; no controlled comparison.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A17": {
+      "url": "https://www.naturochim.com/en/our-product/nat-organic-deodorized-camelina-oil/",
+      "title": "Naturochim: NAT Organic Deodorized Camelina Oil",
+      "locator": "INCI; Properties",
+      "short_paraphrase": "Exact Camelina Sativa Seed Oil is described as a light oil with dry skin feel.",
+      "limitations": "Supplier descriptor for deodorized cold-pressed grade; no hair-weight panel.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A18": {
+      "url": "https://dauphineorganics.com/shop/chia-seed-oil-virgin-org/",
+      "title": "Dauphine Organics: Chia Seed Oil V ORG",
+      "locator": "INCI; Formulation Notes / Texture Contribution",
+      "short_paraphrase": "Exact Salvia Hispanica Seed Oil is described as light, silky and non-greasy.",
+      "limitations": "Supplier commercial description for virgin grade; no hair weight measurement.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A19": {
+      "url": "https://www.oand3.com/product/blackcurrant-seed-oil-cold-pressed/",
+      "title": "O&3: Blackcurrant Seed Oil, Cold Pressed, K0509",
+      "locator": "INCI Listing; Easily-Absorbed",
+      "short_paraphrase": "Exact Ribes Nigrum Seed Oil has light/non-greasy skin wording.",
+      "limitations": "Repeated functionality template is weak evidence; specific opening copy gives only velvety/nourishing feel.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A20": {
+      "url": "https://www.newdirectionsaromatics.com/oils/carrier-oils/black-currant-seed-carrier-oil-rbdw",
+      "title": "NDA: Black Currant Seed Carrier Oil RBDW",
+      "locator": "More About / Aromatic Description and Absorption",
+      "short_paraphrase": "Heavy/oily describes odour; absorption and consistency are generic carrier-oil descriptions.",
+      "limitations": "Does not establish rich texture. Refined grade and no explicit weight descriptor.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A21": {
+      "url": "https://pub-mediabox-storage.rxweb-prd.com/exhibitor/document/exh-dd358b00-8715-41e6-9fdb-2f47ccd9d5e6/20204c6a-0035-4768-8343-f98a972a850e.pdf",
+      "title": "Gustav Heess: Cosmetic Product List",
+      "locator": "p5 ordinary and high-oleic sunflower rows; p4 rapeseed; p2 corn/chia",
+      "short_paraphrase": "Both sunflower rows are fairly light; rapeseed has medium spreading; corn has no sensory weight claim; chia spreads slowly.",
+      "limitations": "Supplier range descriptions, no hair testing. Layout extracted with PyMuPDF sort=True to resolve table rows.",
+      "access": "public PDF opened with web and independently downloaded/read, 2026-10-02"
+    },
+    "A22": {
+      "url": "https://www.nordmann.global/en/products/akosuntm",
+      "title": "Nordmann / AAK: Akosun",
+      "locator": "INCI; product description",
+      "short_paraphrase": "Helianthus Annuus Hybrid Oil is a refined high-oleic selected-sunflower grade.",
+      "limitations": "Identity and stability evidence, no direct weight descriptor.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A23": {
+      "url": "https://www.oleon.com/products-solutions/lucee-oil-macadamia-rbd-6792",
+      "title": "Oleon: LUCEE Oil Macadamia RBD 6792",
+      "locator": "General info; INCI Name",
+      "short_paraphrase": "Exact Macadamia Ternifolia Seed Oil has an explicit lightweight skin descriptor.",
+      "limitations": "Refined, bleached, deodorized grade; no hair weight measurement or botanical taxonomy resolution.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A24": {
+      "url": "https://www.interchimie.fr/produits/huiles-vegetales/huile-de-noix-de-macadamia-raffinee/",
+      "title": "Interchimie: Refined macadamia nut oil",
+      "locator": "INCI and Description du produit chimique",
+      "short_paraphrase": "Macadamia integrifolia tetraphylla seed oil is pressed/refined and low-viscosity.",
+      "limitations": "No sensory weight claim. Slashless declaration needs comparison with slash-bearing supplier identity; not a pure species alias.",
+      "access": "opened public primary page, 2026-10-02"
+    },
+    "A25": {
+      "url": "https://www.makingcosmetics.com/on/demandware.static/-/Sites-makingcosmetics-master/default/dwe49e27d3/msds/sds-macadamia-nut-oil2.pdf",
+      "title": "MakingCosmetics: Macadamia Nut Oil SDS",
+      "locator": "p1 INCI Name",
+      "short_paraphrase": "SDS names Macadamia integrifolia tetraphylla seed oil.",
+      "limitations": "Identity only; no true sensory/heaviness evidence.",
+      "access": "primary SDS retrieved in search, 2026-10-02"
+    },
+    "A26": {
+      "url": "https://www.heessoils.com/en/type.html?cHash=dc9e21551b8067320bc188a7e6493554&tx_igoils_productdetail%5Baction%5D=pdf&tx_igoils_productdetail%5Bcontroller%5D=Product&tx_igoils_productdetail%5Bproduct%5D=23",
+      "title": "Gustav Heess: Organic macadamia nut oil",
+      "locator": "INCI name",
+      "short_paraphrase": "Lists Macadamia Integrifolia / Tetraphylla Seed Oil.",
+      "limitations": "Identity only; direct web opening failed, search extraction available.",
+      "access": "primary PDF search extraction; direct open failed, 2026-10-02"
+    },
+    "A27": {
+      "url": "https://www.makingcosmetics.com/on/demandware.static/-/Sites-makingcosmetics-master/default/dw83fa6471/fact-sheets/fact-sheet-rice-bran-oil.pdf",
+      "title": "MakingCosmetics: Rice Bran Oil specification, 2025-08-04",
+      "locator": "INCI Name, Composition, Manufacture",
+      "short_paraphrase": "Uses Oryza Sativa (Rice) Bran Oil for refined, bleached, deodorized, winterized rice-bran oil.",
+      "limitations": "Identity corroboration only; reasonable emollience does not quantify weight.",
+      "access": "primary specification retrieved in search, 2026-10-02"
+    },
+    "A28": {
+      "url": "https://raasaoils.in/products/cottonseed-oil",
+      "title": "Raasa Oils: Cottonseed Oil",
+      "locator": "Product Specifications; FAQ / What is Cottonseed Oil used for?",
+      "short_paraphrase": "Exact Gossypium Hirsutum Seed Oil is described as a light refined carrier for skin and hair.",
+      "limitations": "Supplier commercial copy; cold-pressed/refined processing wording is broad; no measured hair heaviness. Does not justify aliasing Herbaceum.",
+      "access": "opened public primary supplier page, 2026-10-02"
+    },
+    "A29": {
+      "url": "https://hub.aakpersonalcare.com/lipex-120",
+      "title": "AAK: LIPEX 120",
+      "locator": "INCI; product description",
+      "short_paraphrase": "Exact Canola Oil declaration for refined canola with added antioxidants.",
+      "limitations": "Identity confirmation only. Low recommended dosage and stability are not light-weight evidence.",
+      "access": "opened public primary manufacturer page, 2026-10-02"
+    }
+  },
+  "materials": [
+    {
+      "material_id": "corn_germ",
+      "exact_inci": "Zea Mays Germ Oil",
+      "aliases": [
+        "Zea Mays (Corn) Germ Oil"
+      ],
+      "grade_scope": "refined; broader grades unresolved",
+      "identity_exclusions": [
+        "Zea Mays Oil",
+        "Zea Mays Germ Extract",
+        "Zea Mays Oil Unsaponifiables"
+      ],
+      "evidence": [
+        {
+          "source_id": "A01",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A03",
+          "kind": "skin_feel_template"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Weak affirmative skin descriptor permits only a provisional light candidate; unknown is equally defensible pending non-template confirmation.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "corn_oil",
+      "exact_inci": "Zea Mays Oil",
+      "aliases": [
+        "Zea Mays (Corn) Oil"
+      ],
+      "grade_scope": "refined wet-milled oil declaration",
+      "identity_exclusions": [
+        "Zea Mays Germ Oil",
+        "Zea Mays Oil Unsaponifiables"
+      ],
+      "evidence": [
+        {
+          "source_id": "A01",
+          "kind": "identity_grade_bridge"
+        },
+        {
+          "source_id": "A02",
+          "kind": "identity"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light only if exact supplied grade is confirmed to match a reviewed sensory grade"
+      ],
+      "why": "Exact label is retained separately. Heess cross-lists one grade, but no exact Oil-declaration sensory source was found.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "soybean",
+      "exact_inci": "Glycine Soja Oil",
+      "aliases": [
+        "Glycine Soja (Soybean) Oil"
+      ],
+      "grade_scope": "refined organic evidence; unmodified seed oil",
+      "identity_exclusions": [
+        "Hydrogenated Soybean Oil",
+        "Glycine Soja Sterols",
+        "Glycine Soja Oil Unsaponifiables"
+      ],
+      "evidence": [
+        {
+          "source_id": "A04",
+          "kind": "supplier_hair_descriptor"
+        },
+        {
+          "source_id": "A21",
+          "kind": "spreading_only"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Explicit supplier hair descriptor supports rough light estimate; spreading is secondary context.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "sesame",
+      "exact_inci": "Sesamum Indicum Seed Oil",
+      "aliases": [
+        "Sesamum Indicum (Sesame) Seed Oil"
+      ],
+      "grade_scope": "cold-pressed unrefined; toasted grades not generalized",
+      "identity_exclusions": [
+        "Sesamum Indicum Seed Extract",
+        "Sesame Oil Unsaponifiables"
+      ],
+      "evidence": [
+        {
+          "source_id": "A05",
+          "kind": "material_texture"
+        },
+        {
+          "source_id": "A21",
+          "kind": "spreading_only"
+        }
+      ],
+      "advisory_weight": "medium",
+      "confidence": "low",
+      "alternatives": [
+        "light",
+        "unknown"
+      ],
+      "why": "Medium is affirmative supplier texture classification, not a fallback or inferred viscosity threshold.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "rice_bran",
+      "exact_inci": "Oryza Sativa Bran Oil",
+      "aliases": [
+        "Oryza Sativa (Rice) Bran Oil"
+      ],
+      "grade_scope": "lightly refined/dewaxed/deodorized evidence",
+      "identity_exclusions": [
+        "Oryza Sativa Germ Oil",
+        "Oryza Sativa Bran Wax",
+        "Oryza Sativa Bran Extract",
+        "Oryza Sativa Oil"
+      ],
+      "evidence": [
+        {
+          "source_id": "A06",
+          "kind": "skin_feel"
+        },
+        {
+          "source_id": "A06",
+          "kind": "supplier_hair_descriptor"
+        },
+        {
+          "source_id": "A27",
+          "kind": "identity"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Supplier provides light texture and a hair non-weighing-down use claim, still without controlled hair assessment.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "oat_kernel",
+      "exact_inci": "Avena Sativa Kernel Oil",
+      "aliases": [
+        "Avena Sativa (Oat) Kernel Oil"
+      ],
+      "grade_scope": "Oat Lipid e ethanol-extracted grade only; generic INCI cannot identify grade",
+      "identity_exclusions": [
+        "Avena Sativa Kernel Extract",
+        "Avena Sativa Kernel Flour",
+        "Avena Sativa Kernel Lipids"
+      ],
+      "evidence": [
+        {
+          "source_id": "A07",
+          "kind": "skin_feel"
+        },
+        {
+          "source_id": "A07",
+          "kind": "qualitative_viscosity"
+        },
+        {
+          "source_id": "A07",
+          "kind": "supplier_hair_conditioning_not_weight"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light for Oat Lipid e with confirmed grade"
+      ],
+      "why": "Specific grade is a light candidate from non-greasy skin feel, but does not establish generic oat kernel oil weight; rich-lipid language is not rich weight.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "rapeseed_campestris",
+      "exact_inci": "Brassica Campestris Seed Oil",
+      "aliases": [
+        "Brassica Campestris (Rapeseed) Seed Oil"
+      ],
+      "grade_scope": "cold-pressed supplier grade",
+      "identity_exclusions": [
+        "Brassica Napus Seed Oil",
+        "Canola Oil",
+        "Hydrogenated Rapeseed Oil",
+        "Brassica Oleracea Italica Seed Oil"
+      ],
+      "evidence": [
+        {
+          "source_id": "A08",
+          "kind": "skin_feel"
+        },
+        {
+          "source_id": "A21",
+          "kind": "spreading_only"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "unknown"
+      ],
+      "why": "Explicit light/non-greasy descriptor supports rough light estimate. Medium spreading/slow penetration from another supplier cannot alone reverse weight.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "rapeseed_napus",
+      "exact_inci": "Brassica Napus Seed Oil",
+      "aliases": [],
+      "grade_scope": "cold-pressed sensory claim; refined identity corroborated",
+      "identity_exclusions": [
+        "Brassica Campestris Seed Oil",
+        "Canola Oil",
+        "Brassica Rapa Seed Oil",
+        "Hydrogenated Rapeseed Oil"
+      ],
+      "evidence": [
+        {
+          "source_id": "A09",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A10",
+          "kind": "skin_feel"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Only low-confidence approximate candidate: exact-INCI supplier wording is affirmative, but commercial copy quality is weak.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "canola_declaration",
+      "exact_inci": "Canola Oil",
+      "aliases": [],
+      "grade_scope": "AAK canola family; exact trade grade unspecified",
+      "identity_exclusions": [
+        "Brassica Campestris Seed Oil",
+        "Brassica Napus Seed Oil",
+        "Hydrogenated Canola Oil",
+        "Canola Oil Unsaponifiables"
+      ],
+      "evidence": [
+        {
+          "source_id": "A11",
+          "kind": "identity_grade_bridge"
+        },
+        {
+          "source_id": "A29",
+          "kind": "identity"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light if exact grade is documented to match a reviewed light material"
+      ],
+      "why": "Supplier-specific alternate naming does not prove generic grade or sensory equivalence with reviewed Campestris material.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "flax_linseed",
+      "exact_inci": "Linum Usitatissimum Seed Oil",
+      "aliases": [
+        "Linum Usitatissimum (Linseed) Seed Oil"
+      ],
+      "grade_scope": "refined cosmetic grade",
+      "identity_exclusions": [
+        "Linum Usitatissimum Seed Extract",
+        "boiled linseed oil",
+        "polymerized linseed oil"
+      ],
+      "evidence": [
+        {
+          "source_id": "A12",
+          "kind": "supplier_hair_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown for unspecified cold-pressed grade"
+      ],
+      "why": "Explicit lightweight hair claim supports estimate for refined grade; no inference from drying/oxidation chemistry.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "evening_primrose",
+      "exact_inci": "Oenothera Biennis Oil",
+      "aliases": [
+        "Oenothera Biennis (Evening Primrose) Oil"
+      ],
+      "grade_scope": "refined versus cold-pressed suppliers conflict",
+      "identity_exclusions": [
+        "Oenothera Biennis Extract",
+        "Oenothera Biennis Flower Extract",
+        "Oenothera Biennis Seed Extract"
+      ],
+      "evidence": [
+        {
+          "source_id": "A13",
+          "kind": "skin_residue"
+        },
+        {
+          "source_id": "A13",
+          "kind": "qualitative_viscosity"
+        },
+        {
+          "source_id": "A13",
+          "kind": "diluted_supplier_hair_claim"
+        },
+        {
+          "source_id": "A14",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A14",
+          "kind": "skin_feel_template"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "medium",
+        "rich",
+        "light for separately substantiated grade"
+      ],
+      "why": "Oily residue conflicts with light template; low-dose hair claim cannot settle neat-oil class.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "borage",
+      "exact_inci": "Borago Officinalis Seed Oil",
+      "aliases": [
+        "Borago Officinalis (Borage) Seed Oil"
+      ],
+      "grade_scope": "refined RBDW versus cold-pressed suppliers",
+      "identity_exclusions": [
+        "Borago Officinalis Extract",
+        "Borago Officinalis Seed Extract"
+      ],
+      "evidence": [
+        {
+          "source_id": "A21",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A15",
+          "kind": "skin_residue"
+        },
+        {
+          "source_id": "A16",
+          "kind": "skin_feel"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "rich for demonstrably persistent grade",
+        "light for demonstrably non-greasy grade"
+      ],
+      "why": "Opposing oily versus lightweight skin descriptions with no controlled grade comparison; neither medium averaging nor GLA inference is justified.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "camelina",
+      "exact_inci": "Camelina Sativa Seed Oil",
+      "aliases": [],
+      "grade_scope": "deodorized organic cold-pressed grade",
+      "identity_exclusions": [
+        "Camelina Sativa Seed Extract",
+        "hydrogenated or esterified camelina derivatives"
+      ],
+      "evidence": [
+        {
+          "source_id": "A17",
+          "kind": "skin_feel"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Exact supplier light/dry feel is affirmative material evidence; hair suitability alone adds no validation.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "chia",
+      "exact_inci": "Salvia Hispanica Seed Oil",
+      "aliases": [],
+      "grade_scope": "virgin organic cold-pressed grade",
+      "identity_exclusions": [
+        "Salvia Hispanica Seed Extract",
+        "Salvia Hispanica Seed Butter"
+      ],
+      "evidence": [
+        {
+          "source_id": "A18",
+          "kind": "skin_feel"
+        },
+        {
+          "source_id": "A21",
+          "kind": "spreading_only"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Direct light/silky/non-greasy texture description supports approximate prior; slow spreading in another supplier is not equivalent to heavy residue.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "blackcurrant",
+      "exact_inci": "Ribes Nigrum Seed Oil",
+      "aliases": [
+        "Ribes Nigrum (Black Currant) Seed Oil"
+      ],
+      "grade_scope": "cold-pressed versus refined RBDW",
+      "identity_exclusions": [
+        "Ribes Nigrum Fruit Extract",
+        "Ribes Nigrum Seed Extract"
+      ],
+      "evidence": [
+        {
+          "source_id": "A19",
+          "kind": "skin_feel_template"
+        },
+        {
+          "source_id": "A20",
+          "kind": "odor_not_weight"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light if template-level evidence is accepted as provisional"
+      ],
+      "why": "Only positive light wording found is generic template. Heavy wording in NDA is expressly odour, so does not establish rich.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "sunflower_ordinary",
+      "exact_inci": "Helianthus Annuus Seed Oil",
+      "aliases": [
+        "Helianthus Annuus (Sunflower) Seed Oil"
+      ],
+      "grade_scope": "ordinary cold-pressed/refined supplier range",
+      "identity_exclusions": [
+        "Helianthus Annuus Hybrid Oil",
+        "Helianthus Annuus Seed Cera",
+        "Hydrogenated Sunflower Seed Oil",
+        "Sunflower Seed Oil Polyglyceryl Esters"
+      ],
+      "evidence": [
+        {
+          "source_id": "A21",
+          "kind": "skin_material_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Same supplier independently describes ordinary and high-oleic grades as fairly light; estimate does not depend on a fatty-acid shortcut.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "sunflower_high_oleic",
+      "exact_inci": "Helianthus Annuus Seed Oil",
+      "aliases": [
+        "Helianthus Annuus (Sunflower) Seed Oil"
+      ],
+      "grade_scope": "high-oleic refined supplier range",
+      "identity_exclusions": [
+        "Helianthus Annuus Hybrid Oil",
+        "Helianthus Annuus Seed Cera",
+        "Hydrogenated Sunflower Seed Oil",
+        "Sunflower Seed Oil Polyglyceryl Esters"
+      ],
+      "evidence": [
+        {
+          "source_id": "A21",
+          "kind": "skin_material_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Same supplier independently describes ordinary and high-oleic grades as fairly light; estimate does not depend on a fatty-acid shortcut.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "sunflower_grade_unspecified",
+      "exact_inci": "Helianthus Annuus Seed Oil",
+      "aliases": [
+        "Helianthus Annuus (Sunflower) Seed Oil"
+      ],
+      "grade_scope": "grade unspecified on label",
+      "identity_exclusions": [
+        "Helianthus Annuus Hybrid Oil",
+        "Helianthus Annuus Seed Cera",
+        "Hydrogenated Sunflower Seed Oil",
+        "Sunflower Seed Oil Polyglyceryl Esters"
+      ],
+      "evidence": [
+        {
+          "source_id": "A21",
+          "kind": "skin_material_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Same supplier independently describes ordinary and high-oleic grades as fairly light; estimate does not depend on a fatty-acid shortcut.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "sunflower_hybrid",
+      "exact_inci": "Helianthus Annuus Hybrid Oil",
+      "aliases": [],
+      "grade_scope": "Akosun refined high-oleic exact declaration",
+      "identity_exclusions": [
+        "Helianthus Annuus Seed Oil",
+        "Helianthus Annuus Seed Cera"
+      ],
+      "evidence": [
+        {
+          "source_id": "A22",
+          "kind": "identity"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light if exact-grade sensory bridge is established"
+      ],
+      "why": "Exact identity is confirmed, but source provides stability/application, not weight. Do not transfer ordinary Seed Oil sensory by botanical name.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "macadamia_ternifolia",
+      "exact_inci": "Macadamia Ternifolia Seed Oil",
+      "aliases": [
+        "Macadamia Ternifolia (Macadamia) Seed Oil"
+      ],
+      "grade_scope": "Oleon refined bleached deodorized grade",
+      "identity_exclusions": [
+        "Macadamia Integrifolia Seed Oil",
+        "Macadamia Integrifolia/Tetraphylla Seed Oil",
+        "Ethyl Macadamiate"
+      ],
+      "evidence": [
+        {
+          "source_id": "A23",
+          "kind": "skin_material_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Strong exact supplier identity plus explicit light descriptor; no import of Integrifolia priors.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "macadamia_hybrid",
+      "exact_inci": "Macadamia Integrifolia/Tetraphylla Seed Oil",
+      "aliases": [
+        "Macadamia Integrifolia / Tetraphylla Seed Oil",
+        "Macadamia Integrifolia Tetraphylla Seed Oil"
+      ],
+      "grade_scope": "pressed/refined supplier grade; slash-bearing declaration separately preserved",
+      "identity_exclusions": [
+        "Macadamia Integrifolia Seed Oil",
+        "Macadamia Ternifolia Seed Oil",
+        "Macadamia Tetraphylla Seed Oil"
+      ],
+      "evidence": [
+        {
+          "source_id": "A24",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A24",
+          "kind": "qualitative_viscosity"
+        },
+        {
+          "source_id": "A25",
+          "kind": "identity"
+        },
+        {
+          "source_id": "A26",
+          "kind": "identity"
+        }
+      ],
+      "advisory_weight": "unknown",
+      "confidence": "low",
+      "alternatives": [
+        "light pending exact-grade sensory evidence"
+      ],
+      "why": "Identity and low viscosity are supported, but no direct exact-grade heaviness descriptor; viscosity does not establish light.",
+      "validated_on_hair": false
+    },
+    {
+      "material_id": "cottonseed_hirsutum",
+      "exact_inci": "Gossypium Hirsutum Seed Oil",
+      "aliases": [],
+      "grade_scope": "refined cosmetic carrier supplier grade",
+      "identity_exclusions": [
+        "Gossypium Herbaceum Seed Oil",
+        "Hydrogenated Cottonseed Oil",
+        "Gossypium Hirsutum Seed Extract"
+      ],
+      "evidence": [
+        {
+          "source_id": "A28",
+          "kind": "skin_material_descriptor"
+        }
+      ],
+      "advisory_weight": "light",
+      "confidence": "low",
+      "alternatives": [
+        "unknown"
+      ],
+      "why": "Affirmative exact-INCI supplier descriptor supports only a rough light candidate; retain separate species identity.",
+      "validated_on_hair": false
+    }
+  ]
+}

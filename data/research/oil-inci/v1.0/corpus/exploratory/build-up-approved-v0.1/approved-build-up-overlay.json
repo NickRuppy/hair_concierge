@@ -1,0 +1,349 @@
+{
+  "run_id": "oil-build-up-approved-v0.1",
+  "date": "2026-10-05",
+  "status": "human_accepted_product_specific_estimates",
+  "scope": "Four originally unresolved round-6 build-up cells; not a generic classification rule revision or a new blind run.",
+  "source_hashes": {
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd",
+    "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.4.md": "36d95689a7007185ee09e8a1853089ac69ab80552be6bcd6430dbfc0b2fcb9b5",
+    "plans/oil-inci/research/evolve-oe46-build-up-decision-2026-10-05.json": "5862f13859a12938235e53cc830d434bab0958a609e7b0312120fea377f695c7",
+    "plans/oil-inci/research/coconut-oe47-build-up-decision-2026-10-05.json": "3d13818012fec5d8107bdc08167d18c2540162defb78fe0a93c81b3fa45bbafe",
+    "plans/oil-inci/research/neqi-oe48-build-up-decision-2026-10-05.json": "17ebcc165823c067309122ca59f120a2f12e91aa3156b99e5b325c12ceed1afc",
+    "plans/oil-inci/research/aroma-zone-oe49-build-up-decision-2026-10-05.json": "599d5a5702250c9f3cef823f6b7c1e471800b82e4ff683ff5548ea644edbd9ff"
+  },
+  "records": [
+    {
+      "neutral_id": "D01",
+      "identity": {
+        "brand": "Evolve Organic Beauty",
+        "product": "Nourishing Hair Elixir – Dry Hair Serum",
+        "size_ml": 30,
+        "market": "UK"
+      },
+      "decision_id": "OE46",
+      "decision_file": "plans/oil-inci/research/evolve-oe46-build-up-decision-2026-10-05.json",
+      "source_id": "D01-maker",
+      "raw_inci": "Isoamyl Laurate, Argania Spinosa (Argan) Kernel Oil*, Adansonia Digitata (Baobab) Seed Oil*, Cocos Nucifera (Coconut) Oil, Parfum (Naturally derived Fragrance), Gardenia Tahitensis Flower Extract, Citral, Geraniol, Limonene, Linalool, Beta-Caryophyllene, Linalyl Acetate, Terpineol, Vanillin, Citrus Aurantium Peel Oil, Citrus Aurantium Bergamia Peel Oil, Citrus Limon Peel Oil, Mentha Piperita Oil, Pelargonium Graveolens Flower Oil, Pogostemon Cablin Oil, Geranyl Acetate, Pinene",
+      "original_property": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISOAMYL LAURATE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          }
+        ],
+        "counter_signal": [
+          "The intact oil module can leave conditioning residue despite the leading ester."
+        ],
+        "nearest_alternative": "low",
+        "reason": "The defined ester and oil blend supply emollience, but the dictionary establishes neither a weak-film fluid whole system nor a substantial persistent coating. Low is plausible without a gum/resin, yet absence of those ingredients is insufficient affirmative weak-film evidence.",
+        "unresolved": [
+          "Residual-film load, spreading properties of the actual grades and the extract contribution are unestablished."
+        ]
+      },
+      "build_up_potential": {
+        "value": "low",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "ISOAMYL LAURATE"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "ADANSONIA DIGITATA (BAOBAB) SEED OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          }
+        ],
+        "counter_signal": [
+          "The intact oil module can leave conditioning residue despite the leading ester.",
+          "Residual oil proportions, material grades and repeated shampoo-cycle retention are not known; unknown remains the stronger evidence-strict alternative."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "OE46 human-approved practical estimate for this exact Evolve declaration: principal mobile ester-led architecture, secondary botanical oils and no obvious substantial gum/resin/wax film system favor low residual-film propensity. The absence of a structurant or the accepted light weight alone is not sufficient; this is a scoped judgment, not measured accumulation or a general classifier anchor.",
+        "unresolved": [
+          "Residual-film load, spreading properties of the actual grades and the extract contribution are unestablished."
+        ]
+      }
+    },
+    {
+      "neutral_id": "D02",
+      "identity": {
+        "brand": "Biopark Cosmetics",
+        "product": "Organic Coconut Oil",
+        "size_ml": 100,
+        "market": "DE"
+      },
+      "decision_id": "OE47",
+      "decision_file": "plans/oil-inci/research/coconut-oe47-build-up-decision-2026-10-05.json",
+      "source_id": "D02-maker",
+      "raw_inci": "Cocos Nucifera Fruit Oil",
+      "original_property": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "COCOS NUCIFERA FRUIT OIL"
+          }
+        ],
+        "counter_signal": [],
+        "nearest_alternative": "elevated",
+        "reason": "A single intact fixed oil defines the carrier but does not decide persistent film propensity. Elevated is a plausible residual-oil interpretation, but no admitted substantial rich coating behavior establishes it, and low also lacks affirmative weak-film evidence.",
+        "unresolved": [
+          "Exact material physical state, residual-film behavior and comparable small-application load are unestablished."
+        ]
+      },
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "COCOS NUCIFERA FRUIT OIL"
+          }
+        ],
+        "counter_signal": [
+          "Primary single-treatment hair research found coconut surface film thinning over time; penetration does not prove zero residue or a shampoo-removal guarantee.",
+          "Source-supported shampooed pre-wash use reduces relevance of retained-coating concerns but does not change the comparable-application product estimate."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "OE47 human-approved practical elevated residual-film estimate for the exact single-ingredient whole-coconut product. The undiluted whole-oil conditioning system supports the retained-coating concern. Not a measured repeated-application/shampoo result, a richness-to-build-up mapping or a judgment for every coconut-containing blend.",
+        "unresolved": [
+          "Comparative repeated-application/shampoo retention and ordinary-dose residual-film behavior are unmeasured."
+        ]
+      }
+    },
+    {
+      "neutral_id": "D04",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE"
+      },
+      "decision_id": "OE48",
+      "decision_file": "plans/oil-inci/research/neqi-oe48-build-up-decision-2026-10-05.json",
+      "source_id": "D04-maker",
+      "raw_inci": "Prunus amygdalus dulcis (Sweet almond) oil, Ricinus communis (Castor) seed oil, Carthamus tinctorius (Safflower) seed oil, Rosmarinus officinalis (Rosemary) leaf oil, Mentha arvensis (Wild mint) leaf oil, Lavandula oil/extract, Camphor, Menthol, Tocopheryl acetate, Beta-caryophyllene, Pinene, Terpineol, Geranyl acetate, Linalyl acetate, Geraniol, Limonene, Linalool",
+      "original_property": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "RICINUS COMMUNIS SEED OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "No admitted gum/resin structurant establishes substantial film; lavender preparation is unresolved."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "The fixed-oil blend supplies residual emollience, but admitted roles do not determine whether it is a weak-film fluid system or a substantial rich coating. Elevated is plausible for the residual oil blend but cannot be derived merely from plant origin or the name castor.",
+        "unresolved": [
+          "Actual oil-blend film/load behavior and lavender preparation-specific residue are unestablished."
+        ]
+      },
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "RICINUS COMMUNIS SEED OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "CARTHAMUS TINCTORIUS SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "LAVANDULA OIL/EXTRACT"
+          }
+        ],
+        "counter_signal": [
+          "No admitted gum/resin structurant establishes substantial film; lavender preparation is unresolved.",
+          "Almond and safflower may make the blend more fluid; exact carrier proportions and actual post-shampoo retention are unknown.",
+          "Authoritative directions establish scalp use followed by shampoo, reducing practical relevance of a retained-film concern without guaranteeing complete removal."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "OE48 human-approved practical elevated residual-film estimate for the exact almond/castor/safflower fixed-oil backbone. Principal castor contribution within the retained oil system supports a substantial-coating hypothesis; this is not inferred from plant origin, castor presence or the medium weight alone, and is not measured repeated accumulation.",
+        "unresolved": [
+          "Actual oil-blend film/load behavior and lavender preparation-specific residue are unestablished."
+        ]
+      }
+    },
+    {
+      "neutral_id": "D06",
+      "identity": {
+        "brand": "Aroma-Zone",
+        "product": "Haircare Oil With 7 Precious Oils",
+        "size_ml": 250,
+        "market": "FR"
+      },
+      "decision_id": "OE49",
+      "decision_file": "plans/oil-inci/research/aroma-zone-oe49-build-up-decision-2026-10-05.json",
+      "source_id": "D06-maker",
+      "raw_inci": "Ricinus communis seed oil* (organic Ricin carrier oil), Olea europaea fruit oil* (organic Olive carrier oil), Cocos nucifera oil* (organic Coconut carrier oil), Persea gratissima oil* (organic Avocado carrier oil), Brassica nigra seed oil* (organic Mustard carrier oil), Simmondsia chinensis seed oil* (organic Jojoba plant oil), Brassica oleracea italica seed oil* (organic Broccoli plant oil), Emblica officinalis fruit powder* (organic Amla powder), Tocopherol (vitamin E), Helianthus annuus seed oil (Sunflower plant oil, tocopherol carrier oil)",
+      "original_property": {
+        "value": "unknown",
+        "estimate": false,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "RICINUS COMMUNIS SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "BRASSICA NIGRA SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Jojoba is an intact emollient rather than an admitted structurant; no explicit gum or resin is present."
+        ],
+        "nearest_alternative": "elevated",
+        "reason": "The full system is a residual fixed-oil blend with a later unassessed powder. Elevated is plausible for a rich residual coating, but neither the oil names nor jojoba wax-ester chemistry establishes substantial gum/wax structuring. Low also lacks affirmative weak-film evidence across the complete system.",
+        "unresolved": [
+          "Whole-blend persistent coating behavior and Emblica powder contribution remain unestablished."
+        ]
+      },
+      "build_up_potential": {
+        "value": "elevated",
+        "estimate": true,
+        "confidence": "low",
+        "evidence": [
+          {
+            "rank": 1,
+            "canonical_name": "RICINUS COMMUNIS SEED OIL"
+          },
+          {
+            "rank": 2,
+            "canonical_name": "OLEA EUROPAEA FRUIT OIL"
+          },
+          {
+            "rank": 3,
+            "canonical_name": "COCOS NUCIFERA OIL"
+          },
+          {
+            "rank": 4,
+            "canonical_name": "PERSEA GRATISSIMA OIL"
+          },
+          {
+            "rank": 5,
+            "canonical_name": "BRASSICA NIGRA SEED OIL"
+          },
+          {
+            "rank": 6,
+            "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL"
+          },
+          {
+            "rank": 7,
+            "canonical_name": "BRASSICA OLERACEA ITALICA SEED OIL"
+          },
+          {
+            "rank": 8,
+            "canonical_name": "EMBLICA OFFICINALIS FRUIT POWDER"
+          },
+          {
+            "rank": 10,
+            "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+          }
+        ],
+        "counter_signal": [
+          "Jojoba is an intact emollient rather than an admitted structurant; no explicit gum or resin is present.",
+          "Exact proportions, ordinary-dose residual coating and post-shampoo retention are unmeasured; jojoba/broccoli spreading and coconut redistribution remain competing considerations.",
+          "Amla powder contribution is unassessed; its presence is not used to force the classification."
+        ],
+        "nearest_alternative": "unknown",
+        "reason": "OE49 human-approved practical elevated residual-film estimate for the exact castor/olive/coconut-led fixed-oil blend. The whole retained conditioning backbone favors a substantial coating hypothesis. This is not measured repeated shampoo-cycle accumulation and is not inferred from rich weight, a single oil name or jojoba wax-ester chemistry alone.",
+        "unresolved": [
+          "Whole-blend persistent coating behavior and Emblica powder contribution remain unestablished."
+        ]
+      }
+    }
+  ],
+  "counts": {
+    "accepted_cells": 4,
+    "low": 1,
+    "elevated": 3,
+    "unknown": 0
+  },
+  "limitations": [
+    "All four are low-confidence estimates, not measured accumulation.",
+    "Frozen original unknowns and repeatability metrics remain unchanged.",
+    "Use and thickness caveats remain separate; no additional automatic thickness penalty.",
+    "Generalization to new formulas and intake readiness are not established."
+  ]
+}

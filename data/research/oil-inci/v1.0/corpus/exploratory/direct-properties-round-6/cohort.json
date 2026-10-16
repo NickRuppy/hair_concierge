@@ -1,0 +1,20 @@
+{
+  "run_id": "oil-direct-properties-round-6",
+  "authorization": "Direct-property input preparation only; no classification or use decision.",
+  "selection": [
+    {"neutral_id":"D01","identity":{"size_ml":30,"market":"UK"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"},
+    {"neutral_id":"D02","identity":{"size_ml":100,"market":"DE"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"},
+    {"neutral_id":"D03","identity":{"size_ml":75,"market":"DE"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"},
+    {"neutral_id":"D04","identity":{"size_ml":75,"market":"DE"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"},
+    {"neutral_id":"D05","identity":{"size_ml":150,"market":"DE"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"},
+    {"neutral_id":"D06","identity":{"size_ml":250,"market":"FR"},"category_disposition":"included exact scoped cosmetic oil or oil-labelled serum"}
+  ],
+  "records": [
+    {"neutral_id":"D01","ingredient_count":22},
+    {"neutral_id":"D02","ingredient_count":1},
+    {"neutral_id":"D03","ingredient_count":19},
+    {"neutral_id":"D04","ingredient_count":17},
+    {"neutral_id":"D05","ingredient_count":19},
+    {"neutral_id":"D06","ingredient_count":10}
+  ]
+}

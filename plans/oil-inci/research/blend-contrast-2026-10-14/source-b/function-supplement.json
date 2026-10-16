@@ -1,0 +1,1175 @@
+{
+  "schema": "oil-source-b-function-supplement-v1",
+  "access_date": "2026-10-14",
+  "scope": "Batch-local source-scoped identity normalization and generic ingredient roles only. No normative edits or product property judgments.",
+  "candidate_file_sha256": "71f632f2b0fb0cef5c4ce3a0296a1b883319c09e2513ff551646f16856e01477",
+  "reviewed_function_dictionary": {
+    "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+    "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "reuse_fields": [
+      "canonical_name",
+      "aliases",
+      "roles",
+      "source_refs only"
+    ],
+    "not_reused": [
+      "weight",
+      "fit",
+      "penetration",
+      "persistence",
+      "finished_product_labels",
+      "skin_sensory_descriptions"
+    ]
+  },
+  "sources": [
+    {
+      "id": "SB-FN01",
+      "url": "https://independentchemical.com/chemical-distributor/avocado-oil-supplier-2257.aspx",
+      "access_date": "2026-10-14",
+      "source_type": "primary_raw_material_supplier",
+      "location": "INCI and Synonyms sections, web lines49-63",
+      "evidence": "Supplier lists Persea gratissima (avocado) oil as INCI and Persea americana oil as a synonym; CAS8024-32-6.",
+      "scope": "Whole avocado oil name identity only. No matching Fushi supplier, grade, processing, concentration or finished-product weight established."
+    },
+    {
+      "id": "SB-FN02",
+      "url": "https://www.amournatural.co.uk/wp-content/uploads/2023/03/sweet-almond-organic-MSDS.pdf",
+      "access_date": "2026-10-14",
+      "source_type": "primary_supplier_SDS",
+      "document_date": "2018-01-10",
+      "location": "Page1 sections1 and3, web lines3-23",
+      "evidence": "The same ALMOND SWEET CP ORGANIC raw material is named Prunus Dulcis oil in section1 and Prunus Amygdalus Dulcis oil in section3; same CAS8007-69-0.",
+      "scope": "Supports exact whole sweet-almond oil synonym. SDS is older; no Fushi batch/grade, cultivation or sensory transfer."
+    },
+    {
+      "id": "SB-FN03",
+      "url": "https://cosmileeurope.eu/inci/detail/15632/styrax-tonkinensis-resin-extract/",
+      "access_date": "2026-10-14",
+      "source_type": "Cosmetics_Europe_ingredient_database",
+      "location": "Exact heading; Functions, web lines21-36",
+      "canonical_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+      "generic_functions": [
+        "fragrance",
+        "skin_conditioning"
+      ],
+      "scope": "Generic functions only. Does not support film former, structuring polymer, structural gum, resin concentration or finished residue judgment."
+    },
+    {
+      "id": "SB-FN04",
+      "url": "https://cosmileeurope.eu/inci/detail/6494/hippophae-rhamnoides-seed-oil/",
+      "access_date": "2026-10-14",
+      "source_type": "Cosmetics_Europe_ingredient_database",
+      "canonical_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "generic_functions": [
+        "skin_protecting"
+      ],
+      "identity_evidence": "Seeds/kernels; exact seed oil is distinguished from fruit-pulp oil in the database.",
+      "scope": "Plant-part identity and listed generic function only. Does not transfer fruit-oil composition, weight, grade or skin-feel information to hair."
+    },
+    {
+      "id": "SB-FN05",
+      "url": "https://cosmileeurope.eu/inci/detail/7638/jasminum-officinale-oil/",
+      "access_date": "2026-10-14",
+      "source_type": "Cosmetics_Europe_ingredient_database",
+      "location": "Exact heading and Functions, web lines25-54",
+      "canonical_name": "JASMINUM OFFICINALE OIL",
+      "generic_functions": [
+        "fragrance",
+        "moisturising",
+        "skin_conditioning",
+        "soothing"
+      ],
+      "scope": "Exact Latin oil entry generic functions. Fushi parenthetical Jasmin Absolute remains a qualifier; no absolute-grade equivalence or carrier composition claimed."
+    },
+    {
+      "id": "SB-FN06",
+      "url": "https://cosmileeurope.eu/inci/detail/13854/rosmarinus-officinalis-extract/",
+      "access_date": "2026-10-14",
+      "source_type": "Cosmetics_Europe_ingredient_database",
+      "location": "Exact heading and Functions, web lines21-46",
+      "canonical_name": "ROSMARINUS OFFICINALIS EXTRACT",
+      "generic_functions": [
+        "antimicrobial",
+        "refreshing",
+        "tonic"
+      ],
+      "scope": "Exact generic extract only. No leaf/CO2/solvent/antioxidant equivalence, function concentration, growth claim or finished product inference."
+    }
+  ],
+  "rows": [
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 1,
+      "source_name": "Sesamum Indicum (Sesame) Seed Oil",
+      "lookup_candidate": "SESAMUM INDICUM SEED OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "SESAMUM INDICUM SEED OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "fixed_oil_carrier"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "SESAMUM INDICUM SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 2,
+      "source_name": "Cocos Nucifera (Coconut) Oil",
+      "lookup_candidate": "COCOS NUCIFERA OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "COCOS NUCIFERA OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "COCOS NUCIFERA OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 3,
+      "source_name": "Persea Americana (Avocado) Oil",
+      "lookup_candidate": "PERSEA AMERICANA OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip the explanatory Avocado/Sweet Almond parentheses, then apply only this source-scoped primary-supported whole-oil synonym."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "PERSEA GRATISSIMA OIL",
+      "identity_status": "source_scoped_whole_oil_synonym_supported",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN01",
+          "claim": "Exact whole-oil synonym identity."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+          "entry": "PERSEA GRATISSIMA OIL",
+          "claim": "Previously reviewed exact whole-oil generic functions only."
+        }
+      ],
+      "whole_oil_prior_identity_basis": {
+        "identity_equivalence_supported": true,
+        "eligible_prior_identity": "PERSEA GRATISSIMA OIL",
+        "basis": "Primary supplier explicitly binds the short botanical oil name and reviewed INCI name to the same whole oil.",
+        "prior_value_copied": false,
+        "grade_equivalence_established": false,
+        "restrictions": "Any downstream use is limited to an already reviewed whole-oil identity prior under the unchanged method; no specific grade, cultivar, extraction or product-weight transfer."
+      }
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 4,
+      "source_name": "Prunus Dulcis (Sweet Almond) Oil",
+      "lookup_candidate": "PRUNUS DULCIS OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip the explanatory Avocado/Sweet Almond parentheses, then apply only this source-scoped primary-supported whole-oil synonym."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "PRUNUS AMYGDALUS DULCIS OIL",
+      "identity_status": "source_scoped_whole_oil_synonym_supported",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN02",
+          "claim": "Exact whole-oil synonym identity."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+          "entry": "PRUNUS AMYGDALUS DULCIS OIL",
+          "claim": "Previously reviewed exact whole-oil generic functions only."
+        }
+      ],
+      "whole_oil_prior_identity_basis": {
+        "identity_equivalence_supported": true,
+        "eligible_prior_identity": "PRUNUS AMYGDALUS DULCIS OIL",
+        "basis": "Primary supplier explicitly binds the short botanical oil name and reviewed INCI name to the same whole oil.",
+        "prior_value_copied": false,
+        "grade_equivalence_established": false,
+        "restrictions": "Any downstream use is limited to an already reviewed whole-oil identity prior under the unchanged method; no specific grade, cultivar, extraction or product-weight transfer."
+      }
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 5,
+      "source_name": "Argania Spinosa (Argan) Kernel Oil",
+      "lookup_candidate": "ARGANIA SPINOSA KERNEL OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "ARGANIA SPINOSA KERNEL OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 6,
+      "source_name": "Brahmi Herpestis (Brahmi) Fruit Extract",
+      "lookup_candidate": "BRAHMI HERPESTIS FRUIT EXTRACT",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "Do not equate Brahmi Herpestis to Bacopa, Herpestis monnieri or another species/name; source typo remains unresolved."
+      ],
+      "normalized_name": "BRAHMI HERPESTIS (BRAHMI) FRUIT EXTRACT",
+      "identity_status": "unresolved_no_correction",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 7,
+      "source_name": "Jasminum Officinale (Jasmin Absolute) Oil",
+      "lookup_candidate": "JASMINUM OFFICINALE OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Latin base matched to primary entry for generic functions; original Jasmin Absolute qualifier retained separately and not treated as a reviewed grade alias."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "JASMINUM OFFICINALE (JASMIN ABSOLUTE) OIL",
+      "identity_status": "exact_Latin_base_functions_qualifier_retained",
+      "generic_roles": [
+        "fragrance",
+        "moisturising",
+        "skin_conditioning",
+        "soothing"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN05",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ],
+      "retained_qualifier": "Jasmin Absolute"
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 8,
+      "source_name": "Tocopherol (Vitamin E)",
+      "lookup_candidate": "TOCOPHEROL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "TOCOPHEROL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "antioxidant"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "TOCOPHEROL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 9,
+      "source_name": "Azadirachta Indica (Neem) Oil",
+      "lookup_candidate": "AZADIRACHTA INDICA OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "AZADIRACHTA INDICA (NEEM) OIL",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 10,
+      "source_name": "Benzyl Benzoateε",
+      "lookup_candidate": "BENZYL BENZOATE",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "BENZYL BENZOATE",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL BENZOATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 11,
+      "source_name": "Linaloolε",
+      "lookup_candidate": "LINALOOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "LINALOOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LINALOOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 12,
+      "source_name": "Eugenolε",
+      "lookup_candidate": "EUGENOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "EUGENOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "EUGENOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 13,
+      "source_name": "Benzyl Alcoholε",
+      "lookup_candidate": "BENZYL ALCOHOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "BENZYL ALCOHOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL ALCOHOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-fushi-really-good-100ml",
+      "rank": 14,
+      "source_name": "Geraniolε",
+      "lookup_candidate": "GERANIOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "GERANIOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "GERANIOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 1,
+      "source_name": "carthamus tinctorius (safflower) seed oil*",
+      "lookup_candidate": "CARTHAMUS TINCTORIUS SEED OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "CARTHAMUS TINCTORIUS SEED OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CARTHAMUS TINCTORIUS SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 2,
+      "source_name": "rosa canina (rosehip) fruit oil*",
+      "lookup_candidate": "ROSA CANINA FRUIT OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "ROSA CANINA FRUIT OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ROSA CANINA FRUIT OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 3,
+      "source_name": "argania spinosa (argan) kernel oil*",
+      "lookup_candidate": "ARGANIA SPINOSA KERNEL OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "ARGANIA SPINOSA KERNEL OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ARGANIA SPINOSA KERNEL OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 4,
+      "source_name": "hippophae rhamnoides (sea buckthorn) seed oil*",
+      "lookup_candidate": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "HIPPOPHAE RHAMNOIDES SEED OIL",
+      "identity_status": "batch_exact_primary_entry",
+      "generic_roles": [
+        "skin_protecting"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN04",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 5,
+      "source_name": "rosa damascena (rose) flower oil*",
+      "lookup_candidate": "ROSA DAMASCENA FLOWER OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "ROSA DAMASCENA FLOWER OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "ROSA DAMASCENA FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 6,
+      "source_name": "pelargonium graveolens (rose geranium) flower oil*",
+      "lookup_candidate": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "aromatic_auxiliary"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "PELARGONIUM GRAVEOLENS FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 7,
+      "source_name": "citrus sinensis (sweet orange) peel oil expressed*",
+      "lookup_candidate": "CITRUS SINENSIS PEEL OIL EXPRESSED",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "CITRUS SINENSIS (SWEET ORANGE) PEEL OIL EXPRESSED",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 8,
+      "source_name": "cananga odorata (yang ylang) flower oil*",
+      "lookup_candidate": "CANANGA ODORATA FLOWER OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "CANANGA ODORATA FLOWER OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "essential_oil",
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-dictionary.json",
+          "entry": "CANANGA ODORATA FLOWER OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        },
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/holdout/targeted-coverage-v0.1/function-source-registry.json",
+          "entry": "F012",
+          "url": "https://www.indesso.com/en/our-catalog/cananga-oil",
+          "claim": "Reviewed manufacturer exact INCI essential flower oil; not all oil/extract forms."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 9,
+      "source_name": "pogostemon cablin (patchouli) leaf oil*",
+      "lookup_candidate": "POGOSTEMON CABLIN LEAF OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "POGOSTEMON CABLIN (PATCHOULI) LEAF OIL",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 10,
+      "source_name": "lycium barbarum (goji berry) fruit extract*",
+      "lookup_candidate": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "LYCIUM BARBARUM FRUIT EXTRACT",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "botanical_extract"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LYCIUM BARBARUM FRUIT EXTRACT",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 11,
+      "source_name": "styrax tonkinensis (benzoin) resin extract",
+      "lookup_candidate": "STYRAX TONKINENSIS RESIN EXTRACT",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "STYRAX TONKINENSIS RESIN EXTRACT",
+      "identity_status": "batch_exact_primary_entry",
+      "generic_roles": [
+        "fragrance",
+        "skin_conditioning"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN03",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 12,
+      "source_name": "rosmarinus officinalis (rosemary) extract*",
+      "lookup_candidate": "ROSMARINUS OFFICINALIS EXTRACT",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Source-specific common-name parentheses stripped against the exact new primary entry; no general alias added."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "ROSMARINUS OFFICINALIS EXTRACT",
+      "identity_status": "batch_exact_primary_entry",
+      "generic_roles": [
+        "antimicrobial",
+        "refreshing",
+        "tonic"
+      ],
+      "source_refs": [
+        {
+          "id": "SB-FN06",
+          "claim": "Exact Latin ingredient and generic functions."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 13,
+      "source_name": "cedrus atlantica (cedar) bark oil*",
+      "lookup_candidate": "CEDRUS ATLANTICA BARK OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "CEDRUS ATLANTICA (CEDAR) BARK OIL",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 14,
+      "source_name": "citrus aurantium (orange) flower oil*",
+      "lookup_candidate": "CITRUS AURANTIUM FLOWER OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "CITRUS AURANTIUM (ORANGE) FLOWER OIL",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 15,
+      "source_name": "anthemis nobilis (chamomile) flower oil*",
+      "lookup_candidate": "ANTHEMIS NOBILIS FLOWER OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions.",
+        "The deparenthesized lookup_candidate is not an admitted alias. No form/part substitution or assumed aroma/fixed-oil role."
+      ],
+      "normalized_name": "ANTHEMIS NOBILIS (CHAMOMILE) FLOWER OIL",
+      "identity_status": "not_normalized_without_exact_reviewed_or_primary_match",
+      "generic_roles": [
+        "not_assessed"
+      ],
+      "source_refs": []
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 16,
+      "source_name": "helianthus annuus (sunflower) seed oil",
+      "lookup_candidate": "HELIANTHUS ANNUUS SEED OIL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "HELIANTHUS ANNUUS SEED OIL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "intact_botanical_fixed_oil",
+        "emollient"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "HELIANTHUS ANNUUS SEED OIL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 17,
+      "source_name": "tocopherol (vitamin E)",
+      "lookup_candidate": "TOCOPHEROL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup.",
+        "Strip only the source-specific explanatory common-name/Vitamin E parentheses; remaining Latin INCI exactly matches the cited reviewed canonical/alias. No plant-part change."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "TOCOPHEROL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "antioxidant"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "TOCOPHEROL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 18,
+      "source_name": "citronellol**",
+      "lookup_candidate": "CITRONELLOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "CITRONELLOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CITRONELLOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 19,
+      "source_name": "limonene**",
+      "lookup_candidate": "LIMONENE",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "LIMONENE",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LIMONENE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 20,
+      "source_name": "geraniol**",
+      "lookup_candidate": "GERANIOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "GERANIOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "GERANIOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 21,
+      "source_name": "linalool**",
+      "lookup_candidate": "LINALOOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "LINALOOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "LINALOOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 22,
+      "source_name": "benzyl benzoate**",
+      "lookup_candidate": "BENZYL BENZOATE",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "BENZYL BENZOATE",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL BENZOATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 23,
+      "source_name": "citral**",
+      "lookup_candidate": "CITRAL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "CITRAL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "CITRAL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 24,
+      "source_name": "farnesol**",
+      "lookup_candidate": "FARNESOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "FARNESOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "FARNESOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 25,
+      "source_name": "benzyl salicylate**",
+      "lookup_candidate": "BENZYL SALICYLATE",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "BENZYL SALICYLATE",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "BENZYL SALICYLATE",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    },
+    {
+      "candidate_id": "source-b-tabitha-scented-original-150ml",
+      "rank": 26,
+      "source_name": "eugenol**",
+      "lookup_candidate": "EUGENOL",
+      "scope": "This source and candidate only; not a generic alias registration.",
+      "normalization_steps": [
+        "Preserve source_name unchanged.",
+        "Remove printed organic/allergen footnote markers into retained source footnote; uppercase/whitespace only for lookup."
+      ],
+      "limits": [
+        "No quantity, role dominance, hair weight, fit, penetration, persistence or batch grade is inferred from generic ingredient functions."
+      ],
+      "normalized_name": "EUGENOL",
+      "identity_status": "exact_reviewed_canonical_after_source_scoped_annotation_removal",
+      "generic_roles": [
+        "declared_fragrance_allergen"
+      ],
+      "source_refs": [
+        {
+          "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+          "entry": "EUGENOL",
+          "claim": "Exact reviewed canonical or declared alias with generic roles only."
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Raw candidate ingredient arrays remain unchanged.",
+    "Parenthetical/common-name removal is source-specific and requires exact cited target identity. No generic alias created.",
+    "Whole-oil synonym receipts do not establish matching Fushi supplier or processing grade.",
+    "Styrax fragrance resin is not equated with a structural gum.",
+    "Remaining unreviewed aromatics/extracts stay not_assessed.",
+    "No tests/build/typecheck/lint launched; JSON/source/rank checks only."
+  ]
+}

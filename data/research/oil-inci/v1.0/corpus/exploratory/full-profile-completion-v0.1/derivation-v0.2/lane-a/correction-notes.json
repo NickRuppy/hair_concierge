@@ -1,0 +1,60 @@
+{
+  "lane_id": "a",
+  "files_read": [
+    "method.md",
+    "blind-packet.json",
+    "function-dictionary.json",
+    "material-weight-reference.json",
+    "../lane-a/blind-records.json",
+    "../lane-a/blind-notes.json"
+  ],
+  "input_hashes": {
+    "method.md": "c142a41df6dae960b6758d5d31922db7c4253b13e816a2fb323a4861162a5aff",
+    "blind-packet.json": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd",
+    "function-dictionary.json": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf",
+    "material-weight-reference.json": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7",
+    "../lane-a/blind-records.json": "77a75f666c0ca53d7a8507d1ff50bf9e91862df760e57896fc6be6e33c301d01",
+    "../lane-a/blind-notes.json": "68cadcb2695d31843d05af8b14c3524eeb3d9cfa87e900e9637e6ad853844b5c"
+  },
+  "completed_ids": [
+    "O09",
+    "O10",
+    "O11",
+    "O12",
+    "O13",
+    "O14",
+    "O16",
+    "O17",
+    "O20",
+    "O21",
+    "O22",
+    "O23",
+    "O24",
+    "O25",
+    "O26",
+    "O27",
+    "O28"
+  ],
+  "recognized_formulas": [
+    {
+      "case_id": "O09",
+      "disclosure": "The multi-oil/ester ingredient sequence felt familiar as a commercial formula pattern. No exact identity was established, looked up, or used; no prior product labels were consulted."
+    },
+    {
+      "case_id": "O11",
+      "disclosure": "The soybean/castor/rosemary/mint sequence prompted spontaneous familiarity with a commercial formula pattern. Identity inference was not pursued and no remembered answer or product label was used."
+    }
+  ],
+  "access_incidents": [],
+  "limitations": [
+    "This is a disclosed development rederivation of my own sealed lane-a predecessor, not independent or unseen classification. My own previous judgments were deliberately read for complete top-level correction patches. Earlier spontaneous O09/O11 familiarity remains disclosed; no additional identity inference or lookup was pursued.",
+    "Only the six declared files were read. The full corrected method and all 269 corrected dictionary entries including alias basis, flags, functions, admissions and exclusions were reviewed in lossless compact displays. The successor packet and full material reference were read/parsed and their SHA256 hashes equal the completely reviewed predecessor inputs; own predecessor bytes match the issued hashes. No provenance path or URL was opened.",
+    "All 17 cases were reassessed. Replacements are complete top-level values; cases with no actual changes have empty changed_fields. Parent applies these patches to the sealed predecessor; neither predecessor file was changed.",
+    "Base and weight scalar values remain unchanged after reassessing each changed function. O11/O12/O25 receive complete base/weight objects only to correct uncertainty text tied to actual function/admission corrections, without changing classification, confidence, evidence or alternatives.",
+    "O16 now has penetration_potential/low because coconut admission applies to its already-principal oil role. O10/O23 retain surface_led with corrected supporting-anchor rationales. O11/O27 retain unknown because secondary positive anchors and unstudied principal oil routes do not settle the delivery balance. No principal role was changed merely to obtain a penetration result.",
+    "O12 auxiliary suffix now starts at 4 after terminal vanillin becomes a recognized fragrance auxiliary. O25 starts at 17 after Pelargonium becomes recognized, using fragrance at 17 and cooling camphor at 20; unresolved methyl salicylate at 16 prevents an earlier suffix. All other suffixes were reviewed and retained.",
+    "Corrected exact flag matches include all primary matching ranks. Coconut/safflower fixed oils remain false for the scalp watch-out family. No new generic alias, species, plant part, essential-oil scope or fragrance sublist primary rank was invented.",
+    "Unassessed ingredients and absent material-prior aliases remain gaps. All blend weights retain low confidence. Positive-anchor estimates retain the supplied study-condition and mixture-transfer limitations; no ordinary-dose efficacy follows.",
+    "No persistence, source identity, packaging, hero, directions, claim, fit or production property was assessed. Output creation stops at the correction blind stage for parent sealing."
+  ]
+}

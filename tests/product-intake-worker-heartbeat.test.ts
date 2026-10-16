@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs"
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
@@ -199,12 +199,41 @@ test("an async child timeout remains codex_timeout", async (t) => {
   )
 })
 
+test("worker arguments remain literal even when caller options request a shell", async (t) => {
+  const dir = mkdtempSync(join(tmpdir(), "intake-argv-"))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  const script = join(dir, "echo-args.cjs")
+  const marker = join(dir, "shell-was-invoked")
+  writeFileSync(script, "process.stdout.write(JSON.stringify(process.argv.slice(2)))")
+  const argument = `literal $(touch "${marker}") ; printf split`
+
+  const result = await worker.runWorkerProcess(process.execPath, [script, argument], {
+    encoding: "utf8",
+    shell: true,
+    timeout: 2_000,
+  })
+
+  assert.equal(result.status, 0)
+  assert.equal(existsSync(marker), false, "argument content was interpreted by a shell")
+  assert.deepEqual(JSON.parse(result.stdout), [argument])
+})
+
 test("timeout settles promptly and kills grandchildren holding inherited pipes", async () => {
   const started = Date.now()
-  const result = await worker.runWorkerProcess("sh", ["-c", "sleep 6 & sleep 6"], {
-    encoding: "utf8",
-    timeout: 100,
-  })
+  const result = await worker.runWorkerProcess(
+    process.execPath,
+    [
+      "-e",
+      `
+    const { spawn } = require('node:child_process');
+    spawn(process.execPath, ['-e', 'setTimeout(() => {}, 6000)'], {
+      stdio: ['ignore', 'inherit', 'inherit']
+    });
+    setTimeout(() => {}, 6000);
+  `,
+    ],
+    { encoding: "utf8", timeout: 100 },
+  )
   assert.equal((result.error as NodeJS.ErrnoException).code, "ETIMEDOUT")
   assert.ok(Date.now() - started < 3_500, "inherited pipes kept the job alive after timeout")
 })

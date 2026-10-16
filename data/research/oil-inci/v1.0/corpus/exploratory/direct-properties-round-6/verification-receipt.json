@@ -1,0 +1,210 @@
+{
+  "date": "2026-10-05",
+  "scope": "Current source-only v0.1.1 plus initial/predecessor byte preservation; original initial transient seal bytes unavailable, original full provenance not claimed.",
+  "commands": [
+    {
+      "command": "python3 plans/oil-inci/verify-direct-properties-round-6.py --inputs-only",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "cases": 6,
+        "scope": "structural/gate verification; no classification judgment",
+        "mode": "inputs_only"
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-direct-properties-round-6.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "cases": 6,
+        "scope": "structural/gate verification; no classification judgment",
+        "mode": "complete",
+        "lanes": 2,
+        "fit_cells_excluded": 120,
+        "historical_files_unchanged": 219,
+        "revision": "source-only-v0.1.1"
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-direct-properties-round-6.py --self-test",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "baseline": {
+          "status": "passed",
+          "cases": 6,
+          "scope": "structural/gate verification; no classification judgment",
+          "mode": "complete",
+          "lanes": 2,
+          "fit_cells_excluded": 120,
+          "historical_files_unchanged": 219,
+          "revision": "source-only-v0.1.1"
+        },
+        "uv_truth_combinations": 4,
+        "mutation_controls": [
+          {
+            "control": "truncated manifest",
+            "guard": "Input manifest files"
+          },
+          {
+            "control": "duplicate case",
+            "guard": "lane a final duplicate/missing ID"
+          },
+          {
+            "control": "post-unblind formula rewrite",
+            "guard": "Changed blind fields"
+          },
+          {
+            "control": "omitted flag",
+            "guard": "Flag keys"
+          },
+          {
+            "control": "false fragrance despite matches",
+            "guard": "Flag dictionary parity: fragrance"
+          },
+          {
+            "control": "wrong UV gate",
+            "guard": "UV conjunction gate"
+          },
+          {
+            "control": "lost heat claim",
+            "guard": "Heat gate"
+          },
+          {
+            "control": "invented source",
+            "guard": "Scenario source/direction"
+          },
+          {
+            "control": "invented direction",
+            "guard": "Scenario source/direction"
+          },
+          {
+            "control": "missing fit cell",
+            "guard": "Fit thickness cells"
+          },
+          {
+            "control": "false metric denominator",
+            "guard": "Comparison denominator/value error"
+          },
+          {
+            "control": "invented dose with valid direction",
+            "guard": "Scenario fact parity"
+          },
+          {
+            "control": "dry prewash mislabelled finish",
+            "guard": "Direction-role constraint"
+          },
+          {
+            "control": "invalid suffix ranks",
+            "guard": "Auxiliary suffix range"
+          },
+          {
+            "control": "principal oil falsely trace",
+            "guard": "Frozen-role prominence parity"
+          },
+          {
+            "control": "fabricated formula evidence",
+            "guard": "Formula evidence rank/name parity"
+          },
+          {
+            "control": "invented optional instructions",
+            "guard": "Optional direction fact parity"
+          },
+          {
+            "control": "fabricated factual ingredient evidence",
+            "guard": "Formula evidence rank/name parity"
+          },
+          {
+            "control": "truncated blind seal",
+            "guard": "Blind-stage seal"
+          }
+        ]
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-4.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "Artifact contracts, not scientific/sensory accuracy",
+        "cases": 10,
+        "fresh": 6,
+        "replay": 4,
+        "materials": 65,
+        "exact_material_names": 104,
+        "historical_files_unchanged": 80,
+        "read_scope_limit": "Self-report, not sandbox proof",
+        "mode": "complete",
+        "cohorts": {
+          "fresh": {
+            "total": 6,
+            "lane_pair_raw_equal": 6,
+            "lane_pair_known_equal": 6,
+            "lane_pair_both_known": 6,
+            "classified_by_lane": {
+              "a": 6,
+              "b": 6,
+              "main": 6
+            }
+          },
+          "replay": {
+            "total": 4,
+            "lane_pair_raw_equal": 4,
+            "lane_pair_known_equal": 4,
+            "lane_pair_both_known": 4,
+            "classified_by_lane": {
+              "a": 4,
+              "b": 4,
+              "main": 4
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "python3 plans/oil-inci/verify-blend-weight-round-5.py",
+      "exit_code": 0,
+      "result": {
+        "status": "passed",
+        "scope": "Artifact contracts, not scientific/sensory accuracy",
+        "cases": 8,
+        "fresh": 6,
+        "replay": 2,
+        "read_scope_limit": "Self-report, not sandbox proof",
+        "mode": "complete",
+        "cohorts": {
+          "fresh": {
+            "total": 6,
+            "lane_pair_raw_equal": 5,
+            "lane_pair_known_equal": 5,
+            "lane_pair_both_known": 5,
+            "classified_by_lane": {
+              "a": 6,
+              "b": 5,
+              "main": 6
+            }
+          },
+          "replay": {
+            "total": 2,
+            "lane_pair_raw_equal": 1,
+            "lane_pair_known_equal": 1,
+            "lane_pair_both_known": 2,
+            "classified_by_lane": {
+              "a": 2,
+              "b": 2,
+              "main": 2
+            }
+          }
+        }
+      }
+    }
+  ],
+  "manual_checks": [
+    "Allsixsourcecontexts matched current property sheet; Elixir explicit heat and prewash source omissions corrected in separateimmutablederivation",
+    "Everycurrentblindfield equals originalsealedrecord; currentcanonicalsealread hashes match restored byte-exactoriginal",
+    "CSV current19namedhero values/uses/flags/pack/weightauthority checked against structured records",
+    "Allconfidence/unknowncoverage numbers derived from actualrecords, not imposedlabeltargets",
+    "No newweight orfit policy; allestimatesretainalternatives andgaps"
+  ]
+}

@@ -1,0 +1,508 @@
+{
+  "run_id": "oil-persistence-leave-on-replay-v0.1",
+  "records": [
+    {
+      "case_id": "O01",
+      "selected_from": "b",
+      "reason": "The ester/squalane/fixed-oil remainder positively supports an ordinary retained coat. Neither the castor derivative nor peptide has admitted film architecture; distinctive-ingredient familiarity is not a target.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "source_context_key": "F01",
+        "scenario_index": 0,
+        "scenario": {
+          "direction_id": "F01-direction-1",
+          "verbatim": false,
+          "source_id": "k-notino",
+          "text": "Begin with 1–3 drops, increasing if needed. Apply to towel-dried damp hair before styling, or use on dry hair as the final step.",
+          "dose": "1–3 drops initially; increase if needed",
+          "contact_time": "not specified in canonical local directions",
+          "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O03",
+      "selected_from": "b",
+      "reason": "The fixative film is integrated with silicone/emollient conditioning, rather than being treated as a free-standing polymer-presence trigger. Retention is explicitly source-supported.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "source_context_key": "D05",
+        "scenario_index": 0,
+        "scenario": {
+          "source_id": "D05-maker",
+          "site": [
+            "hair",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Shake well; spray into damp or dry hair, especially ends; air dry.",
+          "direction_id": "D05-direction-1",
+          "restrictions": "unestablished"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O04",
+      "selected_from": "b",
+      "reason": "The declared intact oil supplies ordinary lipid retention. A former binary elevated judgment cannot establish a new coherent conditioning network; no changed weight or penetration follows.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "source_context_key": "D02",
+        "scenario_index": 1,
+        "scenario": {
+          "source_id": "D02-maker",
+          "site": [
+            "ends"
+          ],
+          "stage": "after_wash",
+          "dose": "small amount; unit unspecified",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "After washing, put a small amount on ends and retain it.",
+          "direction_id": "D02-direction-2",
+          "restrictions": "unestablished"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O05",
+      "selected_from": "b",
+      "reason": "The hard comparison is gelling versus conditioning-film structure. The styrenic gelling pair structures the vehicle; the modified-oil polymer lacks admitted film evidence, so the positive ordinary-emollient reading wins.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "source_context_key": "F05",
+        "scenario_index": 1,
+        "scenario": {
+          "direction_id": "F05-direction-2",
+          "source_id": "E05-maker",
+          "verbatim": false,
+          "text": "Der Hersteller nennt ein bis zwei Tropfen als Anfangsmenge, verteilt im abgeteilten feuchten oder trockenen Haar; Wiederholung nach Bedarf. Anwendung auch nach Hitzestyling beschrieben.",
+          "stage": "damp_or_dry; separate explicit after_heat_styling option",
+          "site": "hair_sections",
+          "dose": "1–2 drops initially",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O06",
+      "selected_from": "b",
+      "reason": "The cationic conditioning polymer is integrated into the aqueous delivery/conditioning architecture. This is not high because water or any polymer is present; the retained conditioning remainder is polymer-led.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "source_context_key": "F06",
+        "scenario_index": 0,
+        "scenario": {
+          "direction_id": "E07-maker-towel-dried",
+          "id": "E07-maker-towel-dried",
+          "source_id": "E07-maker-de",
+          "verbatim": false,
+          "text": "Spread two to three pump doses between hands and work through towel-dried lengths and ends. Comb through and retain without rinsing.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried",
+          "dose": "2–3 pumps",
+          "contact_time": "unspecified",
+          "removal": "no_rinse",
+          "restrictions": "No dry-hair application inferred from finish positioning."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O07",
+      "selected_from": "b",
+      "reason": "The retained silicone fluids and emollients support ordinary coating, while the distinctive unassessed molecule cannot be promoted into an adherent film. Familiarity was disclosed but no prior answer was used.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "source_context_key": "F07",
+        "scenario_index": 0,
+        "scenario": {
+          "direction_id": "F07-direction-1",
+          "verbatim": false,
+          "source_id": "ol-local-brand",
+          "text": "Remove cap, invert bottle, and tap its base to release individual drops. Apply 2–3 drops to damp or dry hair and style. The source permits daily use on wet/dry hair, before heat styling or after styling.",
+          "dose": "2–3 drops",
+          "contact_time": "not specified",
+          "rinse_requirement": "No rinse step stated; styling/finishing instructions retain product."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O08",
+      "selected_from": "b",
+      "reason": "The conditioning fluid/gum combination coherently supports a retained film; botanical oils, extracts and fragrance do not independently amplify its persistence.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "source_context_key": "F08",
+        "scenario_index": 0,
+        "scenario": {
+          "direction_id": "F08-direction-1",
+          "source_id": "E04-dm",
+          "verbatim": false,
+          "text": "Einige Tropfen in den Händen verteilen und ins handtuchtrockene Haar bis zu den Spitzen einarbeiten. Bei feinem Haar auf die Spitzen konzentrieren und den Ansatz auslassen.",
+          "stage": "towel_dried",
+          "site": "hair_to_ends",
+          "dose": "a few drops",
+          "contact_time": "not_stated",
+          "rinse": "not_stated",
+          "shake": "not_stated"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O09",
+      "selected_from": "b",
+      "reason": "Retained fixed oils plus ester/ether emollients support an ordinary lipid layer. The emulsifying auxiliary does not establish either automatic washout or a cohesive conditioning network.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "A few drops on lengths/ends as needed; FAQ 1–2 sprays on lengths/ends or weekly mask ≥10 minutes before shampoo."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O10",
+      "selected_from": "b",
+      "reason": "The applied remainder has a conditioning-gum route, while carrier mobility does not erase it. Neither volatile-vehicle presence nor weight determines the answer.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q03",
+        "scenario_index": null,
+        "scenario": {
+          "text": "1–2 pumps; apply to lengths/ends before blow-drying or on dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O11",
+      "selected_from": "b",
+      "reason": "The fixed oils support ordinary lipid coating. Castor identity, numerous botanicals and silica do not create a demonstrated structured conditioning network; lane-a familiarity was disclosed.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount on scalp; massage and comb through ends, leave in. Daily scalp/ends use; capped ends treatment can be rinsed/shampooed."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O12",
+      "selected_from": "b",
+      "reason": "Dimethicone/dimethiconol supplies complementary conditioning-fluid/gum architecture. Rice oil and auxiliaries are included without being counted as independent film multipliers.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q06",
+        "scenario_index": null,
+        "scenario": {
+          "text": "One pump on wet/damp hair avoiding roots; air-dry/style. A few drops on dry hair for frizz."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O13",
+      "selected_from": "b",
+      "reason": "The fixed oils provide a positive ordinary-lipid reading; extracts/aromatics cannot independently justify a cohesive polymer-type conditioning film.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q08",
+        "scenario_index": null,
+        "scenario": {
+          "text": "2–3 pumps on scalp/lengths; sparse daily leave-in or pre-wash 30–60 min/overnight 1–2 times weekly."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O14",
+      "selected_from": "b",
+      "reason": "The joined silicone fluid, gum and explicit film former are the conditioning route. Elastomer texture and wetting support are considered but not sufficient independent triggers.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+        "source_context_key": "Q09",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount midlengths to ends of clean towel-dried hair; blow-dry or air-dry; also apply to dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O15",
+      "selected_from": "b",
+      "reason": "The silicone conditioning-fluid/gum remainder supports a coherent film. Botanical oils add lipid coating without displacing the whole-system film reading.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "source_context_key": "D03",
+        "scenario_index": 0,
+        "scenario": {
+          "source_id": "D03-maker",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "damp_or_dry",
+          "dose": "1–2 drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply 1–2 drops on damp or dry lengths and ends.",
+          "direction_id": "D03-direction-1",
+          "restrictions": "Maker FAQ advises no direct scalp application; intended for lengths."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O16",
+      "selected_from": "b",
+      "reason": "The retained protective-style hair context is source-supported separately from hot-oil treatment. Its fixed-oil blend supports ordinary lipid coating, not a special high class from castor or repeated names.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/leave-on-source-supplement.json",
+        "source_context_key": "O16",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker permits daily hair care and use with protective styles such as braids or weaves, separately mentioning hot-oil treatment. This admits retained protective-style fibre care; no numeric hair dose or damp/dry stage is inferred."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O17",
+      "selected_from": "b",
+      "reason": "The retained lipid/ester architecture is affirmative. Colour marketing and botanical extracts do not establish a new film mechanism or protection endpoint.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "2–3 pumps on dry lengths/ends before wash, 30–60 minutes or overnight; sparing leave-in daily use also permitted."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O18",
+      "selected_from": "b",
+      "reason": "The mixed intact oils support ordinary coating; liquid jojoba is not a structuring-wax shortcut and the powder is not admitted as an adherent film.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "source_context_key": "D06",
+        "scenario_index": 2,
+        "scenario": {
+          "source_id": "D06-maker",
+          "site": [
+            "ends"
+          ],
+          "stage": "dry_finish",
+          "dose": "a dab",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply a dab to dry ends and massage in.",
+          "direction_id": "D06-direction-3",
+          "restrictions": "unestablished"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O19",
+      "selected_from": "b",
+      "reason": "Mobile ester plus retained oils supports the middle coating anchor. Neither the light weight nor oil retention alone is used to assign the class.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "source_context_key": "D01",
+        "scenario_index": 0,
+        "scenario": {
+          "source_id": "D01-maker",
+          "site": [
+            "mid_lengths",
+            "ends"
+          ],
+          "stage": "clean_wet_or_dry",
+          "dose": "3–4 drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "text": "Apply 3–4 drops from mid to ends of clean hair, wet or dry; comb through gently.",
+          "direction_id": "D01-direction-1",
+          "restrictions": "unestablished"
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O20",
+      "selected_from": "b",
+      "reason": "The silicone-fluid/gum conditioning route supports the more cohesive film reading; aromatic and botanical components are not extra film-strength points.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+        "source_context_key": "R08",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Small amount on towel-dried or dry hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O21",
+      "selected_from": "b",
+      "reason": "Jojoba-esters grade and estolide function do not establish a coherent wax network within the mobile emollient system. All fragrance-footnote material stays contextual.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Few drops rubbed between palms, smoothed through damp or dry mid-lengths and ends; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O22",
+      "selected_from": "b",
+      "reason": "Exact intact fluid liquid-wax evidence supports ordinary retained coating. This independently reproduces the pilot direction, without carrying over its product answer.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N02",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Hair/scalp treatment at least 30 minutes then shampoo; separate small amount on dry ends retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O23",
+      "selected_from": "b",
+      "reason": "The combined silicone conditioning gum/polymer system supports the film reading. Optical filters and carrier mobility are not persistence evidence or cancellation factors.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N03",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Sparingly on damp hair before heat styling or smooth through dry hair for shine; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O24",
+      "selected_from": "b",
+      "reason": "The silicone conditioning-fluid/gum pair supplies the coherent coating route. Polyacrylamide gel/rheology is explicitly separated from conditioning-film evidence.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+        "source_context_key": "N04",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Few drops on wet or dry lower lengths/ends; retained."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O25",
+      "selected_from": "b",
+      "reason": "The conditioning-gum remainder is supported by its delivery/emollient context; volatile carriers do not force a low value and filters do not add film strength.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+        "source_context_key": "C01",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Retained: 2–3 pumps towel-dried hair before styling; dry lengths/ends finish, fine hair start one pump."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O26",
+      "selected_from": "b",
+      "reason": "The silicone fluid/gum system supports the coherent retained film. Texture crosspolymer, UV-filter polymer and proteins are not automatic additive persistence triggers.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+        "source_context_key": "C02",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Retained: 2–3 pumps mid-lengths/ends of damp/dry hair, comb to distribute; more as needed."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O27",
+      "selected_from": "b",
+      "reason": "All retained oils and the seed fat are included; an isolated butter declaration does not establish a coherent structured network across the formula.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+        "source_context_key": "O27",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker separately permits retained towel-dried hair care and dry mid-lengths/ends finishing; pre-shampoo and overnight applications are separate scenarios."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    },
+    {
+      "case_id": "O28",
+      "selected_from": "b",
+      "reason": "The single exact intact oil provides ordinary retained lipid coating. Lack of another film ingredient alone is not the reason; the positive whole-oil emollient reading supplies the middle anchor.",
+      "selected_context": {
+        "mode": "retained_fibre",
+        "source_context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/persistence-replay-v0.1/context-source-supplement.json",
+        "source_context_key": "O28",
+        "scenario_index": null,
+        "scenario": {
+          "text": "Maker instructs working through clean damp hair daily or as needed. Face-dose instructions do not transfer to hair."
+        },
+        "reason": "Select the independently captured retained hair scenario; pre-wash/scalp alternatives do not determine persistence."
+      }
+    }
+  ],
+  "process_concerns_resolution": "Both lanes disclosed spontaneous/partial familiarity with some patterns, without source access or prior labels. Root reviewed every complete formula and both reasons after byte seal, including the distinctive unassessed ingredients. These are source-hidden independent development judgments, not cognitively blind accuracy evidence or unseen holdout. No access incidents reported.",
+  "scope": "One retained fibre scalar per admitted case; pre-wash-only O02 remains excluded. No sibling engine, fit, weight, catalog or runtime change."
+}

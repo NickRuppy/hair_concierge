@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "decision": "OE34",
+  "scope": "Current documentation/product adjudication only; not sensory validation",
+  "current_NUXE": "light/low, medium alternative",
+  "preserved_trial_NUXE": "medium",
+  "current_Wella": "medium/low, light alternative",
+  "preserved_trial_Wella": "light",
+  "edited_guides_checked": 6,
+  "immutable_files_unchanged": 115,
+  "material_reference_unchanged": "v0.8 / 66 entries",
+  "policy_unchanged": "v0.2",
+  "local_links": "passed",
+  "whitespace": "passed",
+  "new_independent_runs": 0,
+  "frozen_trial_verifier": "passed: python3 plans/oil-inci/verify-blend-weight-round-4.py",
+  "supersedes_current_document_status": "OE33 recording snapshot; previous receipt retained as historical",
+  "verified_current_document_sha256": {
+    "plans/oil-inci/phase1-decision-coverage.md": "a4ffbab461edbcf08388c9594e4bc671cd0e8dc4d6043f8552a62a72e7671fce",
+    "plans/oil-inci/research/weight-uncertainty-decisions-2026-10-02.md": "452831c11f931740da253a4846f623ff60d6d26d08f57d6f82c0ab7eef06dfd0",
+    "docs/research/oil-inci/README.md": "fa677b805b8cf4358c56a73fe8c3761349588cdecb0922d2f67d76ab485926c0",
+    "docs/research/oil-inci/v1.0/00_category_charter.md": "868eb970451c5205d2f31b01f27eceaa1f9d26b49e3a38739864c320094bda76",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.md": "590f3f68742d657ff10ef6d3439e8818c274a887e0a3e865f572f3e2ebe15741",
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.1.md": "bdc5e27a62a1f16682d3a6b8a0beeef6f3e1c08fbf3597567d972afb017e3006"
+  }
+}

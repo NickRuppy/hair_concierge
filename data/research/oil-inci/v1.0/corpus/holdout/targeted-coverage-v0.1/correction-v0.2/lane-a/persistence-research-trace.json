@@ -1,0 +1,45 @@
+{
+  "lane_id": "a",
+  "records": [
+    {
+      "case_id": "T02",
+      "reason": "The reviewed silicone-carrier/conditioning-film route at ranks 1 and 5, combined with hydrocarbon and ester emollient roles at ranks 2 and 3, supports an ordinary retained conditioning coating. A low reading gives too little weight to the affirmative conditioning-film route; a high reading would require a stronger whole-system cohesive/adherent/structured-film argument than these supplied functions establish. Rank 4 remains functionally unassessed rather than assigned a species, oil prior or persistence mechanism. Rank 6 provides fragrance composition without an admitted conditioning mechanism.",
+      "evidence": [
+        {
+          "rank": 1,
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 3,
+          "canonical_name": "C12-15 ALKYL BENZOATE"
+        },
+        {
+          "rank": 4,
+          "canonical_name": "ARGANIA KERNEL OIL"
+        },
+        {
+          "rank": 5,
+          "canonical_name": "PHENYL TRIMETHICONE"
+        },
+        {
+          "rank": 6,
+          "canonical_name": "FRAGRANCE (PARFUM)"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "application_context": "retained leave-on hair-fibre conditioning/finish; no rinse or shampoo-removal estimate; no scalp assessment",
+      "tipping_assumption": "The identified carrier and conditioning-film functions represent ordinary retained coating rather than a particularly cohesive or adherent system. This commitment uses the admitted retained-fibre context and the complete known architecture while preserving rank 4 as an unresolved contribution; no volatile-carrier cancellation, material weight prior, binary buildup value, rinse estimate or scalp assumption is used."
+    }
+  ]
+}

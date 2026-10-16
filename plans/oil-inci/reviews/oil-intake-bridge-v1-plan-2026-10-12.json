@@ -1,0 +1,180 @@
+{
+  "status": "counterpart_completed_revisions_reconciled",
+  "date": "2026-10-12",
+  "plan_path": "plans/oil-inci/oil-intake-bridge-v1-plan-2026-10-12.md",
+  "plan_sha256": "c5d68e574e93c707fb9aed9e23f1a9c80817c293f1ab02b7daa21cf4d1bb6bd2",
+  "planning_worktree": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-inci",
+  "research_head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "integration_checkout": "/Users/nick/AI_work/hair_conscierge",
+  "inspected_integration_head": "91b013a5f2b594379dd310da85b2a5c67079c750",
+  "integration_files": {
+    "src/lib/product-intake/category-research-router.ts": "a454bf4b13f2b4247b1865e931190076c93813f3bf0da5146ac4c0d8972484ec",
+    "src/lib/product-intake/leave-in-research-adapter.ts": "2596aeb2c7a6f288613db154f95a98eb9d1f5a96b68818221a9a7b8d4f6b60ca",
+    "src/lib/product-intake/category-validators.ts": "1ab0c4cfb80f2985e386592cd376170a612cd5b006e45c15918d867c52b2b6b8",
+    "scripts/product-intake/codex-research-worker.ts": "7f169e1f2241a7c2c94f6fda4cb50d6481dbf3a6f2385637be5c61b5bd2ccc92",
+    "src/lib/oil/constants.ts": "eada5f14cff4a56fb7b43ad8eb1c6def195a1f27f30bcb98165ca6f418036286",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts": "88a4bd4288c5db83a058634496212bca72c337d81d0b150ec17128176649301e",
+    "src/lib/personal-plan/products/authority/categories/oil.ts": "8fa2b25d1f6d85192074d624b5f90fde8079fd322c27300be42b8b3ec36ac188",
+    "src/lib/recommendation-engine/selection.ts": "b2185c0cd896735e62f8776a1871f5c5ff27e5d17eeba0e8024406ce453dd815",
+    "src/lib/product-intake/catalog-enrichment/index.ts": "dc6aa67cff307e9db19a014ab630ae9f5efa8652318c5bc5781a41a5e9dc7db0",
+    "apps/product-intake-review/app/submissions/[submissionId]/review-property-rows.ts": "73a02c5de9a50ed52ef045960c8c00ff5ca681e74ec76a822f2ce9970e599f8f",
+    "scripts/product-intake/approve-package.ts": "b2fbdb173a7dcbb99a3bfc8c0fa77e7cf3739066a1d92ce34bf94b0640d3c8d7",
+    "packages/product-intake-core/src/repository.ts": "f3ca1fec594b46f3afde07b005bd33b1cb8c3c6a965d233556877ab0a61b89a8",
+    "docs/product-intake-research-ops.md": "66ce9d8e50d676bfa9bf20f1abaea06a9a77a57ae53ad4683219b60544ed7a3a",
+    "docs/product-intake-leave-in-production-adapter.md": "0f3cef0be3712fd145e1443d75d1d631a15b7056f694bb762f2a69234267da6b"
+  },
+  "frozen_policy_pins": {
+    "docs/research/oil-inci/v1.0/02_classification-standard-v0.8.md": "2238a966c7cefbae48bec2df72293bef98837e29cba15c0eed9b5c2e91a281cc",
+    "docs/research/oil-inci/v1.0/01_property-set-v0.2.md": "b9bc09bdf9c6076530d9d34ac33c4e8b7ba3b4b47dc11d91491f72e05b9eefd5",
+    "docs/research/oil-inci/v1.0/11_operating-guide-v0.2.md": "c7ca970424c3004d825c2faa4a636a8df0d93e214e293671acdab9a00ca5d28d",
+    "docs/research/oil-inci/v1.0/10_persistence-guidance-v0.2.md": "251bcbfd705e521df4303a9f5b24c4007d0dd138a2c7dce554bb14fbb99e6208",
+    "docs/research/shared/persistence-potential-v0.1.md": "b8b9ef91e408af0756dcb7d9f931f5fe0f8c3874f92ffc780512baf423f31fd4",
+    "docs/research/oil-inci/v1.0/03_weight-reference-v0.10.md": "dc6d7f117cae895014620ce9b3f542f5cb35c980581d0e692aa022862ede657d",
+    "data/research/oil-inci/v1.0/reference/natural-oil-weight-v0.10.json": "f2a57bd84195fa911578b69cb2153743f839d1d64f403e1bda625028bb855b50",
+    "docs/research/oil-inci/v1.0/04_blend-weight-policy-v0.2.md": "5db652413c5dd814f9a9488dfab6a8bedbd7dcc107a9fe002448203429db8391",
+    "data/research/oil-inci/v1.0/reference/blend-weight-policy-v0.2.json": "00d916f2faab0b07f607b3a220e788c4d82e026a36381faab40c49bcae9d5305",
+    "docs/research/oil-inci/v1.0/05_thickness-fit-standard-v0.1.md": "1a28981bedf298ace48924125f12c5610ad84da4d2de5866239e4db00dc5b43c",
+    "docs/research/oil-inci/v1.0/06_curl-pattern-fit-standard-v0.1.md": "93df70950d1e9cc803aa69e200a967a365c39489028859fbbe26b21fba2ce5e4",
+    "docs/research/oil-inci/v1.0/07_damage-fit-standard-v0.1.md": "6c7f2c8e3bae83ee796d36af5fa8da7398ef3d071fcde97abdd93395c0e82b6b"
+  },
+  "prior_research_preservation": {
+    "verified_files": 93,
+    "all_identical": true,
+    "read_only_revalidation": {
+      "cases": 4,
+      "ranks": 64,
+      "scenario_roles": 7,
+      "frozen_files_unchanged": 160,
+      "routing_predecessors_preserved": 2,
+      "fresh_corrected_case_count": 1,
+      "corrected_ranks": 6,
+      "current_view_cases": 4
+    }
+  },
+  "plan_self_review": {
+    "scope": "offline deterministic adapter and inactive helper; manual matching v1",
+    "coverage_acknowledgement": "lets do it; Yes\u2014manual matching tags for v1 (Recommended)",
+    "decision_coverage": "confirmed",
+    "undiscussed_consequential_assumptions": "none",
+    "literal_local_markdown_links": 7,
+    "customer_journey_and_mockup": "not applicable to offline/inactive scope",
+    "exact_contracts": "full envelope, fixed/variable provenance,3-field ownership,exhaustive outcomes,manual compatibility and protocol boundaries",
+    "excluded": "no activation,DB schema/production writes,matching changes,legacy rewrite,UI/enrichment activation",
+    "retention_boundary": "local artifacts now; later worker artifact row distinct from legacy manual package payload retention",
+    "scope_exclusion": "Separate typed exclusion input has no profile/persistence; valid complete source proof required, unknown context stays needs_research.",
+    "implementation_ready": true,
+    "next_action": "Implement the bounded inactive bridge in a fresh current-main-based worktree.",
+    "source_replay_weight_gap": "H04 Rahua has unknown weight:requires research, no medium fallback. Persistence moderate remains committed.",
+    "counterpart_findings_reconciled": true,
+    "technical_revisions": [
+      "read-only verifier invocation",
+      "explicit full-corpus identity mappings",
+      "current serialization policy versus historical method provenance",
+      "caught CLI errors and exact exit mapping",
+      "verification commands and router guard",
+      "identity binding, replay expectations and naming clarifications"
+    ]
+  },
+  "counterpart": {
+    "status": "completed_reconciled",
+    "model_requested": "opus",
+    "model_resolved": "claude-opus-5",
+    "effort": "high",
+    "timeout_seconds": 600,
+    "terminal_read_only": true,
+    "allowed_tools": [
+      "Glob",
+      "Grep",
+      "Read"
+    ],
+    "mcp_servers": [],
+    "verdict": "Approve with revisions",
+    "verdict_opening": "**Verdict: Approve with revisions.** The shape is right and matches repo prior art; four precision defects and a handful of consistency gaps should be fixed in the plan text before a fresh implementer picks it up. No re-shape, no scope reduction needed.",
+    "exit_code": 0,
+    "duration_ms": 445547,
+    "num_turns": 47,
+    "tool_calls": 46,
+    "reviewed_plan_sha256": "13d74f3438e542567f200a3c6e5e07cb17843661d45912a45d1e649879ffc9f2",
+    "reconciled_plan_sha256": "c5d68e574e93c707fb9aed9e23f1a9c80817c293f1ab02b7daa21cf4d1bb6bd2",
+    "report_sha256": "0ccdff13c42a2e8860d0d0d89c8b91522f6e4b8a1683fac58b2ba350dcc87726",
+    "events_sha256": "49de77747a8b22cec3d306638fec866a6a482c6f642ade2faef7c1f4bc4b327d",
+    "verified_blockers": [
+      "frozen receipt overwrite from verifier main",
+      "undefined historical identity mapping",
+      "historical versus current method-pin meaning",
+      "uncaught CLI exceptions collide with refusal exit 1"
+    ],
+    "findings_reconciled": "C1-C10 ledger; four verified technical revisions incorporated. Missing test-audit claim rejected in part: personal skill exists. Approved helper retained.",
+    "owner_decisions_needed": [],
+    "orchestrator_verdict": "Ready for bounded inactive-adapter implementation; no activation/publication/method lock.",
+    "second_unconditional_claude_approval_claimed": false,
+    "rerun_after_reconciliation": "Not needed for precision fixes without product/scope changes; original conditional verdict preserved.",
+    "attempt_history": [
+      {
+        "exit_code": 1,
+        "reason": "Not logged in"
+      },
+      {
+        "exit_code": 142,
+        "timeout_seconds": 300,
+        "reason": "Resumed authenticated review timed out without verdict."
+      },
+      {
+        "exit_code": 143,
+        "reason": "Authenticated wrapper stopped after prolonged silent execution; no verdict. Same Claude lane retried with local read-only tools and explicit skills."
+      }
+    ],
+    "successful_retry_mode": "CLI safe mode disables automatic customization loading; review/planning skill files explicitly read. No bare mode; subscription authentication retained."
+  },
+  "disposition": {
+    "commit_intended": [
+      "plan",
+      "this receipt",
+      "concise review reconciliation"
+    ],
+    "preserve": "all existing research and task-owned dirt/stashes",
+    "discard": "owned detailed /tmp reviewer report after reconciliation",
+    "transient_review": "Owned prompt/events/report and stopped wrapper output discarded after reconciliation; hashes and findings retained."
+  },
+  "publication": "no commit/push/PR/activation",
+  "reconciliation_sha256": "eb97b7afe2b4218ae801e951a4412a367290f0e59357ac6e4da2826182dc86ed",
+  "authentication_restored": {
+    "authorization": "Please, together with me, let's reauthenticate the Claude cli so we can use it for review.",
+    "verified_logged_in": true,
+    "auth_method": "claude.ai",
+    "credential_material_retained_in_repo": false,
+    "live_cli_check": {
+      "model": "opus",
+      "tools": "disabled",
+      "exit_code": 0,
+      "response": "OK"
+    }
+  },
+  "post_auth_integration_recheck": {
+    "current_main": "bc32c3613b29ef5cda4a0c9b7cd10c8656700f5c",
+    "fourteen_inspected_code_files_unchanged": true,
+    "primary_clean": true
+  },
+  "review_completion_revalidation": {
+    "current_main": "dd60acc4e89c40b21d5e3fe39c5834915b74c3be",
+    "primary_clean": true,
+    "integration_files_unchanged": 14,
+    "policy_files_unchanged": 12,
+    "research_files_unchanged": 93,
+    "read_only_targeted_check": {
+      "cases": 4,
+      "ranks": 64,
+      "scenario_roles": 7,
+      "frozen_files_unchanged": 160,
+      "routing_predecessors_preserved": 2,
+      "fresh_corrected_case_count": 1,
+      "corrected_ranks": 6,
+      "current_view_cases": 4
+    },
+    "identity_containers_inspected": 3,
+    "identity_records_inspected": 37,
+    "markdown_links_resolve": 7,
+    "future_implementation_tests_executed": false,
+    "scope_changes": false
+  }
+}

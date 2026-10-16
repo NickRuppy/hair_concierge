@@ -1,0 +1,10 @@
+{
+  "version": "oil-lab-integration-transfer-v1",
+  "old_worktree": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-intake-bridge-v1",
+  "new_worktree": "/Users/nick/AI_work/hair_conscierge/.worktrees/oil-review-lab",
+  "base": "10f2f9726978a18c52acb3ee12569d63023feabd",
+  "oil_task_files_copied": 906,
+  "shared_lab_files_copied": 16,
+  "source_worktrees_modified": false,
+  "tracked_patch_applied": "four task-owned files, preserving current main changes"
+}

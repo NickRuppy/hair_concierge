@@ -1,0 +1,32 @@
+[
+  {
+    "product_key": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "leave-in-gold-slot-11",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "low"
+  },
+  {
+    "product_key": "leave-in-gold-slot-08",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "oil-replay-n02",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "oil-replay-c02",
+    "policy_version": "shared-persistence-v0.1",
+    "persistence_potential": "high"
+  }
+]

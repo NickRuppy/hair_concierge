@@ -1,0 +1,52 @@
+# Canonical persistence: shared contract and six-product pilot
+
+Outcome: turn Nick's approved architecture into a one-page shared persistence contract and classify six existing exact formulas with one committed low/moderate/high value each. This is a local research pilot, not a migration of established engines or measured accumulation validation.
+
+## Decision coverage
+
+Status: confirmed. Confirmed with Nick: shared persistence meaning; low/moderate/high; no confidence, unknown or indeterminate in the canonical output; borderline products still receive a decision; short rationale and a rule version allow later revision. Nick said “yeah i think thats the smart architecture” on 2026-10-07 after the preceding exact contract and six-product proposal. This authorizes the shared draft and pilot, not catalog activation or silently rewriting earlier trials.
+
+Inherited: formula-first; exact source declaration and application context; weight and user fit separate from persistence; no duration/wash count, ingredient percentages or proprietary claim shortcut; frozen older trials preserved. Current Conditioner cumulative residue risk, Leave-In mechanism persistence and Oil coating estimates are different constructs and cannot be automatically renamed/mapped.
+
+Defaults: six previously researched declarations, two per category; two independently dispatched formula-only researchers, then root integration. A repeat-case compatibility pilot, not an unseen holdout or standard-freeze calibration. Two-lane agreement is repeatability only. Product identity and old labels stay outside the researcher's inputs. Category and neutral intended-use context are visible because rinse-out versus leave-on defines this endpoint. Local snapshots are replay evidence, not a live-label refresh.
+
+Open consequential assumptions affecting this pilot: none. Integration into each established engine and production adapter is outside this explicitly proposed draft/test step. A later integration plan must decide exact replacement/migration of native fields and consumers; no such mapping is applied in this pilot. Internal revalidation: current category definitions inspected; the shared endpoint is a qualitative retained-coating persistence hypothesis, not cumulative residue risk or weight. Undiscussed consequential assumptions affecting this handoff: none. No app surface, copy, timing or user-visible feedback change; mockups/journey sign-off not applicable.
+
+## Scope and files
+
+- `docs/research/shared/persistence-potential-v0.1.md`: owner of the new definition, three classes, decision rules and computational shape.
+- `data/research/shared/persistence-pilot-v0.1/`: source packet, exact-role dictionary, neutral packet, copied method, preservation/input hashes, sealed researcher output, root-selected decisions, flat computational projection, `results.csv`, compatibility table and receipts.
+- `plans/oil-inci/verify-canonical-persistence-pilot.py`: artifact integrity and closed-output checks; no runtime import.
+- `plans/oil-inci/reviews/canonical-persistence-plan-review-2026-10-07.md`: retained counterpart reconciliation.
+- Mutable research README/decision indexes: identify this as the new shared draft and six-case pilot, without replacing category contracts.
+- `.gitignore`: expose only this durable shared pilot directory; preserve the existing oil exceptions and all other ignored research paths.
+
+Other product properties, existing category standards/guides, their adapters and frozen results are unchanged. No Supabase, runtime, publication or Git cleanup action.
+
+## Ordered work and acceptance
+
+1. Stage the proposed method and six exact prior source declarations: Balea Professional Aqua Hyaluron Conditioner; Balea Med Ultra Sensitive Conditioner; Balea Leichtkämmspray Pure Styling; Schwarzkopf GLISS Ultimate Repair spray; exact Biopark whole jojoba; Verb Ghost Oil. Two conditioners are rinse-out, other cases retained hair use. Prior values are not targets. Reject any source whose application context cannot be bound. Preserve literal ingredient spellings/ranks and context annotations. Acceptance: six complete source-scoped declarations, each with captured source/protocol provenance and category.
+2. Obtain one read-only terminal Claude plan/spec review before freeze. Resolve defects locally; do not dispatch another reviewer or change user-approved output policy on reviewer preference. Prepare an exact-role dictionary from current internal material-function evidence, including an exact `function_not_assessed` role where a function is not reviewed, without weight values or old product labels. This is reconciliation of existing evidence, not a new external hair-science claim.
+3. Freeze method, neutral packet and dictionary, plus all source/dependency hashes, before two independent researchers. Read only these three declared files; no browsing, source identities, old results, native class answers or peer output. The method file contains the shared definition verbatim followed by the exact output/read contract. Each researcher owns only `lane-a/records.json` and `lane-a/notes.json`, or their `lane-b/` equivalents; root seals all four files before inspecting contents. Each case outputs a committed value, short reason, rank/name evidence, and `considered_ranks` equal to the ordered input ranks. No confidence/estimate/alternative/unknown field in this new schema. Acceptance: 6/6 committed decisions and exact read attestations.
+4. Root reviews both sets of decisions after sealing, committing a best judgment for every case. Preserve disagreement and any root override with the exact formula argument; no forced lane convergence. Store `projection.json`: six objects with exactly `product_key`, `policy_version: shared-persistence-v0.1`, and `persistence_potential: low | moderate | high`. Research reasons live separately and never gate computation. Acceptance: every complete case supplies one value; no medium-as-uncertainty fallback or mechanical mapping of old labels.
+5. Verify source/neutral declaration parity, dictionary/rank coverage, evidence references, method/input/seal hashes, three-values-only and exact projection/decision/CSV parity. Negative controls: unknown class, confidence field in projection, dropped case and broken evidence rank are rejected. Preserve all existing category artifacts using a pre-write hash snapshot. Check that all local Markdown targets in the new increment exist (copied method links use the originating document directory); reject trailing whitespace in every new/changed text file, including untracked files. Main-session correctness/structural review covers the full increment. Acceptance: fresh receipt, no verified blocking finding, no historical input changed.
+
+## Review and handoff
+
+Reuse `.worktrees/oil-inci` on `codex/oil-inci` with established task-owned dirt. Durables are commit-intended, uncommitted; transient detailed counterpart report lives in `/tmp` and is discarded after retained reconciliation. Report six committed values, what moderate contributes, and whether the same endpoint worked across rinse-out/leave-on contexts. Report value agreement with denominator six as repeatability only; no measured-accuracy score. Recommend the concrete category-integration slice only after this pilot, carrying the approved forced-decision policy. Stop before commit/push/PR, migration, catalog or production activation.
+
+Self-review: computational contract is explicit and simple; uncertainty is expressed in ordinary rationale rather than output state; source context is separate from brand claims; every promised artifact has a check; no mapping of historical indeterminate to moderate; no hidden approval loop.
+
+## Counterpart reconciliation (2026-10-09)
+
+The single read-only Claude review approved with revisions. Accepted: explicitly name results.csv, carry the shared definition verbatim in method.md, specify exact output shapes/rank coverage, and clarify link/whitespace checks. Expanded the routine research default to two independent lanes, matching the established calibration pattern; this adds verification rather than a product choice. This remains a pilot, not standard-freeze or measured-accuracy validation.
+
+Rejected stale unknown-policy concern: the reviewer cited historical property-set v0, while OE52/v0.6 already require binary committed oil judgments, and Nick's newer 2026-10-07 instruction explicitly forbids confidence/unknown/indeterminate in the shared computation. Rejected repeated cross-category confirmation: the visible conversation explicitly proposed conditioner + leave-in + oil, two each, before Nick accepted the architecture. These are evidence/context corrections, not silently approved reviewer tradeoffs.
+
+Future integration must resolve native-field replacement and migration consumers; no mapping is performed or promised by the approved one-page/six-product step. Record this integration gate explicitly without fabricating a pilot-blocking decision or parking requested work. Confirmed decision coverage remains current; undiscussed consequential assumptions affecting this pilot: none. The detailed temporary review will be discarded after durable reconciliation.
+
+## Execution and closure (2026-10-09)
+
+Both independent lanes completed; all four files were byte-sealed before inspection. Root reviewed all reasons and committed intact lane-B decisions for six cases: two moderate, three high, one low. Exact value agreement 6/6, not measured accuracy. The three-value projection contains no confidence, unknown or alternative property. The middle band distinguishes ordinary retained coating from stronger film systems; native labels are compared explicitly without conversion.
+
+Fresh verifier passed 93 ranked positions, 71 exact dictionary identities, source/protocol/input/seal checks, projection/decision/CSV parity, all four negative controls and preservation of 576 earlier artifacts. Final scope review includes every new artifact plus index updates; no native engine/adapter migration. Runtime/browser/database checks do not apply to this local artifact-only increment. Durable outputs are commit-intended and uncommitted. Detailed temporary counterpart report was discarded after the retained summary. Follow-up: oil consumer integration and exact field replacement, then sibling category consumers. Completion receipt identifies the reviewed content fingerprint.

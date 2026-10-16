@@ -1,0 +1,296 @@
+{
+  "scope": "Four project-new exact formulas from a six-slot pre-registered targeted discovery. Not a shelf-representative sample or measured accuracy.",
+  "formula_fields": {
+    "base": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 3,
+      "known_matches": 3,
+      "lane_a_counts": {
+        "water_based": 1,
+        "silicone_led": 1,
+        "unknown": 1,
+        "ester_alkane_led": 1
+      },
+      "lane_b_counts": {
+        "water_based": 1,
+        "silicone_led": 1,
+        "unknown": 1,
+        "ester_alkane_led": 1
+      }
+    },
+    "weight": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "light": 2,
+        "medium": 2
+      },
+      "lane_b_counts": {
+        "light": 2,
+        "medium": 2
+      }
+    },
+    "penetration_potential": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 3,
+      "known_matches": 3,
+      "lane_a_counts": {
+        "surface_led": 3,
+        "unknown": 1
+      },
+      "lane_b_counts": {
+        "surface_led": 3,
+        "unknown": 1
+      }
+    },
+    "persistence_potential": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "moderate": 4
+      },
+      "lane_b_counts": {
+        "moderate": 4
+      }
+    },
+    "silicones": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "False": 3,
+        "True": 1
+      },
+      "lane_b_counts": {
+        "False": 3,
+        "True": 1
+      },
+      "positive_conditioned": {
+        "matches": 1,
+        "denominator": 1
+      },
+      "negative_conditioned": {
+        "matches": 3,
+        "denominator": 3
+      }
+    },
+    "mineral_oil": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "False": 4
+      },
+      "lane_b_counts": {
+        "False": 4
+      },
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 4,
+        "denominator": 4
+      }
+    },
+    "drying_alcohol": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "True": 2,
+        "False": 2
+      },
+      "lane_b_counts": {
+        "True": 2,
+        "False": 2
+      },
+      "positive_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      },
+      "negative_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      }
+    },
+    "fragrance": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "True": 4
+      },
+      "lane_b_counts": {
+        "True": 4
+      },
+      "positive_conditioned": {
+        "matches": 4,
+        "denominator": 4
+      },
+      "negative_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      }
+    },
+    "scalp_active_botanicals": {
+      "matches": 4,
+      "denominator": 4,
+      "both_known": 4,
+      "known_matches": 4,
+      "lane_a_counts": {
+        "False": 3,
+        "True": 1
+      },
+      "lane_b_counts": {
+        "False": 3,
+        "True": 1
+      },
+      "positive_conditioned": {
+        "matches": 1,
+        "denominator": 1
+      },
+      "negative_conditioned": {
+        "matches": 3,
+        "denominator": 3
+      }
+    }
+  },
+  "source_fields": {
+    "dispenser": {
+      "matches": 4,
+      "denominator": 4,
+      "disagreements": []
+    },
+    "provides_heat_protection": {
+      "matches": 4,
+      "denominator": 4,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 0,
+        "denominator": 0
+      },
+      "negative_conditioned": {
+        "matches": 4,
+        "denominator": 4
+      }
+    },
+    "provides_uv_protection": {
+      "matches": 4,
+      "denominator": 4,
+      "disagreements": [],
+      "positive_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      },
+      "negative_conditioned": {
+        "matches": 2,
+        "denominator": 2
+      }
+    },
+    "supported_uses": {
+      "matches": 4,
+      "denominator": 4,
+      "disagreements": []
+    },
+    "named_oil_prominence": {
+      "matches": 6,
+      "denominator": 6,
+      "both_known": 4,
+      "disagreements": []
+    }
+  },
+  "coverage": {
+    "base": {
+      "pure_plant_oil": 0,
+      "plant_oil_blend": 0,
+      "silicone_led": 1,
+      "ester_alkane_led": 1,
+      "hybrid": 0,
+      "water_based": 1,
+      "unknown": 1
+    },
+    "weight": {
+      "light": 2,
+      "medium": 2,
+      "rich": 0,
+      "unknown": 0
+    },
+    "penetration_potential": {
+      "penetration_potential": 0,
+      "surface_led": 3,
+      "unknown": 1
+    },
+    "persistence_potential": {
+      "low": 0,
+      "moderate": 4,
+      "high": 0
+    },
+    "positive_flags": {
+      "silicones": 1,
+      "mineral_oil": 0,
+      "drying_alcohol": 2,
+      "fragrance": 4,
+      "scalp_active_botanicals": 1
+    },
+    "positive_protection": {
+      "provides_heat_protection": 0,
+      "provides_uv_protection": 2
+    },
+    "explicit_biphasic_source_cases": [
+      "T01"
+    ],
+    "source_admitted_cases": 4,
+    "registered_slots": 6,
+    "unfilled_slots": [
+      "T03",
+      "T05"
+    ],
+    "unknown_fields": {
+      "base": [
+        "T04"
+      ],
+      "weight": [],
+      "penetration_potential": [
+        "T04"
+      ],
+      "dispenser": [
+        "T04"
+      ]
+    },
+    "unknown_heroes": [
+      {
+        "case_id": "T02",
+        "hero_id": "T02-hero-1"
+      },
+      {
+        "case_id": "T04",
+        "hero_id": "T04-hero-1"
+      }
+    ]
+  },
+  "acceptance_diagnostic": {
+    "formula_raw_80_percent": true,
+    "factual_flags_100_percent": true,
+    "source_gates_100_percent": true,
+    "persistence_unknown": 0,
+    "does_not_unlock_adapter": true
+  },
+  "limits": [
+    "Zero low and zero high in this new cohort; no class quota used.",
+    "Base and penetration both-known3/4; weight4/4; unknown agreement is not substantive coverage.",
+    "No known natural base, rich weight, positive penetration or mineral-oil positive in this cohort.",
+    "Rahua evidence-only followup is separate and contributes no new blind classifications.",
+    "Common memory summary/general context was present but no prior result, identity or memory file used; unrelated inherited carrier example disclosed in laneA notes."
+  ]
+}

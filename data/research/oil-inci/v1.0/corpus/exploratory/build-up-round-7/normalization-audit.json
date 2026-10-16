@@ -1,0 +1,404 @@
+{
+  "records": [
+    {
+      "neutral_id": "N01",
+      "rank": 1,
+      "raw_name": "Hydrogenated Farnesene*",
+      "canonical_name": "HYDROGENATED FARNESENE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 2,
+      "raw_name": "Squalane",
+      "canonical_name": "SQUALANE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 3,
+      "raw_name": "Jojoba Esters",
+      "canonical_name": "JOJOBA ESTERS",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 4,
+      "raw_name": "Limnanthes Alba (Meadowfoam) Seed Oil",
+      "canonical_name": "LIMNANTHES ALBA (MEADOWFOAM) SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 5,
+      "raw_name": "Meadowfoam Estolide",
+      "canonical_name": "MEADOWFOAM ESTOLIDE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 6,
+      "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+      "canonical_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 7,
+      "raw_name": "Hibiscus Sabdariffa Flower Extract",
+      "canonical_name": "HIBISCUS SABDARIFFA FLOWER EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 8,
+      "raw_name": "Eclipta Prostrata Extract",
+      "canonical_name": "ECLIPTA PROSTRATA EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 9,
+      "raw_name": "Moringa Oleifera Seed Oil",
+      "canonical_name": "MORINGA OLEIFERA SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 10,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 11,
+      "raw_name": "Melia Azadirachta Leaf Extract",
+      "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 12,
+      "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Extract",
+      "canonical_name": "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N01",
+      "rank": 13,
+      "raw_name": "Fragrance/Parfum**",
+      "canonical_name": "FRAGRANCE/PARFUM",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N02",
+      "rank": 1,
+      "raw_name": "Simmondsia Chinensis Seed Oil",
+      "canonical_name": "SIMMONDSIA CHINENSIS SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 1,
+      "raw_name": "Dimethicone",
+      "canonical_name": "DIMETHICONE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 2,
+      "raw_name": "Isododecane",
+      "canonical_name": "ISODODECANE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 3,
+      "raw_name": "Hydrogenated Ethylhexyl Olivate",
+      "canonical_name": "HYDROGENATED ETHYLHEXYL OLIVATE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 4,
+      "raw_name": "Dimethiconol",
+      "canonical_name": "DIMETHICONOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 5,
+      "raw_name": "Vitis Vinifera (Grape) Seed Extract",
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 6,
+      "raw_name": "Gardenia Taitensis Flower Extract",
+      "canonical_name": "GARDENIA TAITENSIS FLOWER EXTRACT",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 7,
+      "raw_name": "Bis-Cetearyl Amodimethicone",
+      "canonical_name": "BIS-CETEARYL AMODIMETHICONE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 8,
+      "raw_name": "Macadamia Ternifolia Seed Oil",
+      "canonical_name": "MACADAMIA TERNIFOLIA SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 9,
+      "raw_name": "Hydrogenated Olive Oil Unsaponifiables",
+      "canonical_name": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 10,
+      "raw_name": "Cocos Nucifera (Coconut) Oil",
+      "canonical_name": "COCOS NUCIFERA (COCONUT) OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 11,
+      "raw_name": "Vitis Vinifera (Grape) Seed Oil",
+      "canonical_name": "VITIS VINIFERA (GRAPE) SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 12,
+      "raw_name": "Prunus Amygdalus Dulcis (Sweet Almond) Oil",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 13,
+      "raw_name": "Argania Spinosa Kernel Oil",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 14,
+      "raw_name": "Carthamus Tinctorius (Safflower) Seed Oil",
+      "canonical_name": "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 15,
+      "raw_name": "Butyl Methoxydibenzoylmethane",
+      "canonical_name": "BUTYL METHOXYDIBENZOYLMETHANE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 16,
+      "raw_name": "Ethylhexyl Methoxycinnamate",
+      "canonical_name": "ETHYLHEXYL METHOXYCINNAMATE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 17,
+      "raw_name": "Ethylhexyl Salicylate",
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 18,
+      "raw_name": "Squalane",
+      "canonical_name": "SQUALANE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 19,
+      "raw_name": "Linalool",
+      "canonical_name": "LINALOOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 20,
+      "raw_name": "Hexyl Cinnamal",
+      "canonical_name": "HEXYL CINNAMAL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 21,
+      "raw_name": "Hydroxycitronellal",
+      "canonical_name": "HYDROXYCITRONELLAL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 22,
+      "raw_name": "Limonene",
+      "canonical_name": "LIMONENE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 23,
+      "raw_name": "Fragrance (Parfum)",
+      "canonical_name": "FRAGRANCE (PARFUM)",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N03",
+      "rank": 24,
+      "raw_name": "Tocopherol",
+      "canonical_name": "TOCOPHEROL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 1,
+      "raw_name": "PROPYLENE GLYCOL",
+      "canonical_name": "PROPYLENE GLYCOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 2,
+      "raw_name": "AQUA/WATER",
+      "canonical_name": "AQUA/WATER",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 3,
+      "raw_name": "CYCLOPENTASILOXANE",
+      "canonical_name": "CYCLOPENTASILOXANE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 4,
+      "raw_name": "HEXYLENE GLYCOL",
+      "canonical_name": "HEXYLENE GLYCOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 5,
+      "raw_name": "PHENYL TRIMETHICONE",
+      "canonical_name": "PHENYL TRIMETHICONE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 6,
+      "raw_name": "DIMETHICONOL",
+      "canonical_name": "DIMETHICONOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 7,
+      "raw_name": "PHENOXYETHANOL",
+      "canonical_name": "PHENOXYETHANOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 8,
+      "raw_name": "CAPRYLYL GLYCOL",
+      "canonical_name": "CAPRYLYL GLYCOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 9,
+      "raw_name": "POLYACRYLAMIDE",
+      "canonical_name": "POLYACRYLAMIDE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 10,
+      "raw_name": "C13-14 ISOPARAFFIN",
+      "canonical_name": "C13-14 ISOPARAFFIN",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 11,
+      "raw_name": "MICA",
+      "canonical_name": "MICA",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 12,
+      "raw_name": "PARFUM/FRAGRANCE",
+      "canonical_name": "PARFUM/FRAGRANCE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 13,
+      "raw_name": "ETHYLHEXYL SALICYLATE",
+      "canonical_name": "ETHYLHEXYL SALICYLATE",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 14,
+      "raw_name": "LAURETH-7",
+      "canonical_name": "LAURETH-7",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 15,
+      "raw_name": "TITANIUM DIOXIDE (CI 77891)",
+      "canonical_name": "TITANIUM DIOXIDE (CI 77891)",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 16,
+      "raw_name": "BUTYLENE GLYCOL",
+      "canonical_name": "BUTYLENE GLYCOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 17,
+      "raw_name": "LINALOOL",
+      "canonical_name": "LINALOOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 18,
+      "raw_name": "HEXYL CINNAMAL",
+      "canonical_name": "HEXYL CINNAMAL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    },
+    {
+      "neutral_id": "N04",
+      "rank": 19,
+      "raw_name": "CITRONELLOL",
+      "canonical_name": "CITRONELLOL",
+      "operation": "upper-case whitespace normalization; remove footnote asterisks only; retain literal plant/derivative spelling"
+    }
+  ],
+  "limits": "No broad parenthetical/plant-part normalization; whole/derivative distinctions retained. JVN footnote not ranked; Color Wow formula code not ingredient."
+}

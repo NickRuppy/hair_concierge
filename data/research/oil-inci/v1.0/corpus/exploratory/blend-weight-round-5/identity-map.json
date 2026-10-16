@@ -1,0 +1,84 @@
+{
+  "records": [
+    {
+      "neutral_id": "R01",
+      "brand": "Kérastase",
+      "product": "Elixir Ultime L’Huile Originale Nachfüllbar",
+      "size": "75 ml",
+      "market": "DE",
+      "source_url": "https://www.kerastase.de/produktlinien/produktart/ole-seren/nach-haartyp-filtern/widerspenstiges-haar/l-huile-originale-nachfullbar/KER_00303.html",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "R02",
+      "brand": "Sunny Isle",
+      "product": "Rosemary Mint Hair and Strong Roots LITE Oil",
+      "size": "2 oz",
+      "market": "US",
+      "source_url": "https://jamaicanblackcastoroil.com/products/sunny-isle-rosemary-mint-hair-and-strong-roots-lite-oil-2oz",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "R03",
+      "brand": "K18",
+      "product": "Molecular Repair Hair Oil",
+      "size": "30 ml",
+      "market": "DE",
+      "source_url": "https://www.notino.de/k18/molecular-repair-hair-oil-pflegendes-trockenoel-fuer-beschaedigtes-und-bruechiges-haar/p-16220382/",
+      "cohort_group": "replay",
+      "reused_development_id": "Q10"
+    },
+    {
+      "neutral_id": "R04",
+      "brand": "khadi",
+      "product": "After Color Haaröl Color Protect",
+      "size": "50 ml",
+      "market": "DE",
+      "source_url": "https://khadi.de/products/haare-haaroel-color-care",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "R05",
+      "brand": "Aroma-Zone",
+      "product": "Haircare Oil With 7 Precious Oils",
+      "size": "250 ml; reference 0298701",
+      "market": "FR maker, English storefront",
+      "source_url": "https://www.aroma-zone.com/en/product/haircare-oil-with-7-precious-oil",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "R06",
+      "brand": "Evolve Organic Beauty",
+      "product": "Nourishing Hair Elixir – Dry Hair Serum",
+      "size": "30 ml",
+      "market": "UK GBP maker storefront",
+      "source_url": "https://www.evolvebeauty.com/products/weightless-hair-serum",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    },
+    {
+      "neutral_id": "R07",
+      "brand": "Wella Professionals",
+      "product": "Oil Reflections Luminous Smoothing Oil",
+      "size": "DE maker page does not state size; US same-name 100 ml is corroboration only",
+      "market": "DE",
+      "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+      "cohort_group": "replay",
+      "reused_development_id": "Q03"
+    },
+    {
+      "neutral_id": "R08",
+      "brand": "Schwarzkopf Professional",
+      "product": "Oil Ultime Rose Finishing Oil",
+      "size": "100 ml; IDH3050393; GTIN4067971053929",
+      "market": "FI/EU",
+      "source_url": "https://shop.schwarzkopf-professional.fi/en/products/central-pdp.html/3050393.html?replacesProduct=null",
+      "cohort_group": "fresh",
+      "reused_development_id": null
+    }
+  ]
+}

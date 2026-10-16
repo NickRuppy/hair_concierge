@@ -1,0 +1,189 @@
+{
+  "reviewed_at": "2026-10-09",
+  "records": [
+    {
+      "case_id": "O09",
+      "identity": {
+        "brand": "NUXE",
+        "product": "Huile Prodigieuse original",
+        "market": "DE",
+        "size": "30 ml"
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "blend-weight-round-4/source-capture.json#Q01",
+        "current_page": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+        "evidence": "Current page labels 30 ml and reproduces frozen N2212/E INCI."
+      },
+      "sources": [
+        {
+          "id": "O09-maker",
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+          "reviewed_at": "2026-10-09",
+          "scope": "body,directions,ingredients",
+          "root_review": "2026-10-09 full exactDE30ml source page read; sameN2212/E formula."
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "nuxe_tsubaki",
+          "hero_name": "Tsubaki",
+          "canonical_ingredients": [
+            "CAMELLIA JAPONICA SEED OIL"
+          ],
+          "mapping_note": "Japanese camellia named Tsubaki; exact species correspondence needs independent maker identity binding for final prominence."
+        },
+        {
+          "hero_id": "nuxe_argan",
+          "hero_name": "Argan",
+          "canonical_ingredients": [
+            "ARGANIA SPINOSA KERNEL OIL"
+          ],
+          "mapping_note": "Literal oil identity."
+        },
+        {
+          "hero_id": "nuxe_macadamia",
+          "hero_name": "Macadamia",
+          "canonical_ingredients": [
+            "MACADAMIA INTEGRIFOLIA SEED OIL"
+          ],
+          "mapping_note": "Exact formula species retained."
+        },
+        {
+          "hero_id": "nuxe_borage",
+          "hero_name": "Borretsch",
+          "canonical_ingredients": [
+            "BORAGO OFFICINALIS SEED OIL"
+          ],
+          "mapping_note": "Reviewed botanical translation; fixed seed-oil identity."
+        },
+        {
+          "hero_id": "nuxe_camellia",
+          "hero_name": "Kamelie",
+          "canonical_ingredients": [
+            "CAMELLIA OLEIFERA SEED OIL"
+          ],
+          "mapping_note": "Maker separately names Tsubaki/Kamelie; correspondence remains explicit mapping limit."
+        },
+        {
+          "hero_id": "nuxe_hazelnut",
+          "hero_name": "Haselnuss",
+          "canonical_ingredients": [
+            "CORYLUS AVELLANA SEED OIL"
+          ],
+          "mapping_note": "Reviewed botanical translation."
+        },
+        {
+          "hero_id": "nuxe_almond",
+          "hero_name": "S\u00fc\u00dfmandel",
+          "canonical_ingredients": [
+            "PRUNUS AMYGDALUS DULCIS OIL"
+          ],
+          "mapping_note": "Reviewed literal botanical translation/parenthetical spelling."
+        }
+      ],
+      "packaging": {
+        "observation": "30 ml page image/product format; no explicit outlet mechanism or use-direction dispensing verb establishes pump/dropper/spray.",
+        "status": "gap"
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "scope": "Completed exact page body/directions/ingredients review found no explicit hair heat-protection claim."
+        },
+        "uv": {
+          "accepted": false,
+          "scope": "Completed exact page body/directions/ingredients review found no explicit hair-UV protection claim; pollution claim is not UV."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O09-maker",
+          "direction_id": "O09-hair-1",
+          "text": "Warm a few drops in hands and apply to lengths and ends as often as necessary.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "unspecified",
+          "dose": "a few drops",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ],
+      "hero_review": "Root read exactDE30ml manufacturerdescription/composition: seven individually named oils. No skinclinical/repair/omega claims adopted. Mapping caveats retained for two camellias."
+    },
+    {
+      "case_id": "O10",
+      "identity": {
+        "brand": "Wella Professionals",
+        "product": "Oil Reflections Luminous Smoothing Oil",
+        "market": "DE",
+        "size": "source-captured DE page; size unverified"
+      },
+      "formula_equality": {
+        "status": "confirmed",
+        "frozen_ref": "blend-weight-round-4/source-capture.json#Q03",
+        "current_page": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+        "evidence": "Current DE page reproduces frozen 12-entry INCI."
+      },
+      "sources": [
+        {
+          "id": "O10-maker",
+          "url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+          "reviewed_at": "2026-10-09",
+          "scope": "body,directions,ingredients"
+        }
+      ],
+      "heroes": [
+        {
+          "hero_id": "macadamia_oil",
+          "hero_name": "Macadamia oil",
+          "canonical_ingredients": [
+            "MACADAMIA TERNIFOLIA SEED OIL"
+          ],
+          "mapping_note": "Exact maker page positioning and frozen INCI."
+        },
+        {
+          "hero_id": "avocado_oil",
+          "hero_name": "Avocado oil",
+          "canonical_ingredients": [
+            "PERSEA GRATISSIMA (AVOCADO) OIL"
+          ],
+          "mapping_note": "Exact maker page positioning and frozen INCI."
+        }
+      ],
+      "packaging": {
+        "observed": "pump",
+        "observation": "ExactDEsource directions explicitly instruct1\u20133pump strokes, which establishes pump under current standard; no spray or dropunitconversion."
+      },
+      "claims": {
+        "heat": {
+          "accepted": false,
+          "scope": "Completed exact DE page review: no explicit heat-protection claim for this oil."
+        },
+        "uv": {
+          "accepted": false,
+          "scope": "Completed exact DE page review: no explicit hair-UV claim or matching UV-filter claim gate."
+        }
+      },
+      "directions": [
+        {
+          "source_id": "O10-maker",
+          "direction_id": "O10-hair-1",
+          "text": "Apply 1\u20133 pumps to hands, distribute on towel-dried lengths and ends, then style; use a small amount on dry hair for finishing.",
+          "site": [
+            "lengths",
+            "ends"
+          ],
+          "stage": "towel_dried_or_dry_finish",
+          "dose": "1\u20133 pumps; small amount dry",
+          "contact_time": "unspecified",
+          "removal": "leave_on",
+          "restrictions": "unestablished"
+        }
+      ]
+    }
+  ]
+}

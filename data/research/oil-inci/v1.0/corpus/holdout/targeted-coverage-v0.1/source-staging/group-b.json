@@ -1,0 +1,175 @@
+{
+  "run_id": "oil-inci-targeted-coverage-group-b-v0.1",
+  "captured_at": "2026-10-12",
+  "registration": "../selection-registration.json",
+  "scope": "Exact-product source capture for registered slots T03,T04,T05 only. This packet records identity, formula, source-supported usage and product-page observations. It contains no property classifications, target labels, ingredient flags, prominence, base, weight, penetration or persistence assignments.",
+  "candidate_attempts": [
+    {
+      "slot": "T03",
+      "candidate_order": 1,
+      "candidate": "Dabur Amla Hair Oil original",
+      "outcome": "rejected",
+      "reason": "The exact UK 200 ml retailer listing is source-complete for identity and INCI, but its directions require shampooing and rinsing after roughly one hour. It therefore does not provide the required retained hair-fibre scenario.",
+      "sources": [
+        {
+          "url": "https://www.asda.com/groceries/product/hair-masks-serums-oils/dabur-amla-hair-oil-200ml/9016651",
+          "observed": "Dabur Amla Hair Oil, 200 ml, UAE origin; full ordered ingredient declaration; apply 1–2 teaspoons/up to 10 ml, leave ideally one hour, shampoo and rinse thoroughly."
+        }
+      ]
+    },
+    {
+      "slot": "T03",
+      "candidate_order": 2,
+      "candidate": "Dabur Vatika Enriched Almond Hair Oil",
+      "outcome": "rejected",
+      "reason": "Directly readable exact-product retailer pages expose materially different ordered declarations across markets, while the reviewed exact UAE 300 ml listing has no directions establishing a retained hair-fibre scenario. The variants are retained separately and were not merged.",
+      "sources": [
+        {
+          "url": "https://www.sharjahcoop.ae/en/dabur-vatika-almond-hair-oil-300ml/p/6291069651089",
+          "observed": "UAE 300 ml listing: Paraffinum Liquidum, Canola Oil, Elaeis Quineensis Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Olea Europaea (Olive) Fruit Oil, Cocos Nucifera (Coconot) Oil, Sesamum Indicum (Sesame) Oil, Phenyl Trimethicone, Parfum, Butyl Methoxydibenzoyl Methane, Tocopheryl Acetate, Rosmarinus Officinalis (Rosemary) Oil, BHT, Alpha-Isomethyl Ionone, Citronellol, Coumarin, Geraniol, Hexyl Cinnamal, Limonene, Linalool, CI 47000, CI 26100. No directions displayed."
+        },
+        {
+          "url": "https://www.ngroceries.com/product/vatika-200ml-almond-hair-oil-1",
+          "observed": "200 ml listing: Canola Oil, Isopropyl Myristate, Prunus Amygdalus Dulcis (Sweet Almond Oil), Parfum, Olea Europaea (Olive) Fruit Oil, Paraffinum Liquidum, Elaies Guineensis Oil, Argania Spinosa (Argan) Oil, Phenyltrimethicone, Kernel Oil, Butyl Methyoxydibenzoylmethane, Tocopheryl Acetate, Rosmarinus Officinalis (Rosemary) Oil, BHT, Alpha-Isomethyl Ionone, Amyl Cinnamal, Benzyl Alcohol, Benzyl Benzoate, Benzyl Salicylate, Citronellol, Eugenol, Geraniol, Hexyl Cinnamal, Hydroxy Citronellal, Limonene, Linalool, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, CI 26100, CI 61565, CI 47000."
+        }
+      ]
+    },
+    {
+      "slot": "T03",
+      "candidate_order": 3,
+      "candidate": "Africa’s Best Ultimate Herbal Oil",
+      "outcome": "rejected",
+      "reason": "The exact US 12 fl oz product has a retained dry-hair use direction on one retailer page, but the same exact-size product has a different, fuller ordered declaration on another directly readable retailer page. Neither declaration is silently preferred or merged; this leaves no stable complete formula binding for this slot.",
+      "sources": [
+        {
+          "url": "https://www.walmart.com/ip/740862194",
+          "observed": "Africa’s Best Ultimate Herbal Oil, 12 oz; directs squeezing a small amount into the palm and massaging into hair to lubricate dry hair. Its displayed ingredient sequence is a shorter marketing list beginning Soybean (Glycine Soja) Oil, Walnut (Juglans Regia) Seed Oil, Kiwi Fruit Extract, Olive Fruit Oil, Castor (Ricinus Communis) Seed Oil."
+        },
+        {
+          "url": "https://www.instacart.com/products/17315282-africa-s-best-ultimate-herbal-oil-12-oz",
+          "observed": "Africa’s Best Ultimate Herbal Oil, 12 fl oz; displayed full ordered declaration begins Glycine Soja Oil, Parfum, Ricinus Communis Seed Oil, Olea Europaea Fruit Oil, Prunus Amygdalus Dulcis Oil, Sesamum Indicum Seed Oil, Juglans Regia Seed Oil, Simmondsia Chinensis Seed Oil and continues through Hydroxycitronellal. Its displayed directions are the rinsed hot-oil treatment."
+        }
+      ]
+    },
+    {
+      "slot": "T04",
+      "candidate_order": 1,
+      "candidate": "Weleda Intensive Nourishing Hair Oil",
+      "outcome": "selected",
+      "reason": "Current German maker page is source-complete for the exact 50 ml product, complete ordered INCI, and retained hair-length/ends directions after washing."
+    },
+    {
+      "slot": "T05",
+      "candidate_order": 1,
+      "candidate": "Dabur Vatika Enriched Coconut Hair Oil",
+      "outcome": "rejected",
+      "reason": "Current maker guidance directs application to scalp and roots, keeping it for at least three hours, then washing off with shampoo. It is not an admissible retained hair-fibre scenario and the maker page does not publish a complete ordered INCI declaration.",
+      "sources": [
+        {
+          "url": "https://www.dabur.com/our-brand/dabur-vatika-enriched-coconut-hair-oil",
+          "observed": "Maker page calls it Dabur Vatika Enriched Coconut Hair Oil and directs scalp/root massage, at least three hours' contact, then wash-off with mild shampoo."
+        }
+      ]
+    },
+    {
+      "slot": "T05",
+      "candidate_order": 2,
+      "candidate": "Tropic Isle Living Jamaican Black Castor Oil with Coconut",
+      "outcome": "rejected",
+      "reason": "The exact 4 oz/118 ml retailer page supplies a distinct retained curl-and-ends sealant direction, but its three-item declaration is generic product-language (100% Pure Jamaican Black Castor Oil, Extra Virgin Coconut Oil & Wheat Germ Oil), not a verbatim formal INCI declaration. It is retained as a near-complete attempt but does not satisfy the registered strict full-INCI capture requirement.",
+      "sources": [
+        {
+          "url": "https://www.kiyobeauty.com/products/tropic-isle-living-coconut-jamaican-black-castor-oil-4oz",
+          "observed": "Exact retailer title: Tropic Isle Living Coconut Jamaican Black Castor Oil 4oz. Ingredients: 100% Pure Jamaican Black Castor Oil, Extra Virgin Coconut Oil & Wheat Germ Oil. Retained direction: 'Curl and Ends Sealant: Using a prayer hand motion, glide the oil on to strands or ends following a leave-in conditioner to seal in moisture. Follow with curling gel or styling cream product.'"
+        }
+      ]
+    },
+    {
+      "slot": "T05",
+      "candidate_order": 3,
+      "candidate": "Fable & Mane HoliRoots Hair Oil",
+      "outcome": "rejected",
+      "reason": "Current maker page publishes a full ordered INCI declaration, but explicitly identifies the product as a pre-wash root treatment and directs rinse-out before shampooing. It does not supply the required retained hair-fibre scenario.",
+      "sources": [
+        {
+          "url": "https://intl.fableandmane.com/products/holiroots-hair-oil",
+          "observed": "Maker calls it a pre-wash root treatment; directs applying to roots, leaving for at least five minutes or overnight, then rinsing thoroughly before cleansing with shampoo."
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "source_key": "T04",
+      "registered_slot": "T04",
+      "identity": {
+        "brand": "Weleda",
+        "product": "Intensiv pflegendes Haaröl",
+        "market": "Germany maker storefront",
+        "size": "50 ml",
+        "identifier_if_verified": null
+      },
+      "source_binding": {
+        "primary_url": "https://www.weleda.de/produkt/intensiv-pflegendes-haaroel-g009362",
+        "reviewed_at": "2026-10-12",
+        "source_type": "maker product page",
+        "exact_identity_basis": "Current maker title and 50 ml sale page."
+      },
+      "raw_inci": "Arachis Hypogaea (Peanut) Oil, Trifolium Pratense (Clover) Flower Extract, Fragrance (Parfum), Arctium Lappa Root Extract, Rosmarinus Officinalis (Rosemary) Leaf Oil, Limonene, Linalool, Geraniol, Coumarin.",
+      "ingredients": [
+        { "rank": 1, "raw_name": "Arachis Hypogaea (Peanut) Oil" },
+        { "rank": 2, "raw_name": "Trifolium Pratense (Clover) Flower Extract" },
+        { "rank": 3, "raw_name": "Fragrance (Parfum)" },
+        { "rank": 4, "raw_name": "Arctium Lappa Root Extract" },
+        { "rank": 5, "raw_name": "Rosmarinus Officinalis (Rosemary) Leaf Oil" },
+        { "rank": 6, "raw_name": "Limonene" },
+        { "rank": 7, "raw_name": "Linalool" },
+        { "rank": 8, "raw_name": "Geraniol" },
+        { "rank": 9, "raw_name": "Coumarin" }
+      ],
+      "retained_hair_fibre_directions": {
+        "verbatim": "Nach der Haarwäsche gleichmässig in die Haarlängen verteilen, auf feuchtem oder trockenem Haar anwenden. Als Intensivpflege in die Haarspitzen kneten.",
+        "site": ["hair lengths", "hair ends"],
+        "dose": "not stated",
+        "stage": ["after washing", "damp hair", "dry hair"],
+        "contact": "retained leave-on scenario; duration not stated",
+        "removal": "no removal instruction for the selected after-wash lengths/ends scenario",
+        "restrictions": "The same page separately gives a pre-wash scalp-only route: massage generously into dry/irritated scalp, leave 1–2 hours, then wash thoroughly. That route is not the selected retained scenario."
+      },
+      "package_mechanism": {
+        "observed": null,
+        "basis": "No dispenser mechanism was stated in the reviewed maker text."
+      },
+      "named_oil_marketing_names": [
+        {
+          "name": "Rosmarinöl",
+          "source_evidence": "Maker description names a composition with rosemary oil; the complete INCI declaration includes Rosmarinus Officinalis (Rosemary) Leaf Oil at rank 5."
+        }
+      ],
+      "claim_evidence": {
+        "heat": {
+          "accepted_explicit": false,
+          "reviewed_sections": ["current maker description", "complete INCI", "application tips"],
+          "negative_basis": "No explicit heat-protection claim was observed."
+        },
+        "hair_uv": {
+          "accepted_explicit": false,
+          "reviewed_sections": ["current maker description", "complete INCI", "application tips"],
+          "negative_basis": "No explicit UV-protection claim was observed. 'Schützt vor schädigenden Umwelteinflüssen' is retained as general environmental wording only and is not converted into a UV claim."
+        }
+      },
+      "oil_category_evidence": "Maker title is 'Intensiv pflegendes Haaröl' and calls the product 'rein pflanzliche Haaröl'.",
+      "source_limits": "Maker says online INCI can in individual cases differ from the packaging and directs users to check the packaging before use; this packet preserves the current online German maker declaration only."
+    }
+  ],
+  "unfilled_slots": [
+    {
+      "slot": "T03",
+      "reason": "All three registered candidates were attempted in order. No candidate supplied one stable, source-complete exact-product formula binding together with an admissible retained hair-fibre scenario."
+    },
+    {
+      "slot": "T05",
+      "reason": "All three registered candidates were attempted in order. The first and third are rinse-off/pre-wash treatments, and the second has retained strands/ends directions but only a generic three-item ingredient declaration rather than verbatim formal INCI. The slot remains unfilled rather than substituting or normalizing a declaration."
+    }
+  ]
+}

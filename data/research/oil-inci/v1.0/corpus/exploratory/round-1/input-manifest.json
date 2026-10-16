@@ -1,0 +1,121 @@
+{
+  "run_id": "oil-exploratory-2026-10-01-round-1",
+  "method_revision": "oil-exploratory-standard-0.1",
+  "lexicon_revision": "oil-round-1-lexicon-0.1.1",
+  "input_files": [
+    {
+      "path": "method.md",
+      "sha256": "79f33e162ccd7d83f846ec1a03d92872074e983d0aca95c3b51d91996963f905",
+      "bytes": 12365
+    },
+    {
+      "path": "ingredient-lexicon.json",
+      "sha256": "14fc33bc49a68433eed75f5dda15578a4223af31669555fbb95269a2c7955b73",
+      "bytes": 156269
+    },
+    {
+      "path": "blind-lexicon.json",
+      "sha256": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b",
+      "bytes": 97524
+    },
+    {
+      "path": "blind-packet.json",
+      "sha256": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10",
+      "bytes": 32596
+    },
+    {
+      "path": "unblinded-packet.json",
+      "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885",
+      "bytes": 42054
+    },
+    {
+      "path": "source-packet.json",
+      "sha256": "7a29772235f3bb1b07a042c367e49955208aa56778d02f4eab76cc510c44f40b",
+      "bytes": 59361
+    },
+    {
+      "path": "cohort.json",
+      "sha256": "1d1026befb941a9efd667a61389aa95a2d62bca0e138bfaa90920e784e7a6ca5",
+      "bytes": 3922
+    },
+    {
+      "path": "normalization-audit.json",
+      "sha256": "62dcf4f8c94ced64a4b5cc2c3365ba81439f5bd8394db41bc72a993b9b238569",
+      "bytes": 26491
+    },
+    {
+      "path": "main-material-mappings.md",
+      "sha256": "e4d78e020f04d27b7e3cc6f2114b6fc7e956db84d5ae76d7e3c0439963e4b841",
+      "bytes": 2324
+    },
+    {
+      "path": "preflight-receipt.json",
+      "sha256": "abc2666ef7ef36c4d24b025b51a5283ce1d96a3186f0886664776223dd945488",
+      "bytes": 1111
+    }
+  ],
+  "input_hashes": [
+    {
+      "neutral_id": "F01",
+      "slot": "E06",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "48ff98d511f87ee302e4950a89179452020fef271f0abddfeba85feed5b2b47d",
+      "normalized_ingredient_sha256": "9f580f3b912abffb7530d09e9ae45ae1b29c13ef37f975aabf723b98890cd022"
+    },
+    {
+      "neutral_id": "F02",
+      "slot": "E02",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "a2f4a532222b0be1083e6e7ff443a1d673c09912b8b60f9f02286524a86e1c68",
+      "normalized_ingredient_sha256": "6876995441866e72808d0deac639089d095ccd68bdf487776c27bb9f82936010"
+    },
+    {
+      "neutral_id": "F03",
+      "slot": "E08",
+      "ingredient_count": 19,
+      "raw_inci_sha256": "9c1bb5f4e619e3569b52a3bc2a2d52c45ab8a310feff259c8933b214a23399fe",
+      "normalized_ingredient_sha256": "59f4c86327c24be64656cc938a2d78c120637b6405c62a7b05a1b44444559ff7"
+    },
+    {
+      "neutral_id": "F04",
+      "slot": "E01",
+      "ingredient_count": 1,
+      "raw_inci_sha256": "12d315272564ff15869bd669ab67e3c97ee7009e31089e76838a510a166cd70a",
+      "normalized_ingredient_sha256": "b2c937f02e96dc517a26cba49681898b311aedc0f16768765d59eec1704fcae7"
+    },
+    {
+      "neutral_id": "F05",
+      "slot": "E05",
+      "ingredient_count": 24,
+      "raw_inci_sha256": "c1dd2dbaf452e4fe9e01a81c69059c0b82cf7a0eb0420bbffee588bc6153676b",
+      "normalized_ingredient_sha256": "e639d82669fb07d7db479769fd96531fce8be59a2d9cf0456cd09c89b5a36169"
+    },
+    {
+      "neutral_id": "F06",
+      "slot": "E07",
+      "ingredient_count": 27,
+      "raw_inci_sha256": "da4fa9ad6c6d521e3fc0ca85bbb3a1730b3a9f1e3ca445550974a18cfc08a0a8",
+      "normalized_ingredient_sha256": "fdc43a1f5729b4bc772c08fee361b880fe76a9b3096a60ada1658b1b5dc68789"
+    },
+    {
+      "neutral_id": "F07",
+      "slot": "E03",
+      "ingredient_count": 21,
+      "raw_inci_sha256": "f2cf36c05776f5e6d9202358439382ec7bdb5e62620fae6f5ac5e5d9a009d76e",
+      "normalized_ingredient_sha256": "81a906e935095e536ac60ac84e62d8d9d52f76053cd2e102723b52208d90c018"
+    },
+    {
+      "neutral_id": "F08",
+      "slot": "E04",
+      "ingredient_count": 17,
+      "raw_inci_sha256": "514034a70c1594f31913a5e35a2c45a1990ee7bf5d0a918672c9361150e625b5",
+      "normalized_ingredient_sha256": "aa3ecbb53d2a9c6f917c2b6e73aefde9499b2005e9e41d80e02850bbab564552"
+    }
+  ],
+  "stage_order": "independent blind files sealed before controlled unblind; no peer/reference/web access",
+  "scope_limits": [
+    "published declarations, not physical batch verification",
+    "first exploratory repeatability round, not gold/heldout accuracy",
+    "fit and production policies pending"
+  ]
+}

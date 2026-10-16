@@ -1,0 +1,1046 @@
+{
+  "passed": true,
+  "files_scanned": 259,
+  "source_files": [
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/adjudication.json",
+      "sha256": "4f517ea4c87b7b58df7a17a13bca90685c6008efaaf7e74578af1606de17dc8c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/blind-packet.json",
+      "sha256": "dd379b48c6d7de1e8e669eeef062335a7618d51664b6dbc79de434799aa92836"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/comparison.json",
+      "sha256": "c3d67ef7c117e2a973df6b21ef0c3d84e80087ca02d524862dafe485dac9e49f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/display-receipts.json",
+      "sha256": "43377161f2c0c4a8230610dd5d86fe029bd4571fac7c28e44bc496df1a754e0d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/historical-baseline.json",
+      "sha256": "70be8a3aed030720cadf7b5d01303e2f144bb0f9e93d25ad1c3f6f4e392cc767"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/identity-map.json",
+      "sha256": "aceaf80ee40cc16a60ec3fa14498d52240d34f638c725a6608f0e1c9326df350"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/input-manifest.json",
+      "sha256": "80f280c3c4c88115dc38da92e1b8840d73dfb47096501ef8cceaf48b105287f6"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/lane-a/records.json",
+      "sha256": "61083689496080a07a7165fff778e7892baa2dd2e647f6c8104dfc96226be601"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/lane-b/records.json",
+      "sha256": "f1e322e330f788274f4db907ea40a43981f57868370a2f61dacd5204bce1d367"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-before-lanes-seal.json",
+      "sha256": "cbadc9ec450fb7f74c7ad6b9ab8cbdfc08a131387537ee8e4bc0fd5fb407aa00"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/main-working.json",
+      "sha256": "1f2fdb26a2c2e90e7ed05c34b29ce0cdc5ef7f5537953b85c017faba2b5f8c3a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/material-reference.json",
+      "sha256": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/negative-control-receipt.json",
+      "sha256": "20a774ae208e21dc2090f8826421b831ec66da9d192edbfd83ca73fa7d443860"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/output-seal.json",
+      "sha256": "98f7db872e445dc8782cbb0893f9d4cefa02eae276dad821a69e4fb101387018"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/policy.json",
+      "sha256": "0855642ec7975a710bf30447da7af8f5b39ebb99ee98f5404dd333efe6a524e7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/preflight-receipt.json",
+      "sha256": "036555fa000560c7863bbf263fc0837068b6bb5a9e065936e9f75f03dfd8da62"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/provenance-seal.json",
+      "sha256": "61b77d234b33fc14a21cf59c37bf4a2279ff9e1621ce7d1385d3ba18cdfbef54"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/role-lexicon.json",
+      "sha256": "a8bd0cdf6401fbce26cb40dabb3851461b33bbc87828cdbdf6c4565ff16d242e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/source-capture.json",
+      "sha256": "a7888cb7a4ea0eeffa23010ec2a604be6daa7e618662c29e232f9311d8140297"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-4/verification-receipt.json",
+      "sha256": "56a76177223e4ef9caae0bc19756092cf272f86fe9cb21289e845e7d73d43814"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/adjudication.json",
+      "sha256": "3bf0a54ba083d0e71833ab9ec23d5d5b218f43feaad5b936fb52f9eecd9a3b45"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/blind-packet.json",
+      "sha256": "b71f7a3c0c53fab51521330e2cf7026061e65a0b4f18d00dba78910f54f32d46"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/comparison.json",
+      "sha256": "04559ea83aaa1bdfc902f92a8f41f97803c184c37eb5d967698bb2e9ed9b60d8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/display-receipts.json",
+      "sha256": "b79660a5aeb936fa8bc2a2167b02f8268ab84e25326174ad2c128c438631cd86"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/historical-baseline.json",
+      "sha256": "fa39392273e3bb1b3c7695565ac8c9abb770b3715a3cb9f369f136643647bb68"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/identity-map.json",
+      "sha256": "996a0f0e5104cef04805583a99cfa01237cde35944d055bea26fc872adf4fa74"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/input-manifest.json",
+      "sha256": "2f419dd3fcd1446b2506b92db27dd4d4e80d71114e4eb876d1a2467ad23510e3"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/lane-a/records.json",
+      "sha256": "2d0b6ea7a7353dcbac5aa1e12b24e72723217e3f7e7e6130a19202bf7d62fd83"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/lane-b/records.json",
+      "sha256": "11c54d3191c66bbc27b3cd87f187fa11948522e55fb4d4613171ee3c6b8aa885"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-before-lanes-seal.json",
+      "sha256": "160c0bf03042d08ec2ec047e16d51501d5c31b51fce988fa5f176ffcd45f1003"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/main-working.json",
+      "sha256": "c8835fd3b455ca8a8e4b0c2af0371dba9e365baa045a1bbe2c0a7bd3bf4889b4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/material-reference.json",
+      "sha256": "fa48a09cf0b1b04262626061266bc7b557bead57a345c40e5c767696ed94d003"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/negative-control-receipt.json",
+      "sha256": "a3c82ae28913380fea28ab6821b4d2ba26bc7f686374617a94682eff3ec7702f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/output-seal.json",
+      "sha256": "20f88620c078d8b289c4563c7277c08a8993deebdd4d7b3ae8b06d2677e6a1f5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/policy.json",
+      "sha256": "8d26aa5c566456588ba4d2e8eb74d32f9f71795be973d7ab53fa966ea998c06e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/preflight-receipt.json",
+      "sha256": "83126b82ad4553141a8571389904ae31320d5b14442e6026cfcab5ca84ddc1f9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/provenance-seal.json",
+      "sha256": "f0486bbe7a5950a774de28c2e98cfbb4f347d0486bcc356b889d2b58baad7007"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-lexicon.json",
+      "sha256": "bb5dca7dd850454cbe1e02cf077761b634dadcd926b315e690e410cfe0d5522f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/role-source-ledger.json",
+      "sha256": "e3721b8771630b0dbee6f9b63a34bb12032d2a0a4ee5de9ca432870b472f5b22"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/source-capture.json",
+      "sha256": "aa08e74ffe3958ea8873f7213f54c2db0dce9fa14f954692a9b23f073d192067"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/blend-weight-round-5/verification-receipt.json",
+      "sha256": "4fedfbf0e669bd3422f4eb2d888c2ce18184eaee57ef8e5953870a9abbae02b4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-approved-v0.1/approved-build-up-overlay.json",
+      "sha256": "65b782ffba154c6ef0a96504f78e1d82a07394c46b33b8b53b93335824aa9b50"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-approved-v0.1/preservation-snapshot.json",
+      "sha256": "d9610b437889cd0e3238b4beca4c3aa479a6dc98cb61f95922ea617c36d87674"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-approved-v0.1/verification-receipt.json",
+      "sha256": "f9f17fdaf8b64b7c5b28d06451178401150fd68dd5cf87b6ec762193cc78a268"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-lexicon.json",
+      "sha256": "0914d5743c52942fad30392e2e3293d0228d6d030c52feb3e7bb07ccc4a7d546"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-packet.json",
+      "sha256": "b90c9c06841ea4a5ec94028de4f659784c483edb5ce6319a18dbdbf3115a39d2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/blind-stage-seal.json",
+      "sha256": "926535884263d00a0b0cb7794eef3d50740ff5228eb67a97be74aa2b8daedcb2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/completion-receipt.json",
+      "sha256": "e39198d15189a848c2d9aad899ae539a84fea9558b0ac8858357a1167215b76d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/content-manifest.json",
+      "sha256": "1bafafe8f19c124a3922f7e770c862ab10c61c137d5979fcefbb87b9b74a91ec"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/function-evidence.json",
+      "sha256": "4bd02107fa08eb4b92407a2b1ed7d66460138b57cb0f68cab17c1a922c6840ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/historical-preservation.json",
+      "sha256": "96d8038252b1a3849392e18fe6ef287a775bdd4c88b289597b9f752057aebdb7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/input-manifest.json",
+      "sha256": "4a81ff5dfcf986eb2aff4717e77cd5accb079d0220356de81a01d8403392d865"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/lane-a/access-log.json",
+      "sha256": "6aa00a2bcc3fe1fa4cbc1f42040da4b3563aaecb9f2355bf5750f174ed58d615"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/lane-a/judgments.json",
+      "sha256": "c0e3ee14f223610f8d8fd3e181d1d3701a004d772ea545c5e2a72cfe27a98147"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/lane-b/access-log.json",
+      "sha256": "d4df27c75098a2c0f13be88e451685a120ae372365326615c53741243cf96bd7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/lane-b/judgments.json",
+      "sha256": "8645593f3c4c1f760e59a2084d0ea95aacf8c8e6b146e041a2a43b184dd5766d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/metrics.json",
+      "sha256": "11f8e96a97d1afddedd18dcbcfd625a7cb25a7cdc77625f22f91097e353606fe"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/normalization-audit.json",
+      "sha256": "270529c1017ff1181decc969599e0ae06cfd169a8a2cb1e69125253bc0d36c65"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/source-packet.json",
+      "sha256": "71d2ad5fb72c783a0abcdc89fd2a9eca25b74ce85ab90f8a4432a4e9e250ee83"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/verification-receipt.json",
+      "sha256": "2126e4ae6ca413dafbb280de956e075b4730433230a07dedd4b268497e9cb684"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-7/working-records.json",
+      "sha256": "2837f5e6c2c9ad31a3ae54e6a49582ae155a6abf04d5fb6d24b3ed9a53957864"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-lexicon.json",
+      "sha256": "b3974e95c9a7e3c77434a3be561f5c1dee464b5da7b3c35c907d9114985cb659"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-packet.json",
+      "sha256": "12146506e1f1566c1abe3064f1c3e36608d0b784679c36d719b2a444b8383c6f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/blind-stage-seal.json",
+      "sha256": "171e6632024afffb82c2f26c4760c29fee20941c0de9084ee6285e16aba13bc9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/completion-receipt.json",
+      "sha256": "fc062d0e01ced154e3eb29ba0823406db8fd8fda91bd906f6672714d4bf09ef9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/function-evidence.json",
+      "sha256": "0f51516ecc7cf233db04684497e83d75dc3f35b1d21751a9fb7dc5e49928ee4d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/historical-preservation.json",
+      "sha256": "31509cf854f97d2c091324918cd39d2a0c11fba5d74bd66c4010eeb11ea605ee"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/input-manifest.json",
+      "sha256": "0a9f5c9b00c92646f099783c4cbf60e0ad0afce6528aab57f1a2d90acc9fe296"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-a/notes.json",
+      "sha256": "18889b48b46ec951acc756e60682329655122e55a30f1e5b571c1733f0ae7821"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-a/records.json",
+      "sha256": "0c4b1bfabbfabe69162c6ec9b7de277d866b7e7d765dcb9441c0ddfa7a550874"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-b/notes.json",
+      "sha256": "6bb68238c4078e4a5b24a352a46baf2258cc250a053178dcd04cfc92b2cd92c2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/lane-b/records.json",
+      "sha256": "45862651d442e81d863dfea5c0419f61569e8f629653fbae817f3dffd4fa3199"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/metrics.json",
+      "sha256": "37c1d6887d07b04a16028293e6cce25d5bf8f70b77b8fa9f9325361c6022b2a8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/natural-oil-build-up-v0.1.json",
+      "sha256": "724f7688d0c97febcc569dd730528a47d9870ab0758367fc890a4fae956579e2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/normalization-audit.json",
+      "sha256": "d2959a31a09ad2083b63a7ead54738d5d74f6661a1febb655ac6230437420f50"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/novelty-audit.json",
+      "sha256": "261bc91d83df5d7da7a2c6e425ff03df7421c5d5ae56ddef8191cce8762c9ebb"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/source-packet.json",
+      "sha256": "d15f6b95b45efe5d7b257b1c47651d773563e3eae8ff8bbae882d9999abffd11"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/verification-receipt.json",
+      "sha256": "d4cdf113cff6eab15258e10f9669c34bbac9b386a036fd58b80ede4f80aa8fce"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/build-up-round-8/working-records.json",
+      "sha256": "063703f609b21cf9e9236320a96dc40d18fdbf8d5180156dc67150187efc2b23"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/curl-pattern-fit-approved-v0.1/approved-pattern-overlay.json",
+      "sha256": "240857647be9ec63d7978a262d9c83d89747e474c5c11425b7cf03c527f429fa"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/curl-pattern-fit-approved-v0.1/verification-receipt.json",
+      "sha256": "79b6b3928344c2dd845d6d1cf23a321425b79428df85613704ee07fdc01f08c2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/damage-fit-approved-v0.1/approved-damage-overlay.json",
+      "sha256": "51ffe7dc36b47bf26a1a0ff9c301a937fbcd3b543857ece078a29eb56aa46d1e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/damage-fit-approved-v0.1/verification-receipt.json",
+      "sha256": "699de696b538e69103a34e94a2a2d0a4ef4b44ca2cf9d164ed9fe73aa037f16e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-lexicon.json",
+      "sha256": "7840fe6645b08ab24248463f7cc6abf575fe081c8775ff607dfba7e7298c88ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-packet.json",
+      "sha256": "802edeb887c93f00a4f9194219e55c7695fb7e89f3ea01e697df93b91060bf48"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/blind-stage-seal.json",
+      "sha256": "12b32292260574d81596fe0d7cded389c595662c7c9a8bbd3ac9b9c71bce3ddc"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/cohort.json",
+      "sha256": "5c5c6f1c91ea78b1a8b43d14ac014732b2062df464a0aec7276150a02732fbd3"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/comparison-v0.1.1.json",
+      "sha256": "a9b4351937cc077e07f530c2e3b2f374e07210fb53b503675e7f8d91575d25aa"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/comparison.json",
+      "sha256": "9635f98ce27b11daf52be63c0d0f693b96590b6a699d3b1f1f0d45ecd4bca931"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/completion-receipt.json",
+      "sha256": "25c7d7c296e6e1762bb08f411b9bf604c2e3c78d938ebae1d474d3ff65f7d5e9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/derivation-manifest-v0.1.1.json",
+      "sha256": "6a2f879d80759d0c892f4c26e096a3113361444ad9fee71f700efbc6ff3712f9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/historical-preservation.json",
+      "sha256": "8308d6873c21c72fe36ea20cc05e2f27ee39e1fb5ed8857a3821d8684d0d2aae"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/ingredient-lexicon.json",
+      "sha256": "1bbf26030098a89f7974a8edd8b4b0882687da692e88732224b744b931d4477e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/initial-stage2-preservation.json",
+      "sha256": "cda757fbfff2be28e147688ae07c5fcff6f56c92ce431a53b92fd27b971e3ed5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/input-manifest.json",
+      "sha256": "83f4b8b2ba56436bd48e5a39c9dce89c2efd50d7df7e397409af68b7cf923476"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-a/blind-records.json",
+      "sha256": "2fdb3648a91caff7137d659bd0344803fbee24809c533e57f5684c1602a6e30b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-a/final-records-v0.1.1.json",
+      "sha256": "1bc7d5fdd0eab33cc80d31c26f473c3f975fa20af9c632f4e0a4be37752ff5d6"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-a/final-records.json",
+      "sha256": "0658dd450ef0e9be5b0f7839415e5000a608dc7c093dd58874759cd82d368070"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-b/blind-records.json",
+      "sha256": "f21624c7fdee1c2126e479198e28d7cfc766744918c1423bc69b3ae89992206a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-b/final-records-v0.1.1.json",
+      "sha256": "fe2dbae4c555d214d50ad7b51e0786fd011851cb0ffcdf68a6dd1ba88a5908fe"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/lane-b/final-records.json",
+      "sha256": "15ab282ef29c6cea6372f2408faa3b35b59075e0ee60412c65190524ab43c3a2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/normalization-audit.json",
+      "sha256": "3da98bf704c87a5a0b1f6f4a600b2f50ca31f4113f1a4963f51795f421d350ce"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/post-seal-source-amendment-v0.1.1.json",
+      "sha256": "47896c2bc0fe7d368fc207b86416b5791d14ee447b88d0eabe100fa0acabf895"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/pre-unblind-source-correction.json",
+      "sha256": "8539911ece9a258c2bb8a6898aaf5e5ff4f7267889c9e558c7c5daeeadb0d9df"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/preflight-receipt.json",
+      "sha256": "ac51052a1620ae55376180b4949378eba1fd3eb8624c03990bba30425485b5ec"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/seal-bookkeeping-correction.json",
+      "sha256": "19bd53db753b47289381e5cce08a66a4c98245bd0a606aa6320e059eb706fecd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet.json",
+      "sha256": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/unblinded-packet-v0.1.1.json",
+      "sha256": "433db0f3b0dafb529491b49e504c29b7efb8dff69de59cc3ca7697e12ac82e35"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/unblinded-packet.json",
+      "sha256": "f1b643c33e4ec6e17b9ff050a12e34a242a7e1a675859e016e31c80080ab0d48"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/verification-receipt.json",
+      "sha256": "9bd7148588b922142e275be5ad0fa52b1f2bba867265efd41d7ca9c1be76387b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/weight-carry-in.json",
+      "sha256": "b13dcbecc40111f566eeb209e9f84537865eaaf695c295be2241697387a35c1c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/working-records-v0.1.1.json",
+      "sha256": "841f5489e92a07a49e36cd5a8197deb70ee149bb491ebf713af8304fc72694bd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-packet.json",
+      "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/blind-seal.json",
+      "sha256": "fe60a757ae696fa9c07253fa9e01c9cbe243c601434d443822e6537fe56557ad"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-packet.json",
+      "sha256": "dc011e6b1cf9bdd4139a20324bd5d66d80f3110c3d959b5fb6f0fbf5ab1cbfcd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/blind-seal.json",
+      "sha256": "43fd1b95faa2c41b21d8d40cc3992cb2585465717c3b7f0fef1111ecf1b56f6d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/correction-seal.json",
+      "sha256": "bec39c076fd656d6db3caa24a44767680c6f2f55ce65dcdbee16a813e2011ae5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/function-dictionary.json",
+      "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/input-manifest.json",
+      "sha256": "8174f6966b6979c33e9e6e614f86d2eefdddebfa834ee6b0573aa4d7c1bb7824"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/blind-records.json",
+      "sha256": "d6c42ed718ae3ea7740085e17da78c6e9c30d85d1c68576a8aa9552e95123b31"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/correction-notes.json",
+      "sha256": "90788c54f40ba698f8131770557a28db201db3c841f0dc091b438a492a9a6495"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-a/correction-records.json",
+      "sha256": "03519b1dcbc6232593a46562307095a95c17718f841c176c72d54ba534b79c2c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/blind-records.json",
+      "sha256": "ffb3573af17f112a741adbee3218c42fe2aafdee5d17981d10fcee958a994a92"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/correction-notes.json",
+      "sha256": "69f06c12ec524f6a9dbdfcb37c4652d31eded3a326f662690c41e0223d081a59"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/lane-b/correction-records.json",
+      "sha256": "eb7a83e9fa82b36dd992ee71bd9767b53eb4fc2f86b786e3b6aeb15690474c45"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/derivation-v0.2/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.2.json",
+      "sha256": "ea2e3f1101e4d10f4deb3e0374f951361121ec309fe2342420b06c9408c8cebd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.3.json",
+      "sha256": "62f573c3974dc9b1819d2d69258197173dc7fc64aa0db293849059e3205fe6d1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrected-function-dictionary-v0.4.json",
+      "sha256": "cd88bd4df1d81b51fdd0e67efe0e03c3d2a5065834f9445b8f015da2964a9adf"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrections-v0.2.json",
+      "sha256": "105bb15ecae0bec465dd1dbbae0efe38f9104663d2948c3caf3fa7be5337b119"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/corrections-v0.3.json",
+      "sha256": "faf7b70bac4b668e78fde027cdbdcebcfe19bd844b47e58b4ef324bba6cfc872"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/full-property-function-dictionary-v0.1.json",
+      "sha256": "7cc4f23fd57144b8da12ea6d5b62c59909dbde089a08f62ac82c88bb1df0e97b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/holdout-function-dictionary-v0.2.json",
+      "sha256": "2231a3105a60a147ef998a36f4996d543beabbaf0413bb83892bcfced9ed4b73"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/dictionary-staging/root-review-v0.4.json",
+      "sha256": "35332fb4d3e242269b19f9bb3415d9fe4b7e1cd4425ddb22c3b84f6f1d773079"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/function-dictionary.json",
+      "sha256": "e12d962914aa13175641a8893f7220f101da5503cf66bd88338b48be6a977d0f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/input-manifest.json",
+      "sha256": "11bd87d1068cca5a6134f5e21e42ab74a4fbad049cafcc14295fcb69bf24649c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-notes.json",
+      "sha256": "a4fe1a5c734ba24ef504a4463dda28439229186864edb8c6497df3dcdd5b7d84"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/integration-notes.json",
+      "sha256": "a4fe1a5c734ba24ef504a4463dda28439229186864edb8c6497df3dcdd5b7d84"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/metrics.json",
+      "sha256": "e2d26ae6927d90f238cdfc1b10378378c9224e4d10ac1b23f4116ff7d376ce09"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/profiles.json",
+      "sha256": "01438e468a2f756ee2f6721289bb40f216e0fed4588d9cb804249ba86a15a627"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/projection.json",
+      "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/scenario-fit.json",
+      "sha256": "52880221f64f29bb49fe01060c416ea3ff7411f630a991c4b90a10cbcae7a18f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/integration-review-predecessor-v0.1/verification-receipt.json",
+      "sha256": "8be82b03a507b73169e7fd90f450ef1612c7e5be51ead34f53adffc2083f39cc"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-a/blind-notes.json",
+      "sha256": "68cadcb2695d31843d05af8b14c3524eeb3d9cfa87e900e9637e6ad853844b5c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-a/blind-records.json",
+      "sha256": "77a75f666c0ca53d7a8507d1ff50bf9e91862df760e57896fc6be6e33c301d01"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-a/stage2-notes.json",
+      "sha256": "06a6a388f58c4dfe84face5bbd7b367efbd286e56b3fa9e1eda87ad7b7590ca4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-a/stage2-records.json",
+      "sha256": "8be277b3e51cd510f408cb3702c59d17acfd780c7fc55d95382e9317188dd9e8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/blind-notes.json",
+      "sha256": "d0c8b25f2d0a47809e3f8bff077baf6d527622ab1a518f29f0a909b35879ddd3"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/blind-records.json",
+      "sha256": "ee7f4f997f77ddce3cffe500e545d0fad3da143bfb14f6ddc7e0831ac8954723"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-notes.json",
+      "sha256": "47c5a035b18e11f3960a7f771f54a90eedc60851d8afa53a47a1f918d11d8c4e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/lane-b/stage2-records.json",
+      "sha256": "ef4b92170f67d38a985e47211a2b5158a6914ab6c917445f4d865c9acea757dd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/metrics.json",
+      "sha256": "e2d26ae6927d90f238cdfc1b10378378c9224e4d10ac1b23f4116ff7d376ce09"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/profiles.json",
+      "sha256": "9eaee01146340abda58ae734a4920b4991837aa3dde911a214118aea09d4788c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/projection.json",
+      "sha256": "88008e0305d9dced7dcf254d1d4ff5a1bef3f99ff568092fb6b920fd9786ac5b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/scenario-fit.json",
+      "sha256": "7525fca4f38567180eea8a0820878e775b7ff0541d4233297229b90c9328fa21"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/O08-retained-source-successor.json",
+      "sha256": "c3b1b0f072efc0dbdef39b54bbd5fea56ff219d256b5c007049ab5a87c3bb492"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/assembled-stage2-source.json",
+      "sha256": "ca6b0142a6496838b2060eb1d47d1c153adf8f866568966cd4660fbda0e9fd65"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/images/group-b/image-sources.json",
+      "sha256": "ce882f7eae2427a17eeeaae2a9716dd2dfb2e1346aef26778362b0fc63e95ed4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/inventory.json",
+      "sha256": "16b18e4157ce31bf0dcb3ce850b218d24f14ab1d6faa6798f1bd5a7652709de0"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a-root-supplement.json",
+      "sha256": "b6c2291038ce86239bf878ec3b659d92542734ce5afb8b9eaa267f96f5df70aa"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a.json",
+      "sha256": "402ee7c6a67c8d0d4a19453c4b1e75e3e3d55dd59471e770c78134f7aa1f36a0"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-a2.json",
+      "sha256": "4e9446e3b6ae27be87a88aed9a437a3cf05a3ec90f4e666921fa76736d3f78ac"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-b.json",
+      "sha256": "179a487c9988fbe65cebdec1507f7a3b4a186024cdf250dcd9509da551862a84"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/source-group-c.json",
+      "sha256": "5a4cb46777e58167fc4beb8a18c7492c6e39b8a87f0ef63bb85d270c39a583c3"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts-completed.json",
+      "sha256": "19273c26b86275cfe147c137e1b684efdfb4c9f03db401530f6fe9cb439d657a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/source-staging/stage2-contexts.json",
+      "sha256": "9630ba92342162a1c9f901f5cbff63457e11abb07d9019533b81e74b5a69f3f6"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-manifest.json",
+      "sha256": "eef52890b4bf24b37e6c6463f1d60043ca7922bf27b7cdbe1e8dc5ae7915760c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-packet.json",
+      "sha256": "95e097a338e49fbc168e82ce31be40c7b20f1dd1448f0ca3e66907484a8ffc4c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/stage2-seal.json",
+      "sha256": "067a71938ab1bfbaa3eac3a2102394baa3f6a5bba48f68937bc8b4e03a6aa9be"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/full-profile-completion-v0.1/verification-receipt.json",
+      "sha256": "10d873260d2758c96a6764f92124d2680d6272bcd6305293ca1f45be25d8be0d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/blind-packet.json",
+      "sha256": "6375ccbb9992da89fc3700d9988fb5ca984d0a8766b3d41c0b17a0bdffa11308"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/comparison.json",
+      "sha256": "d364cfcb35d836d653893a296fac71e61f9635f37f5bb3414a56df8d0532d5e2"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/completion-receipt.json",
+      "sha256": "fb0170da5b9da99e633eaba5e3bb295126db40e2ff9d46977b4fe06e2524f1a1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/historical-round1-baseline.json",
+      "sha256": "eee04257b030ae6a2942dfb56e5eead45a194f4bc3f3525cf0f9f020cd8684af"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/identity-map.json",
+      "sha256": "7bec5b7fa60229727d5d39d4d7a8eaef84082dbed58a18ca523beb85f09e49de"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/input-manifest.json",
+      "sha256": "36f0f1804f1449602ca49e87ab749606f2471453b0797e0db19b5e26f44dbe05"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/lane-a/records.json",
+      "sha256": "0d98e984fff9db7c7f551973f90d3ba549b59d64435802ecd72d1da5500d954a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/lane-b/records.json",
+      "sha256": "9370634d2a8dc3d01ed0874ab58b2254c150317c935c5b9117fa4029ccdee516"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/main-working-weights-v0.2.json",
+      "sha256": "8dfbb2b20dc8327a5d83cb5c55686c9d96e0574a2f3ca1b2c1f28bff89e7e869"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/material-reference.json",
+      "sha256": "3ed3768eaacf076cfc29d3303730d135fc04e45636e93d86a02e1b96918e53be"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/output-seal.json",
+      "sha256": "cf5986e92bfce0a7ebe9fada1534dc4b7825553ef7a7ef0d91057177e7b7fe87"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/role-lexicon.json",
+      "sha256": "ee8b2face3f484460fbc01dce5c8c3decbe4be69290b199c668b9eb719a0f5cd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/source-capture.json",
+      "sha256": "1c29f9f91d9205593952afb1efda5ce3d1835ebb0abeadea79e622772c33b3e4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/natural-base-round-2/verification-receipt.json",
+      "sha256": "7225be28daf71deaae1093b092e2baa8f0db331349c6ddd58e58d1f7ee80e7f5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-lexicon.json",
+      "sha256": "55d39f6cd2bc24237b3912abdcdd6773a805c96343f7b328df58d51132448d5b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json",
+      "sha256": "f75640af96ffa3c98cb55dc38a64a0d1e70f673e3c8adecd8b716be576cc7f10"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-stage-seal.json",
+      "sha256": "f5d06234d83ddd02b4aac4bf656cb3fcf59bd88d6c5c913fa015d80f2f177bc8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/cohort.json",
+      "sha256": "1d1026befb941a9efd667a61389aa95a2d62bca0e138bfaa90920e784e7a6ca5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/comparison.json",
+      "sha256": "a139498aeb8d9bf3f0a2ac39ef92ecbb88b966b9ba99d5b87911481bf49509e4"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/completion-receipt.json",
+      "sha256": "4f2af3bee3d987d50b91f47cbda4199cd403ed5057a001febe8974d6a242011a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/ingredient-lexicon.json",
+      "sha256": "14fc33bc49a68433eed75f5dda15578a4223af31669555fbb95269a2c7955b73"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/input-manifest.json",
+      "sha256": "4f20a480ff5990b04626acda494efc08e9e112ac68d4ab4578318738958feac9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/lane-a/blind-records.json",
+      "sha256": "38f6306454d8fe9b927f1a07d59c30260b70077f26af6837317ae7666ce0cd84"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/lane-a/final-records.json",
+      "sha256": "b55454354feb0ed78e8347bcba5fcc4022a64d80aa8bd37b974e9ddc5c1c2d33"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/lane-b/blind-records.json",
+      "sha256": "9a1deb80db05490a20f9199e0579aea3b19a669ab607fcf4d0e5602e4fd090ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/lane-b/final-records.json",
+      "sha256": "7a4f53b15994f4427034f62817e6840943c60ccd07383c61ea71912b1f92795d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/main-working-records-v0.1.1.json",
+      "sha256": "daf57ce6eefa7191d9be57ae9d9c5a8416b25909885ddfce9fbd56436a8862e1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/normalization-audit.json",
+      "sha256": "62dcf4f8c94ced64a4b5cc2c3365ba81439f5bd8394db41bc72a993b9b238569"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/post-seal-source-amendment-v0.1.1.json",
+      "sha256": "db41853814520e6704d17aa8a89f3639f5acbd6d92b06db7b6001afa63fd7e94"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/preflight-receipt.json",
+      "sha256": "abc2666ef7ef36c4d24b025b51a5283ce1d96a3186f0886664776223dd945488"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/source-packet.json",
+      "sha256": "7a29772235f3bb1b07a042c367e49955208aa56778d02f4eab76cc510c44f40b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+      "sha256": "f3d564584970d1d14a9288cae277a97fe3d38c6a14c316930ed61d995cf86885"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/verification-addendum.json",
+      "sha256": "4e53618b9fca1f161688a9d83808c8080fcab773284916c847945cd304cf177a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/approved-scenario-overlay.json",
+      "sha256": "a32c26ec25df4d93ede59f362ef462bb40308eab8d304c6a87929c71fe99d63d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-approved-v0.1/verification-receipt.json",
+      "sha256": "01682610c83ae440b655a29a846f1d275a1be0e0654387d51abd008225b2b479"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/thickness-fit-scenario-check-v0.1/candidate-scenario-overlay.json",
+      "sha256": "ce58c466547de7378a7f4c1bf2ebab34be7b31a149d378b8e8ee4c49f2ee0a12"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/blind-packet.json",
+      "sha256": "3e28c57931f770791d9fa183f861fc1e2752bbaa72c64be510688d1769f5830c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/comparison.json",
+      "sha256": "e83b8296d3a65cc966f96355ad81db3308a0a72b305d83324f2ad7cb704cead1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/complete-list-review.json",
+      "sha256": "641437ee8e260dee8f69380b98cccaf3cca2902919ed0bb898d99c98012a3dd5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/display-receipts.json",
+      "sha256": "bf2ff279166e0e996d7db87f7156bb95702a40a0bf0ff398ffb5f4ef340baa68"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/historical-baseline.json",
+      "sha256": "a71b19ae34053cd31cf0c6c158eba7e00357fd66ab92dff831eb5590482450e1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/identity-map.json",
+      "sha256": "cbed2836c7980f6e242f08e973606c749fa81979f6645f4cd363c405f0a7fe55"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/input-manifest.json",
+      "sha256": "4221fd663d8bea5135efb054e2e2924ebdc8497d79749e5b9baefc6c511c8974"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/lane-a/records.json",
+      "sha256": "60401e3843e48a3f2fa640519fc10076ffd05a09c1bcb6f1d7e91ebb2afb2bdc"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/lane-b/records.json",
+      "sha256": "9c42c2d36ca5c3450319e7151d45e2d97f603c050cc9ff3027dd6d8eae4cdb08"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/main-working-weights-v0.7.json",
+      "sha256": "b89f056510580a9f82a032dcd2437ecd257f8344098dc07d683bf0492f6a00bd"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/material-reference.json",
+      "sha256": "3bf6a3631a407e4439032f335083d927d56d0cff5061fd4e912c6a4191f76068"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/output-seal.json",
+      "sha256": "1b1625521952cb88fb08360f87eaea9f24752e701e0a326786d7fcfa37fc9ae9"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/role-lexicon.json",
+      "sha256": "2cd08138a1890f8e61103e6a0c0a36d9ede18c451248dc172e536bf8e74bc09e"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/source-capture.json",
+      "sha256": "474e95cd2f07ab476466e64631da970773c49f2e0ef87e29cd2f8634f6dc34ca"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/exploratory/weight-application-round-3/verification-receipt.json",
+      "sha256": "8c9e219245d464e267c0187bd46f1cee2cf30fa844d378e5948010db1f3c8296"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/blind-packet.json",
+      "sha256": "34a5ea5a7fb45240c01963f50f54ebc80021fb798ca4c5394a22d8d97174fb42"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/blind-seal.json",
+      "sha256": "1594f91171bee2c8d10d7838d37f8189973b6ded96cf94c04a7a682a48615ae8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/cohort-manifest.json",
+      "sha256": "079f360897475ea709477000b49e65cda53ae706e1533cb484582c9d88180a88"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/dictionary.json",
+      "sha256": "be2de6a16f3d5bcbfe0c062d5875e0f8d33fa3239c92c21d95e14064022d1ab1"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/formula-overlap-audit-v0.2.json",
+      "sha256": "185e9c3c33089ae70aa1a75aebaaf9f8a0e9bc51f0975e86c99b8e8406835feb"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/function-source-registry.json",
+      "sha256": "7bbf725b664243ba0a3d56f292abdd964220e9ef85d9bb0094d0f8320a6fff3d"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/input-manifest.json",
+      "sha256": "fd48c425d9b1e1b7ba7f3398e5ab474040f0f60e5f831713197672143e33d07c"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-notes.json",
+      "sha256": "6e0bc6f120728517ba96be329dce1e1720da0d4010f800e01eaf23df460dcd9a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/integration-notes.json",
+      "sha256": "086e5046f17eb99f674bc39a54a941dec39e1f96ca1e7f0dfe8c940a1ca252d5"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/metrics.json",
+      "sha256": "9f06c12b0ce7ed116c53e769346bc7e6b540336b863cbff0d48a4c10c73d3585"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/profiles.json",
+      "sha256": "7a16f609d1ea5a58b0b807c3f66b72a37c4119f7ecf73b6ceac0c3f4ffa7fcb6"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/projection.json",
+      "sha256": "71dcff5e7a773a755b2a5aba118e3028200851c515629991452ec7e909ebff76"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/scenario-fit.json",
+      "sha256": "f02d01d3ae18a7f19dd0eab7370ad2908c5817128edcd09df9ecac9bbd256606"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/integration-review-predecessor-v0.1/verification-receipt.json",
+      "sha256": "5a31cb8995e950284b3e8d7d074a31db9c80ac2ccd05cc29b4911d51458e3c42"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/blind-notes.json",
+      "sha256": "9a04b0b660b1141a0c9eec8451d6a5c312fc016e11a8508c174e931cbe1b817a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/blind-records.json",
+      "sha256": "485764b3c2ed7a658e5966ecba9d5628f7e34e79db4d653ee61b9440cbebb556"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/persistence-research-trace.json",
+      "sha256": "d39bf1291dc91150969f04238501353ae9f3b974efa7df606fa12c29e1650dc8"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/stage2-notes.json",
+      "sha256": "9f4044230a20ff805c62939459221499b12ea2f089e818f677480708dd8a592f"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-a/stage2-records.json",
+      "sha256": "bdd9b0f6235b023feffacc17920975218166ff7a7f42d6b128c9009bc1da812a"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-b/blind-notes.json",
+      "sha256": "7ff5527c99ce23ae9a6a3ff26464ca711f92062df15b885be9f95a4bb799e749"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-b/blind-records.json",
+      "sha256": "0cf5d660f52cef132a14df0d3c3e4780cb186161dda8ff246ca538c878bad46b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-b/persistence-research-trace.json",
+      "sha256": "4729a40702acd1501965ec47e13f2c5d856ae2bf04e57ec217d59609da65ac61"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-b/stage2-notes.json",
+      "sha256": "bc037e6b25acaf771ada5903e28a9d36b44c3cd1a7b853295eca7de8b0848cbe"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/lane-b/stage2-records.json",
+      "sha256": "fbba44a1781f7249f200da5b9eb04c99db36541e2ebbb195c7570acdea907e00"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/material-weight-reference.json",
+      "sha256": "83e8b419eaf3d1fb502aa7bbbbff60fb9eabab8ddc13c5340bf41e52711f2ae7"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/metrics.json",
+      "sha256": "34b526da81129fa8743bb734c5f3fc1163f4083d69a4027eb78c37b46c4b9f64"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/profiles.json",
+      "sha256": "b0e925e5b568ef8071542f9d8d557136d1a2d8f2949f4bf05311e7193cd1b913"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/projection.json",
+      "sha256": "71dcff5e7a773a755b2a5aba118e3028200851c515629991452ec7e909ebff76"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/root-selection-v0.2.json",
+      "sha256": "78e9c37f31e2eb448d7f789fa82694280995e3752e9b2fdfa28afb039a260825"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/root-selection.json",
+      "sha256": "6d68436583a922273e5f09d959dfa318c906ab21c228fc3861982ed924df6473"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/scenario-fit.json",
+      "sha256": "950c33447946727f9f7cf938da7c417803f2a548a426ad18f83c2299f04a8be6"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/source-packet.json",
+      "sha256": "6fb120c79d58590644dcf18f8eff81d776962975e60b918bcd3b9fa0721eb940"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-manifest.json",
+      "sha256": "e67797912926bbce700fca34d501eaf8b4ebedb1d9686583cf2e92af7db7f0ed"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-packet.json",
+      "sha256": "cc598f53fef053fa9d1c5749e07664ee687860b7be6dc3c058da300dee978d42"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/stage2-seal.json",
+      "sha256": "f13a6b2e07ea9a9a06c45d6f4588a2d40a80c410d86a2f6aed54f9587864d96b"
+    },
+    {
+      "path": "data/research/oil-inci/v1.0/corpus/holdout/full-profile-v0.2/verification-receipt.json",
+      "sha256": "c6de685ca30e2ff31a59e8c98689f8c4094f92b982323759ce81579a3708211f"
+    }
+  ],
+  "prior_complete_array_count": 47,
+  "within_cohort_unique": true,
+  "new_formula_count": 4,
+  "meaning": "Exact ordered normalized declarations; whole arrays only. Project-new evidence, not a claim that an assessor has never seen a commercial formula."
+}

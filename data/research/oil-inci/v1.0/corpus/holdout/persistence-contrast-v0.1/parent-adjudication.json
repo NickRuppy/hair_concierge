@@ -1,0 +1,516 @@
+{
+  "scope": "Parent source-disclosed adjudication, after both sealed independent formula-only assessments. Parent preliminary readings were recorded before either result was read, not a third blind vote.",
+  "records": [
+    {
+      "neutral_id": "PC01",
+      "product_key": "Schwarzkopf Professional Oil Ultime|Argan Finishing Oil|DE|100ml",
+      "identity": {
+        "brand": "Schwarzkopf Professional Oil Ultime",
+        "product_name": "Argan Finishing Oil",
+        "market": "DE",
+        "size_ml": 100,
+        "gtin": "4067971053844",
+        "producer_product_id": "3050391"
+      },
+      "persistence_potential": "high",
+      "reason": "A substantive dimethiconol-supported silicone film, with complementary conditioning fluids/emollients, is the stronger complete-system reading. Mobile hydrocarbons/ether do not cancel the film; no grade or amount is inferred.",
+      "tipping_assumption": "The gum meaningfully organizes the retained conditioning coating rather than only modifying product texture.",
+      "source_id": "PA01-F01",
+      "direction_id": "PA01-D01",
+      "application_context": "Retained leave-on hair-fibre application; small amount on towel-dried or dry hair; style as usual. No scalp or shampoo-removal assessment.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "Dimethicone",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Dimethiconol",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Undecane",
+          "canonical_name": "UNDECANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Dicaprylyl Ether",
+          "canonical_name": "DICAPRYLYL ETHER"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Tridecane",
+          "canonical_name": "TRIDECANE"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Argania Spinosa Kernel Oil",
+          "canonical_name": "ARGANIA SPINOSA KERNEL OIL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Helianthus Annuus (Sunflower) Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Parfum (Fragrance)",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 13,
+          "raw_name": "Trisiloxane",
+          "canonical_name": "TRISILOXANE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "Disiloxane",
+          "canonical_name": "DISILOXANE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "lane_values": {
+        "a": "high",
+        "b": "high"
+      },
+      "lane_result_hashes": {
+        "a": "6a0172853df4b8c8e9cbf9c3335dc14662b89f56b4b6a96d35b7de464ce1fd2b",
+        "b": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+      },
+      "recognition_limit": null,
+      "source_limits": [
+        "Public German producer declaration, not a photographed current batch. Formula is bound to DE page and matching German maker-shop identity only.",
+        "Source says towel-dried/dry hair without explicit lengths/ends restriction; declaration labels hair treatment leave-on. No scalp-only or pre-wash inference."
+      ],
+      "formula_conflicts": [
+        "DE maker and DE maker shop agree on this 15-ingredient declaration. A separately encountered NL/Greek maker version omits Linalyl Acetate; no EU-wide formula equivalence is asserted."
+      ]
+    },
+    {
+      "neutral_id": "PC02",
+      "product_key": "L’Oréal Professionnel|Metal Detox Beschermende geconcentreerde olie|NL|50ml",
+      "identity": {
+        "brand": "L’Oréal Professionnel",
+        "product_name": "Metal Detox Beschermende geconcentreerde olie",
+        "market": "NL",
+        "size_ml": 50,
+        "gtin": "3474637090609"
+      },
+      "persistence_potential": "high",
+      "reason": "The dimethicone/dimethiconol conditioning system supports a cohesive retained film within aqueous/solvent delivery. PEG-14 dimethicone and polyquaternium-7 supply complementary conditioning clues, not independently proven adhesive/gum mechanisms. Polyacrylamide remains rheology, and PEG-60 hydrogenated castor oil remains a solubilizer/emulsifier.",
+      "tipping_assumption": "The silicone gum route remains functionally substantive after application; the high reading does not require actual plasticization, particular deposition, or a persistent-film role for every polymer.",
+      "source_id": "PA02-F01",
+      "direction_id": "PA02-D01",
+      "application_context": "Retained leave-on hair-fibre application; 1–2 pumps warmed in palms, applied from mid-lengths to ends on dry or towel-dried hair; do not rinse, then blow-dry or air-dry. No scalp or shampoo-removal assessment.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "ISODODECANE",
+          "canonical_name": "ISODODECANE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "AQUA / WATER",
+          "canonical_name": "AQUA"
+        },
+        {
+          "rank": 3,
+          "raw_name": "DIPROPYLENE GLYCOL",
+          "canonical_name": "DIPROPYLENE GLYCOL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "DIMETHICONE",
+          "canonical_name": "DIMETHICONE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "ALCOHOL DENAT.",
+          "canonical_name": "ALCOHOL DENAT."
+        },
+        {
+          "rank": 6,
+          "raw_name": "DIMETHICONOL",
+          "canonical_name": "DIMETHICONOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "GLYCERIN",
+          "canonical_name": "GLYCERIN"
+        },
+        {
+          "rank": 8,
+          "raw_name": "PEG-14 DIMETHICONE",
+          "canonical_name": "PEG-14 DIMETHICONE"
+        },
+        {
+          "rank": 9,
+          "raw_name": "HYDROXYETHYL UREA",
+          "canonical_name": "HYDROXYETHYL UREA"
+        },
+        {
+          "rank": 11,
+          "raw_name": "PEG-60 HYDROGENATED CASTOR OIL",
+          "canonical_name": "PEG-60 HYDROGENATED CASTOR OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "POLYACRYLAMIDE",
+          "canonical_name": "POLYACRYLAMIDE"
+        },
+        {
+          "rank": 14,
+          "raw_name": "C13-14 ISOPARAFFIN",
+          "canonical_name": "C13-14 ISOPARAFFIN"
+        },
+        {
+          "rank": 15,
+          "raw_name": "PROPYLENE GLYCOL",
+          "canonical_name": "PROPYLENE GLYCOL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "LAURETH-7",
+          "canonical_name": "LAURETH-7"
+        },
+        {
+          "rank": 25,
+          "raw_name": "POLYQUATERNIUM-7",
+          "canonical_name": "POLYQUATERNIUM-7"
+        },
+        {
+          "rank": 29,
+          "raw_name": "PARFUM / FRAGRANCE",
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "lane_values": {
+        "a": "high",
+        "b": "high"
+      },
+      "lane_result_hashes": {
+        "a": "6a0172853df4b8c8e9cbf9c3335dc14662b89f56b4b6a96d35b7de464ce1fd2b",
+        "b": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+      },
+      "recognition_limit": null,
+      "source_limits": [
+        "Primary current Netherlands producer page, not a photographed batch. Suitable EU source identity; not a proven German package.",
+        "Producer headline claims are captured only for identity/use; not persistence evidence. 10% Glicoamine text nearby is technology marketing and must not be translated into ingredient concentration."
+      ],
+      "formula_conflicts": [
+        "German maker product named Metal DX exists but exposes no complete INCI in retrieved page; do not join DE identity or infer same formula from that page.",
+        "NL declaration includes AQUA / WATER, not US/UK EAU wording; NL source is independently complete and primary. No cross-market equality needed."
+      ]
+    },
+    {
+      "neutral_id": "PC03",
+      "product_key": "Dr. Hauschka|Haaröl|DE|75ml",
+      "identity": {
+        "brand": "Dr. Hauschka",
+        "product": "Haaröl",
+        "market": "DE",
+        "size_ml": 75,
+        "gtin": null,
+        "producer_url": "https://www.drhauschka.de/haarpflege/haaroel/"
+      },
+      "persistence_potential": "moderate",
+      "reason": "The exact peanut, wheat-germ and sunflower oil functions support an ordinary retained lipid coat. Lecithin stabilization does not establish an especially cohesive hair film; unassessed extract/aroma contributions remain gaps rather than zero.",
+      "tipping_assumption": "The retained fixed-oil system behaves as ordinary fluid conditioning, with lecithin primarily stabilizing the preparation rather than organizing a persistent coating.",
+      "source_id": "PSB-S01",
+      "direction_id": "PSB-S01",
+      "application_context": "Retained leave-on hair-fibre application; very small amount on damp or dry ends after washing; do not rinse. No scalp or shampoo-removal assessment.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "Arachis Hypogaea Oil",
+          "canonical_name": "ARACHIS HYPOGAEA OIL"
+        },
+        {
+          "rank": 2,
+          "raw_name": "Melia Azadirachta Leaf Extract",
+          "canonical_name": "MELIA AZADIRACHTA LEAF EXTRACT"
+        },
+        {
+          "rank": 3,
+          "raw_name": "Triticum Vulgare Germ Oil",
+          "canonical_name": "TRITICUM VULGARE GERM OIL"
+        },
+        {
+          "rank": 4,
+          "raw_name": "Chamomilla Recutita Flower Extract",
+          "canonical_name": "CHAMOMILLA RECUTITA FLOWER EXTRACT"
+        },
+        {
+          "rank": 5,
+          "raw_name": "Lecithin",
+          "canonical_name": "LECITHIN"
+        },
+        {
+          "rank": 6,
+          "raw_name": "Alcohol",
+          "canonical_name": "ALCOHOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "Parfum*",
+          "canonical_name": "PARFUM"
+        },
+        {
+          "rank": 8,
+          "raw_name": "Helianthus Annuus Seed Oil",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 9,
+          "raw_name": "Lavandula Oil/Extract",
+          "canonical_name": "LAVANDULA OIL/EXTRACT"
+        },
+        {
+          "rank": 19,
+          "raw_name": "Alpha-Terpinene*",
+          "canonical_name": "ALPHA-TERPINENE"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "lane_values": {
+        "a": "moderate",
+        "b": "moderate"
+      },
+      "lane_result_hashes": {
+        "a": "6a0172853df4b8c8e9cbf9c3335dc14662b89f56b4b6a96d35b7de464ce1fd2b",
+        "b": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+      },
+      "recognition_limit": "Lane A disclosed a tentative unverified identity association, stated unused; keep the disclosure and do not call this case clean model-unfamiliar blind validation.",
+      "source_limits": [
+        "GTIN not captured; page identity and 75 ml size only.",
+        "Use scope is postwash small-dose ends only. Prewash/scalp passages deliberately excluded from application assessment.",
+        "Producer descriptive copy mentions rosemary, but current ordered INCI declares Lavandula Oil/Extract and does not list rosemary oil. Preserve declaration; do not insert or substitute rosemary.",
+        "Lavandula Oil/Extract is generic exact source wording; species, plant part and extract carrier unresolved.",
+        "Asterisks retained in raw string and are footnote markers, not separate ingredients."
+      ],
+      "formula_conflicts": []
+    },
+    {
+      "neutral_id": "PC04",
+      "product_key": "L’Occitane en Provence|Huile Cheveux Réparation Intense|FR|50ml",
+      "identity": {
+        "brand": "L’Occitane en Provence",
+        "product": "Huile Cheveux Réparation Intense",
+        "market": "FR",
+        "size_ml": 50,
+        "gtin": null,
+        "sku": "11HI050G24",
+        "producer_url": "https://fr.loccitane.com/huile-cheveux-reparation-intense-11HI050G24.html"
+      },
+      "persistence_potential": "moderate",
+      "reason": "The complete ester/alkane and fixed-oil system favors an ordinary retained fluid coat. Hydrogenated coco-glycerides supply a real film-forming/structuring counter-signal, but generic capability does not establish a particularly cohesive whole-film architecture. No late-rank trace assumption, supplier melting grade or percentage is imported.",
+      "tipping_assumption": "The modified glycerides contribute meaningfully within a fluid emollient coating rather than becoming the organizing mechanism of a particularly cohesive film.",
+      "source_id": "PSB-S02",
+      "direction_id": "PSB-S02",
+      "application_context": "Retained leave-on hair-fibre application; 3–4 drops warmed between hands, applied to lengths and ends of damp or dry hair. No scalp or shampoo-removal assessment; separate overnight pre-wash scenario excluded.",
+      "evidence": [
+        {
+          "rank": 1,
+          "raw_name": "ISOPROPYL PALMITATE",
+          "canonical_name": "ISOPROPYL PALMITATE"
+        },
+        {
+          "rank": 2,
+          "raw_name": "COCO-CAPRYLATE/CAPRATE",
+          "canonical_name": "COCO-CAPRYLATE/CAPRATE"
+        },
+        {
+          "rank": 3,
+          "raw_name": "C13-15 ALKANE",
+          "canonical_name": "C13-15 ALKANE"
+        },
+        {
+          "rank": 4,
+          "raw_name": "ETHYLHEXYL PALMITATE",
+          "canonical_name": "ETHYLHEXYL PALMITATE"
+        },
+        {
+          "rank": 5,
+          "raw_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+          "canonical_name": "PRUNUS AMYGDALUS DULCIS OIL"
+        },
+        {
+          "rank": 6,
+          "raw_name": "OCTYLDODECANOL",
+          "canonical_name": "OCTYLDODECANOL"
+        },
+        {
+          "rank": 7,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED EXTRACT",
+          "canonical_name": "HELIANTHUS ANNUUS SEED EXTRACT"
+        },
+        {
+          "rank": 8,
+          "raw_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT",
+          "canonical_name": "DAUCUS CAROTA SATIVA (CARROT) ROOT EXTRACT"
+        },
+        {
+          "rank": 9,
+          "raw_name": "RICINUS COMMUNIS (CASTOR) SEED OIL",
+          "canonical_name": "RICINUS COMMUNIS SEED OIL"
+        },
+        {
+          "rank": 10,
+          "raw_name": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+          "canonical_name": "HELIANTHUS ANNUUS SEED OIL"
+        },
+        {
+          "rank": 11,
+          "raw_name": "CITRUS AURANTIUM DULCIS (ORANGE) PEEL OIL",
+          "canonical_name": "CITRUS AURANTIUM DULCIS PEEL OIL"
+        },
+        {
+          "rank": 13,
+          "raw_name": "LAVANDULA ANGUSTIFOLIA (LAVENDER) OIL",
+          "canonical_name": "LAVANDULA ANGUSTIFOLIA OIL"
+        },
+        {
+          "rank": 15,
+          "raw_name": "ANGELICA ARCHANGELICA SEED OIL",
+          "canonical_name": "ANGELICA ARCHANGELICA SEED OIL"
+        },
+        {
+          "rank": 17,
+          "raw_name": "GLYCINE SOJA (SOYBEAN) OIL",
+          "canonical_name": "GLYCINE SOJA OIL"
+        },
+        {
+          "rank": 18,
+          "raw_name": "HYDROGENATED COCO-GLYCERIDES",
+          "canonical_name": "HYDROGENATED COCO-GLYCERIDES"
+        },
+        {
+          "rank": 21,
+          "raw_name": "PARFUM/FRAGRANCE",
+          "canonical_name": "PARFUM"
+        }
+      ],
+      "considered_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "lane_values": {
+        "a": "moderate",
+        "b": "moderate"
+      },
+      "lane_result_hashes": {
+        "a": "6a0172853df4b8c8e9cbf9c3335dc14662b89f56b4b6a96d35b7de464ce1fd2b",
+        "b": "445e2b292e94dcd4b1fe6549fec7fdb0144939aa5772176e3c57a842ea1046ee"
+      },
+      "recognition_limit": null,
+      "source_limits": [
+        "GTIN not captured. Exact URL SKU and 50 ml current selected size; 100 ml alternate is not assumed package-identical.",
+        "Same directions section separately permits a generous overnight use followed by washing. The initial 3-4 drops damp/dry branch is the retained styling application selected; exclude overnight prewash branch.",
+        "No repair/bond or thermoprotection claim evidence supplied to formula classifier.",
+        "Hyphens around ingredients are source separators; the internal hyphen in C13-15 is part of the exact ingredient name."
+      ],
+      "formula_conflicts": []
+    }
+  ],
+  "policy_change_required": false,
+  "critical_owner_decision_required": false,
+  "limits": [
+    "Repeatability only, not measured accuracy.",
+    "Project-new exact European source formulas, not established model-level unseen products.",
+    "PC03 lane A tentative recognition disclosure retained; no rerun to obtain a cleaner attestation.",
+    "No full profiles, Lab additions, adapter repins, manual matching approvals, database writes or activation."
+  ]
+}

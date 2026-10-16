@@ -1,0 +1,43 @@
+{
+  "run_id": "oil-blend-contrast-2026-10-14-v0.1",
+  "canonical_content_fingerprint": "6df86c11e46d5fbcab6dbbe71958b3b7b9fc3fe5ddbb45cafde6ca0e3945c43d",
+  "files": {
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/blind-method.md": "1b1f2ed476e1ee4b1ae1a745148a617c20aef9fdd9edd0841c74b5ac7b6b2435",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/function-dictionary.json": "45fbdca0710d99bbc813409c9de388a40b9a31ba20931535f831e9ee73ff0253",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/input-manifest.json": "e0d9dbb9f370cd9432123d28f9e5c7b07abc925b52e9fbea4eb47e4cd86afe25",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-a/results.json": "e46042f12831df19a67e8fbfdb1c3ad11025a02d955815e2790c361fefa8d4e3",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-a/seal.json": "2d80baf7a2196596a0862ce2377593217df2673e47c408e589a3c0b6461e2606",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-b/results.json": "39e7b6cc8e3d03bcb8d6f08ab7aaddba8d914716093d45746c532fc1121705c3",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/lane-b/seal.json": "19e850a2ffd40242a95c87fdca5b9ba6f9f6e2d40e6d92c93fa68849d2e560da",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/material-priors.json": "ed2cf346bb3a5aa0419a25f3ddfc4ec651c6a372383f2d3d9496cf8b002e91d4",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet-draft.json": "9a7376e3f35e2978e50e58b5042ef9970e4946b45c586b5277158de53ab7d579",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/neutral-packet.json": "b217cfbe6b788ab181a0239ea097c385654aa50d0afd721ba85c7c266e4ba9e1",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/parent-adjudication.json": "efab485a93fe5a586c18b3f8073ef9938897f334b6e927f8a9c0ffdcc9a2ba64",
+    "data/research/oil-inci/v1.0/corpus/holdout/blend-contrast-v0.1/results-for-review.md": "e2f7c232ecc3b806a474142b8b58efa1dc1c6f084560fd0add4b36f05a142e96",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/completion.md": "2b4c3e8b8d0369454f730281b76c87f9ec9aeddaccc2f4bab69d39939034d0f4",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/exposure-inventory.json": "eea50dc838a96f250e37922d528a6cf5f2c065c2be35f29ddf9f0759de4ee0fe",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/formula-exposure-check.json": "5488e1e5c99e3d17973f6e0ab90b52e469aef471e138b8a27475ca185422f27b",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/frozen-input-audit.json": "d17e41af72f4b362fc14f261c208f8468fb783e200b1c892168e501b942200f5",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/function-provenance.json": "a418e8928cb8b1e3a247d692ec4eda09c5a473b45abb46a5b2673037ff059b51",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/identity-source-map.json": "6ea4365613a8beb85aebc6811d183bcfb379b8eb6dbfd259f9c99ef58b6261f0",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/method-inputs.json": "23c52faee1e4e246314838581a23e62416ecc4d585732a23993a3abe54cce8ca",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/normalization-draft.json": "5befeecc17efb2a02feaa3676e1315f2a20b8a776cfa58c67f7368e476f3b3bd",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/normalization-final.json": "5f2404fa317e2c3021f010814716fa689dd5af7dc01f613ed5f5ed1bd2dd74cc",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/output-audit.json": "32e13b6fcc398450dc8565b314b5ff03e9df9ac54cfab84f954a1a23ba45020b",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/preflight-audit.json": "059c74862d4fbb820dcfc3c3836a14c21b35175040ce56689f17b3468b440ea0",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/protocol.md": "dc76f3f4e3ae18518e2b38cc85343e1454831259bd0c6ab342fca49cf9454e8f",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a01-source-excerpt.md": "d97163afeb59c95ba6e5bd896aee0be6e97af457bbfdb46b95fd9b701478c02a",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a02-source-excerpt.md": "a7e2ded60c4e40ced5a576ec5f851c22460daea7a09dcc3bdd82fbe08b5d6791",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/a03-source-excerpt.md": "5a9a793a337a3b6390b9ffba543fb7380638f55dfe751144f67b0915ef9d06a0",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/candidates.json": "bcb9be2796a888d96f5371090edff2732caf8b8c5204997561fa45fe534f24fb",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/function-supplement.json": "b7d68fc29a92aeec24369a82034e03fd3c801f7f4b85b0c41b023b60cbc2fa05",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-a/paul-mitchell-variant-receipt.json": "14819cd355b8d78dfa5c0cd74cd89917ed648d38afc2168dce258b2e809160af",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/candidates.json": "71f632f2b0fb0cef5c4ce3a0296a1b883319c09e2513ff551646f16856e01477",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/function-supplement.json": "72b267629358be0dc80cfebeb2c0fb17d144b20b1867368e5a49f2c371cf1634",
+    "plans/oil-inci/research/blend-contrast-2026-10-14/source-b/receipt.md": "6aedaa6f118e6e9c52ebf5bcff85d0479cd3488e3778c0af75d44ac2e5ceb3c8"
+  },
+  "excluded_self_attestations": [
+    "run-manifest.json",
+    "verification.json"
+  ]
+}

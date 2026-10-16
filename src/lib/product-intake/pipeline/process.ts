@@ -31,6 +31,8 @@ export function runWorkerProcess(
     let terminated = false
     const child = spawn(command, args, {
       ...spawnOptions,
+      // Worker paths and prompts are literal argv values, never shell input.
+      shell: false,
       detached: true,
       stdio: ["ignore", "pipe", "pipe"],
     })

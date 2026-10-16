@@ -1,0 +1,22 @@
+[
+  {
+    "product_key": "Schwarzkopf Professional Oil Ultime|Argan Finishing Oil|DE|100ml",
+    "policy_version": "oil-persistence-boundaries-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "L’Oréal Professionnel|Metal Detox Beschermende geconcentreerde olie|NL|50ml",
+    "policy_version": "oil-persistence-boundaries-v0.1",
+    "persistence_potential": "high"
+  },
+  {
+    "product_key": "Dr. Hauschka|Haaröl|DE|75ml",
+    "policy_version": "oil-persistence-boundaries-v0.1",
+    "persistence_potential": "moderate"
+  },
+  {
+    "product_key": "L’Occitane en Provence|Huile Cheveux Réparation Intense|FR|50ml",
+    "policy_version": "oil-persistence-boundaries-v0.1",
+    "persistence_potential": "moderate"
+  }
+]

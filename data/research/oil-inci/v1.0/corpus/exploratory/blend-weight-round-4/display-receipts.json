@@ -1,0 +1,300 @@
+{
+  "receipts": [
+    {
+      "neutral_id": "Q01",
+      "rank": 6,
+      "raw_token": "CORYLUS AVELLANA (HAZELNUT) SEED OIL",
+      "canonical_name": "CORYLUS AVELLANA SEED OIL",
+      "kind": "reviewed_source_scoped_common_name_display",
+      "authority_url": "https://cosmileeurope.eu/inci/detail/3867/corylus-avellana-seed-oil/",
+      "display_source": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+      "limit": "Same scientific species and Kernel/Seed Oil plant part; source-scoped parenthetical common-name display, not a new generic alias."
+    },
+    {
+      "neutral_id": "Q01",
+      "kind": "formula_code_removal",
+      "raw_code": "N2212/E",
+      "authority_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE/",
+      "limit": "Code printed after ingredients; retained in raw capture, not ingredient."
+    },
+    {
+      "neutral_id": "Q03",
+      "rank": 12,
+      "raw_token": "Alpha-Isomethyl Ionone.",
+      "canonical_name": "ALPHA-ISOMETHYL IONONE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://www.wella.com/professional/de-DE/products/haarpflege/oil-reflections/oil-reflections-luminous-smoothing-oil",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 1,
+      "raw_token": "HELIANTHUS ANNUUS SEED OIL*",
+      "canonical_name": "HELIANTHUS ANNUUS SEED OIL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 3,
+      "raw_token": "CANANGA ODORATA OIL/EXTRACT**",
+      "canonical_name": "CANANGA ODORATA OIL/EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 4,
+      "raw_token": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL*",
+      "canonical_name": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 5,
+      "raw_token": "BETA-CARYOPHYLLENE**",
+      "canonical_name": "BETA-CARYOPHYLLENE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 7,
+      "raw_token": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)**",
+      "canonical_name": "CINNAMOMUM CAMPHORA WOOD OIL (DECAMPHORISED)",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 10,
+      "raw_token": "EMBLICA OFFICINALIS FRUIT EXTRACT*",
+      "canonical_name": "EMBLICA OFFICINALIS FRUIT EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 11,
+      "raw_token": "OCIMUM SANCTUM LEAF EXTRACT*",
+      "canonical_name": "OCIMUM SANCTUM LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 12,
+      "raw_token": "BACOPA MONNIERI LEAF EXTRACT*",
+      "canonical_name": "BACOPA MONNIERI LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 13,
+      "raw_token": "CENTELLA ASIATICA LEAF EXTRACT*",
+      "canonical_name": "CENTELLA ASIATICA LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 14,
+      "raw_token": "ECLIPTA ALBA LEAF EXTRACT*",
+      "canonical_name": "ECLIPTA ALBA LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 15,
+      "raw_token": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT*",
+      "canonical_name": "LAWSONIA INERMIS (HENNA) LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 16,
+      "raw_token": "LIMONENE**",
+      "canonical_name": "LIMONENE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 17,
+      "raw_token": "BENZYL BENZOATE**",
+      "canonical_name": "BENZYL BENZOATE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 18,
+      "raw_token": "LINALOOL**",
+      "canonical_name": "LINALOOL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 19,
+      "raw_token": "ACACIA CONCINNA FRUIT EXTRACT*",
+      "canonical_name": "ACACIA CONCINNA FRUIT EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 20,
+      "raw_token": "ALOE BARBADENSIS LEAF EXTRACT*",
+      "canonical_name": "ALOE BARBADENSIS LEAF EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 21,
+      "raw_token": "SAPINDUS MUKOROSSI FRUIT EXTRACT*",
+      "canonical_name": "SAPINDUS MUKOROSSI FRUIT EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 22,
+      "raw_token": "GERANYL ACETATE**",
+      "canonical_name": "GERANYL ACETATE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 23,
+      "raw_token": "PINENE**",
+      "canonical_name": "PINENE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 24,
+      "raw_token": "FARNESOL**",
+      "canonical_name": "FARNESOL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 26,
+      "raw_token": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT*",
+      "canonical_name": "TRIGONELLA FOENUM-GRAECUM SEED EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 27,
+      "raw_token": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT*",
+      "canonical_name": "WITHANIA SOMNIFERA LEAF/ROOT EXTRACT",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 28,
+      "raw_token": "BENZYL SALICYLATE**",
+      "canonical_name": "BENZYL SALICYLATE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 29,
+      "raw_token": "ALPHA-TERPINENE**",
+      "canonical_name": "ALPHA-TERPINENE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 30,
+      "raw_token": "GERANIOL**",
+      "canonical_name": "GERANIOL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 31,
+      "raw_token": "EUGENOL**",
+      "canonical_name": "EUGENOL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 32,
+      "raw_token": "CITRAL**",
+      "canonical_name": "CITRAL",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q08",
+      "rank": 33,
+      "raw_token": "TERPINOLENE**",
+      "canonical_name": "TERPINOLENE",
+      "kind": "source_annotation_or_terminal_punctuation",
+      "authority_url": "https://khadi.de/products/haare-haaroel-strong-amla",
+      "limit": "Exact source-scoped footnote/display removal only; no generic alias."
+    },
+    {
+      "neutral_id": "Q09",
+      "rank": 10,
+      "raw_token": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+      "canonical_name": "ARGANIA SPINOSA KERNEL OIL",
+      "kind": "reviewed_source_scoped_common_name_display",
+      "authority_url": "https://cosmileeurope.eu/inci/detail/1152/argania-spinosa-kernel-oil/",
+      "display_source": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+      "limit": "Same scientific species and Kernel/Seed Oil plant part; source-scoped parenthetical common-name display, not a new generic alias."
+    },
+    {
+      "neutral_id": "Q09",
+      "kind": "formula_code_removal",
+      "raw_code": "MOT02",
+      "authority_url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+      "limit": "Code printed after ingredients; retained in raw capture, not ingredient."
+    }
+  ],
+  "limits": "Mielle malformed spellings and Ocimum/Basilicum split tokens are NOT silently corrected. Replay canonicalization is exactly the old blind packet and its frozen receipts."
+}

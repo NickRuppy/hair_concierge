@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-09",
+  "authorization": "Nick: only do it for oil; leave on; pre-washes are not relevant as mostly removed via shampoo.",
+  "policy_version": "oil-persistence-leave-on-v0.1",
+  "candidate_formulas": 28,
+  "included_leave_on": 27,
+  "excluded_pre_wash_only": [
+    {
+      "case_id": "O02",
+      "product_key": "oil-persistence-02",
+      "identity": {
+        "brand": "NEQI",
+        "product": "Smooth Strength Rosemary Oil",
+        "size_ml": 75,
+        "market": "DE",
+        "gtin_if_verified": "4063528086280",
+        "gtin_source_id": "E02-retailer-de",
+        "manufacturer_code": "NQ-HO-RO-201"
+      },
+      "reason": "Captured canonical directions are pre-wash scalp application followed by shampoo. No source-supported leave-on fibre use is established; excluded from this leave-on-only property run, not classified low or unknown.",
+      "source_refs": {
+        "formula_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/unblinded-packet.json",
+        "formula_key": "F02",
+        "formula_key_field": "neutral_id",
+        "ingredient_packet": "data/research/oil-inci/v1.0/corpus/exploratory/round-1/blind-packet.json",
+        "ingredient_key": "F02",
+        "context_packet": "data/research/oil-inci/v1.0/corpus/exploratory/direct-properties-round-6/source-packet-v0.1.1.json",
+        "context_key": "D04"
+      }
+    }
+  ],
+  "no_other_category_migration": true,
+  "no_post_shampoo_classification": true
+}
