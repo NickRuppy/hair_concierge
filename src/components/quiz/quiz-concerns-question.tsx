@@ -25,7 +25,7 @@ function toggleConcern(current: string[], value: string): string[] {
 
 export function QuizConcernsQuestion() {
   const question = getQuestionByStep(8)
-  const { answers, setAnswer, goNext } = useQuizStore()
+  const { answers, setAnswer, commitAnswersAndAdvance } = useQuizStore()
   const requestBack = useQuizBrowserBack()
   const [localSelection, setLocalSelection] = useState<string[]>(
     resolveVisibleDiagnosticConcerns(answers.concerns ?? []),
@@ -43,12 +43,13 @@ export function QuizConcernsQuestion() {
 
   const commitAndAdvance = useCallback(
     (primaryConcern: QuizAnswers["primary_concern"]) => {
-      setAnswer("concerns", localSelection)
-      setAnswer("primary_concern", primaryConcern)
-      setAnswer("concerns_other_text", showOtherField ? otherText.trim() || undefined : undefined)
-      goNext()
+      commitAnswersAndAdvance({
+        concerns: localSelection as QuizAnswers["concerns"],
+        primary_concern: primaryConcern,
+        concerns_other_text: showOtherField ? otherText.trim() || undefined : undefined,
+      })
     },
-    [goNext, localSelection, otherText, setAnswer, showOtherField],
+    [commitAnswersAndAdvance, localSelection, otherText, showOtherField],
   )
 
   // Two or more concerns: Weiter asks for her main problem first (F1). With exactly one,

@@ -78,16 +78,17 @@ export function QuizShell({
     return useQuizStore.subscribe((nextState, previousState) => {
       const previousKey = `${previousState.step}:${previousState.leadCaptureSubStep}`
       const nextKey = `${nextState.step}:${nextState.leadCaptureSubStep}`
-      if (previousKey === nextKey) return
 
-      // Step AND answers replaced in one store write is a restore (draft, migration
-      // prefill, return link, fresh start) — not a navigation, so it swaps without a step
-      // transition. Every in-quiz move writes answers and step separately.
-      if (nextState.step !== previousState.step && nextState.answers !== previousState.answers) {
+      // Navigation intent is emitted atomically with the store transition. Restore,
+      // reset and package reconciliation swap screens without an outgoing snapshot.
+      const transition = nextState.transition
+      if (!transition || transition.id === previousState.transition?.id) return
+      if (transition.kind !== "forward" && transition.kind !== "back") {
         setOutgoingLayer(null)
         setProgressTransition(null)
         return
       }
+      if (previousKey === nextKey) return
 
       const direction =
         nextState.step === previousState.step
