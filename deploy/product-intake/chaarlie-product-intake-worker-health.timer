@@ -1,0 +1,12 @@
+[Unit]
+Description=Observe Product Intake worker heartbeat without paid cron monitoring
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=1m
+Persistent=true
+RandomizedDelaySec=15s
+Unit=chaarlie-product-intake-worker-health.service
+
+[Install]
+WantedBy=timers.target

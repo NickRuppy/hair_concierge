@@ -1,0 +1,353 @@
+{
+  "blindId": "W217",
+  "identity": {
+    "brand": "Balea",
+    "productName": "Balea PROFESSIONAL Shampoo Aqua Hyaluron",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminenceCutoff": "Parfum @5; positions 1-4 prominent",
+    "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+    "gtinAliases": [
+      "4070765001648"
+    ]
+  },
+  "normalizedInci": [
+    "1 Aqua",
+    "2 Sodium Laureth Sulfate",
+    "3 Cocamidopropyl Betaine",
+    "4 Sodium Chloride",
+    "5 Parfum",
+    "6 Sodium Benzoate",
+    "7 Citric Acid",
+    "8 Coco-Glucoside",
+    "9 Glyceryl Oleate",
+    "10 Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "11 Aloe Barbadensis Leaf Juice Powder",
+    "12 Potassium Sorbate",
+    "13 Sodium Hyaluronate",
+    "14 Tocopherol",
+    "15 Hydrogenated Palm Glycerides Citrate",
+    "16 Lecithin",
+    "17 Ascorbyl Palmitate"
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic. Coco-Glucoside @8 is after Parfum @5 (recorded, not a buffer).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1",
+        "E3"
+      ],
+      "counterSignal": "Coco-Glucoside @8 is post-E3 (not a buffer)."
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led; every care ingredient follows Parfum @5 and Sodium Benzoate @6 (trace zone): Glyceryl Oleate @9, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10, Sodium Hyaluronate @13, Hydrogenated Palm Glycerides Citrate @15, Lecithin @16, Ascorbyl Palmitate @17. C2 not met. Moderate is the neighbor because a cationic guar is present.",
+      "ruleIds": [
+        "5",
+        "C2",
+        "E3"
+      ],
+      "counterSignal": "A cationic guar is present (post-E3)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @9",
+          "Hydrogenated Palm Glycerides Citrate @15",
+          "Lecithin @16",
+          "Ascorbyl Palmitate @17"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3",
+          "Coco-Glucoside @8 (non-prominent)"
+        ],
+        "humectantContext": [
+          "Sodium Hyaluronate @13",
+          "Aloe Barbadensis Leaf Juice Powder @11"
+        ],
+        "excluded": [
+          "Tocopherol @14 (antioxidant)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 5,
+        "inci": "Parfum",
+        "candidateClasses": [
+          "fragrance"
+        ],
+        "cap": "e3Point @5 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: trace guar and weak refatters, all after Parfum @5.",
+      "persistence": "low: no silicone, lipid or film.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Two families (cationic_polymer, weak_refatter), both trace.",
+      "whyThisBand": "Low: only trace guar and weak refatters against an effective reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the only families are a cationic guar @10 and weak refatters @9/@15-17, all listed after Parfum @5 and Sodium Benzoate @6 (trace zone); no silicone, lipid, protein or film.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low with high confidence: trace light routes only (W-line @5).",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "Two families (cationic_polymer, weak_refatter), both trace."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Sodium Hyaluronate @13",
+          "Aloe Barbadensis Leaf Juice Powder @11"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10",
+          "Glyceryl Oleate @9"
+        ],
+        "limitation": "Humectant is a single trace Sodium Hyaluronate after Parfum; not a coherent humectant cluster."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Moisture positioning is clear but the formula has no coherent humectant cluster.",
+      "decisionTrace": "Claim direction moisture ('Feuchtigkeitsspendendes Shampoo', 'Für trockenes & feuchtigkeitsbedürftiges Haar', dm own brand, moderate; 'Aqua Hyaluron' name). Formula verdict nonspecific: the only listed humectant is Sodium Hyaluronate @13 and every care ingredient follows Parfum @5. F1: moisture language over a nonspecific formula stays general.",
+      "rationale": "General: moisture claim not supported by a moisture_supported formula (F1).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "F-TRACE"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered.",
+      "rationale": "Secondary empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3",
+        "F-TRACE"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Default regular: no non-default trigger from a moderate/high-graded source.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_targeted: no E2 sensitive or dry-scalp claim unit graded moderate/high (SC1 not met); CSA formula half recorded in the formula pass (not met). 'die Kopfhaut geschont' is sparing wording (E2a).",
+      "csaRoute": "none: listed routes only post-E3; MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4",
+        "E2a"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "none (mechanical recognition, Section 11)"
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": [
+        "Sodium Laureth Sulfate @2 (defining)"
+      ],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": [
+        "Cocamidopropyl Betaine @3 (buffer)"
+      ],
+      "nonionicCleansing": [
+        "Coco-Glucoside @8 (non-prominent)"
+      ],
+      "notRouteNotBuffer": []
+    },
+    "conditioningRoutes": [
+      "Glyceryl Oleate @9",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10",
+      "Hydrogenated Palm Glycerides Citrate @15",
+      "Lecithin @16",
+      "Ascorbyl Palmitate @17"
+    ],
+    "humectants": [
+      "Sodium Hyaluronate @13 (post-E3)"
+    ],
+    "actives": [
+      "Aloe Barbadensis Leaf Juice Powder @11",
+      "Sodium Hyaluronate @13",
+      "Tocopherol @14"
+    ],
+    "recognizedDandruffActives": [],
+    "exposureFlags": [
+      "Parfum @5 (early)",
+      "no cooling agent",
+      "no essential oil"
+    ],
+    "chelatorsPhAdjusters": [
+      "Citric Acid @7"
+    ],
+    "preservatives": [
+      "Sodium Benzoate @6",
+      "Potassium Sorbate @12"
+    ]
+  },
+  "claimEvidence": [
+    {
+      "unit": "Feuchtigkeitsspendendes Shampoo / Für trockenes & feuchtigkeitsbedürftiges Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "moisture candidate; formula nonspecific -> general (F1)"
+    },
+    {
+      "unit": "Mit Hyaluron & Aloe Vera",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "maps to Sodium Hyaluronate @13, Aloe Barbadensis Leaf Juice Powder @11"
+    },
+    {
+      "unit": "ohne das Haar zu beschweren / die Kopfhaut geschont",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "never lowers weight; sparing wording"
+    }
+  ],
+  "reconciliation": [
+    "focusPrimary: general unchanged (low -> moderate; neighbor moisture).",
+    "Other properties unchanged."
+  ],
+  "projection": {
+    "status": "proposal_ready",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 from weightPotential low (high, N-ALT none) and conditioningLevel low (moderate, N-ALT moderate): fine ideal, normal ideal, coarse acceptable; ordinary target, no T6; final fine ideal, normal ideal, coarse acceptable. T4: no neighbor lowers a final tier. T2: thickness/texture claims in the reveal were not used.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1, confidence = weightPotential confidence (high). Claims never move it (6.5 step 5).",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer (dm own brand) source, confidence high."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate with D1 false -> regular. I3: no flag (cleansingStrength high confidence, neighbor none). Bucket expectations: normal expects regular.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 false: no Tiefenreinigung/Deep Clean/Clarifying Shampoo/Detox-Reinigung wording and no occasional-use directions from a manufacturer or pack source; D2 not met -> not_flagged.",
+    "rows": [
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs is resolved by the orchestrator against live rows after freeze (lane cannot see the catalog)."
+  },
+  "selfCheck": "6.11/standard self-check: fingerprint matches the frozen packet and the pinned formula-pass record (not edited); claims were hidden during the formula pass; no ingredient, family count or position window assigned the weight band (W-line only gates payload_lipid legs) and the W-line was derived from the frozen list with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand is specific; N-ALT follows confidence for every property; claims graded per CL-SRC/E1 and none set cleansing, conditioning, weight, thickness fit or a formula gate; projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7 rows); no comparison with earlier values was made inside the lane.",
+  "uncertainties": [
+    "Focus alternative moisture if the post-E3 Sodium Hyaluronate plus aloe were read as a humectant cluster; the formula pass recorded nonspecific."
+  ],
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.6.2",
+    "modelVersion": "shampoo-inci-v1.6.2",
+    "policySha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
+    "runbookSha256": "2a6ca1bdd0944aaf295af471818302e21f3b74302cdd8f4eeaf6039473b18a78"
+  }
+}

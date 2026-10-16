@@ -79,7 +79,7 @@ const sourceRecordSchema = z
   })
   .strict()
 
-export const shampooProductionLightInputSchema = z
+const shampooProductionLightV14InputSchema = z
   .object({
     version: z.literal(SHAMPOO_PRODUCTION_LIGHT_VERSION),
     researchMethod: z
@@ -251,7 +251,199 @@ export const shampooProductionLightInputSchema = z
   })
   .strict()
 
-export type ShampooProductionLightInput = z.infer<typeof shampooProductionLightInputSchema>
+// Keep the historical envelope type and projection byte-compatible.
+export type ShampooProductionLightInput = z.infer<typeof shampooProductionLightV14InputSchema>
+
+export const SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD = {
+  policyId: "shampoo-classification-v1.6.2",
+  modelVersion: "shampoo-inci-v1.6.2",
+  policySha256: "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
+  runbookSha256: "2a6ca1bdd0944aaf295af471818302e21f3b74302cdd8f4eeaf6039473b18a78",
+} as const
+
+const researchConfidence = z.enum(["low", "moderate", "high"])
+const researchProperty = <T extends readonly [string, ...string[]]>(values: T) =>
+  z
+    .object({
+      value: z.enum(values),
+      confidence: researchConfidence,
+      rationale: z.string().min(1),
+      ruleIds: evidenceRefsSchema,
+    })
+    .passthrough()
+const researchFocusValues = [
+  "volume",
+  "shine",
+  "repair",
+  "moisture",
+  "clarifying",
+  "scalp_active",
+  "general",
+] as const
+const researchTarget = z
+  .object({
+    target: z.enum(["ordinary", "oily", "dry", "sensitive", "dandruff"]),
+    confidence: researchConfidence,
+    rationale: z.string().min(1),
+  })
+  .passthrough()
+
+// Native final lane/record-skeleton fields, plus the offline envelope's method
+// pins and catalog identity. Evidence extensions stay available to reviewers.
+const shampooProductionLightV162InputSchema = z
+  .object({
+    version: z.literal(SHAMPOO_PRODUCTION_LIGHT_VERSION),
+    researchMethod: z
+      .object({
+        policyId: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policyId),
+        modelVersion: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.modelVersion),
+        policySha256: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policySha256),
+        runbookSha256: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.runbookSha256),
+      })
+      .strict(),
+    identity: z
+      .object({
+        productId: z.string().min(1),
+        productName: z.string().min(1),
+        packSize: z.string().min(1),
+        market: z.literal("DE"),
+        gtinAliases: z.array(z.string()),
+        formulaFingerprintSha256: z.string().regex(/^[a-f0-9]{64}$/i),
+        completeness: z.string().min(1),
+        identityConfidence: researchConfidence.optional(),
+      })
+      .passthrough()
+      .superRefine((identity, context) => {
+        const gtins = identity.gtinAliases.map(canonicalizeGtin)
+        if (gtins.some((gtin) => !gtin) || new Set(gtins).size !== gtins.length)
+          context.addIssue({
+            code: "custom",
+            path: ["gtinAliases"],
+            message: "GTIN aliases must be valid and canonically unique",
+          })
+      }),
+    standard: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policyId).optional(),
+    policyId: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policyId).optional(),
+    policy: z.literal(SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policyId).optional(),
+    status: z.string().optional(),
+    needsResearch: z.boolean().optional(),
+    directProperties: z
+      .object({
+        cleansingStrength: researchProperty(["low", "moderate", "strong"]),
+        conditioningLevel: researchProperty(["low", "moderate", "high"]),
+        weightPotential: researchProperty(["low", "moderate", "high"]),
+        focusPrimary: researchProperty(researchFocusValues),
+        focusSecondary: z
+          .object({
+            value: z.array(z.enum(researchFocusValues)).max(2),
+            confidence: researchConfidence,
+            rationale: z.string().min(1),
+            ruleIds: evidenceRefsSchema,
+          })
+          .passthrough(),
+        usageRole: researchProperty([
+          "frequent",
+          "regular",
+          "alternating",
+          "occasional_reset",
+          "treatment",
+        ]),
+        scalpComfortTarget: researchProperty(["targeted", "not_targeted", "unknown"]),
+        dandruffSupport: researchProperty(["supported", "not_supported", "unknown"]),
+      })
+      .strict(),
+    projection: z
+      .object({
+        status: z.string().min(1),
+        projectionStatus: z.string().optional(),
+        thicknessFit: z
+          .object({
+            fine: z.enum(["ideal", "acceptable", "not_suited"]),
+            normal: z.enum(["ideal", "acceptable", "not_suited"]),
+            coarse: z.enum(["ideal", "acceptable", "not_suited"]),
+          })
+          .strict(),
+        thicknessFitConfidence: z
+          .object({
+            fine: researchConfidence,
+            normal: researchConfidence,
+            coarse: researchConfidence,
+          })
+          .strict(),
+        thicknessRationale: z.string().min(1),
+        weight: z.enum(["light", "moderate", "heavy"]),
+        weightConfidence: researchConfidence,
+        weightRationale: z.string().min(1),
+        scalpTargets: z
+          .object({ primary: researchTarget, secondary: researchTarget.nullish() })
+          .passthrough(),
+        cleansingIntensity: z.enum(["gentle", "regular", "clarifying"]),
+        cleansingIntensityConfidence: researchConfidence,
+        cleansingIntensityRationale: z.string().min(1),
+        explicitResetPositioning: z.boolean(),
+        deepCleanserListing: z.enum(["flagged", "not_flagged"]),
+        deepCleanserListingConfidence: researchConfidence,
+        deepCleanserRationale: z.string().min(1),
+        rows: z.array(
+          z
+            .object({
+              thickness: z.enum(HAIR_THICKNESSES),
+              shampoo_bucket: z.enum(SHAMPOO_BUCKETS),
+              scalp_route: z.enum(["balanced", "oily", "dry", "irritated", "dandruff"]),
+              cleansing_intensity: z.enum(["gentle", "regular", "clarifying"]),
+              weight: z.enum(["light", "moderate", "heavy"]),
+              tier: z.enum(["ideal", "acceptable", "not_suited"]),
+            })
+            .strict(),
+        ),
+        requiredProtocolRoles: z.array(z.enum(["shampoo_everyday", "shampoo_dandruff"])),
+        reviewFlags: z.array(z.string()),
+        informationalNotes: z.array(z.string()),
+      })
+      .passthrough(),
+  })
+  .passthrough()
+
+export const shampooProductionLightInputSchema = z.unknown().transform((input, context) => {
+  const record =
+    input && typeof input === "object" && !Array.isArray(input)
+      ? (input as Record<string, unknown>)
+      : undefined
+  const method = record?.researchMethod
+  const policyId =
+    method && typeof method === "object" && "policyId" in method
+      ? method.policyId
+      : (record?.standard ?? record?.policyId ?? record?.policy)
+  const isV162 = policyId === SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.policyId
+  // Sealed native records pin the standard by policy ID. Envelopes can additionally
+  // carry all four pins; a supplied method is always validated, never repaired.
+  const identity =
+    record?.identity && typeof record.identity === "object"
+      ? (record.identity as Record<string, unknown>)
+      : undefined
+  const normalized =
+    isV162 && record && identity
+      ? {
+          ...record,
+          version: record.version ?? SHAMPOO_PRODUCTION_LIGHT_VERSION,
+          researchMethod: record.researchMethod ?? SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD,
+          identity: {
+            ...identity,
+            productId: identity.productId ?? record.blindId,
+            gtinAliases: identity.gtinAliases ?? [],
+          },
+        }
+      : input
+  const result = isV162
+    ? shampooProductionLightV162InputSchema.safeParse(normalized)
+    : shampooProductionLightV14InputSchema.safeParse(input)
+  if (!result.success) {
+    for (const issue of result.error.issues) context.addIssue({ ...issue })
+    return z.NEVER
+  }
+  return result.data
+})
+export type ShampooProductionLightV162Input = z.infer<typeof shampooProductionLightV162InputSchema>
 
 type FieldRationale = { confidence: FinalConfidence; rationale: string; evidenceRefs: string[] }
 type ProductionRow = {
@@ -276,6 +468,9 @@ export type ShampooProductionLightReady = {
     productName: string
     rows: number
     conditionalThicknesses: HairThickness[]
+    researchModelVersion?: typeof SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.modelVersion
+    weight?: "light" | "moderate" | "heavy"
+    deepCleanserListing?: "flagged" | "not_flagged"
   }
 }
 
@@ -454,12 +649,13 @@ function legacyWarnings(
 }
 
 /**
- * Projects a complete v1.4 research envelope into today’s production Shampoo facts.
+ * Projects a pinned v1.4 envelope or reviewed v1.6.2 record into offline Shampoo facts.
  * It performs no I/O and never returns a partial production-shaped payload.
  */
 export function projectShampooProductionLight(input: unknown): ShampooProductionLightOutcome {
   const parsed = shampooProductionLightInputSchema.safeParse(input)
   if (!parsed.success) return needsResearch(issuePaths(parsed.error))
+  if ("directProperties" in parsed.data) return projectV162(parsed.data)
   const envelope = parsed.data
 
   if (envelope.identity.confidence === "low")
@@ -624,6 +820,9 @@ export function renderShampooProductionLightMarkdown(
   if (outcome.status === "routed_deep_cleansing")
     return `# Shampoo Production Light v1\n\nVersion: ${outcome.version}\n\nStatus: routed_deep_cleansing\n\nProduct: ${outcome.summary.productName} (${outcome.summary.productId})\n\n## Route reason\n\n${outcome.reasons.map((reason) => `- ${reason}`).join("\n")}`
   const { payload, summary } = outcome
+  const researchSection = summary.researchModelVersion
+    ? `\n\nResearch method: ${summary.researchModelVersion}\n\nResearch weight (not stored): ${summary.weight}\n\nDeep-cleanser dual listing: ${summary.deepCleanserListing}`
+    : ""
   const rows = payload.category_specs.product_shampoo_specs
     .map(
       (row) =>
@@ -645,5 +844,215 @@ export function renderShampooProductionLightMarkdown(
   const warningSection = outcome.warnings.length
     ? `\n\n## Warnings\n\n${outcome.warnings.map((warning) => `- ${warning}`).join("\n")}`
     : "\n\n## Warnings\n\n- None"
-  return `# Shampoo Production Light v1\n\nVersion: ${outcome.version}\n\nStatus: property_lane_ready\n\nProduct: ${summary.productName} (${summary.productId})\n\n## Production rows\n\n| Thickness | Bucket | Scalp route | Cleansing |\n| --- | --- | --- | --- |\n${rows}\n\nConditional thicknesses (not emitted): ${summary.conditionalThicknesses.join(", ") || "none"}\n\nRequired roles: ${payload.required_protocol_roles.join(", ")}\n\n## Projected rationale and confidence\n\n| Field | Confidence | Rationale |\n| --- | --- | --- |\n${rationaleRows}${warningSection}`
+  return `# Shampoo Production Light v1\n\nVersion: ${outcome.version}\n\nStatus: property_lane_ready\n\nProduct: ${summary.productName} (${summary.productId})\n\n## Production rows\n\n| Thickness | Bucket | Scalp route | Cleansing |\n| --- | --- | --- | --- |\n${rows}\n\nConditional thicknesses (not emitted): ${summary.conditionalThicknesses.join(", ") || "none"}\n\nRequired roles: ${payload.required_protocol_roles.join(", ")}\n\n## Projected rationale and confidence\n\n| Field | Confidence | Rationale |\n| --- | --- | --- |\n${rationaleRows}${researchSection}${warningSection}`
+}
+
+function projectV162(input: ShampooProductionLightV162Input): ShampooProductionLightOutcome {
+  const { projection: p, directProperties: d } = input
+  const reject = (reasons: string[]): ShampooProductionLightNeedsResearch => ({
+    version: SHAMPOO_PRODUCTION_LIGHT_VERSION,
+    status: "needs_research",
+    reasons,
+    warnings: [],
+    summary: { productId: input.identity.productId, productName: input.identity.productName },
+  })
+  const statuses = [input.status, p.status, p.projectionStatus].filter((value): value is string =>
+    Boolean(value),
+  )
+  if (input.needsResearch || statuses.some((status) => /needs_research|blocked/i.test(status)))
+    return reject([
+      "Research status is needs_research or blocked; no production rows may be emitted.",
+    ])
+  if (
+    ![
+      "proposal",
+      "proposed",
+      "proposal_ready",
+      "proposal_ready_no_review_flags",
+      "proposal_no_review_flags",
+      "property_lane_ready",
+    ].includes(p.status)
+  )
+    return reject([`Unsupported projection status: ${p.status}`])
+  if (p.reviewFlags.length)
+    return reject(p.reviewFlags.map((flag) => `Unresolved review flag: ${flag}`))
+  if (
+    !/^complete(?:$|[ (;])/i.test(input.identity.completeness) ||
+    input.identity.identityConfidence === "low" ||
+    /identity confidence low/i.test(input.identity.completeness)
+  )
+    return reject(["Exact identity and complete formula research are required."])
+  const confidences = [
+    ...Object.entries(d),
+    ...Object.entries(p.thicknessFitConfidence).map(
+      ([k, confidence]) => [k, { confidence }] as const,
+    ),
+    ["weight", { confidence: p.weightConfidence }],
+    ["cleansingIntensity", { confidence: p.cleansingIntensityConfidence }],
+    ["deepCleanserListing", { confidence: p.deepCleanserListingConfidence }],
+  ] as Array<[string, { confidence: string }]>
+  const low = confidences
+    .filter(([, value]) => value.confidence === "low")
+    .map(([field]) => `${field}: low confidence`)
+  if (low.length) return reject(low)
+  if (d.scalpComfortTarget.value === "unknown" || d.dandruffSupport.value === "unknown")
+    return reject(["Final scalp comfort and dandruff properties must resolve unknown."])
+  const intensity: ShampooCleansingIntensity =
+    d.cleansingStrength.value === "low"
+      ? "gentle"
+      : d.cleansingStrength.value === "strong" && p.explicitResetPositioning
+        ? "clarifying"
+        : "regular"
+  const deep =
+    d.cleansingStrength.value === "strong" &&
+    d.focusPrimary.value === "clarifying" &&
+    d.usageRole.value === "occasional_reset" &&
+    p.explicitResetPositioning
+      ? "flagged"
+      : "not_flagged"
+  const weight = ({ low: "light", moderate: "moderate", high: "heavy" } as const)[
+    d.weightPotential.value
+  ]
+  if (p.cleansingIntensity !== intensity || p.weight !== weight || p.deepCleanserListing !== deep)
+    return reject([
+      "Research projection disagrees with v1.6.2 mechanical intensity, weight or D2 listing.",
+    ])
+  if (p.explicitResetPositioning && d.cleansingStrength.value === "strong" && deep !== "flagged")
+    return reject(["review_reset_positioning_mismatch: strong D1 formula does not meet D2."])
+  const targets = [p.scalpTargets.primary, p.scalpTargets.secondary].filter(
+    (t): t is z.infer<typeof researchTarget> => Boolean(t),
+  )
+  if (
+    targets.some((t) => t.confidence === "low") ||
+    (targets.length > 1 &&
+      (targets.some((t) => t.target === "ordinary") ||
+        p.scalpTargets.primary.target === "dandruff")) ||
+    new Set(targets.map((t) => t.target)).size !== targets.length
+  )
+    return reject(["Scalp targets violate the v1.6.2 confidence or secondary-target contract."])
+  if (targets.some((t) => t.target === "dandruff") && d.dandruffSupport.value !== "supported")
+    return reject([
+      "Dandruff rows require supported dandruff research and shampoo_dandruff protocol role.",
+    ])
+  if (
+    targets.some((t) => t.target === "sensitive" || t.target === "dry") &&
+    d.scalpComfortTarget.value !== "targeted"
+  )
+    return reject(["Sensitive/dry targets require scalpComfortTarget: targeted."])
+  if (
+    targets.some((t) => t.target === "oily") &&
+    (d.weightPotential.value === "high" || d.conditioningLevel.value === "high")
+  )
+    return reject(["Oily targets require non-high weight and conditioning (S-OILY)."])
+  const buckets = targets.map((t) => targetToProduction[t.target].bucket)
+  const expectedRoles = deriveShampooProtocolRoles(buckets)
+  if (
+    JSON.stringify([...new Set(p.requiredProtocolRoles)].sort()) !==
+    JSON.stringify([...expectedRoles].sort())
+  )
+    return reject(["Research protocol roles do not match the reviewed scalp buckets."])
+  // The researched rows are authority, including conservative two-lane intersection.
+  // Apply T7 only to balanced scalp. Scalp-concern cells retain every researched thickness (R19).
+  const fullFit = { light: ["fine", "normal"], moderate: ["normal"], heavy: ["coarse"] } as const
+  const rows: ProductionRow[] = []
+  const seen = new Set<string>()
+  for (const row of p.rows) {
+    const route = targets.find((t) => targetToProduction[t.target].bucket === row.shampoo_bucket)
+    const key = `${row.thickness}/${row.shampoo_bucket}`
+    if (
+      !route ||
+      row.scalp_route !== targetToProduction[route.target].route ||
+      row.cleansing_intensity !== intensity ||
+      row.weight !== weight ||
+      row.tier === "not_suited" ||
+      seen.has(key)
+    )
+      return reject([`Invalid or contradictory researched row: ${key}`])
+    seen.add(key)
+    if (
+      row.shampoo_bucket === "normal" &&
+      !(fullFit[weight] as readonly string[]).includes(row.thickness)
+    )
+      continue
+    rows.push({
+      thickness: row.thickness,
+      shampoo_bucket: row.shampoo_bucket,
+      scalp_route: row.scalp_route,
+      cleansing_intensity: intensity,
+    })
+  }
+  rows.sort(
+    (a, b) =>
+      HAIR_THICKNESSES.indexOf(a.thickness) - HAIR_THICKNESSES.indexOf(b.thickness) ||
+      (a.shampoo_bucket < b.shampoo_bucket ? -1 : a.shampoo_bucket > b.shampoo_bucket ? 1 : 0),
+  )
+  if (!rows.length) return reject(["No full-fit production rows survive the reviewed projection."])
+  const thicknesses = HAIR_THICKNESSES.filter((t) => rows.some((r) => r.thickness === t))
+  const roles = deriveShampooProtocolRoles(rows.map((r) => r.shampoo_bucket))
+  const rationale = (
+    confidence: FinalConfidence,
+    text: string,
+    refs: string[],
+  ): FieldRationale => ({ confidence, rationale: text, evidenceRefs: refs })
+  return {
+    version: SHAMPOO_PRODUCTION_LIGHT_VERSION,
+    status: "property_lane_ready",
+    payload: {
+      suitable_thicknesses: thicknesses,
+      category_specs: { product_shampoo_specs: rows },
+      required_protocol_roles: roles,
+      field_rationales: {
+        ...Object.fromEntries(
+          Object.entries(d).map(([k, v]) => [
+            `research.properties.${k}`,
+            rationale(v.confidence as FinalConfidence, v.rationale, v.ruleIds),
+          ]),
+        ),
+        "research.weight": rationale(p.weightConfidence as FinalConfidence, p.weightRationale, [
+          "W-LIVE",
+          "T7",
+          "R19",
+        ]),
+        "product.suitable_thicknesses": rationale(
+          p.weightConfidence as FinalConfidence,
+          `Balanced scalp stores T7 full-fit rows; scalp concerns retain every researched thickness (R19). ${p.thicknessRationale}`,
+          ["T7", "R19"],
+        ),
+        "category_specs.product_shampoo_specs": rationale(
+          targets.some((t) => t.confidence === "moderate") ? "moderate" : "high",
+          targets.map((t) => t.rationale).join(" "),
+          ["13.7", "R19"],
+        ),
+        "category_specs.product_shampoo_specs.cleansing_intensity": rationale(
+          p.cleansingIntensityConfidence as FinalConfidence,
+          p.cleansingIntensityRationale,
+          ["I1", "R16.2"],
+        ),
+        required_protocol_roles: rationale(
+          "high",
+          `Roles derived from reviewed buckets: ${roles.join(", ")}. Protocols still require separate catalog handoff.`,
+          ["13.7"],
+        ),
+      },
+    },
+    warnings: [
+      ...p.informationalNotes,
+      ...(deep === "flagged"
+        ? ["D2: separate deep-cleanser catalog record required; regular-shampoo rows retained."]
+        : []),
+    ],
+    summary: {
+      productId: input.identity.productId,
+      productName: input.identity.productName,
+      rows: rows.length,
+      conditionalThicknesses: HAIR_THICKNESSES.filter(
+        (t) =>
+          p.rows.some((r) => r.thickness === t && r.shampoo_bucket === "normal") &&
+          !thicknesses.includes(t),
+      ),
+      researchModelVersion: SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.modelVersion,
+      weight,
+      deepCleanserListing: deep,
+    },
+  }
 }

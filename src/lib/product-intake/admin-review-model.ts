@@ -19,6 +19,7 @@ export type ProductReviewSubmission = {
   updated_at: string
   researched_payload?: Record<string, unknown> | null
   payload_revision?: number
+  payload_sha256?: string
 }
 
 export type ProductReviewQueueEntry = ProductReviewSubmission & {

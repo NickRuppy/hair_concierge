@@ -92,6 +92,10 @@ export type ProductIntakeResearchJob = {
   priority: number
   attempt_count: number
   max_attempts: number
+  review_cycle_id?: string
+  auto_rework_count?: number
+  reserved_model_runs?: number
+  cycle_deadline_at?: string | null
   locked_by: string | null
   locked_at: string | null
   started_at: string | null
@@ -142,6 +146,36 @@ export type ProductIntakeReviewDecisionRow = {
   reviewed_at: string
   resolved_at: string | null
   created_at: string
+  payload_revision?: number | null
+  payload_sha256?: string | null
+  approved_asset_sha256?: string | null
+  review_cycle_id?: string | null
+  request_id?: string | null
+  review_source?: "admin" | "legacy_package" | null
+  review_action?: string | null
+}
+
+export const PRODUCT_INTAKE_REVIEW_ASSET_KINDS = [
+  "raw",
+  "magenta",
+  "neutral",
+  "final",
+  "search_thumbnail",
+] as const
+export type ProductIntakeReviewAssetKind = (typeof PRODUCT_INTAKE_REVIEW_ASSET_KINDS)[number]
+export type ProductIntakeReviewAssetInput = {
+  kind: ProductIntakeReviewAssetKind
+  sha256: string
+  storage_key: string
+  media_type: string
+  byte_length: number
+}
+export type ProductIntakeReviewAsset = ProductIntakeReviewAssetInput & {
+  id: string
+  submission_id: string
+  payload_revision: number
+  job_id: string | null
+  created_at: string
 }
 
 export type ProductIntakeSubmissionDetail = {
@@ -152,6 +186,8 @@ export type ProductIntakeSubmissionDetail = {
   product_name: string | null
   source: string | null
   payload: JsonRecord | null
+  payload_revision?: number
+  payload_sha256?: string
   created_at: string
   updated_at: string
   job: ProductIntakeResearchJob | null

@@ -107,12 +107,10 @@ for (const category of ["conditioner", "leave_in", "bondbuilder", "shampoo", "ma
         { inciRetryAttempted: retry },
       )
       const inciBlockers = result.blockers.filter((reason) => reason.startsWith("inci_"))
-      if (["conditioner", "leave_in", "bondbuilder", "mask"].includes(category)) {
-        assert.equal(inciBlockers.length, 1)
-        assert.ok(
-          inciBlockers[0]!.startsWith(retry ? "inci_unavailable:" : "inci_missing_first_pass:"),
-        )
-      } else assert.deepEqual(inciBlockers, [])
+      assert.equal(inciBlockers.length, 1)
+      assert.ok(
+        inciBlockers[0]!.startsWith(retry ? "inci_unavailable:" : "inci_missing_first_pass:"),
+      )
       assert.equal(
         (result.researched_payload!.draft as Record<string, Record<string, unknown>>).formula!
           .status,

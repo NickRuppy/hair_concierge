@@ -378,3 +378,30 @@ test("open-question notifications stay shared: neither wording claims a routine 
     assert.doesNotMatch(scan, /Routine/, status)
   }
 })
+
+test("durable information requests have distinct message identities while retrying one event reuses its identity", async () => {
+  const client = createNotificationSupabaseFake()
+  const first = notificationSubmission({
+    status: "needs_more_info",
+    notification_sent_at: "2026-10-16T12:00:00Z",
+    user_facing_resolution_reason: "Bitte die Rückseite ergänzen.",
+  })
+  await sendProductIntakeReviewNotification(client as never, first, {
+    eventId: "11111111-1111-4111-8111-111111111111",
+  })
+  await sendProductIntakeReviewNotification(client as never, first, {
+    eventId: "11111111-1111-4111-8111-111111111111",
+  })
+  await sendProductIntakeReviewNotification(
+    client as never,
+    { ...first, user_facing_resolution_reason: "Bitte die Größe ergänzen." },
+    { eventId: "22222222-2222-4222-8222-222222222222" },
+  )
+  assert.equal(client.insertedMessages.length, 3)
+  assert.equal(client.insertedMessages[0].id, client.insertedMessages[1].id)
+  assert.notEqual(client.insertedMessages[0].id, client.insertedMessages[2].id)
+  assert.equal(
+    client.calls.some((call) => call === "claim:product_submissions"),
+    false,
+  )
+})

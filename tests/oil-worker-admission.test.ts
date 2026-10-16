@@ -330,7 +330,8 @@ test("real normalize rejects absent independent context even when the model draf
 
 async function persistNormalizedWorker(
   options: {
-    interruptAfterIdentity?: boolean
+    repeatCommit?: boolean
+    interruptCommit?: boolean
     duplicate?: boolean
     mutateAfterCommerce?: JsonRecord
   } = {},
@@ -364,56 +365,54 @@ async function persistNormalizedWorker(
     locked_at: "2026-10-13T12:00:00Z",
     progress: {},
   } as ProductIntakeResearchJob
+  const requests: JsonRecord[] = []
+  let rpcCalls = 0
   const client = {
     from(table: string) {
-      let row: JsonRecord | null = null
+      assert.equal(table, "product_submissions", "artifact writes belong only to atomic completion")
       const query = {
-        insert(value: JsonRecord) {
-          row = structuredClone(value)
-          return query
-        },
-        update(value: JsonRecord) {
-          row = structuredClone(value)
-          return query
-        },
         select() {
           return query
         },
         eq() {
           return query
         },
-        in() {
-          return query
-        },
         async maybeSingle() {
           return { data: { user_id: null }, error: null }
-        },
-        async single() {
-          if (table === "product_intake_research_artifacts") {
-            if (options.interruptAfterIdentity && writes.length === 1)
-              return { data: null, error: new Error("artifact persistence interrupted") }
-            const saved: JsonRecord & { id: string } = {
-              ...row!,
-              id: `00000000-0000-4000-8000-${String(500 + writes.length).padStart(12, "0")}`,
-            }
-            writes.push(saved)
-            events.push(`artifact:${saved.kind}`)
-            return { data: saved, error: null }
-          }
-          assert.equal(table, "product_submissions")
-          previews.push(row!)
-          events.push("preview")
-          return { data: { id: submissionId, status: row!.status }, error: null }
         },
       }
       return query
     },
     async rpc(name: string, args: JsonRecord) {
+      rpcCalls++
+      requests.push(structuredClone(args))
       assert.equal(name, "product_intake_commit_research_pass")
       assert.equal(args.expected_locked_by, job.locked_by)
       assert.equal(args.expected_locked_at, job.locked_at)
       const preview = args.researched_payload as JsonRecord
-      previews.push({ researched_payload: preview })
+      const draft = preview.draft as JsonRecord
+      const binding = draft.oil_research_binding as JsonRecord | undefined
+      assert.ok(binding, "atomic completion must carry the Oil binding")
+      const artifacts = args.research_artifacts as JsonRecord[]
+      const identity = artifacts.find((row) => row.kind === "identity_candidate")!
+      const oil = artifacts.find((row) => (row.payload as JsonRecord).oil_storage_version)!
+      assert.match(String(identity.id), /^[a-f0-9-]{36}$/)
+      assert.equal(binding.artifact_id, oil.id)
+      assert.equal(
+        (oil.payload as JsonRecord).oil_admission_context &&
+          ((oil.payload as JsonRecord).oil_admission_context as JsonRecord)
+            .resolved_identity_artifact_id,
+        identity.id,
+      )
+      if (options.interruptCommit)
+        return { data: null, error: new Error("atomic artifact persistence interrupted") }
+      // This fixture observes the transaction request; SQL-owner tests separately
+      // prove insertion, rollback and privilege behavior in a real database.
+      for (const artifact of artifacts) {
+        writes.push(structuredClone(artifact))
+        events.push(`artifact:${artifact.kind}`)
+      }
+      previews.push({ researched_payload: structuredClone(preview) })
       events.push("completion")
       return {
         data: {
@@ -431,15 +430,23 @@ async function persistNormalizedWorker(
       supabase: client as unknown as Parameters<typeof completeResearchPass>[0]["supabase"],
       job,
       category: "oil",
-      submission: { id: submissionId, source: "admin", status: "researching" },
+      submission: { id: submissionId, source: "admin", status: "researching", payload_revision: 1 },
       workerId: job.locked_by!,
       promptPacketPath: "/tmp/oil-fixture-prompt.json",
       researchOutput: output,
       researchModel: "fixture",
       executeCodex: true,
       autoPrepareImages: false,
+      execution: { signal: new AbortController().signal, deadlineMs: Date.now() + 60_000 },
+      stageRawCandidate: async ({ submissionId, expectedRevision }) => ({
+        kind: "raw",
+        sha256: "a".repeat(64),
+        storage_key: `${submissionId}/${expectedRevision + 1}/${"a".repeat(64)}`,
+        media_type: "image/png",
+        byte_length: 42,
+      }),
     })
-  if (options.interruptAfterIdentity || options.duplicate || options.mutateAfterCommerce) {
+  if (options.interruptCommit || options.duplicate || options.mutateAfterCommerce) {
     await assert.rejects(
       finish,
       options.duplicate
@@ -448,13 +455,16 @@ async function persistNormalizedWorker(
           ? /final product|identity changed/
           : /interrupted/,
     )
-  } else await finish()
-  return { writes, previews, events, output }
+  } else {
+    await finish()
+    if (options.repeatCommit) await finish()
+  }
+  return { writes, previews, events, output, rpcCalls, requests }
 }
 
-test("real normalize and persistence bind the stored oil artifact to the returned identity UUID before atomically completing the research pass", async () => {
+test("real normalization binds Oil evidence and server-allocated artifact IDs in one atomic completion request", async () => {
   const { writes, previews, events, output } = await persistNormalizedWorker()
-  const identity = writes[0]!
+  const identity = writes.find((row) => row.kind === "identity_candidate")!
   assert.equal(identity.kind, "identity_candidate")
   const oil = writes.find((row) => (row.payload as JsonRecord).oil_storage_version)!
   const payload = oil.payload as JsonRecord
@@ -487,14 +497,14 @@ test("real normalize and persistence bind the stored oil artifact to the returne
   assert.equal(writes.length, output.artifacts.length, "each artifact is inserted only once")
 })
 
-test("interrupted persistence leaves only unreferenced history and never saves a preview", async () => {
-  const { writes, previews, events } = await persistNormalizedWorker({
-    interruptAfterIdentity: true,
+test("an atomic completion rejection never falls back to separate Oil artifact or preview writes", async () => {
+  const { writes, previews, events, rpcCalls } = await persistNormalizedWorker({
+    interruptCommit: true,
   })
-  assert.equal(writes.length, 1)
-  assert.equal(writes[0]!.kind, "identity_candidate")
+  assert.equal(rpcCalls, 1, "the transaction was attempted")
+  assert.deepEqual(writes, [])
   assert.deepEqual(previews, [])
-  assert.deepEqual(events, ["artifact:identity_candidate"])
+  assert.deepEqual(events, [])
 })
 
 test("duplicate current oil artifacts are refused before any persistence", async () => {
@@ -518,4 +528,14 @@ test("persistence rejects post-commerce identity changes before inserting any ar
       assert.deepEqual(events, [])
     })
   }
+})
+
+test("an exact Oil completion retry reuses server-owned IDs and context bytes", async () => {
+  const { requests } = await persistNormalizedWorker({ repeatCommit: true })
+  assert.equal(requests.length, 2)
+  assert.deepEqual(
+    requests[1],
+    requests[0],
+    "the same prepared output must produce the same atomic completion request",
+  )
 })

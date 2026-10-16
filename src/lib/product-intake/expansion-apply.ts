@@ -24,7 +24,7 @@ import {
  * F-02 — this module contains no storage writer. It turns a reviewed expansion
  * manifest into the exact inputs of the canonical publication boundary
  * (`validateProductIntakeApprovalPayload` on the TS side, then
- * `product_intake_approve_reviewed_product` inside
+ * `product_intake_approve_catalog_private` inside
  * `apply_scan_expansion_batch_v1` on the DB side). Anything the boundary would
  * reject is parked here instead of being written (F-04).
  *

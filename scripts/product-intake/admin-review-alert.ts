@@ -35,6 +35,9 @@ function offlineRpcClient(pg: PGlite): AdminReviewOutboxClient {
         "resolve_decision_ids",
         "review_outcome",
         "notification_payload",
+        "expected_review_cycle_id",
+        "research_artifacts",
+        "request_auto_rework",
       ],
       product_intake_claim_admin_notification: [],
       product_intake_settle_admin_notification: [
@@ -48,7 +51,9 @@ function offlineRpcClient(pg: PGlite): AdminReviewOutboxClient {
     }
     const names = signatures[name]
     if (!names) throw new Error("Unsupported offline admin alert RPC")
-    const values = names.map((key) => args[key] ?? null)
+    const values = names.map((key) =>
+      key === "research_artifacts" ? JSON.stringify(args[key] ?? []) : (args[key] ?? null),
+    )
     const result = await pg.query<Record<string, unknown>>(
       `SELECT * FROM public.${name}(${names.map((_, index) => `$${index + 1}`).join(",")})`,
       values,

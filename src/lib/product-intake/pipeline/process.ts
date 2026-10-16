@@ -4,21 +4,49 @@ import {
   type SpawnSyncReturns,
 } from "node:child_process"
 
+export type WorkerProcessOptions = SpawnSyncOptionsWithStringEncoding & {
+  signal?: AbortSignal
+  terminationGraceMs?: number
+}
+
 export type WorkerSpawn = (
   command: string,
   args: string[],
-  options: SpawnSyncOptionsWithStringEncoding,
+  options: WorkerProcessOptions,
 ) => SpawnSyncReturns<string> | Promise<SpawnSyncReturns<string>>
 
 // Preserve the result/error contract of spawnSync without blocking heartbeats.
 export function runWorkerProcess(
   command: string,
   args: string[],
-  options: SpawnSyncOptionsWithStringEncoding,
+  options: WorkerProcessOptions,
 ): Promise<SpawnSyncReturns<string>> {
   return new Promise((resolveResult) => {
-    const { timeout, maxBuffer = 1024 * 1024, encoding: _encoding, ...spawnOptions } = options
+    const {
+      timeout,
+      signal: abortSignal,
+      terminationGraceMs = 1_000,
+      maxBuffer = 1024 * 1024,
+      input,
+      encoding: _encoding,
+      ...spawnOptions
+    } = options
     void _encoding
+    const abortedError = () =>
+      Object.assign(new Error(`${command} cancelled`), { code: "ABORT_ERR" })
+    if (abortSignal?.aborted) {
+      resolveResult({
+        pid: 0,
+        output: [],
+        stdout: "",
+        stderr: "",
+        status: null,
+        signal: null,
+        error: abortedError(),
+      })
+      return
+    }
+    const graceMs = Math.max(1_000, Math.min(30_000, terminationGraceMs))
     const stdout: Buffer[] = []
     const stderr: Buffer[] = []
     let stdoutSize = 0
@@ -34,7 +62,7 @@ export function runWorkerProcess(
       // Worker paths and prompts are literal argv values, never shell input.
       shell: false,
       detached: true,
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: [input === undefined ? "ignore" : "pipe", "pipe", "pipe"],
     })
     const signalGroup = (signal: NodeJS.Signals) => {
       try {
@@ -50,6 +78,7 @@ export function runWorkerProcess(
       clearTimeout(timer)
       clearTimeout(killTimer)
       clearTimeout(settleTimer)
+      abortSignal?.removeEventListener("abort", onAbort)
       if (terminated) signalGroup("SIGKILL")
       child.stdout?.destroy()
       child.stderr?.destroy()
@@ -65,16 +94,19 @@ export function runWorkerProcess(
     }
     const settleAfterGrace = () => {
       // Pipes can outlive the leader, even after a process-group kill. Bound that wait.
-      settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), 2_000)
+      settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), graceMs + 1_000)
     }
     const terminate = (failure: Error) => {
-      if (error) return
+      if (error || settled) return
       error = failure
       terminated = true
       signalGroup("SIGTERM")
-      killTimer = setTimeout(() => signalGroup("SIGKILL"), 1_000)
+      killTimer = setTimeout(() => signalGroup("SIGKILL"), graceMs)
       settleAfterGrace()
     }
+    const onAbort = () => terminate(abortedError())
+    abortSignal?.addEventListener("abort", onAbort, { once: true })
+    if (abortSignal?.aborted) onAbort()
     const collect = (stream: "stdout" | "stderr", chunk: Buffer) => {
       const size = stream === "stdout" ? stdoutSize : stderrSize
       const remaining = Math.max(0, maxBuffer - size)
@@ -106,6 +138,12 @@ export function runWorkerProcess(
         () => terminate(Object.assign(new Error(`${command} ETIMEDOUT`), { code: "ETIMEDOUT" })),
         timeout,
       )
+    }
+    if (input !== undefined) {
+      child.stdin?.on("error", terminate)
+      // end() streams all bytes with backpressure and closes stdin, so Codex
+      // cannot wait indefinitely for additional prompt input.
+      child.stdin?.end(input)
     }
   })
 }

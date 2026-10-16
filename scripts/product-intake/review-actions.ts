@@ -1,6 +1,14 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { isDeepStrictEqual } from "node:util"
+import {
+  executeReviewAction,
+  loadReviewPublicationPreflight,
+  publishReviewedProduct,
+  stableReviewRequestId,
+  reviewBinding,
+  type ReviewPublicationReceipt,
+} from "../../src/lib/product-intake/review-publication"
 
 import { sendProductIntakeReviewNotification } from "@/lib/product-intake/notifications"
 import { captureProductIntakeException } from "@/lib/observability/product-intake"
@@ -177,6 +185,7 @@ export async function saveResearchedPayload(params: {
 }
 
 type ApprovalRpcResult = {
+  publication: ReviewPublicationReceipt
   submission: ReviewActionSubmission
   product_id: string
   brand_id: string
@@ -207,43 +216,27 @@ export async function approveReviewedSubmission(params: {
       "approval_payload_mismatch: caller payload does not match the validated stored submission",
     )
   }
-  const usesOwnerBondbuilderPath = ownerAdmission.ok
-  const { data, error } = usesOwnerBondbuilderPath
-    ? await params.supabase.rpc("product_intake_approve_bondbuilder_owner_v1", {
-        p_submission_id: params.submission.id,
-        p_owner_user_id: ownerAdmission.ownerUserId,
-        p_final_payload: selected.normalizedPayload.final,
-        p_spec_operations: selected.targetSpecOperations,
-        p_reviewed_by: params.reviewedBy,
-        p_reviewed_at: params.reviewedAt,
-        p_review_notes: params.reviewNotes,
-      })
-    : await params.supabase.rpc("product_intake_approve_reviewed_product", {
-        p_submission_id: params.submission.id,
-        p_final_payload: selected.normalizedPayload.final,
-        p_spec_operations: selected.targetSpecOperations,
-        p_reviewed_by: params.reviewedBy,
-        p_reviewed_at: params.reviewedAt,
-        p_review_notes: params.reviewNotes,
-      })
-
-  if (error) {
-    captureProductIntakeException(error, {
-      stage: "approve_reviewed_product",
-      submissionId: params.submission.id,
-      userId: params.submission.user_id,
-      source: params.submission.source,
-      sourceConversationId: params.submission.source_conversation_id,
-      category: params.submission.category,
-      intakeMethod: params.submission.intake_method,
-      status: params.submission.status,
-      reason: error.code ?? "rpc_error",
-      committed: false,
-    })
-    throw new Error(`approve product submission ${params.submission.id}: ${error.message}`)
+  const preflight = await loadReviewPublicationPreflight(params.supabase, params.submission.id)
+  if (!preflight.data_decision_id || !preflight.image_decision_id)
+    throw new Error("approval_requires_current_separate_reviews")
+  const request = {
+    ...reviewBinding(preflight),
+    reviewed_by: params.reviewedBy,
+    data_decision_id: preflight.data_decision_id,
+    image_decision_id: preflight.image_decision_id,
+    confirm: true as const,
   }
-
-  return data as ApprovalRpcResult
+  const { publication } = await publishReviewedProduct(params.supabase, {
+    ...request,
+    request_id: stableReviewRequestId(request),
+  })
+  return {
+    submission: await loadSubmission(params.supabase, params.submission.id),
+    product_id: publication.product_id,
+    brand_id: publication.brand_id,
+    product_line_id: publication.product_line_id,
+    publication,
+  }
 }
 
 export async function linkExistingProduct(params: {
@@ -254,26 +247,23 @@ export async function linkExistingProduct(params: {
   reviewedAt: string
   reviewNotes: string | null
 }) {
-  const { data, error } = await params.supabase.rpc("product_intake_link_existing_product", {
-    p_submission_id: params.submissionId,
-    p_product_id: params.productId,
-    p_reviewed_by: params.reviewedBy,
-    p_reviewed_at: params.reviewedAt,
-    p_review_notes: params.reviewNotes,
-  })
-
-  if (error) {
-    captureProductIntakeException(error, {
-      stage: "link_existing_product",
-      submissionId: params.submissionId,
-      productId: params.productId,
-      reason: error.code ?? "rpc_error",
-      committed: false,
-    })
-    throw new Error(`link product submission ${params.submissionId}: ${error.message}`)
+  const preflight = await loadReviewPublicationPreflight(params.supabase, params.submissionId)
+  const request = {
+    ...reviewBinding(preflight),
+    reviewed_by: params.reviewedBy,
+    action: "link_existing" as const,
+    reviewer_value: { product_id: params.productId },
+    comment: params.reviewNotes,
   }
-
-  return data as { submission: ReviewActionSubmission }
+  const result = await executeReviewAction(params.supabase, {
+    ...request,
+    request_id: stableReviewRequestId(request),
+  })
+  return {
+    submission: await loadSubmission(params.supabase, params.submissionId),
+    notification: { status: result.decision.notification_status },
+    deleted_usage_id: null,
+  }
 }
 
 export async function requestMoreInfo(params: {
@@ -286,27 +276,27 @@ export async function requestMoreInfo(params: {
   missingFields: unknown[]
   reviewNotes: string | null
 }) {
-  const { data, error } = await params.supabase.rpc("product_intake_request_more_info", {
-    p_submission_id: params.submissionId,
-    p_reviewed_by: params.reviewedBy,
-    p_reason: params.reason,
-    p_next_step: params.nextStep,
-    p_missing_fields: params.missingFields,
-    p_reviewed_at: params.reviewedAt,
-    p_review_notes: params.reviewNotes,
-  })
-
-  if (error) {
-    captureProductIntakeException(error, {
-      stage: "request_more_info",
-      submissionId: params.submissionId,
-      reason: error.code ?? "rpc_error",
-      committed: false,
-    })
-    throw new Error(`request info for product submission ${params.submissionId}: ${error.message}`)
+  const preflight = await loadReviewPublicationPreflight(params.supabase, params.submissionId)
+  const request = {
+    ...reviewBinding(preflight),
+    reviewed_by: params.reviewedBy,
+    action: "request_info" as const,
+    reviewer_value: {
+      reason: params.reason,
+      next_step: params.nextStep,
+      missing_fields: params.missingFields,
+    },
+    comment: params.reviewNotes,
   }
-
-  return data as { submission: ReviewActionSubmission }
+  const result = await executeReviewAction(params.supabase, {
+    ...request,
+    request_id: stableReviewRequestId(request),
+  })
+  return {
+    submission: await loadSubmission(params.supabase, params.submissionId),
+    notification: { status: result.decision.notification_status },
+    deleted_usage_id: null,
+  }
 }
 
 export async function rejectSubmission(params: {
@@ -318,26 +308,23 @@ export async function rejectSubmission(params: {
   nextStep: string | null
   reviewNotes: string | null
 }) {
-  const { data, error } = await params.supabase.rpc("product_intake_reject_submission", {
-    p_submission_id: params.submissionId,
-    p_reviewed_by: params.reviewedBy,
-    p_reason: params.reason,
-    p_next_step: params.nextStep,
-    p_reviewed_at: params.reviewedAt,
-    p_review_notes: params.reviewNotes,
-  })
-
-  if (error) {
-    captureProductIntakeException(error, {
-      stage: "reject_submission",
-      submissionId: params.submissionId,
-      reason: error.code ?? "rpc_error",
-      committed: false,
-    })
-    throw new Error(`reject product submission ${params.submissionId}: ${error.message}`)
+  const preflight = await loadReviewPublicationPreflight(params.supabase, params.submissionId)
+  const request = {
+    ...reviewBinding(preflight),
+    reviewed_by: params.reviewedBy,
+    action: "reject" as const,
+    reviewer_value: { reason: params.reason, next_step: params.nextStep },
+    comment: params.reviewNotes,
   }
-
-  return data as { submission: ReviewActionSubmission; deleted_usage_id: string | null }
+  const result = await executeReviewAction(params.supabase, {
+    ...request,
+    request_id: stableReviewRequestId(request),
+  })
+  return {
+    submission: await loadSubmission(params.supabase, params.submissionId),
+    notification: { status: result.decision.notification_status },
+    deleted_usage_id: null,
+  }
 }
 
 type AdditionRecord = {

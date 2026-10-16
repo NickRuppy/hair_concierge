@@ -5,6 +5,7 @@ import {
   type ProductIntakeResearchArtifact,
   type ProductIntakeResearchJob,
   type ProductIntakeReviewDecisionRow,
+  type ProductIntakeReviewAsset,
 } from "@chaarlie/product-intake-core"
 import {
   latestProductReviewJob,
@@ -12,13 +13,23 @@ import {
   type ProductReviewQueueEntry,
   type ProductReviewSubmission,
 } from "./admin-review-model"
+import { signProductReviewAsset } from "./review-assets"
+import {
+  loadReviewPublicationPreflight,
+  type ReviewPublicationPreflight,
+} from "./review-publication"
 
-export type ProductReviewReadClient = Pick<SupabaseClient, "from">
+export type ProductReviewReadClient = Pick<SupabaseClient, "from" | "storage">
+export type ProductReviewImage = Pick<ProductIntakeReviewAsset, "id" | "kind" | "sha256"> & {
+  signed_url: string | null
+}
 export type ProductReviewDetail = {
   submission: ProductReviewSubmission
   job: ProductIntakeResearchJob | null
   artifacts: ProductIntakeResearchArtifact[]
   decisions: ProductIntakeReviewDecisionRow[]
+  images?: ProductReviewImage[]
+  publication_review?: ReviewPublicationPreflight | null
 }
 
 // Keyset pagination avoids offset shifts when an earlier submission closes.
@@ -93,6 +104,7 @@ export async function loadAdminProductReviewDetail(
     .maybeSingle()
   if (error) throw error
   if (!data) return null
+  const revision = typeof data.payload_revision === "number" ? data.payload_revision : undefined
   const [jobs, artifacts, decisions] = await Promise.all([
     allRows<ProductIntakeResearchJob>(client, "product_intake_research_jobs", (query) =>
       query.eq("submission_id", id),
@@ -117,10 +129,53 @@ export async function loadAdminProductReviewDetail(
     ...(typeof data.payload_revision === "number"
       ? { payload_revision: data.payload_revision }
       : {}),
+    ...(typeof data.payload_sha256 === "string" ? { payload_sha256: data.payload_sha256 } : {}),
+  }
+  const manifests =
+    revision === undefined
+      ? []
+      : await allRows<ProductIntakeReviewAsset>(client, "product_intake_review_assets", (query) =>
+          query.eq("submission_id", id).eq("payload_revision", revision),
+        )
+  const images: ProductReviewImage[] = await Promise.all(
+    manifests
+      .filter((asset) => ["raw", "magenta", "final"].includes(asset.kind))
+      .map(async (asset) => {
+        let signed_url: string | null = null
+        try {
+          signed_url = await signProductReviewAsset({
+            client,
+            asset,
+            submissionId: id,
+            payloadRevision: revision!,
+          })
+        } catch {
+          // Keep exact data review available if image delivery temporarily fails.
+        }
+        return { id: asset.id, kind: asset.kind, sha256: asset.sha256, signed_url }
+      }),
+  )
+  const currentJob = latestProductReviewJob(jobs)
+  let publication_review: ReviewPublicationPreflight | null = null
+  try {
+    const current = await loadReviewPublicationPreflight(client as SupabaseClient, id)
+    // A concurrent pass can intervene between reads. Never combine one version's
+    // values/images with another version's action tokens or approval indicators.
+    if (
+      current.payload_revision === submission.payload_revision &&
+      current.payload_sha256 === submission.payload_sha256 &&
+      current.job_id === (currentJob?.id ?? null) &&
+      current.review_cycle_id === (currentJob?.review_cycle_id ?? null)
+    )
+      publication_review = current
+  } catch {
+    // Keep the evidence readable while an unavailable authority fails actions closed.
   }
   return {
     submission,
-    job: latestProductReviewJob(jobs),
+    images,
+    publication_review,
+    job: currentJob,
     artifacts: artifacts.sort(
       (a, b) => b.created_at.localeCompare(a.created_at) || b.id.localeCompare(a.id),
     ),

@@ -9,7 +9,7 @@ import {
   requireFlag,
 } from "./cli"
 import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
-import { notifyReviewResult, rejectSubmission, requestMoreInfo } from "./review-actions"
+import { rejectSubmission, requestMoreInfo } from "./review-actions"
 
 async function readMissingFields(path: string | null): Promise<unknown[]> {
   if (!path) return []
@@ -70,7 +70,7 @@ async function main() {
       nextStep,
       reviewNotes,
     })
-    const notification = await notifyReviewResult(supabase, result.submission)
+    const notification = result.notification
 
     printJson({
       ...dryRunPayload,
@@ -119,7 +119,7 @@ async function main() {
     missingFields,
     reviewNotes,
   })
-  const notification = await notifyReviewResult(supabase, result.submission)
+  const notification = result.notification
 
   printJson({
     ...dryRunPayload,

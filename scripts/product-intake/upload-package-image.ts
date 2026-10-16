@@ -190,9 +190,8 @@ async function ensureStorageObject(params: {
   const existing = await params.bucket.download(params.path)
   if (!existing.error && existing.data) {
     const existingBytes = Buffer.from(await existing.data.arrayBuffer())
-    if (params.validateExisting) {
-      await params.validateExisting(existingBytes)
-    } else if (sha256Buffer(existingBytes) !== params.expectedSha256) {
+    if (params.validateExisting) await params.validateExisting(existingBytes)
+    if (sha256Buffer(existingBytes) !== params.expectedSha256) {
       throw new Error(`Existing Storage object checksum mismatch: ${params.path}`)
     }
     return "already_uploaded"

@@ -56,6 +56,16 @@ import {
 import { OIL_RESEARCH_PROMPT_CONTRACT } from "./oil-research-prompt-contract"
 import { OIL_INTAKE_METHOD } from "@/lib/oil-research/registry"
 import { PROTOCOL_SLOT_RESEARCH_CONTRACT } from "./pipeline/protocol"
+import {
+  applyShampooResearchAdapter,
+  type ShampooDownstreamDecision,
+} from "./shampoo-research-adapter"
+import { shampooResearchPromptContract } from "./shampoo-research-prompt-contract"
+import { SHAMPOO_STAGE_PROOF_KIND, validateShampooStageProof } from "./shampoo-research-stages"
+import {
+  SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD,
+  SHAMPOO_PRODUCTION_LIGHT_VERSION,
+} from "@/lib/shampoo/production-light-adapter"
 
 export const CATEGORY_SPEC_KEYS = {
   shampoo: ["product_shampoo_specs", "product_application_protocols"],
@@ -109,11 +119,13 @@ export type CategoryResearchAdapterInput = {
   final: JsonRecord
   artifacts: { kind: string; payload: JsonRecord }[]
   expectedResearchId?: string
+  expectedReviewCycleId?: string
   oilContext?: OilWorkerAdmissionContext
 }
 export type CategoryResearchAdapterResult = {
   blockers: string[]
   warnings: string[]
+  downstreamDecisions?: ShampooDownstreamDecision[]
   oilAdmission?: OilAdmission
 }
 type CategoryResearchEntryBase = {
@@ -202,12 +214,15 @@ export const CATEGORY_RESEARCH_REGISTRY: Readonly<
       }),
   },
   shampoo: {
-    state: "pending_lock",
+    state: "active",
     engineId: "shampoo-standard",
-    methodology: "v1.6",
-    adapter: "shampoo-production-light-v1",
+    methodology: SHAMPOO_PRODUCTION_LIGHT_V162_RESEARCH_METHOD.modelVersion.replace(
+      "shampoo-inci-",
+      "",
+    ),
+    adapter: SHAMPOO_PRODUCTION_LIGHT_VERSION,
     promptContract: shampooApprovalContract,
-    apply: () => ({ blockers: [], warnings: [] }),
+    apply: applySealedShampooResearchAdapter,
   },
   mask: {
     state: "active",
@@ -224,6 +239,39 @@ export const CATEGORY_RESEARCH_REGISTRY: Readonly<
   scalp_care: unavailable(scalpCareApprovalContract),
 }
 
+function applySealedShampooResearchAdapter(
+  input: CategoryResearchAdapterInput,
+): CategoryResearchAdapterResult {
+  const carriers = input.artifacts.filter(
+    (artifact) =>
+      artifact.kind === "formula" && artifact.payload.stage === SHAMPOO_STAGE_PROOF_KIND,
+  )
+  const envelopes = input.artifacts.filter(
+    (artifact) =>
+      artifact.kind === "property_synthesis" && artifact.payload.shampoo_research_envelope != null,
+  )
+  const validation =
+    input.expectedResearchId && input.expectedReviewCycleId && carriers.length === 1
+      ? validateShampooStageProof(carriers[0]!.payload.proof, {
+          submissionId: input.expectedResearchId,
+          reviewCycleId: input.expectedReviewCycleId,
+          envelope:
+            envelopes.length === 1 ? envelopes[0]!.payload.shampoo_research_envelope : undefined,
+        })
+      : {
+          ok: false as const,
+          reason: "a unique server-owned stage proof and current cycle are required",
+        }
+  const result = applyShampooResearchAdapter({
+    ...input,
+    expectedResearchId: input.expectedResearchId ?? "",
+    expectedFormulaFingerprintSha256: validation.ok ? validation.formulaFingerprintSha256 : "",
+  })
+  if (!validation.ok)
+    return { ...result, blockers: [`shampoo research adapter: ${validation.reason}`] }
+  return result
+}
+
 const CANONICAL_INCI_RESEARCH_CONTRACT = {
   output_path: "researched_payload.draft.formula",
   fields: { raw_inci: "string or null", source_url: "string or null" },
@@ -236,7 +284,8 @@ function shampooApprovalContract(): JsonRecord {
     category_key: "shampoo",
     canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
-      "Research and emit only shampoo approval specs under researched_payload.final.category_specs.",
+      "Use the isolated source-freeze, blind-formula and revealed-final stages under locked Shampoo v1.6.2. Retain the complete native research record; Chaarlie's deterministic adapter owns final Shampoo values. Publication requires Nick's approval.",
+    shampoo_research: shampooResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.shampoo],
     product_shampoo_specs:
       "array with one row per relevant hair thickness; each row has thickness, shampoo_bucket, scalp_route, optional cleansing_intensity. shampoo_bucket is a scalp/route bucket, not a dry-hair or damaged-lengths claim. Use trocken only when sources support dry scalp; dry/damaged hair alone should usually stay normal + balanced unless another scalp claim is proven.",

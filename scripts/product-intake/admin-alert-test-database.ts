@@ -17,6 +17,8 @@ const MIGRATIONS = [
   "20261006141653_product_intake_job_engine_binding.sql",
   "20261007062729_product_intake_stage_artifact_kinds.sql",
   "20261015200636_product_intake_admin_notifications.sql",
+  "20261016052958_product_intake_review_cycles.sql",
+  "20261016131141_product_intake_atomic_artifact_ids.sql",
 ] as const
 
 const PREREQUISITES = `
@@ -48,14 +50,19 @@ const PREREQUISITES = `
   INSERT INTO public.products VALUES ('22222222-2222-4222-8222-222222222222', 'conditioner');
 `
 
+/** Same offline schema for the explicit email-test CLI and real PostgreSQL lock proofs. */
+export async function loadAdminAlertTestDatabaseSql(): Promise<string> {
+  const migrations = await Promise.all(
+    MIGRATIONS.map((migration) =>
+      readFile(new URL(`supabase/migrations/${migration}`, ROOT), "utf8"),
+    ),
+  )
+  // Replay the latest additive/replacement migration to prove repeatable bootstrap.
+  return [PREREQUISITES, ...migrations, migrations.at(-1), "SET ROLE service_role;"].join("\n")
+}
+
 export async function createAdminAlertTestDatabase(dataDir?: string): Promise<PGlite> {
   const pg = new PGlite(dataDir)
-  await pg.exec(PREREQUISITES)
-  for (const migration of MIGRATIONS) {
-    await pg.exec(await readFile(new URL(`supabase/migrations/${migration}`, ROOT), "utf8"))
-  }
-  // Reapplying the replacement migration remains part of the compatibility proof.
-  await pg.exec(await readFile(new URL(`supabase/migrations/${MIGRATIONS.at(-1)}`, ROOT), "utf8"))
-  await pg.exec("SET ROLE service_role")
+  await pg.exec(await loadAdminAlertTestDatabaseSql())
   return pg
 }

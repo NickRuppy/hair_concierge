@@ -124,28 +124,42 @@ function withoutTemplatedProtocols(result: ReturnType<typeof adapterOwnedResult>
   return { ...result, category_specs }
 }
 
-test("all 52 captured production outputs retain reviewed results apart from Mask activation and templated protocols", () => {
+test("captured outputs preserve unchanged categories; historical Shampoo requires a fresh sealed cycle", () => {
   assert.equal(captures.cases.length, 52)
   assert.deepEqual(brandContext, frozen.brand_context)
   assert.deepEqual(
-    captures.cases.map(adapterOwnedResult).map(withoutTemplatedProtocols),
-    frozen.cases.map((result) =>
-      withoutTemplatedProtocols(
-        result.category === "mask"
-          ? {
-              ...result,
-              // These historical captures predate the Mask engine. Preserve their
-              // frozen bytes; the intentional new refusal replaces false engine readiness.
-              adapter_blockers: [
-                "mask research adapter: exactly one property_synthesis.mask_research_envelope is required",
-              ],
-            }
-          : result,
+    captures.cases
+      .filter((capture) => capture.category !== "shampoo")
+      .map(adapterOwnedResult)
+      .map(withoutTemplatedProtocols),
+    frozen.cases
+      .filter((result) => result.category !== "shampoo")
+      .map((result) =>
+        withoutTemplatedProtocols(
+          result.category === "mask"
+            ? {
+                ...result,
+                // These historical captures predate the Mask engine. Preserve their
+                // frozen bytes; the intentional new refusal replaces false engine readiness.
+                adapter_blockers: [
+                  "mask research adapter: exactly one property_synthesis.mask_research_envelope is required",
+                ],
+              }
+            : result,
+        ),
       ),
-    ),
   )
   for (const [index, capture] of captures.cases.entries()) {
     const result = normalizeCapture(capture)
+    if (capture.category === "shampoo") {
+      const final = result.researched_payload?.final as Record<string, Record<string, unknown>>
+      assert.equal(final.product.suitable_thicknesses, undefined, capture.submission_id)
+      assert.equal(final.category_specs.product_shampoo_specs, undefined, capture.submission_id)
+      assert.ok(
+        result.blockers.some((blocker) => blocker.startsWith("shampoo research adapter:")),
+        capture.submission_id,
+      )
+    }
     const stage = result.artifacts.find((artifact) => artifact.kind === "protocol_template")
     assert.ok(stage, capture.submission_id)
     if (templatedCategories.has(capture.category)) {
@@ -170,7 +184,7 @@ test("all 52 captured production outputs retain reviewed results apart from Mask
   }
 })
 
-test("reviewed category prompt bytes include current Oil v0.10; Mask has a separate envelope contract", () => {
+test("reviewed Oil v0.10 and Shampoo v1.6.2 prompt contracts retain their sealed bytes", () => {
   const unchanged = Object.fromEntries(
     Object.entries(normalizationSnapshot().prompt_contract_sha256).filter(
       ([category]) => category !== "mask",
@@ -181,7 +195,8 @@ test("reviewed category prompt bytes include current Oil v0.10; Mask has a separ
     // Leave-In v1.2 heat activation (T21, 2026-10-09): v1.2 pins + heatActivation capture
     leave_in: "d2e828a6653b783a9649af9428afe037e3794c39e61efe063d92e0159c8d00af",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
-    shampoo: "dc511c24cb88c76fe66fbb60dadda2bbe52f246314bc582c7278af1ad97c99a7",
+    // Reviewed Shampoo v1.6.2: isolated stages, full record and explicit human publication.
+    shampoo: "6f7ef93056f8e309044d1ec00ba8066dc876080df457704ef2f50058b50b8ca0",
     // Oil v0.10: the reviewed lean schema, evidence instructions and manual matching boundary.
     oil: "e48517923ab43c3e10d93d92d1f55e1327c99498cfb9f272c9549c4c985b72ee",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",

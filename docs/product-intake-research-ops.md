@@ -356,9 +356,19 @@ Shampoo-specific rule:
 For new regular Shampoo property research where the operator wants the full
 ingredient methodology but only the current production Shampoo fields as output,
 use [Shampoo Production Light v1](./product-intake-shampoo-production-light.md).
-That workflow keeps Shampoo v1.4 as the complete research authority and projects
-only the reviewed property lane. Its `property_lane_ready` status is not catalog
+That workflow uses locked Shampoo v1.6.2 for new research (v1.4 is historical
+replay only) and projects only the reviewed property lane. Its
+`property_lane_ready` status is not catalog
 intake readiness, global recommendation readiness, or publish approval.
+Routine worker intake uses one isolated blind/reveal lane, followed by the shared
+Sol judge and Nick's approval. Validation batches retain two independent lanes.
+The server owns source/blind/final proof, formula and cycle bindings; model-authored
+proofs or approval flags cannot establish readiness. A correction reuses the frozen
+assessment only with the same formula/cycle and budget for repair plus judge.
+All launches share the six-run/45-minute cap. D2 retains regular Shampoo research
+and asks Nick about the extra listing in “Entscheidung nötig”; no second product
+is created automatically. This integration is local until separately deployed;
+automatic email/image/rework switches remain disabled during setup.
 
 Conditioner-specific rule:
 
@@ -467,9 +477,10 @@ What this cockpit intentionally must not do:
 
 Internal Admin alert template/setup is tracked in
 [Product Review admin alerts](customerio/product-intake-admin-review.md).
-The outbox is implemented locally with automatic delivery disabled. Dedicated
-provider setup and one real outbox email/inbox verification are complete;
-production migration/deployment remain pending. Uncertain sends are held for
+The outbox is deployed with automatic delivery disabled. Dedicated provider
+setup, production migration and one real email/inbox verification are complete;
+Nick approved the test email on 2026-10-16. Reconciliation monitoring, the complete
+review flow and a separate bounded activation decision remain gates. Uncertain sends are held for
 reconciliation, never automatically resent. This internal alert
 never authorizes customer notification or product publication.
 
@@ -1441,3 +1452,17 @@ After approval:
 - [ ] Product image URL renders.
 - [ ] User notification was sent.
 - [ ] Daily product-addition record was written.
+
+
+### Private raw candidate handoff
+
+With automatic image preparation disabled, otherwise complete research stages
+only this pass’s exact `image_candidate` bytes in private review storage. The
+current revision advances and its raw manifest registers atomically with research
+completion under the existing lease/cycle. This staging adds no approval or model
+run. Missing, unsafe or unreadable candidates remain an explicit image blocker;
+research evidence is retained. Nick selects the staged raw image before processing,
+then separately reviews the final image and confirms publication. Candidate
+storage never fills the final catalog-image fields. Interrupted private uploads
+may remain unreferenced; they must not be registered as stale evidence or deleted
+through speculative cleanup.

@@ -350,3 +350,59 @@ test("refuses a nonempty output unless overwrite atomically replaces it", () => 
     rmSync(root, { recursive: true, force: true })
   }
 })
+
+test("CLI writes v1.6.2 review weight and dual listing, and accounts for blocked research in a mixed batch", () => {
+  const root = tempDirectory()
+  try {
+    const fixtureRoot = "tests/fixtures/shampoo-production-light/v1.6.2"
+    const inputs = ["U2", "A09"].map((slot) =>
+      JSON.parse(readFileSync(path.join(fixtureRoot, `${slot}.json`), "utf8")),
+    )
+    const products = inputs.map((input, index) => {
+      const inputPath = `record-${index}.json`
+      writeJson(path.join(root, inputPath), input)
+      return {
+        productId: input.identity.productId,
+        exactProductName: input.identity.productName,
+        gtinAliases: input.identity.gtinAliases,
+        selectionNotes: "Reviewed Track A consolidation; needs_research preserved.",
+        input: inputPath,
+      }
+    })
+    const manifest = path.join(root, "batch.json")
+    writeJson(manifest, { version: "shampoo-production-light-batch-v1", products })
+    const output = path.join(root, "batch-out")
+    assert.deepEqual(runProductionLightCli({ manifest, output, overwrite: false }), {
+      kind: "batch",
+      ready: 1,
+      routed: 0,
+      needsResearch: 1,
+      products: 2,
+    })
+    const summary = JSON.parse(readFileSync(path.join(output, "batch-summary.json"), "utf8"))
+    assert.ok(
+      summary.products.every(
+        (product: { researchModelVersion: string }) =>
+          product.researchModelVersion === "shampoo-inci-v1.6.2",
+      ),
+    )
+    const md = readFileSync(
+      path.join(output, products[0].productId, "production-light-summary.md"),
+      "utf8",
+    )
+    assert.match(md, /Research weight \(not stored\): light/)
+    assert.match(md, /Deep-cleanser dual listing: flagged/)
+    const single = runProductionLightCli({
+      input: path.join(root, "record-1.json"),
+      output: path.join(root, "single-out"),
+      overwrite: false,
+    })
+    assert.equal(single.kind, "single")
+    if (single.kind === "single") {
+      assert.equal(single.status, "needs_research")
+      assert.equal(single.researchModelVersion, "shampoo-inci-v1.6.2")
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
