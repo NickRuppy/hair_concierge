@@ -43,12 +43,26 @@ import {
   type CodexResearchRuntimeConfig,
 } from "@/lib/product-intake/pipeline/shared"
 
-import {
-  checkResearchReadiness,
-  type ResearchReadinessSelfCheck,
-} from "@/lib/product-intake/research-readiness-self-check"
+import { checkResearchReadiness } from "@/lib/product-intake/research-readiness-self-check"
 import { buildAdminReviewSnapshot } from "@/lib/product-intake/admin-review-email"
 import { drainAdminReviewOutbox } from "@/lib/product-intake/admin-review-outbox"
+import {
+  createAdminReviewOutboxHealthObserver,
+  type AdminReviewOutboxHealthClient,
+  type AdminReviewOutboxHealthPoll,
+} from "@/lib/product-intake/admin-review-outbox-health"
+import {
+  reserveCurrentResearchModelRun,
+  withResearchModelCycle,
+} from "@/lib/product-intake/pipeline/review-cycle"
+import {
+  buildProjectedResearchJudgePacket,
+  buildProjectedResearchJudgePrompt,
+  parseProjectedResearchJudgeVerdict,
+  decideProjectedResearchOutcome,
+  type ProjectedResearchJudgePacket,
+  type ProjectedResearchJudgeVerdict,
+} from "@/lib/product-intake/pipeline/research-judge"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
 import {
   appendResearchArtifact as coreAppendResearchArtifact,
@@ -57,6 +71,8 @@ import {
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
   commitResearchPass as coreCommitResearchPass,
+  reserveResearchModelRun,
+  ResearchModelReservationError,
   updateResearchJob as coreUpdateResearchJob,
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_JOB_STAGES,
@@ -126,6 +142,8 @@ class WorkerLeaseLostError extends Error {
 
 export class WorkerJobLease {
   aborted = false
+  private runtimeExpired = false
+  private leaseLost = false
   private pending: Promise<unknown> = Promise.resolve()
   private readonly startedAt = Date.now()
   private readonly maxRuntimeMs = positiveDurationMs(
@@ -134,7 +152,10 @@ export class WorkerJobLease {
   )
 
   private checkRuntime(): void {
-    if (Date.now() - this.startedAt > this.maxRuntimeMs) this.aborted = true
+    if (Date.now() - this.startedAt > this.maxRuntimeMs) {
+      this.runtimeExpired = true
+      this.aborted = true
+    }
   }
 
   constructor(
@@ -157,22 +178,117 @@ export class WorkerJobLease {
         expected_locked_by: this.job.locked_by,
       })
       if (error) throw error
-      if (data === null) this.aborted = true
-      else if (typeof data === "string") this.job.locked_at = data
+      if (data === null) {
+        this.leaseLost = true
+        this.aborted = true
+      } else if (typeof data === "string") this.job.locked_at = data
       else throw new Error("Lease renewal returned an invalid timestamp")
     })
   }
 
-  write<T>(operation: () => Promise<T>): Promise<T> {
+  write<T>(operation: () => Promise<T>, allowExpiredRuntimeEscalation = false): Promise<T> {
     return this.serialize(async () => {
       this.checkRuntime()
-      if (this.aborted) throw new WorkerLeaseLostError(this.job.id)
+      if (
+        this.aborted &&
+        !(allowExpiredRuntimeEscalation && this.runtimeExpired && !this.leaseLost)
+      )
+        throw new WorkerLeaseLostError(this.job.id)
       return operation()
     })
   }
 }
 
 const workerLeases = new Map<string, WorkerJobLease>()
+
+function modelCycleForJob(
+  client: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+) {
+  return async () =>
+    withJobLease(job.id, async () => {
+      const leased = workerLeases.get(job.id)?.job as ProductIntakeResearchJob | undefined
+      const current = leased ?? job
+      if (!current.locked_by || !current.locked_at || !current.review_cycle_id)
+        throw new ResearchModelReservationError("lease_lost")
+      const reserved = await reserveResearchModelRun(client, {
+        jobId: current.id,
+        expectedLockedBy: current.locked_by,
+        expectedLockedAt: current.locked_at,
+        expectedReviewCycleId: current.review_cycle_id,
+      })
+      Object.assign(current, reserved)
+      const deadline = Date.parse(reserved.cycle_deadline_at ?? "")
+      if (!Number.isFinite(deadline)) throw new ResearchModelReservationError("storage_error")
+      return deadline
+    })
+}
+
+/** Separate timer: an outbox read must never delay safety-critical lease renewal. */
+export function startAdminReviewOutboxHealthMonitor(
+  client: AdminReviewOutboxHealthClient,
+  report: (observation: AdminReviewOutboxHealthPoll) => void,
+  intervalMs = 60_000,
+) {
+  let stopped = false
+  let inFlight: Promise<void> | undefined
+  const abort = new AbortController()
+  const observer = createAdminReviewOutboxHealthObserver(client, {
+    signal: () => AbortSignal.any([abort.signal, AbortSignal.timeout(10_000)]),
+  })
+  const tick = () => {
+    if (stopped) return Promise.resolve()
+    if (inFlight) return inFlight
+    inFlight = observer
+      .poll()
+      .then((observation) => {
+        if (!stopped && observation.kind !== "quiet") {
+          try {
+            report(observation)
+          } catch {
+            /* Monitoring must not stop research. */
+          }
+        }
+      })
+      .finally(() => {
+        inFlight = undefined
+      })
+    return inFlight
+  }
+  const timer = setInterval(() => {
+    void tick()
+  }, intervalMs)
+  void tick()
+  return {
+    tick,
+    stop: () => {
+      stopped = true
+      clearInterval(timer)
+      abort.abort()
+    },
+  }
+}
+
+function reportAdminReviewOutboxHealth(observation: AdminReviewOutboxHealthPoll) {
+  if (observation.kind === "issue") {
+    const summary = {
+      held_count: observation.report.heldCount,
+      expired_sending_count: observation.report.expiredSendingCount,
+      failed_count: observation.report.failedCount,
+      oldest_affected_notification_age_ms: observation.report.oldestReconciliationAgeMs,
+    }
+    console.log(JSON.stringify({ admin_review_alert_health: summary }))
+    Sentry.captureMessage("product_intake_admin_alert_outbox_requires_attention", {
+      level: "warning",
+      extra: summary,
+    })
+  } else if (observation.kind === "read_failure") {
+    console.error("product_intake_admin_alert_health_read_failed")
+    Sentry.captureMessage("product_intake_admin_alert_health_read_failed", "error")
+  } else if (observation.kind !== "quiet") {
+    console.log(JSON.stringify({ admin_review_alert_health: observation.kind }))
+  }
+}
 
 function withJobLease<T>(jobId: string | null | undefined, write: () => Promise<T>): Promise<T> {
   const lease = jobId ? workerLeases.get(jobId) : undefined
@@ -200,7 +316,8 @@ function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateRese
 }
 
 function commitResearchPass(...[client, params]: Parameters<typeof coreCommitResearchPass>) {
-  return withJobLease(params.jobId, async () => {
+  const lease = workerLeases.get(params.jobId)
+  const finish = async () => {
     const lease = workerLeases.get(params.jobId)
     const updated = await coreCommitResearchPass(client, {
       ...params,
@@ -209,6 +326,50 @@ function commitResearchPass(...[client, params]: Parameters<typeof coreCommitRes
     if (lease) Object.assign(lease.job, updated)
     workerLeases.delete(params.jobId)
     return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  }
+  // Runtime exhaustion may record only a blocked human outcome, still fenced in
+  // SQL by the exact lease/cycle. Renewal-confirmed lease loss never gets this path.
+  return lease
+    ? lease.write(finish, params.status === "blocked" && params.reviewOutcome === "needs_nick")
+    : finish()
+}
+
+async function blockExhaustedResearchCycle(params: {
+  client: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  detail: ProductIntakeSubmissionDetail | null
+  error: ResearchModelReservationError
+}) {
+  if (params.error.code === "lease_lost") throw new WorkerLeaseLostError(params.job.id)
+  const question =
+    params.error.code === "storage_error"
+      ? "Kannst du den technischen Fehler prüfen, bevor eine neue Recherche gestartet wird?"
+      : "Soll nach Prüfung der Zeit- und Laufgrenzen eine neue Recherche gestartet werden?"
+  return commitResearchPass(params.client, {
+    jobId: params.job.id,
+    status: "blocked",
+    stage: params.job.stage,
+    reviewOutcome: "needs_nick",
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
+    expectedReviewCycleId: params.job.review_cycle_id,
+    progress: {
+      ...params.job.progress,
+      message: question,
+      open_questions: [question],
+      cycle_budget_error: params.error.code,
+    },
+    lastError: params.error.code,
+    notificationPayload: {
+      ...buildAdminReviewSnapshot({
+        submissionId: params.job.submission_id,
+        category: params.detail?.category,
+        researchedPayload: params.detail?.payload,
+        outcome: "needs_nick",
+        questionCodes: [],
+      }),
+      question_1: question,
+    },
   })
 }
 
@@ -397,6 +558,7 @@ export type ProductIntakeModelLane =
   | "challenger_medium"
   | "judge"
   | "image_judge"
+  | "projected_judge"
 
 export type ModelEvaluationRuntimeConfig = {
   enabled: boolean
@@ -569,6 +731,9 @@ async function main() {
 
   const heartbeatMs = normalizeWorkerPollMs(process.env.PRODUCT_INTAKE_WORKER_HEARTBEAT_MS, 60_000)
   const sentryEnabled = initWorkerSentry()
+  const outboxHealth = watch
+    ? startAdminReviewOutboxHealthMonitor(supabase, reportAdminReviewOutboxHealth)
+    : undefined
   const heartbeat = watch
     ? startWorkerHeartbeat({
         client: supabase,
@@ -591,10 +756,6 @@ async function main() {
         const delivery = await drainAdminReviewOutbox(options.supabase)
         if (delivery.status !== "disabled" && delivery.status !== "empty")
           console.log(JSON.stringify({ admin_review_alert: delivery }))
-        if (delivery.status === "failed")
-          Sentry.captureMessage("product_intake_admin_alert_delivery_failed", "error")
-        if (delivery.status === "needs_reconciliation")
-          Sentry.captureMessage("product_intake_admin_alert_needs_reconciliation", "warning")
       } catch {
         // Delivery trouble must never requeue an already committed product pass.
         Sentry.captureMessage("product_intake_admin_alert_dispatch_failed", "error")
@@ -603,11 +764,12 @@ async function main() {
       if (watch) await sleep(pollMs)
     } while (watch)
   } finally {
+    outboxHealth?.stop()
     heartbeat?.stop()
   }
 }
 
-/** Persist artifacts before optional evaluation; release the preview/outcome/outbox atomically. */
+/** Commit final research/judge evidence, preview, outcome and outbox together. */
 export async function completeResearchPass(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
@@ -621,6 +783,9 @@ export async function completeResearchPass(params: {
   researchModel: string
   executeCodex: boolean
   autoPrepareImages: boolean
+  judgeProjected?: (packet: ProjectedResearchJudgePacket) => Promise<ProjectedResearchJudgeVerdict>
+  projectedJudgeModel?: string
+  autoReworkEnabled?: boolean
   beforeCompletion?: () => Promise<{
     job: ProductIntakeResearchJob
     modelEvaluation: ModelEvaluationResult
@@ -655,7 +820,6 @@ export async function completeResearchPass(params: {
           submissionContext,
         )
       : null
-  const progress = await persistResearchOutput({ ...params, readiness })
   const evaluated = await params.beforeCompletion?.()
   const leasedJob = evaluated?.job ?? params.job
   const evaluation = evaluated?.modelEvaluation ?? {
@@ -663,18 +827,111 @@ export async function completeResearchPass(params: {
     successfulJudgments: 0,
     targetSuccessfulJudgments: 0,
   }
+  const finalArtifacts = researchOutput.artifacts.map((artifact) => ({
+    kind: artifact.kind,
+    status: artifact.status ?? "proposed",
+    confidence: artifact.confidence ?? null,
+    payload: artifact.payload,
+    sourceUrls: artifact.source_urls ?? null,
+    model: params.researchModel,
+    promptVersion: "product_intake_codex_research_v1",
+  }))
+  let projectedOutcome: ReturnType<typeof decideProjectedResearchOutcome> | undefined
+  if (params.judgeProjected) {
+    const packet = buildProjectedResearchJudgePacket({
+      projectedPayload: { final: normalizeRecord(researchOutput.researched_payload?.final) ?? {} },
+      projectionEvidence: {
+        engine:
+          normalizeRecord(
+            researchOutput.artifacts.find((artifact) => artifact.kind === "property_synthesis")
+              ?.payload.engine,
+          ) ?? {},
+        artifacts: researchOutput.artifacts.filter(
+          (artifact) => artifact.kind !== "publication_preview",
+        ),
+      },
+      readiness,
+      rawBlockers: hasFinalPayload
+        ? blockers
+        : [...blockers, "schema_or_adapter_invalid: Final research payload is missing"],
+    })
+    let verdict: ProjectedResearchJudgeVerdict
+    try {
+      verdict = await params.judgeProjected(packet)
+    } catch (error) {
+      if (
+        error instanceof WorkerLeaseLostError ||
+        (error instanceof ResearchModelReservationError && error.code === "lease_lost")
+      )
+        throw error
+      verdict = {
+        ok: false,
+        error:
+          error instanceof ResearchModelReservationError ? error.code : "projected_judge_failed",
+      }
+    }
+    const category = normalizeCategoryKey(params.category)
+    const engineState =
+      category === "oil"
+        ? "pending_lock"
+        : category
+          ? CATEGORY_RESEARCH_REGISTRY[category].state
+          : "engine_not_available"
+    projectedOutcome = decideProjectedResearchOutcome({
+      verdict,
+      readiness,
+      rawBlockers: packet.raw_blockers,
+      engineState,
+      autoReworkEnabled: params.autoReworkEnabled === true,
+      autoReworkCount: leasedJob.auto_rework_count,
+      reservedModelRuns: leasedJob.reserved_model_runs,
+      cycleDeadlineAt: leasedJob.cycle_deadline_at,
+      inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+    })
+    finalArtifacts.push({
+      kind: "model_judgment",
+      status: verdict.ok ? "completed" : "failed",
+      confidence: null,
+      payload: {
+        review_type: "projected_research_values_v1",
+        projected_input_sha256: createHash("sha256").update(JSON.stringify(packet)).digest("hex"),
+        verdict,
+        outcome: projectedOutcome.outcome,
+        defects: projectedOutcome.defects,
+        open_questions: projectedOutcome.questions,
+      },
+      sourceUrls: null,
+      model: params.projectedJudgeModel ?? "gpt-6-sol",
+      promptVersion: "product_intake_projected_research_judge_v1",
+    })
+  }
+  const progress = {
+    summary: researchOutput.summary,
+    blockers: researchOutput.blockers,
+  }
   const autoPrepareImage = shouldAutoPrepareImage({
-    enabled: params.autoPrepareImages && readiness?.ok === true,
+    enabled:
+      params.autoPrepareImages &&
+      readiness?.ok === true &&
+      (!projectedOutcome || projectedOutcome.outcome === "ready_for_human_review"),
     researchOutput,
   })
-  const nextStatus = autoPrepareImage
-    ? "queued"
-    : readiness?.ok === true
-      ? "waiting_for_review"
-      : "blocked"
-  const nextStage = autoPrepareImage
-    ? "image_judging"
-    : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+  const nextStatus =
+    projectedOutcome?.outcome === "needs_bounded_rework"
+      ? "waiting_for_rework"
+      : projectedOutcome?.outcome === "blocked_needs_human"
+        ? "blocked"
+        : autoPrepareImage
+          ? "queued"
+          : readiness?.ok === true
+            ? "waiting_for_review"
+            : "blocked"
+  const nextStage =
+    nextStatus === "waiting_for_rework"
+      ? "rework"
+      : autoPrepareImage
+        ? "image_judging"
+        : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
 
   const readinessError =
     readiness && !readiness.ok
@@ -687,29 +944,44 @@ export async function completeResearchPass(params: {
     for (const key of ["requested_by", "requested_at", "rework_type", "message"])
       delete previousProgress[key]
   }
-  const reviewOutcome = autoPrepareImage
-    ? "continue"
-    : nextStatus === "waiting_for_review"
-      ? "ready_for_review"
-      : "needs_nick"
+  const reviewOutcome =
+    nextStatus === "waiting_for_rework"
+      ? "continue"
+      : autoPrepareImage
+        ? "continue"
+        : nextStatus === "waiting_for_review"
+          ? "ready_for_review"
+          : "needs_nick"
   const updated = await commitResearchPass(params.supabase, {
     jobId: leasedJob.id,
     reviewOutcome,
     researchedPayload: hasFinalPayload ? researchOutput.researched_payload : null,
+    expectedReviewCycleId: leasedJob.review_cycle_id,
+    artifacts: finalArtifacts,
+    autoRework: nextStatus === "waiting_for_rework",
     resolveDecisionIds: reworkRequest && hasFinalPayload ? (params.resolveDecisionIds ?? []) : [],
     notificationPayload:
       reviewOutcome === "continue"
         ? null
-        : buildAdminReviewSnapshot({
-            submissionId: leasedJob.submission_id,
-            category: params.category,
-            researchedPayload: researchOutput.researched_payload,
-            outcome: reviewOutcome,
-            questionCodes:
-              reviewOutcome === "needs_nick"
-                ? [readiness && !readiness.ok ? "research_gaps" : "research_blockers"]
-                : [],
-          }),
+        : {
+            ...buildAdminReviewSnapshot({
+              submissionId: leasedJob.submission_id,
+              category: params.category,
+              researchedPayload: researchOutput.researched_payload,
+              outcome: reviewOutcome,
+              questionCodes:
+                reviewOutcome === "needs_nick"
+                  ? [readiness && !readiness.ok ? "research_gaps" : "research_blockers"]
+                  : [],
+            }),
+            ...(projectedOutcome?.questions.length
+              ? {
+                  question_1: projectedOutcome.questions[0] ?? "",
+                  question_2: projectedOutcome.questions[1] ?? "",
+                  question_3: projectedOutcome.questions[2] ?? "",
+                }
+              : {}),
+          },
     status: nextStatus,
     stage: nextStage,
     progress: {
@@ -726,6 +998,24 @@ export async function completeResearchPass(params: {
       next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
       model_evaluation: evaluation,
       ...progress,
+      ...(projectedOutcome
+        ? {
+            projected_review_outcome: projectedOutcome.outcome,
+            projected_review_defects: projectedOutcome.defects,
+            open_questions: projectedOutcome.questions,
+          }
+        : {}),
+      ...(projectedOutcome?.outcome === "needs_bounded_rework"
+        ? {
+            message: projectedOutcome.reworkInstruction,
+            requested_by: "worker",
+            requested_at: new Date().toISOString(),
+            rework_type: "bounded_automatic",
+            inci_retry_attempted:
+              leasedJob.progress.inci_retry_attempted === true ||
+              projectedOutcome.inciRetryRequested,
+          }
+        : {}),
       ...(readiness
         ? {
             readiness_check: readiness.ok ? "passed" : "failed",
@@ -733,7 +1023,12 @@ export async function completeResearchPass(params: {
           }
         : {}),
     },
-    lastError: blockers.length > 0 ? blockers.join("; ") : readinessError,
+    lastError:
+      projectedOutcome?.status === "blocked"
+        ? projectedOutcome.questions.join("; ")
+        : blockers.length > 0
+          ? blockers.join("; ")
+          : readinessError,
     expectedLockedBy: leasedJob.locked_by,
     expectedLockedAt: leasedJob.locked_at,
   })
@@ -759,6 +1054,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     for (const job of jobs) {
       options.currentJobId = job.id
       const lease = workerLeases.get(job.id)!
+      const reserveModel = modelCycleForJob(options.supabase, job)
       // Lease refreshes replace progress.message before completion; retain the
       // reviewer instruction as it was when this rework pass was claimed.
       const reworkRequest =
@@ -826,31 +1122,41 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
         if (job.stage === "image_judging") {
           let imageLeasedJob = job
           try {
-            const updated = await processApprovedImageForReview(
-              {
-                supabase: options.supabase,
-                job,
-                detail,
-                workerId: options.workerId,
-                promptPacketPath,
-                executeCodex: options.executeCodex,
-                onLeaseRefresh: (refreshedJob) => {
-                  imageLeasedJob = refreshedJob
+            const updated = await withResearchModelCycle(reserveModel, () =>
+              processApprovedImageForReview(
+                {
+                  supabase: options.supabase,
+                  job,
+                  detail,
+                  workerId: options.workerId,
+                  promptPacketPath,
+                  executeCodex: options.executeCodex,
+                  onLeaseRefresh: (refreshedJob) => {
+                    imageLeasedJob = refreshedJob
+                  },
                 },
-              },
-              {
-                appendResearchArtifact,
-                commitResearchPass,
-                measureModelRun,
-                refreshModelRunLease,
-                captureOptionalTelemetryFailure,
-                runCodexJson,
-                outputPathForModelLane,
-              },
+                {
+                  commitResearchPass,
+                  measureModelRun,
+                  refreshModelRunLease,
+                  runCodexJson,
+                  outputPathForModelLane,
+                },
+              ),
             )
             result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
           } catch (error) {
             options.claimGate.handleFailure(error)
+            if (error instanceof ResearchModelReservationError) {
+              const updated = await blockExhaustedResearchCycle({
+                client: options.supabase,
+                job: imageLeasedJob,
+                detail,
+                error,
+              })
+              result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+              continue
+            }
             if (lease.aborted || error instanceof WorkerLeaseLostError) continue
             const updated = await updateResearchJob(
               options.supabase,
@@ -882,7 +1188,10 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             const productionRun = await measureModelRun(
               "production_low",
               researchRuntimeConfig,
-              () => runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+              () =>
+                withResearchModelCycle(reserveModel, () =>
+                  runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+                ),
             )
             leasedJob = await refreshModelRunLease({
               supabase: options.supabase,
@@ -950,6 +1259,41 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             autoPrepareImages:
               options.executeCodex &&
               process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
+            autoReworkEnabled: process.env.PRODUCT_INTAKE_AUTO_REWORK === "true",
+            projectedJudgeModel: evaluationRuntimeConfig.judge.model,
+            judgeProjected: options.executeCodex
+              ? async (packet) => {
+                  try {
+                    const judged = await measureModelRun(
+                      "projected_judge",
+                      evaluationRuntimeConfig.judge,
+                      () =>
+                        withResearchModelCycle(reserveModel, () =>
+                          runCodexJson({
+                            outputPath: outputPathForModelLane(promptPacketPath, "projected_judge"),
+                            prompt: buildProjectedResearchJudgePrompt(packet),
+                            runtimeConfig: evaluationRuntimeConfig.judge,
+                            webSearch: "disabled",
+                          }),
+                        ),
+                    )
+                    leasedJob = await refreshModelRunLease({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      message: "Projected-value judge returned; worker lease refreshed.",
+                    })
+                    await persistModelRunArtifact(options.supabase, leasedJob, judged)
+                    return judged.success
+                      ? parseProjectedResearchJudgeVerdict(judged.output)
+                      : { ok: false, error: "projected_judge_failed" }
+                  } catch (error) {
+                    options.claimGate.handleFailure(error)
+                    throw error
+                  }
+                }
+              : undefined,
             beforeCompletion: async () => {
               if (options.executeCodex) {
                 const evaluationRun = await runNonFatalModelEvaluation({
@@ -957,17 +1301,19 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                   currentJob: () => leasedJob,
                   targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
                   run: () =>
-                    runOptionalModelEvaluation({
-                      supabase: options.supabase,
-                      job: leasedJob,
-                      workerId: options.workerId,
-                      promptPacketPath,
-                      productionOutput: rawResearchOutput,
-                      config: evaluationRuntimeConfig,
-                      onLeaseRefresh: (refreshedJob) => {
-                        leasedJob = refreshedJob
-                      },
-                    }),
+                    withResearchModelCycle(reserveModel, () =>
+                      runOptionalModelEvaluation({
+                        supabase: options.supabase,
+                        job: leasedJob,
+                        workerId: options.workerId,
+                        promptPacketPath,
+                        productionOutput: rawResearchOutput,
+                        config: evaluationRuntimeConfig,
+                        onLeaseRefresh: (refreshedJob) => {
+                          leasedJob = refreshedJob
+                        },
+                      }),
+                    ),
                   persistFailure: (message) =>
                     persistModelJudgmentFailure(options.supabase, leasedJob, message),
                 })
@@ -980,6 +1326,16 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
         } catch (error) {
           options.claimGate.handleFailure(error)
+          if (error instanceof ResearchModelReservationError) {
+            const updated = await blockExhaustedResearchCycle({
+              client: options.supabase,
+              job: leasedJob,
+              detail,
+              error,
+            })
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+            continue
+          }
           if (lease.aborted || error instanceof WorkerLeaseLostError) continue
           const updated = await updateResearchJob(
             options.supabase,
@@ -1095,6 +1451,7 @@ export async function measureModelRun<T>(
       output,
     }
   } catch (error) {
+    if (error instanceof ResearchModelReservationError) throw error
     const code = codexInfrastructureCode(error)
     if (code === "infra_auth" || (code === "codex_timeout" && lane === "production_low")) {
       throw error
@@ -1445,39 +1802,6 @@ export function imageProcessingFailureUpdate(params: {
     lastError: message,
     expectedLockedBy: params.job.locked_by,
     expectedLockedAt: params.job.locked_at,
-  }
-}
-
-async function persistResearchOutput(params: {
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>
-  job: ProductIntakeResearchJob
-  workerId: string
-  promptPacketPath: string
-  researchOutput: CodexResearchOutput
-  researchModel: string
-  readiness: ResearchReadinessSelfCheck | null
-}) {
-  const created = []
-  for (const artifact of params.researchOutput.artifacts) {
-    const row = await appendResearchArtifact(params.supabase, {
-      jobId: params.job.id,
-      submissionId: params.job.submission_id,
-      kind: artifact.kind,
-      status: artifact.status ?? "proposed",
-      confidence: artifact.confidence ?? null,
-      payload: artifact.payload,
-      sourceUrls: artifact.source_urls ?? null,
-      model: params.researchModel,
-      promptVersion: "product_intake_codex_research_v1",
-    })
-    created.push(row.id)
-  }
-
-  return {
-    summary: params.researchOutput.summary,
-    artifact_ids: created,
-    artifacts_created: created.length,
-    blockers: params.researchOutput.blockers,
   }
 }
 
@@ -2311,6 +2635,11 @@ export async function runCodexJson(
   spawn: WorkerSpawn = runWorkerProcess,
 ): Promise<JsonRecord> {
   const codexBinary = codexBinaryForWorker()
+  const deadline = await reserveCurrentResearchModelRun()
+  const remainingMs = deadline === undefined ? CODEX_RESEARCH_TIMEOUT_MS : deadline - Date.now()
+  if (!Number.isFinite(remainingMs) || remainingMs <= 0)
+    throw new ResearchModelReservationError("cycle_deadline")
+  const timeoutMs = Math.min(CODEX_RESEARCH_TIMEOUT_MS, remainingMs)
 
   const run = await spawn(
     codexBinary,
@@ -2326,14 +2655,14 @@ export async function runCodexJson(
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       maxBuffer: 1024 * 1024 * 20,
-      timeout: CODEX_RESEARCH_TIMEOUT_MS,
+      timeout: timeoutMs,
     },
   )
 
   if (run.error && "code" in run.error && run.error.code === "ETIMEDOUT") {
     throw new CodexInfrastructureError(
       "codex_timeout",
-      `Codex CLI timed out after ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s (${codexBinary}): ${run.error.message}`,
+      `Codex CLI timed out after ${timeoutMs / 1000}s (${codexBinary}): ${run.error.message}`,
     )
   }
   if (
@@ -2355,7 +2684,7 @@ export async function runCodexJson(
   if (run.signal) {
     throw new Error(
       truncateDiagnostic(
-        `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
+        `Codex CLI terminated by ${run.signal} after up to ${timeoutMs / 1000}s: ${
           run.stderr || run.stdout || "no output"
         }`,
       ),

@@ -467,9 +467,10 @@ What this cockpit intentionally must not do:
 
 Internal Admin alert template/setup is tracked in
 [Product Review admin alerts](customerio/product-intake-admin-review.md).
-The outbox is implemented locally with automatic delivery disabled. Dedicated
-provider setup and one real outbox email/inbox verification are complete;
-production migration/deployment remain pending. Uncertain sends are held for
+The outbox is deployed with automatic delivery disabled. Dedicated provider
+setup, production migration and one real email/inbox verification are complete;
+Nick approved the test email on 2026-10-16. Reconciliation monitoring, the complete
+review flow and a separate bounded activation decision remain gates. Uncertain sends are held for
 reconciliation, never automatically resent. This internal alert
 never authorizes customer notification or product publication.
 

@@ -4,7 +4,7 @@ import { createHash } from "node:crypto"
 import sharp from "sharp"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type {
-  appendResearchArtifact,
+  AppendResearchArtifactParams,
   commitResearchPass,
   JsonRecord,
   ProductIntakeResearchJob,
@@ -35,7 +35,6 @@ export * from "./image-background"
 export * from "./image-quality"
 
 export type ImageStageDeps = ImageQualityJudgeDeps & {
-  appendResearchArtifact: typeof appendResearchArtifact
   commitResearchPass: typeof commitResearchPass
   measureModelRun: (
     lane: "image_judge",
@@ -52,7 +51,6 @@ export type ImageStageDeps = ImageQualityJudgeDeps & {
     promptPacketPath: string
     message: string
   }) => Promise<ProductIntakeResearchJob>
-  captureOptionalTelemetryFailure: (write: () => Promise<unknown>) => Promise<string | null>
 }
 
 export async function processApprovedImageForReview(
@@ -67,14 +65,9 @@ export async function processApprovedImageForReview(
   },
   deps: ImageStageDeps,
 ) {
-  const {
-    appendResearchArtifact,
-    commitResearchPass,
-    measureModelRun,
-    refreshModelRunLease,
-    captureOptionalTelemetryFailure,
-  } = deps
+  const { commitResearchPass, measureModelRun, refreshModelRunLease } = deps
   let leasedJob = params.job
+  const finalArtifacts: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId">> = []
   const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
   if (!sourceImageUrl) {
     throw new Error("No approved source image URL found for image processing.")
@@ -122,9 +115,7 @@ export async function processApprovedImageForReview(
   const transparentBackgroundDetected = sourceAlreadyTransparent || Boolean(preparedCutoutFile)
   const backgroundRemovalRequired = !sourceAlreadyTransparent && !preparedCutoutFile
   if (backgroundRemovalRequired) {
-    const artifact = await appendResearchArtifact(params.supabase, {
-      jobId: params.job.id,
-      submissionId: params.job.submission_id,
+    const artifact: Omit<AppendResearchArtifactParams, "jobId" | "submissionId"> = {
       kind: "processed_image",
       status: "needs_image_work",
       confidence: 0.2,
@@ -143,10 +134,12 @@ export async function processApprovedImageForReview(
       sourceUrls: [sourceImageUrl],
       model: "local-image-finalizer",
       promptVersion: "product_intake_image_finalization_v1",
-    })
+    }
 
     return commitResearchPass(params.supabase, {
       jobId: params.job.id,
+      expectedReviewCycleId: params.job.review_cycle_id,
+      artifacts: [artifact],
       reviewOutcome: "needs_nick",
       notificationPayload: buildAdminReviewSnapshot({
         submissionId: params.job.submission_id,
@@ -163,7 +156,6 @@ export async function processApprovedImageForReview(
         prompt_packet_path: params.promptPacketPath,
         worker_id: params.workerId,
         mode: "local_image_processing",
-        processed_image_artifact_id: artifact.id,
         processed_image_ready: false,
         background_action: "background_removal_required",
         processed_at: new Date().toISOString(),
@@ -235,34 +227,30 @@ export async function processApprovedImageForReview(
     } else {
       visualJudgeError = visualRun.error
     }
-    await captureOptionalTelemetryFailure(() =>
-      appendResearchArtifact(params.supabase, {
-        jobId: leasedJob.id,
-        submissionId: leasedJob.submission_id,
-        kind: "image_judgment",
-        status: visualRun.success ? "completed" : "failed",
+    finalArtifacts.push({
+      kind: "image_judgment",
+      status: visualRun.success ? "completed" : "failed",
+      confidence: visualRun.success ? visualRun.output.confidence : null,
+      payload: {
+        verdict: visualRun.success ? visualRun.output.verdict : "needs_human_review",
         confidence: visualRun.success ? visualRun.output.confidence : null,
-        payload: {
-          verdict: visualRun.success ? visualRun.output.verdict : "needs_human_review",
-          confidence: visualRun.success ? visualRun.output.confidence : null,
-          defects: visualRun.success ? visualRun.output.defects : [],
-          rationale: visualRun.success
-            ? visualRun.output.rationale
-            : "Visual image judge failed; Nick must inspect the prepared image.",
-          error: visualRun.success ? null : visualRun.error,
-          duration_ms: visualRun.durationMs,
-          output_hash: visualRun.success ? visualRun.outputHash : null,
-          reference_set_version: referenceSet.version,
-          reference_ids: referenceSet.references.map((reference) => reference.id),
-          reference_warnings: referenceSet.warnings,
-          deterministic_quality_gate: finalized.qualityGate,
-          human_approval_required: true,
-        },
-        sourceUrls: [sourceImageUrl],
-        model: judgeConfig.model,
-        promptVersion: "product_intake_image_quality_judge_v1",
-      }),
-    )
+        defects: visualRun.success ? visualRun.output.defects : [],
+        rationale: visualRun.success
+          ? visualRun.output.rationale
+          : "Visual image judge failed; Nick must inspect the prepared image.",
+        error: visualRun.success ? null : visualRun.error,
+        duration_ms: visualRun.durationMs,
+        output_hash: visualRun.success ? visualRun.outputHash : null,
+        reference_set_version: referenceSet.version,
+        reference_ids: referenceSet.references.map((reference) => reference.id),
+        reference_warnings: referenceSet.warnings,
+        deterministic_quality_gate: finalized.qualityGate,
+        human_approval_required: true,
+      },
+      sourceUrls: [sourceImageUrl],
+      model: judgeConfig.model,
+      promptVersion: "product_intake_image_quality_judge_v1",
+    })
   }
 
   const preparation = imageQualityPreparationDecision({
@@ -272,9 +260,7 @@ export async function processApprovedImageForReview(
   })
   const finalImageReady = preparation.finalImageReady
 
-  const artifact = await appendResearchArtifact(params.supabase, {
-    jobId: params.job.id,
-    submissionId: params.job.submission_id,
+  const artifact: Omit<AppendResearchArtifactParams, "jobId" | "submissionId"> = {
     kind: "processed_image",
     status: preparation.status,
     confidence: visualVerdict?.confidence ?? (finalImageReady ? 0.9 : 0.4),
@@ -329,13 +315,15 @@ export async function processApprovedImageForReview(
     sourceUrls: [sourceImageUrl],
     model: "local-image-finalizer",
     promptVersion: "product_intake_image_finalization_v1",
-  })
+  }
 
   // An image-only/manual pass cannot upgrade unverified research to ready.
   const researchReady = params.job.progress.readiness_check === "passed"
   const packageReady = finalImageReady && researchReady
   return commitResearchPass(params.supabase, {
     jobId: params.job.id,
+    expectedReviewCycleId: leasedJob.review_cycle_id,
+    artifacts: [...finalArtifacts, artifact],
     reviewOutcome: packageReady ? "ready_for_review" : "needs_nick",
     notificationPayload: buildAdminReviewSnapshot({
       submissionId: params.job.submission_id,
@@ -355,7 +343,6 @@ export async function processApprovedImageForReview(
       prompt_packet_path: params.promptPacketPath,
       worker_id: params.workerId,
       mode: "local_image_processing",
-      processed_image_artifact_id: artifact.id,
       processed_image_url: finalized.finalReviewUrl,
       qa_image_url: finalized.qaReviewUrl,
       processed_image_ready: finalImageReady,

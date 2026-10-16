@@ -133,6 +133,9 @@ export type CommitResearchPassParams = UpdateResearchJobParams & {
   resolveDecisionIds?: string[]
   reviewOutcome: "continue" | "ready_for_review" | "needs_nick"
   notificationPayload?: JsonRecord | null
+  expectedReviewCycleId?: string | null
+  artifacts?: Array<Omit<AppendResearchArtifactParams, "jobId" | "submissionId">>
+  autoRework?: boolean
 }
 
 /** Final preview, job outcome and notification snapshot share one database transaction. */
@@ -154,9 +157,66 @@ export async function commitResearchPass(
     resolve_decision_ids: params.resolveDecisionIds ?? [],
     review_outcome: params.reviewOutcome,
     notification_payload: params.notificationPayload ?? null,
+    expected_review_cycle_id: params.expectedReviewCycleId ?? null,
+    research_artifacts: (params.artifacts ?? []).map((artifact) => ({
+      kind: artifact.kind,
+      status: artifact.status ?? "proposed",
+      payload: artifact.payload,
+      confidence: artifact.confidence ?? null,
+      source_urls: artifact.sourceUrls ?? null,
+      model: artifact.model ?? null,
+      prompt_version: artifact.promptVersion ?? null,
+    })),
+    request_auto_rework: params.autoRework ?? false,
   })
+  if (error?.code === "23514" && error.details === "cycle_deadline")
+    throw new ResearchModelReservationError("cycle_deadline", error.code)
   if (error) throw error
   return data as ProductIntakeResearchJob
+}
+
+export class ResearchModelReservationError extends Error {
+  constructor(
+    public readonly code: "model_run_limit" | "cycle_deadline" | "lease_lost" | "storage_error",
+    public readonly sqlState?: string,
+  ) {
+    super(`Research model reservation denied: ${code}`)
+    this.name = "ResearchModelReservationError"
+  }
+}
+
+/** Reserve immediately before spawn. A failed or uncertain launch never refunds its slot. */
+export async function reserveResearchModelRun(
+  client: RpcClient,
+  params: {
+    jobId: string
+    expectedLockedBy: string
+    expectedLockedAt: string
+    expectedReviewCycleId: string
+  },
+): Promise<ProductIntakeResearchJob> {
+  try {
+    const { data, error } = await client.rpc("product_intake_reserve_model_run", {
+      target_job_id: params.jobId,
+      expected_locked_by: params.expectedLockedBy,
+      expected_locked_at: params.expectedLockedAt,
+      expected_review_cycle_id: params.expectedReviewCycleId,
+    })
+    if (error) {
+      const code =
+        error.code === "23514" &&
+        (error.details === "model_run_limit" || error.details === "cycle_deadline")
+          ? error.details
+          : error.code === "02000"
+            ? "lease_lost"
+            : "storage_error"
+      throw new ResearchModelReservationError(code, error.code)
+    }
+    return data as ProductIntakeResearchJob
+  } catch (error) {
+    if (error instanceof ResearchModelReservationError) throw error
+    throw new ResearchModelReservationError("storage_error")
+  }
 }
 
 export async function retryResearchJob(

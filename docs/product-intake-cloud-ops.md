@@ -177,6 +177,23 @@ pruning any additional installed copy; do not prune by age alone. The private
 archives preserve historical data and require sudo for access; they are not
 installed or running application versions. No automatic cleanup was installed.
 
+## Current release and continuation (2026-10-16)
+
+PR #689 merged as `80b963a2`; main app production is READY. Hetzner runs reviewed
+head `7c00ca4a` from `20261015-201339-7c00ca4a76c6`; verified rollback is
+`20261007-92bfe95862eb`. Other installed copies were archived/verified before
+removal. Read-only morning refresh: worker/review healthy, fresh idle heartbeat,
+zero active jobs/outbox rows, disk 60% (~15 GiB available); 74 shared finalized
+images and one rembg model intact. Runtime email/image switches are false.
+
+The [continuation checklist](../plans/product-intake-cloud-research/continuation-2026-10-16.md)
+is current. The next local safety increment introduces independent outbox
+observation and [bounded research cycles](../plans/product-intake-cloud-research/s3-review-cycles.md),
+including migration `20261016052958_product_intake_review_cycles.sql`.
+**That new migration is not applied and that worker code is not deployed.**
+Migration-before-code, reviewed head/CI and exact release guards remain mandatory;
+no automatic activation is implied. Existing resource units/caps have not changed.
+
 ## Status of the completion work
 
 - #645: merged as `a34feee1789843f76681673a655fd8c9cf01ff80` after all checks
@@ -185,7 +202,7 @@ installed or running application versions. No automatic cleanup was installed.
   finish refused ignored `tmp/`; worktree/branches preserved.
 - #650: merged as `6ae710fb32add7fb9192645b88aae2d952b8d41e` after all final
   checks passed on `7777d0ef082865a2c6dd58f92b33ae0043784003`; owner tests 23/23.
-  Runtime deployment reconciliation remains. Exact worktree cleanup refused
+  Native runtime is preserved in the verified #689 worker release. Exact worktree cleanup refused
   because ignored `tmp/` may be unique; worktree/branches preserved.
 - Unit/resource activation and monitoring delivery:
   **not performed** by preparing these files. Retention cleanup is complete as

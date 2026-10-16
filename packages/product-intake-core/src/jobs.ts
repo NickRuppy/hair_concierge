@@ -92,6 +92,10 @@ export type ProductIntakeResearchJob = {
   priority: number
   attempt_count: number
   max_attempts: number
+  review_cycle_id?: string
+  auto_rework_count?: number
+  reserved_model_runs?: number
+  cycle_deadline_at?: string | null
   locked_by: string | null
   locked_at: string | null
   started_at: string | null

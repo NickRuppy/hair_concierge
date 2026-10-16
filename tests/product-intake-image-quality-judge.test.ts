@@ -320,11 +320,13 @@ test("transparent image completion commits the ready notification snapshot with 
   }) as typeof fetch
   const deps = {
     appendResearchArtifact: async (_client: unknown, params: Record<string, unknown>) => {
-      artifacts.push(params)
-      return { id: `processed-image-artifact-${artifacts.length}` } as never
+      throw new Error(
+        "Final image evidence must be part of the atomic pass, not appended before it",
+      )
     },
     commitResearchPass: async (_client: unknown, params: Record<string, unknown>) => {
       commits.push(params)
+      artifacts.push(...((params.artifacts as Array<Record<string, unknown>>) ?? []))
       return { ...job, status: params.status, stage: params.stage } as never
     },
     measureModelRun: async () => {

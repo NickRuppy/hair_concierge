@@ -2,6 +2,12 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import type { PGlite } from "@electric-sql/pglite"
+import {
+  commitResearchPass,
+  reserveResearchModelRun,
+  ResearchModelReservationError,
+  type AppendResearchArtifactParams,
+} from "@chaarlie/product-intake-core"
 
 import { createAdminAlertTestDatabase } from "../scripts/product-intake/admin-alert-test-database"
 
@@ -21,6 +27,10 @@ type Job = {
   engine_key: string | null
   engine_version: string | null
   progress: Record<string, unknown>
+  review_cycle_id: string
+  auto_rework_count: number
+  reserved_model_runs: number
+  cycle_deadline_at: Date | null
 }
 
 async function migratedDatabase(t: { after: (fn: () => Promise<void>) => void }) {
@@ -614,13 +624,17 @@ test("completion rolls back preview, decisions, and job handoff if the outbox in
     SET ROLE service_role;
   `)
   await assert.rejects(
-    commitPass(pg, claimed!, "ready_for_review", [decision.rows[0]!.id]),
+    commitCycle(pg, claimed!, { artifacts: finalArtifacts, decisionIds: [decision.rows[0]!.id] }),
     /deliberate outbox fault/,
   )
   await pg.exec(
     "RESET ROLE; DROP TRIGGER fail_admin_notification_insert ON public.product_intake_admin_notifications; SET ROLE service_role",
   )
   assert.equal((await storedJob(pg, job.id)).status, "running")
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_research_artifacts")).rows.length,
+    0,
+  )
   assert.equal(
     (
       await pg.query<{ status: string }>(
@@ -644,7 +658,12 @@ test("completion rolls back preview, decisions, and job handoff if the outbox in
     0,
   )
   assert.equal(
-    (await commitPass(pg, claimed!, "ready_for_review", [decision.rows[0]!.id])).rows[0]!.status,
+    (
+      await commitCycle(pg, claimed!, {
+        artifacts: finalArtifacts,
+        decisionIds: [decision.rows[0]!.id],
+      })
+    ).status,
     "waiting_for_review",
   )
 })
@@ -806,4 +825,390 @@ test("admin notification storage and RPCs are inaccessible to anon and authentic
       /permission denied/,
     )
   }
+})
+
+// The database owns these safety boundaries: mocks cannot prove transactional
+// rollback, lease fencing or persisted budgets across crashes and human rework.
+async function reserve(pg: PGlite, job: Job) {
+  return (
+    await pg.query<Job>("SELECT * FROM public.product_intake_reserve_model_run($1,$2,$3,$4)", [
+      job.id,
+      job.locked_by,
+      job.locked_at,
+      job.review_cycle_id,
+    ])
+  ).rows[0]!
+}
+
+// Only the transport envelope is adapted. Actual validation and persistence run
+// through the repository wrapper and PostgreSQL functions, not a mock store.
+function cycleRpcClient(pg: PGlite): Parameters<typeof commitResearchPass>[0] {
+  return {
+    rpc: async (name: string, args: Record<string, unknown>) => {
+      const names =
+        name === "product_intake_commit_research_pass"
+          ? [
+              "target_job_id",
+              "expected_locked_by",
+              "expected_locked_at",
+              "next_status",
+              "next_stage",
+              "next_progress",
+              "next_last_error",
+              "researched_payload",
+              "resolve_decision_ids",
+              "review_outcome",
+              "notification_payload",
+              "expected_review_cycle_id",
+              "research_artifacts",
+              "request_auto_rework",
+            ]
+          : name === "product_intake_reserve_model_run"
+            ? [
+                "target_job_id",
+                "expected_locked_by",
+                "expected_locked_at",
+                "expected_review_cycle_id",
+              ]
+            : null
+      if (!names) throw new Error("Unsupported cycle proof RPC")
+      try {
+        const result = await pg.query(
+          `SELECT * FROM public.${name}(${names.map((_, i) => `$${i + 1}`).join(",")})`,
+          names.map((key) =>
+            key === "research_artifacts" ? JSON.stringify(args[key]) : args[key],
+          ),
+        )
+        return { data: result.rows[0], error: null }
+      } catch (error) {
+        const pgError = error as { code: string; detail?: string; message: string }
+        return {
+          data: null,
+          error: Object.assign(new Error(pgError.message), {
+            code: pgError.code,
+            details: pgError.detail,
+          }),
+        }
+      }
+    },
+  } as unknown as Parameters<typeof commitResearchPass>[0]
+}
+
+async function commitCycle(
+  pg: PGlite,
+  job: Job,
+  options: {
+    autoRework?: boolean
+    artifacts?: unknown[]
+    payload?: Record<string, unknown>
+    blocked?: boolean
+    decisionIds?: string[]
+    inciRetry?: boolean
+  } = {},
+): Promise<Job> {
+  const outcome = options.autoRework
+    ? "continue"
+    : options.blocked
+      ? "needs_nick"
+      : "ready_for_review"
+  return (await commitResearchPass(cycleRpcClient(pg), {
+    jobId: job.id,
+    expectedLockedBy: job.locked_by,
+    expectedLockedAt: job.locked_at!.toISOString(),
+    status: options.autoRework
+      ? "waiting_for_rework"
+      : options.blocked
+        ? "blocked"
+        : "waiting_for_review",
+    stage: options.autoRework ? "rework" : "preview_build",
+    progress: {
+      artifact_ids: ["forged"],
+      artifacts_created: 999,
+      ...(options.inciRetry ? { inci_retry_attempted: true } : {}),
+    },
+    researchedPayload: options.payload ?? { final: "reviewed" },
+    resolveDecisionIds: options.decisionIds ?? [],
+    reviewOutcome: outcome,
+    notificationPayload: options.autoRework
+      ? null
+      : {
+          ...notificationPayload(job.submission_id),
+          outcome_label: options.blocked ? "Entscheidung nötig" : "Bereit zur Prüfung",
+        },
+    expectedReviewCycleId: job.review_cycle_id,
+    artifacts: (options.artifacts ?? []).map((value) => {
+      const artifact = value as Record<string, unknown>
+      return {
+        kind: artifact.kind,
+        payload: artifact.payload,
+        status: artifact.status,
+        confidence: artifact.confidence,
+        sourceUrls: artifact.source_urls,
+        model: artifact.model,
+        promptVersion: artifact.prompt_version,
+      } as Omit<AppendResearchArtifactParams, "jobId" | "submissionId">
+    }),
+    autoRework: options.autoRework ?? false,
+  })) as unknown as Job
+}
+
+const finalArtifacts = [
+  { kind: "property_synthesis", payload: { slip: "moderate" } },
+  {
+    kind: "model_judgment",
+    payload: { defects: [] },
+    confidence: 1,
+    model: "judge-model",
+    prompt_version: "projected-v1",
+  },
+  {
+    kind: "processed_image",
+    payload: { image: "private/local.png" },
+    source_urls: ["https://example.com/image"],
+  },
+]
+
+test("completion rejects changed replay content even for legacy callers", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  const [job] = await claim(pg)
+  await commitPass(pg, job!)
+  await assert.rejects(
+    pg.query(
+      "SELECT * FROM public.product_intake_commit_research_pass($1,$2,$3,'waiting_for_review','preview_build','{\"source\":\"test\"}',NULL,'{\"changed\":true}','{}','ready_for_review',$4)",
+      [job!.id, job!.locked_by, job!.locked_at, notificationPayload(job!.submission_id)],
+    ),
+    /completion replay/,
+  )
+})
+
+test("model reservations persist through reclaim and retry, cap six runs, and fence stale leases and cycles", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  let [job] = await claim(pg)
+  const first = await reserve(pg, job!)
+  assert.equal(first.reserved_model_runs, 1)
+  assert.ok(first.cycle_deadline_at)
+  const remaining = first.cycle_deadline_at!.getTime() - Date.now()
+  assert.ok(remaining > 44 * 60_000 && remaining <= 45 * 60_000)
+  await assert.rejects(reserve(pg, { ...job!, locked_by: "lost-worker" }), /lock no longer matches/)
+  await assert.rejects(
+    reserve(pg, { ...job!, review_cycle_id: PRODUCT }),
+    /cycle no longer matches/,
+  )
+  await assert.rejects(commitPass(pg, job!), /review cycle is required/)
+  await pg.query(
+    "UPDATE public.product_intake_research_jobs SET locked_at=now()-interval '1 hour' WHERE id=$1",
+    [job!.id],
+  )
+  ;[job] = await claim(pg, "worker-after-crash")
+  const second = await reserve(pg, job!)
+  assert.equal(second.reserved_model_runs, 2)
+  assert.deepEqual(second.cycle_deadline_at, first.cycle_deadline_at)
+  await pg.query(
+    "SELECT public.product_intake_update_research_job($1,'failed','source_research',NULL,NULL,$2,$3)",
+    [job!.id, job!.locked_by, job!.locked_at],
+  )
+  await pg.query("SELECT public.product_intake_retry_research_job($1)", [job!.id])
+  ;[job] = await claim(pg, "worker-after-retry")
+  for (let count = 3; count <= 6; count++)
+    assert.equal((await reserve(pg, job!)).reserved_model_runs, count)
+  await assert.rejects(reserve(pg, job!), (error: unknown) => {
+    const e = error as { code: string; detail: string }
+    return e.code === "23514" && e.detail === "model_run_limit"
+  })
+  await assert.rejects(
+    reserveResearchModelRun(cycleRpcClient(pg), {
+      jobId: job!.id,
+      expectedLockedBy: job!.locked_by!,
+      expectedLockedAt: job!.locked_at!.toISOString(),
+      expectedReviewCycleId: job!.review_cycle_id,
+    }),
+    (error: unknown) =>
+      error instanceof ResearchModelReservationError &&
+      error.code === "model_run_limit" &&
+      error.sqlState === "23514",
+  )
+  assert.equal((await storedJob(pg, job!.id)).reserved_model_runs, 6)
+  assert.deepEqual((await storedJob(pg, job!.id)).cycle_deadline_at, first.cycle_deadline_at)
+})
+
+test("cycle deadline denies new runs and ready handoff but allows atomic human escalation", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  const [job] = await claim(pg)
+  await reserve(pg, job!)
+  await pg.query(
+    "UPDATE public.product_intake_research_jobs SET cycle_deadline_at=now()-interval '1 second' WHERE id=$1",
+    [job!.id],
+  )
+  await assert.rejects(
+    reserve(pg, job!),
+    (error: unknown) => (error as { detail: string }).detail === "cycle_deadline",
+  )
+  await assert.rejects(
+    commitCycle(pg, job!),
+    (error: unknown) =>
+      error instanceof ResearchModelReservationError && error.code === "cycle_deadline",
+  )
+  const blocked = await commitCycle(pg, job!, { blocked: true, artifacts: finalArtifacts })
+  assert.equal(blocked.status, "blocked")
+  assert.equal(blocked.reserved_model_runs, 1)
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    1,
+  )
+})
+
+test("two automatic reworks share one cycle, require two slots, and explicit human rework alone resets it", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  let [job] = await claim(pg)
+  const cycle = job!.review_cycle_id
+  for (let round = 1; round <= 2; round++) {
+    await reserve(pg, job!)
+    await reserve(pg, job!)
+    const next = await commitCycle(pg, job!, { autoRework: true, inciRetry: round === 1 })
+    assert.equal(next.progress.inci_retry_attempted, true)
+    assert.equal(next.auto_rework_count, round)
+    assert.equal(next.review_cycle_id, cycle)
+    assert.equal(next.attempt_count, 0)
+    assert.equal(next.locked_by, null)
+    assert.equal(next.reserved_model_runs, round * 2)
+    assert.equal(
+      (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+      0,
+    )
+    if (round === 1) {
+      await pg.query(
+        "SELECT public.product_intake_update_research_job($1,'failed','rework','{\"inci_retry_attempted\":false}')",
+        [job!.id],
+      )
+      assert.equal((await storedJob(pg, job!.id)).progress.inci_retry_attempted, true)
+      await pg.query(
+        "SELECT public.product_intake_retry_research_job($1,'{\"inci_retry_attempted\":false}')",
+        [job!.id],
+      )
+      assert.equal((await storedJob(pg, job!.id)).progress.inci_retry_attempted, true)
+    }
+    ;[job] = await claim(pg)
+  }
+  await assert.rejects(commitCycle(pg, job!, { autoRework: true }), /automatic rework budget/)
+  await assert.rejects(
+    pg.query("SELECT public.product_intake_request_rework_job($1)", [job!.submission_id]),
+    /No review-ready/,
+  )
+  const completed = await commitCycle(pg, job!, { artifacts: finalArtifacts })
+  const fresh = (
+    await pg.query<Job>("SELECT * FROM public.product_intake_request_rework_job($1)", [
+      job!.submission_id,
+    ])
+  ).rows[0]!
+  assert.notEqual(fresh.review_cycle_id, cycle)
+  assert.equal(fresh.reserved_model_runs, 0)
+  assert.equal(fresh.auto_rework_count, 0)
+  assert.equal(fresh.cycle_deadline_at, null)
+  assert.equal(fresh.progress.inci_retry_attempted, undefined)
+  await assert.rejects(
+    commitCycle(pg, job!, { artifacts: finalArtifacts }),
+    /cycle no longer matches/,
+  )
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_research_artifacts")).rows.length,
+    3,
+  )
+  assert.equal(completed.progress.artifacts_created, 3)
+
+  const [newClaim] = await claim(pg)
+  for (let n = 0; n < 5; n++) await reserve(pg, newClaim!)
+  await assert.rejects(commitCycle(pg, newClaim!, { autoRework: true }), /automatic rework budget/)
+})
+
+test("final artifacts commit atomically, identify stored images, and exact replay creates no duplicates", async (t) => {
+  const pg = await migratedDatabase(t)
+  await queuedJob(pg)
+  const [job] = await claim(pg)
+  await reserve(pg, job!)
+  await assert.rejects(
+    commitCycle(pg, job!, {
+      artifacts: [...finalArtifacts, { kind: "model_judgment", payload: [], confidence: 2 }],
+    }),
+    /invalid research artifact/,
+  )
+  assert.equal((await storedJob(pg, job!.id)).status, "running")
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_research_artifacts")).rows.length,
+    0,
+  )
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_admin_notifications")).rows.length,
+    0,
+  )
+  const saved = await commitCycle(pg, job!, { artifacts: finalArtifacts })
+  const rows = (
+    await pg.query<{ id: string; kind: string }>(
+      "SELECT id,kind FROM public.product_intake_research_artifacts",
+    )
+  ).rows
+  assert.equal(saved.progress.artifacts_created, 3)
+  assert.deepEqual(
+    new Set(saved.progress.artifact_ids as string[]),
+    new Set(rows.map((row) => row.id)),
+  )
+  assert.equal(
+    saved.progress.processed_image_artifact_id,
+    rows.find((row) => row.kind === "processed_image")!.id,
+  )
+  assert.deepEqual(
+    (
+      await pg.query(
+        "SELECT payload,confidence::float8 AS confidence,model,prompt_version FROM public.product_intake_research_artifacts WHERE kind='model_judgment'",
+      )
+    ).rows[0],
+    {
+      payload: { defects: [] },
+      confidence: 1,
+      model: "judge-model",
+      prompt_version: "projected-v1",
+    },
+  )
+  assert.deepEqual(
+    (
+      await pg.query(
+        "SELECT source_urls FROM public.product_intake_research_artifacts WHERE kind='processed_image'",
+      )
+    ).rows[0],
+    { source_urls: ["https://example.com/image"] },
+  )
+  assert.deepEqual(await commitCycle(pg, job!, { artifacts: finalArtifacts }), saved)
+  await assert.rejects(
+    commitCycle(pg, job!, { artifacts: finalArtifacts, payload: { changed: true } }),
+    /completion replay/,
+  )
+  await assert.rejects(commitCycle(pg, job!, { artifacts: [] }), /completion replay/)
+  assert.equal(
+    (await pg.query("SELECT * FROM public.product_intake_research_artifacts")).rows.length,
+    3,
+  )
+})
+
+test("cycle reservation privileges and closed submission rework remain service-only", async (t) => {
+  const pg = await migratedDatabase(t)
+  const queued = await queuedJob(pg)
+  const [job] = await claim(pg)
+  for (const role of ["anon", "authenticated"]) {
+    await pg.exec(`SET ROLE ${role}`)
+    await assert.rejects(reserve(pg, job!), /permission denied/)
+    await assert.rejects(commitCycle(pg, job!), /permission denied/)
+    await pg.exec("RESET ROLE; SET ROLE service_role")
+  }
+  await commitCycle(pg, job!)
+  await pg.query("UPDATE public.product_submissions SET status='rejected' WHERE id=$1", [
+    queued.submission_id,
+  ])
+  await assert.rejects(
+    pg.query("SELECT public.product_intake_request_rework_job($1)", [queued.submission_id]),
+    /not open/,
+  )
+  assert.equal((await storedJob(pg, job!.id)).review_cycle_id, job!.review_cycle_id)
 })
