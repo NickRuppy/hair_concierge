@@ -14,7 +14,7 @@ export type CandidateResponse = {
 
 /** Mock only OS DNS/TLS boundaries; URL policy, streaming, decode and storage remain real. */
 export function mockCandidateTransport(
-  t: TestContext,
+  t: Pick<TestContext, "mock"> & { after(cleanup: () => void): void },
   options: {
     responses: CandidateResponse[]
     addresses?: Record<string, LookupAddress[]>

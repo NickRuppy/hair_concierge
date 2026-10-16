@@ -6,6 +6,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test, { type TestContext } from "node:test"
 import { fileURLToPath } from "node:url"
+import sharp from "sharp"
 
 import { runWorkerProcess } from "../scripts/product-intake/codex-research-worker"
 
@@ -18,6 +19,13 @@ async function workerFixture(t: TestContext, record = "A01") {
   const root = mkdtempSync(join(tmpdir(), "shampoo-worker-cli-"))
   t.after(() => rmSync(root, { recursive: true, force: true }))
   const repo = fileURLToPath(new URL("../", import.meta.url))
+  const rawImage = await sharp({
+    create: { width: 2, height: 2, channels: 4, background: "red" },
+  })
+    .png()
+    .toBuffer()
+  const rawHash = createHash("sha256").update(rawImage).digest("hex")
+  const uploads: Array<{ key: string; bytes: Buffer }> = []
   const id = randomUUID(),
     submissionId = randomUUID(),
     cycleId = randomUUID()
@@ -135,7 +143,10 @@ async function workerFixture(t: TestContext, record = "A01") {
         },
       },
     },
-    artifacts: [{ kind: "property_synthesis", payload: { shampoo_research_envelope: fixture } }],
+    artifacts: [
+      { kind: "property_synthesis", payload: { shampoo_research_envelope: fixture } },
+      { kind: "image_candidate", payload: { image_url: "https://xylozent.invalid/raw.png" } },
+    ],
   }
   const outputs = join(root, "outputs.json")
   writeFileSync(
@@ -190,18 +201,29 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
   })
   const server = createServer(async (req, res) => {
     const u = new URL(req.url!, "http://x"),
-      raw = await new Promise<string>((r) => {
-        let s = ""
-        req.on("data", (c) => (s += c))
-        req.on("end", () => r(s))
+      raw = await new Promise<Buffer>((r) => {
+        const chunks: Buffer[] = []
+        req.on("data", (c) => chunks.push(Buffer.from(c)))
+        req.on("end", () => r(Buffer.concat(chunks)))
       }),
-      body = raw ? JSON.parse(raw) : {}
+      body =
+        raw.length && req.headers["content-type"]?.includes("application/json")
+          ? JSON.parse(raw.toString("utf8"))
+          : {}
     const reply = (v: unknown, status = 200) => {
       res.statusCode = status
       res.setHeader("content-type", "application/json")
       res.end(JSON.stringify(v))
     }
     const table = u.pathname.split("/").at(-1)!
+    if (
+      req.method === "POST" &&
+      u.pathname.startsWith("/storage/v1/object/product-intake-review/")
+    ) {
+      const key = u.pathname.slice("/storage/v1/object/product-intake-review/".length)
+      uploads.push({ key, bytes: raw })
+      return reply({ Key: `product-intake-review/${key}` })
+    }
     if (u.pathname.includes("/rpc/")) {
       calls.push({ name: table, body })
       if (table === "product_intake_claim_research_jobs") {
@@ -300,6 +322,8 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
         "--conditions=react-server",
         "--import",
         "tsx",
+        "--import",
+        join(repo, "tests/fixtures/shampoo-worker-image-preload.ts"),
         "scripts/product-intake/codex-research-worker.ts",
         "--execute-codex",
         "--json",
@@ -318,6 +342,7 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
           PRODUCT_INTAKE_CODEX_BIN: binary,
           SHAMPOO_FAKE_OUTPUTS: outputs,
           SHAMPOO_FAKE_LOG: log,
+          SHAMPOO_FAKE_RAW_IMAGE: rawImage.toString("base64"),
           PRODUCT_INTAKE_CODEX_SHADOW_ENABLED: "false",
           PRODUCT_INTAKE_CODEX_RESEARCH_MODEL: "gpt-6-luna",
           PRODUCT_INTAKE_CODEX_RESEARCH_REASONING_EFFORT: "low",
@@ -344,6 +369,9 @@ else if(out.includes('projected_judge')) v={defects:data.judgeDefects}; else v=d
     job,
     cycleId,
     submissionId,
+    uploads,
+    rawImage,
+    rawHash,
     decisions,
     startNewCycle: () => {
       reserved = 0
@@ -375,6 +403,16 @@ test(
     assert.equal(committed.expected_payload_revision, 1)
     assert.equal(committed.expected_review_cycle_id, f.cycleId)
     assert.equal(f.commits.length, 1)
+    assert.deepEqual(f.uploads, [{ key: `${f.submissionId}/2/${f.rawHash}`, bytes: f.rawImage }])
+    assert.deepEqual(committed.review_assets, [
+      {
+        kind: "raw",
+        sha256: f.rawHash,
+        storage_key: `${f.submissionId}/2/${f.rawHash}`,
+        media_type: "image/png",
+        byte_length: f.rawImage.length,
+      },
+    ])
     assert.equal(
       f.calls.some((c) => c.name === "product_intake_claim_admin_notification"),
       false,

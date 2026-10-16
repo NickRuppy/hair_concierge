@@ -1,7 +1,9 @@
-# Ten-entry operational pilot proposal
+# Ten-entry operational pilot
 
-Status: proposed; Nick has not approved these backlog actions. Production was
-read without changes on 2026-10-16. This is an operational pilot of the routine
+Status: approved by Nick: “Run the proposed pilot after checks pass.” Execute only
+after deployment and host checks; approval does not cover exact images, product
+publication or customer messages. The baseline was read without changes on
+2026-10-16. This is an operational pilot of the routine
 intake path, not a research-engine validation batch. Routine Shampoo uses its
 approved single isolated lane plus Sol judge; research validation batches still
 require two independent lanes.
